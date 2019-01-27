@@ -1,0 +1,7 @@
+<jmix-component>
+
+    <properties>
+        <property name="jmix.metadataConfig" value="io/jmix/core/metadata.xml"/>
+    </properties>
+
+</jmix-component>

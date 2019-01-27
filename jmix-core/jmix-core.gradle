@@ -1,0 +1,34 @@
+repositories {
+	mavenCentral()
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'io.spring.dependency-management'
+
+dependencyManagement {
+	imports {
+		mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+	}
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+version = jmixVersion
+
+def spockVersion = '1.2-groovy-2.5'
+
+dependencies {
+	implementation 'org.springframework:spring-context'
+	implementation 'org.apache.commons:commons-lang3'
+	implementation 'commons-io:commons-io:2.6'
+	implementation 'org.apache.commons:commons-text:1.6'
+	implementation 'com.google.guava:guava:27.0.1-jre'
+	implementation 'org.slf4j:slf4j-api'
+	implementation 'org.dom4j:dom4j:2.1.1'
+
+	testImplementation 'org.springframework:spring-test'
+	testImplementation "org.spockframework:spock-core:$spockVersion"
+	testImplementation "org.spockframework:spock-spring:$spockVersion"
+	testRuntimeOnly 'org.slf4j:slf4j-simple'
+}

@@ -1,0 +1,19 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.2.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+//plugins {
+//	id 'org.springframework.boot' version '2.1.2.RELEASE' apply false
+//}
+
+ext {
+    jmixVersion = '0.0.1'
+}
