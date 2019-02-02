@@ -1,4 +1,4 @@
-package io.jmix.core.compatibility
+package io.jmix.core.cubacompatibility
 
 import com.sample.addon1.TestAddon1Configuration
 import com.sample.app.TestAppConfiguration

@@ -2,11 +2,8 @@ package io.jmix.core;
 
 import com.google.common.base.Splitter;
 import io.jmix.core.annotation.JmixComponent;
+import io.jmix.core.annotation.JmixProperty;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -17,10 +14,6 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -59,18 +52,18 @@ public class JmixComponents implements BeanFactoryPostProcessor {
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
-            JmixComponent jmixComponent = AnnotationUtils.findAnnotation(beanClass, JmixComponent.class);
-            if (jmixComponent == null) {
+            JmixComponent componentAnnotation = AnnotationUtils.findAnnotation(beanClass, JmixComponent.class);
+            if (componentAnnotation == null) {
                 continue;
             }
-            String compId = getComponentId(jmixComponent, beanClass);
+            String compId = getComponentId(componentAnnotation, beanClass);
             if (!componentIds.contains(compId)) {
                 componentIds.add(compId);
             }
             JmixComponentDescriptor compDescriptor = get(compId);
             if (compDescriptor == null) {
                 compDescriptor = new JmixComponentDescriptor(compId);
-                load(compDescriptor, jmixComponent.dependsOn());
+                load(compDescriptor, componentAnnotation);
             }
             if (!components.contains(compDescriptor))
                 components.add(compDescriptor);
@@ -123,46 +116,25 @@ public class JmixComponents implements BeanFactoryPostProcessor {
         return null;
     }
 
-    private void load(JmixComponentDescriptor component, Class[] dependsOn) {
-        try {
-            for (Class<?> depClass : dependsOn) {
-                JmixComponent jmixComponent = AnnotationUtils.findAnnotation(depClass, JmixComponent.class);
-                if (jmixComponent == null) {
-                    log.warn("Dependency class {} is not annotated with @JmixComponent, ignoring it", depClass.getName());
-                    continue;
-                }
-                String depCompId = getComponentId(jmixComponent, depClass);
-                JmixComponentDescriptor depComp = get(depCompId);
-                if (depComp == null) {
-                    depComp = new JmixComponentDescriptor(depCompId);
-                    load(depComp, jmixComponent.dependsOn());
-                    components.add(depComp);
-                }
-                component.addDependency(depComp);
+    private void load(JmixComponentDescriptor component, JmixComponent componentAnnotation) {
+        for (Class<?> depClass : componentAnnotation.dependsOn()) {
+            JmixComponent depComponentAnnotation = AnnotationUtils.findAnnotation(depClass, JmixComponent.class);
+            if (depComponentAnnotation == null) {
+                log.warn("Dependency class {} is not annotated with {}, ignoring it", depClass.getName(), JmixComponent.class.getName());
+                continue;
             }
-
-            Element propertiesEl = getDescriptorDoc(component).getRootElement().element("properties");
-            for (Element propertyEl : propertiesEl.elements("property")) {
-                String name = propertyEl.attributeValue("name");
-                String value = propertyEl.attributeValue("value");
-                boolean overwrite = Boolean.parseBoolean(propertyEl.attributeValue("overwrite"));
-                component.setProperty(name, value, !overwrite);
+            String depCompId = getComponentId(depComponentAnnotation, depClass);
+            JmixComponentDescriptor depComp = get(depCompId);
+            if (depComp == null) {
+                depComp = new JmixComponentDescriptor(depCompId);
+                load(depComp, depComponentAnnotation);
+                components.add(depComp);
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Error loading app component '" + component + "'", e);
+            component.addDependency(depComp);
         }
-    }
 
-    private Document getDescriptorDoc(JmixComponentDescriptor component) {
-        String descriptorPath = component.getDescriptorPath();
-        try (InputStream descrStream = getClass().getClassLoader().getResourceAsStream(descriptorPath)) {
-            if (descrStream == null)
-                throw new RuntimeException("Jmix component descriptor was not found in '" + descriptorPath + "'");
-
-            SAXReader reader = new SAXReader();
-            return reader.read(new InputStreamReader(descrStream, StandardCharsets.UTF_8));
-        } catch (IOException | DocumentException e) {
-            throw new RuntimeException("Error reading Jmix component descriptor '" + descriptorPath + "'", e);
+        for (JmixProperty propertyAnn : componentAnnotation.properties()) {
+            component.setProperty(propertyAnn.name(), propertyAnn.value(), propertyAnn.append());
         }
     }
 

@@ -7,11 +7,11 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface JmixComponent {
+public @interface JmixProperty {
 
-    String id() default "";
+    String name();
 
-    Class[] dependsOn();
+    String value();
 
-    JmixProperty[] properties() default {};
+    boolean append() default false;
 }

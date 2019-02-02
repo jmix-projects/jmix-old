@@ -1,6 +1,7 @@
 package io.jmix.core;
 
 import io.jmix.core.annotation.JmixComponent;
+import io.jmix.core.annotation.JmixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,7 +10,9 @@ import org.springframework.core.env.Environment;
 
 @Configuration
 @ComponentScan
-@JmixComponent(dependsOn = {})
+@JmixComponent(dependsOn = {}, properties = {
+        @JmixProperty(name = "jmix.metadataConfig", value = "io/jmix/core/metadata.xml")
+})
 public class JmixCoreConfiguration {
 
     protected Environment environment;

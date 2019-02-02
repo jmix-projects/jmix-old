@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.core.compatibility;
+package io.jmix.core.cubacompatibility;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
