@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':jmix-core')
+    implementation project(':starters:starter-standard')
     implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
