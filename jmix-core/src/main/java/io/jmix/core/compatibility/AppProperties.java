@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2016 Haulmont.
+ * Copyright 2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.core.cubacompatibility;
+package io.jmix.core.compatibility;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +32,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * INTERNAL.
  * Provides access to file-based properties.
  */
-@Component("jmix_AppProperties")
+@Component(AppProperties.NAME)
 public class AppProperties {
+
+    public static final String NAME = "jmix_AppProperties";
 
     private static final Logger log = LoggerFactory.getLogger(AppProperties.class);
 

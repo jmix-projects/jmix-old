@@ -7,6 +7,7 @@ import io.jmix.core.annotation.JmixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 @Configuration
@@ -16,6 +17,7 @@ import org.springframework.core.env.Environment;
         @JmixProperty(name = "prop2", value = "app_prop2"),
         @JmixProperty(name = "prop3", value = "app_prop3")
 })
+@PropertySource("classpath:/com/sample/app/app.properties")
 public class TestAppConfiguration {
 
     @Autowired
@@ -26,4 +28,3 @@ public class TestAppConfiguration {
         return new TestBean(environment.getProperty("prop1"));
     }
 }
-

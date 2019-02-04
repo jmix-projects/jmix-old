@@ -1,4 +1,4 @@
-package io.jmix.core.cubacompatibility
+package io.jmix.core.compatibility
 
 import com.sample.addon1.TestAddon1Configuration
 import com.sample.app.TestAppConfiguration
@@ -13,7 +13,7 @@ class AppPropertiesTest extends Specification {
     @Autowired
     AppProperties appProperties
 
-    def "test"() {
+    def "properties can be changed at runtime"() {
         when:
 
         appProperties.setProperty('prop3', 'changed_prop3')
