@@ -266,7 +266,6 @@ public final class ConfigUtil {
      * @return The default value, or null.
      */
     public static String getDefaultValue(Class<?> configInterface, Method method) {
-        // TODO: returnType.cast()?
         try {
             Default defaultValue = method.getAnnotation(Default.class);
             if (defaultValue != null) {

@@ -18,6 +18,7 @@ package io.jmix.core;
 
 import io.jmix.core.entity.User;
 
+import java.util.TimeZone;
 import java.util.UUID;
 
 public class UserSession {
@@ -27,6 +28,10 @@ public class UserSession {
     }
 
     public User getUser() {
+        return null;
+    }
+
+    public TimeZone getTimeZone() {
         return null;
     }
 }

@@ -25,17 +25,11 @@ public interface Instance extends Serializable {
 
     /**
      * @return metaclass of this object. Throws exception if the metaclass is not found.
-     */
-    MetaClass getMetaClass();
-    
-    /**
-     * @return Instance name as defined by {@link io.jmix.core.metamodel.annotations.NamePattern}
-     * or {@code toString()}.
-     * @deprecated Use {@link MetadataTools#getInstanceName(io.jmix.core.metamodel.model.Instance)} instead.
+     * @deprecated Use {@link io.jmix.core.Metadata#getClassNN(Class)} instead.
      */
     @Deprecated
-    String getInstanceName();
-
+    MetaClass getMetaClass();
+    
     /**
      * Get an attribute value.
      * @param name  attribute name according to JavaBeans notation

@@ -17,7 +17,6 @@ package io.jmix.core.metamodel.model.utils;
 
 import io.jmix.core.metamodel.model.Instance;
 import io.jmix.core.metamodel.model.impl.AbstractInstance;
-import io.jmix.core.AppBeans;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
@@ -211,37 +210,6 @@ public final class InstanceUtils {
         } else {
             instance.setValue(properties[0], value);
         }
-    }
-
-    /**
-     * Use io.jmix.core.global.MetadataTools#copy instead
-     */
-    @Deprecated
-    public static Instance copy(Instance source) {
-        // todo MetadataTools
-        return null; //AppBeans.get(MetadataTools.NAME, MetadataTools.class).copy(source);
-    }
-
-    /**
-     * Use io.jmix.core.global.MetadataTools#copy instead
-     */
-    @Deprecated
-    public static void copy(Instance source, Instance dest) {
-        // todo MetadataTools
-//        AppBeans.get(MetadataTools.NAME, MetadataTools.class).copy(source, dest);
-    }
-
-    /**
-     * @deprecated Use {@link MetadataTools#getInstanceName(io.jmix.core.metamodel.model.Instance)} instead.
-     * @return Instance name as defined by {@link io.jmix.core.metamodel.annotations.NamePattern}
-     * or <code>toString()</code>.
-     * @param instance  instance
-     */
-    @Deprecated
-    public static String getInstanceName(Instance instance) {
-        // todo MetadataTools
-//        MetadataTools metadataTools = AppBeans.get(MetadataTools.NAME, MetadataTools.class);
-        return null; //metadataTools.getInstanceName(instance);
     }
 
     /**

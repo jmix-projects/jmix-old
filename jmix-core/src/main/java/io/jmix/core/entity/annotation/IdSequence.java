@@ -22,8 +22,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Defines sequence name in the database for id generation for {@link com.haulmont.cuba.core.entity.BaseLongIdEntity}
- * and {@link com.haulmont.cuba.core.entity.BaseIntegerIdEntity}
+ * Defines sequence name in the database for id generation for {@link io.jmix.core.entity.BaseLongIdEntity}
+ * and {@link io.jmix.core.entity.BaseIntegerIdEntity}
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

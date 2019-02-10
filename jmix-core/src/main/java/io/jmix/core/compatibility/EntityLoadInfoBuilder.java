@@ -17,6 +17,7 @@
 package io.jmix.core.compatibility;
 
 import io.jmix.core.Metadata;
+import io.jmix.core.MetadataTools;
 import io.jmix.core.UuidProvider;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
@@ -42,6 +43,9 @@ public class EntityLoadInfoBuilder {
     @Inject
     protected Metadata metadata;
 
+    @Inject
+    protected MetadataTools metadataTools;
+
     /**
      * Create a new info instance.
      *
@@ -54,12 +58,10 @@ public class EntityLoadInfoBuilder {
 
         MetaClass metaClass = metadata.getSession().getClassNN(entity.getClass());
 
-        // todo MetadataTools
-//        MetaProperty primaryKeyProperty = metadata.getTools().getPrimaryKeyProperty(metaClass);
-//        boolean stringKey = primaryKeyProperty != null && primaryKeyProperty.getJavaType().equals(String.class);
+        MetaProperty primaryKeyProperty = metadataTools.getPrimaryKeyProperty(metaClass);
+        boolean stringKey = primaryKeyProperty != null && primaryKeyProperty.getJavaType().equals(String.class);
 
-//        return new EntityLoadInfo(entity.getId(), metaClass, viewName, stringKey);
-        return null;
+        return new EntityLoadInfo(entity.getId(), metaClass, viewName, stringKey);
     }
 
     /**
@@ -94,10 +96,9 @@ public class EntityLoadInfoBuilder {
                     return null;
                 }
                 Entity entity = metadata.create(metaClass);
-                // todo MetadataTools
-//                MetaProperty primaryKeyProp = metadata.getTools().getPrimaryKeyProperty(metaClass);
-//                boolean stringKey = primaryKeyProp != null && primaryKeyProp.getJavaType().equals(String.class);
-//                return new EntityLoadInfo(entity.getId(), metaClass, null, stringKey, true);
+                MetaProperty primaryKeyProp = metadataTools.getPrimaryKeyProperty(metaClass);
+                boolean stringKey = primaryKeyProp != null && primaryKeyProp.getJavaType().equals(String.class);
+                return new EntityLoadInfo(entity.getId(), metaClass, null, stringKey, true);
             }
             return null;
         }
@@ -112,9 +113,7 @@ public class EntityLoadInfoBuilder {
         String viewName;
         boolean stringKey = false;
 
-        // todo MetadataTools
-        MetaProperty primaryKeyProp = null;
-//        MetaProperty primaryKeyProp = metadata.getTools().getPrimaryKeyProperty(metaClass);
+        MetaProperty primaryKeyProp = metadataTools.getPrimaryKeyProperty(metaClass);
         if (primaryKeyProp == null)
             return null;
 

@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
 public @interface LocalizedValue {
 
     /**
-     * Explicit definition of a messages pack, e.g. "com.haulmont.cuba.core.entity"
+     * Explicit definition of a messages pack, e.g. "io.jmix.core.entity"
      */
     String messagePack() default "";
 

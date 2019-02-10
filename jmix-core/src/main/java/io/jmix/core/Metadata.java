@@ -17,6 +17,7 @@
 package io.jmix.core;
 
 import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.Session;
 
@@ -39,25 +40,33 @@ public interface Metadata extends Session {
     /**
      * Convenient access to {@link ViewRepository} bean.
      * @return  ViewRepository instance
+     * @deprecated Use DI.
      */
-//    ViewRepository getViewRepository();
+    @Deprecated
+    ViewRepository getViewRepository();
 
     /**
      * Convenient access to {@link ExtendedEntities} bean.
      * @return ExtendedEntities instance
+     * @deprecated Use DI.
      */
-//    ExtendedEntities getExtendedEntities();
+    @Deprecated
+    ExtendedEntities getExtendedEntities();
 
     /**
      * Convenient access to {@link MetadataTools} bean.
      * @return  MetadataTools instance
+     * @deprecated Use DI.
      */
-//    MetadataTools getTools();
+    @Deprecated
+    MetadataTools getTools();
 
     /**
      * Convenient access to {@link DatatypeRegistry} bean.
+     * @deprecated Use DI.
      */
-//    DatatypeRegistry getDatatypes();
+    @Deprecated
+    DatatypeRegistry getDatatypes();
 
     /**
      * Instantiate an entity, taking into account extended entities.

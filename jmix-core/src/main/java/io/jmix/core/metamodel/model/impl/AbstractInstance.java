@@ -52,15 +52,6 @@ public abstract class AbstractInstance implements Instance {
         }
     }
 
-    /**
-     * @deprecated Use {@link MetadataTools#getInstanceName(io.jmix.core.metamodel.model.Instance)} instead.
-     */
-    @Deprecated
-    @Override
-    public String getInstanceName() {
-        return InstanceUtils.getInstanceName(this);
-    }
-
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         if (__propertyChangeListeners == null) {
