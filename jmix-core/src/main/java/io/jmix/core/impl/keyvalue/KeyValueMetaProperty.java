@@ -23,7 +23,10 @@ import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.Datatypes;
 import io.jmix.core.metamodel.datatypes.impl.EnumClass;
 import io.jmix.core.metamodel.datatypes.impl.EnumerationImpl;
-import io.jmix.core.metamodel.model.*;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.Range;
+import io.jmix.core.metamodel.model.Session;
 import io.jmix.core.metamodel.model.impl.ClassRange;
 import io.jmix.core.metamodel.model.impl.DatatypeRange;
 import io.jmix.core.metamodel.model.impl.EnumerationRange;
@@ -80,8 +83,8 @@ public class KeyValueMetaProperty extends MetadataObjectImpl implements MetaProp
     }
 
     @Override
-    public MetaModel getModel() {
-        return metaClass.getModel();
+    public Session getSession() {
+        return metaClass.getSession();
     }
 
     @Override

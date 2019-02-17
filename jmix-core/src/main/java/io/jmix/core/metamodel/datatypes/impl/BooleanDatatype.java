@@ -16,19 +16,22 @@
 
 package io.jmix.core.metamodel.datatypes.impl;
 
-import io.jmix.core.metamodel.annotations.JavaClass;
+import io.jmix.core.metamodel.annotations.DatatypeDef;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.FormatStrings;
 import io.jmix.core.metamodel.datatypes.FormatStringsRegistry;
-import io.jmix.core.AppBeans;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.text.ParseException;
 import java.util.Locale;
 
-@JavaClass(Boolean.class)
+@DatatypeDef(id = "boolean", javaClass = Boolean.class, defaultForClass = true, value = "jmix_BooleanDatatype")
 public class BooleanDatatype implements Datatype<Boolean> {
+
+    @Inject
+    protected FormatStringsRegistry formatStringsRegistry;
 
     @Override
     public String format(Object value) {
@@ -41,7 +44,7 @@ public class BooleanDatatype implements Datatype<Boolean> {
             return "";
         }
 
-        FormatStrings formatStrings = AppBeans.get(FormatStringsRegistry.class).getFormatStrings(locale);
+        FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(locale);
         if (formatStrings == null) {
             return format(value);
         }
@@ -74,7 +77,7 @@ public class BooleanDatatype implements Datatype<Boolean> {
             return null;
         }
 
-        FormatStrings formatStrings = AppBeans.get(FormatStringsRegistry.class).getFormatStrings(locale);
+        FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(locale);
         if (formatStrings == null) {
             return parse(value);
         }
@@ -86,7 +89,4 @@ public class BooleanDatatype implements Datatype<Boolean> {
     public String toString() {
         return getClass().getSimpleName();
     }
-
-    @Deprecated
-    public final static String NAME = "boolean";
 }

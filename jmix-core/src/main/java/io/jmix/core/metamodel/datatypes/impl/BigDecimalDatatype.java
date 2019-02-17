@@ -16,31 +16,34 @@
 
 package io.jmix.core.metamodel.datatypes.impl;
 
-import io.jmix.core.metamodel.annotations.JavaClass;
+import io.jmix.core.metamodel.annotations.DatatypeDef;
+import io.jmix.core.metamodel.annotations.NumberFormat;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.FormatStrings;
 import io.jmix.core.metamodel.datatypes.FormatStringsRegistry;
-import io.jmix.core.AppBeans;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
 
+import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-@JavaClass(BigDecimal.class)
+@DatatypeDef(id = "decimal", javaClass = BigDecimal.class, defaultForClass = true, value = "jmix_BigDecimalDatatype")
+@NumberFormat(
+        pattern = "0.####",
+        decimalSeparator = ".",
+        groupingSeparator = ""
+)
 public class BigDecimalDatatype extends NumberDatatype implements Datatype<BigDecimal> {
 
-    public BigDecimalDatatype(Element element) {
-        super(element);
-    }
+    @Inject
+    protected FormatStringsRegistry formatStringsRegistry;
 
     @Override
-    protected NumberFormat createFormat() {
-        NumberFormat format = super.createFormat();
+    protected java.text.NumberFormat createFormat() {
+        java.text.NumberFormat format = super.createFormat();
         if (format instanceof DecimalFormat) {
             ((DecimalFormat) format).setParseBigDecimal(true);
         }
@@ -58,13 +61,13 @@ public class BigDecimalDatatype extends NumberDatatype implements Datatype<BigDe
             return "";
         }
 
-        FormatStrings formatStrings = AppBeans.get(FormatStringsRegistry.class).getFormatStrings(locale);
+        FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(locale);
         if (formatStrings == null) {
             return format(value);
         }
 
         DecimalFormatSymbols formatSymbols = formatStrings.getFormatSymbols();
-        NumberFormat format = new DecimalFormat(formatStrings.getDecimalFormat(), formatSymbols);
+        java.text.NumberFormat format = new DecimalFormat(formatStrings.getDecimalFormat(), formatSymbols);
         return format.format(value);
     }
 
@@ -83,7 +86,7 @@ public class BigDecimalDatatype extends NumberDatatype implements Datatype<BigDe
             return null;
         }
 
-        FormatStrings formatStrings = AppBeans.get(FormatStringsRegistry.class).getFormatStrings(locale);
+        FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(locale);
         if (formatStrings == null) {
             return parse(value);
         }
@@ -98,7 +101,4 @@ public class BigDecimalDatatype extends NumberDatatype implements Datatype<BigDe
     public String toString() {
         return getClass().getSimpleName();
     }
-
-    @Deprecated
-    public final static String NAME = "decimal";
 }

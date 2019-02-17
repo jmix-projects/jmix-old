@@ -39,6 +39,8 @@ import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,7 +72,10 @@ public abstract class AbstractScripting implements Scripting {
 
     protected GlobalConfig globalConfig;
 
-    public AbstractScripting(JavaClassLoader javaClassLoader, ConfigInterfaces configInterfaces, SpringBeanLoader springBeanLoader) {
+    public AbstractScripting(Environment environment,
+                             JavaClassLoader javaClassLoader,
+                             ConfigInterfaces configInterfaces,
+                             SpringBeanLoader springBeanLoader) {
         this.javaClassLoader = javaClassLoader;
         this.springBeanLoader = springBeanLoader;
 
@@ -79,7 +84,7 @@ public abstract class AbstractScripting implements Scripting {
         StringBuilder groovyClassPathBuilder = new StringBuilder(globalConfig.getConfDir())
                 .append(File.pathSeparator);
 
-        String classPathProp = AppContext.getProperty("cuba.groovyClassPath");
+        String classPathProp = environment.getProperty("cuba.groovyClassPath");
         if (StringUtils.isNotBlank(classPathProp)) {
             String[] strings = classPathProp.split(";");
             for (String string : strings) {
@@ -93,7 +98,7 @@ public abstract class AbstractScripting implements Scripting {
 
         this.groovyClassPath = groovyClassPathBuilder.toString();
 
-        String importProp = AppContext.getProperty("cuba.groovyEvaluatorImport");
+        String importProp = environment.getProperty("cuba.groovyEvaluatorImport");
         if (StringUtils.isNotBlank(importProp)) {
             String[] strings = importProp.split("[,;]");
             for (String string : strings) {

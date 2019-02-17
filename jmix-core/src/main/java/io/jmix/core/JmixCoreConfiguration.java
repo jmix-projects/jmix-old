@@ -30,7 +30,8 @@ import org.springframework.core.env.Environment;
 @Configuration
 @ComponentScan
 @JmixComponent(dependsOn = {}, properties = {
-        @JmixProperty(name = "jmix.metadataConfig", value = "io/jmix/core/metadata.xml")
+        @JmixProperty(name = "jmix.metadataConfig", value = "io/jmix/core/metadata.xml"),
+        @JmixProperty(name = "cuba.confDir", value = "./conf")
 })
 public class JmixCoreConfiguration {
 

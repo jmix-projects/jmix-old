@@ -17,10 +17,15 @@
 package io.jmix.core.impl;
 
 import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.metamodel.annotations.DatatypeDef;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
+import io.jmix.core.metamodel.datatypes.impl.DatatypeDefUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -41,7 +46,7 @@ public class DatatypeRegistryImpl implements DatatypeRegistry {
     public Datatype get(String id) {
         Datatype datatype = datatypeById.get(id);
         if (datatype == null)
-            throw new IllegalArgumentException("Datatype " + id + " is not found");
+            throw new IllegalArgumentException("Datatype '" + id + "' is not found");
         return datatype;
     }
 
@@ -108,5 +113,14 @@ public class DatatypeRegistryImpl implements DatatypeRegistry {
             datatypeByClass.put(datatype.getJavaClass(), datatype);
         }
         datatypeById.put(id, datatype);
+    }
+
+    @EventListener
+    private void onContextRefresh(ContextRefreshedEvent event) {
+        ApplicationContext context = event.getApplicationContext();
+        Map<String, Datatype> beansMap = context.getBeansOfType(Datatype.class);
+        for (Datatype datatype : beansMap.values()) {
+            register(datatype, datatype.getId(), DatatypeDefUtils.isDefaultForClass(datatype));
+        }
     }
 }

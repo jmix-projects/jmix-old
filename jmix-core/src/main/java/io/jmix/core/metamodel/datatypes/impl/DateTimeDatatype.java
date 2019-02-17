@@ -16,12 +16,11 @@
 
 package io.jmix.core.metamodel.datatypes.impl;
 
-import io.jmix.core.commons.util.ParamsMap;
-import io.jmix.core.metamodel.annotations.JavaClass;
-import io.jmix.core.metamodel.datatypes.*;
 import io.jmix.core.AppBeans;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.metamodel.annotations.DatatypeDef;
+import io.jmix.core.metamodel.datatypes.*;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
 
 import javax.annotation.Nullable;
 import java.text.DateFormat;
@@ -32,13 +31,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-@JavaClass(Date.class)
+@DatatypeDef(id = "dateTime", javaClass = Date.class, defaultForClass = true, value = "jmix_DateTimeDatatype")
 public class DateTimeDatatype implements Datatype<Date>, ParameterizedDatatype, TimeZoneAwareDatatype {
 
     private String formatPattern;
 
-    public DateTimeDatatype(Element element) {
-        formatPattern = element.attributeValue("format");
+    public DateTimeDatatype() {
+        formatPattern = "yyyy-MM-dd HH:mm:ss.SSS";
     }
 
     @Override
@@ -48,7 +47,7 @@ public class DateTimeDatatype implements Datatype<Date>, ParameterizedDatatype, 
         } else {
             DateFormat format;
             if (formatPattern != null) {
-                format = new SimpleDateFormat(formatPattern);
+                format = new     SimpleDateFormat(formatPattern);
             } else {
                 format = DateFormat.getDateInstance();
             }
@@ -129,7 +128,4 @@ public class DateTimeDatatype implements Datatype<Date>, ParameterizedDatatype, 
     public String toString() {
         return getClass().getSimpleName();
     }
-
-    @Deprecated
-    public final static String NAME = "dateTime";
 }

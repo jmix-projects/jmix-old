@@ -17,10 +17,7 @@
 package io.jmix.core.impl.keyvalue;
 
 import io.jmix.core.entity.KeyValueEntity;
-import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaModel;
-import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.metamodel.model.*;
 import io.jmix.core.metamodel.model.impl.MetadataObjectImpl;
 
 import javax.annotation.Nullable;
@@ -62,7 +59,7 @@ public class KeyValueMetaClass extends MetadataObjectImpl implements MetaClass {
     }
 
     @Override
-    public MetaModel getModel() {
+    public Session getSession() {
         return null; // temporary metaclass
     }
 

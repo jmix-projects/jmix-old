@@ -43,10 +43,10 @@ public class ConfigPersisterImpl implements ConfigPersister {
                 value = System.getProperty(name);
                 break;
             case APP:
-                value = AppContext.getProperty(name);
+                value = applicationContext.getEnvironment().getProperty(name);
                 break;
             case DATABASE:
-                value = AppContext.getProperty(name);
+                value = applicationContext.getEnvironment().getProperty(name);
                 if (StringUtils.isEmpty(value)) {
                     value = getConfigStorage().getDbProperty(name);
                 }

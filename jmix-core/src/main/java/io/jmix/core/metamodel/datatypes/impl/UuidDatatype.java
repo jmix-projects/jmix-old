@@ -16,7 +16,7 @@
 package io.jmix.core.metamodel.datatypes.impl;
 
 import io.jmix.core.UuidProvider;
-import io.jmix.core.metamodel.annotations.JavaClass;
+import io.jmix.core.metamodel.annotations.DatatypeDef;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,8 +24,8 @@ import java.text.ParseException;
 import java.util.Locale;
 import java.util.UUID;
 
-@JavaClass(UUID.class)
-public class UUIDDatatype implements Datatype<UUID> {
+@DatatypeDef(id = "uuid", javaClass = UUID.class, defaultForClass = true, value = "jmix_UuidDatatype")
+public class UuidDatatype implements Datatype<UUID> {
 
     @Override
     public String format(Object value) {
@@ -59,7 +59,4 @@ public class UUIDDatatype implements Datatype<UUID> {
     public String toString() {
         return getClass().getSimpleName();
     }
-
-    @Deprecated
-    public final static String NAME = "uuid";
 }

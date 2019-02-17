@@ -19,7 +19,6 @@ package io.jmix.core.metamodel.datatypes.impl;
 import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.metamodel.datatypes.ParameterizedDatatype;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
 
 import java.text.*;
 import java.util.Map;
@@ -36,10 +35,14 @@ public abstract class NumberDatatype implements ParameterizedDatatype {
         this.groupingSeparator = groupingSeparator;
     }
 
-    protected NumberDatatype(Element element) {
-        formatPattern = element.attributeValue("format");
-        decimalSeparator = element.attributeValue("decimalSeparator");
-        groupingSeparator = element.attributeValue("groupingSeparator");
+    protected NumberDatatype() {
+        io.jmix.core.metamodel.annotations.NumberFormat numberFormat =
+                getClass().getAnnotation(io.jmix.core.metamodel.annotations.NumberFormat.class);
+        if (numberFormat != null) {
+            formatPattern = numberFormat.pattern();
+            decimalSeparator = numberFormat.decimalSeparator();
+            groupingSeparator = numberFormat.groupingSeparator();
+        }
     }
 
     @Override

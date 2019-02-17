@@ -16,13 +16,13 @@
 
 package io.jmix.core.metamodel.datatypes.impl;
 
-import io.jmix.core.metamodel.annotations.JavaClass;
+import io.jmix.core.metamodel.annotations.DatatypeDef;
 import io.jmix.core.metamodel.datatypes.Datatype;
 
 import java.text.ParseException;
 import java.util.Locale;
 
-@JavaClass(String.class)
+@DatatypeDef(id = "string", javaClass = String.class, defaultForClass = true, value = "jmix_StringDatatype")
 public class StringDatatype implements Datatype<String> {
 
     @Override
@@ -49,7 +49,4 @@ public class StringDatatype implements Datatype<String> {
     public String toString() {
         return getClass().getSimpleName();
     }
-
-    @Deprecated
-    public final static String NAME = "string";
 }

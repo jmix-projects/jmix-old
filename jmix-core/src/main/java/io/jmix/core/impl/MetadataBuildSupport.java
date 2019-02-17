@@ -121,17 +121,6 @@ public class MetadataBuildSupport {
         return config;
     }
 
-    public List<Element> getDatatypeElements(List<XmlFile> metadataXmlList) {
-        List<Element> list = new ArrayList<>();
-        for (XmlFile xmlFile : metadataXmlList) {
-            Element datatypesEl = xmlFile.root.element("datatypes");
-            if (datatypesEl != null) {
-                list.addAll(datatypesEl.elements("datatype"));
-            }
-        }
-        return list;
-    }
-
     public Map<String, List<EntityClassInfo>> getEntityPackages(List<XmlFile> metadataXmlList) {
         Map<String, List<EntityClassInfo>> packages = new LinkedHashMap<>();
 

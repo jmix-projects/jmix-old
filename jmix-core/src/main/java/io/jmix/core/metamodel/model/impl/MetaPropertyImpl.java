@@ -16,7 +16,10 @@
 
 package io.jmix.core.metamodel.model.impl;
 
-import io.jmix.core.metamodel.model.*;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.Range;
+import io.jmix.core.metamodel.model.Session;
 
 import java.io.InvalidObjectException;
 import java.lang.reflect.AnnotatedElement;
@@ -28,7 +31,7 @@ import java.lang.reflect.Proxy;
 public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty {
 
     private MetaClass domain;
-    private transient final MetaModel model;
+    private transient final Session session;
 
     private transient boolean mandatory;
     private transient boolean readOnly;
@@ -45,7 +48,7 @@ public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty
 
     public MetaPropertyImpl(MetaClass domain, String name) {
         this.domain = domain;
-        this.model = domain.getModel();
+        this.session = domain.getSession();
         this.name = name;
 
         ((MetaClassImpl) domain).registerProperty(this);
@@ -83,8 +86,8 @@ public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty
     }
 
     @Override
-    public MetaModel getModel() {
-        return model;
+    public Session getSession() {
+        return session;
     }
 
     @Override

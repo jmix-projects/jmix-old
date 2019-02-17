@@ -30,7 +30,7 @@ import java.util.UUID;
  * Inherit from it if you need an entity without optimistic locking, create, update and soft deletion info.
  */
 @MappedSuperclass
-@MetaClass(name = "sys$BaseUuidEntity")
+@MetaClass(name = "sys_BaseUuidEntity")
 @UnavailableInSecurityConstraints
 public abstract class BaseUuidEntity extends BaseGenericIdEntity<UUID> implements HasUuid {
 

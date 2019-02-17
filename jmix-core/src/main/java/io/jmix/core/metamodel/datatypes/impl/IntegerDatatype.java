@@ -16,26 +16,27 @@
 
 package io.jmix.core.metamodel.datatypes.impl;
 
-import io.jmix.core.metamodel.annotations.JavaClass;
+import io.jmix.core.metamodel.annotations.DatatypeDef;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.FormatStrings;
 import io.jmix.core.metamodel.datatypes.FormatStringsRegistry;
-import io.jmix.core.AppBeans;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
 
+import javax.inject.Inject;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-@JavaClass(Integer.class)
+@DatatypeDef(id = "int", javaClass = Integer.class, defaultForClass = true, value = "jmix_IntegerDatatype")
+@io.jmix.core.metamodel.annotations.NumberFormat(
+        pattern = "0"
+)
 public class IntegerDatatype extends NumberDatatype implements Datatype<Integer> {
 
-    public IntegerDatatype(Element element) {
-        super(element);
-    }
+    @Inject
+    protected FormatStringsRegistry formatStringsRegistry;
 
     @Override
     public String format(Object value) {
@@ -47,7 +48,7 @@ public class IntegerDatatype extends NumberDatatype implements Datatype<Integer>
         if (value == null)
             return "";
 
-        FormatStrings formatStrings = AppBeans.get(FormatStringsRegistry.class).getFormatStrings(locale);
+        FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(locale);
         if (formatStrings == null)
             return format(value);
 
@@ -69,7 +70,7 @@ public class IntegerDatatype extends NumberDatatype implements Datatype<Integer>
         if (StringUtils.isBlank(value))
             return null;
 
-        FormatStrings formatStrings = AppBeans.get(FormatStringsRegistry.class).getFormatStrings(locale);
+        FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(locale);
         if (formatStrings == null)
             return parse(value);
 
@@ -109,7 +110,4 @@ public class IntegerDatatype extends NumberDatatype implements Datatype<Integer>
     public String toString() {
         return getClass().getSimpleName();
     }
-
-    @Deprecated
-    public final static String NAME = "int";
 }

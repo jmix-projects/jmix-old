@@ -107,7 +107,7 @@ public class MetadataImpl implements Metadata {
         MetadataLoader metadataLoader = (MetadataLoader) applicationContext.getBean(MetadataLoader.NAME);
         metadataLoader.loadMetadata();
         rootPackages = metadataLoader.getRootPackages();
-        session = new CachingMetadataSession(metadataLoader.getSession());
+        session = metadataLoader.getSession();
         SessionImpl.setSerializationSupportSession(session);
 
         log.info("Metadata initialized in {} ms", System.currentTimeMillis() - startTime);
@@ -297,16 +297,6 @@ public class MetadataImpl implements Metadata {
     @Override
     public List<String> getRootPackages() {
         return Collections.unmodifiableList(rootPackages);
-    }
-
-    @Override
-    public MetaModel getModel(String name) {
-        return getSession().getModel(name);
-    }
-
-    @Override
-    public Collection<MetaModel> getModels() {
-        return getSession().getModels();
     }
 
     @Nullable

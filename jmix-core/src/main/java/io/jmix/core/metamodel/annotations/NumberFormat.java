@@ -16,17 +16,15 @@
 
 package io.jmix.core.metamodel.annotations;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Specifies a format {@link #pattern()} and optional {@link #decimalSeparator()} and {@link #groupingSeparator()} for
  * an entity attribute of the {@link Number} type.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
+@Inherited
 public @interface NumberFormat {
 
 	/**

@@ -20,6 +20,8 @@ import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.GlobalConfig;
 import io.jmix.core.Scripting;
 import io.jmix.core.ServerConfig;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -30,8 +32,11 @@ public class ScriptingImpl extends AbstractScripting {
     private String[] scriptEngineRoots;
 
     @Inject
-    public ScriptingImpl(JavaClassLoader javaClassLoader, ConfigInterfaces configInterfaces, SpringBeanLoader springBeanLoader) {
-        super(javaClassLoader, configInterfaces, springBeanLoader);
+    public ScriptingImpl(Environment environment,
+                         JavaClassLoader javaClassLoader,
+                         ConfigInterfaces configInterfaces,
+                         SpringBeanLoader springBeanLoader) {
+        super(environment, javaClassLoader, configInterfaces, springBeanLoader);
         scriptEngineRoots = new String[] {
                 configInterfaces.getConfig(GlobalConfig.class).getConfDir(),
                 configInterfaces.getConfig(ServerConfig.class).getDbDir()

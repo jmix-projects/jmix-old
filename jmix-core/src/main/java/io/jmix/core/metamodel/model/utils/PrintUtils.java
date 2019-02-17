@@ -28,15 +28,6 @@ public final class PrintUtils {
     private PrintUtils() {
     }
 
-    public static String printModels(Session session) {
-        StringBuilder builder = new StringBuilder();
-        for (MetaModel model : session.getModels()) {
-            builder.append(model.getName()).append("\n");
-        }
-
-        return builder.toString();
-    }
-
     public static String printClassHierarchy(MetaModel model) {
         StringBuilder builder = new StringBuilder();
 

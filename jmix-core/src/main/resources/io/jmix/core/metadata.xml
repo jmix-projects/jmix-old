@@ -1,0 +1,85 @@
+<!--
+  ~ Copyright 2019 Haulmont.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<metadata>
+
+    <datatypes>
+        <datatype id="boolean" class="com.haulmont.chile.core.datatypes.impl.BooleanDatatype"
+                  default="true"/>
+
+        <datatype id="int" class="com.haulmont.chile.core.datatypes.impl.IntegerDatatype"
+                  default="true"
+                  format="0" groupingSeparator=""/>
+
+        <datatype id="long" class="com.haulmont.chile.core.datatypes.impl.LongDatatype"
+                  default="true"
+                  format="0" groupingSeparator=""/>
+
+        <datatype id="double" class="com.haulmont.chile.core.datatypes.impl.DoubleDatatype"
+                  default="true"
+                  format="0.###" decimalSeparator="." groupingSeparator=""/>
+
+        <datatype id="decimal" class="com.haulmont.chile.core.datatypes.impl.BigDecimalDatatype"
+                  default="true"
+                  format="0.####" decimalSeparator="." groupingSeparator=""/>
+
+        <datatype id="string" class="com.haulmont.chile.core.datatypes.impl.StringDatatype"
+                  default="true"/>
+
+        <datatype id="dateTime" class="com.haulmont.chile.core.datatypes.impl.DateTimeDatatype"
+                  default="true"
+                  format="yyyy-MM-dd HH:mm:ss.SSS"/>
+
+        <datatype id="localDateTime" class="com.haulmont.chile.core.datatypes.impl.LocalDateTimeDatatype"
+                  default="true"
+                  format="yyyy-MM-dd HH:mm:ss.SSS"/>
+
+        <datatype id="offsetDateTime" class="com.haulmont.chile.core.datatypes.impl.OffsetDateTimeDatatype"
+                  default="true"
+                  format="yyyy-MM-dd HH:mm:ss.SSS Z"/>
+
+        <datatype id="date" class="com.haulmont.chile.core.datatypes.impl.DateDatatype"
+                  default="true"
+                  format="yyyy-MM-dd"/>
+
+        <datatype id="localDate" class="com.haulmont.chile.core.datatypes.impl.LocalDateDatatype"
+                  default="true"
+                  format="yyyy-MM-dd"/>
+
+        <datatype id="time" class="com.haulmont.chile.core.datatypes.impl.TimeDatatype"
+                  default="true"
+                  format="HH:mm:ss"/>
+
+        <datatype id="localTime" class="com.haulmont.chile.core.datatypes.impl.LocalTimeDatatype"
+                  default="true"
+                  format="HH:mm:ss"/>
+
+        <datatype id="offsetTime" class="com.haulmont.chile.core.datatypes.impl.OffsetTimeDatatype"
+                  default="true"
+                  format="HH:mm:ss Z"/>
+
+        <datatype id="uuid" class="com.haulmont.chile.core.datatypes.impl.UUIDDatatype"
+                  default="true"/>
+
+        <datatype id="byteArray" class="com.haulmont.chile.core.datatypes.impl.ByteArrayDatatype"
+                  default="true"/>
+    </datatypes>
+
+    <metadata-model>
+        <class>io.jmix.core.entity.KeyValueEntity</class>
+    </metadata-model>
+
+</metadata>

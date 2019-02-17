@@ -81,52 +81,40 @@ public class MetaModelLoader {
         this.datatypes = datatypeRegistry;
     }
 
-    public void loadModel(String rootPackage, List<EntityClassInfo> classInfos) {
-        checkNotNullArgument(rootPackage, "rootPackage is null");
-        checkNotNullArgument(classInfos, "classInfos is null");
+    public void loadModel(List<String> classNames) {
+        checkNotNullArgument(classNames, "classInfos is null");
 
-        Map<Class<?>, Boolean> classes = new LinkedHashMap<>();
-        for (EntityClassInfo classInfo : classInfos) {
+        Set<Class<?>> classes = new LinkedHashSet<>();
+        for (String className : classNames) {
             try {
-                classes.put(ReflectionHelper.loadClass(classInfo.name), classInfo.persistent);
+                classes.add(ReflectionHelper.loadClass(className));
             } catch (ClassNotFoundException e) {
-                log.warn("Class {} not found for model {}", classInfo.name, rootPackage);
+                log.warn("Class {} not found", className);
             }
         }
 
 
-        for (Map.Entry<Class<?>, Boolean> entry : classes.entrySet()) {
-            Class<?> aClass = entry.getKey();
-            if (aClass.getName().startsWith(rootPackage)) {
-                MetaClassImpl metaClass = createClass(aClass, rootPackage);
-                if (metaClass == null) {
-                    log.warn("Class {} is not loaded into metadata", aClass.getName());
-                }
-            } else {
-                log.warn("Class {} is not under root package {} and will not be included to metadata", aClass.getName(), rootPackage);
+        for (Class<?> aClass : classes) {
+            MetaClassImpl metaClass = createClass(aClass);
+            if (metaClass == null) {
+                log.warn("Class {} is not loaded into metadata", aClass.getName());
             }
         }
 
-        for (Map.Entry<Class<?>, Boolean> entry : classes.entrySet()) {
-            Class<?> aClass = entry.getKey();
-            MetaClassImpl metaClass = (MetaClassImpl) session.getClass(aClass);
-            if (metaClass != null) {
-                onClassLoaded(metaClass, aClass, entry.getValue());
-            }
-        }
+//        for (Class<?> aClass : classes) {
+//            MetaClassImpl metaClass = (MetaClassImpl) session.getClass(aClass);
+//            if (metaClass != null) {
+//                onClassLoaded(metaClass, aClass, entry.getValue());
+//            }
+//        }
 
         List<RangeInitTask> tasks = new ArrayList<>();
-        for (Map.Entry<Class<?>, Boolean> entry : classes.entrySet()) {
-            Class<?> aClass = entry.getKey();
-            if (aClass.getName().startsWith(rootPackage)) {
-                MetadataObjectInfo<MetaClass> info = loadClass(rootPackage, aClass, entry.getValue());
-                if (info != null) {
-                    tasks.addAll(info.getTasks());
-                } else {
-                    log.warn("Class {} is not loaded into metadata", aClass.getName());
-                }
+        for (Class<?> aClass : classes) {
+            MetadataObjectInfo<MetaClass> info = loadClass(aClass);
+            if (info != null) {
+                tasks.addAll(info.getTasks());
             } else {
-                log.warn("Class {} is not under root package {} and will not be included to metadata", aClass.getName(), rootPackage);
+                log.warn("Class {} is not loaded into metadata", aClass.getName());
             }
         }
 
@@ -136,7 +124,7 @@ public class MetaModelLoader {
     }
 
     @Nullable
-    protected MetadataObjectInfo<MetaClass> loadClass(String packageName, Class<?> javaClass, boolean persistent) {
+    protected MetadataObjectInfo<MetaClass> loadClass(Class<?> javaClass) {
         MetaClassImpl metaClass = (MetaClassImpl) session.getClass(javaClass);
         if (metaClass == null)
             return null;
@@ -154,7 +142,7 @@ public class MetaModelLoader {
     }
 
     @Nullable
-    protected MetaClassImpl createClass(Class<?> javaClass, String packageName) {
+    protected MetaClassImpl createClass(Class<?> javaClass) {
         if (AbstractInstance.class.equals(javaClass) || Object.class.equals(javaClass)) {
             return null;
         }
@@ -163,25 +151,23 @@ public class MetaModelLoader {
         if (metaClass != null) {
             return metaClass;
 
-        } else if (packageName == null || javaClass.getName().startsWith(packageName)) {
+        } else {
             String name = getMetaClassName(javaClass);
             if (name == null)
                 return null;
 
-            metaClass = createClassInModel(packageName, name);
+            metaClass = new MetaClassImpl(session, name);
             metaClass.setJavaClass(javaClass);
 
             Class<?> ancestor = javaClass.getSuperclass();
             if (ancestor != null) {
-                MetaClass ancestorClass = createClass(ancestor, packageName);
+                MetaClass ancestorClass = createClass(ancestor);
                 if (ancestorClass != null) {
                     metaClass.addAncestor(ancestorClass);
                 }
             }
 
             return metaClass;
-        } else {
-            return null;
         }
     }
 
@@ -211,11 +197,11 @@ public class MetaModelLoader {
         return name;
     }
 
-    protected void onClassLoaded(MetaClass metaClass, Class<?> javaClass, boolean persistent) {
-        if (persistent) {
-            metaClass.getAnnotations().put(MetadataTools.PERSISTENT_ANN_NAME, true);
-        }
-    }
+//    protected void onClassLoaded(MetaClass metaClass, Class<?> javaClass, boolean persistent) {
+//        if (persistent) {
+//            metaClass.getAnnotations().put(MetadataTools.PERSISTENT_ANN_NAME, true);
+//        }
+//    }
 
     protected void initProperties(Class<?> clazz, MetaClassImpl metaClass, Collection<RangeInitTask> tasks) {
         if (!metaClass.getOwnProperties().isEmpty())
@@ -594,14 +580,6 @@ public class MetaModelLoader {
                 || field.isAnnotationPresent(OneToOne.class)
                 || field.isAnnotationPresent(Embedded.class)
                 || field.isAnnotationPresent(EmbeddedId.class);
-    }
-
-    protected MetaClassImpl createClassInModel(String modelName, String className) {
-        MetaModel model = session.getModel(modelName);
-        if (model == null) {
-            model = new MetaModelImpl(session, modelName);
-        }
-        return new MetaClassImpl(model, className);
     }
 
     protected boolean isCollection(Field field) {

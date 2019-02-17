@@ -16,14 +16,9 @@
 
 package io.jmix.core.metamodel.datatypes;
 
-import io.jmix.core.metamodel.annotations.JavaClass;
+import io.jmix.core.metamodel.datatypes.impl.DatatypeDefUtils;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -47,44 +42,12 @@ public interface Datatype<T> {
     T parse(@Nullable String value, Locale locale) throws ParseException;
 
     /** Java class representing this Datatype */
+    default String getId() {
+        return DatatypeDefUtils.getId(this);
+    }
+
+    /** Java class representing this Datatype */
     default Class getJavaClass() {
-        JavaClass annotation = getClass().getAnnotation(JavaClass.class);
-        if (annotation == null)
-            throw new IllegalStateException("Datatype " + this + " does not declare a Java class it works with. " +
-                    "Either add @JavaClass annotation or implement getJavaClass() method.");
-        return annotation.value();
-    }
-
-    /**
-     * DEPRECATED.
-     * Use {@link DatatypeRegistry#getId(Datatype)} or {@link DatatypeRegistry#getIdByJavaClass(Class)} methods.
-     */
-    @Deprecated
-    default String getName() {
-        try {
-            Field nameField = getClass().getField("NAME");
-            if (Modifier.isStatic(nameField.getModifiers())) {
-                return (String) nameField.get(null);
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            // ignore
-        }
-        throw new IllegalStateException("Cannot get datatype name. Do not use this method as it is deprecated.");
-    }
-
-    @Deprecated
-    @Nullable
-    default T read(ResultSet resultSet, int index) throws SQLException {
-        throw new UnsupportedOperationException("Method is deprecated");
-    }
-
-    @Deprecated
-    default void write(PreparedStatement statement, int index, @Nullable Object value) throws SQLException {
-        throw new UnsupportedOperationException("Method is deprecated");
-    }
-
-    @Deprecated
-    default int getSqlType() {
-        throw new UnsupportedOperationException("Method is deprecated");
+        return DatatypeDefUtils.getJavaClass(this);
     }
 }

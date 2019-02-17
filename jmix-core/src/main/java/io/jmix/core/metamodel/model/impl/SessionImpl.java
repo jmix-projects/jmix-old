@@ -17,7 +17,6 @@
 package io.jmix.core.metamodel.model.impl;
 
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaModel;
 import io.jmix.core.metamodel.model.Session;
 
 import javax.annotation.Nullable;
@@ -25,35 +24,19 @@ import java.util.*;
 
 public class SessionImpl implements Session {
 
-    private final Map<String, MetaModel> models = new HashMap<>();
-
     static Session serializationSupportSession;
+
+    private Map<String, MetaClass> classByName = new HashMap<>();
+    private Map<Class, MetaClass> classByClass = new HashMap<>();
 
     public static void setSerializationSupportSession(Session serializationSupportSession) {
         SessionImpl.serializationSupportSession = serializationSupportSession;
     }
 
-    @Override
-    public MetaModel getModel(String name) {
-        return models.get(name);
-    }
-
-    @Override
-    public Collection<MetaModel> getModels() {
-        return models.values();
-    }
-
     @Nullable
     @Override
     public MetaClass getClass(String name) {
-        for (MetaModel model : models.values()) {
-            final MetaClass metaClass = model.getClass(name);
-            if (metaClass != null) {
-                return metaClass;
-            }
-        }
-
-        return null;
+        return classByName.get(name);
     }
 
     @Override
@@ -68,14 +51,7 @@ public class SessionImpl implements Session {
     @Nullable
     @Override
     public MetaClass getClass(Class<?> clazz) {
-        for (MetaModel model : models.values()) {
-            final MetaClass metaClass = model.getClass(clazz);
-            if (metaClass != null) {
-                return metaClass;
-            }
-        }
-
-        return null;
+        return classByClass.get(clazz);
     }
 
     @Override
@@ -89,15 +65,18 @@ public class SessionImpl implements Session {
 
     @Override
     public Collection<MetaClass> getClasses() {
-        final List<MetaClass> classes = new ArrayList<>();
-        for (MetaModel model : models.values()) {
-            classes.addAll(model.getClasses());
-        }
-
-        return classes;
+        return classByName.values();
     }
 
-    public void addModel(MetaModelImpl model) {
-        models.put(model.getName(), model);
+    public void registerClass(MetaClassImpl clazz) {
+        classByName.put(clazz.getName(), clazz);
+        if (clazz.getJavaClass() != null) {
+            classByClass.put(clazz.getJavaClass(), clazz);
+        }
+    }
+
+    public void registerClass(String name, Class javaClass, MetaClassImpl clazz) {
+        classByName.put(name, clazz);
+        classByClass.put(javaClass, clazz);
     }
 }

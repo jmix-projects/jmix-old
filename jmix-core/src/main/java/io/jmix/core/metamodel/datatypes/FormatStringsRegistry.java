@@ -24,7 +24,7 @@ import java.util.Locale;
  */
 public interface FormatStringsRegistry {
 
-    String NAME = "cuba_FormatStringsRegistry";
+    String NAME = "jmix_FormatStringsRegistry";
 
     /**
      * Get format strings for a locale. Returns null if not registered.

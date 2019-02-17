@@ -41,13 +41,6 @@ public class JmixComponentDescriptor implements Comparable<JmixComponentDescript
     }
 
     /**
-     * @return descriptor path by convention
-     */
-    public String getDescriptorPath() {
-        return id.replace('.', '/') + "/jmix-component.xml";
-    }
-
-    /**
      * INTERNAL.
      * Add a dependency to the component.
      */

@@ -16,13 +16,12 @@
 
 package io.jmix.core.metamodel.datatypes.impl;
 
+import io.jmix.core.AppBeans;
 import io.jmix.core.metamodel.annotations.JavaClass;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.FormatStrings;
 import io.jmix.core.metamodel.datatypes.FormatStringsRegistry;
-import io.jmix.core.AppBeans;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -32,10 +31,6 @@ import java.util.Locale;
 
 @JavaClass(Double.class)
 public class DoubleDatatype extends NumberDatatype implements Datatype<Double> {
-
-    public DoubleDatatype(Element element) {
-        super(element);
-    }
 
     @Override
     public String format(Object value) {

@@ -30,7 +30,7 @@ public class MetaClassImpl extends MetadataObjectImpl implements MetaClass {
 	private transient Map<String, MetaProperty> propertyByName = new HashMap<>();
     private transient Map<String, MetaProperty> ownPropertyByName = new HashMap<>();
 
-	private transient final MetaModel model;
+	private transient final Session session;
     private transient Class javaClass;
 
     protected transient List<MetaClass> ancestors = new ArrayList<>(3);
@@ -38,13 +38,13 @@ public class MetaClassImpl extends MetadataObjectImpl implements MetaClass {
 
     private static final long serialVersionUID = 7862691995170873154L;
 
-    public MetaClassImpl(MetaModel model, String className) {
+    public MetaClassImpl(Session session, String className) {
 		super();
 
-		this.model = model;
+		this.session = session;
         this.name = className;
 
-        ((MetaModelImpl) model).registerClass(this);
+        ((SessionImpl) this.session).registerClass(this);
     }
 
     protected Object readResolve() throws InvalidObjectException {
@@ -80,8 +80,8 @@ public class MetaClassImpl extends MetadataObjectImpl implements MetaClass {
     }
 
 	@Override
-    public MetaModel getModel() {
-		return model;
+    public Session getSession() {
+		return session;
 	}
 
     @Override
@@ -143,7 +143,7 @@ public class MetaClassImpl extends MetadataObjectImpl implements MetaClass {
 
     public void setJavaClass(Class javaClass) {
         this.javaClass = javaClass;
-        ((MetaModelImpl) model).registerClass(this);
+        ((SessionImpl) session).registerClass(this);
     }
 
     public void addAncestor(MetaClass ancestorClass) {

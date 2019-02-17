@@ -16,16 +16,12 @@
 
 package io.jmix.core.impl;
 
-import com.google.common.base.Strings;
 import io.jmix.core.commons.datastruct.Pair;
 import io.jmix.core.commons.util.Dom4j;
 import io.jmix.core.commons.util.ReflectionHelper;
-import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.impl.scanning.EntitiesScanner;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
-import io.jmix.core.metamodel.datatypes.Datatypes;
-import io.jmix.core.metamodel.datatypes.impl.*;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaModel;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Session;
 import io.jmix.core.metamodel.model.impl.*;
@@ -39,10 +35,7 @@ import io.jmix.core.impl.MetadataBuildSupport.XmlAnnotations;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -53,10 +46,6 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -67,12 +56,15 @@ import java.util.*;
 @Scope("prototype")
 public class MetadataLoader {
 
-    public static final String NAME = "cuba_MetadataLoader";
+    public static final String NAME = "jmix_MetadataLoader";
 
     private final Logger log = LoggerFactory.getLogger(MetadataLoader.class);
 
     @Inject
-    protected MetadataBuildSupport metadataBuildSupport;
+    protected EntitiesScanner entitiesScanner;
+
+//    @Inject
+//    protected MetadataBuildSupport metadataBuildSupport;
 
     @Inject
     protected ExtendedEntities extendedEntities;
@@ -84,7 +76,8 @@ public class MetadataLoader {
     protected ApplicationContext applicationContext;
 
     protected Session session;
-    protected List<String> rootPackages = new ArrayList<>();
+
+    protected List<String> basePackages = new ArrayList<>();
 
     public MetadataLoader() {
         this.session = new SessionImpl();
@@ -98,33 +91,30 @@ public class MetadataLoader {
      * Loads metadata session.
      */
     public void loadMetadata() {
-        List<MetadataBuildSupport.XmlFile> metadataXmlList = metadataBuildSupport.init();
+        basePackages = entitiesScanner.getBasePackages();
 
-        initRootPackages(metadataXmlList);
-
-        initDatatypes(metadataBuildSupport.getDatatypeElements(metadataXmlList));
+//        List<MetadataBuildSupport.XmlFile> metadataXmlList = metadataBuildSupport.init();
 
         MetaModelLoader modelLoader = createModelLoader(session);
 
-        Map<String, List<EntityClassInfo>> entityPackages = metadataBuildSupport.getEntityPackages(metadataXmlList);
-        for (Map.Entry<String, List<EntityClassInfo>> entry : entityPackages.entrySet()) {
-            modelLoader.loadModel(entry.getKey(), entry.getValue());
-        }
+        modelLoader.loadModel(entitiesScanner.getEntityClassNames());
 
         for (MetaClass metaClass : session.getClasses()) {
             postProcessClass(metaClass);
             initMetaAnnotations(metaClass);
         }
 
-        initStoreMetaAnnotations(entityPackages);
-        initExtensionMetaAnnotations();
+//        initStoreMetaAnnotations(entityPackages);
 
-        List<XmlAnnotations> xmlAnnotations = metadataBuildSupport.getEntityAnnotations(metadataXmlList);
-        for (MetaClass metaClass : session.getClasses()) {
-            addMetaAnnotationsFromXml(xmlAnnotations, metaClass);
-        }
+        // todo extended entities
+//        initExtensionMetaAnnotations();
 
-        replaceExtendedMetaClasses();
+//        List<XmlAnnotations> xmlAnnotations = metadataBuildSupport.getEntityAnnotations(metadataXmlList);
+//        for (MetaClass metaClass : session.getClasses()) {
+//            addMetaAnnotationsFromXml(xmlAnnotations, metaClass);
+//        }
+//
+//        replaceExtendedMetaClasses();
     }
 
     /**
@@ -138,133 +128,12 @@ public class MetadataLoader {
      * @return list of root packages of all loaded meta-models
      */
     public List<String> getRootPackages() {
-        return rootPackages;
-    }
-
-    protected void initRootPackages(List<MetadataBuildSupport.XmlFile> metadataXmlList) {
-        for (MetadataBuildSupport.XmlFile xmlFile : metadataXmlList) {
-            for (Element element : Dom4j.elements(xmlFile.root, "metadata-model")) {
-                String rootPackage = element.attributeValue("root-package");
-                if (!StringUtils.isBlank(rootPackage) && !rootPackages.contains(rootPackage)) {
-                    rootPackages.add(rootPackage);
-                }
-            }
-        }
-    }
-
-    protected void initDatatypes(List<Element> datatypeElements) {
-        loadDatatypesFromClasspathResource();
-
-        for (Element datatypeEl : datatypeElements) {
-            String id = datatypeEl.attributeValue("id");
-            String className = datatypeEl.attributeValue("class");
-
-            if (Strings.isNullOrEmpty(className))
-                throw new IllegalStateException("Missing required 'class' attribute for datatype " + id + ". Check your metadata.xml file.");
-
-            if (Strings.isNullOrEmpty(id))
-                throw new IllegalStateException("Missing required 'id' attribute for datatype " + className + ". Check your metadata.xml file.");
-
-            try {
-                Datatype datatype;
-                Class<Datatype> datatypeClass = ReflectionHelper.getClass(className);
-                try {
-                    Constructor<Datatype> constructor = datatypeClass.getConstructor(Element.class);
-                    datatype = constructor.newInstance(datatypeEl);
-                } catch (Throwable e) {
-                    datatype = datatypeClass.newInstance();
-                }
-                datatypeRegistry.register(datatype, id, Boolean.valueOf(datatypeEl.attributeValue("default")));
-            } catch (Throwable e) {
-                log.error("Fail to load datatype '{}'", className, e);
-            }
-        }
-    }
-
-    protected void loadDatatypesFromClasspathResource() {
-        SAXReader reader = new SAXReader();
-        URL resource = Datatypes.class.getResource(getGetDatatypesResourcePath());
-        if (resource != null) {
-            log.info("Loading datatypes from " + resource);
-            try {
-                Document document = reader.read(resource);
-                Element element = document.getRootElement();
-
-                List<Element> datatypeElements = Dom4j.elements(element, "datatype");
-                for (Element datatypeElement : datatypeElements) {
-                    String datatypeClassName = datatypeElement.attributeValue("class");
-                    try {
-                        Datatype datatype;
-                        Class<Datatype> datatypeClass = ReflectionHelper.getClass(datatypeClassName);
-                        try {
-                            final Constructor<Datatype> constructor = datatypeClass.getConstructor(Element.class);
-                            datatype = constructor.newInstance(datatypeElement);
-                        } catch (Throwable e) {
-                            datatype = datatypeClass.newInstance();
-                        }
-
-                        String id = datatypeElement.attributeValue("id");
-                        if (Strings.isNullOrEmpty(id))
-                            id = guessDatatypeId(datatype);
-                        datatypeRegistry.register(datatype, id, true);
-                    } catch (Throwable e) {
-                        log.error(String.format("Fail to load datatype '%s'", datatypeClassName), e);
-                    }
-                }
-            } catch (DocumentException e) {
-                log.error("Fail to load datatype settings", e);
-            }
-        }
-    }
-
-    /**
-     * Guesses id for a datatype registered in legacy datatypes.xml file.
-     * For backward compatibility only.
-     */
-    protected String guessDatatypeId(Datatype datatype) {
-        if (datatype instanceof BigDecimalDatatype)
-            return "decimal";
-        if (datatype instanceof BooleanDatatype)
-            return "boolean";
-        if (datatype instanceof ByteArrayDatatype)
-            return "byteArray";
-        if (datatype instanceof DateDatatype)
-            return "date";
-        if (datatype instanceof DateTimeDatatype)
-            return "dateTime";
-        if (datatype instanceof DoubleDatatype)
-            return "double";
-        if (datatype instanceof IntegerDatatype)
-            return "int";
-        if (datatype instanceof LongDatatype)
-            return "long";
-        if (datatype instanceof StringDatatype)
-            return "string";
-        if (datatype instanceof TimeDatatype)
-            return "time";
-        if (datatype instanceof UUIDDatatype)
-            return "uuid";
-        try {
-            Field nameField = datatype.getClass().getField("NAME");
-            if (Modifier.isStatic(nameField.getModifiers()) && nameField.isAccessible()) {
-                return (String) nameField.get(null);
-            }
-        } catch (Exception e) {
-            log.trace("Cannot get NAME static field value: {}", e);
-        }
-        throw new IllegalStateException("Cannot guess id for datatype " + datatype);
-    }
-
-    protected String getGetDatatypesResourcePath() {
-        return "/datatypes.xml";
+        return basePackages;
     }
 
     protected void replaceExtendedMetaClasses() {
-        for (MetaModel model : session.getModels()) {
-            MetaModelImpl modelImpl = (MetaModelImpl) model;
-
             List<Pair<MetaClass, MetaClass>> replaceMap = new ArrayList<>();
-            for (MetaClass metaClass : modelImpl.getClasses()) {
+            for (MetaClass metaClass : session.getClasses()) {
                 MetaClass effectiveMetaClass = session.getClass(extendedEntities.getEffectiveClass(metaClass));
 
                 if (effectiveMetaClass != metaClass) {
@@ -303,9 +172,8 @@ public class MetadataLoader {
                 extendedEntities.registerReplacedMetaClass(replacedMetaClass);
 
                 MetaClassImpl effectiveMetaClass = (MetaClassImpl) replace.getSecond();
-                modelImpl.registerClass(replacedMetaClass.getName(), replacedMetaClass.getJavaClass(), effectiveMetaClass);
+                ((SessionImpl) session).registerClass(replacedMetaClass.getName(), replacedMetaClass.getJavaClass(), effectiveMetaClass);
             }
-        }
     }
 
     protected void initStoreMetaAnnotations(Map<String, List<EntityClassInfo>> entityPackages) {

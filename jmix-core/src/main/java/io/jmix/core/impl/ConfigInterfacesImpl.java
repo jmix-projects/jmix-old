@@ -22,6 +22,8 @@ import io.jmix.core.config.ConfigHandler;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.AutowireCandidateResolver;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -55,7 +57,12 @@ public class ConfigInterfacesImpl implements ConfigInterfaces, BeanFactoryPostPr
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        // empty, just to make sure this bean is instantiated before others
+        if (beanFactory instanceof DefaultListableBeanFactory) {
+            AutowireCandidateResolver delegate =
+                    ((DefaultListableBeanFactory) beanFactory).getAutowireCandidateResolver();
+            ((DefaultListableBeanFactory) beanFactory).setAutowireCandidateResolver(
+                    new ConfigInterfaceAutowireCandidateResolver(delegate, this));
+        }
     }
 
     protected ConfigPersisterImpl createPersister() {

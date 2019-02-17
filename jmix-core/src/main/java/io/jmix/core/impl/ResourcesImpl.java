@@ -19,8 +19,11 @@ package io.jmix.core.impl;
 import io.jmix.core.Resources;
 import io.jmix.core.Scripting;
 import org.apache.commons.io.IOUtils;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -30,19 +33,14 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 @Component(Resources.NAME)
-public class ResourcesImpl extends ConfigurationResourceLoader implements Resources {
+public class ResourcesImpl extends DefaultResourceLoader implements Resources {
+
+    private final Environment environment;
 
     @Inject
-    public ResourcesImpl(Scripting scripting) {
+    public ResourcesImpl(Environment environment, Scripting scripting) {
         super(scripting.getClassLoader());
-    }
-
-    public ResourcesImpl(ClassLoader classLoader) {
-        super(classLoader);
-    }
-
-    public ResourcesImpl(ClassLoader classLoader, File confDir) {
-        super(classLoader, confDir);
+        this.environment = environment;
     }
 
     @Override
@@ -72,6 +70,37 @@ public class ResourcesImpl extends ConfigurationResourceLoader implements Resour
             throw new RuntimeException(e);
         } finally {
             IOUtils.closeQuietly(stream);
+        }
+    }
+
+    /**
+     * Search for a resource according to the following rules:
+     * <ul>
+     * <li>If the location represents an URL, return a new {@link org.springframework.core.io.UrlResource} for
+     * this URL.</li>
+     * <li>Try to find a file below the {@code conf} directory using {@code location} as relative path.
+     * If found, return a new {@link org.springframework.core.io.UrlResource} for this file.</li>
+     * <li> Otherwise return a new {@link org.springframework.core.io.ClassPathResource} to retrieve content
+     * from classpath.</li>
+     * </ul>
+     *
+     * @param location resource location
+     * @return resource reference
+     */
+    @Override
+    public Resource getResource(String location) {
+        if (ResourceUtils.isUrl(location)) {
+            return super.getResource(location);
+        } else {
+            if (location.startsWith("/"))
+                location = location.substring(1);
+            File file = new File(environment.getProperty("cuba.confDir"), location);
+            if (file.exists()) {
+                location = file.toURI().toString();
+            } else {
+                location = "classpath:" + location;
+            }
+            return super.getResource(location);
         }
     }
 }

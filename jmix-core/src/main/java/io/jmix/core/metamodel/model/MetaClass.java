@@ -31,7 +31,7 @@ public interface MetaClass extends MetadataObject {
      *
      */
     @Nullable
-    MetaModel getModel();
+    Session getSession();
 
     /**
      * @return corresponding Java class
