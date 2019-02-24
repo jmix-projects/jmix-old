@@ -13,11 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.jmix.backend.listener;
 
-package io.jmix.core.entity;
+import io.jmix.backend.EntityManager;
+import io.jmix.core.entity.Entity;
 
-import java.util.UUID;
+/**
+ * Defines the contract for handling entities before they have been inserted into DB.
+ *
+ */
+public interface BeforeInsertEntityListener<T extends Entity> {
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+    /**
+     * Executes before the object has been inserted into DB.
+     *
+     * @param entity        inserted entity instance
+     * @param entityManager EntityManager that owns the entity instance
+     */
+    void onBeforeInsert(T entity, EntityManager entityManager);
 }

@@ -14,10 +14,33 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core.impl;
 
-import java.util.UUID;
+import io.jmix.core.TimeSource;
+import org.springframework.stereotype.Component;
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+import java.time.ZonedDateTime;
+import java.util.Date;
+
+/**
+ * Standard implementation of {@link TimeSource} interface.
+ *
+ */
+@Component(TimeSource.NAME)
+public class TimeSourceImpl implements TimeSource {
+
+    @Override
+    public Date currentTimestamp() {
+        return new Date();
+    }
+
+    @Override
+    public long currentTimeMillis() {
+        return System.currentTimeMillis();
+    }
+
+    @Override
+    public ZonedDateTime now() {
+        return ZonedDateTime.now();
+    }
 }

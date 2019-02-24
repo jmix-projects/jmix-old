@@ -13,11 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.jmix.backend.listener;
 
-package io.jmix.core.entity;
+import io.jmix.core.entity.Entity;
 
-import java.util.UUID;
+/**
+ * Defines the contract for handling entities right before they are attached to an EntityManager on merge operation.
+ *
+ */
+public interface BeforeAttachEntityListener<T extends Entity> {
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+    /**
+     * Executes before the object is attached to an EntityManager on merge operation.
+     *
+     * @param entity        detached entity
+     */
+    void onBeforeAttach(T entity);
 }

@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core.impl.jpql.tree;
 
-import java.util.UUID;
+import io.jmix.core.impl.jpql.ErrorRec;
+import io.jmix.core.impl.jpql.QueryBuilder;
+import org.antlr.runtime.tree.CommonTree;
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+import java.util.List;
+
+public interface TreeToQueryCapable {
+
+    CommonTree treeToQueryPre(QueryBuilder sb, List<ErrorRec> invalidNodes);
+
+    CommonTree treeToQueryPost(QueryBuilder sb, List<ErrorRec> invalidNodes);
 }

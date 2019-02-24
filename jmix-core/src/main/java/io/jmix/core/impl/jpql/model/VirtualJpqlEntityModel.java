@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core.impl.jpql.model;
 
-import java.util.UUID;
+public class VirtualJpqlEntityModel extends JpqlEntityModelImpl {
+    protected static int idx = 0;
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+    public VirtualJpqlEntityModel() {
+        super(VirtualJpqlEntityModel.generateName());
+    }
+
+    static synchronized String generateName() {
+        return "Virtual#" + idx++;
+    }
 }

@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core.impl.jpql;
 
-import java.util.UUID;
+public class JPA2RecognitionException extends RuntimeException {
+    public JPA2RecognitionException(String message) {
+        super(message);
+    }
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+    public JPA2RecognitionException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

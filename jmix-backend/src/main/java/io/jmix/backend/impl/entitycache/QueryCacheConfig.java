@@ -14,10 +14,24 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.backend.impl.entitycache;
 
-import java.util.UUID;
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+import io.jmix.core.config.Config;
+import io.jmix.core.config.Property;
+import io.jmix.core.config.Source;
+import io.jmix.core.config.SourceType;
+import io.jmix.core.config.defaults.DefaultBoolean;
+import io.jmix.core.config.defaults.DefaultInt;
+
+@Source(type = SourceType.APP)
+public interface QueryCacheConfig extends Config {
+
+    @Property("cuba.queryCache.enabled")
+    @DefaultBoolean(true)
+    boolean getQueryCacheEnabled();
+
+    @Property("cuba.queryCache.maxSize")
+    @DefaultInt(100)
+    int getQueryCacheMaxSize();
 }

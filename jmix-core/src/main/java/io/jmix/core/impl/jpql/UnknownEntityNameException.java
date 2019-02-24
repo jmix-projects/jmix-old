@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core.impl.jpql;
 
-import java.util.UUID;
+public class UnknownEntityNameException extends Exception {
+    private String entityName;
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+    public UnknownEntityNameException(String entityName) {
+        super("Entity with name [" + entityName + "] is unknown");
+        this.entityName = entityName;
+    }
+
+    public String getEntityName() {
+        return entityName;
+    }
 }

@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core.impl.jpql;
 
-import java.util.UUID;
+import org.antlr.runtime.tree.CommonTree;
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+public class ErrorRec {
+    public final CommonTree node;
+    public final String message;
+
+    public ErrorRec(CommonTree node, String message) {
+        this.node = node;
+        this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return message + " [" + node.toString() + "]";
+    }
 }

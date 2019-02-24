@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core.impl.jpql.pointer;
 
-import java.util.UUID;
+import io.jmix.core.impl.jpql.model.JpqlEntityModel;
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+public interface HasEntityPointer extends Pointer {
+    JpqlEntityModel getEntity();
 }

@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.backend;
 
-import java.util.UUID;
+/**
+ * Adapter containing default implementation for simple cluster listeners that don't need state transfer.
+ *
+ */
+public abstract class ClusterListenerAdapter<T> implements ClusterListener<T> {
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+    @Override
+    public byte[] getState() {
+        return new byte[0];
+    }
+
+    @Override
+    public void setState(byte[] state) {
+    }
 }

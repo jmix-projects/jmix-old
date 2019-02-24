@@ -14,10 +14,23 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.backend;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+/**
+ * INTERNAL.
+ * Provides information about current user for audit purposes -
+ * Creatable, Updatable, SoftDelete entities and for Entity Log.
+ */
+public interface AuditInfoProvider {
+
+    String NAME = "cuba_AuditInfoProvider";
+
+    @Nullable
+    String getCurrentUserLogin();
+
+    @Nullable
+    UUID getCurrentUserId();
 }

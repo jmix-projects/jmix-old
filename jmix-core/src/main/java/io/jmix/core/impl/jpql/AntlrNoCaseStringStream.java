@@ -14,10 +14,29 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core.impl.jpql;
 
-import java.util.UUID;
+import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.runtime.CharStream;
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+public class AntlrNoCaseStringStream extends ANTLRStringStream {
+    public AntlrNoCaseStringStream(String str) {
+        super(str);
+    }
+
+    @Override
+    public int LA(int i) {
+        if (i == 0) {
+            return 0; // undefined
+        }
+        if (i < 0) {
+            i++; // e.g., translate LA(-1) to use offset 0
+        }
+
+        if ((p + i - 1) >= n) {
+
+            return CharStream.EOF;
+        }
+        return Character.toUpperCase(data[p + i - 1]);
+    }
 }

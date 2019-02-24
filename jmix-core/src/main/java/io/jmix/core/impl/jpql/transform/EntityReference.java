@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core.impl.jpql.transform;
 
-import java.util.UUID;
+import io.jmix.core.impl.jpql.tree.IdentificationVariableNode;
+import io.jmix.core.impl.jpql.tree.PathNode;
+import org.antlr.runtime.tree.Tree;
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+public interface EntityReference {
+    String replaceEntries(String queryPart, String replaceablePart);
+
+    void renameVariableIn(PathNode node);
+
+    Tree createNode();
+
+    boolean supportsJoinTo(IdentificationVariableNode node);
+
+    PathEntityReference addFieldPath(String fieldPath);
 }

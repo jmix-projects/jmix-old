@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core.impl.jpql.model;
 
-import java.util.UUID;
+public interface Attribute extends Cloneable {
+    Class getSimpleType();
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+    String getName();
+
+    boolean isEntityReferenceAttribute();
+
+    boolean isCollection();
+
+    String getReferencedEntityName();
+
+    String getUserFriendlyName();
+
+    boolean isEmbedded();
+
+    Object clone() throws CloneNotSupportedException;
 }

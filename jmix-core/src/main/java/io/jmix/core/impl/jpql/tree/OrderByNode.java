@@ -14,10 +14,30 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core.impl.jpql.tree;
 
-import java.util.UUID;
+import org.antlr.runtime.CommonToken;
+import org.antlr.runtime.Token;
+import org.antlr.runtime.tree.Tree;
 
-public interface User extends Entity<UUID> {
-    String getLogin();
-}
+public class OrderByNode extends BaseCustomNode {
+    private OrderByNode(Token token) {
+        super(token);
+    }
+
+    public OrderByNode(int type) {
+        this(new CommonToken(type, ""));
+    }
+
+    @Override
+    public String toString() {
+        return "ORDER BY";
+    }
+
+    @Override
+    public Tree dupNode() {
+        OrderByNode result = new OrderByNode(token);
+        dupChildren(result);
+        return result;
+    }
+}    

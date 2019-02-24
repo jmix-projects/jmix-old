@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core.impl.jpql;
 
-import java.util.UUID;
+import org.springframework.stereotype.Component;
 
-public interface User extends Entity<UUID> {
-    String getLogin();
+/**
+ * INTERNAL.
+ * Generates domain model for use in autocomplete fields.
+ */
+@Component(DomainModelWithCaptionsBuilder.NAME)
+public class DomainModelWithCaptionsBuilder extends DomainModelBuilder {
+
+    public static final String NAME = "cuba_DomainModelWithCaptionsBuilder";
+
+    public DomainModelWithCaptionsBuilder() {
+        this.loadCaptions = true;
+    }
 }
