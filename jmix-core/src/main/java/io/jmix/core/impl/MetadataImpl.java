@@ -21,20 +21,18 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import io.jmix.core.*;
 import io.jmix.core.commons.util.StackTrace;
+import io.jmix.core.entity.*;
+import io.jmix.core.entity.annotation.EmbeddedParameters;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaModel;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Session;
 import io.jmix.core.metamodel.model.impl.SessionImpl;
-import io.jmix.core.entity.*;
-import io.jmix.core.entity.annotation.EmbeddedParameters;
-import io.jmix.core.*;
-import io.jmix.core.event.AppContextInitializedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -47,7 +45,10 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component(Metadata.NAME)
@@ -78,9 +79,6 @@ public class MetadataImpl implements Metadata {
     protected NumberIdSource numberIdSource;
 
     @Inject
-    protected ApplicationContext applicationContext;
-
-    @Inject
     protected GlobalConfig config;
 
     // stores methods in the execution order, all methods are accessible
@@ -93,9 +91,9 @@ public class MetadataImpl implements Metadata {
                         }
                     });
 
-    @EventListener(AppContextInitializedEvent.class)
-    @Order(Events.HIGHEST_PLATFORM_PRECEDENCE + 10)
-    protected void initMetadata() {
+    @EventListener
+    @Order(Events.HIGHEST_CORE_PRECEDENCE + 30)
+    protected void initMetadata(ContextRefreshedEvent event) {
         if (session != null) {
             log.warn("Repetitive initialization\n" + StackTrace.asString());
             return;
@@ -104,7 +102,7 @@ public class MetadataImpl implements Metadata {
         log.info("Initializing metadata");
         long startTime = System.currentTimeMillis();
 
-        MetadataLoader metadataLoader = (MetadataLoader) applicationContext.getBean(MetadataLoader.NAME);
+        MetadataLoader metadataLoader = (MetadataLoader) event.getApplicationContext().getBean(MetadataLoader.NAME);
         metadataLoader.loadMetadata();
         rootPackages = metadataLoader.getRootPackages();
         session = metadataLoader.getSession();

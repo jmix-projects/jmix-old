@@ -30,13 +30,13 @@ public interface Events {
      * Defines the highest precedence for {@link org.springframework.core.Ordered} or
      * {@link org.springframework.core.annotation.Order} listeners added by the platform.
      */
-    int HIGHEST_PLATFORM_PRECEDENCE = 100;
+    int HIGHEST_CORE_PRECEDENCE = 100;
 
     /**
      * Defines the lowest precedence for {@link org.springframework.core.Ordered} or
      * {@link org.springframework.core.annotation.Order} listeners added by the platform.
      */
-    int LOWEST_PLATFORM_PRECEDENCE = 1000;
+    int LOWEST_CORE_PRECEDENCE = 1000;
 
     /**
      * Notify all <strong>matching</strong> listeners registered with this application of an application event.

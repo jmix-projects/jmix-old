@@ -16,8 +16,8 @@
 
 package io.jmix.core.impl;
 
+import io.jmix.core.Events;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.metamodel.annotations.DatatypeDef;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.core.metamodel.datatypes.impl.DatatypeDefUtils;
@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -116,6 +117,7 @@ public class DatatypeRegistryImpl implements DatatypeRegistry {
     }
 
     @EventListener
+    @Order(Events.HIGHEST_CORE_PRECEDENCE + 20)
     private void onContextRefresh(ContextRefreshedEvent event) {
         ApplicationContext context = event.getApplicationContext();
         Map<String, Datatype> beansMap = context.getBeansOfType(Datatype.class);

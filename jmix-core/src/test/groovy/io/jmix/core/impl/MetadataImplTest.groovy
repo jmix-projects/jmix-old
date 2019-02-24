@@ -19,6 +19,7 @@ package io.jmix.core.impl
 import com.sample.addon1.TestAddon1Configuration
 import com.sample.addon1.entity.TestAddon1Entity
 import io.jmix.core.JmixCoreConfiguration
+import io.jmix.core.Metadata
 import io.jmix.core.entity.BaseUuidEntity
 import org.springframework.context.ApplicationContext
 import org.springframework.test.context.ContextConfiguration
@@ -27,25 +28,17 @@ import spock.lang.Specification
 import javax.inject.Inject
 
 @ContextConfiguration(classes = [JmixCoreConfiguration, TestAddon1Configuration])
-class MetadataLoaderTest extends Specification {
+class MetadataImplTest extends Specification {
 
     @Inject
     ApplicationContext context
 
-    def "loads metadata from core and add-on"() {
-        def metadataLoader = context.getBean(MetadataLoader)
+    def "metadata is initialized"() {
+        Metadata metadata = context.getBean(Metadata.class)
 
-        when:
+        expect:
 
-        metadataLoader.loadMetadata()
-
-        then:
-
-        def session = metadataLoader.getSession()
-
-        session.getClass(BaseUuidEntity) != null
-        session.getClass(TestAddon1Entity) != null
-
-        metadataLoader.getRootPackages() == ['io.jmix.core', 'com.sample.addon1']
+        metadata.getClass(BaseUuidEntity) != null
+        metadata.getClass(TestAddon1Entity) != null
     }
 }

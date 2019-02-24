@@ -19,33 +19,27 @@ package io.jmix.core.impl
 import com.sample.addon1.TestAddon1Configuration
 import com.sample.addon1.entity.TestAddon1Entity
 import io.jmix.core.JmixCoreConfiguration
-import io.jmix.core.entity.BaseUuidEntity
-import org.springframework.context.ApplicationContext
+import io.jmix.core.ViewRepository
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 import javax.inject.Inject
 
 @ContextConfiguration(classes = [JmixCoreConfiguration, TestAddon1Configuration])
-class MetadataLoaderTest extends Specification {
+class ViewRepositoryImplTest extends Specification {
 
     @Inject
-    ApplicationContext context
+    ViewRepository viewRepository
 
-    def "loads metadata from core and add-on"() {
-        def metadataLoader = context.getBean(MetadataLoader)
+    def "view repository is initialized"() {
 
         when:
 
-        metadataLoader.loadMetadata()
+        def view = viewRepository.getView(TestAddon1Entity, 'test-view-1')
 
         then:
 
-        def session = metadataLoader.getSession()
-
-        session.getClass(BaseUuidEntity) != null
-        session.getClass(TestAddon1Entity) != null
-
-        metadataLoader.getRootPackages() == ['io.jmix.core', 'com.sample.addon1']
+        noExceptionThrown()
+        view.getProperty('name') != null
     }
 }

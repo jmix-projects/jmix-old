@@ -15,6 +15,10 @@
   ~ limitations under the License.
   -->
 
-<metadata>
+<views xmlns="http://schemas.haulmont.com/jmix/views.xsd">
 
-</metadata>
+    <view class="com.sample.addon1.entity.TestAddon1Entity" name="test-view-1">
+        <property name="name"/>
+    </view>
+
+</views>

@@ -1,6 +1,5 @@
 package io.jmix.samples.helloworld;
 
-import io.jmix.core.Greeter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

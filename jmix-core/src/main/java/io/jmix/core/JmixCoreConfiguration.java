@@ -25,12 +25,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 
 @Configuration
 @ComponentScan
 @JmixComponent(dependsOn = {}, properties = {
         @JmixProperty(name = "jmix.metadataConfig", value = "io/jmix/core/metadata.xml"),
+        @JmixProperty(name = "jmix.viewsConfig", value = "io/jmix/core/views.xml"),
         @JmixProperty(name = "cuba.confDir", value = "./conf")
 })
 public class JmixCoreConfiguration {
@@ -47,14 +49,8 @@ public class JmixCoreConfiguration {
         return new JmixComponents();
     }
 
-    @Bean
-    public Greeter greeter() {
-        System.out.println("Creating Greeter");
-        System.out.println("Environment: " + environment);
-        return new Greeter();
-    }
-
     @EventListener
+    @Order(Events.HIGHEST_CORE_PRECEDENCE + 10)
     void onApplicationContextRefresh(ContextRefreshedEvent event) {
         AppContext.Internals.setApplicationContext(event.getApplicationContext());
     }

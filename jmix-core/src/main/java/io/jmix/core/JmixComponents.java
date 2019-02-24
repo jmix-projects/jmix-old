@@ -27,7 +27,12 @@ import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.EnumerablePropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.MutablePropertySources;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -36,13 +41,20 @@ import java.util.regex.Pattern;
 /**
  * Holds the list of {@link JmixComponentDescriptor}s.
  */
-public class JmixComponents implements BeanFactoryPostProcessor {
+public class JmixComponents implements BeanFactoryPostProcessor, EnvironmentAware {
 
     public static final Pattern SEPARATOR_PATTERN = Pattern.compile("\\s");
 
     private final Logger log = LoggerFactory.getLogger(JmixComponents.class);
 
     private final List<JmixComponentDescriptor> components = new ArrayList<>();
+
+    private Environment environment;
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
@@ -95,12 +107,11 @@ public class JmixComponents implements BeanFactoryPostProcessor {
 
         log.info("Using Jmix components: {}", components);
 
-        Set<String> propertyNames = new HashSet<>();
-        for (JmixComponentDescriptor component : components) {
-            propertyNames.addAll(component.getPropertyNames());
-        }
-        for (String name : propertyNames) {
-            System.setProperty(name, getProperty(name));
+        if (environment instanceof ConfigurableEnvironment) {
+            MutablePropertySources sources = ((ConfigurableEnvironment) environment).getPropertySources();
+            sources.addLast(new JmixPropertySource(this));
+        } else {
+            throw new IllegalStateException("Not a ConfigurableEnvironment, cannot register JmixComponents property source");
         }
     }
 
@@ -154,6 +165,7 @@ public class JmixComponents implements BeanFactoryPostProcessor {
         }
     }
 
+    @Nullable
     public String getProperty(String name) {
         List<String> values = new ArrayList<>();
 
@@ -182,10 +194,31 @@ public class JmixComponents implements BeanFactoryPostProcessor {
             }
         }
 
-        return String.join(" ", values);
+        return values.isEmpty() ? null : String.join(" ", values);
     }
 
     private Iterable<String> split(String compValue) {
         return Splitter.on(SEPARATOR_PATTERN).omitEmptyStrings().split(compValue);
+    }
+
+    private static class JmixPropertySource extends EnumerablePropertySource<JmixComponents> {
+
+        public JmixPropertySource(JmixComponents source) {
+            super("JmixComponents properties", source);
+        }
+
+        @Override
+        public String[] getPropertyNames() {
+            Set<String> propertyNames = new HashSet<>();
+            for (JmixComponentDescriptor component : source.components) {
+                propertyNames.addAll(component.getPropertyNames());
+            }
+            return propertyNames.toArray(new String[0]);
+        }
+
+        @Override
+        public Object getProperty(String name) {
+            return source.getProperty(name);
+        }
     }
 }

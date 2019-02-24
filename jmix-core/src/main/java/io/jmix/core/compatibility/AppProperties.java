@@ -47,7 +47,7 @@ public class AppProperties {
     @PostConstruct
     protected void init() {
         if (!(environment instanceof ConfigurableEnvironment)) {
-            log.warn("{} is not a ConfigurableEnvironment, cannot register property source");
+            log.warn("{} is not a ConfigurableEnvironment, cannot register Jmix mutable property source");
             return;
         }
         MutablePropertySources sources = ((ConfigurableEnvironment) environment).getPropertySources();

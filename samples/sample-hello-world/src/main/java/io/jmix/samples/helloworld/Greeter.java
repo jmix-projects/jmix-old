@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-package io.jmix.core;
+package io.jmix.samples.helloworld;
 
+import io.jmix.core.JmixComponents;
+import org.springframework.stereotype.Component;
+
+import javax.inject.Inject;
+
+@Component
 public class Greeter {
 
+    @Inject
+    private JmixComponents jmixComponents;
+
     public String sayHello(String name) {
-        return "Hello " + name;
+        return "Hello " + name + " from " + jmixComponents.getComponents();
     }
 }
