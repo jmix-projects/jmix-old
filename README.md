@@ -10,4 +10,4 @@
   * AppContext, AppBeans
   * global infrastructure interfaces
 * core
-  * PersistenceImpl, PersistenceImplSupport, EntityManagerImpl, QueryImpl
+  * ORM persistence: PersistenceImpl, EntityManagerImpl, QueryImpl, etc.
