@@ -3,7 +3,20 @@ buildscript {
         springBootVersion = '2.1.2.RELEASE'
     }
     repositories {
-        mavenCentral()
+        if (rootProject.hasProperty('haulmontRepoUrl')) {
+            maven {
+                url rootProject['haulmontRepoUrl']
+
+                if (rootProject.hasProperty('haulmontRepoUser') && rootProject.hasProperty('haulmontRepoPassword')) {
+                    credentials {
+                        username rootProject['haulmontRepoUser']
+                        password rootProject['haulmontRepoPassword']
+                    }
+                }
+            }
+        } else {
+            jcenter()
+        }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -16,4 +29,24 @@ buildscript {
 
 ext {
     jmixVersion = '0.0.1'
+}
+
+allprojects {
+    repositories {
+        if (rootProject.hasProperty('haulmontRepoUrl')) {
+            maven {
+                url rootProject['haulmontRepoUrl']
+
+                if (rootProject.hasProperty('haulmontRepoUser') && rootProject.hasProperty('haulmontRepoPassword')) {
+                    credentials {
+                        username rootProject['haulmontRepoUser']
+                        password rootProject['haulmontRepoPassword']
+                    }
+                }
+            }
+        } else {
+            jcenter()
+            maven { url "https://dl.bintray.com/cuba-platform/main" }
+        }
+    }
 }

@@ -1,8 +1,3 @@
-repositories {
-    mavenCentral()
-    maven { url "https://dl.bintray.com/cuba-platform/main" }
-}
-
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'java-library'
