@@ -14,5 +14,6 @@
   * config interfaces
   * AppContext, AppBeans
   * global infrastructure interfaces
+  * JPQL parser
 * core
   * ORM persistence: PersistenceImpl, EntityManagerImpl, QueryImpl, etc.
