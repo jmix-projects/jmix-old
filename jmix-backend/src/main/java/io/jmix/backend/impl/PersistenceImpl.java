@@ -18,7 +18,7 @@ package io.jmix.backend.impl;
 
 import io.jmix.backend.*;
 import io.jmix.backend.persistence.DbTypeConverter;
-import io.jmix.backend.persistence.DbmsSpecificFactory;
+import io.jmix.backend.persistence.DbmsSpecifics;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.Stores;
 import org.eclipse.persistence.internal.helper.CubaUtil;
@@ -72,6 +72,9 @@ public class PersistenceImpl implements Persistence {
     protected Transactions transactions;
 
     @Inject
+    protected DbmsSpecifics dbmsSpecifics;
+
+    @Inject
     @Named("entityManagerFactory")
     public void setFactory(LocalContainerEntityManagerFactoryBean factoryBean) {
         this.jpaEmf = factoryBean.getObject();
@@ -84,12 +87,12 @@ public class PersistenceImpl implements Persistence {
 
     @Override
     public DbTypeConverter getDbTypeConverter() {
-        return DbmsSpecificFactory.getDbTypeConverter();
+        return dbmsSpecifics.getDbTypeConverter();
     }
 
     @Override
     public DbTypeConverter getDbTypeConverter(String store) {
-        return DbmsSpecificFactory.getDbTypeConverter(store);
+        return dbmsSpecifics.getDbTypeConverter(store);
     }
 
     @Override
@@ -210,9 +213,9 @@ public class PersistenceImpl implements Persistence {
     @Override
     public DataSource getDataSource(String store) {
         if (Stores.isMain(store))
-            return (DataSource) beanLocator.get("cubaDataSource");
+            return (DataSource) beanLocator.get("dataSource");
         else
-            return (DataSource) beanLocator.get("cubaDataSource_" + store);
+            return (DataSource) beanLocator.get("dataSource_" + store);
     }
 
     @Override

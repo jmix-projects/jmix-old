@@ -20,7 +20,7 @@ import java.io.Serializable;
 /**
  * Interface defining methods for communication in a middleware cluster.
  */
-public interface ClusterManagerAPI {
+public interface ClusterManager {
 
     String NAME = "cuba_ClusterManager";
 

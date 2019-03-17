@@ -17,8 +17,11 @@
 package io.jmix.backend.persistence;
 
 import io.jmix.core.Stores;
-import io.jmix.core.compatibility.AppContext;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+
+import javax.inject.Inject;
 
 /**
  * INTERNAL.
@@ -30,32 +33,38 @@ import org.apache.commons.lang3.StringUtils;
  * {@code getDbmsVersion()} methods of {@link com.haulmont.cuba.core.app.PersistenceManagerService}.
  *
  */
+@Component(DbmsType.NAME)
 public class DbmsType {
 
-    public static String getType() {
+    public static final String NAME = "jmix_DbmsType";
+
+    @Inject
+    protected Environment environment;
+
+    public String getType() {
         return getType(Stores.MAIN);
     }
 
-    public static String getType(String storeName) {
-        String propName = "cuba.dbmsType";
+    public String getType(String storeName) {
+        String propName = "jmix.dbmsType";
         if (!Stores.isMain(storeName))
             propName = propName + "_" + storeName;
 
-        String id = AppContext.getProperty(propName);
+        String id = environment.getProperty(propName);
         if (StringUtils.isBlank(id))
             throw new IllegalStateException("Property " + propName + " is not set");
         return id;
     }
 
-    public static String getVersion() {
+    public String getVersion() {
         return getVersion(Stores.MAIN);
     }
 
-    public static String getVersion(String storeName) {
-        String propName = "cuba.dbmsVersion";
+    public String getVersion(String storeName) {
+        String propName = "jmix.dbmsVersion";
         if (!Stores.isMain(storeName))
             propName = propName + "_" + storeName;
 
-        return StringUtils.trimToEmpty(AppContext.getProperty(propName));
+        return StringUtils.trimToEmpty(environment.getProperty(propName));
     }
 }

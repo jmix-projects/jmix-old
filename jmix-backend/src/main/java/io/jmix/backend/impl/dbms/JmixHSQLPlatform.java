@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-package io.jmix.core
+package io.jmix.backend.impl.dbms;
 
-import com.sample.addon1.TestAddon1Configuration
-import com.sample.addon1.entity.TestAddon1Entity
-import com.sample.app.TestAppConfiguration
-import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification
+import org.eclipse.persistence.platform.database.HSQLPlatform;
 
-import javax.inject.Inject
-
-@ContextConfiguration(classes = [JmixCoreConfiguration, TestAddon1Configuration, TestAppConfiguration])
-class MetadataTest extends Specification {
-
-    @Inject
-    Metadata metadata
-
-    def "test"() {
-        expect:
-        metadata.getClass(TestAddon1Entity) != null
+public class JmixHSQLPlatform extends HSQLPlatform {
+    @Override
+    public boolean supportsNestingOuterJoins() {
+        //nested joins supports in hsqldb from version 1.9
+        //https://sourceforge.net/p/hsqldb/feature-requests/206/
+        return true;
     }
 }

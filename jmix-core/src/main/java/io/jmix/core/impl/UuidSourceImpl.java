@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package io.jmix.core
+package io.jmix.core.impl;
 
-import com.sample.addon1.TestAddon1Configuration
-import com.sample.addon1.entity.TestAddon1Entity
-import com.sample.app.TestAppConfiguration
-import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification
+import io.jmix.core.UuidSource;
+import org.springframework.stereotype.Component;
 
-import javax.inject.Inject
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
-@ContextConfiguration(classes = [JmixCoreConfiguration, TestAddon1Configuration, TestAppConfiguration])
-class MetadataTest extends Specification {
+@Component(UuidSource.NAME)
+public class UuidSourceImpl implements UuidSource {
 
-    @Inject
-    Metadata metadata
-
-    def "test"() {
-        expect:
-        metadata.getClass(TestAddon1Entity) != null
+    @Override
+    public UUID createUuid() {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        return new UUID(random.nextLong(), random.nextLong());
     }
 }

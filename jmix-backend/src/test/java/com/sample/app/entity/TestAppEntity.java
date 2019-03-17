@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-package io.jmix.core
+package com.sample.app.entity;
 
-import com.sample.addon1.TestAddon1Configuration
-import com.sample.addon1.entity.TestAddon1Entity
-import com.sample.app.TestAppConfiguration
-import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification
+import io.jmix.core.entity.StandardEntity;
 
-import javax.inject.Inject
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-@ContextConfiguration(classes = [JmixCoreConfiguration, TestAddon1Configuration, TestAppConfiguration])
-class MetadataTest extends Specification {
+@Entity(name = "test_TestAppEntity")
+@Table(name = "TEST_APP_ENTITY")
+public class TestAppEntity extends StandardEntity {
 
-    @Inject
-    Metadata metadata
+    @Column(name = "NAME")
+    private String name;
 
-    def "test"() {
-        expect:
-        metadata.getClass(TestAddon1Entity) != null
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

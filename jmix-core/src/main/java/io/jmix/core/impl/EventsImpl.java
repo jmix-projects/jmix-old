@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package io.jmix.core
+package io.jmix.core.impl;
 
-import com.sample.addon1.TestAddon1Configuration
-import com.sample.addon1.entity.TestAddon1Entity
-import com.sample.app.TestAppConfiguration
-import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification
+import io.jmix.core.Events;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Component;
 
-import javax.inject.Inject
+import javax.inject.Inject;
 
-@ContextConfiguration(classes = [JmixCoreConfiguration, TestAddon1Configuration, TestAppConfiguration])
-class MetadataTest extends Specification {
+@Component(Events.NAME)
+public class EventsImpl implements Events {
 
     @Inject
-    Metadata metadata
+    protected ApplicationEventPublisher eventPublisher;
 
-    def "test"() {
-        expect:
-        metadata.getClass(TestAddon1Entity) != null
+    @Override
+    public void publish(ApplicationEvent event) {
+        eventPublisher.publishEvent(event);
     }
 }

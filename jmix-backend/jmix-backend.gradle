@@ -40,4 +40,11 @@ dependencies {
     api project(':jmix-core')
     implementation 'org.springframework:spring-orm'
     implementation 'org.springframework:spring-tx'
+
+    testImplementation 'org.springframework:spring-test'
+    testImplementation "org.spockframework:spock-core:$spockVersion"
+    testImplementation "org.spockframework:spock-spring:$spockVersion"
+    testImplementation 'org.apache.commons:commons-dbcp2'
+    testRuntimeOnly 'org.slf4j:slf4j-simple'
+    testRuntimeOnly 'org.hsqldb:hsqldb:2.4.1'
 }

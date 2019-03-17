@@ -19,7 +19,7 @@ package io.jmix.backend.impl.entitycache;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import io.jmix.backend.ClusterListenerAdapter;
-import io.jmix.backend.ClusterManagerAPI;
+import io.jmix.backend.ClusterManager;
 import io.jmix.backend.EntityManager;
 import io.jmix.backend.Persistence;
 import io.jmix.core.Metadata;
@@ -48,7 +48,7 @@ public class QueryCacheManager {
     @Inject
     protected QueryCacheConfig queryCacheConfig;
     @Inject
-    protected ClusterManagerAPI clusterManager;
+    protected ClusterManager clusterManager;
     @Inject
     protected Persistence persistence;
     @Inject

@@ -22,7 +22,7 @@ import io.jmix.backend.TypedQuery;
 import io.jmix.backend.impl.entitycache.QueryCacheManager;
 import io.jmix.backend.impl.entitycache.QueryKey;
 import io.jmix.backend.persistence.DbmsFeatures;
-import io.jmix.backend.persistence.DbmsSpecificFactory;
+import io.jmix.backend.persistence.DbmsSpecifics;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.compatibility.AppContext;
@@ -95,12 +95,14 @@ public class QueryImpl<T> implements TypedQuery<T> {
     protected boolean cacheable;
     protected javax.persistence.FlushModeType flushMode;
 
+    protected DbmsSpecifics dbmsSpecifics;
     protected Collection<QueryMacroHandler> macroHandlers;
 
     public QueryImpl(EntityManagerImpl entityManager, boolean isNative, @Nullable Class resultClass) {
         this.entityManager = entityManager;
         this.emDelegate = entityManager.getDelegate();
         this.isNative = isNative;
+        this.dbmsSpecifics = AppBeans.get(DbmsSpecifics.NAME);
         this.macroHandlers = AppBeans.getAll(QueryMacroHandler.class).values();
         //noinspection unchecked
         this.resultClass = resultClass;
@@ -244,7 +246,7 @@ public class QueryImpl<T> implements TypedQuery<T> {
 
         if (firstResult != null && firstResult > 0) {
             String storeName = metadata.getTools().getStoreName(effectiveMetaClass);
-            DbmsFeatures dbmsFeatures = DbmsSpecificFactory.getDbmsFeatures(storeName);
+            DbmsFeatures dbmsFeatures = dbmsSpecifics.getDbmsFeatures(storeName);
             if (dbmsFeatures.useOrderByForPaging()) {
                 QueryTransformer transformer = queryTransformerFactory.transformer(result);
                 transformer.addOrderByIdIfNotExists(metadata.getTools().getPrimaryKeyName(effectiveMetaClass));
@@ -547,7 +549,7 @@ public class QueryImpl<T> implements TypedQuery<T> {
     @SuppressWarnings("unchecked")
     protected TypedQuery<T> internalSetParameter(int position, Object value, boolean implicitConversions) {
         checkState();
-        DbmsFeatures dbmsFeatures = DbmsSpecificFactory.getDbmsFeatures();
+        DbmsFeatures dbmsFeatures = dbmsSpecifics.getDbmsFeatures();
         if (isNative && (value instanceof UUID) && (dbmsFeatures.getUuidTypeClassName() != null)) {
             Class c = ReflectionHelper.getClass(dbmsFeatures.getUuidTypeClassName());
             try {

@@ -16,15 +16,18 @@
 
 package io.jmix.core.compatibility;
 
+import io.jmix.core.EnvironmentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.*;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.MutablePropertySources;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -55,14 +58,7 @@ public class AppProperties {
     }
 
     public String[] getPropertyNames() {
-        MutablePropertySources propSrcs = ((AbstractEnvironment) environment).getPropertySources();
-        return propSrcs.stream()
-                .filter(ps -> ps instanceof EnumerablePropertySource)
-                .map(ps -> ((EnumerablePropertySource<?>) ps).getPropertyNames())
-                .flatMap(Arrays::stream)
-                .distinct()
-                .sorted()
-                .toArray(String[]::new);
+        return EnvironmentUtils.getPropertyNames(environment).toArray(new String[0]);
     }
 
     @Nullable

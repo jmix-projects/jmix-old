@@ -17,7 +17,7 @@
 package io.jmix.backend.impl.entitycache;
 
 import io.jmix.backend.ClusterListenerAdapter;
-import io.jmix.backend.ClusterManagerAPI;
+import io.jmix.backend.ClusterManager;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.ReflectionHelper;
@@ -36,9 +36,9 @@ public class EntityCacheConnection extends BroadcastRemoteConnection {
 
     protected Metadata metadata;
     protected QueryCacheManager queryCacheManager;
-    protected ClusterManagerAPI clusterManager;
+    protected ClusterManager clusterManager;
 
-    public EntityCacheConnection(RemoteCommandManager rcm, ClusterManagerAPI clusterManager) {
+    public EntityCacheConnection(RemoteCommandManager rcm, ClusterManager clusterManager) {
         super(rcm);
         this.metadata = AppBeans.get(Metadata.NAME);
         this.queryCacheManager = AppBeans.get(QueryCacheManager.NAME);

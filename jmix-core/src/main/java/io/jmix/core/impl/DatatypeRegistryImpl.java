@@ -16,24 +16,17 @@
 
 package io.jmix.core.impl;
 
-import io.jmix.core.Events;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.core.metamodel.datatypes.impl.DatatypeDefUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import javax.inject.Inject;
+import java.util.*;
 
 @Component(DatatypeRegistry.NAME)
 public class DatatypeRegistryImpl implements DatatypeRegistry {
@@ -42,6 +35,13 @@ public class DatatypeRegistryImpl implements DatatypeRegistry {
 
     protected Map<Class<?>, Datatype> datatypeByClass = new HashMap<>();
     protected Map<String, Datatype> datatypeById = new HashMap<>();
+
+    @Inject
+    public DatatypeRegistryImpl(List<Datatype> datatypeList) {
+        for (Datatype datatype : datatypeList) {
+            register(datatype, datatype.getId(), DatatypeDefUtils.isDefaultForClass(datatype));
+        }
+    }
 
     @Override
     public Datatype get(String id) {
@@ -116,13 +116,13 @@ public class DatatypeRegistryImpl implements DatatypeRegistry {
         datatypeById.put(id, datatype);
     }
 
-    @EventListener
-    @Order(Events.HIGHEST_CORE_PRECEDENCE + 20)
-    private void onContextRefresh(ContextRefreshedEvent event) {
-        ApplicationContext context = event.getApplicationContext();
-        Map<String, Datatype> beansMap = context.getBeansOfType(Datatype.class);
-        for (Datatype datatype : beansMap.values()) {
-            register(datatype, datatype.getId(), DatatypeDefUtils.isDefaultForClass(datatype));
-        }
-    }
+//    @EventListener
+//    @Order(Events.HIGHEST_CORE_PRECEDENCE + 20)
+//    private void onContextRefresh(ContextRefreshedEvent event) {
+//        ApplicationContext context = event.getApplicationContext();
+//        Map<String, Datatype> beansMap = context.getBeansOfType(Datatype.class);
+//        for (Datatype datatype : beansMap.values()) {
+//            register(datatype, datatype.getId(), DatatypeDefUtils.isDefaultForClass(datatype));
+//        }
+//    }
 }

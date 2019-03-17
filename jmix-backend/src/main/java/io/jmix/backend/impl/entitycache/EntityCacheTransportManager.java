@@ -16,7 +16,7 @@
 
 package io.jmix.backend.impl.entitycache;
 
-import io.jmix.backend.ClusterManagerAPI;
+import io.jmix.backend.ClusterManager;
 import io.jmix.core.AppBeans;
 import org.eclipse.persistence.exceptions.RemoteCommandManagerException;
 import org.eclipse.persistence.internal.sessions.coordination.RemoteConnection;
@@ -36,7 +36,7 @@ public class EntityCacheTransportManager extends BroadcastTransportManager {
 
     protected EntityCacheConnection createConnection() throws RemoteCommandManagerException {
         try {
-            ClusterManagerAPI clusterManager = AppBeans.get(ClusterManagerAPI.class);
+            ClusterManager clusterManager = AppBeans.get(ClusterManager.class);
             return new EntityCacheConnection(this.rcm, clusterManager);
         } catch (Exception ex) {
             throw new RemoteCommandManagerException(ex.getMessage());
