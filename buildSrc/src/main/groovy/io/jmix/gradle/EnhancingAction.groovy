@@ -84,7 +84,7 @@ class EnhancingAction implements Action<Task> {
                 args "-persistenceinfo"
                 args "${project.buildDir}/tmp/enhancing"
                 args project.sourceSets.main.java.outputDir.absolutePath
-                args "${project.buildDir}/tmp/enhanced-main"
+                args project.sourceSets.main.java.outputDir.absolutePath
                 debug = project.hasProperty("debugEnhancing") ? Boolean.valueOf(project.getProperty("debugEnhancing")) : false
             }
 

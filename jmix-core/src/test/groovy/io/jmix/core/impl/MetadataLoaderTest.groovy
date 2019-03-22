@@ -20,7 +20,6 @@ import com.sample.addon1.TestAddon1Configuration
 import com.sample.addon1.entity.TestAddon1Entity
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.entity.BaseUuidEntity
-import org.springframework.context.ApplicationContext
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
@@ -30,16 +29,10 @@ import javax.inject.Inject
 class MetadataLoaderTest extends Specification {
 
     @Inject
-    ApplicationContext context
+    MetadataLoader metadataLoader
 
     def "loads metadata from core and add-on"() {
-        def metadataLoader = context.getBean(MetadataLoader)
-
-        when:
-
-        metadataLoader.loadMetadata()
-
-        then:
+        expect:
 
         def session = metadataLoader.getSession()
 
