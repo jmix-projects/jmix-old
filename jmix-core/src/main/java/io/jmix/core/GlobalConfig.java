@@ -146,7 +146,7 @@ public interface GlobalConfig extends Config {
     boolean getLocaleSelectVisible();
 
     /**
-     * Whether to use {@link com.haulmont.cuba.core.sys.jpql.transform.QueryTransformerAstBased} instead of
+     * Whether to use {@link io.jmix.core.impl.jpql.transform.QueryTransformerAstBased} instead of
      * {@link QueryTransformerRegex}
      * @return true or false
      */

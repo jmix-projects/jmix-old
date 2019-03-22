@@ -2,6 +2,7 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'java-library'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'io.jmix'
 
 dependencyManagement {
     imports {
@@ -16,22 +17,23 @@ version = jmixVersion
 def spockVersion = '1.2-groovy-2.5'
 
 dependencies {
-    implementation 'org.springframework:spring-context'
-    implementation 'org.apache.commons:commons-lang3'
-    implementation 'org.slf4j:slf4j-api'
-    implementation 'org.codehaus.groovy:groovy'
-    implementation 'org.apache.commons:commons-pool2'
-    implementation 'javax.validation:validation-api'
-    implementation 'org.hibernate.validator:hibernate-validator'
+    api 'org.springframework:spring-context'
+    api 'org.apache.commons:commons-lang3'
+    api 'org.slf4j:slf4j-api'
+    api 'org.codehaus.groovy:groovy'
+    api 'org.apache.commons:commons-pool2'
+    api 'javax.validation:validation-api'
+    api 'org.hibernate.validator:hibernate-validator'
 
     api 'javax.inject:javax.inject:1'
-    implementation 'org.apache.commons:commons-collections4:4.2'
-    implementation 'commons-io:commons-io:2.6'
-    implementation 'org.apache.commons:commons-text:1.6'
-    implementation 'com.google.guava:guava:27.0.1-jre'
-    implementation 'org.dom4j:dom4j:2.1.1'
-    implementation 'org.eclipse.persistence:javax.persistence:2.1.1'
-    implementation 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-1-cuba'
+    api 'org.apache.commons:commons-collections4:4.2'
+    api 'commons-io:commons-io:2.6'
+    api 'org.apache.commons:commons-text:1.6'
+    api 'com.google.guava:guava:27.0.1-jre'
+    api 'org.dom4j:dom4j:2.1.1'
+    api 'org.eclipse.persistence:javax.persistence:2.1.1'
+    api 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-1-cuba'
+    implementation 'org.antlr:antlr-runtime:3.5.2'
 
     testImplementation 'org.springframework:spring-test'
     testImplementation "org.spockframework:spock-core:$spockVersion"

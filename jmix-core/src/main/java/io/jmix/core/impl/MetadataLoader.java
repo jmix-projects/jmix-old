@@ -60,44 +60,31 @@ public class MetadataLoader {
 
     private final Logger log = LoggerFactory.getLogger(MetadataLoader.class);
 
-    @Inject
-    protected EntitiesScanner entitiesScanner;
-
 //    @Inject
 //    protected MetadataBuildSupport metadataBuildSupport;
 
-    @Inject
-    protected ExtendedEntities extendedEntities;
+//    @Inject
+//    protected ExtendedEntities extendedEntities;
 
-    @Inject
-    protected DatatypeRegistry datatypeRegistry;
-
-    @Inject
-    protected ApplicationContext applicationContext;
+//    @Inject
+//    protected DatatypeRegistry datatypeRegistry;
 
     protected Session session;
 
-    protected List<String> basePackages = new ArrayList<>();
+    protected List<String> basePackages;
 
-    public MetadataLoader() {
+    @Inject
+    public MetadataLoader(EntitiesScanner entitiesScanner, MetaModelLoader metaModelLoader) {
         this.session = new SessionImpl();
-    }
 
-    protected MetaModelLoader createModelLoader(Session session) {
-        return (MetaModelLoader) applicationContext.getBean(MetaModelLoader.NAME, session);
-    }
+        log.info("Initializing metadata");
+        long startTime = System.currentTimeMillis();
 
-    /**
-     * Loads metadata session.
-     */
-    public void loadMetadata() {
         basePackages = entitiesScanner.getBasePackages();
 
 //        List<MetadataBuildSupport.XmlFile> metadataXmlList = metadataBuildSupport.init();
 
-        MetaModelLoader modelLoader = createModelLoader(session);
-
-        modelLoader.loadModel(entitiesScanner.getEntityClassNames());
+        metaModelLoader.loadModel(session, entitiesScanner.getEntityClassNames());
 
         for (MetaClass metaClass : session.getClasses()) {
             postProcessClass(metaClass);
@@ -115,6 +102,8 @@ public class MetadataLoader {
 //        }
 //
 //        replaceExtendedMetaClasses();
+
+        log.info("Metadata initialized in {} ms", System.currentTimeMillis() - startTime);
     }
 
     /**
@@ -131,50 +120,50 @@ public class MetadataLoader {
         return basePackages;
     }
 
-    protected void replaceExtendedMetaClasses() {
-            List<Pair<MetaClass, MetaClass>> replaceMap = new ArrayList<>();
-            for (MetaClass metaClass : session.getClasses()) {
-                MetaClass effectiveMetaClass = session.getClass(extendedEntities.getEffectiveClass(metaClass));
-
-                if (effectiveMetaClass != metaClass) {
-                    replaceMap.add(new Pair<>(metaClass, effectiveMetaClass));
-                }
-
-                for (MetaProperty metaProperty : metaClass.getOwnProperties()) {
-                    MetaPropertyImpl propertyImpl = (MetaPropertyImpl) metaProperty;
-
-                    // replace domain
-                    Class effectiveDomainClass = extendedEntities.getEffectiveClass(metaProperty.getDomain());
-                    MetaClass effectiveDomainMeta = session.getClass(effectiveDomainClass);
-                    if (metaProperty.getDomain() != effectiveDomainMeta) {
-                        propertyImpl.setDomain(effectiveDomainMeta);
-                    }
-
-                    if (metaProperty.getRange().isClass()) {
-                        // replace range class
-                        ClassRange range = (ClassRange) metaProperty.getRange();
-
-                        Class effectiveRangeClass = extendedEntities.getEffectiveClass(range.asClass());
-                        MetaClass effectiveRangeMeta = session.getClass(effectiveRangeClass);
-                        if (effectiveRangeMeta != range.asClass()) {
-                            ClassRange newRange = new ClassRange(effectiveRangeMeta);
-                            newRange.setCardinality(range.getCardinality());
-                            newRange.setOrdered(range.isOrdered());
-
-                            ((MetaPropertyImpl) metaProperty).setRange(newRange);
-                        }
-                    }
-                }
-            }
-
-            for (Pair<MetaClass, MetaClass> replace : replaceMap) {
-                MetaClass replacedMetaClass = replace.getFirst();
-                extendedEntities.registerReplacedMetaClass(replacedMetaClass);
-
-                MetaClassImpl effectiveMetaClass = (MetaClassImpl) replace.getSecond();
-                ((SessionImpl) session).registerClass(replacedMetaClass.getName(), replacedMetaClass.getJavaClass(), effectiveMetaClass);
-            }
-    }
+//    protected void replaceExtendedMetaClasses() {
+//            List<Pair<MetaClass, MetaClass>> replaceMap = new ArrayList<>();
+//            for (MetaClass metaClass : session.getClasses()) {
+//                MetaClass effectiveMetaClass = session.getClass(extendedEntities.getEffectiveClass(metaClass));
+//
+//                if (effectiveMetaClass != metaClass) {
+//                    replaceMap.add(new Pair<>(metaClass, effectiveMetaClass));
+//                }
+//
+//                for (MetaProperty metaProperty : metaClass.getOwnProperties()) {
+//                    MetaPropertyImpl propertyImpl = (MetaPropertyImpl) metaProperty;
+//
+//                    // replace domain
+//                    Class effectiveDomainClass = extendedEntities.getEffectiveClass(metaProperty.getDomain());
+//                    MetaClass effectiveDomainMeta = session.getClass(effectiveDomainClass);
+//                    if (metaProperty.getDomain() != effectiveDomainMeta) {
+//                        propertyImpl.setDomain(effectiveDomainMeta);
+//                    }
+//
+//                    if (metaProperty.getRange().isClass()) {
+//                        // replace range class
+//                        ClassRange range = (ClassRange) metaProperty.getRange();
+//
+//                        Class effectiveRangeClass = extendedEntities.getEffectiveClass(range.asClass());
+//                        MetaClass effectiveRangeMeta = session.getClass(effectiveRangeClass);
+//                        if (effectiveRangeMeta != range.asClass()) {
+//                            ClassRange newRange = new ClassRange(effectiveRangeMeta);
+//                            newRange.setCardinality(range.getCardinality());
+//                            newRange.setOrdered(range.isOrdered());
+//
+//                            ((MetaPropertyImpl) metaProperty).setRange(newRange);
+//                        }
+//                    }
+//                }
+//            }
+//
+//            for (Pair<MetaClass, MetaClass> replace : replaceMap) {
+//                MetaClass replacedMetaClass = replace.getFirst();
+//                extendedEntities.registerReplacedMetaClass(replacedMetaClass);
+//
+//                MetaClassImpl effectiveMetaClass = (MetaClassImpl) replace.getSecond();
+//                ((SessionImpl) session).registerClass(replacedMetaClass.getName(), replacedMetaClass.getJavaClass(), effectiveMetaClass);
+//            }
+//    }
 
     protected void initStoreMetaAnnotations(Map<String, List<EntityClassInfo>> entityPackages) {
         if (Stores.getAdditional().isEmpty())
@@ -231,32 +220,32 @@ public class MetadataLoader {
         }
     }
 
-    /**
-     * Initialize entity annotations from definition in <code>metadata.xml</code>.
-     * <p>Can be overridden in application projects to handle application-specific annotations.</p>
-     *
-     * @param xmlAnnotations map of class name to annotations map
-     * @param metaClass      MetaClass instance to assign annotations
-     */
-    protected void addMetaAnnotationsFromXml(List<XmlAnnotations> xmlAnnotations, MetaClass metaClass) {
-        for (XmlAnnotations xmlAnnotation : xmlAnnotations) {
-            MetaClass metaClassFromXml = session.getClassNN(ReflectionHelper.getClass(xmlAnnotation.entityClass));
-            Class extendedClass = extendedEntities.getExtendedClass(metaClassFromXml);
-            MetaClass effectiveMetaClass = extendedClass != null ? session.getClassNN(extendedClass) : metaClassFromXml;
-            if (effectiveMetaClass.equals(metaClass)) {
-                for (Map.Entry<String, XmlAnnotation> entry : xmlAnnotation.annotations.entrySet()) {
-                    assignMetaAnnotationValueFromXml(entry.getKey(), entry.getValue(), metaClass.getAnnotations());
-                }
-                for (XmlAnnotations attributeAnnotation : xmlAnnotation.attributeAnnotations) {
-                    MetaProperty property = metaClass.getPropertyNN(attributeAnnotation.entityClass);
-                    for (Map.Entry<String, XmlAnnotation> entry : attributeAnnotation.annotations.entrySet()) {
-                        assignMetaAnnotationValueFromXml(entry.getKey(), entry.getValue(), property.getAnnotations());
-                    }
-                }
-                break;
-            }
-        }
-    }
+//    /**
+//     * Initialize entity annotations from definition in <code>metadata.xml</code>.
+//     * <p>Can be overridden in application projects to handle application-specific annotations.</p>
+//     *
+//     * @param xmlAnnotations map of class name to annotations map
+//     * @param metaClass      MetaClass instance to assign annotations
+//     */
+//    protected void addMetaAnnotationsFromXml(List<XmlAnnotations> xmlAnnotations, MetaClass metaClass) {
+//        for (XmlAnnotations xmlAnnotation : xmlAnnotations) {
+//            MetaClass metaClassFromXml = session.getClassNN(ReflectionHelper.getClass(xmlAnnotation.entityClass));
+//            Class extendedClass = extendedEntities.getExtendedClass(metaClassFromXml);
+//            MetaClass effectiveMetaClass = extendedClass != null ? session.getClassNN(extendedClass) : metaClassFromXml;
+//            if (effectiveMetaClass.equals(metaClass)) {
+//                for (Map.Entry<String, XmlAnnotation> entry : xmlAnnotation.annotations.entrySet()) {
+//                    assignMetaAnnotationValueFromXml(entry.getKey(), entry.getValue(), metaClass.getAnnotations());
+//                }
+//                for (XmlAnnotations attributeAnnotation : xmlAnnotation.attributeAnnotations) {
+//                    MetaProperty property = metaClass.getPropertyNN(attributeAnnotation.entityClass);
+//                    for (Map.Entry<String, XmlAnnotation> entry : attributeAnnotation.annotations.entrySet()) {
+//                        assignMetaAnnotationValueFromXml(entry.getKey(), entry.getValue(), property.getAnnotations());
+//                    }
+//                }
+//                break;
+//            }
+//        }
+//    }
 
     protected void assignMetaAnnotationValueFromXml(String annName, XmlAnnotation xmlAnn, Map<String, Object> metaAnnotations) {
         if (xmlAnn.value != null) {
@@ -342,11 +331,17 @@ public class MetadataLoader {
 
     protected void initMetaAnnotations(MetaClass metaClass) {
         for (Annotation annotation : metaClass.getJavaClass().getAnnotations()) {
+            if (isOrmAnnotation(annotation)) {
+                // todo ORM-based entity
+                metaClass.getAnnotations().put("jmix.orm", true);
+            }
+
             MetaAnnotation metaAnnotation = AnnotationUtils.findAnnotation(annotation.getClass(), MetaAnnotation.class);
             if (metaAnnotation != null) {
                 String name = annotation.annotationType().getName();
 
-                Map<String, Object> attributes = new LinkedHashMap<>(AnnotationUtils.getAnnotationAttributes(metaClass.getJavaClass(), annotation));
+                Map<String, Object> attributes = new LinkedHashMap<>(
+                        AnnotationUtils.getAnnotationAttributes(metaClass.getJavaClass(), annotation));
                 metaClass.getAnnotations().put(name, attributes);
 
                 Object propagateToSubclasses = attributes.get("propagateToSubclasses");
@@ -360,5 +355,11 @@ public class MetadataLoader {
                 }
             }
         }
+    }
+
+    private boolean isOrmAnnotation(Annotation annotation) {
+        return javax.persistence.Entity.class.isAssignableFrom(annotation.getClass())
+                || javax.persistence.MappedSuperclass.class.isAssignableFrom(annotation.getClass())
+                || javax.persistence.Embeddable.class.isAssignableFrom(annotation.getClass());
     }
 }

@@ -91,25 +91,30 @@ public class MetadataImpl implements Metadata {
                         }
                     });
 
-    @EventListener
-    @Order(Events.HIGHEST_CORE_PRECEDENCE + 30)
-    protected void initMetadata(ContextRefreshedEvent event) {
-        if (session != null) {
-            log.warn("Repetitive initialization\n" + StackTrace.asString());
-            return;
-        }
-
-        log.info("Initializing metadata");
-        long startTime = System.currentTimeMillis();
-
-        MetadataLoader metadataLoader = (MetadataLoader) event.getApplicationContext().getBean(MetadataLoader.NAME);
-        metadataLoader.loadMetadata();
+    @Inject
+    public MetadataImpl(MetadataLoader metadataLoader) {
         rootPackages = metadataLoader.getRootPackages();
         session = metadataLoader.getSession();
         SessionImpl.setSerializationSupportSession(session);
-
-        log.info("Metadata initialized in {} ms", System.currentTimeMillis() - startTime);
     }
+
+//    protected void initMetadata(ContextRefreshedEvent event) {
+//        if (session != null) {
+//            log.warn("Repetitive initialization\n" + StackTrace.asString());
+//            return;
+//        }
+//
+//        log.info("Initializing metadata");
+//        long startTime = System.currentTimeMillis();
+//
+//        MetadataLoader metadataLoader = (MetadataLoader) event.getApplicationContext().getBean(MetadataLoader.NAME);
+//        metadataLoader.loadMetadata();
+//        rootPackages = metadataLoader.getRootPackages();
+//        session = metadataLoader.getSession();
+//        SessionImpl.setSerializationSupportSession(session);
+//
+//        log.info("Metadata initialized in {} ms", System.currentTimeMillis() - startTime);
+//    }
 
     @Override
     public Session getSession() {

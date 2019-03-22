@@ -16,6 +16,8 @@
 
 package io.jmix.core.entity;
 
-public interface User extends Entity {
+import java.util.UUID;
+
+public interface User extends Entity<UUID> {
     String getLogin();
 }

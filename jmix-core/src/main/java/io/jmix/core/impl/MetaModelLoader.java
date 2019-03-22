@@ -55,7 +55,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * Loads meta-model from a set of annotated Java classes.
  */
 @Component(MetaModelLoader.NAME)
-@Scope("prototype")
 public class MetaModelLoader {
 
     public static final String NAME = "cuba_MetaModelLoader";
@@ -68,20 +67,14 @@ public class MetaModelLoader {
 
     protected DatatypeRegistry datatypes;
 
-    protected Session session;
-
     private static final Logger log = LoggerFactory.getLogger(MetaModelLoader.class);
 
-    public MetaModelLoader(Session session) {
-        this.session = session;
-    }
-
     @Inject
-    public void setDatatypeRegistry(DatatypeRegistry datatypeRegistry) {
-        this.datatypes = datatypeRegistry;
+    public MetaModelLoader(DatatypeRegistry datatypes) {
+        this.datatypes = datatypes;
     }
 
-    public void loadModel(List<String> classNames) {
+    public void loadModel(Session session, List<String> classNames) {
         checkNotNullArgument(classNames, "classInfos is null");
 
         Set<Class<?>> classes = new LinkedHashSet<>();
@@ -95,7 +88,7 @@ public class MetaModelLoader {
 
 
         for (Class<?> aClass : classes) {
-            MetaClassImpl metaClass = createClass(aClass);
+            MetaClassImpl metaClass = createClass(session, aClass);
             if (metaClass == null) {
                 log.warn("Class {} is not loaded into metadata", aClass.getName());
             }
@@ -110,7 +103,7 @@ public class MetaModelLoader {
 
         List<RangeInitTask> tasks = new ArrayList<>();
         for (Class<?> aClass : classes) {
-            MetadataObjectInfo<MetaClass> info = loadClass(aClass);
+            MetadataObjectInfo<MetaClass> info = loadClass(session, aClass);
             if (info != null) {
                 tasks.addAll(info.getTasks());
             } else {
@@ -124,7 +117,7 @@ public class MetaModelLoader {
     }
 
     @Nullable
-    protected MetadataObjectInfo<MetaClass> loadClass(Class<?> javaClass) {
+    protected MetadataObjectInfo<MetaClass> loadClass(Session session, Class<?> javaClass) {
         MetaClassImpl metaClass = (MetaClassImpl) session.getClass(javaClass);
         if (metaClass == null)
             return null;
@@ -133,16 +126,16 @@ public class MetaModelLoader {
 
         Collection<MetaClass> ancestors = metaClass.getAncestors();
         for (MetaClass ancestor : ancestors) {
-            initProperties(ancestor.getJavaClass(), ((MetaClassImpl) ancestor), tasks);
+            initProperties(session, ancestor.getJavaClass(), ((MetaClassImpl) ancestor), tasks);
         }
 
-        initProperties(javaClass, metaClass, tasks);
+        initProperties(session, javaClass, metaClass, tasks);
 
         return new MetadataObjectInfo<>(metaClass, tasks);
     }
 
     @Nullable
-    protected MetaClassImpl createClass(Class<?> javaClass) {
+    protected MetaClassImpl createClass(Session session, Class<?> javaClass) {
         if (AbstractInstance.class.equals(javaClass) || Object.class.equals(javaClass)) {
             return null;
         }
@@ -161,7 +154,7 @@ public class MetaModelLoader {
 
             Class<?> ancestor = javaClass.getSuperclass();
             if (ancestor != null) {
-                MetaClass ancestorClass = createClass(ancestor);
+                MetaClass ancestorClass = createClass(session, ancestor);
                 if (ancestorClass != null) {
                     metaClass.addAncestor(ancestorClass);
                 }
@@ -203,7 +196,7 @@ public class MetaModelLoader {
 //        }
 //    }
 
-    protected void initProperties(Class<?> clazz, MetaClassImpl metaClass, Collection<RangeInitTask> tasks) {
+    protected void initProperties(Session session, Class<?> clazz, MetaClassImpl metaClass, Collection<RangeInitTask> tasks) {
         if (!metaClass.getOwnProperties().isEmpty())
             return;
 
@@ -222,7 +215,7 @@ public class MetaModelLoader {
                     if (isCollection(field) || isMap(field)) {
                         collectionProps.add(field);
                     } else {
-                        info = loadProperty(metaClass, field);
+                        info = loadProperty(session, metaClass, field);
                         tasks.addAll(info.getTasks());
                         MetaProperty metaProperty = info.getObject();
                         onPropertyLoaded(metaProperty, field);
@@ -235,7 +228,7 @@ public class MetaModelLoader {
         }
 
         for (Field f : collectionProps) {
-            MetadataObjectInfo<MetaProperty> info = loadCollectionProperty(metaClass, f);
+            MetadataObjectInfo<MetaProperty> info = loadCollectionProperty(session, metaClass, f);
             tasks.addAll(info.getTasks());
             MetaProperty metaProperty = info.getObject();
             onPropertyLoaded(metaProperty, f);
@@ -260,7 +253,7 @@ public class MetaModelLoader {
                     } else if (method.getParameterCount() != 0) {
                         throw new UnsupportedOperationException(String.format("Method-based property %s.%s doesn't support arguments", clazz.getSimpleName(), method.getName()));
                     } else {
-                        info = loadProperty(metaClass, method, name);
+                        info = loadProperty(session, metaClass, method, name);
                         tasks.addAll(info.getTasks());
                     }
                     MetaProperty metaProperty = info.getObject();
@@ -288,7 +281,7 @@ public class MetaModelLoader {
         return method.isAnnotationPresent(io.jmix.core.metamodel.annotations.MetaProperty.class);
     }
 
-    protected MetadataObjectInfo<MetaProperty> loadProperty(MetaClassImpl metaClass, Field field) {
+    protected MetadataObjectInfo<MetaProperty> loadProperty(Session session, MetaClassImpl metaClass, Field field) {
         Collection<RangeInitTask> tasks = new ArrayList<>();
 
         MetaPropertyImpl property = new MetaPropertyImpl(metaClass, field.getName());
@@ -316,7 +309,7 @@ public class MetaModelLoader {
         property.setAnnotatedElement(field);
         property.setDeclaringClass(field.getDeclaringClass());
 
-        MetadataObjectInfo<Range> info = loadRange(property, type, map);
+        MetadataObjectInfo<Range> info = loadRange(session, property, type, map);
         Range range = info.getObject();
         if (range != null) {
             ((AbstractRange) range).setCardinality(cardinality);
@@ -336,7 +329,7 @@ public class MetaModelLoader {
         return new MetadataObjectInfo<>(property, tasks);
     }
 
-    protected MetadataObjectInfo<MetaProperty> loadProperty(MetaClassImpl metaClass,
+    protected MetadataObjectInfo<MetaProperty> loadProperty(Session session, MetaClassImpl metaClass,
                                                             Method method, String name) {
         Collection<RangeInitTask> tasks = new ArrayList<>();
 
@@ -361,7 +354,7 @@ public class MetaModelLoader {
         property.setDeclaringClass(method.getDeclaringClass());
         property.setJavaType(method.getReturnType());
 
-        MetadataObjectInfo<Range> info = loadRange(property, type, map);
+        MetadataObjectInfo<Range> info = loadRange(session, property, type, map);
         Range range = info.getObject();
         if (range != null) {
             ((AbstractRange) range).setCardinality(Range.Cardinality.NONE);
@@ -374,7 +367,7 @@ public class MetaModelLoader {
         return new MetadataObjectInfo<>(property, tasks);
     }
 
-    protected MetadataObjectInfo<MetaProperty> loadCollectionProperty(MetaClassImpl metaClass, Field field) {
+    protected MetadataObjectInfo<MetaProperty> loadCollectionProperty(Session session, MetaClassImpl metaClass, Field field) {
         Collection<RangeInitTask> tasks = new ArrayList<>();
 
         MetaPropertyImpl property = new MetaPropertyImpl(metaClass, field.getName());
@@ -397,7 +390,7 @@ public class MetaModelLoader {
         property.setDeclaringClass(field.getDeclaringClass());
         property.setJavaType(field.getType());
 
-        MetadataObjectInfo<Range> info = loadRange(property, type, map);
+        MetadataObjectInfo<Range> info = loadRange(session, property, type, map);
         Range range = info.getObject();
         if (range != null) {
             ((AbstractRange) range).setCardinality(cardinality);
@@ -747,7 +740,7 @@ public class MetaModelLoader {
     }
 
     @SuppressWarnings("unchecked")
-    protected MetadataObjectInfo<Range> loadRange(MetaProperty metaProperty, Class<?> type, Map<String, Object> map) {
+    protected MetadataObjectInfo<Range> loadRange(Session session, MetaProperty metaProperty, Class<?> type, Map<String, Object> map) {
         Datatype datatype = (Datatype) map.get("datatype");
         if (datatype != null) {
             // A datatype is assigned explicitly
@@ -779,7 +772,7 @@ public class MetaModelLoader {
             return new MetadataObjectInfo<>(new EnumerationRange(new EnumerationImpl(type)));
 
         } else {
-            return new MetadataObjectInfo<>(null, Collections.singletonList(new RangeInitTask(metaProperty, type, map)));
+            return new MetadataObjectInfo<>(null, Collections.singletonList(new RangeInitTask(session, metaProperty, type, map)));
         }
     }
 
@@ -836,11 +829,13 @@ public class MetaModelLoader {
 
     protected class RangeInitTask {
 
+        private Session session;
         private MetaProperty metaProperty;
         private Class rangeClass;
         private Map<String, Object> map;
 
-        public RangeInitTask(MetaProperty metaProperty, Class rangeClass, Map<String, Object> map) {
+        public RangeInitTask(Session session, MetaProperty metaProperty, Class rangeClass, Map<String, Object> map) {
+            this.session = session;
             this.metaProperty = metaProperty;
             this.rangeClass = rangeClass;
             this.map = map;

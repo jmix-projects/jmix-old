@@ -100,6 +100,8 @@ public class JmixComponentDescriptor implements Comparable<JmixComponentDescript
      * @return names of properties exported by this app component, sorted in natural order
      */
     public List<String> getPropertyNames() {
+        if (properties == null)
+            return Collections.emptyList();
         List<String> list = new ArrayList<>(properties.stringPropertyNames());
         list.sort(Comparator.naturalOrder());
         return list;

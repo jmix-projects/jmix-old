@@ -17,10 +17,21 @@
 package io.jmix.core
 
 import com.sample.addon1.TestAddon1Configuration
+import com.sample.addon1.entity.TestAddon1Entity
 import com.sample.app.TestAppConfiguration
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
+import javax.inject.Inject
+
 @ContextConfiguration(classes = [JmixCoreConfiguration, TestAddon1Configuration, TestAppConfiguration])
 class MetadataTest extends Specification {
+
+    @Inject
+    Metadata metadata
+
+    def "test"() {
+        expect:
+        metadata.getClass(TestAddon1Entity) != null
+    }
 }
