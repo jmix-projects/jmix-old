@@ -18,8 +18,8 @@ package io.jmix.backend.impl.entitycache;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
-import io.jmix.backend.ClusterListenerAdapter;
-import io.jmix.backend.ClusterManager;
+import io.jmix.core.cluster.ClusterListenerAdapter;
+import io.jmix.core.cluster.ClusterManager;
 import io.jmix.backend.EntityManager;
 import io.jmix.backend.Persistence;
 import io.jmix.core.Metadata;

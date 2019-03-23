@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package io.jmix.backend;
+package io.jmix.core;
 
-/**
- * Adapter containing default implementation for simple cluster listeners that don't need state transfer.
- *
- */
-public abstract class ClusterListenerAdapter<T> implements ClusterListener<T> {
+import javax.persistence.TemporalType;
+import java.io.Serializable;
+import java.util.Date;
 
-    @Override
-    public byte[] getState() {
-        return new byte[0];
-    }
+public class TemporalValue implements Serializable {
 
-    @Override
-    public void setState(byte[] state) {
+    private static final long serialVersionUID = 4972088045550018312L;
+
+    public final Date date;
+    public final TemporalType type;
+
+    public TemporalValue(Date date, TemporalType type) {
+        this.date = date;
+        this.type = type;
     }
 }

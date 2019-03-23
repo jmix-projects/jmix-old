@@ -16,7 +16,7 @@
 
 package io.jmix.backend.impl.entitycache;
 
-import io.jmix.backend.ClusterManager;
+import io.jmix.core.cluster.ClusterManager;
 import io.jmix.core.AppBeans;
 import org.eclipse.persistence.exceptions.RemoteCommandManagerException;
 import org.eclipse.persistence.internal.sessions.coordination.RemoteConnection;

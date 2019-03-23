@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.backend;
+package io.jmix.core.cluster;
 
 /**
  * Interface to be implemented by middleware cluster listeners. A cluster listener receives messages from other nodes

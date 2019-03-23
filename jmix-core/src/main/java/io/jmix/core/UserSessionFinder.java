@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
-public interface User extends Entity<UUID> {
+/**
+ * INTERNAL.
+ */
+public interface UserSessionFinder {
 
-    String getLogin();
-
-    void setLogin(String server);
-
-    String getLoginLowerCase();
-
-    String getName();
+    @Nullable
+    UserSession get(UUID id);
 }

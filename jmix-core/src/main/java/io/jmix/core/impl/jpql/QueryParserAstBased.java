@@ -19,7 +19,6 @@ package io.jmix.core.impl.jpql;
 import io.jmix.core.QueryParser;
 import io.jmix.core.impl.jpql.model.Attribute;
 import io.jmix.core.impl.jpql.model.JpqlEntityModel;
-import io.jmix.core.impl.jpql.transform.NodesFinder;
 import io.jmix.core.impl.jpql.tree.IdentificationVariableNode;
 import io.jmix.core.impl.jpql.tree.PathNode;
 import io.jmix.core.impl.jpql.tree.SimpleConditionNode;

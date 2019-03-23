@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core;
 
-import java.util.UUID;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface User extends Entity<UUID> {
+/**
+ * Annotation that suggests what should be written to log for an exception.
+ *
+ */
+@Target({java.lang.annotation.ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Logging {
 
-    String getLogin();
+    enum Type {
+        FULL, BRIEF, NONE
+    }
 
-    void setLogin(String server);
-
-    String getLoginLowerCase();
-
-    String getName();
+    Type value() default Type.FULL;
 }

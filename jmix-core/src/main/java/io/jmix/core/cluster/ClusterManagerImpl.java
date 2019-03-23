@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.backend.impl;
+package io.jmix.core.cluster;
 
-import io.jmix.backend.ClusterListener;
-import io.jmix.backend.ClusterManager;
+import io.jmix.core.cluster.ClusterListener;
+import io.jmix.core.cluster.ClusterManager;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;

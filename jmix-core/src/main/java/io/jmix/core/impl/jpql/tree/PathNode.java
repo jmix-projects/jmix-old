@@ -26,6 +26,8 @@ import org.antlr.runtime.tree.CommonTree;
 import java.util.Collections;
 import java.util.List;
 
+import static io.jmix.core.impl.jpql.JPATreeNodes.createWord;
+
 public class PathNode extends BaseCustomNode {
     private String entityVariableName;
 
@@ -73,29 +75,30 @@ public class PathNode extends BaseCustomNode {
     }
 
     public String asPathString(char separator) {
-        String result = "";
-        result += entityVariableName;
+        StringBuilder result = new StringBuilder();
+        result.append(entityVariableName);
         if (children != null) {
             for (Object child : children) {
-                result += separator + child.toString();
+                result.append(separator)
+                        .append(child.toString());
             }
         }
-        return result;
+        return result.toString();
     }
 
     public void renameVariableTo(String newVariableName) {
         entityVariableName = newVariableName;
     }
 
-    public void addDefaultChildren(String fieldPath) {
-        String[] strings = fieldPath.split("\\.");
-        for (String string : strings) {
-            addChild(new CommonTree(new CommonToken(JPA2Lexer.WORD, string)));
+    public void addDefaultChildren(String path) {
+        String[] fields = path.split("\\.");
+        for (String field : fields) {
+            addChild(createWord(field));
         }
     }
 
     public void addDefaultChild(String field) {
-        addChild(new CommonTree(new CommonToken(JPA2Lexer.WORD, field)));
+        addChild(createWord(field));
     }
 
     protected EntityPath createEntityPath() {

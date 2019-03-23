@@ -13,18 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.jmix.core.usersessions;
 
-package io.jmix.core.entity;
+import io.jmix.core.Logging;
+import io.jmix.core.compatibility.SupportedByClient;
 
 import java.util.UUID;
 
-public interface User extends Entity<UUID> {
+/**
+ * Raised by middleware if the client provides an invalid user session ID (e.g. if the user session has expired).
+ *
+ */
+@SupportedByClient
+@Logging(Logging.Type.BRIEF)
+public class NoUserSessionException extends RuntimeException {
 
-    String getLogin();
+    private static final long serialVersionUID = 4820628023682230319L;
 
-    void setLogin(String server);
-
-    String getLoginLowerCase();
-
-    String getName();
+    public NoUserSessionException(UUID sessionId) {
+        super(String.format("User session not found: %s", sessionId.toString()));
+    }
 }

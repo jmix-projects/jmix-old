@@ -18,6 +18,7 @@ package io.jmix.core.impl.jpql;
 import io.jmix.core.impl.jpql.antlr2.JPA2Lexer;
 import io.jmix.core.impl.jpql.antlr2.JPA2Parser;
 import io.jmix.core.impl.jpql.tree.JoinVariableNode;
+import io.jmix.core.impl.jpql.tree.OrderByFieldNode;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
@@ -76,6 +77,14 @@ public class Parser {
         JPA2Parser.identification_variable_declaration_or_collection_member_declaration_return aReturn =
                 parser.identification_variable_declaration_or_collection_member_declaration();
         CommonTree tree = (CommonTree) aReturn.getTree();
+        checkTreeForExceptions(input, tree);
+        return tree;
+    }
+
+    public static OrderByFieldNode parseOrderByItem(String input) throws RecognitionException {
+        JPA2Parser parser = createParser(input);
+        JPA2Parser.orderby_item_return aReturn = parser.orderby_item();
+        OrderByFieldNode tree = (OrderByFieldNode) aReturn.getTree();
         checkTreeForExceptions(input, tree);
         return tree;
     }

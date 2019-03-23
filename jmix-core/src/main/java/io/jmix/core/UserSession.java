@@ -18,20 +18,48 @@ package io.jmix.core;
 
 import io.jmix.core.entity.User;
 
+import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.TimeZone;
 import java.util.UUID;
 
 public class UserSession {
+
+    private User user;
+
+    public UserSession(User user) {
+        this.user = user;
+    }
 
     public UUID getId() {
         return null;
     }
 
     public User getUser() {
-        return null;
+        return user;
     }
 
     public TimeZone getTimeZone() {
         return null;
+    }
+
+    public boolean isSystem() {
+        return false;
+    }
+
+    public String getAddress() {
+        return null;
+    }
+
+    public String getClientInfo() {
+        return null;
+    }
+
+    public <T> T getAttribute(String attributeName) {
+        return null;
+    }
+
+    public void setAttribute(String name, Serializable value) {
+
     }
 }

@@ -18,8 +18,6 @@ package io.jmix.core.impl.jpql;
 
 import io.jmix.core.impl.jpql.antlr2.JPA2Lexer;
 import io.jmix.core.impl.jpql.model.JpqlEntityModel;
-import io.jmix.core.impl.jpql.transform.NodesFinder;
-import io.jmix.core.impl.jpql.transform.ParameterCounter;
 import io.jmix.core.impl.jpql.tree.IdentificationVariableNode;
 import io.jmix.core.impl.jpql.tree.ParameterNode;
 import io.jmix.core.impl.jpql.tree.PathNode;

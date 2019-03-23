@@ -14,17 +14,27 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.backend.impl;
 
-import java.util.UUID;
+import io.jmix.core.LoadContext;
 
-public interface User extends Entity<UUID> {
+import java.util.List;
 
-    String getLogin();
+/**
+ * Supports functionality that allows queries from previously selected results.
+ *
+ */
+public interface QueryResultsManager {
 
-    void setLogin(String server);
+    String NAME = "cuba_QueryResultsManager";
 
-    String getLoginLowerCase();
+    void savePreviousQueryResults(LoadContext loadContext);
 
-    String getName();
+    void insert(int queryKey, List idList);
+
+    void delete(int queryKey);
+
+    void deleteForCurrentSession();
+
+    void deleteForInactiveSessions();
 }

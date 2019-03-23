@@ -20,6 +20,7 @@ import io.jmix.core.config.Property;
 import io.jmix.core.config.Source;
 import io.jmix.core.config.SourceType;
 import io.jmix.core.config.defaults.*;
+import io.jmix.core.usersessions.UserSessions;
 
 /**
  * Configuration parameters interface used by the CORE layer.
@@ -84,7 +85,7 @@ public interface ServerConfig extends Config {
 
     /**
      * @return User session ping timeout in cluster.
-     * If ping is performed by {@link UserSessionsAPI#getAndRefresh}, user session is sent to the cluster only
+     * If ping is performed by {@link UserSessions#getAndRefresh}, user session is sent to the cluster only
      * after this timeout
      */
     @Property("cuba.userSessionSendTimeoutSec")
@@ -93,7 +94,7 @@ public interface ServerConfig extends Config {
     void setUserSessionSendTimeoutSec(int timeout);
 
     /**
-     * {@link UserSessionsAPI} will update last used timestamp for a session only if the old value is older than
+     * {@link UserSessions} will update last used timestamp for a session only if the old value is older than
      * the current + timeout.
      */
     @Property("cuba.userSessionTouchTimeoutSec")

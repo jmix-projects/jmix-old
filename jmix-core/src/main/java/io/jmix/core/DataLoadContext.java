@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core;
 
-import java.util.UUID;
+/**
+ * Base interface for load contexts used in {@link DataManager}.
+ */
+public interface DataLoadContext {
 
-public interface User extends Entity<UUID> {
-
-    String getLogin();
-
-    void setLogin(String server);
-
-    String getLoginLowerCase();
-
-    String getName();
+    /**
+     * @param queryString JPQL query string. Only named parameters are supported.
+     * @return  query definition object
+     */
+    DataLoadContextQuery setQueryString(String queryString);
 }

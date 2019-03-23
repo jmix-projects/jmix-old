@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.core.impl.jpql.transform;
+package io.jmix.core.impl.jpql;
 
 import org.antlr.runtime.tree.TreeVisitorAction;
 
