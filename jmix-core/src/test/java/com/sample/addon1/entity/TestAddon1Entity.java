@@ -16,17 +16,14 @@
 
 package com.sample.addon1.entity;
 
-import io.jmix.core.entity.BaseUuidEntity;
+import io.jmix.core.entity.StandardEntity;
+import io.jmix.core.metamodel.annotations.MetaClass;
+import io.jmix.core.metamodel.annotations.MetaProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+@MetaClass(name = "addon1_TestEntity")
+public class TestAddon1Entity extends StandardEntity {
 
-@Entity(name = "addon1_TestEntity")
-@Table(name = "ADDON1_TEST_ENTITY")
-public class TestAddon1Entity extends BaseUuidEntity {
-
-    @Column(name = "NAME")
+    @MetaProperty
     private String name;
 
     public String getName() {

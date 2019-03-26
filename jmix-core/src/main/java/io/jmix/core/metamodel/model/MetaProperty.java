@@ -98,4 +98,6 @@ public interface MetaProperty extends MetadataObject {
      */
     @Nullable
     Class<?> getDeclaringClass();
+
+    Store getStore();
 }

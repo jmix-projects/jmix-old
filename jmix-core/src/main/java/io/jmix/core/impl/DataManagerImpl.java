@@ -22,6 +22,7 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -46,7 +47,12 @@ public class DataManagerImpl implements DataManager {
     protected ServerConfig serverConfig;
 
     @Inject
-    protected StoreFactory storeFactory;
+    protected Stores stores;
+
+    @Inject
+    protected ApplicationContext applicationContext;
+
+    protected Map<String, DataStore> dataStores = new HashMap<>();
 
     // todo entity log
 //    @Inject
@@ -56,7 +62,7 @@ public class DataManagerImpl implements DataManager {
     @Override
     public <E extends Entity> E load(LoadContext<E> context) {
         MetaClass metaClass = metadata.getClassNN(context.getMetaClass());
-        DataStore storage = storeFactory.get(getStoreName(metaClass));
+        DataStore storage = getDataStore(getStoreName(metaClass));
         E entity = storage.load(context);
         if (entity != null)
             readCrossDataStoreReferences(Collections.singletonList(entity), context.getView(), metaClass, context.isJoinTransaction());
@@ -67,7 +73,7 @@ public class DataManagerImpl implements DataManager {
     @SuppressWarnings("unchecked")
     public <E extends Entity> List<E> loadList(LoadContext<E> context) {
         MetaClass metaClass = metadata.getClassNN(context.getMetaClass());
-        DataStore storage = storeFactory.get(getStoreName(metaClass));
+        DataStore storage = getDataStore(getStoreName(metaClass));
         List<E> entities = storage.loadList(context);
         readCrossDataStoreReferences(entities, context.getView(), metaClass, context.isJoinTransaction());
         return entities;
@@ -76,7 +82,7 @@ public class DataManagerImpl implements DataManager {
     @Override
     public long getCount(LoadContext<? extends Entity> context) {
         MetaClass metaClass = metadata.getClassNN(context.getMetaClass());
-        DataStore storage = storeFactory.get(getStoreName(metaClass));
+        DataStore storage = getDataStore(getStoreName(metaClass));
         return storage.getCount(context);
     }
 
@@ -154,7 +160,7 @@ public class DataManagerImpl implements DataManager {
 
         Set<Entity> result = new LinkedHashSet<>();
         for (Map.Entry<String, CommitContext> entry : storeToContextMap.entrySet()) {
-            DataStore dataStore = storeFactory.get(entry.getKey());
+            DataStore dataStore = getDataStore(entry.getKey());
             Set<Entity> committed = dataStore.commit(entry.getValue());
             if (!committed.isEmpty()) {
                 Entity committedEntity = committed.iterator().next();
@@ -232,7 +238,7 @@ public class DataManagerImpl implements DataManager {
 
     @Override
     public List<KeyValueEntity> loadValues(ValueLoadContext context) {
-        DataStore store = storeFactory.get(getStoreName(context.getStoreName()));
+        DataStore store = getDataStore(getStoreName(context.getStoreName()));
         return store.loadValues(context);
     }
 
@@ -287,7 +293,7 @@ public class DataManagerImpl implements DataManager {
     }
 
     protected boolean writeCrossDataStoreReferences(Entity entity, Collection<Entity> allEntities) {
-        if (Stores.getAdditional().isEmpty())
+        if (stores.getAdditional().isEmpty())
             return false;
 
         boolean repeatRequired = false;
@@ -342,7 +348,7 @@ public class DataManagerImpl implements DataManager {
 
     protected void readCrossDataStoreReferences(Collection<? extends Entity> entities, View view, MetaClass metaClass,
                                                 boolean joinTransaction) {
-        if (Stores.getAdditional().isEmpty() || entities.isEmpty() || view == null)
+        if (stores.getAdditional().isEmpty() || entities.isEmpty() || view == null)
             return;
 
         CrossDataStoreReferenceLoader crossDataStoreReferenceLoader = AppBeans.getPrototype(
@@ -351,11 +357,20 @@ public class DataManagerImpl implements DataManager {
     }
 
     protected String getStoreName(MetaClass metaClass) {
-        return getStoreName(metadata.getTools().getStoreName(metaClass));
+        return metaClass.getStore().getName();
     }
 
     protected String getStoreName(@Nullable String storeName) {
-        return storeName == null ? StoreFactory.NULL_NAME : storeName;
+        return storeName == null ? Stores.NOOP : storeName;
+    }
+
+    protected DataStore getDataStore(String name) {
+        String beanName = stores.get(name).getDescriptor().getBeanName();
+        return dataStores.computeIfAbsent(beanName, s -> {
+            DataStore dataStore = applicationContext.getBean(s, DataStore.class);
+            dataStore.setName(name);
+            return dataStore;
+        });
     }
 
     private static class Secure extends DataManagerImpl {

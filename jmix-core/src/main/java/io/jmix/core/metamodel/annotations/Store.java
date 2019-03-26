@@ -14,28 +14,15 @@
  * limitations under the License.
  */
 
-package com.sample.app.entity;
+package io.jmix.core.metamodel.annotations;
 
-import io.jmix.core.entity.StandardEntity;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+@Target({java.lang.annotation.ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Store {
 
-@Entity(name = "test_TestAppEntity")
-@Table(name = "TEST_APP_ENTITY")
-public class TestAppEntity extends StandardEntity {
-
-    private static final long serialVersionUID = 8256929425690816623L;
-
-    @Column(name = "NAME")
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    String name();
 }

@@ -18,18 +18,14 @@ package io.jmix.core.metamodel.model.impl;
 
 import io.jmix.core.metamodel.model.MetadataObject;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings({"TransientFieldNotInitialized"})
-public abstract class MetadataObjectImpl implements MetadataObject, Serializable {
-
-    private static final long serialVersionUID = 5179324236413815312L;
+public abstract class MetadataObjectImpl implements MetadataObject {
 
     protected String name;
 
-    private transient Map<String, Object> annotations = new HashMap<>();
+    private Map<String, Object> annotations = new HashMap<>();
 
     @Override
     public String getName() {

@@ -165,27 +165,27 @@ public class MetadataLoader {
 //            }
 //    }
 
-    protected void initStoreMetaAnnotations(Map<String, List<EntityClassInfo>> entityPackages) {
-        if (Stores.getAdditional().isEmpty())
-            return;
-
-        Map<String, String> nameToStoreMap = new HashMap<>();
-        for (List<EntityClassInfo> list : entityPackages.values()) {
-            for (EntityClassInfo entityClassInfo : list) {
-                if (nameToStoreMap.containsKey(entityClassInfo.name)) {
-                    throw new IllegalStateException("Entity cannot belong to more than one store: " + entityClassInfo.name);
-                }
-                nameToStoreMap.put(entityClassInfo.name, entityClassInfo.store);
-            }
-        }
-
-        for (MetaClass metaClass : session.getClasses()) {
-            String className = metaClass.getJavaClass().getName();
-            String store = nameToStoreMap.get(className);
-            if (store != null)
-                metaClass.getAnnotations().put(MetadataTools.STORE_ANN_NAME, store);
-        }
-    }
+//    protected void initStoreMetaAnnotations(Map<String, List<EntityClassInfo>> entityPackages) {
+//        if (Stores.getAdditional().isEmpty())
+//            return;
+//
+//        Map<String, String> nameToStoreMap = new HashMap<>();
+//        for (List<EntityClassInfo> list : entityPackages.values()) {
+//            for (EntityClassInfo entityClassInfo : list) {
+//                if (nameToStoreMap.containsKey(entityClassInfo.name)) {
+//                    throw new IllegalStateException("Entity cannot belong to more than one store: " + entityClassInfo.name);
+//                }
+//                nameToStoreMap.put(entityClassInfo.name, entityClassInfo.store);
+//            }
+//        }
+//
+//        for (MetaClass metaClass : session.getClasses()) {
+//            String className = metaClass.getJavaClass().getName();
+//            String store = nameToStoreMap.get(className);
+//            if (store != null)
+//                metaClass.getAnnotations().put(MetadataTools.STORE_ANN_NAME, store);
+//        }
+//    }
 
     /**
      * Initialize connections between extended and base entities.
@@ -269,25 +269,25 @@ public class MetadataLoader {
             postProcessProperty(metaClass, property);
         }
 
-        Collection<MetaClass> missingDescendants = new HashSet<>(1);
-
-        findMissingDescendants(metaClass, missingDescendants);
-
-        if (!missingDescendants.isEmpty()) {
-            CollectionUtils.addAll(metaClass.getDescendants(), missingDescendants.iterator());
-
-            MetaClass ancestorMetaClass = metaClass.getAncestor();
-            while (ancestorMetaClass != null) {
-                CollectionUtils.addAll(ancestorMetaClass.getDescendants(), missingDescendants.iterator());
-                ancestorMetaClass = ancestorMetaClass.getAncestor();
-            }
-        }
-
-        MetaClass ancestorMetaClass = metaClass.getAncestor();
-        while (ancestorMetaClass != null) {
-            ((MetaClassImpl) metaClass).addAncestor(ancestorMetaClass);
-            ancestorMetaClass = ancestorMetaClass.getAncestor();
-        }
+//        Collection<MetaClass> missingDescendants = new HashSet<>(1);
+//
+//        findMissingDescendants(metaClass, missingDescendants);
+//
+//        if (!missingDescendants.isEmpty()) {
+//            CollectionUtils.addAll(metaClass.getDescendants(), missingDescendants.iterator());
+//
+//            MetaClass ancestorMetaClass = metaClass.getAncestor();
+//            while (ancestorMetaClass != null) {
+//                CollectionUtils.addAll(ancestorMetaClass.getDescendants(), missingDescendants.iterator());
+//                ancestorMetaClass = ancestorMetaClass.getAncestor();
+//            }
+//        }
+//
+//        MetaClass ancestorMetaClass = metaClass.getAncestor();
+//        while (ancestorMetaClass != null) {
+//            ((MetaClassImpl) metaClass).addAncestor(ancestorMetaClass);
+//            ancestorMetaClass = ancestorMetaClass.getAncestor();
+//        }
     }
 
     protected void postProcessProperty(MetaClass metaClass, MetaProperty metaProperty) {
@@ -321,13 +321,13 @@ public class MetadataLoader {
         }
     }
 
-    protected void findMissingDescendants(MetaClass ancestor, Collection<MetaClass> missingDescendants) {
-        Collection<MetaClass> descendants = ancestor.getDescendants();
-        for (Object descendant : descendants) {
-            missingDescendants.add((MetaClass) descendant);
-            findMissingDescendants((MetaClass) descendant, missingDescendants);
-        }
-    }
+//    protected void findMissingDescendants(MetaClass ancestor, Collection<MetaClass> missingDescendants) {
+//        Collection<MetaClass> descendants = ancestor.getDescendants();
+//        for (Object descendant : descendants) {
+//            missingDescendants.add((MetaClass) descendant);
+//            findMissingDescendants((MetaClass) descendant, missingDescendants);
+//        }
+//    }
 
     protected void initMetaAnnotations(MetaClass metaClass) {
         for (Annotation annotation : metaClass.getJavaClass().getAnnotations()) {

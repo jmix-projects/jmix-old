@@ -16,35 +16,29 @@
 
 package io.jmix.core.metamodel.model.impl;
 
-import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.metamodel.model.Range;
-import io.jmix.core.metamodel.model.Session;
+import io.jmix.core.metamodel.model.*;
 
-import java.io.InvalidObjectException;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
-@SuppressWarnings({"TransientFieldNotInitialized"})
 public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty {
 
+    private Store store;
     private MetaClass domain;
-    private transient final Session session;
+    private final Session session;
 
-    private transient boolean mandatory;
-    private transient boolean readOnly;
-    private transient Type type;
-    private transient Range range;
+    private boolean mandatory;
+    private boolean readOnly;
+    private Type type;
+    private Range range;
 
-    private transient MetaProperty inverse;
+    private MetaProperty inverse;
 
-    private transient AnnotatedElement annotatedElement;
-    private transient Class<?> javaType;
-    private transient Class<?> declaringClass;
-
-    private static final long serialVersionUID = -2827471157045502206L;
+    private AnnotatedElement annotatedElement;
+    private Class<?> javaType;
+    private Class<?> declaringClass;
 
     public MetaPropertyImpl(MetaClass domain, String name) {
         this.domain = domain;
@@ -54,17 +48,20 @@ public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty
         ((MetaClassImpl) domain).registerProperty(this);
     }
 
-    protected Object readResolve() throws InvalidObjectException {
-        Session session = SessionImpl.serializationSupportSession;
-        if (session == null) {
-            return Proxy.newProxyInstance(
-                    this.getClass().getClassLoader(),
-                    new Class[]{MetaProperty.class},
-                    new MetaPropertyInvocationHandler(domain, name)
-            );
-        } else {
-            return domain.getProperty(name);
-        }
+    public MetaPropertyImpl(MetaPropertyImpl prototype) {
+        name = prototype.name;
+
+        store = prototype.store;
+        domain = prototype.domain;
+        session = prototype.session;
+        mandatory = prototype.mandatory;
+        readOnly = prototype.readOnly;
+        type = prototype.type;
+        range = prototype.range;
+        inverse = prototype.inverse;
+        annotatedElement = prototype.annotatedElement;
+        javaType = prototype.javaType;
+        declaringClass = prototype.declaringClass;
     }
 
     @Override
@@ -83,6 +80,7 @@ public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty
 
     public void setInverse(MetaProperty inverse) {
         this.inverse = inverse;
+        withClones(clone -> clone.inverse = inverse);
     }
 
     @Override
@@ -95,6 +93,11 @@ public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty
         return range;
     }
 
+    public void setRange(Range range) {
+        this.range = range;
+        withClones(clone -> clone.range = range);
+    }
+
     @Override
     public AnnotatedElement getAnnotatedElement() {
         return annotatedElement;
@@ -102,6 +105,7 @@ public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty
 
     public void setAnnotatedElement(AnnotatedElement annotatedElement) {
         this.annotatedElement = annotatedElement;
+        withClones(clone -> clone.annotatedElement = annotatedElement);
     }
 
     @Override
@@ -111,6 +115,7 @@ public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty
 
     public void setJavaType(Class<?> javaType) {
         this.javaType = javaType;
+        withClones(clone -> clone.javaType = javaType);
     }
 
     @Override
@@ -118,12 +123,19 @@ public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty
         return declaringClass;
     }
 
-    public void setDeclaringClass(Class<?> declaringClass) {
-        this.declaringClass = declaringClass;
+    @Override
+    public Store getStore() {
+        return store;
     }
 
-    public void setRange(Range range) {
-        this.range = range;
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
+    public void setDeclaringClass(Class<?> declaringClass) {
+        this.declaringClass = declaringClass;
+        withClones(clone -> clone.declaringClass = declaringClass);
+
     }
 
     @Override
@@ -133,6 +145,7 @@ public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty
 
     public void setType(Type type) {
         this.type = type;
+        withClones(clone -> clone.type = type);
     }
 
     @Override
@@ -142,6 +155,7 @@ public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty
 
     public void setMandatory(boolean mandatory) {
         this.mandatory = mandatory;
+        withClones(clone -> clone.mandatory = mandatory);
     }
 
     @Override
@@ -151,37 +165,18 @@ public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty
 
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
+        withClones(clone -> clone.readOnly = readOnly);
+    }
+
+    protected void withClones(Consumer<MetaPropertyImpl> consumer) {
+        for (MetaClass descendant : domain.getDescendants()) {
+            MetaPropertyImpl clone = (MetaPropertyImpl) descendant.getPropertyNN(name);
+            consumer.accept(clone);
+        }
     }
 
     @Override
     public String toString() {
         return domain.getName() + "." + name;
-    }
-
-    private static class MetaPropertyInvocationHandler implements InvocationHandler {
-
-        private MetaClass domain;
-        private String name;
-        private volatile MetaProperty metaProperty;
-
-        public MetaPropertyInvocationHandler(MetaClass domain, String name) {
-            this.domain = domain;
-            this.name = name;
-        }
-
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if ("hashCode".equals(method.getName())) {
-                return hashCode();
-            }
-            if (metaProperty == null) {
-                synchronized (this) {
-                    if (metaProperty == null) {
-                        metaProperty = domain.getProperty(name);
-                    }
-                }
-            }
-            return method.invoke(metaProperty, args);
-        }
     }
 }

@@ -18,6 +18,7 @@ package io.jmix.core.impl;
 
 import com.google.common.base.Joiner;
 import io.jmix.core.MetadataTools;
+import io.jmix.core.Stores;
 import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.entity.annotation.MetaAnnotation;
 import io.jmix.core.metamodel.annotations.Composition;
@@ -35,7 +36,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 
@@ -67,11 +67,14 @@ public class MetaModelLoader {
 
     protected DatatypeRegistry datatypes;
 
+    protected Stores stores;
+
     private static final Logger log = LoggerFactory.getLogger(MetaModelLoader.class);
 
     @Inject
-    public MetaModelLoader(DatatypeRegistry datatypes) {
+    public MetaModelLoader(DatatypeRegistry datatypes, Stores stores) {
         this.datatypes = datatypes;
+        this.stores = stores;
     }
 
     public void loadModel(Session session, List<String> classNames) {
@@ -86,7 +89,6 @@ public class MetaModelLoader {
             }
         }
 
-
         for (Class<?> aClass : classes) {
             MetaClassImpl metaClass = createClass(session, aClass);
             if (metaClass == null) {
@@ -94,12 +96,10 @@ public class MetaModelLoader {
             }
         }
 
-//        for (Class<?> aClass : classes) {
-//            MetaClassImpl metaClass = (MetaClassImpl) session.getClass(aClass);
-//            if (metaClass != null) {
-//                onClassLoaded(metaClass, aClass, entry.getValue());
-//            }
-//        }
+        for (MetaClass metaClass : session.getClasses()) {
+            initAncestors(session, metaClass);
+            assignStore(metaClass);
+        }
 
         List<RangeInitTask> tasks = new ArrayList<>();
         for (Class<?> aClass : classes) {
@@ -114,6 +114,23 @@ public class MetaModelLoader {
         for (RangeInitTask task : tasks) {
             task.execute();
         }
+
+        for (MetaClass metaClass : session.getClasses()) {
+            initInheritedProperties(metaClass);
+        }
+    }
+
+    protected void initAncestors(Session session, MetaClass metaClass) {
+        Class<?> ancestor = metaClass.getJavaClass().getSuperclass();
+        if (ancestor != null) {
+            List<Class<?>> superclasses = ClassUtils.getAllSuperclasses(metaClass.getJavaClass());
+            for (Class<?> superclass : superclasses) {
+                MetaClass ancestorClass = session.getClass(superclass);
+                if (ancestorClass != null) {
+                    ((MetaClassImpl) metaClass).addAncestor(ancestorClass);
+                }
+            }
+        }
     }
 
     @Nullable
@@ -124,19 +141,44 @@ public class MetaModelLoader {
 
         Collection<RangeInitTask> tasks = new ArrayList<>();
 
-        Collection<MetaClass> ancestors = metaClass.getAncestors();
-        for (MetaClass ancestor : ancestors) {
-            initProperties(session, ancestor.getJavaClass(), ((MetaClassImpl) ancestor), tasks);
-        }
-
         initProperties(session, javaClass, metaClass, tasks);
 
         return new MetadataObjectInfo<>(metaClass, tasks);
     }
 
+    protected void assignStore(MetaClass metaClass) {
+        Store store;
+        Class<?> javaClass = metaClass.getJavaClass();
+        io.jmix.core.metamodel.annotations.Store storeAnn = javaClass.getAnnotation(io.jmix.core.metamodel.annotations.Store.class);
+        if (storeAnn != null) {
+            store = stores.get(storeAnn.name());
+        } else {
+            Entity entityAnn = javaClass.getAnnotation(Entity.class);
+            if (entityAnn != null) {
+                store = stores.get(Stores.MAIN);
+            } else {
+                if (javaClass.getAnnotation(Embedded.class) != null
+                        || javaClass.getAnnotation(MappedSuperclass.class) != null) {
+                    store = stores.get(Stores.UNDEFINED);
+                } else {
+                    store = stores.get(Stores.NOOP);
+                }
+            }
+        }
+        ((MetaClassImpl) metaClass).setStore(store);
+    }
+
+    protected void initInheritedProperties(MetaClass metaClass) {
+        for (MetaProperty property : metaClass.getProperties()) {
+            if (!metaClass.getOwnProperties().contains(property)) {
+                assignStore(property);
+            }
+        }
+    }
+
     @Nullable
     protected MetaClassImpl createClass(Session session, Class<?> javaClass) {
-        if (AbstractInstance.class.equals(javaClass) || Object.class.equals(javaClass)) {
+        if (!Instance.class.isAssignableFrom(javaClass)) {
             return null;
         }
 
@@ -151,14 +193,6 @@ public class MetaModelLoader {
 
             metaClass = new MetaClassImpl(session, name);
             metaClass.setJavaClass(javaClass);
-
-            Class<?> ancestor = javaClass.getSuperclass();
-            if (ancestor != null) {
-                MetaClass ancestorClass = createClass(session, ancestor);
-                if (ancestorClass != null) {
-                    metaClass.addAncestor(ancestorClass);
-                }
-            }
 
             return metaClass;
         }
@@ -189,12 +223,6 @@ public class MetaModelLoader {
         }
         return name;
     }
-
-//    protected void onClassLoaded(MetaClass metaClass, Class<?> javaClass, boolean persistent) {
-//        if (persistent) {
-//            metaClass.getAnnotations().put(MetadataTools.PERSISTENT_ANN_NAME, true);
-//        }
-//    }
 
     protected void initProperties(Session session, Class<?> clazz, MetaClassImpl metaClass, Collection<RangeInitTask> tasks) {
         if (!metaClass.getOwnProperties().isEmpty())
@@ -409,19 +437,11 @@ public class MetaModelLoader {
     protected void onPropertyLoaded(MetaProperty metaProperty, Field field) {
         loadPropertyAnnotations(metaProperty, field);
 
-        boolean persistentClass = Boolean.TRUE.equals(metaProperty.getDomain().getAnnotations().get(MetadataTools.PERSISTENT_ANN_NAME));
+        assignStore(metaProperty);
 
         if (isPrimaryKey(field)) {
             metaProperty.getAnnotations().put(MetadataTools.PRIMARY_KEY_ANN_NAME, true);
             metaProperty.getDomain().getAnnotations().put(MetadataTools.PRIMARY_KEY_ANN_NAME, metaProperty.getName());
-        }
-
-        if (isPersistent(field) && persistentClass) {
-            metaProperty.getAnnotations().put(MetadataTools.PERSISTENT_ANN_NAME, true);
-        }
-
-        if (isEmbedded(field) && persistentClass) {
-            metaProperty.getAnnotations().put(MetadataTools.EMBEDDED_ANN_NAME, true);
         }
 
         Column column = field.getAnnotation(Column.class);
@@ -438,6 +458,16 @@ public class MetaModelLoader {
         boolean system = isPrimaryKey(field) || propertyBelongsTo(field, metaProperty, MetadataTools.SYSTEM_INTERFACES);
         if (system)
             metaProperty.getAnnotations().put(MetadataTools.SYSTEM_ANN_NAME, true);
+    }
+
+    protected void assignStore(MetaProperty metaProperty) {
+        Store classStore = metaProperty.getDomain().getStore();
+        if (hasJpaAnnotation(metaProperty.getDomain().getJavaClass())
+                && !hasJpaAnnotation(metaProperty.getAnnotatedElement())) {
+            ((MetaPropertyImpl) metaProperty).setStore(stores.get(Stores.UNDEFINED));
+        } else {
+            ((MetaPropertyImpl) metaProperty).setStore(classStore);
+        }
     }
 
     private boolean propertyBelongsTo(Field field, MetaProperty metaProperty, List<Class> systemInterfaces) {
@@ -564,15 +594,21 @@ public class MetaModelLoader {
         return field.isAnnotationPresent(Embedded.class) || field.isAnnotationPresent(EmbeddedId.class);
     }
 
-    protected boolean isPersistent(Field field) {
-        return field.isAnnotationPresent(Id.class)
-                || field.isAnnotationPresent(Column.class)
-                || field.isAnnotationPresent(ManyToOne.class)
-                || field.isAnnotationPresent(OneToMany.class)
-                || field.isAnnotationPresent(ManyToMany.class)
-                || field.isAnnotationPresent(OneToOne.class)
-                || field.isAnnotationPresent(Embedded.class)
-                || field.isAnnotationPresent(EmbeddedId.class);
+    protected boolean hasJpaAnnotation(AnnotatedElement annotatedElement) {
+        return annotatedElement.isAnnotationPresent(Id.class)
+                || annotatedElement.isAnnotationPresent(Column.class)
+                || annotatedElement.isAnnotationPresent(ManyToOne.class)
+                || annotatedElement.isAnnotationPresent(OneToMany.class)
+                || annotatedElement.isAnnotationPresent(ManyToMany.class)
+                || annotatedElement.isAnnotationPresent(OneToOne.class)
+                || annotatedElement.isAnnotationPresent(Embedded.class)
+                || annotatedElement.isAnnotationPresent(EmbeddedId.class);
+    }
+
+    protected boolean hasJpaAnnotation(Class javaClass) {
+        return javaClass.isAnnotationPresent(Entity.class)
+                || javaClass.isAnnotationPresent(Embeddable.class)
+                || javaClass.isAnnotationPresent(MappedSuperclass.class);
     }
 
     protected boolean isCollection(Field field) {
@@ -597,6 +633,7 @@ public class MetaModelLoader {
 
     protected void onPropertyLoaded(MetaProperty metaProperty, Method method) {
         loadPropertyAnnotations(metaProperty, method);
+        assignStore(metaProperty);
     }
 
     protected void loadPropertyAnnotations(MetaProperty metaProperty, AnnotatedElement annotatedElement) {

@@ -23,12 +23,11 @@ import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.core.metamodel.model.Session;
 import io.jmix.core.metamodel.model.impl.AbstractInstance;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -36,20 +35,18 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * INTERNAL.
  * Implementation of the {@link DataStore} interface working with a relational database through ORM.
  */
-@Component(RdbmsStore.NAME)
-@Scope("prototype")
-public class RdbmsStore implements DataStore {
+@Component(OrmDataStore.NAME)
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
+public class OrmDataStore implements DataStore {
 
-    public static final String NAME = "cuba_RdbmsStore";
+    public static final String NAME = "jmix_OrmDataStore";
 
-    private static final Logger log = LoggerFactory.getLogger(RdbmsStore.class);
+    private static final Logger log = LoggerFactory.getLogger(OrmDataStore.class);
 
     @Inject
     protected Metadata metadata;
@@ -96,8 +93,14 @@ public class RdbmsStore implements DataStore {
 
     protected String storeName;
 
-    public RdbmsStore(String storeName) {
-        this.storeName = storeName;
+    @Override
+    public String getName() {
+        return storeName;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.storeName = name;
     }
 
     @Nullable
@@ -107,9 +110,8 @@ public class RdbmsStore implements DataStore {
             log.debug("load: metaClass={}, id={}, view={}", context.getMetaClass(), context.getId(), context.getView());
         }
 
-        final MetaClass metaClass = metadata.getSession().getClassNN(context.getMetaClass());
-
         // todo security
+//        final MetaClass metaClass = metadata.getSession().getClassNN(context.getMetaClass());
 //        if (isAuthorizationRequired(context) && !isEntityOpPermitted(metaClass, EntityOp.READ)) {
 //            log.debug("reading of {} not permitted, returning null", metaClass);
 //            return null;
@@ -347,7 +349,9 @@ public class RdbmsStore implements DataStore {
 
         try (Transaction tx = getSaveTransaction(storeName, context.isJoinTransaction())) {
             EntityManager em = persistence.getEntityManager(storeName);
-            checkPermissions(context);
+
+            // todo security
+//            checkPermissions(context);
 
             if (!context.isSoftDeletion())
                 em.setSoftDeletion(false);

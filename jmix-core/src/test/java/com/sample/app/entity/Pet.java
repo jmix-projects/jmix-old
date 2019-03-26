@@ -17,19 +17,26 @@
 package com.sample.app.entity;
 
 import io.jmix.core.entity.StandardEntity;
+import io.jmix.core.metamodel.annotations.MetaProperty;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
-@Entity(name = "test_TestAppEntity")
-@Table(name = "TEST_APP_ENTITY")
-public class TestAppEntity extends StandardEntity {
+@Entity(name = "app_Pet")
+public class Pet extends StandardEntity {
 
-    private static final long serialVersionUID = 8256929425690816623L;
+    private static final long serialVersionUID = 6106462788935207865L;
 
-    @Column(name = "NAME")
+    @Column(name = "name")
     private String name;
+
+    @MetaProperty
+    private String nick;
+
+    @MetaProperty
+    public String getDescription() {
+        return "Name: " + name + ", nick: " + nick;
+    }
 
     public String getName() {
         return name;
@@ -37,5 +44,13 @@ public class TestAppEntity extends StandardEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNick() {
+        return nick;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
     }
 }

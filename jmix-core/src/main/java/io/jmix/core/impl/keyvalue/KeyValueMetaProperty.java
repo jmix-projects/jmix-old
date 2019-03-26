@@ -23,10 +23,7 @@ import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.Datatypes;
 import io.jmix.core.metamodel.datatypes.impl.EnumClass;
 import io.jmix.core.metamodel.datatypes.impl.EnumerationImpl;
-import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.metamodel.model.Range;
-import io.jmix.core.metamodel.model.Session;
+import io.jmix.core.metamodel.model.*;
 import io.jmix.core.metamodel.model.impl.ClassRange;
 import io.jmix.core.metamodel.model.impl.DatatypeRange;
 import io.jmix.core.metamodel.model.impl.EnumerationRange;
@@ -49,6 +46,7 @@ public class KeyValueMetaProperty extends MetadataObjectImpl implements MetaProp
     protected final Boolean mandatory;
     protected final AnnotatedElement annotatedElement = new FakeAnnotatedElement();
     protected final Type type;
+    protected Store store;
 
     public KeyValueMetaProperty(MetaClass metaClass, String name, Class javaClass) {
         this.name = name;
@@ -130,6 +128,15 @@ public class KeyValueMetaProperty extends MetadataObjectImpl implements MetaProp
     @Override
     public Class<?> getDeclaringClass() {
         return null;
+    }
+
+    @Override
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     protected static class FakeAnnotatedElement implements AnnotatedElement, Serializable {

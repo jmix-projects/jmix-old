@@ -75,6 +75,9 @@ public class PersistenceImpl implements Persistence {
     protected DbmsSpecifics dbmsSpecifics;
 
     @Inject
+    protected Stores stores;
+
+    @Inject
     @Named("entityManagerFactory")
     public void setFactory(LocalContainerEntityManagerFactoryBean factoryBean) {
         this.jpaEmf = factoryBean.getObject();
@@ -237,7 +240,7 @@ public class PersistenceImpl implements Persistence {
      */
     public void dispose() {
         jpaEmf.close();
-        for (String store : Stores.getAdditional()) {
+        for (String store : stores.getAdditional()) {
             EntityManagerFactory emf = beanLocator.get("entityManagerFactory_" + store);
             emf.close();
         }

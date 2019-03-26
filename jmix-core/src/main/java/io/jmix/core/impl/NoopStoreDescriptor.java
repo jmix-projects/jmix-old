@@ -14,28 +14,18 @@
  * limitations under the License.
  */
 
-package com.sample.app.entity;
+package io.jmix.core.impl;
 
-import io.jmix.core.entity.StandardEntity;
+import io.jmix.core.metamodel.model.StoreDescriptor;
+import org.springframework.stereotype.Component;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+@Component
+public class NoopStoreDescriptor implements StoreDescriptor {
 
-@Entity(name = "test_TestAppEntity")
-@Table(name = "TEST_APP_ENTITY")
-public class TestAppEntity extends StandardEntity {
+    public static final String NAME = "jmix_NoopStoreDescriptor";
 
-    private static final long serialVersionUID = 8256929425690816623L;
-
-    @Column(name = "NAME")
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public String getBeanName() {
+        return NoopDataStore.NAME;
     }
 }

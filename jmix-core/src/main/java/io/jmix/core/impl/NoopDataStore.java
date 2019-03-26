@@ -37,13 +37,22 @@ import java.util.Set;
  * Empty implementation of the {@link DataStore} interface. {@code DataManager} routes here entities that do not
  * belong to any data store.
  */
-@Component(NullStore.NAME)
+@Component(NoopDataStore.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class NullStore implements DataStore {
+public class NoopDataStore implements DataStore {
 
-    public static final String NAME = "cuba_NullStore";
+    public static final String NAME = "jmix_NoopDataStore";
 
-    public NullStore(String storeName) {
+    protected String name;
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Nullable

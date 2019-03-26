@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-repositories {
-    mavenCentral()
-    maven { url "https://dl.bintray.com/cuba-platform/main" }
-}
-
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'java-library'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'io.jmix'
 
 dependencyManagement {
     imports {

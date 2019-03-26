@@ -14,28 +14,11 @@
  * limitations under the License.
  */
 
-package com.sample.app.entity;
+package io.jmix.core.metamodel.model;
 
-import io.jmix.core.entity.StandardEntity;
+public interface Store {
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+    String getName();
 
-@Entity(name = "test_TestAppEntity")
-@Table(name = "TEST_APP_ENTITY")
-public class TestAppEntity extends StandardEntity {
-
-    private static final long serialVersionUID = 8256929425690816623L;
-
-    @Column(name = "NAME")
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    StoreDescriptor getDescriptor();
 }

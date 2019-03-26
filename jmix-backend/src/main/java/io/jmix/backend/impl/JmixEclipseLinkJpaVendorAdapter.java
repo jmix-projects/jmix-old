@@ -44,6 +44,9 @@ public class JmixEclipseLinkJpaVendorAdapter extends EclipseLinkJpaVendorAdapter
     @Override
     public Map<String, Object> getJpaPropertyMap() {
         Map<String, Object> map = super.getJpaPropertyMap();
+
+        map.put("eclipselink.session-event-listener", EclipseLinkSessionEventListener.class.getName());
+
         for (String name : EnvironmentUtils.getPropertyNames(environment)) {
             if (name.startsWith("eclipselink.")) {
                 map.put(name, environment.getProperty(name));

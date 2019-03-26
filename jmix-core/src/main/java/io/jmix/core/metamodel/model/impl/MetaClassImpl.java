@@ -18,25 +18,19 @@ package io.jmix.core.metamodel.model.impl;
 
 import io.jmix.core.metamodel.model.*;
 
-import java.io.InvalidObjectException;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.*;
 
-@SuppressWarnings({"TransientFieldNotInitialized"})
 public class MetaClassImpl extends MetadataObjectImpl implements MetaClass {
 
-	private transient Map<String, MetaProperty> propertyByName = new HashMap<>();
-    private transient Map<String, MetaProperty> ownPropertyByName = new HashMap<>();
+	private Map<String, MetaProperty> propertyByName = new HashMap<>();
+    private Map<String, MetaProperty> ownPropertyByName = new HashMap<>();
 
-	private transient final Session session;
-    private transient Class javaClass;
+	private final Session session;
+    private Class javaClass;
+    private Store store;
 
-    protected transient List<MetaClass> ancestors = new ArrayList<>(3);
-    protected transient Collection<MetaClass> descendants = new ArrayList<>(1);
-
-    private static final long serialVersionUID = 7862691995170873154L;
+    protected List<MetaClass> ancestors = new ArrayList<>(3);
+    protected Collection<MetaClass> descendants = new HashSet<>(0);
 
     public MetaClassImpl(Session session, String className) {
 		super();
@@ -45,19 +39,6 @@ public class MetaClassImpl extends MetadataObjectImpl implements MetaClass {
         this.name = className;
 
         ((SessionImpl) this.session).registerClass(this);
-    }
-
-    protected Object readResolve() throws InvalidObjectException {
-        Session session = SessionImpl.serializationSupportSession;
-        if (session == null) {
-            return Proxy.newProxyInstance(
-                    this.getClass().getClassLoader(),
-                    new Class[] { MetaClass.class },
-                    new MetaClassInvocationHandler(name)
-            );
-        } else {
-            return session.getClass(name);
-        }
     }
 
     @Override
@@ -94,7 +75,16 @@ public class MetaClassImpl extends MetadataObjectImpl implements MetaClass {
 		return propertyByName.values();
 	}
 
-	@Override
+    @Override
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
+    @Override
     public MetaProperty getProperty(String name) {
 		return propertyByName.get(name);
 	}
@@ -166,45 +156,16 @@ public class MetaClassImpl extends MetadataObjectImpl implements MetaClass {
     }
 
     public void registerAncestorProperty(MetaProperty metaProperty) {
-        final MetaProperty prop = propertyByName.get(metaProperty.getName());
+        MetaProperty prop = propertyByName.get(metaProperty.getName());
         if (prop == null) {
-            propertyByName.put(metaProperty.getName(), metaProperty);
-            for (MetaClass descendant : descendants) {
-                ((MetaClassImpl) descendant).registerAncestorProperty(metaProperty);
-            }
+            MetaPropertyImpl clone = new MetaPropertyImpl((MetaPropertyImpl) metaProperty);
+            clone.setDomain(this);
+            propertyByName.put(metaProperty.getName(), clone);
         }
     }
 
     @Override
     public String toString() {
         return name;
-    }
-
-    private static class MetaClassInvocationHandler implements InvocationHandler {
-
-        private String name;
-        private volatile MetaClass metaClass;
-
-        public MetaClassInvocationHandler(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if ("hashCode".equals(method.getName())) {
-                return hashCode();
-            }
-            if (metaClass == null) {
-                synchronized (this) {
-                    if (metaClass == null) {
-                        Session session = SessionImpl.serializationSupportSession;
-                        if (session == null)
-                            throw new IllegalStateException("SerializationSupportSession is not initialized");
-                        metaClass = session.getClass(name);
-                    }
-                }
-            }
-            return method.invoke(metaClass, args);
-        }
     }
 }

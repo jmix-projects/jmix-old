@@ -26,16 +26,23 @@ import org.gradle.api.Task
 
 class EnhancingAction implements Action<Task> {
 
+    private String sourceSetName
+
+    EnhancingAction(String sourceSetName) {
+        this.sourceSetName = sourceSetName
+    }
+
     @Override
     void execute(Task task) {
         Project project = task.getProject()
-        project.logger.warn "Enhancing entities in $project"
+        project.logger.warn "Enhancing entities in $project for source set '$sourceSetName'"
 
-        def srcDirs = project.sourceSets.main.allJava.getSrcDirs()
+        def sourceSet = project.sourceSets.findByName(sourceSetName)
+        def srcDirs = sourceSet.allJava.getSrcDirs()
 
         ClassPool classPool = new ClassPool(null)
         classPool.appendSystemPath()
-        classPool.insertClassPath(project.sourceSets.main.java.outputDir.absolutePath)
+        classPool.insertClassPath(sourceSet.java.outputDir.absolutePath)
 
         List<String> classNames = []
         srcDirs.each { File srcDir ->
@@ -59,7 +66,7 @@ class EnhancingAction implements Action<Task> {
         }
 
         if (!classNames.isEmpty()) {
-            File file = new File(project.buildDir, 'tmp/enhancing/META-INF/persistence.xml')
+            File file = new File(project.buildDir, "dummy/enhancing/$sourceSetName/META-INF/persistence.xml")
             file.parentFile.mkdirs()
             file.withWriter { writer ->
                 def xml = new MarkupBuilder(writer)
@@ -69,6 +76,9 @@ class EnhancingAction implements Action<Task> {
                             'class'(name)
                         }
                         'exclude-unlisted-classes'()
+                        'properties'() {
+                            'property'(name: 'eclipselink.weaving', value: 'static')
+                        }
                     }
                 }
             }
@@ -76,15 +86,15 @@ class EnhancingAction implements Action<Task> {
             project.javaexec {
                 main = 'org.eclipse.persistence.tools.weaving.jpa.StaticWeave'
                 classpath(
-                        project.sourceSets.main.compileClasspath,
-                        project.sourceSets.main.java.outputDir
+                        sourceSet.compileClasspath,
+                        sourceSet.java.outputDir
                 )
                 args "-loglevel"
                 args "INFO"
                 args "-persistenceinfo"
-                args "${project.buildDir}/tmp/enhancing"
-                args project.sourceSets.main.java.outputDir.absolutePath
-                args project.sourceSets.main.java.outputDir.absolutePath
+                args "${project.buildDir}/dummy/enhancing/$sourceSetName"
+                args sourceSet.java.outputDir.absolutePath
+                args sourceSet.java.outputDir.absolutePath
                 debug = project.hasProperty("debugEnhancing") ? Boolean.valueOf(project.getProperty("debugEnhancing")) : false
             }
 

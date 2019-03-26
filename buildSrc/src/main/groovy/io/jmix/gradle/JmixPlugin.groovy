@@ -23,6 +23,7 @@ class JmixPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project target) {
-        target.tasks.findByName('compileJava').doLast(new EnhancingAction())
+        target.tasks.findByName('compileJava').doLast(new EnhancingAction('main'))
+        target.tasks.findByName('compileTestJava').doLast(new EnhancingAction('test'))
     }
 }

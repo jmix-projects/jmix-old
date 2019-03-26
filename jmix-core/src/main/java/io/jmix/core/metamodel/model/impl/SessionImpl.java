@@ -20,18 +20,14 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.Session;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SessionImpl implements Session {
 
-    static Session serializationSupportSession;
-
     private Map<String, MetaClass> classByName = new HashMap<>();
     private Map<Class, MetaClass> classByClass = new HashMap<>();
-
-    public static void setSerializationSupportSession(Session serializationSupportSession) {
-        SessionImpl.serializationSupportSession = serializationSupportSession;
-    }
 
     @Nullable
     @Override

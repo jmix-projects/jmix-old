@@ -13,30 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.core.entity;
+package io.jmix.backend.entity;
 
-import io.jmix.core.metamodel.annotations.MetaClass;
-import io.jmix.core.entity.annotation.UnavailableInSecurityConstraints;
+import io.jmix.core.entity.BaseUuidEntity;
+import io.jmix.core.entity.Creatable;
+import io.jmix.core.entity.Updatable;
+import io.jmix.core.entity.Versioned;
+import io.jmix.core.entity.annotation.SystemLevel;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
- * The most widely used base class for entities. <br>
- * Optimistically locked, implements Updatable and SoftDelete.
+ * Entity for working with configuration parameters (see com.haulmont.cuba.core.config.Config).<br>
+ * Should not be used in application code.
  */
-@MappedSuperclass
-@MetaClass(name = "sys$StandardEntity")
-@UnavailableInSecurityConstraints
-public abstract class StandardEntity extends BaseUuidEntity implements Versioned, Creatable, Updatable, SoftDelete {
+@Entity(name = "sys$Config")
+@Table(name = "SYS_CONFIG")
+@SystemLevel
+public class ConfigEntity extends BaseUuidEntity implements Versioned, Creatable, Updatable {
 
-    private static final long serialVersionUID = 5642226839555253331L;
+    private static final long serialVersionUID = -2103060811330948816L;
 
     @Version
-    @Column(name = "VERSION", nullable = false)
-    protected Integer version;
+    @Column(name = "VERSION")
+    private Integer version;
 
     @Column(name = "CREATE_TS")
     protected Date createTs;
@@ -45,16 +46,17 @@ public abstract class StandardEntity extends BaseUuidEntity implements Versioned
     protected String createdBy;
 
     @Column(name = "UPDATE_TS")
-    protected Date updateTs;
+    private Date updateTs;
 
     @Column(name = "UPDATED_BY", length = 50)
-    protected String updatedBy;
+    private String updatedBy;
 
-    @Column(name = "DELETE_TS")
-    protected Date deleteTs;
+    @Column(name = "NAME", nullable = false)
+    private String name;
 
-    @Column(name = "DELETED_BY", length = 50)
-    protected String deletedBy;
+    @Lob
+    @Column(name = "VALUE_", nullable = false)
+    private String value;
 
     @Override
     public Integer getVersion() {
@@ -106,28 +108,19 @@ public abstract class StandardEntity extends BaseUuidEntity implements Versioned
         this.updatedBy = updatedBy;
     }
 
-    @Override
-    public Boolean isDeleted() {
-        return deleteTs != null;
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public Date getDeleteTs() {
-        return deleteTs;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    @Override
-    public void setDeleteTs(Date deleteTs) {
-        this.deleteTs = deleteTs;
+    public String getValue() {
+        return value;
     }
 
-    @Override
-    public String getDeletedBy() {
-        return deletedBy;
-    }
-
-    @Override
-    public void setDeletedBy(String deletedBy) {
-        this.deletedBy = deletedBy;
+    public void setValue(String value) {
+        this.value = value;
     }
 }

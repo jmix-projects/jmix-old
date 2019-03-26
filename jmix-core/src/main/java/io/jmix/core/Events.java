@@ -26,6 +26,7 @@ import org.springframework.context.ApplicationEventPublisher;
 public interface Events {
     String NAME = "cuba_Events";
 
+    // todo move to JmixCoreConfiguration
     /**
      * Defines the highest precedence for {@link org.springframework.core.Ordered} or
      * {@link org.springframework.core.annotation.Order} listeners added by the platform.

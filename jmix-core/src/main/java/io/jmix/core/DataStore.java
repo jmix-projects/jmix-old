@@ -31,6 +31,9 @@ import java.util.Set;
  */
 public interface DataStore {
 
+    String getName();
+    void setName(String name);
+
     /**
      * Loads a single entity instance.
      * @return the loaded object, or null if not found

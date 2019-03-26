@@ -42,6 +42,9 @@ import java.util.regex.Pattern;
 @Component("jmix_MetadataBuildSupport")
 public class MetadataBuildSupport {
 
+    @Inject
+    protected Stores stores;
+
     public static class XmlAnnotation {
         public final Object value;
         public final Map<String, Object> attributes = new HashMap<>();
@@ -125,7 +128,7 @@ public class MetadataBuildSupport {
         Map<String, List<EntityClassInfo>> packages = new LinkedHashMap<>();
 
         loadFromMetadataConfig(packages, metadataXmlList);
-        Stores.getAll().forEach(db -> loadFromPersistenceConfig(packages, db));
+        stores.getAll().forEach(db -> loadFromPersistenceConfig(packages, db));
 
         return packages;
     }

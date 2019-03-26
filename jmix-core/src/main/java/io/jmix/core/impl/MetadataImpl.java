@@ -22,19 +22,14 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import io.jmix.core.*;
-import io.jmix.core.commons.util.StackTrace;
 import io.jmix.core.entity.*;
 import io.jmix.core.entity.annotation.EmbeddedParameters;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Session;
-import io.jmix.core.metamodel.model.impl.SessionImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
@@ -95,7 +90,6 @@ public class MetadataImpl implements Metadata {
     public MetadataImpl(MetadataLoader metadataLoader) {
         rootPackages = metadataLoader.getRootPackages();
         session = metadataLoader.getSession();
-        SessionImpl.setSerializationSupportSession(session);
     }
 
 //    protected void initMetadata(ContextRefreshedEvent event) {

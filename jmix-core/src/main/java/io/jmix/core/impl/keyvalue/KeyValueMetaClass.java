@@ -30,6 +30,8 @@ public class KeyValueMetaClass extends MetadataObjectImpl implements MetaClass {
 
     private Map<String, MetaProperty> properties = new LinkedHashMap<>();
 
+    private Store store;
+
     public void addProperty(MetaProperty property) {
         properties.put(property.getName(), property);
     }
@@ -99,6 +101,15 @@ public class KeyValueMetaClass extends MetadataObjectImpl implements MetaClass {
     @Override
     public Collection<MetaProperty> getProperties() {
         return properties.values();
+    }
+
+    @Override
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 
     @Override
