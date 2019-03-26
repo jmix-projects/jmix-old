@@ -17,3 +17,4 @@
   * JPQL parser
 * core
   * ORM persistence: PersistenceImpl, EntityManagerImpl, QueryImpl, etc.
+  * DataManager, RdbmsStore
