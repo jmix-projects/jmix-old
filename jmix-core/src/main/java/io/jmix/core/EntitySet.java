@@ -114,8 +114,9 @@ public class EntitySet extends ForwardingSet<Entity> implements Serializable {
         return (T) get(prototype.getClass(), prototype.getId());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    protected Set delegate() {
-        return entities;
+    protected Set<Entity> delegate() {
+        return (Set<Entity>) entities;
     }
 }

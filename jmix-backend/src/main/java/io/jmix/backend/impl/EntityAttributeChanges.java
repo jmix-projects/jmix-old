@@ -124,11 +124,11 @@ public class EntityAttributeChanges {
     /**
      * @return old value for changed own attribute.
      */
+    @SuppressWarnings("unchecked")
     @Nullable
     public <T> T getOldValue(String attributeName) {
         for (Change change : changes) {
             if (change.name.equals(attributeName))
-                //noinspection unchecked
                 return (T) change.oldValue;
         }
         return null;
@@ -138,13 +138,13 @@ public class EntityAttributeChanges {
      * @return old value for changed attribute.
      * Includes changed embedded attributes.
      */
+    @SuppressWarnings("unchecked")
     @Nullable
     public <T> T getOldValueEx(String attributePath) {
         String[] properties = attributePath.split("[.]");
         if (properties.length == 1) {
             for (Change change : changes) {
                 if (change.name.equals(attributePath))
-                    //noinspection unchecked
                     return (T) change.oldValue;
             }
         } else {

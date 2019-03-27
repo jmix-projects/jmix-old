@@ -69,7 +69,7 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
 
     @Override
     public void savePreviousQueryResults(LoadContext loadContext) {
-        List<LoadContext.Query> prevQueries = loadContext.getPrevQueries();
+        @SuppressWarnings("unchecked") List<LoadContext.Query> prevQueries = loadContext.getPrevQueries();
         if (prevQueries.isEmpty())
             return;
 
@@ -177,6 +177,7 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
                         columnName, userSessionIdStr, queryKey);
                 int[] paramTypes = new int[]{converter.getSqlType(idFromList.getClass())};
                 for (int i = 0; i < idList.size(); i += BATCH_SIZE) {
+                    @SuppressWarnings("unchecked")
                     List<UUID> sublist = idList.subList(i, Math.min(i + BATCH_SIZE, idList.size()));
                     Object[][] params = new Object[sublist.size()][1];
                     for (int j = 0; j < sublist.size(); j++) {

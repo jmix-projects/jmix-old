@@ -37,6 +37,7 @@ public class PathEntityReference implements EntityReference {
         return queryPart.replaceAll("\\{E\\}", pathNode.asPathString());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void renameVariableIn(PathNode node) {
         node.renameVariableTo(pathNode.getEntityVariableName());

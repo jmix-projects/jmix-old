@@ -94,6 +94,7 @@ public class CubaEntityFetchGroup extends EntityFetchGroup {
         return wrappedFetchGroup.isEntityFetchGroup();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean isSupersetOf(CoreAttributeGroup anotherGroup) {
         return wrappedFetchGroup.isSupersetOf(anotherGroup);

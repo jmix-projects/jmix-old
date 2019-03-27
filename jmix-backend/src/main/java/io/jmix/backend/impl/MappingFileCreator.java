@@ -252,30 +252,6 @@ class MappingFileCreator {
         return file;
     }
 
-    private class ClassDef {
-
-        private Class<?> entityClass;
-
-        private ClassDef(Class<?> entityClass) {
-            this.entityClass = entityClass;
-        }
-
-        @Nullable
-        private Element toXml(Element parentEl) {
-            Element el;
-            if (entityClass.getAnnotation(Entity.class) != null) {
-                el = parentEl.addElement("entity", XMLNS);
-            } else if (entityClass.getAnnotation(MappedSuperclass.class) != null) {
-                el = parentEl.addElement("mapped-superclass", XMLNS);
-            } else {
-                log.warn(entityClass + " has neither @Entity nor @MappedSuperclass annotation, ignoring it");
-                return null;
-            }
-            el.addAttribute("class", entityClass.getName());
-            return el;
-        }
-    }
-
     private static class Attr {
 
         private enum Type {

@@ -55,7 +55,7 @@ import java.util.*;
  * Utility class to provide common functionality related to persistence.
  * <br> Implemented as Spring bean to allow extension in application projects.
  * <br> A reference to this class can be obtained either via DI or by
- * {@link io.jmix.core.Persistence#getTools()} method.
+ * {@link io.jmix.backend.Persistence#getTools()} method.
  */
 @Component(PersistenceTools.NAME)
 public class PersistenceTools {

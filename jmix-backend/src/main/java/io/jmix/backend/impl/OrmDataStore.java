@@ -819,9 +819,9 @@ public class OrmDataStore implements DataStore {
         if (!isAuthorizationRequired(context))
             return;
 
-        Set<MetaClass> checkedCreateRights = new HashSet<>();
-        Set<MetaClass> checkedUpdateRights = new HashSet<>();
-        Set<MetaClass> checkedDeleteRights = new HashSet<>();
+//        Set<MetaClass> checkedCreateRights = new HashSet<>();
+//        Set<MetaClass> checkedUpdateRights = new HashSet<>();
+//        Set<MetaClass> checkedDeleteRights = new HashSet<>();
 
         for (Entity entity : context.getCommitInstances()) {
             if (entity == null)

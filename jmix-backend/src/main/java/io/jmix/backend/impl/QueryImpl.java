@@ -104,10 +104,10 @@ public class QueryImpl<T> implements TypedQuery<T> {
         this.isNative = isNative;
         this.dbmsSpecifics = AppBeans.get(DbmsSpecifics.NAME);
         this.macroHandlers = AppBeans.getAll(QueryMacroHandler.class).values();
-        //noinspection unchecked
         this.resultClass = resultClass;
     }
 
+    @SuppressWarnings("unchecked")
     protected JpaQuery<T> getQuery() {
         if (query == null) {
             View view = views.isEmpty() ? null : views.get(0);
@@ -180,7 +180,6 @@ public class QueryImpl<T> implements TypedQuery<T> {
                     fetchGroupMgr.addView(query, queryString, views.get(i), singleResultExpected);
             }
         }
-        //noinspection unchecked
         return query;
     }
 
@@ -599,6 +598,7 @@ public class QueryImpl<T> implements TypedQuery<T> {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public TypedQuery<T> setViewName(String viewName) {
         if (resultClass == null)
@@ -623,6 +623,7 @@ public class QueryImpl<T> implements TypedQuery<T> {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public TypedQuery<T> addViewName(String viewName) {
         if (resultClass == null)

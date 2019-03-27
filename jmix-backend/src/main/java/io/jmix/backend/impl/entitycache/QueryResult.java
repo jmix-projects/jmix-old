@@ -26,11 +26,11 @@ public class QueryResult {
     protected final Set<String> relatedTypes;
     protected final RuntimeException exception;
 
-    public QueryResult(List result, String type, Set<String> relatedTypes) {
+    public QueryResult(List<?> result, String type, Set<String> relatedTypes) {
         this(result, type, relatedTypes, null);
     }
 
-    public QueryResult(List result, String type, Set<String> relatedTypes, RuntimeException exception) {
+    public QueryResult(List<?> result, String type, Set<String> relatedTypes, RuntimeException exception) {
         this.result = Collections.unmodifiableList(result);
         this.type = type;
         this.relatedTypes = relatedTypes;

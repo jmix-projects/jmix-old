@@ -49,6 +49,7 @@ public class EntityCacheTransportManager extends BroadcastTransportManager {
         createExternalConnection();
     }
 
+    @SuppressWarnings("unchecked")
     public void createExternalConnection() {
         synchronized (this.connectionsToExternalServices) {
             if (this.connectionsToExternalServices.isEmpty()) {
@@ -71,7 +72,6 @@ public class EntityCacheTransportManager extends BroadcastTransportManager {
             }
         }
     }
-
 
     @Override
     public Map<String, RemoteConnection> getConnectionsToExternalServicesForCommandPropagation() {

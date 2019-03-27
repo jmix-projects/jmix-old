@@ -304,6 +304,7 @@ public class DeletePolicyProcessor {
         Query query = entityManager.createQuery(qlStr);
         query.setParameter(1, entity.getId());
         query.setMaxResults(1);
+        @SuppressWarnings("unchecked")
         List<Entity> list = query.getResultList();
 
         return list.isEmpty();
@@ -314,7 +315,7 @@ public class DeletePolicyProcessor {
         if (inverseProperty == null) {
             log.warn("Inverse property not found for property {}", property);
             Collection<Entity> value = entity.getValue(property.getName());
-            return value == null ? Collections.EMPTY_LIST : value;
+            return value == null ? Collections.emptyList() : value;
         }
 
         String invPropName = inverseProperty.getName();
@@ -323,6 +324,7 @@ public class DeletePolicyProcessor {
 
         Query query = entityManager.createQuery(qlStr);
         query.setParameter(1, entity.getId());
+        @SuppressWarnings("unchecked")
         List<Entity> list = query.getResultList();
 
         // If the property is not loaded, it means it was not modified and further check is not needed
@@ -363,6 +365,7 @@ public class DeletePolicyProcessor {
         String qstr = String.format(template, entityName, property.getName());
         Query query = entityManager.createQuery(qstr);
         query.setParameter(1, entity.getId());
+        @SuppressWarnings("unchecked")
         List<Entity> list = query.getResultList();
         for (Entity e : list) {
             entityManager.remove(e);
@@ -377,10 +380,11 @@ public class DeletePolicyProcessor {
             String qstr = String.format(template, entityName, property.getName());
             Query query = entityManager.createQuery(qstr);
             query.setParameter(1, entity.getId());
+            @SuppressWarnings("unchecked")
             List<Entity> list = query.getResultList();
             for (Entity e : list) {
                 if (property.getRange().getCardinality().isMany()) {
-                    Collection collection = e.getValue(property.getName());
+                    Collection<?> collection = e.getValue(property.getName());
                     if (collection != null) {
                         collection.removeIf(o -> entity.equals(o));
                     }

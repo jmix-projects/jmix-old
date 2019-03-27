@@ -99,7 +99,9 @@ public class JmixEclipseLinkJpaDialect extends EclipseLinkJpaDialect {
 
     @Override
     public void cleanupTransaction(Object transactionData) {
-        ((JmixEclipseLinkTransactionData)transactionData).clearEntityManager();
+        if (transactionData instanceof JmixEclipseLinkTransactionData) {
+            ((JmixEclipseLinkTransactionData) transactionData).clearEntityManager();
+        }
     }
 
     protected static class JmixEclipseLinkTransactionData {

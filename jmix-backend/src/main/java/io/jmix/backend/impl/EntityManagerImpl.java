@@ -96,6 +96,7 @@ public class EntityManagerImpl implements EntityManager {
         support.registerInstance(entity, this);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Entity> T merge(T entity) {
         log.debug("merge {}", entity);
@@ -110,7 +111,6 @@ public class EntityManagerImpl implements EntityManager {
             // if a new instance is passed to merge(), we suppose it is persistent but "not detached"
             Entity destEntity = findOrCreate(entity.getClass(), entity.getId());
             deepCopyIgnoringNulls(entity, destEntity, Sets.newIdentityHashSet());
-            //noinspection unchecked
             return (T) destEntity;
         }
 
@@ -194,6 +194,7 @@ public class EntityManagerImpl implements EntityManager {
         return find(entityClass, id, viewArray);
     }
 
+    @SuppressWarnings("unchecked")
     protected <T extends Entity> T findWithViews(MetaClass metaClass, Object id, List<View> views) {
         Object realId = getRealId(id);
         log.debug("find {} by id={}, views={}", metaClass.getJavaClass().getSimpleName(), realId, views);
@@ -208,7 +209,6 @@ public class EntityManagerImpl implements EntityManager {
         for (View view : views) {
             query.addView(view);
         }
-        //noinspection unchecked
         return (T) query.getFirstResult();
     }
 
@@ -358,9 +358,10 @@ public class EntityManagerImpl implements EntityManager {
                     continue;
 
                 if (srcProperty.getRange().getCardinality().isMany()) {
-                    if (!metadataTools.isOwningSide(srcProperty))
+                    if (!metadataTools.isOwningSide(srcProperty)) {
                         continue;
-                    //noinspection unchecked
+                    }
+                    @SuppressWarnings("unchecked")
                     Collection<Entity> srcCollection = (Collection) value;
                     Collection<Entity> dstCollection = dest.getValue(name);
                     if (dstCollection == null)
@@ -408,6 +409,7 @@ public class EntityManagerImpl implements EntityManager {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected <T extends Entity> T findOrCreate(Class<T> entityClass, Object id) {
         Entity reloadedRef = find(entityClass, id);
         if (reloadedRef == null) {
@@ -417,7 +419,6 @@ public class EntityManagerImpl implements EntityManager {
             }
             persist(reloadedRef);
         }
-        //noinspection unchecked
         return (T) reloadedRef;
     }
 

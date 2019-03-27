@@ -54,3 +54,59 @@ allprojects {
         }
     }
 }
+
+configure([project(':jmix-core'), project(':jmix-backend')]) {
+    if (rootProject.hasProperty('spotbugsEnabled')) {
+        apply plugin: 'com.github.spotbugs'
+
+        afterEvaluate {
+            spotbugs {
+                toolVersion = '3.1.12'
+                ignoreFailures = false
+                omitVisitors = ['FindDoubleCheck']
+                excludeFilter = rootProject.file("codestyle/exclude-filter.xml")
+                effort = "max"
+                reportLevel = "medium"
+            }
+
+            spotbugsMain {
+                jvmArgs '-Xmx1024m'
+
+                reports {
+                    xml.enabled = false
+                    html {
+                        enabled = true
+                        stylesheet = rootProject.resources.text.fromFile('codestyle/fancy-hist.xsl')
+                        destination file("${project.buildDir}/reports/spotbugs/${project.name}.html")
+                    }
+                }
+            }
+
+            spotbugsTest {
+                jvmArgs '-Xmx1024m'
+
+                reports {
+                    xml.enabled = false
+                    html {
+                        enabled = true
+                        stylesheet = project.resources.text.fromFile('codestyle/fancy-hist.xsl')
+                        destination file("${project.buildDir}/reports/spotbugs/test-${project.name}.html")
+                    }
+                }
+            }
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.withType(Javadoc) {
+        options.addStringOption("sourcepath", "")
+        options.encoding = 'UTF-8'
+        options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+        destinationDir = file("$buildDir/docs/javadoc")
+
+        title = "${project.name.toUpperCase()} ${project.version.replace('-SNAPSHOT','')} API"
+    }
+}

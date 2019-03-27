@@ -4,10 +4,6 @@ apply plugin: 'java-library'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'io.jmix'
 
-if (project.hasProperty('spotbugsEnabled')) {
-    apply plugin: 'com.github.spotbugs'
-}
-
 dependencyManagement {
     imports {
         mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
@@ -43,56 +39,4 @@ dependencies {
     testImplementation "org.spockframework:spock-core:$spockVersion"
     testImplementation "org.spockframework:spock-spring:$spockVersion"
     testRuntimeOnly 'org.slf4j:slf4j-simple'
-}
-
-if (project.hasProperty('spotbugsEnabled')) {
-    spotbugs {
-        toolVersion = '3.1.12'
-        ignoreFailures = false
-        omitVisitors = ['FindDoubleCheck']
-        excludeFilter = project.file("codestyle/exclude-filter.xml")
-        effort = "max"
-        reportLevel = "medium"
-    }
-
-    spotbugsMain {
-        jvmArgs '-Xmx1024m'
-
-        reports {
-            xml.enabled = false
-            html {
-                enabled = true
-                stylesheet = project.resources.text.fromFile('codestyle/fancy-hist.xsl')
-                destination file("${project.buildDir}/reports/spotbugs/${project.name}.html")
-            }
-        }
-    }
-
-    spotbugsTest {
-        jvmArgs '-Xmx1024m'
-
-        reports {
-            xml.enabled = false
-            html {
-                enabled = true
-                stylesheet = project.resources.text.fromFile('codestyle/fancy-hist.xsl')
-                destination file("${project.buildDir}/reports/spotbugs/test-${project.name}.html")
-            }
-        }
-    }
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-    options.deprecation = false
-    options.compilerArgs += ["-Xlint:unchecked", "-Xlint:-deprecation", "-Werror"]
-}
-
-javadoc {
-    options.addStringOption("sourcepath", "")
-    options.encoding = 'UTF-8'
-    options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
-    destinationDir = file("$buildDir/docs/javadoc")
-
-    title = "${project.name.toUpperCase()} ${project.version.replace('-SNAPSHOT','')} API"
 }

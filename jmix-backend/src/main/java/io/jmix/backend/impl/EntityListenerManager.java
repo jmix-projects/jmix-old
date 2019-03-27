@@ -360,13 +360,14 @@ public class EntityListenerManager {
 
         List<Class<?>> superclasses = ClassUtils.getAllSuperclasses(entityClass);
         Collections.reverse(superclasses);
-        for (Class superclass : superclasses) {
+        for (Class<?> superclass : superclasses) {
+            @SuppressWarnings("SuspiciousMethodCalls")
             Set<String> set = dynamicListeners.get(superclass);
             if (set != null) {
                 listeners.addAll(set);
             }
 
-            Listeners annotation = (Listeners) superclass.getAnnotation(Listeners.class);
+            Listeners annotation = superclass.getAnnotation(Listeners.class);
             if (annotation != null) {
                 listeners.addAll(Arrays.asList(annotation.value()));
             }

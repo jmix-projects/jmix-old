@@ -47,6 +47,7 @@ public class EntityManagerContext {
         attributes.put(key, value);
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     public <T> T getAttribute(Object key) {
         return (T) attributes.get(key);

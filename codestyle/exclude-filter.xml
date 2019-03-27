@@ -88,4 +88,29 @@
         <Class name="io.jmix.core.UuidProvider"/>
     </Match>
 
+    <Match>
+        <Bug pattern="CN_IDIOM_NO_SUPER_CALL"/>
+        <Class name="io.jmix.backend.impl.DescriptorEventManagerWrapper"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE"/>
+        <Class name="io.jmix.backend.impl.PersistenceConfigProcessor"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED"/>
+        <Class name="io.jmix.backend.impl.entitycache.QueryKey"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="SE_NO_SERIALVERSIONID"/>
+        <Class name="io.jmix.backend.impl.entitycache.QueryKey"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="BC_VACUOUS_INSTANCEOF"/>
+        <Class name="io.jmix.backend.PersistenceTools"/>
+    </Match>
+
 </FindBugsFilter>

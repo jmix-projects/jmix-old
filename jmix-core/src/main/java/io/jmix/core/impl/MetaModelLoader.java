@@ -27,10 +27,7 @@ import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.core.metamodel.datatypes.impl.AdaptiveNumberDatatype;
 import io.jmix.core.metamodel.datatypes.impl.EnumerationImpl;
-import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.metamodel.model.Range;
-import io.jmix.core.metamodel.model.Session;
+import io.jmix.core.metamodel.model.*;
 import io.jmix.core.metamodel.model.impl.*;
 import io.jmix.core.validation.groups.UiComponentChecks;
 import org.apache.commons.lang3.ArrayUtils;
@@ -313,8 +310,6 @@ public class MetaModelLoader {
     }
 
     protected MetadataObjectInfo<MetaProperty> loadProperty(Session session, MetaClassImpl metaClass, Field field) {
-        Collection<RangeInitTask> tasks = new ArrayList<>();
-
         MetaPropertyImpl property = new MetaPropertyImpl(metaClass, field.getName());
 
         Range.Cardinality cardinality = getCardinality(field);
@@ -355,14 +350,13 @@ public class MetaModelLoader {
             property.setJavaType(field.getType());
         }
 
-        tasks.addAll(info.getTasks());
+        Collection<RangeInitTask> tasks = new ArrayList<>(info.getTasks());
 
         return new MetadataObjectInfo<>(property, tasks);
     }
 
     protected MetadataObjectInfo<MetaProperty> loadProperty(Session session, MetaClassImpl metaClass,
                                                             Method method, String name) {
-        Collection<RangeInitTask> tasks = new ArrayList<>();
 
         MetaPropertyImpl property = new MetaPropertyImpl(metaClass, name);
 
@@ -393,13 +387,12 @@ public class MetaModelLoader {
             assignPropertyType(method, property, range);
         }
 
-        tasks.addAll(info.getTasks());
+        Collection<RangeInitTask> tasks = new ArrayList<>(info.getTasks());
 
         return new MetadataObjectInfo<>(property, tasks);
     }
 
     protected MetadataObjectInfo<MetaProperty> loadCollectionProperty(Session session, MetaClassImpl metaClass, Field field) {
-        Collection<RangeInitTask> tasks = new ArrayList<>();
 
         MetaPropertyImpl property = new MetaPropertyImpl(metaClass, field.getName());
 
@@ -432,7 +425,7 @@ public class MetaModelLoader {
         }
         property.setMandatory(mandatory);
 
-        tasks.addAll(info.getTasks());
+        Collection<RangeInitTask> tasks = new ArrayList<>(info.getTasks());
 
         return new MetadataObjectInfo<>(property, tasks);
     }
@@ -477,7 +470,6 @@ public class MetaModelLoader {
         String getterName = "get" + StringUtils.capitalize(metaProperty.getName());
 
         Class<?> aClass = field.getDeclaringClass();
-        //noinspection unchecked
         List<Class<?>> allInterfaces = ClassUtils.getAllInterfaces(aClass);
         for (Class intf : allInterfaces) {
             Method[] methods = intf.getDeclaredMethods();
@@ -608,14 +600,14 @@ public class MetaModelLoader {
                 || annotatedElement.isAnnotationPresent(EmbeddedId.class);
     }
 
-    protected boolean hasJpaAnnotation(Class javaClass) {
+    protected boolean hasJpaAnnotation(Class<?> javaClass) {
         return javaClass.isAnnotationPresent(Entity.class)
                 || javaClass.isAnnotationPresent(Embeddable.class)
                 || javaClass.isAnnotationPresent(MappedSuperclass.class);
     }
 
     protected boolean isCollection(Field field) {
-        final Class<?> type = field.getType();
+        Class<?> type = field.getType();
         return Collection.class.isAssignableFrom(type);
     }
 
