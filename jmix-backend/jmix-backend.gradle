@@ -44,5 +44,3 @@ dependencies {
     testRuntimeOnly 'org.slf4j:slf4j-simple'
     testRuntimeOnly 'org.hsqldb:hsqldb:2.4.1'
 }
-
-spotbugsMain.dependsOn(project(':jmix-core').spotbugsMain)
