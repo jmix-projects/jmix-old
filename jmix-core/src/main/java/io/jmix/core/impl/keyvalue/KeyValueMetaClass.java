@@ -65,9 +65,10 @@ public class KeyValueMetaClass extends MetadataObjectImpl implements MetaClass {
         return null; // temporary metaclass
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Class getJavaClass() {
-        return KeyValueEntity.class;
+    public <T> Class<T> getJavaClass() {
+        return (Class<T>) KeyValueEntity.class;
     }
 
     @Override

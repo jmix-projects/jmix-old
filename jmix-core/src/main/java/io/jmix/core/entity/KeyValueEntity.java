@@ -87,9 +87,9 @@ public class KeyValueEntity
         this.idName = idName;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T getValue(String name) {
-        //noinspection unchecked
         return (T) properties.get(name);
     }
 

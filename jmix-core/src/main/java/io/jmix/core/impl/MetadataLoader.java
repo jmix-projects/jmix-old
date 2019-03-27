@@ -247,6 +247,7 @@ public class MetadataLoader {
 //        }
 //    }
 
+    @SuppressWarnings("unchecked")
     protected void assignMetaAnnotationValueFromXml(String annName, XmlAnnotation xmlAnn, Map<String, Object> metaAnnotations) {
         if (xmlAnn.value != null) {
             metaAnnotations.put(annName, xmlAnn.value);
@@ -256,7 +257,6 @@ public class MetadataLoader {
         } else {
             Object annValue = metaAnnotations.computeIfAbsent(annName, k -> new LinkedHashMap<>());
             if (annValue instanceof Map) {
-                //noinspection unchecked
                 ((Map) annValue).putAll(xmlAnn.attributes);
             } else {
                 log.warn("Meta-annotation {} has value {} and cannot be re-assigned by annotation attributes", annName, annValue);

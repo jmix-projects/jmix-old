@@ -136,6 +136,7 @@ public final class InstanceUtils {
      * @param properties    path to the attribute
      * @return              attribute value
      */
+    @SuppressWarnings("unchecked")
     public static <T> T getValueEx(Instance instance, String[] properties) {
         if (properties == null) {
             return null;
@@ -153,7 +154,6 @@ public final class InstanceUtils {
 
             currentInstance = currentValue instanceof Instance ? (Instance) currentValue : null;
         }
-        //noinspection unchecked
         return (T) currentValue;
     }
 

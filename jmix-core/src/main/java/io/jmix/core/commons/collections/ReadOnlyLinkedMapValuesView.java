@@ -90,12 +90,13 @@ public class ReadOnlyLinkedMapValuesView extends AbstractCollection implements S
 
     // hack access to commons-collections internals
     protected static class LinkedMapValuesIteratorProvider extends AbstractLinkedMap {
+        @SuppressWarnings("unchecked")
         public static Iterator createValuesIterator(LinkedMap linkedMap) {
             return new ReadOnlyValuesIterator(linkedMap);
         }
 
-        protected static class ReadOnlyValuesIterator extends ValuesIterator {
-            public ReadOnlyValuesIterator(AbstractLinkedMap parent) {
+        protected static class ReadOnlyValuesIterator<V> extends ValuesIterator<V> {
+            public ReadOnlyValuesIterator(AbstractLinkedMap<?, V> parent) {
                 super(parent);
             }
 

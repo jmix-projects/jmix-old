@@ -34,8 +34,9 @@ public class DatatypeRange extends AbstractRange implements Range {
         throw new IllegalStateException("Range is datatype");
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Datatype asDatatype() {
+    public <T> Datatype<T> asDatatype() {
         return datatype;
     }
 

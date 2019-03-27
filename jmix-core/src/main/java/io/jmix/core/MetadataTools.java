@@ -151,8 +151,9 @@ public class MetadataTools {
         } else if (value instanceof Instance) {
             return getInstanceName((Instance) value);
         } else if (value instanceof Collection) {
-            //noinspection unchecked
-            return ((Collection<Object>) value).stream()
+            @SuppressWarnings("unchecked")
+            Collection<Object> collection = (Collection<Object>) value;
+            return collection.stream()
                     .map(this::format)
                     .collect(Collectors.joining(", "));
         } else {
@@ -174,8 +175,9 @@ public class MetadataTools {
         } else if (value instanceof Enum) {
             return messages.getMessage((Enum) value, userSessionSource.getLocale());
         } else if (value instanceof Collection) {
-            //noinspection unchecked
-            return ((Collection<Object>) value).stream()
+            @SuppressWarnings("unchecked")
+            Collection<Object> collection = (Collection<Object>) value;
+            return collection.stream()
                     .map(this::format)
                     .collect(Collectors.joining(", "));
         } else {
@@ -511,7 +513,8 @@ public class MetadataTools {
     }
 
     public Map<String, Object> getMetaAnnotationAttributes(Map<String, Object> metaAnnotations, Class metaAnnotationClass) {
-        Map map = (Map) metaAnnotations.get(metaAnnotationClass.getName());
+        @SuppressWarnings("unchecked")
+        Map<String, Object> map = (Map) metaAnnotations.get(metaAnnotationClass.getName());
         return map != null ? map : Collections.emptyMap();
     }
 
@@ -623,7 +626,7 @@ public class MetadataTools {
     /**
      * Determine whether the given entity class is persistent embeddable.
      */
-    public boolean isEmbeddable(Class aClass) {
+    public boolean isEmbeddable(Class<?> aClass) {
         checkNotNullArgument(aClass, "Class is null");
         return Boolean.TRUE.equals(metadata.getClassNN(aClass).getAnnotations().get(PERSISTENT_ANN_NAME))
                 && aClass.isAnnotationPresent(javax.persistence.Embeddable.class);
@@ -1002,7 +1005,7 @@ public class MetadataTools {
     public <T extends Instance> T copy(T source) {
         checkNotNullArgument(source, "source is null");
 
-        //noinspection unchecked
+        @SuppressWarnings("unchecked")
         T dest = createInstance((Class<T>) source.getClass());
 
         copy(source, dest);
@@ -1117,7 +1120,7 @@ public class MetadataTools {
                 }
 
                 if (srcProperty.getRange().getCardinality().isMany()) {
-                    //noinspection unchecked
+                    @SuppressWarnings("unchecked")
                     Collection<Entity> srcCollection = (Collection) value;
                     Collection<Entity> dstCollection = value instanceof List ? new ArrayList<>() : new LinkedHashSet<>();
 

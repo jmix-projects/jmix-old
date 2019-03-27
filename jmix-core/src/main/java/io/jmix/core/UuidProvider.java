@@ -23,7 +23,10 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Provides static method to create UUIDs.
  */
-public abstract class UuidProvider {
+public final class UuidProvider {
+
+    private UuidProvider() {
+    }
 
     private static volatile UuidSource uuidSource;
 

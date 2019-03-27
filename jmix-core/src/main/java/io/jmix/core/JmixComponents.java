@@ -34,13 +34,16 @@ import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.*;
 import java.util.regex.Pattern;
 
 /**
  * Holds the list of {@link JmixComponentDescriptor}s.
  */
+@ParametersAreNonnullByDefault
 public class JmixComponents implements BeanFactoryPostProcessor, EnvironmentAware {
 
     public static final Pattern SEPARATOR_PATTERN = Pattern.compile("\\s");
@@ -207,6 +210,7 @@ public class JmixComponents implements BeanFactoryPostProcessor, EnvironmentAwar
             super("JmixComponents properties", source);
         }
 
+        @Nonnull
         @Override
         public String[] getPropertyNames() {
             Set<String> propertyNames = new HashSet<>();

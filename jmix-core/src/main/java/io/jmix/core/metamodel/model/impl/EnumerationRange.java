@@ -36,7 +36,7 @@ public class EnumerationRange extends AbstractRange implements Range {
     }
 
     @Override
-    public Datatype asDatatype() {
+    public <T> Datatype<T> asDatatype() {
         throw new IllegalStateException("Range is enumeration");
     }
 

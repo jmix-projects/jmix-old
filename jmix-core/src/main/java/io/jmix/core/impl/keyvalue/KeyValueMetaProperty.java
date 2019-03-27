@@ -65,7 +65,10 @@ public class KeyValueMetaProperty extends MetadataObjectImpl implements MetaProp
             this.range = new EnumerationRange(enumeration);
             this.type = Type.ENUM;
         } else {
-            this.range = new DatatypeRange(Datatypes.getNN(javaClass));
+            @SuppressWarnings("unchecked")
+            Datatype datatype = Datatypes.getNN(javaClass);
+
+            this.range = new DatatypeRange(datatype);
             this.type = Type.DATATYPE;
         }
     }

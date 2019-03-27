@@ -19,14 +19,12 @@ package io.jmix.core;
 import io.jmix.core.annotation.JmixComponent;
 import io.jmix.core.annotation.JmixProperty;
 import io.jmix.core.compatibility.AppContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
 
 @Configuration
 @ComponentScan
@@ -36,14 +34,6 @@ import org.springframework.core.env.Environment;
         @JmixProperty(name = "cuba.confDir", value = "./conf")
 })
 public class JmixCoreConfiguration {
-
-    protected Environment environment;
-
-    @Autowired
-    void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
-
     @Bean
     static JmixComponents jmixComponents() {
         return new JmixComponents();

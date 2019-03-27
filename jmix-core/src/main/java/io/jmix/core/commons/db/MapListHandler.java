@@ -35,6 +35,7 @@ public class MapListHandler implements ResultSetHandler<List<Map<String, Object>
         this.convert = convert;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Map<String, Object>> handle(ResultSet rs) throws SQLException {
         List<Map<String, Object>> result = new ArrayList<>();

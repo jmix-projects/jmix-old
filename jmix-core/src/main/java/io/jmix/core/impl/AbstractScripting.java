@@ -28,7 +28,6 @@ import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.GlobalConfig;
 import io.jmix.core.ScriptExecutionPolicy;
 import io.jmix.core.Scripting;
-import io.jmix.core.compatibility.AppContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
@@ -39,7 +38,6 @@ import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
 import java.io.File;
@@ -198,6 +196,7 @@ public abstract class AbstractScripting implements Scripting {
         return binding;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T evaluateGroovy(String text, Binding binding, ScriptExecutionPolicy... policies) {
         boolean useCompilationCache = policies == null ||
@@ -229,7 +228,6 @@ public abstract class AbstractScripting implements Scripting {
                 log.warn("Error returning object into the pool", e);
             }
         }
-        //noinspection unchecked
         return (T) result;
     }
 
@@ -238,10 +236,10 @@ public abstract class AbstractScripting implements Scripting {
         return evaluateGroovy(text, binding, (ScriptExecutionPolicy[]) null);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T evaluateGroovy(String text, Map<String, Object> context) {
         Binding binding = createBinding(context);
-        //noinspection unchecked
         return (T) evaluateGroovy(text, binding);
     }
 
@@ -281,10 +279,10 @@ public abstract class AbstractScripting implements Scripting {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T runGroovyScript(String name, Map<String, Object> context) {
         Binding binding = createBinding(context);
-        //noinspection unchecked
         return (T) runGroovyScript(name, binding);
     }
 

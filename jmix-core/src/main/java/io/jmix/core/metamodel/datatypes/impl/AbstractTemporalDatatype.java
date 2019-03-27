@@ -41,6 +41,7 @@ public abstract class AbstractTemporalDatatype<T extends Temporal> implements Da
         this.formatPattern = element.attributeValue("format");
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public String format(Object value) {
         if (value == null) {
@@ -52,7 +53,6 @@ public abstract class AbstractTemporalDatatype<T extends Temporal> implements Da
             } else {
                 formatter = getDateTimeFormatter();
             }
-            //noinspection unchecked
             return formatter.format((T) value);
         }
     }
@@ -69,7 +69,6 @@ public abstract class AbstractTemporalDatatype<T extends Temporal> implements Da
         }
 
         DateTimeFormatter formatter = getDateTimeFormatter(formatStrings, locale);
-        //noinspection unchecked
         return formatter.format((TemporalAccessor) value);
     }
 

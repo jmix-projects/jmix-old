@@ -27,7 +27,10 @@ import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.core.metamodel.datatypes.impl.AdaptiveNumberDatatype;
 import io.jmix.core.metamodel.datatypes.impl.EnumerationImpl;
-import io.jmix.core.metamodel.model.*;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.Range;
+import io.jmix.core.metamodel.model.Session;
 import io.jmix.core.metamodel.model.impl.*;
 import io.jmix.core.validation.groups.UiComponentChecks;
 import org.apache.commons.lang3.ArrayUtils;
@@ -923,6 +926,7 @@ public class MetaModelLoader {
             this.tasks = Collections.emptyList();
         }
 
+        @SuppressWarnings("unchecked")
         public MetadataObjectInfo(T object, Collection<? extends RangeInitTask> tasks) {
             this.object = object;
             this.tasks = (Collection<RangeInitTask>) tasks;

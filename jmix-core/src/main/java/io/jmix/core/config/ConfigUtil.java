@@ -35,12 +35,8 @@ import java.util.regex.Pattern;
 
 /**
  * Various configuration utility methods.
- *
  */
 public final class ConfigUtil {
-    /**
-     * Prohibited.
-     */
     private ConfigUtil() {
     }
 

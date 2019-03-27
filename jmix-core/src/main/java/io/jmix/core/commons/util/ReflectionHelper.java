@@ -68,6 +68,7 @@ public final class ReflectionHelper {
      * @param name  class FQN
      * @return      class instance
      */
+    @SuppressWarnings("unchecked")
     public static <T> Class<T> getClass(String name) {
         try {
             return (Class<T>) loadClass(name);
@@ -105,7 +106,7 @@ public final class ReflectionHelper {
      * @return          method reference or null if a suitable method not found
      */
     @Nullable
-    public static Method findMethod(Class c, String name, Object...params) {
+    public static Method findMethod(Class<?> c, String name, Object... params) {
         Class[] paramTypes = getParamTypes(params);
 
         Method method = null;
@@ -121,8 +122,9 @@ public final class ReflectionHelper {
                 }
             }
         }
-        if (method != null)
+        if (method != null) {
             method.setAccessible(true);
+        }
 
         return method;
     }
@@ -135,6 +137,7 @@ public final class ReflectionHelper {
      * @return          method result
      * @throws NoSuchMethodException if a suitable method not found
      */
+    @SuppressWarnings("unchecked")
     public static <T> T invokeMethod(Object obj, String name, Object...params) throws NoSuchMethodException
     {
         Class[] paramTypes = getParamTypes(params);
@@ -148,7 +151,6 @@ public final class ReflectionHelper {
         }
         method.setAccessible(true);
         try {
-            //noinspection unchecked
             return (T) method.invoke(obj, params);
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException("Unable to invoke method " + name, e);

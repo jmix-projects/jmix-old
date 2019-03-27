@@ -46,7 +46,6 @@ public interface Events {
      * You can use {@link org.springframework.context.PayloadApplicationEvent} to publish any object as an event.
      *
      * @param event the event to publish
-     * @see org.springframework.web.context.support.RequestHandledEvent
      */
     void publish(ApplicationEvent event);
 }

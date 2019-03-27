@@ -49,6 +49,7 @@ public class EnumerationImpl<T extends Enum> implements Enumeration<T> {
         return format(value);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public T parse(String value) throws ParseException {
         if (StringUtils.isBlank(value))
@@ -56,8 +57,9 @@ public class EnumerationImpl<T extends Enum> implements Enumeration<T> {
 
         for (Enum enumValue : javaClass.getEnumConstants()) {
             Object enumId = ((EnumClass) enumValue).getId();
-            if (value.equals(enumId.toString()))
+            if (value.equals(enumId.toString())) {
                 return (T) enumValue;
+            }
         }
         return null;
     }

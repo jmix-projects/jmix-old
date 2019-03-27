@@ -53,8 +53,9 @@ public class DatatypeRegistryImpl implements DatatypeRegistry {
 
     @Nullable
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Datatype<T> get(Class<T> javaClass) {
-        Datatype datatype = datatypeByClass.get(javaClass);
+        Datatype<T> datatype = datatypeByClass.get(javaClass);
         if (datatype == null) {
             // if no exact type found, try to find matching super-type
             for (Map.Entry<Class<?>, Datatype> entry : datatypeByClass.entrySet()) {
@@ -64,7 +65,6 @@ public class DatatypeRegistryImpl implements DatatypeRegistry {
                 }
             }
         }
-        //noinspection unchecked
         return datatype;
     }
 

@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 @Component("cuba_SpringBeanLoader")
@@ -35,7 +36,7 @@ public class SpringBeanLoader implements BeanFactoryAware {
     protected DefaultListableBeanFactory beanFactory;
 
     @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+    public void setBeanFactory(@Nonnull BeanFactory beanFactory) throws BeansException {
         if (beanFactory instanceof DefaultListableBeanFactory) {
             this.beanFactory = (DefaultListableBeanFactory) beanFactory;
         }
@@ -44,10 +45,10 @@ public class SpringBeanLoader implements BeanFactoryAware {
     public void updateContext(Collection<Class> classes) {
         if (beanFactory != null) {
             boolean needToRefreshRemotingContext = false;
-            for (Class clazz : classes) {
-                Service serviceAnnotation = (Service) clazz.getAnnotation(Service.class);
-                Component componentAnnotation = (Component) clazz.getAnnotation(Component.class);
-                Controller controllerAnnotation = (Controller) clazz.getAnnotation(Controller.class);
+            for (Class<?> clazz : classes) {
+                Service serviceAnnotation = clazz.getAnnotation(Service.class);
+                Component componentAnnotation = clazz.getAnnotation(Component.class);
+                Controller controllerAnnotation = clazz.getAnnotation(Controller.class);
 
                 String beanName = null;
                 if (serviceAnnotation != null) {
@@ -61,7 +62,7 @@ public class SpringBeanLoader implements BeanFactoryAware {
                 if (StringUtils.isNotBlank(beanName)) {
                     GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
                     beanDefinition.setBeanClass(clazz);
-                    Scope scope = (Scope) clazz.getAnnotation(Scope.class);
+                    Scope scope = clazz.getAnnotation(Scope.class);
                     if (scope != null) {
                         beanDefinition.setScope(scope.value());
                     }

@@ -26,7 +26,6 @@ import java.util.NoSuchElementException;
 
 /**
  * Implementation of configuration getter methods.
- *
  */
 public class ConfigGetter extends ConfigAccessorMethod {
     /**

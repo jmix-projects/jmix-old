@@ -140,11 +140,8 @@ public class MetadataBuildSupport {
                 if (StringUtils.isBlank(rootPackage))
                     throw new IllegalStateException("metadata-model/@root-package is empty in " + xmlFile.name);
 
-                List<EntityClassInfo> classNames = packages.get(rootPackage);
-                if (classNames == null) {
-                    classNames = new ArrayList<>();
-                    packages.put(rootPackage, classNames);
-                }
+                List<EntityClassInfo> classNames = packages.computeIfAbsent(rootPackage, k -> new ArrayList<>());
+
                 for (Element classEl : element.elements("class")) {
                     classNames.add(new EntityClassInfo(classEl.attributeValue("store"), classEl.getText().trim(), false));
                 }
@@ -167,21 +164,25 @@ public class MetadataBuildSupport {
             for (Element classEl : puEl.elements("class")) {
                 String className = classEl.getText().trim();
                 boolean included = false;
-                for (String rootPackage : packages.keySet()) {
-                    if (className.startsWith(rootPackage + ".")) {
-                        List<EntityClassInfo> classNames = packages.get(rootPackage);
+
+                for (Map.Entry<String, List<EntityClassInfo>> entry : packages.entrySet()) {
+                    if (className.startsWith(entry.getKey() + ".")) {
+                        List<EntityClassInfo> classNames = entry.getValue();
                         if (classNames == null) {
                             classNames = new ArrayList<>();
-                            packages.put(rootPackage, classNames);
+                            packages.put(entry.getKey(), classNames);
                         }
                         classNames.add(new EntityClassInfo(db, className, true));
                         included = true;
                         break;
                     }
                 }
-                if (!included)
-                    throw new IllegalStateException("Can not find a model for class " + className
-                            + ". The class's package must be inside of some model's root package.");
+
+                if (!included) {
+                    throw new IllegalStateException(
+                            String.format("Can not find a model for class %s. The class's package must be inside of some model's root package.",
+                                    className));
+                }
             }
         }
     }
@@ -259,13 +260,13 @@ public class MetadataBuildSupport {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     protected Object getXmlAnnotationAttributeValue(String value, String className, String datatypeName) {
         if (className == null && datatypeName == null)
             return inferMetaAnnotationType(value);
         if (className != null) {
             Class aClass = ReflectionHelper.getClass(className);
             if (aClass.isEnum()) {
-                //noinspection unchecked
                 return Enum.valueOf(aClass, value);
             } else {
                 throw new UnsupportedOperationException("Class " + className + "  is not Enum");
