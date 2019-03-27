@@ -59,10 +59,10 @@ configure([project(':jmix-core'), project(':jmix-backend')]) {
     if (rootProject.hasProperty('spotbugsEnabled')) {
         apply plugin: 'com.github.spotbugs'
 
-        afterEvaluate {
+        project.afterEvaluate {
             spotbugs {
                 toolVersion = '3.1.12'
-                ignoreFailures = false
+                ignoreFailures = true
                 omitVisitors = ['FindDoubleCheck']
                 excludeFilter = rootProject.file("codestyle/exclude-filter.xml")
                 effort = "max"
