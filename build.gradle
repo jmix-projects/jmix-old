@@ -55,7 +55,7 @@ allprojects {
     }
 }
 
-configure([project(':jmix-core'), project(':jmix-backend')]) {
+configure([project(':jmix-core'), project(':jmix-data')]) {
     if (rootProject.hasProperty('spotbugsEnabled')) {
         apply plugin: 'com.github.spotbugs'
 
