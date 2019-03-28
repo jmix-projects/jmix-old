@@ -22,8 +22,17 @@ import org.gradle.api.Project
 class JmixPlugin implements Plugin<Project> {
 
     @Override
-    void apply(Project target) {
-        target.tasks.findByName('compileJava').doLast(new EnhancingAction('main'))
-        target.tasks.findByName('compileTestJava').doLast(new EnhancingAction('test'))
+    void apply(Project project) {
+        project.extensions.create("entitiesEnhancing", EnhancingExtension, project)
+
+        project.afterEvaluate {
+            if (project.entitiesEnhancing.enabled) {
+                // todo find a better way to provide classpath for EclipseLink weaver
+                project.dependencies.add('compile', 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-1-cuba')
+
+                project.tasks.findByName('compileJava').doLast(new EnhancingAction('main'))
+                project.tasks.findByName('compileTestJava').doLast(new EnhancingAction('test'))
+            }
+        }
     }
 }

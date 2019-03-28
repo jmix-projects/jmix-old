@@ -16,12 +16,12 @@
 
 package io.jmix.core;
 
+import com.google.common.collect.Sets;
 import io.jmix.core.commons.util.StackTrace;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.entity.*;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.persistence.internal.helper.IdentityHashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -228,7 +228,7 @@ public class EntityStates {
         checkNotNullArgument(entity);
         checkNotNullArgument(view);
 
-        checkLoadedWithView(entity, view, new IdentityHashSet());
+        checkLoadedWithView(entity, view, Sets.newIdentityHashSet());
     }
 
     /**
@@ -305,7 +305,7 @@ public class EntityStates {
         checkNotNullArgument(entity);
         checkNotNullArgument(view);
 
-        return isLoadedWithView(entity, view, new IdentityHashSet());
+        return isLoadedWithView(entity, view, Sets.newIdentityHashSet());
     }
 
     /**

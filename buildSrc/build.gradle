@@ -15,7 +15,21 @@
  */
 
 repositories {
-    mavenCentral()
+    if (rootProject.hasProperty('haulmontRepoUrl')) {
+        maven {
+            url rootProject['haulmontRepoUrl']
+
+            if (rootProject.hasProperty('haulmontRepoUser') && rootProject.hasProperty('haulmontRepoPassword')) {
+                credentials {
+                    username rootProject['haulmontRepoUser']
+                    password rootProject['haulmontRepoPassword']
+                }
+            }
+        }
+    } else {
+        jcenter()
+        maven { url "https://dl.bintray.com/cuba-platform/main" }
+    }
 }
 
 dependencies {

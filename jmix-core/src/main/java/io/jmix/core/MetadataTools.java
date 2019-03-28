@@ -1239,7 +1239,7 @@ public class MetadataTools {
 
     private boolean isNotLoadedAttributeException(Throwable e) {
         return e instanceof IllegalStateException
-                || e instanceof org.eclipse.persistence.exceptions.ValidationException && e.getMessage() != null
+                || e.getClass().getName().equals("org.eclipse.persistence.exceptions.ValidationException") && e.getMessage() != null
                 && e.getMessage().contains("An attempt was made to traverse a relationship using indirection that had a null Session");
     }
 

@@ -20,7 +20,6 @@ import io.jmix.backend.AuditInfoProvider;
 import io.jmix.backend.Persistence;
 import io.jmix.core.TimeSource;
 import io.jmix.core.entity.*;
-import io.jmix.core.impl.persistence.CubaEntityFetchGroup;
 import org.eclipse.persistence.descriptors.DescriptorEvent;
 import org.eclipse.persistence.descriptors.DescriptorEventListener;
 import org.eclipse.persistence.descriptors.DescriptorEventManager;
@@ -81,8 +80,8 @@ public class EclipseLinkDescriptorEventListener implements DescriptorEventListen
         if (event.getObject() instanceof FetchGroupTracker) {
             FetchGroupTracker entity = (FetchGroupTracker) event.getObject();
             FetchGroup fetchGroup = entity._persistence_getFetchGroup();
-            if (fetchGroup != null && !(fetchGroup instanceof CubaEntityFetchGroup))
-                entity._persistence_setFetchGroup(new CubaEntityFetchGroup(fetchGroup));
+            if (fetchGroup != null && !(fetchGroup instanceof JmixEntityFetchGroup))
+                entity._persistence_setFetchGroup(new JmixEntityFetchGroup(fetchGroup));
         }
     }
 
@@ -95,8 +94,8 @@ public class EclipseLinkDescriptorEventListener implements DescriptorEventListen
         if (event.getObject() instanceof FetchGroupTracker) {
             FetchGroupTracker entity = (FetchGroupTracker) event.getObject();
             FetchGroup fetchGroup = entity._persistence_getFetchGroup();
-            if (fetchGroup != null && !(fetchGroup instanceof CubaEntityFetchGroup))
-                entity._persistence_setFetchGroup(new CubaEntityFetchGroup(fetchGroup));
+            if (fetchGroup != null && !(fetchGroup instanceof JmixEntityFetchGroup))
+                entity._persistence_setFetchGroup(new JmixEntityFetchGroup(fetchGroup));
         }
 
         if (event.getObject() instanceof Entity)
@@ -126,8 +125,8 @@ public class EclipseLinkDescriptorEventListener implements DescriptorEventListen
         if (event.getObject() instanceof FetchGroupTracker) {
             FetchGroupTracker entity = (FetchGroupTracker) event.getObject();
             FetchGroup fetchGroup = entity._persistence_getFetchGroup();
-            if (fetchGroup != null && !(fetchGroup instanceof CubaEntityFetchGroup))
-                entity._persistence_setFetchGroup(new CubaEntityFetchGroup(fetchGroup));
+            if (fetchGroup != null && !(fetchGroup instanceof JmixEntityFetchGroup))
+                entity._persistence_setFetchGroup(new JmixEntityFetchGroup(fetchGroup));
         }
     }
 

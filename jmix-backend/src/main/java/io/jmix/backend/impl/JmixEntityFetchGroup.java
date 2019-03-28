@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.core.impl.persistence;
+package io.jmix.backend.impl;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.EntityStates;
@@ -37,17 +37,17 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-public class CubaEntityFetchGroup extends EntityFetchGroup {
+public class JmixEntityFetchGroup extends EntityFetchGroup {
 
     protected FetchGroup wrappedFetchGroup;
 
     protected static ThreadLocal<Boolean> accessLocalUnfetched = new ThreadLocal<>();
 
-    public CubaEntityFetchGroup(FetchGroup fetchGroup) {
+    public JmixEntityFetchGroup(FetchGroup fetchGroup) {
         wrappedFetchGroup = fetchGroup;
     }
 
-    public CubaEntityFetchGroup(Collection<String> attributeNames) {
+    public JmixEntityFetchGroup(Collection<String> attributeNames) {
         wrappedFetchGroup = new EntityFetchGroup(attributeNames);
     }
 
@@ -142,12 +142,12 @@ public class CubaEntityFetchGroup extends EntityFetchGroup {
 
     @Override
     public FetchGroup clone() {
-        return new CubaEntityFetchGroup(wrappedFetchGroup.clone());
+        return new JmixEntityFetchGroup(wrappedFetchGroup.clone());
     }
 
     @Override
     public CoreAttributeGroup cloneWithSameAttributes(Map<CoreAttributeGroup<AttributeItem, ClassDescriptor>, CoreAttributeGroup<AttributeItem, ClassDescriptor>> cloneMap) {
-        return new CubaEntityFetchGroup(wrappedFetchGroup.cloneWithSameAttributes());
+        return new JmixEntityFetchGroup(wrappedFetchGroup.cloneWithSameAttributes());
     }
 
     @Override
@@ -270,7 +270,7 @@ public class CubaEntityFetchGroup extends EntityFetchGroup {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CubaEntityFetchGroup that = (CubaEntityFetchGroup) o;
+        JmixEntityFetchGroup that = (JmixEntityFetchGroup) o;
 
         return wrappedFetchGroup.equals(that.wrappedFetchGroup);
     }

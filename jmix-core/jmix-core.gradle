@@ -32,11 +32,14 @@ dependencies {
     api 'com.google.guava:guava:27.0.1-jre'
     api 'org.dom4j:dom4j:2.1.1'
     api 'org.eclipse.persistence:javax.persistence:2.1.1'
-    api 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-1-cuba'
     implementation 'org.antlr:antlr-runtime:3.5.2'
 
     testImplementation 'org.springframework:spring-test'
     testImplementation "org.spockframework:spock-core:$spockVersion"
     testImplementation "org.spockframework:spock-spring:$spockVersion"
     testRuntimeOnly 'org.slf4j:slf4j-simple'
+}
+
+entitiesEnhancing {
+    enabled = true
 }

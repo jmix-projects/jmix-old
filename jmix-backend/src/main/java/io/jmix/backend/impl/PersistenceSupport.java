@@ -31,7 +31,6 @@ import io.jmix.core.entity.BaseEntityInternalAccess;
 import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.SoftDelete;
-import io.jmix.core.impl.persistence.CubaEntityFetchGroup;
 import org.eclipse.persistence.descriptors.changetracking.ChangeTracker;
 import org.eclipse.persistence.internal.descriptors.changetracking.AttributeChangeListener;
 import org.eclipse.persistence.internal.sessions.AbstractSession;
@@ -184,11 +183,11 @@ public class PersistenceSupport implements ApplicationContextAware {
 
     protected void fireBeforeDetachEntityListener(BaseGenericIdEntity entity, String storeName) {
         if (!BaseEntityInternalAccess.isDetached(entity)) {
-            CubaEntityFetchGroup.setAccessLocalUnfetched(false);
+            JmixEntityFetchGroup.setAccessLocalUnfetched(false);
             try {
                 entityListenerManager.fireListener(entity, EntityListenerType.BEFORE_DETACH, storeName);
             } finally {
-                CubaEntityFetchGroup.setAccessLocalUnfetched(true);
+                JmixEntityFetchGroup.setAccessLocalUnfetched(true);
             }
         }
     }
@@ -409,12 +408,12 @@ public class PersistenceSupport implements ApplicationContextAware {
                             throw new IllegalStateException("Changed instance " + entity + " in read-only transaction");
                     }
 
-                    // if cache is enabled, the entity can have EntityFetchGroup instead of CubaEntityFetchGroup
+                    // if cache is enabled, the entity can have EntityFetchGroup instead of JmixEntityFetchGroup
                     if (instance instanceof FetchGroupTracker) {
                         FetchGroupTracker fetchGroupTracker = (FetchGroupTracker) entity;
                         FetchGroup fetchGroup = fetchGroupTracker._persistence_getFetchGroup();
-                        if (fetchGroup != null && !(fetchGroup instanceof CubaEntityFetchGroup))
-                            fetchGroupTracker._persistence_setFetchGroup(new CubaEntityFetchGroup(fetchGroup));
+                        if (fetchGroup != null && !(fetchGroup instanceof JmixEntityFetchGroup))
+                            fetchGroupTracker._persistence_setFetchGroup(new JmixEntityFetchGroup(fetchGroup));
                     }
 
                     if (entity instanceof BaseGenericIdEntity) {

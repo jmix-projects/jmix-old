@@ -34,6 +34,7 @@ def spockVersion = '1.2-groovy-2.5'
 
 dependencies {
     api project(':jmix-core')
+    implementation 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-1-cuba'
     implementation 'org.springframework:spring-orm'
     implementation 'org.springframework:spring-tx'
 
@@ -43,4 +44,8 @@ dependencies {
     testImplementation 'org.apache.commons:commons-dbcp2'
     testRuntimeOnly 'org.slf4j:slf4j-simple'
     testRuntimeOnly 'org.hsqldb:hsqldb:2.4.1'
+}
+
+entitiesEnhancing {
+    enabled = true
 }
