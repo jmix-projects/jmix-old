@@ -16,13 +16,15 @@
 
 package io.jmix.data.impl;
 
-import io.jmix.data.EntityManager;
-import io.jmix.data.Query;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.StringHelper;
-import io.jmix.core.metamodel.model.*;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.queryconditions.Condition;
 import io.jmix.core.queryconditions.ConditionJpqlGenerator;
+import io.jmix.data.EntityManager;
+import io.jmix.data.PersistenceSecurity;
+import io.jmix.data.Query;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +39,13 @@ import java.util.stream.Collectors;
 /**
  * Builds {@link Query} instance to use in DataService.
  */
-@Component(RdbmsQueryBuilder.NAME)
+@Component(OrmQueryBuilder.NAME)
 @Scope("prototype")
-public class RdbmsQueryBuilder {
+public class OrmQueryBuilder {
 
-    public static final String NAME = "cuba_RdbmsQueryBuilder";
+    public static final String NAME = "jmix_OrmQueryBuilder";
 
-    private static final Logger log = LoggerFactory.getLogger(RdbmsQueryBuilder.class);
+    private static final Logger log = LoggerFactory.getLogger(OrmQueryBuilder.class);
 
     protected String queryString;
     protected Map<String, Object> queryParams;
@@ -54,9 +56,8 @@ public class RdbmsQueryBuilder {
     @Inject
     protected Metadata metadata;
 
-    // todo security
-//    @Inject
-//    protected PersistenceSecurity security;
+    @Inject
+    protected PersistenceSecurity persistenceSecurity;
 
     @Inject
     protected ConditionJpqlGenerator conditionJpqlGenerator;
@@ -184,18 +185,17 @@ public class RdbmsQueryBuilder {
     }
 
     protected void applyConstraints(Query query) {
-        // todo security
-//        boolean constraintsApplied = security.applyConstraints(query);
-//        if (constraintsApplied && singleResult) {
-//            QueryParser parser = QueryTransformerFactory.createParser(query.getQueryString());
-//            if (parser.isQueryWithJoins()) {
-//                QueryTransformer transformer = QueryTransformerFactory.createTransformer(query.getQueryString());
-//                transformer.addDistinct();
-//                query.setQueryString(transformer.getResult());
-//            }
-//        }
-//        if (constraintsApplied && log.isDebugEnabled())
-//            log.debug("Constraints applied: {}", printQuery(query.getQueryString()));
+        boolean constraintsApplied = persistenceSecurity.applyConstraints(query);
+        if (constraintsApplied && singleResult) {
+            QueryParser parser = QueryTransformerFactory.createParser(query.getQueryString());
+            if (parser.isQueryWithJoins()) {
+                QueryTransformer transformer = QueryTransformerFactory.createTransformer(query.getQueryString());
+                transformer.addDistinct();
+                query.setQueryString(transformer.getResult());
+            }
+        }
+        if (constraintsApplied && log.isDebugEnabled())
+            log.debug("Constraints applied: {}", printQuery(query.getQueryString()));
     }
 
     public static String printQuery(String query) {

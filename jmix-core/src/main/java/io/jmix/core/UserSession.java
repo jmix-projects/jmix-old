@@ -62,4 +62,8 @@ public class UserSession {
     public void setAttribute(String name, Serializable value) {
 
     }
+
+    public boolean hasConstraints() {
+        return false;
+    }
 }

@@ -12,7 +12,7 @@ import org.springframework.core.env.Environment;
 
 @Configuration
 @JmixComponent(dependsOn = TestAddon1Configuration.class, properties = {
-        @JmixProperty(name = "jmix.metadataConfig", value = "com/sample/app/metadata.xml", append = true),
+        @JmixProperty(name = "jmix.viewsConfig", value = "com/sample/app/views.xml", append = true),
         @JmixProperty(name = "prop1", value = "app_prop1", append = true),
         @JmixProperty(name = "prop2", value = "app_prop2"),
         @JmixProperty(name = "prop3", value = "app_prop3")

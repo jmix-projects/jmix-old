@@ -17,22 +17,11 @@
 package io.jmix.core;
 
 import com.google.common.base.Splitter;
-import io.jmix.core.annotation.JmixComponent;
-import io.jmix.core.annotation.JmixProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.context.EnvironmentAware;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.MutablePropertySources;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,86 +33,19 @@ import java.util.regex.Pattern;
  * Holds the list of {@link JmixComponentDescriptor}s.
  */
 @ParametersAreNonnullByDefault
-public class JmixComponents implements BeanFactoryPostProcessor, EnvironmentAware {
+public class JmixComponents {
 
     public static final Pattern SEPARATOR_PATTERN = Pattern.compile("\\s");
 
     private final Logger log = LoggerFactory.getLogger(JmixComponents.class);
 
-    private final List<JmixComponentDescriptor> components = new ArrayList<>();
+    private final List<JmixComponentDescriptor> components;
 
-    private Environment environment;
+    private final Environment environment;
 
-    @Override
-    public void setEnvironment(Environment environment) {
+    public JmixComponents(Environment environment, List<JmixComponentDescriptor> components) {
         this.environment = environment;
-    }
-
-    @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        List<String> componentIds = new ArrayList<>();
-
-        for (String beanName : beanFactory.getBeanDefinitionNames()) {
-            BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
-            if (!(beanDefinition instanceof AnnotatedBeanDefinition)) {
-                continue;
-            }
-            if (!((AnnotatedBeanDefinition) beanDefinition).getMetadata().hasAnnotation(JmixComponent.class.getName())
-                    || ((AnnotatedBeanDefinition) beanDefinition).getFactoryMethodMetadata() != null) {
-                continue;
-            }
-            String beanClassName = beanDefinition.getBeanClassName();
-            ClassLoader beanClassLoader = beanFactory.getBeanClassLoader();
-            if (beanClassLoader == null) {
-                throw new RuntimeException("BeanClassLoader is null");
-            }
-            Class<?> beanClass;
-            try {
-                beanClass = beanClassLoader.loadClass(beanClassName);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            JmixComponent componentAnnotation = AnnotationUtils.findAnnotation(beanClass, JmixComponent.class);
-            if (componentAnnotation == null) {
-                continue;
-            }
-            String compId = getComponentId(componentAnnotation, beanClass);
-            if (!componentIds.contains(compId)) {
-                componentIds.add(compId);
-            }
-            JmixComponentDescriptor compDescriptor = get(compId);
-            if (compDescriptor == null) {
-                compDescriptor = new JmixComponentDescriptor(compId);
-                load(compDescriptor, componentAnnotation);
-            }
-            if (!components.contains(compDescriptor))
-                components.add(compDescriptor);
-        }
-
-        components.sort((c1, c2) -> {
-            int res = c1.compareTo(c2);
-            if (res != 0)
-                return res;
-            else
-                return componentIds.indexOf(c1.getId()) - componentIds.indexOf(c2.getId());
-        });
-
-        log.info("Using Jmix components: {}", components);
-
-        if (environment instanceof ConfigurableEnvironment) {
-            MutablePropertySources sources = ((ConfigurableEnvironment) environment).getPropertySources();
-            sources.addLast(new JmixPropertySource(this));
-        } else {
-            throw new IllegalStateException("Not a ConfigurableEnvironment, cannot register JmixComponents property source");
-        }
-    }
-
-    private String getComponentId(JmixComponent jmixComponent, Class<?> aClass) {
-        String compId = jmixComponent.id();
-        if ("".equals(compId)) {
-            compId = aClass.getPackage().getName();
-        }
-        return compId;
+        this.components = components;
     }
 
     /**
@@ -144,28 +66,6 @@ public class JmixComponents implements BeanFactoryPostProcessor, EnvironmentAwar
                 return component;
         }
         return null;
-    }
-
-    private void load(JmixComponentDescriptor component, JmixComponent componentAnnotation) {
-        for (Class<?> depClass : componentAnnotation.dependsOn()) {
-            JmixComponent depComponentAnnotation = AnnotationUtils.findAnnotation(depClass, JmixComponent.class);
-            if (depComponentAnnotation == null) {
-                log.warn("Dependency class {} is not annotated with {}, ignoring it", depClass.getName(), JmixComponent.class.getName());
-                continue;
-            }
-            String depCompId = getComponentId(depComponentAnnotation, depClass);
-            JmixComponentDescriptor depComp = get(depCompId);
-            if (depComp == null) {
-                depComp = new JmixComponentDescriptor(depCompId);
-                load(depComp, depComponentAnnotation);
-                components.add(depComp);
-            }
-            component.addDependency(depComp);
-        }
-
-        for (JmixProperty propertyAnn : componentAnnotation.properties()) {
-            component.setProperty(propertyAnn.name(), propertyAnn.value(), propertyAnn.append());
-        }
     }
 
     @Nullable

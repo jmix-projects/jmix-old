@@ -33,6 +33,9 @@ buildscript {
 
 ext {
     jmixVersion = '0.0.1'
+    spockVersion = '1.2-groovy-2.5'
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
 }
 
 allprojects {
@@ -55,7 +58,7 @@ allprojects {
     }
 }
 
-configure([project(':jmix-core'), project(':jmix-data')]) {
+configure([project(':jmix-core'), project(':jmix-data'), project(':jmix-security')]) {
     if (rootProject.hasProperty('spotbugsEnabled')) {
         apply plugin: 'com.github.spotbugs'
 

@@ -39,16 +39,16 @@ class JmixComponentsTest extends Specification {
         def addon1 = components.get('com.sample.addon1')
         def app = components.get('com.sample.app')
 
-        jmixCore.getProperty('jmix.metadataConfig') == 'io/jmix/core/metadata.xml'
-        addon1.getProperty('jmix.metadataConfig') == 'com/sample/addon1/metadata.xml'
-        app.getProperty('jmix.metadataConfig') == 'com/sample/app/metadata.xml'
+        jmixCore.getProperty('jmix.viewsConfig') == 'io/jmix/core/views.xml'
+        addon1.getProperty('jmix.viewsConfig') == 'com/sample/addon1/views.xml'
+        app.getProperty('jmix.viewsConfig') == 'com/sample/app/views.xml'
 
     }
 
     def "resulting configuration properties"() {
         expect:
 
-        components.getProperty('jmix.metadataConfig') == 'io/jmix/core/metadata.xml com/sample/addon1/metadata.xml com/sample/app/metadata.xml'
+        components.getProperty('jmix.viewsConfig') == 'io/jmix/core/views.xml com/sample/addon1/views.xml com/sample/app/views.xml'
         components.getProperty('prop1') == 'addon1_prop1 app_prop1'
         components.getProperty('prop2') == 'app_prop2'
         components.getProperty('prop3') == 'app_prop3'

@@ -2,8 +2,10 @@ rootProject.name = 'jmix'
 
 include 'jmix-core'
 include 'jmix-data'
+include 'jmix-security'
 include 'starters:starter-standard'
 include 'samples:sample-hello-world'
+include 'samples:sample-custom-security'
 
 rootProject.children.each { p1 ->
 	p1.buildFileName = "${p1.name}.gradle"

@@ -32,9 +32,9 @@ targetCompatibility = rootProject.targetCompatibility
 
 dependencies {
     api project(':jmix-core')
-    implementation 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-1-cuba'
-    implementation 'org.springframework:spring-orm'
-    implementation 'org.springframework:spring-tx'
+    api project(':jmix-data')
+    
+    implementation 'org.json:json:20180813'
 
     testImplementation 'org.springframework:spring-test'
     testImplementation "org.spockframework:spock-core:$rootProject.spockVersion"

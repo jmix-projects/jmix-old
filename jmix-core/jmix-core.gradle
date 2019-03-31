@@ -10,11 +10,9 @@ dependencyManagement {
     }
 }
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
-version = jmixVersion
-
-def spockVersion = '1.2-groovy-2.5'
+version = rootProject.jmixVersion
+sourceCompatibility = rootProject.sourceCompatibility
+targetCompatibility = rootProject.targetCompatibility
 
 dependencies {
     api 'org.springframework:spring-context'
@@ -35,8 +33,8 @@ dependencies {
     implementation 'org.antlr:antlr-runtime:3.5.2'
 
     testImplementation 'org.springframework:spring-test'
-    testImplementation "org.spockframework:spock-core:$spockVersion"
-    testImplementation "org.spockframework:spock-spring:$spockVersion"
+    testImplementation "org.spockframework:spock-core:$rootProject.spockVersion"
+    testImplementation "org.spockframework:spock-spring:$rootProject.spockVersion"
     testRuntimeOnly 'org.slf4j:slf4j-simple'
 }
 

@@ -1,14 +1,18 @@
 apply plugin: 'java'
+apply plugin: 'groovy'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'war'
 
-group = 'io.jmix.sample.helloworld'
+group = 'io.jmix.sample.customsecurity'
 version = rootProject.jmixVersion
 sourceCompatibility = rootProject.sourceCompatibility
 
 dependencies {
     implementation project(':starters:starter-standard')
     implementation 'org.springframework.boot:spring-boot-starter'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.spockframework:spock-core:$rootProject.spockVersion"
+    testImplementation "org.spockframework:spock-spring:$rootProject.spockVersion"
 }

@@ -96,7 +96,7 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
             transformer.removeOrderBy();
             String queryString = transformer.getResult();
 
-            RdbmsQueryBuilder queryBuilder = AppBeans.get(RdbmsQueryBuilder.NAME);
+            OrmQueryBuilder queryBuilder = AppBeans.get(OrmQueryBuilder.NAME);
             queryBuilder.init(queryString, contextQuery.getCondition(), contextQuery.getSort(),
                     contextQuery.getParameters(), contextQuery.getNoConversionParams(),
                     null, entityName);
@@ -105,7 +105,7 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
             }
             Query query = queryBuilder.getQuery(em);
 
-            String logMsg = "Load previous query results: " + RdbmsQueryBuilder.printQuery(query.getQueryString());
+            String logMsg = "Load previous query results: " + OrmQueryBuilder.printQuery(query.getQueryString());
             log.debug(logMsg);
             long start = System.currentTimeMillis();
 

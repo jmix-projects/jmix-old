@@ -14,5 +14,6 @@ sourceCompatibility = '1.8'
 
 dependencies {
     api project(':jmix-core')
+    api project(':jmix-security')
     implementation 'org.springframework:spring-context'
 }
