@@ -20,7 +20,7 @@ import io.jmix.core.config.Property;
 import io.jmix.core.config.Source;
 import io.jmix.core.config.SourceType;
 import io.jmix.core.config.defaults.*;
-import io.jmix.core.usersessions.UserSessions;
+import io.jmix.core.security.UserSessions;
 
 /**
  * Configuration parameters interface used by the CORE layer.
@@ -250,9 +250,9 @@ public interface ServerConfig extends Config {
     /**
      * Login name which is used by default in system authentication
      */
-    @Property("cuba.jmxUserLogin")
-    @Default("admin")
-    String getJmxUserLogin();
+    @Property("jmix.systemUserLogin")
+    @Default("system")
+    String getSystemUserLogin();
 
     /**
      * Warning in the log when a service is invoked from inside middleware.

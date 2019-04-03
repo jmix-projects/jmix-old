@@ -19,4 +19,6 @@ package io.jmix.core.metamodel.model;
 public interface StoreDescriptor {
 
     String getBeanName();
+
+    boolean isPersistent();
 }

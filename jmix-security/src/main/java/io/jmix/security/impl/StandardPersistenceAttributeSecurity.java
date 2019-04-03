@@ -23,6 +23,7 @@ import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Range;
+import io.jmix.core.security.Security;
 import io.jmix.data.impl.JmixEntityFetchGroup;
 import io.jmix.data.PersistenceAttributeSecurity;
 import io.jmix.data.RowLevelSecurityException;

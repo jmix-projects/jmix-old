@@ -19,6 +19,7 @@ package io.jmix.core;
 import io.jmix.core.annotation.JmixComponent;
 import io.jmix.core.annotation.JmixProperty;
 import io.jmix.core.compatibility.AppContext;
+import io.jmix.core.security.JmixCoreSecurityConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -31,6 +32,7 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.Ordered;
@@ -56,9 +58,10 @@ import java.util.Set;
  * before {@code @Conditional} annotations that depend on {@code @JmixProperty} values.
  */
 @Configuration
+@Import(JmixCoreSecurityConfiguration.class)
 @ComponentScan
 @JmixComponent(dependsOn = {}, properties = {
-        @JmixProperty(name = "jmix.securityImplementation", value = "default"),
+        @JmixProperty(name = "jmix.securityImplementation", value = "core"),
         @JmixProperty(name = "jmix.viewsConfig", value = "io/jmix/core/views.xml"),
         @JmixProperty(name = "cuba.confDir", value = "./conf")
 })
@@ -82,8 +85,14 @@ public class JmixCoreConfiguration implements BeanDefinitionRegistryPostProcesso
 
     @EventListener
     @Order(Events.HIGHEST_CORE_PRECEDENCE + 10)
-    void onApplicationContextRefresh(ContextRefreshedEvent event) {
+    void onApplicationContextRefreshFirst(ContextRefreshedEvent event) {
         AppContext.Internals.setApplicationContext(event.getApplicationContext());
+    }
+
+    @EventListener
+    @Order(Events.LOWEST_CORE_PRECEDENCE - 10)
+    void onApplicationContextRefreshLast(ContextRefreshedEvent event) {
+        AppContext.Internals.startContext();
     }
 
     @Override

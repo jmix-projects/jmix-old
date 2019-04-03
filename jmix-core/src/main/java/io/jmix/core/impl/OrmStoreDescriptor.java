@@ -28,4 +28,9 @@ public class OrmStoreDescriptor implements StoreDescriptor {
     public String getBeanName() {
         return "jmix_OrmDataStore";
     }
+
+    @Override
+    public boolean isPersistent() {
+        return true;
+    }
 }

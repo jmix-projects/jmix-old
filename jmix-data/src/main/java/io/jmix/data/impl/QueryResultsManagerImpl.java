@@ -16,13 +16,15 @@
 
 package io.jmix.data.impl;
 
+import io.jmix.core.security.UserSession;
+import io.jmix.core.security.UserSessionSource;
 import io.jmix.data.*;
 import io.jmix.data.persistence.DbTypeConverter;
 import io.jmix.core.*;
 import io.jmix.core.cluster.ClusterManager;
 import io.jmix.core.commons.db.QueryRunner;
 import io.jmix.core.compatibility.AppContext;
-import io.jmix.core.usersessions.UserSessions;
+import io.jmix.core.security.UserSessions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

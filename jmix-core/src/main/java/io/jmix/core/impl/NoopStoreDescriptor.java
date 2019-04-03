@@ -28,4 +28,9 @@ public class NoopStoreDescriptor implements StoreDescriptor {
     public String getBeanName() {
         return NoopDataStore.NAME;
     }
+
+    @Override
+    public boolean isPersistent() {
+        return false;
+    }
 }

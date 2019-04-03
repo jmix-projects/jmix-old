@@ -16,13 +16,13 @@
 
 package io.jmix.core.entity;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.UUID;
 
-public interface User extends Entity<UUID> {
+public interface User extends UserDetails, Entity<UUID> {
 
     String getLogin();
-
-    void setLogin(String server);
 
     String getLoginLowerCase();
 

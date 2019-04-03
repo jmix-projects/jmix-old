@@ -28,4 +28,9 @@ public class UndefinedStoreDescriptor implements StoreDescriptor {
     public String getBeanName() {
         return "<undefined>";
     }
+
+    @Override
+    public boolean isPersistent() {
+        return false;
+    }
 }

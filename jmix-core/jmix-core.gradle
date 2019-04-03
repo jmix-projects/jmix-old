@@ -20,8 +20,12 @@ dependencies {
     api 'org.slf4j:slf4j-api'
     api 'org.codehaus.groovy:groovy'
     api 'org.apache.commons:commons-pool2'
+    api 'javax.servlet:javax.servlet-api'
     api 'javax.validation:validation-api'
     api 'org.hibernate.validator:hibernate-validator'
+    api 'org.springframework.security:spring-security-core'
+    api 'org.springframework.security:spring-security-config'
+    api 'org.springframework.security:spring-security-web'
 
     api 'javax.inject:javax.inject:1'
     api 'org.apache.commons:commons-collections4:4.2'

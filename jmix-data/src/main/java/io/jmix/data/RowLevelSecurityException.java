@@ -15,7 +15,7 @@
  */
 package io.jmix.data;
 
-import io.jmix.core.ConstraintOperationType;
+import io.jmix.core.security.ConstraintOperationType;
 import io.jmix.core.Logging;
 import io.jmix.core.compatibility.SupportedByClient;
 

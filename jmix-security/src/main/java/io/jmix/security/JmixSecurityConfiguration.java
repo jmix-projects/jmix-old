@@ -24,7 +24,9 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @JmixComponent(dependsOn = JmixCoreConfiguration.class, properties = {
-        @JmixProperty(name = "jmix.securityImplementation", value = "standard")
+        @JmixProperty(name = "jmix.securityImplementation", value = "standard"),
+        @JmixProperty(name = "jmix.viewsConfig", value = "io/jmix/security/views.xml", append = true),
+        @JmixProperty(name = "jmix.defaultPermissionValuesConfig", value = "io/jmix/security/default-permission-values.xml")
 })
 @Import(StandardSecurityConfiguration.class)
 public class JmixSecurityConfiguration {

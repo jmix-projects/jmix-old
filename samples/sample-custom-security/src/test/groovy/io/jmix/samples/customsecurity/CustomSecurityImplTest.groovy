@@ -16,8 +16,12 @@
 
 package io.jmix.samples.customsecurity
 
-import io.jmix.core.Security
+import io.jmix.core.security.Security
+import io.jmix.core.security.UserSession
+import io.jmix.core.security.UserSessionManager
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.userdetails.UserDetailsService
 import spock.lang.Specification
 
 import javax.inject.Inject
@@ -28,9 +32,33 @@ class CustomSecurityImplTest extends Specification {
     @Inject
     Security security
 
-    def "test"() {
+    @Inject
+    UserDetailsService userDetailsService
+
+    @Inject
+    UserSessionManager userSessionManager
+
+    def "custom implementations are in use"() {
         expect:
 
         security instanceof CustomSecurityImpl
+        userDetailsService.loadUserByUsername('admin') instanceof CustomUser
+    }
+
+    def "authentication yields custom session and user"() {
+
+        when:
+
+        def session = userSessionManager.createSession(new UsernamePasswordAuthenticationToken('admin', 'admin123'))
+
+        then:
+
+        session instanceof CustomUserSession
+        session.user instanceof CustomUser
+        session.authentication.principal.is(session.user)
+
+        cleanup:
+
+        userSessionManager.removeSession()
     }
 }

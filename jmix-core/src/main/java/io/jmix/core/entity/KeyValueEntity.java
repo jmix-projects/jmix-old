@@ -41,7 +41,7 @@ import java.util.UUID;
  * </pre>
  *
  */
-@io.jmix.core.metamodel.annotations.MetaClass(name = "sys$KeyValueEntity")
+@io.jmix.core.metamodel.annotations.MetaClass(name = "sys_KeyValueEntity")
 @SystemLevel
 public class KeyValueEntity
         extends AbstractInstance
