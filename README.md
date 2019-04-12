@@ -18,3 +18,4 @@
 * core
   * ORM persistence: PersistenceImpl, EntityManagerImpl, QueryImpl, etc.
   * DataManager, RdbmsStore
+  * Security data model, authorization
