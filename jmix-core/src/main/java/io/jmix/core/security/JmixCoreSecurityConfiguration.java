@@ -16,12 +16,13 @@
 
 package io.jmix.core.security;
 
-import io.jmix.core.security.impl.SystemAuthenticationProvider;
 import io.jmix.core.security.impl.CoreUserDetailsService;
+import io.jmix.core.security.impl.SystemAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,7 +37,13 @@ public class JmixCoreSecurityConfiguration extends WebSecurityConfigurerAdapter 
         UserDetailsService userDetailsService = new CoreUserDetailsService();
         auth.userDetailsService(userDetailsService);
         auth.authenticationProvider(new SystemAuthenticationProvider(userDetailsService));
+    }
 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        // todo configure HTTP security
+        http.anonymous();
+        http.csrf().disable(); // otherwise remoting fails with 403
     }
 
     @Bean(name = "jmix_authenticationManager")
@@ -45,13 +52,9 @@ public class JmixCoreSecurityConfiguration extends WebSecurityConfigurerAdapter 
         return super.authenticationManagerBean();
     }
 
-
-
     @Bean(name = "jmix_userDetailsService")
     @Override
     public UserDetailsService userDetailsServiceBean() throws Exception {
         return super.userDetailsServiceBean();
     }
-
-
 }

@@ -23,11 +23,13 @@ import io.jmix.core.security.UserSession
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.TestPropertySource
 import spock.lang.Specification
 
 import javax.inject.Inject
 
 @ContextConfiguration(classes = [JmixCoreConfiguration])
+@TestPropertySource(properties = ["jmix.securityImplementation = core"])
 class AuthenticatorTest extends Specification {
 
     @Inject

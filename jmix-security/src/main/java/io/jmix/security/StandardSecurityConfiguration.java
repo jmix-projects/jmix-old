@@ -16,7 +16,6 @@
 
 package io.jmix.security;
 
-import io.jmix.core.DataManager;
 import io.jmix.core.security.ConditionalOnSecurityImplementation;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
 import io.jmix.data.Persistence;
@@ -46,7 +45,6 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
         UserDetailsService userDetailsService = new StandardUserDetailsService(persistence);
         auth.userDetailsService(userDetailsService);
         auth.authenticationProvider(new SystemAuthenticationProvider(userDetailsService));
-
     }
 
     @Bean(name = "jmix_authenticationManager")
@@ -54,8 +52,6 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
-
 
     @Bean(name = "jmix_userDetailsService")
     @Override

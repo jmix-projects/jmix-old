@@ -16,7 +16,8 @@
 
 package io.jmix.core.security;
 
-import io.jmix.core.security.ConditionalOnSecurityImplementation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
@@ -25,16 +26,22 @@ import java.util.Map;
 
 public class OnSecurityImplementationCondition implements Condition {
 
+    private static final Logger log = LoggerFactory.getLogger(OnSecurityImplementationCondition.class);
+
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         String property = context.getEnvironment().getProperty("jmix.securityImplementation");
+        if (property == null) {
+            log.warn("Property jmix.securityImplementation is not set, using 'core' security implementation");
+            property = "core";
+        }
 
         Map<String, Object> attributes =
                 metadata.getAnnotationAttributes(ConditionalOnSecurityImplementation.class.getName());
         if (attributes != null) {
             String value = (String) attributes.get("value");
             if (value.equals("")) {
-                return property == null || property.equals("default");
+                return property.equals("core");
             } else {
                 return value.equals(property);
             }
