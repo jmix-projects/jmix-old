@@ -179,7 +179,7 @@ public class PersistenceTools {
                 ChangeRecord changeRecord = objectChanges.getChangesForAttributeNamed(attribute);
                 if (changeRecord instanceof CollectionChangeRecord) {
                     if (persistence.getEntityManager().isSoftDeletion() && changeRecord.getOldValue() != null) {
-                        MetaProperty metaProperty = entity.getMetaClass().getPropertyNN(attribute);
+                        MetaProperty metaProperty = metadata.getClass(entity).getPropertyNN(attribute);
                         if (SoftDelete.class.isAssignableFrom(metaProperty.getRange().asClass().getJavaClass())) {
                             Collection oldValue = (Collection) changeRecord.getOldValue();
                             Collection<SoftDelete> filteredValue;

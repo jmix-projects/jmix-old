@@ -18,6 +18,8 @@ package io.jmix.core.entity;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.ObjectArrays;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.Preconditions;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -186,7 +188,8 @@ public final class BaseEntityInternalAccess {
             EmbeddableEntity embeddableEntity = (EmbeddableEntity) entity;
             securityState = embeddableEntity.__securityState;
         } else {
-            throw new IllegalArgumentException(String.format("Entity with type [%s] does not support security state", entity.getMetaClass().getName()));
+            throw new IllegalArgumentException(String.format(
+                    "Entity with type [%s] does not support security state", AppBeans.get(Metadata.class).getClass(entity).getName()));
         }
         return securityState;
     }
@@ -200,7 +203,8 @@ public final class BaseEntityInternalAccess {
             EmbeddableEntity embeddableEntity = (EmbeddableEntity) entity;
             embeddableEntity.__securityState = securityState;
         } else {
-            throw new IllegalArgumentException(String.format("Entity with type [%s] does not support security state", entity.getMetaClass().getName()));
+            throw new IllegalArgumentException(String.format(
+                    "Entity with type [%s] does not support security state", AppBeans.get(Metadata.class).getClass(entity).getName()));
         }
     }
 
@@ -220,7 +224,8 @@ public final class BaseEntityInternalAccess {
             }
             securityState = embeddableEntity.__securityState;
         } else {
-            throw new IllegalArgumentException(String.format("Entity with type [%s] does not support security state", entity.getMetaClass().getName()));
+            throw new IllegalArgumentException(String.format(
+                    "Entity with type [%s] does not support security state", AppBeans.get(Metadata.class).getClass(entity).getName()));
         }
         return securityState;
     }

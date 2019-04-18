@@ -49,6 +49,9 @@ public class EntityStates {
     @Inject
     protected MetadataTools metadataTools;
 
+    @Inject
+    protected Metadata metadata;
+
     private static final Logger log = LoggerFactory.getLogger(EntityStates.class);
 
     /**
@@ -180,7 +183,7 @@ public class EntityStates {
         visited.add(entity);
 
         for (ViewProperty property : view.getProperties()) {
-            MetaClass metaClass = entity.getMetaClass();
+            MetaClass metaClass = metadata.getClass(entity);
             MetaProperty metaProperty = metaClass.getPropertyNN(property.getName());
 
             if (!isLoaded(entity, property.getName())) {
@@ -243,7 +246,7 @@ public class EntityStates {
     public void checkLoadedWithView(Entity entity, String viewName) {
         checkNotNullArgument(viewName);
 
-        checkLoadedWithView(entity, viewRepository.getView(entity.getMetaClass(), viewName));
+        checkLoadedWithView(entity, viewRepository.getView(metadata.getClass(entity), viewName));
     }
 
     protected boolean isLoadedWithView(Entity entity, View view, Set<Entity> visited) {
@@ -254,7 +257,7 @@ public class EntityStates {
         visited.add(entity);
 
         for (ViewProperty property : view.getProperties()) {
-            MetaClass metaClass = entity.getMetaClass();
+            MetaClass metaClass = metadata.getClass(entity);
             MetaProperty metaProperty = metaClass.getPropertyNN(property.getName());
 
             if (!isLoaded(entity, property.getName())) {
@@ -319,7 +322,7 @@ public class EntityStates {
     public boolean isLoadedWithView(Entity entity, String viewName) {
         checkNotNullArgument(viewName);
 
-        return isLoadedWithView(entity, viewRepository.getView(entity.getMetaClass(), viewName));
+        return isLoadedWithView(entity, viewRepository.getView(metadata.getClass(entity), viewName));
     }
 
     /**

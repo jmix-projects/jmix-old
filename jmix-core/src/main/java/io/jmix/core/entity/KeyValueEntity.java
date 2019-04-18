@@ -17,10 +17,10 @@
 package io.jmix.core.entity;
 
 import io.jmix.core.UuidProvider;
+import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.impl.AbstractInstance;
 import io.jmix.core.metamodel.model.utils.InstanceUtils;
-import io.jmix.core.entity.annotation.SystemLevel;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -59,7 +59,6 @@ public class KeyValueEntity
         uuid = UuidProvider.createUuid();
     }
 
-    @Override
     public MetaClass getMetaClass() {
         if (metaClass == null)
             throw new IllegalStateException("metaClass is null");

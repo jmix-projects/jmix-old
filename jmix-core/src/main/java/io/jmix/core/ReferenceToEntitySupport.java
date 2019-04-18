@@ -36,6 +36,8 @@ public class ReferenceToEntitySupport {
 
     @Inject
     protected MetadataTools metadataTools;
+    @Inject
+    protected Metadata metadata;
 
     /**
      * @param entity entity
@@ -63,7 +65,7 @@ public class ReferenceToEntitySupport {
         }
         if (entityId == null)
             return null;
-        if (metadataTools.hasCompositePrimaryKey(entity.getMetaClass())) {
+        if (metadataTools.hasCompositePrimaryKey(metadata.getClass(entity))) {
             if (entity instanceof HasUuid)
                 return ((HasUuid) entity).getUuid();
             else

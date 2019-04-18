@@ -22,6 +22,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import io.jmix.core.*;
+import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.*;
 import io.jmix.core.entity.annotation.EmbeddedParameters;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
@@ -133,6 +134,12 @@ public class MetadataImpl implements Metadata {
     @Override
     public DatatypeRegistry getDatatypes() {
         return datatypeRegistry;
+    }
+
+    @Override
+    public MetaClass getClass(Entity entity) {
+        Preconditions.checkNotNullArgument(entity, "entity is null");
+        return session.getClassNN(entity.getClass());
     }
 
     protected <T> T __create(Class<T> entityClass) {

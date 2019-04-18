@@ -69,6 +69,13 @@ public interface Metadata extends Session {
     DatatypeRegistry getDatatypes();
 
     /**
+     * Returns MetaClass of the given entity.
+     * @param entity entity instance
+     * @return      MetaClass instance
+     */
+    MetaClass getClass(Entity entity);
+
+    /**
      * Instantiate an entity, taking into account extended entities.
      * @param entityClass   entity class
      * @return              entity instance

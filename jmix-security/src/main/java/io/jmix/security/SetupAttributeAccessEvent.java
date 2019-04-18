@@ -18,6 +18,7 @@ package io.jmix.security;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.ExtendedEntities;
+import io.jmix.core.Metadata;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import org.springframework.context.ApplicationEvent;
@@ -98,7 +99,8 @@ public class SetupAttributeAccessEvent<T extends Entity> extends ApplicationEven
     @Override
     public ResolvableType getResolvableType() {
         ExtendedEntities extendedEntities = AppBeans.get(ExtendedEntities.NAME);
-        MetaClass metaClass = extendedEntities.getOriginalOrThisMetaClass(getEntity().getMetaClass());
+        Metadata metadata = AppBeans.get(Metadata.class);
+        MetaClass metaClass = extendedEntities.getOriginalOrThisMetaClass(metadata.getClass(getEntity()));
         return ResolvableType.forClassWithGenerics(getClass(), ResolvableType.forClass(metaClass.getJavaClass()));
     }
 }

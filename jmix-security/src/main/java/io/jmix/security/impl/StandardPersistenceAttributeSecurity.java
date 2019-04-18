@@ -61,6 +61,9 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
     @Inject
     protected EntityStates entityStates;
 
+    @Inject
+    protected ExtendedEntities extendedEntities;
+
     /**
      * Removes restricted attributes from a view.
      *
@@ -178,7 +181,7 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
         checkRequiredAttributes(entity);
         applySecurityToFetchGroup(entity);
         //apply fetch group constraints to embedded
-        for (MetaProperty metaProperty : entity.getMetaClass().getProperties()) {
+        for (MetaProperty metaProperty : metadata.getClass(entity).getProperties()) {
             String name = metaProperty.getName();
             if (metadataTools.isEmbedded(metaProperty) && entityStates.isLoaded(entity, name)) {
                 Entity embedded = entity.getValue(name);
@@ -253,7 +256,7 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
             Map<String, SetupAttributeAccessHandler> handlers = AppBeans.getAll(SetupAttributeAccessHandler.class);
             if (handlers != null) {
                 for (SetupAttributeAccessHandler handler : handlers.values()) {
-                    MetaClass metaClass = metadata.getExtendedEntities().getOriginalOrThisMetaClass(entity.getMetaClass());
+                    MetaClass metaClass = extendedEntities.getOriginalOrThisMetaClass(metadata.getClass(entity));
                     if (handler.supports(metaClass.getJavaClass())) {
                         handled = true;
                         handler.setupAccess(event);
@@ -291,7 +294,7 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
     public boolean isAttributeAccessEnabled(MetaClass metaClass) {
         Map<String, SetupAttributeAccessHandler> handlers = AppBeans.getAll(SetupAttributeAccessHandler.class);
         if (handlers != null) {
-            metaClass = metadata.getExtendedEntities().getOriginalOrThisMetaClass(metaClass);
+            metaClass = extendedEntities.getOriginalOrThisMetaClass(metaClass);
             for (SetupAttributeAccessHandler handler : handlers.values()) {
                 if (handler.supports(metaClass.getJavaClass())) {
                     return true;
@@ -313,11 +316,12 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
     protected void checkRequiredAttributes(Entity entity) {
         SecurityState securityState = getSecurityState(entity);
         if (securityState != null && !securityState.getRequiredAttributes().isEmpty()) {
-            for (MetaProperty metaProperty : entity.getMetaClass().getProperties()) {
+            MetaClass metaClass = metadata.getClass(entity);
+            for (MetaProperty metaProperty : metaClass.getProperties()) {
                 String propertyName = metaProperty.getName();
                 if (BaseEntityInternalAccess.isRequired(securityState, propertyName) && entity.getValue(propertyName) == null) {
                     throw new RowLevelSecurityException(format("Attribute [%s] is required for entity %s", propertyName, entity),
-                            entity.getMetaClass().getName());
+                            metaClass.getName());
                 }
             }
         }

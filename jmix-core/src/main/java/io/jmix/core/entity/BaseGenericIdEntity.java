@@ -15,10 +15,7 @@
  */
 package io.jmix.core.entity;
 
-import io.jmix.core.AppBeans;
-import io.jmix.core.Metadata;
 import io.jmix.core.entity.annotation.UnavailableInSecurityConstraints;
-import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.impl.AbstractInstance;
 
 import javax.persistence.MappedSuperclass;
@@ -77,12 +74,6 @@ public abstract class BaseGenericIdEntity<T> extends AbstractInstance implements
         __securityState = src.__securityState;
         // todo dynamic attributes
 //        dynamicAttributes = src.dynamicAttributes;
-    }
-
-    @Override
-    public MetaClass getMetaClass() {
-        Metadata metadata = AppBeans.get(Metadata.NAME);
-        return metadata.getSession().getClassNN(getClass());
     }
 
     // todo dynamic attributes

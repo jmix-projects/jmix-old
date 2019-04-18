@@ -53,6 +53,8 @@ public class EntityManagerImpl implements EntityManager {
     @Inject
     protected Metadata metadata;
     @Inject
+    private MetadataTools metadataTools;
+    @Inject
     protected EntityListenerManager entityListenerMgr;
     @Inject
     protected PersistenceSupport support;
@@ -64,6 +66,8 @@ public class EntityManagerImpl implements EntityManager {
     protected EntityStates entityStates;
     @Inject
     protected ExtendedEntities extendedEntities;
+    @Inject
+    protected ViewRepository viewRepository;
 
     protected boolean softDeletion = true;
 
@@ -180,7 +184,7 @@ public class EntityManagerImpl implements EntityManager {
         Preconditions.checkNotNullArgument(entityClass, "entityClass is null");
         Preconditions.checkNotNullArgument(id, "id is null");
 
-        MetaClass metaClass = metadata.getExtendedEntities().getEffectiveMetaClass(entityClass);
+        MetaClass metaClass = extendedEntities.getEffectiveMetaClass(entityClass);
         return findWithViews(metaClass, id, Arrays.asList(views));
     }
 
@@ -189,7 +193,7 @@ public class EntityManagerImpl implements EntityManager {
     public <T extends Entity<K>, K> T find(Class<T> entityClass, K id, String... viewNames) {
         View[] viewArray = new View[viewNames.length];
         for (int i = 0; i < viewNames.length; i++) {
-            viewArray[i] = metadata.getViewRepository().getView(entityClass, viewNames[i]);
+            viewArray[i] = viewRepository.getView(entityClass, viewNames[i]);
         }
         return find(entityClass, id, viewArray);
     }
@@ -199,7 +203,7 @@ public class EntityManagerImpl implements EntityManager {
         Object realId = getRealId(id);
         log.debug("find {} by id={}, views={}", metaClass.getJavaClass().getSimpleName(), realId, views);
 
-        String pkName = metadata.getTools().getPrimaryKeyName(metaClass);
+        String pkName = metadataTools.getPrimaryKeyName(metaClass);
         if (pkName == null)
             throw new IllegalStateException("Cannot determine PK name for entity " + metaClass);
 
@@ -215,7 +219,7 @@ public class EntityManagerImpl implements EntityManager {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Entity<K>, K> T getReference(Class<T> clazz, K id) {
-        Class<T> effectiveClass = metadata.getExtendedEntities().getEffectiveClass(clazz);
+        Class<T> effectiveClass = extendedEntities.getEffectiveClass(clazz);
 
         T reference = delegate.getReference(effectiveClass, getRealId(id));
         BaseEntityInternalAccess.setNew((BaseGenericIdEntity) reference, false);
@@ -332,8 +336,7 @@ public class EntityManagerImpl implements EntityManager {
             return;
         visited.add(source);
 
-        MetadataTools metadataTools = metadata.getTools();
-        for (MetaProperty srcProperty : source.getMetaClass().getProperties()) {
+        for (MetaProperty srcProperty : metadata.getClass(source).getProperties()) {
             String name = srcProperty.getName();
 
             if (!entityStates.isLoaded(source, name)) {
@@ -399,7 +402,7 @@ public class EntityManagerImpl implements EntityManager {
                 if (destRef != null) {
                     deepCopyIgnoringNulls(srcRef, destRef, visited);
                 } else {
-                    Entity newRef = (Entity) metadata.create(srcProperty.getRange().asClass().getJavaClass());
+                    Entity newRef = metadata.create(srcProperty.getRange().asClass().getJavaClass());
                     dest.setValue(name, newRef);
                     deepCopyIgnoringNulls(srcRef, newRef, visited);
                 }
@@ -442,7 +445,7 @@ public class EntityManagerImpl implements EntityManager {
 
             // copy non-persistent attributes to the resulting merged instance
             for (MetaProperty property : metadata.getClassNN(entity.getClass()).getProperties()) {
-                if (metadata.getTools().isNotPersistent(property) && !property.isReadOnly()) {
+                if (metadataTools.isNotPersistent(property) && !property.isReadOnly()) {
                     // copy using reflection to avoid executing getter/setter code
                     Field field = FieldUtils.getField(entity.getClass(), property.getName(), true);
                     if (field != null) {

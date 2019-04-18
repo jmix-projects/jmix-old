@@ -54,6 +54,9 @@ public class EntityFetcher {
     @Inject
     protected EntityStates entityStates;
 
+    @Inject
+    protected MetadataTools metadataTools;
+
     /**
      * Fetch instance by view object.
      */
@@ -135,7 +138,7 @@ public class EntityFetcher {
                             if (log.isTraceEnabled()) {
                                 log.trace("Object " + value + " is detached, loading it");
                             }
-                            String storeName = metadata.getTools().getStoreName(e.getMetaClass());
+                            String storeName = metadataTools.getStoreName(metadata.getClass(e));
                             if (storeName != null) {
                                 try (Transaction tx = persistence.getTransaction(storeName)) {
                                     EntityManager em = persistence.getEntityManager(storeName);

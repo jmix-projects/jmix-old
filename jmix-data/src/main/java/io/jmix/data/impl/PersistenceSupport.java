@@ -18,6 +18,7 @@ package io.jmix.data.impl;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
+import io.jmix.core.Metadata;
 import io.jmix.data.EntityManager;
 import io.jmix.data.Persistence;
 import io.jmix.data.event.EntityChangedEvent;
@@ -67,6 +68,9 @@ public class PersistenceSupport implements ApplicationContextAware {
 
     @Inject
     protected Persistence persistence;
+
+    @Inject
+    protected Metadata metadata;
 
     @Inject
     protected EntityListenerManager entityListenerManager;
@@ -418,7 +422,7 @@ public class PersistenceSupport implements ApplicationContextAware {
 
                     if (entity instanceof BaseGenericIdEntity) {
                         if (BaseEntityInternalAccess.isNew((BaseGenericIdEntity) entity)) {
-                            typeNames.add(entity.getMetaClass().getName());
+                            typeNames.add(metadata.getClass(entity).getName());
                         }
                         fireBeforeDetachEntityListener((BaseGenericIdEntity) entity, container.getStoreName());
                     }

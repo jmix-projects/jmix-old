@@ -23,14 +23,6 @@ import java.io.Serializable;
  */
 public interface Instance extends Serializable {
 
-    // todo remove
-    /**
-     * @return metaclass of this object. Throws exception if the metaclass is not found.
-     * @deprecated Use {@link io.jmix.core.Metadata#getClassNN(Class)} instead.
-     */
-    @Deprecated
-    MetaClass getMetaClass();
-    
     /**
      * Get an attribute value.
      * @param name  attribute name according to JavaBeans notation

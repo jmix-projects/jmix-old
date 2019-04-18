@@ -198,7 +198,7 @@ public class MetadataTools {
     public String getInstanceName(Instance instance) {
         checkNotNullArgument(instance, "instance is null");
 
-        NamePatternRec rec = parseNamePattern(instance.getMetaClass());
+        NamePatternRec rec = parseNamePattern(metadata.getClassNN(instance.getClass()));
         if (rec == null) {
             return instance.toString();
         } else {
@@ -970,9 +970,8 @@ public class MetadataTools {
     }
 
     /**
-     * Create a new instance and make it a shallow copy of the instance given. <br> This method copies attributes
-     * according to the metadata and relies on {@link io.jmix.core.metamodel.model.Instance#getMetaClass()} method
-     * which should not return null.
+     * Create a new instance and make it a shallow copy of the instance given.
+     * <p> This method copies attributes according to the metadata.
      *
      * @param source source instance
      * @return new instance of the same Java class as source
@@ -988,9 +987,9 @@ public class MetadataTools {
     }
 
     /**
-     * Make a shallow copy of an instance. <br> This method copies attributes according to the metadata and relies on
-     * {@link io.jmix.core.metamodel.model.Instance#getMetaClass()} method which should not return null for both
-     * objects. <br> The source and destination instances don't have to be of the same Java class or metaclass. Copying
+     * Make a shallow copy of an instance.
+     * <p> This method copies attributes according to the metadata.
+     * <p> The source and destination instances don't have to be of the same Java class or metaclass. Copying
      * is performed in the following scenario: get each source property and copy the value to the destination if it
      * contains a property with the same name and it is not read-only.
      *
@@ -1076,7 +1075,7 @@ public class MetadataTools {
      * Copies all property values from source to destination excluding null values.
      */
     public void deepCopy(Entity source, Entity destination, EntitiesHolder entitiesHolder) {
-        for (MetaProperty srcProperty : source.getMetaClass().getProperties()) {
+        for (MetaProperty srcProperty : metadata.getClass(source).getProperties()) {
             String name = srcProperty.getName();
 
             if (srcProperty.isReadOnly() || !persistentAttributesLoadChecker.isLoaded(source, name)) {
@@ -1133,7 +1132,7 @@ public class MetadataTools {
             return;
         visited.add(entity);
 
-        for (MetaProperty property : entity.getMetaClass().getProperties()) {
+        for (MetaProperty property : metadata.getClassNN(entity.getClass()).getProperties()) {
             if (visitor.skip(property))
                 continue;
 

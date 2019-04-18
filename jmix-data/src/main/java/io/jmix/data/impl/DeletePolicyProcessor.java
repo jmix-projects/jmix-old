@@ -68,15 +68,15 @@ public class DeletePolicyProcessor {
 
     public void setEntity(Entity entity) {
         this.entity = entity;
-        this.metaClass = metadata.getSession().getClass(entity.getClass());
-        primaryKeyName = metadata.getTools().getPrimaryKeyName(metaClass);
+        this.metaClass = metadata.getClassNN(entity.getClass());
+        primaryKeyName = metadataTools.getPrimaryKeyName(metaClass);
 
-        String storeName = metadata.getTools().getStoreName(metaClass);
+        String storeName = metadataTools.getStoreName(metaClass);
         entityManager = persistence.getEntityManager(storeName == null ? Stores.MAIN : storeName);
     }
 
     public void process() {
-        List<MetaProperty> properties = new ArrayList<MetaProperty>();
+        List<MetaProperty> properties = new ArrayList<>();
 
         fillProperties(properties, OnDeleteInverse.class.getName());
         if (!properties.isEmpty())
@@ -173,7 +173,7 @@ public class DeletePolicyProcessor {
                     break;
                 case UNLINK:
                     if (property.getRange().getCardinality().isMany()) {
-                        if (metadata.getTools().isOwningSide(property)) {
+                        if (metadataTools.isOwningSide(property)) {
                             Collection<Entity> value = entity.getValue(property.getName());
                             if (value != null) {
                                 value.clear();
@@ -187,7 +187,7 @@ public class DeletePolicyProcessor {
                             throw new UnsupportedOperationException("Unable to unlink nested collection items");
                         }
                     } else {
-                        if (metadata.getTools().isOwningSide(property)) {
+                        if (metadataTools.isOwningSide(property)) {
                             setReferenceNull(entity, property);
                         } else {
                             Entity value = getReference(entity, property);
@@ -203,7 +203,6 @@ public class DeletePolicyProcessor {
 
     protected void hardDeleteNotLoadedReference(Entity entity, MetaProperty property, Entity reference) {
         ((PersistenceImpl) persistence).addBeforeCommitAction(() -> {
-            MetadataTools metadataTools = metadata.getTools();
             QueryRunner queryRunner = new QueryRunner();
             try {
                 String column = metadataTools.getDatabaseColumn(property);
@@ -239,7 +238,6 @@ public class DeletePolicyProcessor {
 
     protected void hardSetReferenceNull(Entity entity, MetaProperty property) {
         ((PersistenceImpl) persistence).addBeforeCommitAction(() -> {
-            MetadataTools metadataTools = metadata.getTools();
             MetaClass entityMetaClass = metadata.getClassNN(entity.getClass());
             while (!entityMetaClass.equals(property.getDomain())) {
                 MetaClass ancestor = entityMetaClass.getAncestor();
@@ -270,7 +268,8 @@ public class DeletePolicyProcessor {
             return entity.getValue(property.getName());
         else {
             Query query = entityManager.createQuery(
-                    "select e." + property.getName() + " from " + entity.getMetaClass().getName() + " e where e." + primaryKeyName + " = ?1");
+                    "select e." + property.getName() + " from " + metadata.getClassNN(entity.getClass()).getName()
+                            + " e where e." + primaryKeyName + " = ?1");
             query.setParameter(1, entity.getId());
             Object refEntity = query.getFirstResult();
             return (Entity) refEntity;
@@ -296,7 +295,7 @@ public class DeletePolicyProcessor {
         }
 
         String invPropName = inverseProperty.getName();
-        String collectionPkName = metadata.getTools().getPrimaryKeyName(property.getRange().asClass());
+        String collectionPkName = metadataTools.getPrimaryKeyName(property.getRange().asClass());
 
         String qlStr = "select e." + collectionPkName + " from " + property.getRange().asClass().getName() +
                 " e where e." + invPropName + "." + primaryKeyName + " = ?1";
@@ -373,7 +372,7 @@ public class DeletePolicyProcessor {
     }
 
     protected void unlink(String entityName, MetaProperty property) {
-        if (metadata.getTools().isOwningSide(property)) {
+        if (metadataTools.isOwningSide(property)) {
             String template = property.getRange().getCardinality().isMany() ?
                     "select e from %s e join e.%s c where c." + primaryKeyName + " = ?1" :
                     "select e from %s e where e.%s." + primaryKeyName + " = ?1";

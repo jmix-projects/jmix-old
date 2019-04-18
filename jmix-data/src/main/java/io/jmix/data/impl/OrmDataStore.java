@@ -617,11 +617,12 @@ public class OrmDataStore implements DataStore {
     }
 
     protected void checkOperationPermitted(Entity entity, ConstraintOperationType operationType) {
+        MetaClass metaClass = metadata.getClass(entity);
         if (security.hasConstraints()
-                && security.hasConstraints(entity.getMetaClass())
+                && security.hasConstraints(metaClass)
                 && !security.isPermitted(entity, operationType)) {
             throw new RowLevelSecurityException(
-                    operationType + " is not permitted for entity " + entity, entity.getMetaClass().getName(), operationType);
+                    operationType + " is not permitted for entity " + entity, metaClass.getName(), operationType);
         }
     }
 
@@ -802,10 +803,11 @@ public class OrmDataStore implements DataStore {
             if (entity == null)
                 continue;
 
+            MetaClass metaClass = metadata.getClass(entity);
             if (entityStates.isNew(entity)) {
-                checkPermission(checkedCreateRights, entity.getMetaClass(), EntityOp.CREATE);
+                checkPermission(checkedCreateRights, metaClass, EntityOp.CREATE);
             } else {
-                checkPermission(checkedUpdateRights, entity.getMetaClass(), EntityOp.UPDATE);
+                checkPermission(checkedUpdateRights, metaClass, EntityOp.UPDATE);
             }
         }
 
@@ -813,7 +815,7 @@ public class OrmDataStore implements DataStore {
             if (entity == null)
                 continue;
 
-            checkPermission(checkedDeleteRights, entity.getMetaClass(), EntityOp.DELETE);
+            checkPermission(checkedDeleteRights, metadata.getClass(entity), EntityOp.DELETE);
         }
     }
 
@@ -941,8 +943,8 @@ public class OrmDataStore implements DataStore {
             return;
         visited.add(entity);
 
-        MetaClass refEntityMetaClass = refEntity.getMetaClass();
-        for (MetaProperty property : entity.getMetaClass().getProperties()) {
+        MetaClass refEntityMetaClass = metadata.getClass(refEntity);
+        for (MetaProperty property : metadata.getClass(entity).getProperties()) {
             if (!property.getRange().isClass() || !property.getRange().asClass().equals(refEntityMetaClass))
                 continue;
             if (entityStates.isLoaded(entity, property.getName())) {

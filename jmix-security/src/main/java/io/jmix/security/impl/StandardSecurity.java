@@ -203,7 +203,7 @@ public class StandardSecurity implements Security {
     }
 
     protected boolean isPermitted(Entity entity, Predicate<ConstraintData> predicate) {
-        List<ConstraintData> constraints = getConstraints(entity.getMetaClass(), predicate);
+        List<ConstraintData> constraints = getConstraints(metadata.getClass(entity), predicate);
         for (ConstraintData constraint : constraints) {
             if (!isPermitted(entity, constraint)) {
                 return false;

@@ -15,9 +15,6 @@
  */
 package io.jmix.core.entity;
 
-import io.jmix.core.AppBeans;
-import io.jmix.core.Metadata;
-import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.impl.AbstractInstance;
 
 import javax.persistence.MappedSuperclass;
@@ -39,11 +36,5 @@ public abstract class EmbeddableEntity extends AbstractInstance implements Entit
     @Override
     public Object getId() {
         return this;
-    }
-
-    @Override
-    public MetaClass getMetaClass() {
-        Metadata metadata = AppBeans.get(Metadata.NAME);
-        return metadata.getSession().getClassNN(getClass());
     }
 }

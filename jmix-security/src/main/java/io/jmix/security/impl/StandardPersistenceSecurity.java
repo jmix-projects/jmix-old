@@ -186,7 +186,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
         } catch (SecurityTokenException e) {
             throw new RowLevelSecurityException(
                     format("Could not restore security state for entity [%s] because security token isn't valid.",
-                            entity), entity.getMetaClass().getName());
+                            entity), metadata.getClass(entity).getName());
         }
     }
 
@@ -262,18 +262,18 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
                     throw new RowLevelSecurityException(format("Could not read security token from entity %s, " +
                                     "even though there are active READ/ALL constraints for the property: %s", entity,
                             metaProperty.getName()),
-                            entity.getMetaClass().getName());
+                            metaClass.getName());
                 }
             }
         }
     }
 
     protected void assertTokenForAttributeAccess(Entity entity) {
-        MetaClass metaClass = metadata.getClassNN(entity.getClass());
+        MetaClass metaClass = metadata.getClass(entity);
         if (persistenceAttributeSecurity.isAttributeAccessEnabled(metaClass)) {
             throw new RowLevelSecurityException(format("Could not read security token from entity %s, " +
                     "even though there are active attribute access for the entity.", entity),
-                    entity.getMetaClass().getName());
+                    metaClass.getName());
         }
     }
 
@@ -305,7 +305,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
 
     @SuppressWarnings("unchecked")
     protected void applyConstraints(Entity entity, Set<EntityId> handled) {
-        MetaClass metaClass = entity.getMetaClass();
+        MetaClass metaClass = metadata.getClass(entity);
         EntityId entityId = new EntityId(referenceToEntitySupport.getReferenceId(entity), metaClass.getName());
         if (handled.contains(entityId)) {
             return;
@@ -346,7 +346,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
         if (referenceToEntitySupport.getReferenceId(entity) == null) {
             return false;
         }
-        MetaClass metaClass = entity.getMetaClass();
+        MetaClass metaClass = metadata.getClass(entity);
         if (!isPermittedInMemory(entity) && checkPermitted) {
             return true;
         }

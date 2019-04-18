@@ -19,6 +19,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import io.jmix.core.Metadata;
+import io.jmix.core.MetadataTools;
 import io.jmix.core.ServerConfig;
 import io.jmix.core.UuidProvider;
 import io.jmix.core.entity.*;
@@ -53,6 +54,8 @@ public class SecurityTokenManager {
     protected ServerConfig config;
     @Inject
     protected Metadata metadata;
+    @Inject
+    private MetadataTools metadataTools;
 
     protected static final String READ_ONLY_ATTRIBUTES_KEY = "__readonlyAttributes";
     protected static final String REQUIRED_ATTRIBUTES_KEY = "__requiredAttributes";
@@ -95,9 +98,9 @@ public class SecurityTokenManager {
             if (!securityState.getRequiredAttributes().isEmpty()) {
                 jsonObject.put(REQUIRED_ATTRIBUTES_KEY, securityState.getRequiredAttributes());
             }
-            MetaClass metaClass = entity.getMetaClass();
+            MetaClass metaClass = metadata.getClassNN(entity.getClass());
             jsonObject.put(ENTITY_NAME_KEY, metaClass.getName());
-            if (!metadata.getTools().hasCompositePrimaryKey(metaClass)) {
+            if (!metadataTools.hasCompositePrimaryKey(metaClass)) {
                 jsonObject.put(ENTITY_ID_KEY, getEntityId(entity));
             }
 
@@ -121,6 +124,7 @@ public class SecurityTokenManager {
         if (getSecurityToken(entity) == null) {
             return;
         }
+        MetaClass metaClass = metadata.getClass(entity);
         Multimap<String, Object> filteredData = ArrayListMultimap.create();
         setFilteredData(securityState, filteredData);
         Cipher cipher = getCipher(Cipher.DECRYPT_MODE);
@@ -132,7 +136,7 @@ public class SecurityTokenManager {
                 if (!SYSTEM_ATTRIBUTE_KEYS.contains(key)) {
                     String elementName = String.valueOf(key);
                     JSONArray jsonArray = jsonObject.getJSONArray(elementName);
-                    MetaProperty metaProperty = entity.getMetaClass().getPropertyNN(elementName);
+                    MetaProperty metaProperty = metaClass.getPropertyNN(elementName);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         Object id = jsonArray.get(i);
                         filteredData.put(elementName, convertId(id, metaProperty.getRange().asClass(), true));
@@ -151,8 +155,7 @@ public class SecurityTokenManager {
                 setRequiredAttributes(securityState, parseJsonArrayAsStrings(
                         jsonObject.getJSONArray(REQUIRED_ATTRIBUTES_KEY)));
             }
-            MetaClass metaClass = entity.getMetaClass();
-            if (!metadata.getTools().hasCompositePrimaryKey(entity.getMetaClass())
+            if (!metadataTools.hasCompositePrimaryKey(metaClass)
                     && !(entity instanceof EmbeddableEntity)) {
                 if (!jsonObject.has(ENTITY_ID_KEY) || !jsonObject.has(ENTITY_NAME_KEY)) {
                     throw new SecurityTokenException("Invalid format for security token");
@@ -212,7 +215,7 @@ public class SecurityTokenManager {
         if (handleHasUuid && HasUuid.class.isAssignableFrom(metaClass.getJavaClass())) {
             return UuidProvider.fromString((String) value);
         }
-        MetaProperty primaryKey = metadata.getTools().getPrimaryKeyProperty(metaClass);
+        MetaProperty primaryKey = metadataTools.getPrimaryKeyProperty(metaClass);
 
         if (primaryKey != null) {
             Class type = primaryKey.getJavaType();
