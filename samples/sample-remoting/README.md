@@ -40,9 +40,9 @@ Open second terminal in the root directory and run:
 
 2. Various types of authentication (both `Authenticator` and `UserSessionManager`):
 
-        curl http://localhost:8080/sample/user-auth/abc
-        curl http://localhost:8080/sample/system-auth/abc
-        curl http://localhost:8080/sample/system-user-auth/abc
+        curl http://localhost:8081/sample/user-auth/abc
+        curl http://localhost:8081/sample/system-auth/abc
+        curl http://localhost:8081/sample/system-user-auth/abc
     
     Result: success.
 
