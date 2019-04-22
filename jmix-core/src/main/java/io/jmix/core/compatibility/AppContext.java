@@ -16,13 +16,13 @@
 package io.jmix.core.compatibility;
 
 import io.jmix.core.Events;
-import io.jmix.core.security.SecurityContext;
 import io.jmix.core.event.AppContextInitializedEvent;
 import io.jmix.core.event.AppContextStartedEvent;
 import io.jmix.core.event.AppContextStoppedEvent;
+import io.jmix.core.impl.logging.LogMdc;
+import io.jmix.core.security.SecurityContext;
 import io.jmix.core.security.impl.SecurityContextHolder;
 import io.jmix.core.security.impl.ThreadLocalSecurityContextHolder;
-import io.jmix.core.impl.logging.LogMdc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -30,17 +30,15 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.core.Authentication;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 /**
  * System-level class with static methods providing access to some central application structures:
  * <ul>
  *     <li>Spring's {@link ApplicationContext}</li>
- *     <li>Application properties which were set in {@code app.properties} files</li>
  *     <li>Current thread's {@link SecurityContext}</li>
+ *     <li>Spring's {@code Environment} properties</li>
  * </ul>
- * It also allows to register listeners which are triggered on the application start/stop, and provides the method
- * {@link #isStarted()} to check whether the app is fully initialized at the moment.
+ * It also provides methods {@link #isStarted()} and {@link #isReady()} to check whether the app is fully initialized at the moment.
  */
 public class AppContext {
 
@@ -49,8 +47,6 @@ public class AppContext {
     private static ApplicationContext context;
 
     private static SecurityContextHolder securityContextHolder = new ThreadLocalSecurityContextHolder();
-
-    private static AppProperties appProperties;
 
     private static volatile boolean started;
     private static volatile boolean listenersNotified;
@@ -67,9 +63,7 @@ public class AppContext {
      * @return all property names defined in the set of {@code app.properties} files
      */
     public static String[] getPropertyNames() {
-        if (appProperties == null)
-            throw new IllegalStateException("appProperties not initialized");
-        return appProperties.getPropertyNames();
+        return getAppProperties().getPropertyNames();
     }
 
     /**
@@ -79,9 +73,7 @@ public class AppContext {
      */
     @Nullable
     public static String getProperty(String key) {
-        if (appProperties == null)
-            throw new IllegalStateException("appProperties not initialized");
-        return appProperties.getProperty(key);
+        return getAppProperties().getProperty(key);
     }
 
     /**
@@ -92,9 +84,7 @@ public class AppContext {
      * @param value     property value. If null, the property will be removed.
      */
     public static void setProperty(String key, @Nullable String value) {
-        if (appProperties == null)
-            throw new IllegalStateException("appProperties not initialized");
-        appProperties.setProperty(key, value);
+        getAppProperties().setProperty(key, value);
     }
 
     /**
@@ -179,6 +169,10 @@ public class AppContext {
         return started && listenersNotified;
     }
 
+    private static AppProperties getAppProperties() {
+        return context.getBean(AppProperties.NAME, AppProperties.class);
+    }
+
     /**
      * INTERNAL.
      * Contains methods for setting up AppContext internals.
@@ -192,8 +186,6 @@ public class AppContext {
          */
         public static void setApplicationContext(@Nullable ApplicationContext applicationContext) {
             context = applicationContext;
-            appProperties = applicationContext != null ?
-                    applicationContext.getBean(AppProperties.NAME, AppProperties.class) : null;
 
             Events events = getApplicationContext().getBean(Events.NAME, Events.class);
             events.publish(new AppContextInitializedEvent(context));
@@ -232,13 +224,6 @@ public class AppContext {
             if (context instanceof ConfigurableApplicationContext) {
                 ((ConfigurableApplicationContext) context).close();
             }
-        }
-
-        /**
-         * Direct access to the {@link AppProperties} object.
-         */
-        public static AppProperties getAppProperties() {
-            return AppContext.appProperties;
         }
     }
 

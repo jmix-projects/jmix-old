@@ -16,23 +16,21 @@
 
 package io.jmix.samples.customsecurity;
 
-import io.jmix.core.security.ClientDetails;
-import io.jmix.core.security.SystemAuthenticationToken;
-import io.jmix.core.security.UserSession;
-import io.jmix.core.security.UserSessionFactory;
+import io.jmix.core.security.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
 
 @Component(UserSessionFactory.NAME)
 public class CustomUserSessionFactory implements UserSessionFactory {
 
-    private final UserSession SERVER_SESSION;
+    private final UserSession SYSTEM_SESSION;
 
     public CustomUserSessionFactory() {
-        CustomUser user = new CustomUser("server", "", "Server");
-        SystemAuthenticationToken authentication = new SystemAuthenticationToken(user);
-        SERVER_SESSION = new CustomUserSession(authentication);
-        SERVER_SESSION.setClientDetails(ClientDetails.builder().info("System authentication").build());
+        CustomUser user = new CustomUser("system", "", "System");
+        SystemAuthenticationToken authentication = new SystemAuthenticationToken(user, Collections.emptyList());
+        SYSTEM_SESSION = new BuiltInSystemUserSession(authentication);
     }
 
     @Override
@@ -41,7 +39,18 @@ public class CustomUserSessionFactory implements UserSessionFactory {
     }
 
     @Override
-    public UserSession getServerSession() {
-        return SERVER_SESSION;
+    public UserSession getSystemSession() {
+        return SYSTEM_SESSION;
     }
+
+    private static class BuiltInSystemUserSession extends UserSession implements SystemUserSession {
+
+        private static final long serialVersionUID = 7080514121793124904L;
+
+        public BuiltInSystemUserSession(SystemAuthenticationToken authentication) {
+            super(authentication);
+            clientDetails = ClientDetails.builder().info("System authentication").build();
+        }
+    }
+
 }

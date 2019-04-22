@@ -27,6 +27,8 @@ public class SystemAuthenticationToken extends AbstractAuthenticationToken {
 
     private final Object principal;
 
+    private String credentials = "";
+
     public SystemAuthenticationToken(Object principal) {
         super(null);
         this.principal = principal;
@@ -40,8 +42,12 @@ public class SystemAuthenticationToken extends AbstractAuthenticationToken {
     }
 
     @Override
-    public Object getCredentials() {
-        return "";
+    public String getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(String credentials) {
+        this.credentials = credentials;
     }
 
     @Override

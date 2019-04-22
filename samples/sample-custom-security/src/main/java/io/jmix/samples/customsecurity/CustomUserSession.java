@@ -21,6 +21,8 @@ import org.springframework.security.core.Authentication;
 
 public class CustomUserSession extends UserSession {
 
+    private static final long serialVersionUID = -4481480396182663248L;
+
     public CustomUserSession(Authentication authentication) {
         super(authentication);
     }

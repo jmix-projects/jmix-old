@@ -35,4 +35,9 @@ public class JmixSecurityTestConfiguration {
         dataSource.setPassword("");
         return dataSource;
     }
+
+    @Bean
+    protected TestSupport testSupport() {
+        return new TestSupport();
+    }
 }

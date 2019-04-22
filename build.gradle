@@ -58,7 +58,7 @@ allprojects {
     }
 }
 
-configure([project(':jmix-core'), project(':jmix-data'), project(':jmix-security')]) {
+configure([project(':jmix-core'), project(':jmix-data'), project(':jmix-security'), project(':jmix-remoting')]) {
     if (rootProject.hasProperty('spotbugsEnabled')) {
         apply plugin: 'com.github.spotbugs'
 

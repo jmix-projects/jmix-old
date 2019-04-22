@@ -29,6 +29,8 @@ import java.util.*;
 
 public class StandardUserSession extends UserSession {
 
+    private static final long serialVersionUID = 3464453157472449019L;
+
     protected Map<String, Integer>[] permissions;
     protected Map<String, List<ConstraintData>> constraints;
     protected EnumSet<RoleType> roleTypes;

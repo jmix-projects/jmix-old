@@ -16,7 +16,6 @@
 
 package io.jmix.core.security;
 
-import io.jmix.core.UuidProvider;
 import io.jmix.core.entity.User;
 import org.springframework.security.core.Authentication;
 
@@ -24,15 +23,15 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class UserSession {
+public class UserSession implements Serializable {
 
-    protected UUID id = UuidProvider.createUuid();
+    private static final long serialVersionUID = -7134190493600163922L;
+
+    protected UUID id = UUID.randomUUID();
 
     protected User user;
 
     protected Authentication authentication;
-
-    protected boolean system;
 
     protected ClientDetails clientDetails = ClientDetails.UNKNOWN;
 
@@ -47,9 +46,6 @@ public class UserSession {
         } else {
             throw new UnsupportedOperationException("UserSession does not support principal of type "
                     + authentication.getPrincipal().getClass().getName());
-        }
-        if (authentication instanceof SystemAuthenticationToken) {
-            system = true;
         }
     }
 
@@ -66,10 +62,6 @@ public class UserSession {
 
     public User getUser() {
         return user;
-    }
-
-    public boolean isSystem() {
-        return system;
     }
 
     public ClientDetails getClientDetails() {

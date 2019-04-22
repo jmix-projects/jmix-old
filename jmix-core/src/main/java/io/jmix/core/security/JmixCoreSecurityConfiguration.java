@@ -20,17 +20,26 @@ import io.jmix.core.security.impl.CoreUserDetailsService;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.inject.Inject;
 
 @Configuration
 @ConditionalOnSecurityImplementation("core")
 @EnableWebSecurity
-public class JmixCoreSecurityConfiguration extends WebSecurityConfigurerAdapter {
+@Order(100)
+public class JmixCoreSecurityConfiguration extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+
+    @Inject
+    protected UserSessionCleanupInterceptor userSessionCleanupInterceptor;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -41,9 +50,15 @@ public class JmixCoreSecurityConfiguration extends WebSecurityConfigurerAdapter 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // todo configure HTTP security
-        http.anonymous();
-        http.csrf().disable(); // otherwise remoting fails with 403
+        http.antMatcher("/**")
+                .authorizeRequests().anyRequest().permitAll()
+                .and()
+                .csrf().disable();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(userSessionCleanupInterceptor);
     }
 
     @Bean(name = "jmix_authenticationManager")

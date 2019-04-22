@@ -36,6 +36,7 @@ import javax.inject.Inject;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -60,19 +61,16 @@ public class StandardUserSessionFactory implements UserSessionFactory {
     @Inject
     protected DatatypeRegistry datatypeRegistry;
 
-    private final StandardUserSession SERVER_SESSION;
+    private final StandardUserSession SYSTEM_SESSION;
 
     public StandardUserSessionFactory() {
         User user = new User();
-        user.setLogin("server");
-        user.setLoginLowerCase("server");
+        user.setLogin("system");
+        user.setLoginLowerCase("system");
         user.setPassword("");
-        user.setName("Server");
-        SystemAuthenticationToken authentication = new SystemAuthenticationToken(user);
-        SERVER_SESSION = new StandardUserSession(authentication) {
-            { id = new UUID(1L, 1L); }
-        };
-        SERVER_SESSION.setClientDetails(ClientDetails.builder().info("System authentication").build());
+        user.setName("System");
+        SystemAuthenticationToken authentication = new SystemAuthenticationToken(user, Collections.emptyList());
+        SYSTEM_SESSION = new BuiltInSystemUserSession(authentication);
     }
 
     @Override
@@ -88,8 +86,8 @@ public class StandardUserSessionFactory implements UserSessionFactory {
     }
 
     @Override
-    public UserSession getServerSession() {
-        return SERVER_SESSION;
+    public UserSession getSystemSession() {
+        return SYSTEM_SESSION;
     }
 
     protected void compilePermissions(StandardUserSession session) {
@@ -190,6 +188,17 @@ public class StandardUserSessionFactory implements UserSessionFactory {
             } catch (ParseException e) {
                 throw new RuntimeException("Unable to set session attribute " + attribute.getName(), e);
             }
+        }
+    }
+
+    private static class BuiltInSystemUserSession extends StandardUserSession implements SystemUserSession {
+
+        private static final long serialVersionUID = 428868424041528894L;
+
+        public BuiltInSystemUserSession(SystemAuthenticationToken authentication) {
+            super(authentication);
+            id = new UUID(1L, 1L);
+            clientDetails = ClientDetails.builder().info("System authentication").build();
         }
     }
 }

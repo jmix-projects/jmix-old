@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * INTERNAL.
  * Provides access to file-based properties.
  */
 @Component(AppProperties.NAME)
@@ -50,7 +49,7 @@ public class AppProperties {
     @PostConstruct
     protected void init() {
         if (!(environment instanceof ConfigurableEnvironment)) {
-            log.warn("{} is not a ConfigurableEnvironment, cannot register Jmix mutable property source");
+            log.warn("{} is not a ConfigurableEnvironment, cannot register Jmix mutable property source", environment);
             return;
         }
         MutablePropertySources sources = ((ConfigurableEnvironment) environment).getPropertySources();

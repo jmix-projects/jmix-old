@@ -36,7 +36,7 @@ public class UserSessionSourceImpl implements UserSessionSource {
         if (securityContext == null) {
             return false;
         }
-        if (securityContext.getSession().isSystem()) {
+        if (securityContext.getSession().getAuthentication() instanceof SystemAuthenticationToken) {
             return true;
         }
         UserSession session = userSessions.getAndRefresh(securityContext.getSession().getId());
@@ -46,7 +46,7 @@ public class UserSessionSourceImpl implements UserSessionSource {
     @Override
     public UserSession getUserSession() throws NoUserSessionException {
         SecurityContext securityContext = AppContext.getSecurityContextNN();
-        if (securityContext.getSession().isSystem()) {
+        if (securityContext.getSession().getAuthentication() instanceof SystemAuthenticationToken) {
             return securityContext.getSession();
         }
 

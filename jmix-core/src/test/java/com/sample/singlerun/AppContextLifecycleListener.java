@@ -18,6 +18,7 @@ package com.sample.singlerun;
 
 import io.jmix.core.event.AppContextInitializedEvent;
 import io.jmix.core.event.AppContextStartedEvent;
+import io.jmix.core.security.SystemUserSession;
 import io.jmix.core.security.UserSessionSource;
 import org.springframework.context.event.ApplicationContextEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -48,12 +49,12 @@ public class AppContextLifecycleListener {
     @EventListener
     void onInitialized(AppContextInitializedEvent event) {
         events.add(event);
-        assert userSessionSource.getUserSession().isSystem();
+        assert userSessionSource.getUserSession() instanceof SystemUserSession;
     }
 
     @EventListener
     void onStarted(AppContextStartedEvent event) {
         events.add(event);
-        assert userSessionSource.getUserSession().isSystem();
+        assert userSessionSource.getUserSession() instanceof SystemUserSession;
     }
 }

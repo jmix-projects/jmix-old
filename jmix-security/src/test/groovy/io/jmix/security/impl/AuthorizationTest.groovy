@@ -31,11 +31,13 @@ import io.jmix.security.test.JmixSecurityTestConfiguration
 import io.jmix.security.test.TestSupport
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.TestPropertySource
 import spock.lang.Specification
 
 import javax.inject.Inject
 
 @ContextConfiguration(classes = [JmixCoreConfiguration, JmixDataConfiguration, JmixSecurityConfiguration, JmixSecurityTestConfiguration])
+@TestPropertySource(properties = ["jmix.securityImplementation = standard"])
 class AuthorizationTest extends Specification {
 
     @Inject

@@ -22,12 +22,10 @@ import io.jmix.core.commons.db.QueryRunner;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.data.Persistence;
-import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
 
-@Component
 public class TestSupport {
 
     @Inject

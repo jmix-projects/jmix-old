@@ -16,6 +16,7 @@ targetCompatibility = rootProject.targetCompatibility
 
 dependencies {
     api 'org.springframework:spring-context'
+    api 'org.springframework:spring-webmvc'
     api 'org.apache.commons:commons-lang3'
     api 'org.slf4j:slf4j-api'
     api 'org.codehaus.groovy:groovy'

@@ -41,7 +41,8 @@ import org.springframework.core.annotation.Order;
 @ComponentScan
 @JmixComponent(dependsOn = {}, properties = {
         @JmixProperty(name = "jmix.viewsConfig", value = "io/jmix/core/views.xml"),
-        @JmixProperty(name = "cuba.confDir", value = "./conf")
+        @JmixProperty(name = "jmix.workDir", value = "${user.dir}/.jmix/work"),
+        @JmixProperty(name = "cuba.confDir", value = "${user.dir}/.jmix/conf")
 })
 public class JmixCoreConfiguration {
 

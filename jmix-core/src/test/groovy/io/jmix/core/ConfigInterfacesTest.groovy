@@ -19,7 +19,7 @@ package io.jmix.core
 import com.sample.addon1.TestAddon1Configuration
 import com.sample.app.TestAppConfiguration
 import com.sample.app.TestConfig
-import io.jmix.core.compatibility.AppContext
+import io.jmix.core.compatibility.AppProperties
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
 import org.springframework.test.context.ContextConfiguration
@@ -29,12 +29,15 @@ import spock.lang.Specification
 class ConfigInterfacesTest extends Specification {
 
     @Autowired
-    private ConfigInterfaces configInterfaces
+    ConfigInterfaces configInterfaces
 
     @Autowired
-    private Environment env
+    AppProperties appProperties
 
-    def "default value can be overridden by setting property via AppContext"() {
+    @Autowired
+    Environment env
+
+    def "default value can be overridden by setting property via AppProperties"() {
         when:
 
         def config = configInterfaces.getConfig(GlobalConfig)
@@ -46,7 +49,7 @@ class ConfigInterfacesTest extends Specification {
 
         when:
 
-        AppContext.setProperty('cuba.webHostName', 'some_host')
+        appProperties.setProperty('cuba.webHostName', 'some_host')
 
         then:
 
@@ -54,7 +57,7 @@ class ConfigInterfacesTest extends Specification {
 
         when:
 
-        AppContext.setProperty('cuba.webHostName', null)
+        appProperties.setProperty('cuba.webHostName', null)
 
         then:
 

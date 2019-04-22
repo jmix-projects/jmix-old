@@ -230,12 +230,11 @@ public class UserSessionsImpl implements UserSessions {
     public void add(UserSession session) {
         UserSessionInfo usi = new UserSessionInfo(session, timeSource.currentTimeMillis());
         putSessionInfo(session.getId(), usi);
-        if (!session.isSystem()) {
-            if (serverConfig.getSyncNewUserSessionReplication())
-                clusterManager.sendSync(usi);
-            else
-                clusterManager.send(usi);
-        }
+
+        if (serverConfig.getSyncNewUserSessionReplication())
+            clusterManager.sendSync(usi);
+        else
+            clusterManager.send(usi);
     }
 
     @Override
@@ -243,10 +242,8 @@ public class UserSessionsImpl implements UserSessions {
         UserSessionInfo usi = removeSessionInfo(session.getId());
         if (usi != null) {
             log.debug("Removed session: {}", usi);
-            if (!session.isSystem()) {
-                usi.lastUsedTs = 0;
-                clusterManager.send(usi);
-            }
+            usi.lastUsedTs = 0;
+            clusterManager.send(usi);
         }
     }
 
@@ -307,7 +304,7 @@ public class UserSessionsImpl implements UserSessions {
                     putSessionInfo(id, usi);
                 }
 
-                if (propagate && !usi.session.isSystem()) {
+                if (propagate) {
                     if (now > (usi.lastSentTs + toMillis(sendTimeout))) {
                         usi.lastSentTs = now;
                         clusterManager.send(usi);
@@ -367,7 +364,6 @@ public class UserSessionsImpl implements UserSessions {
         use.setClientInfo(session.getClientDetails().getInfo());
         use.setSince(new Date(since));
         use.setLastUsedTs(new Date(lastUsedTs));
-        use.setSystem(session.isSystem());
         return use;
     }
 
@@ -416,7 +412,7 @@ public class UserSessionsImpl implements UserSessions {
         long now = timeSource.currentTimeMillis();
 
         getSessionInfoStream()
-                .filter(info -> !info.session.isSystem() && now > (info.lastUsedTs + toMillis(expirationTimeout)))
+                .filter(info -> now > (info.lastUsedTs + toMillis(expirationTimeout)))
                 .forEach(usi -> {
                     log.debug("Removing session due to timeout: {}", usi);
 

@@ -24,5 +24,5 @@ public interface UserSessionFactory {
 
     UserSession create(Authentication authentication);
 
-    UserSession getServerSession();
+    UserSession getSystemSession();
 }

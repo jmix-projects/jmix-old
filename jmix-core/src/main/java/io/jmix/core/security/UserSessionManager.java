@@ -22,7 +22,7 @@ public interface UserSessionManager {
 
     String NAME = "jmix_UserSessionManager";
 
-    UserSession createSession(Authentication authentication);
+    UserSession createSession(Authentication authToken);
 
     void removeSession();
 }

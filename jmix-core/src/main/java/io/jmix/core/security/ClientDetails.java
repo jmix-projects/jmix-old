@@ -16,9 +16,12 @@
 
 package io.jmix.core.security;
 
+import java.io.Serializable;
 import java.util.TimeZone;
 
-public class ClientDetails {
+public class ClientDetails implements Serializable {
+
+    private static final long serialVersionUID = 8397588752541616904L;
 
     public static final ClientDetails UNKNOWN = builder().build();
 

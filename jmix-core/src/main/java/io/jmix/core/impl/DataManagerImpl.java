@@ -30,7 +30,7 @@ import javax.inject.Inject;
 import java.util.*;
 
 @Component(DataManager.NAME)
-public class DataManagerImpl implements DataManager {
+public class DataManagerImpl extends DataManagerSupport implements DataManager {
 
     private static final Logger log = LoggerFactory.getLogger(DataManagerImpl.class);
 
@@ -84,39 +84,6 @@ public class DataManagerImpl implements DataManager {
         MetaClass metaClass = metadata.getClassNN(context.getMetaClass());
         DataStore storage = getDataStore(getStoreName(metaClass));
         return storage.getCount(context);
-    }
-
-    @Override
-    public <E extends Entity> E reload(E entity, String viewName) {
-        Objects.requireNonNull(viewName, "viewName is null");
-        return reload(entity, metadata.getViewRepository().getView(entity.getClass(), viewName));
-    }
-
-    @Override
-    public <E extends Entity> E reload(E entity, View view) {
-        return reload(entity, view, null);
-    }
-
-    @Override
-    public <E extends Entity> E reload(E entity, View view, @Nullable MetaClass metaClass) {
-        return reload(entity, view, metaClass, entityHasDynamicAttributes(entity));
-    }
-
-    @Override
-    public <E extends Entity> E reload(E entity, View view, @Nullable MetaClass metaClass, boolean loadDynamicAttributes) {
-        if (metaClass == null) {
-            metaClass = metadata.getSession().getClass(entity.getClass());
-        }
-        LoadContext<E> context = new LoadContext<>(metaClass);
-        context.setId(entity.getId());
-        context.setView(view);
-        context.setLoadDynamicAttributes(loadDynamicAttributes);
-
-        E reloaded = load(context);
-        if (reloaded == null)
-            throw new EntityAccessException(metaClass, entity.getId());
-
-        return reloaded;
     }
 
     @Override
@@ -204,50 +171,9 @@ public class DataManagerImpl implements DataManager {
     }
 
     @Override
-    public EntitySet commit(Entity... entities) {
-        return commit(new CommitContext(entities));
-    }
-
-    @Override
-    public <E extends Entity> E commit(E entity, @Nullable View view) {
-        return commit(new CommitContext().addInstanceToCommit(entity, view)).get(entity);
-    }
-
-    @Override
-    public <E extends Entity> E commit(E entity, @Nullable String viewName) {
-        if (viewName != null) {
-            View view = metadata.getViewRepository().getView(metadata.getClassNN(entity.getClass()), viewName);
-            return commit(entity, view);
-        } else {
-            return commit(entity, (View) null);
-        }
-    }
-
-    @Override
-    public <E extends Entity> E commit(E entity) {
-        return commit(entity, (View) null);
-    }
-
-    @Override
-    public void remove(Entity entity) {
-        CommitContext context = new CommitContext(
-                Collections.<Entity>emptyList(),
-                Collections.singleton(entity));
-        commit(context);
-    }
-
-    @Override
     public List<KeyValueEntity> loadValues(ValueLoadContext context) {
         DataStore store = getDataStore(getStoreName(context.getStoreName()));
         return store.loadValues(context);
-    }
-
-    protected boolean entityHasDynamicAttributes(Entity entity) {
-        return false;
-
-        // todo dynamic attributes
-//        return entity instanceof BaseGenericIdEntity
-//                && ((BaseGenericIdEntity) entity).getDynamicAttributes() != null;
     }
 
     protected CommitContext createCommitContext(CommitContext context) {
@@ -277,19 +203,6 @@ public class DataManagerImpl implements DataManager {
     @Override
     public <T> FluentValueLoader<T> loadValue(String queryString, Class<T> valueClass) {
         return new FluentValueLoader<>(queryString, valueClass, this);
-    }
-
-    @Override
-    public <T> T create(Class<T> entityClass) {
-        return metadata.create(entityClass);
-    }
-
-    @Override
-    public <T extends BaseGenericIdEntity<K>, K> T getReference(Class<T> entityClass, K id) {
-        T entity = metadata.create(entityClass);
-        entity.setId(id);
-        entityStates.makePatch(entity);
-        return entity;
     }
 
     protected boolean writeCrossDataStoreReferences(Entity entity, Collection<Entity> allEntities) {

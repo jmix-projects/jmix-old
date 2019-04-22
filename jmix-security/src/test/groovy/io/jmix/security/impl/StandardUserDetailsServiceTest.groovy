@@ -26,11 +26,13 @@ import io.jmix.security.test.TestSupport
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.TestPropertySource
 import spock.lang.Specification
 
 import javax.inject.Inject
 
 @ContextConfiguration(classes = [JmixCoreConfiguration, JmixDataConfiguration, JmixSecurityConfiguration, JmixSecurityTestConfiguration])
+@TestPropertySource(properties = ["jmix.securityImplementation = standard"])
 class StandardUserDetailsServiceTest extends Specification {
 
     @Inject

@@ -20,21 +20,19 @@ import io.jmix.core.security.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.UUID;
 
 @Component(UserSessionFactory.NAME)
 @ConditionalOnSecurityImplementation("core")
 public class CoreUserSessionFactory implements UserSessionFactory {
 
-    private final UserSession SERVER_SESSION;
+    private final UserSession SYSTEM_SESSION;
 
     public CoreUserSessionFactory() {
-        CoreUser user = new CoreUser("server", "", "Server");
-        SystemAuthenticationToken authentication = new SystemAuthenticationToken(user);
-        SERVER_SESSION = new UserSession(authentication) {
-            { id = new UUID(1L, 1L); }
-        };
-        SERVER_SESSION.setClientDetails(ClientDetails.builder().info("System authentication").build());
+        CoreUser user = new CoreUser("system", "", "System");
+        SystemAuthenticationToken authentication = new SystemAuthenticationToken(user, Collections.emptyList());
+        SYSTEM_SESSION = new BuiltInSystemUserSession(authentication);
     }
 
     @Override
@@ -43,7 +41,18 @@ public class CoreUserSessionFactory implements UserSessionFactory {
     }
 
     @Override
-    public UserSession getServerSession() {
-        return SERVER_SESSION;
+    public UserSession getSystemSession() {
+        return SYSTEM_SESSION;
+    }
+
+    private static class BuiltInSystemUserSession extends UserSession implements SystemUserSession {
+
+        private static final long serialVersionUID = 6457244307815440998L;
+
+        public BuiltInSystemUserSession(SystemAuthenticationToken authentication) {
+            super(authentication);
+            id = new UUID(1L, 1L);
+            clientDetails = ClientDetails.builder().info("System authentication").build();
+        }
     }
 }

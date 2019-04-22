@@ -24,7 +24,7 @@ import java.util.Map;
  */
 public interface ConfigStorage {
 
-    String NAME = "cuba_ConfigStorage";
+    String NAME = "jmix_ConfigStorage";
 
     /**
      * Loads all properties stored in the database.

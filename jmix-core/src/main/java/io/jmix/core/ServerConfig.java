@@ -210,7 +210,7 @@ public interface ServerConfig extends Config {
      * Indicates that {@code DataManager} should always apply security restrictions on the middleware.
      */
     @Property("cuba.dataManagerChecksSecurityOnMiddleware")
-    @Source(type = SourceType.DATABASE)
+    @Source(type = SourceType.APP)
     @DefaultBoolean(false)
     boolean getDataManagerChecksSecurityOnMiddleware();
 
@@ -273,7 +273,7 @@ public interface ServerConfig extends Config {
      * @return use read-only transactions in {@code DataManager} load operations and do not commit them
      */
     @Property("cuba.useReadOnlyTransactionForLoad")
-    @Source(type = SourceType.DATABASE)
+    @Source(type = SourceType.APP)
     @DefaultBoolean(true)
     boolean getUseReadOnlyTransactionForLoad();
 
