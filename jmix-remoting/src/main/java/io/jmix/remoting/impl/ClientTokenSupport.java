@@ -32,11 +32,11 @@ public class ClientTokenSupport {
 
     @Nullable
     public String current() {
-        return environment.getProperty("jmix.clientToken");
+        return environment.getProperty("jmix.remoting.clientToken");
     }
 
     public boolean matches(String clientToken) {
-        String clientTokenProp = environment.getProperty("jmix.clientToken");
+        String clientTokenProp = environment.getProperty("jmix.remoting.clientToken");
         if (clientTokenProp == null) {
             return false;
         }

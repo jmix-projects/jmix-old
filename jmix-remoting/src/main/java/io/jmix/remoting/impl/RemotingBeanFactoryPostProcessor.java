@@ -42,11 +42,16 @@ public class RemotingBeanFactoryPostProcessor implements BeanFactoryPostProcesso
 
     protected Environment environment;
 
-    private static final String SERVER_URL = "http://localhost:8080"; // todo remoting configuration
+    protected String serverUrl;
 
     @Override
     public void setEnvironment(Environment environment) {
         this.environment = environment;
+
+        serverUrl = environment.getProperty("jmix.remoting.serverUrl");
+        if (serverUrl == null) {
+            serverUrl = "http://localhost:8080";
+        }
     }
 
     @Override
@@ -56,7 +61,7 @@ public class RemotingBeanFactoryPostProcessor implements BeanFactoryPostProcesso
         }
     }
 
-    private void processRemoteBeans(BeanDefinitionRegistry registry) {
+    protected void processRemoteBeans(BeanDefinitionRegistry registry) {
         for (String beanName : registry.getBeanDefinitionNames()) {
             BeanDefinition beanDefinition = registry.getBeanDefinition(beanName);
             if (beanDefinition instanceof AnnotatedBeanDefinition) {
@@ -86,7 +91,7 @@ public class RemotingBeanFactoryPostProcessor implements BeanFactoryPostProcesso
         return environment.acceptsProfiles(Profiles.of(profile));
     }
 
-    private void createServerEndpoint(BeanDefinitionRegistry registry, String beanName, String interfaceName) {
+    protected void createServerEndpoint(BeanDefinitionRegistry registry, String beanName, String interfaceName) {
         BeanDefinition endpointBeanDefinition = new RootBeanDefinition(ServerEndpointExporter.class);
         MutablePropertyValues propertyValues = endpointBeanDefinition.getPropertyValues();
         propertyValues.add("serviceBeanName", beanName);
@@ -95,16 +100,15 @@ public class RemotingBeanFactoryPostProcessor implements BeanFactoryPostProcesso
         log.debug("Configured bean " + beanName + " for export via HTTP");
     }
 
-    private void createClientProxy(BeanDefinitionRegistry registry, String beanName, String interfaceName) {
+    protected void createClientProxy(BeanDefinitionRegistry registry, String beanName, String interfaceName) {
         BeanDefinition definition = new RootBeanDefinition(ClientProxyFactoryBean.class);
         MutablePropertyValues propertyValues = definition.getPropertyValues();
         String servicePath = "/remoting/" + beanName;
-        propertyValues.add("serviceUrl", SERVER_URL + servicePath);
+        propertyValues.add("serviceUrl", serverUrl + servicePath);
         propertyValues.add("serviceInterface", interfaceName);
         propertyValues.add("httpInvokerRequestExecutorBeanName", ClientRequestExecutor.NAME);
         registry.registerBeanDefinition(beanName, definition);
 
         log.debug("Configured remote proxy bean " + beanName + " of type " + interfaceName + ", bound to " + servicePath);
-
     }
 }

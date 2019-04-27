@@ -1,6 +1,14 @@
 # sample-remoting
 
-## No remoting
+## Automatic testing
+
+Open terminal in the root directory and run:
+
+    ./gradlew :samples:sample-remoting:systemTest
+
+## Manual testing
+
+### No remoting
 
 Open terminal in the root directory and run:
 
@@ -20,17 +28,17 @@ Open terminal in the root directory and run:
     
     Result: success.
 
-## Client-server with trusted client
+### Client-server with trusted client
 
 Open first terminal in the root directory and run:
 
     ./gradlew :samples:sample-remoting:bootRun \
-      --args='--spring.profiles.active=remoting,server --jmix.clientToken=123'     
+      --args='--spring.profiles.active=remoting,server --jmix.remoting.clientToken=123'     
 
 Open second terminal in the root directory and run:
 
     ./gradlew :samples:sample-remoting:bootRun \
-      --args='--spring.profiles.active=remoting,client --jmix.clientToken=123'     
+      --args='--spring.profiles.active=remoting,client --jmix.remoting.clientToken=123'     
 
 1. No authentication on client.
 
@@ -46,17 +54,17 @@ Open second terminal in the root directory and run:
     
     Result: success.
 
-## Client-server with non-trusted client
+### Client-server with non-trusted client
 
 Open first terminal in the root directory and run:
 
     ./gradlew :samples:sample-remoting:bootRun \
-      --args='--spring.profiles.active=remoting,server --jmix.clientToken=123'     
+      --args='--spring.profiles.active=remoting,server --jmix.remoting.clientToken=123'     
 
 Open second terminal in the root directory and run:
 
     ./gradlew :samples:sample-remoting:bootRun \
-      --args='--spring.profiles.active=remoting,client --jmix.clientToken=invalid'     
+      --args='--spring.profiles.active=remoting,client --jmix.remoting.clientToken=invalid'     
 
 1. No authentication on client.
 

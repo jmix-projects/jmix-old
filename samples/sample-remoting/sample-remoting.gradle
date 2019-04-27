@@ -31,12 +31,29 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.apache.commons:commons-dbcp2'
     runtimeOnly 'org.hsqldb:hsqldb:2.4.1'
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation "org.spockframework:spock-core:$rootProject.spockVersion"
-    testImplementation "org.spockframework:spock-spring:$rootProject.spockVersion"
 }
 
 entitiesEnhancing {
     enabled = true
+}
+
+sourceSets {
+    systemTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+    systemTestImplementation.extendsFrom implementation
+    systemTestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+dependencies {
+    systemTestImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+task systemTest(type: Test, dependsOn: bootJar) {
+    testClassesDirs = sourceSets.systemTest.output.classesDirs
+    classpath = sourceSets.systemTest.runtimeClasspath
 }

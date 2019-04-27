@@ -57,7 +57,7 @@ public class ClientAuthenticator extends AuthenticatorSupport implements Authent
                 if (clientToken != null) {
                     return serverAuthenticator.authenticateByClientToken(login, clientToken);
                 } else {
-                    throw new IllegalStateException("Property jmix.clientToken is not set");
+                    throw new IllegalStateException("Property jmix.remoting.clientToken is not set");
                 }
             });
 
