@@ -1,0 +1,28 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'java-library'
+apply plugin: 'io.spring.dependency-management'
+
+dependencyManagement {
+    imports {
+        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+version = rootProject.jmixVersion
+sourceCompatibility = rootProject.sourceCompatibility
+targetCompatibility = rootProject.targetCompatibility
+
+def vaadinVersion = '8.6.4'
+
+dependencies {
+    api project(':jmix-core')
+    api "com.vaadin:vaadin-server:$vaadinVersion"
+    implementation "com.vaadin:vaadin-client-compiled:$vaadinVersion"
+    api 'com.vaadin:vaadin-spring:3.1.1'
+    
+    testImplementation 'org.springframework:spring-test'
+    testImplementation "org.spockframework:spock-core:$rootProject.spockVersion"
+    testImplementation "org.spockframework:spock-spring:$rootProject.spockVersion"
+    testRuntimeOnly 'org.slf4j:slf4j-simple'
+}
