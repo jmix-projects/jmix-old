@@ -16,7 +16,6 @@
 
 package io.jmix.core.security.impl;
 
-import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.security.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,7 @@ public class UserSessionManagerImpl implements UserSessionManager {
             Authentication authentication = authenticationManager.authenticate(authToken);
             UserSession session = userSessionFactory.create(authentication);
             userSessions.add(session);
-            AppContext.setSecurityContext(new SecurityContext(session));
+            CurrentUserSession.set(session);
 
             log.info("Created session: {}", session);
             return session;
@@ -58,19 +57,13 @@ public class UserSessionManagerImpl implements UserSessionManager {
 
     @Override
     public void removeSession() {
-        try {
-            SecurityContext securityContext = AppContext.getSecurityContext();
-            if (securityContext == null) {
-                log.warn("No security context to remove");
-                return;
-            }
-            UserSession session = securityContext.getSession();
-            userSessions.remove(session);
-            AppContext.setSecurityContext(null);
-
-            log.info("Removed session: {}", session);
-        } catch (NoUserSessionException e) {
-            log.warn("No current session to remove");
+        UserSession userSession = CurrentUserSession.get();
+        if (userSession != null) {
+            userSessions.remove(userSession);
+            CurrentUserSession.set(null);
+            log.info("Removed session: {}", userSession);
+        } else {
+            log.debug("There is no UserSession in the current thread");
         }
     }
 }

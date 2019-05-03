@@ -19,6 +19,7 @@ package io.jmix.security.impl
 import io.jmix.core.DataManager
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.compatibility.AppContext
+import io.jmix.core.security.CurrentUserSession
 import io.jmix.core.security.UserSessionManager
 import io.jmix.data.JmixDataConfiguration
 import io.jmix.security.JmixSecurityConfiguration
@@ -57,7 +58,7 @@ class AuthenticationTest extends Specification {
 
         then:
 
-        AppContext.getSecurityContext().session == session
+        CurrentUserSession.get() == session
         session.user == user
 
         when:
@@ -66,7 +67,7 @@ class AuthenticationTest extends Specification {
 
         then:
 
-        AppContext.getSecurityContext() == null
+        CurrentUserSession.get() == null
 
         cleanup:
 

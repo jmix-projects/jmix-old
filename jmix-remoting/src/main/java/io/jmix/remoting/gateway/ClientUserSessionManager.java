@@ -16,8 +16,7 @@
 
 package io.jmix.remoting.gateway;
 
-import io.jmix.core.compatibility.AppContext;
-import io.jmix.core.security.SecurityContext;
+import io.jmix.core.security.CurrentUserSession;
 import io.jmix.core.security.SystemAuthenticationToken;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionManager;
@@ -36,13 +35,13 @@ public class ClientUserSessionManager implements UserSessionManager {
             ((SystemAuthenticationToken) authToken).setCredentials("todo clientPassword");
         }
         UserSession userSession = service.createSession(authToken);
-        AppContext.setSecurityContext(new SecurityContext(userSession));
+        CurrentUserSession.set(userSession);
         return userSession;
     }
 
     @Override
     public void removeSession() {
-        AppContext.setSecurityContext(null);
+        CurrentUserSession.set(null);
         // todo logout
     }
 }

@@ -17,7 +17,6 @@
 package io.jmix.core.security
 
 import io.jmix.core.JmixCoreConfiguration
-import io.jmix.core.compatibility.AppContext
 import io.jmix.core.security.impl.AuthenticatorImpl
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
@@ -41,7 +40,7 @@ class AuthenticatorTest extends Specification {
 
         then:
 
-        UserSession session = AppContext.getSecurityContextNN().getSession()
+        UserSession session = CurrentUserSession.get()
         session.user.loginLowerCase == 'system'
         session instanceof SystemUserSession
 
@@ -54,7 +53,7 @@ class AuthenticatorTest extends Specification {
 
         then:
 
-        AppContext.getSecurityContext() == null
+        CurrentUserSession.get() == null
         SecurityContextHolder.getContext().getAuthentication() == null
     }
 
@@ -65,7 +64,7 @@ class AuthenticatorTest extends Specification {
 
         then:
 
-        UserSession session = AppContext.getSecurityContextNN().getSession()
+        UserSession session = CurrentUserSession.get()
         session.user.loginLowerCase == 'admin'
         session.authentication instanceof SystemAuthenticationToken
 
@@ -78,7 +77,7 @@ class AuthenticatorTest extends Specification {
 
         then:
 
-        AppContext.getSecurityContext() == null
+        CurrentUserSession.get() == null
         SecurityContextHolder.getContext().getAuthentication() == null
     }
 
@@ -90,7 +89,7 @@ class AuthenticatorTest extends Specification {
 
         then:
 
-        UserSession outerSession = AppContext.getSecurityContextNN().getSession()
+        UserSession outerSession = CurrentUserSession.get()
         outerSession.user.loginLowerCase == 'system'
 
         Authentication outerAuth = SecurityContextHolder.getContext().getAuthentication()
@@ -102,7 +101,7 @@ class AuthenticatorTest extends Specification {
 
         then:
 
-        UserSession innerSession = AppContext.getSecurityContextNN().getSession()
+        UserSession innerSession = CurrentUserSession.get()
         innerSession.user.loginLowerCase == 'admin'
         innerSession.authentication instanceof SystemAuthenticationToken
 
@@ -115,7 +114,7 @@ class AuthenticatorTest extends Specification {
 
         then:
 
-        UserSession outerSession1 = AppContext.getSecurityContextNN().getSession()
+        UserSession outerSession1 = CurrentUserSession.get()
         outerSession1.user.loginLowerCase == 'system'
 
         Authentication outerAuth1 = SecurityContextHolder.getContext().getAuthentication()
@@ -127,7 +126,7 @@ class AuthenticatorTest extends Specification {
 
         then:
 
-        AppContext.getSecurityContext() == null
+        CurrentUserSession.get() == null
         SecurityContextHolder.getContext().getAuthentication() == null
     }
 }

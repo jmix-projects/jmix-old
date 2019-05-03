@@ -19,15 +19,10 @@ import io.jmix.core.Events;
 import io.jmix.core.event.AppContextInitializedEvent;
 import io.jmix.core.event.AppContextStartedEvent;
 import io.jmix.core.event.AppContextStoppedEvent;
-import io.jmix.core.impl.logging.LogMdc;
-import io.jmix.core.security.SecurityContext;
-import io.jmix.core.security.impl.SecurityContextHolder;
-import io.jmix.core.security.impl.ThreadLocalSecurityContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.security.core.Authentication;
 
 import javax.annotation.Nullable;
 
@@ -35,7 +30,6 @@ import javax.annotation.Nullable;
  * System-level class with static methods providing access to some central application structures:
  * <ul>
  *     <li>Spring's {@link ApplicationContext}</li>
- *     <li>Current thread's {@link SecurityContext}</li>
  *     <li>Spring's {@code Environment} properties</li>
  * </ul>
  * It also provides methods {@link #isStarted()} and {@link #isReady()} to check whether the app is fully initialized at the moment.
@@ -45,8 +39,6 @@ public class AppContext {
     private static final Logger log = LoggerFactory.getLogger(AppContext.class);
 
     private static ApplicationContext context;
-
-    private static SecurityContextHolder securityContextHolder = new ThreadLocalSecurityContextHolder();
 
     private static volatile boolean started;
     private static volatile boolean listenersNotified;
@@ -88,74 +80,6 @@ public class AppContext {
     }
 
     /**
-     * @return  current thread's {@link SecurityContext} or null if there is no context bound
-     */
-    @Nullable
-    public static SecurityContext getSecurityContext() {
-        return securityContextHolder.get();
-    }
-
-    /**
-     * @return  current thread's {@link SecurityContext}
-     * @throws SecurityException if there is no context bound to the current thread
-     */
-    public static SecurityContext getSecurityContextNN() {
-        SecurityContext securityContext = getSecurityContext();
-        if (securityContext == null)
-            // todo think about using NoUserSessionException or introduce a specific exception
-            throw new SecurityException("No security context bound to the current thread");
-
-        return securityContext;
-    }
-
-    /**
-     * Set current thread's {@link SecurityContext}.
-     * @param securityContext security context to be set for the current thread
-     */
-    public static void setSecurityContext(@Nullable SecurityContext securityContext) {
-        log.trace("setSecurityContext {} for thread {}", securityContext, Thread.currentThread());
-
-        securityContextHolder.set(securityContext);
-        LogMdc.setup(securityContext);
-
-        Authentication authentication = securityContext != null ? securityContext.getSession().getAuthentication() : null;
-        org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
-
-    /**
-     * Sets current thread's {@link SecurityContext}, invokes runnable and sets previous security context back.
-     *
-     * @param securityContext security context to be set for the current thread
-     * @param runnable        runnable
-     */
-    public static void withSecurityContext(SecurityContext securityContext, Runnable runnable) {
-        SecurityContext previousSecurityContext = getSecurityContext();
-        setSecurityContext(securityContext);
-        try {
-            runnable.run();
-        } finally {
-            setSecurityContext(previousSecurityContext);
-        }
-    }
-
-    /**
-     * Sets current thread's {@link SecurityContext}, calls operation and sets previous security context back.
-     *
-     * @param securityContext security context to be set for the current thread
-     * @param operation       operation
-     * @return result of operation
-     */
-    public static <T> T withSecurityContext(SecurityContext securityContext, SecuredOperation<T> operation) {
-        SecurityContext previousSecurityContext = getSecurityContext();
-        setSecurityContext(securityContext);
-        try {
-            return operation.call();
-        } finally {
-            setSecurityContext(previousSecurityContext);
-        }
-    }
-
-    /**
      * @return true if the application context is initialized
      */
     public static boolean isStarted() {
@@ -189,15 +113,6 @@ public class AppContext {
 
             Events events = getApplicationContext().getBean(Events.NAME, Events.class);
             events.publish(new AppContextInitializedEvent(context));
-        }
-
-        /**
-         * Called by the framework to replace standard thread-local holder.
-         *
-         * @param holder a holder implementation
-         */
-        public static void setSecurityContextHolder(SecurityContextHolder holder) {
-            AppContext.securityContextHolder = holder;
         }
 
         /**

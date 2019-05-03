@@ -16,9 +16,8 @@
 
 package io.jmix.remoting.impl;
 
-import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.security.Authenticator;
-import io.jmix.core.security.SecurityContext;
+import io.jmix.core.security.CurrentUserSession;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessions;
 import org.slf4j.Logger;
@@ -83,7 +82,7 @@ public class RemotingAuthenticationFilter extends OncePerRequestFilter {
             if (userSession == null) {
                 throw new SessionAuthenticationException("User session " + sessionId + " does not exist");
             }
-            AppContext.setSecurityContext(new SecurityContext(userSession));
+            CurrentUserSession.set(userSession);
         }
 
     }

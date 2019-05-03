@@ -18,12 +18,13 @@ package io.jmix.core.security;
 
 import io.jmix.core.entity.User;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class UserSession implements Serializable {
+public class UserSession implements Authentication {
 
     private static final long serialVersionUID = -7134190493600163922L;
 
@@ -99,5 +100,39 @@ public class UserSession implements Serializable {
                 "id=" + id + "," +
                 "user=" + user.getUsername() +
                 '}';
+    }
+
+    @Override
+    public String getName() {
+        return authentication.getName();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authentication.getAuthorities();
+    }
+
+    @Override
+    public Object getCredentials() {
+        return authentication.getCredentials();
+    }
+
+    @Override
+    public Object getDetails() {
+        return authentication.getDetails();
+    }
+
+    @Override
+    public Object getPrincipal() {
+        return authentication.getPrincipal();
+    }
+
+    @Override
+    public boolean isAuthenticated() {
+        return true;
+    }
+
+    @Override
+    public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
     }
 }

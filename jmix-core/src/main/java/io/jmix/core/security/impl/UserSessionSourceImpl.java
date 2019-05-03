@@ -32,29 +32,32 @@ public class UserSessionSourceImpl implements UserSessionSource {
 
     @Override
     public boolean checkCurrentUserSession() {
-        SecurityContext securityContext = AppContext.getSecurityContext();
-        if (securityContext == null) {
+        UserSession userSession = CurrentUserSession.get();
+        if (userSession == null) {
             return false;
         }
-        if (securityContext.getSession().getAuthentication() instanceof SystemAuthenticationToken) {
+        if (userSession.getAuthentication() instanceof SystemAuthenticationToken) {
             return true;
         }
-        UserSession session = userSessions.getAndRefresh(securityContext.getSession().getId());
+        UserSession session = userSessions.getAndRefresh(userSession.getId());
         return session != null;
     }
 
     @Override
     public UserSession getUserSession() throws NoUserSessionException {
-        SecurityContext securityContext = AppContext.getSecurityContextNN();
-        if (securityContext.getSession().getAuthentication() instanceof SystemAuthenticationToken) {
-            return securityContext.getSession();
+        UserSession userSession = CurrentUserSession.get();
+        if (userSession == null) {
+            throw new NoUserSessionException();
+        }
+        if (userSession.getAuthentication() instanceof SystemAuthenticationToken) {
+            return userSession;
         }
 
-        UserSession session = userSessions.getAndRefresh(securityContext.getSession().getId());
-        if (session == null) {
-            throw new NoUserSessionException(securityContext.getSession().getId());
+        UserSession cachedSession = userSessions.getAndRefresh(userSession.getId());
+        if (cachedSession == null) {
+            throw new NoUserSessionException(userSession.getId());
         }
-        return session;
+        return cachedSession;
     }
 
     @Override

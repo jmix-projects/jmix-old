@@ -16,7 +16,6 @@
 
 package io.jmix.core.security;
 
-import io.jmix.core.compatibility.AppContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -30,6 +29,6 @@ public class UserSessionCleanupInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        AppContext.setSecurityContext(null);
+        CurrentUserSession.set(null);
     }
 }

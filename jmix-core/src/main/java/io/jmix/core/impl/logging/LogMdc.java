@@ -16,17 +16,19 @@
 
 package io.jmix.core.impl.logging;
 
-import io.jmix.core.security.SecurityContext;
 import org.slf4j.MDC;
+import org.springframework.security.core.Authentication;
+
+import javax.annotation.Nullable;
 
 public class LogMdc {
 
     public static final String USER = "jmixUser";
 
-    public static void setup(SecurityContext securityContext) {
-        if (securityContext != null) {
-            String username = securityContext.getSession().getUser().getUsername();
-            MDC.put(USER, "/" + username);
+    public static void setup(@Nullable Authentication authentication) {
+        if (authentication != null) {
+            String username = authentication.getName();
+            MDC.put(USER, username);
         } else {
             MDC.remove(USER);
         }

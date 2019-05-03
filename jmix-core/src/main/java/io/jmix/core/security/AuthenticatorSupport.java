@@ -19,7 +19,9 @@ package io.jmix.core.security;
 import io.jmix.core.security.impl.SystemSessions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 
+import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.UUID;
@@ -29,9 +31,9 @@ public abstract class AuthenticatorSupport {
 
     private static final Logger log = LoggerFactory.getLogger(AuthenticatorSupport.class);
 
-    protected static final SecurityContext NULL_CONTEXT = new SecurityContext(new NullSession());
+    protected static final UserSession NULL_SESSION = new NullSession();
 
-    protected ThreadLocal<Deque<SecurityContext>> threadLocalStack = new ThreadLocal<>();
+    protected ThreadLocal<Deque<Authentication>> threadLocalStack = new ThreadLocal<>();
 
     protected SystemSessions sessions;
 
@@ -40,8 +42,7 @@ public abstract class AuthenticatorSupport {
     }
 
     protected UserSession getFromCacheOrCreate(String login, Supplier<UserSession> supplier) {
-        UserSession session;
-        session = sessions.get(login);
+        UserSession session = sessions.get(login);
         if (session == null) {
             // saved session doesn't exist
             synchronized (this) {
@@ -60,8 +61,8 @@ public abstract class AuthenticatorSupport {
         return session;
     }
 
-    protected void pushSecurityContext(SecurityContext securityContext) {
-        Deque<SecurityContext> stack = threadLocalStack.get();
+    protected void pushAuthentication(@Nullable Authentication authentication) {
+        Deque<Authentication> stack = threadLocalStack.get();
         if (stack == null) {
             stack = new ArrayDeque<>();
             threadLocalStack.set(stack);
@@ -70,21 +71,23 @@ public abstract class AuthenticatorSupport {
                 log.warn("Stack is too big: {}. Check correctness of begin/end invocations.", stack.size());
             }
         }
-        if (securityContext == null) {
-            securityContext = NULL_CONTEXT;
+        if (authentication == null) {
+            stack.push(NULL_SESSION);
+        } else {
+            stack.push(authentication);
         }
-        stack.push(securityContext);
     }
 
-    protected SecurityContext popSecurityContext() {
-        Deque<SecurityContext> stack = threadLocalStack.get();
+    @Nullable
+    protected Authentication popAuthentication() {
+        Deque<Authentication> stack = threadLocalStack.get();
         if (stack != null) {
-            SecurityContext securityContext = stack.poll();
-            if (securityContext != null) {
-                if (securityContext == NULL_CONTEXT) {
+            Authentication authentication = stack.poll();
+            if (authentication != null) {
+                if (authentication == NULL_SESSION) {
                     return null;
                 } else {
-                    return securityContext;
+                    return authentication;
                 }
             } else {
                 log.warn("Stack is empty. Check correctness of begin/end invocations.");

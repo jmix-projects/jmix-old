@@ -17,12 +17,14 @@
 package io.jmix.remoting.gateway;
 
 import com.google.common.base.Strings;
-import io.jmix.core.compatibility.AppContext;
+import io.jmix.core.impl.logging.LogMdc;
 import io.jmix.core.security.*;
 import io.jmix.core.security.impl.SystemSessions;
 import io.jmix.remoting.impl.ClientTokenSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -66,9 +68,9 @@ public class ClientAuthenticator extends AuthenticatorSupport implements Authent
             userSession = userSessionFactory.getSystemSession();
         }
 
-        pushSecurityContext(AppContext.getSecurityContext());
+        pushAuthentication(SecurityContextHolder.getContext().getAuthentication());
 
-        AppContext.setSecurityContext(new SecurityContext(userSession));
+        CurrentUserSession.set(userSession);
 
         return userSession;
     }
@@ -80,9 +82,10 @@ public class ClientAuthenticator extends AuthenticatorSupport implements Authent
 
     @Override
     public void end() {
-        log.trace("Set previous SecurityContext");
-        SecurityContext previous = popSecurityContext();
-        AppContext.setSecurityContext(previous);
+        log.trace("Set previous Authentication");
+        Authentication previous = popAuthentication();
+        SecurityContextHolder.getContext().setAuthentication(previous);
+        LogMdc.setup(previous);
     }
 
     @Override

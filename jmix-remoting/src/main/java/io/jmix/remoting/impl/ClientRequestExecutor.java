@@ -16,8 +16,7 @@
 
 package io.jmix.remoting.impl;
 
-import io.jmix.core.compatibility.AppContext;
-import io.jmix.core.security.SecurityContext;
+import io.jmix.core.security.CurrentUserSession;
 import io.jmix.core.security.SystemAuthenticationToken;
 import io.jmix.core.security.SystemUserSession;
 import io.jmix.core.security.UserSession;
@@ -39,10 +38,9 @@ public class ClientRequestExecutor extends SimpleHttpInvokerRequestExecutor {
     @Override
     protected void prepareConnection(HttpURLConnection connection, int contentLength) throws IOException {
         super.prepareConnection(connection, contentLength);
-        SecurityContext securityContext = AppContext.getSecurityContext();
-        if (securityContext != null) {
+        UserSession userSession = CurrentUserSession.get();
+        if (userSession != null) {
             String authValue;
-            UserSession userSession = securityContext.getSession();
             if (userSession.getAuthentication() instanceof SystemAuthenticationToken) {
                 String clientToken = clientTokenSupport.current();
                 if (clientToken == null) {
