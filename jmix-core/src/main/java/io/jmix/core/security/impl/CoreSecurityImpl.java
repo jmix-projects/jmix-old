@@ -20,10 +20,11 @@ import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.security.*;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
 @Component(Security.NAME)
-@ConditionalOnSecurityImplementation("core")
+@Conditional(OnCoreSecurityImplementation.class)
 public class CoreSecurityImpl implements Security {
 
     @Override

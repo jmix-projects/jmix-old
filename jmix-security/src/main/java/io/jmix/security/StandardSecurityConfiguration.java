@@ -16,12 +16,12 @@
 
 package io.jmix.security;
 
-import io.jmix.core.security.ConditionalOnSecurityImplementation;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
 import io.jmix.data.Persistence;
 import io.jmix.security.impl.StandardUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -33,7 +33,7 @@ import javax.inject.Inject;
 
 @Configuration
 @ComponentScan
-@ConditionalOnSecurityImplementation("standard")
+@Conditional(OnStandardSecurityImplementation.class)
 @EnableWebSecurity
 public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter {
 

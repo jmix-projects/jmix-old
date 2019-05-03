@@ -22,11 +22,9 @@ import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 
-import java.util.Map;
+public abstract class AbstractSecurityImplementationCondition implements Condition {
 
-public class OnSecurityImplementationCondition implements Condition {
-
-    private static final Logger log = LoggerFactory.getLogger(OnSecurityImplementationCondition.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractSecurityImplementationCondition.class);
 
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
@@ -36,16 +34,9 @@ public class OnSecurityImplementationCondition implements Condition {
             property = "core";
         }
 
-        Map<String, Object> attributes =
-                metadata.getAnnotationAttributes(ConditionalOnSecurityImplementation.class.getName());
-        if (attributes != null) {
-            String value = (String) attributes.get("value");
-            if (value.equals("")) {
-                return property.equals("core");
-            } else {
-                return value.equals(property);
-            }
-        }
-        throw new IllegalStateException("Cannot get @ConditionalOnSecurityImplementation attributes from " + metadata);
+        String value = getSecurityImplementationName();
+        return value.equals(property);
     }
+
+    protected abstract String getSecurityImplementationName();
 }

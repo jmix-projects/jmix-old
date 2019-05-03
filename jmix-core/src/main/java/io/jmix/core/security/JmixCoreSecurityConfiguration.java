@@ -19,6 +19,7 @@ package io.jmix.core.security;
 import io.jmix.core.security.impl.CoreUserDetailsService;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,7 +34,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import javax.inject.Inject;
 
 @Configuration
-@ConditionalOnSecurityImplementation("core")
+@Conditional(OnCoreSecurityImplementation.class)
 @EnableWebSecurity
 @Order(100)
 public class JmixCoreSecurityConfiguration extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {

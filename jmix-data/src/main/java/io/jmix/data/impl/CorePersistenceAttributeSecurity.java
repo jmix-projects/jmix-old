@@ -16,17 +16,18 @@
 
 package io.jmix.data.impl;
 
-import io.jmix.core.security.ConditionalOnSecurityImplementation;
 import io.jmix.core.View;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.security.OnCoreSecurityImplementation;
 import io.jmix.data.PersistenceAttributeSecurity;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
 @Component(PersistenceAttributeSecurity.NAME)
-@ConditionalOnSecurityImplementation("core")
+@Conditional(OnCoreSecurityImplementation.class)
 public class CorePersistenceAttributeSecurity implements PersistenceAttributeSecurity {
 
     @Override

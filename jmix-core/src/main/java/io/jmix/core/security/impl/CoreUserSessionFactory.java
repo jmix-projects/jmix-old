@@ -17,6 +17,7 @@
 package io.jmix.core.security.impl;
 
 import io.jmix.core.security.*;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 @Component(UserSessionFactory.NAME)
-@ConditionalOnSecurityImplementation("core")
+@Conditional(OnCoreSecurityImplementation.class)
 public class CoreUserSessionFactory implements UserSessionFactory {
 
     private final UserSession SYSTEM_SESSION;
