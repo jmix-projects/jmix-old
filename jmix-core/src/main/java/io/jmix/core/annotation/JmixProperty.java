@@ -21,13 +21,27 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Defines an {@link org.springframework.core.env.Environment} property provided by a {@link JmixModule}.
+ * <p> The property value can be overridden or appended (see {@link #append()}) according to the module dependencies tree.
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JmixProperty {
 
+    /**
+     * Property name.
+     */
     String name();
 
+    /**
+     * Property value.
+     */
     String value();
 
+    /**
+     * Whether to override or append the value to the value of the same property provided by a module processed
+     * earlier in the dependencies tree.
+     */
     boolean append() default false;
 }

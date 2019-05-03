@@ -17,7 +17,7 @@
 package io.jmix.remoting;
 
 import io.jmix.core.DataManager;
-import io.jmix.core.annotation.JmixComponent;
+import io.jmix.core.annotation.JmixModule;
 import io.jmix.core.impl.ConfigStorage;
 import io.jmix.core.security.Authenticator;
 import io.jmix.core.security.UserSessionManager;
@@ -40,7 +40,7 @@ import javax.inject.Inject;
 
 @Configuration
 @ComponentScan
-@JmixComponent(dependsOn = JmixDataConfiguration.class)
+@JmixModule(dependsOn = JmixDataConfiguration.class)
 public class JmixRemotingConfiguration {
 
     @Bean(name = UserSessionManager.NAME)

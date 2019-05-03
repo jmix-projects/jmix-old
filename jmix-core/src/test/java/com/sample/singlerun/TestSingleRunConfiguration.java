@@ -17,13 +17,12 @@
 package com.sample.singlerun;
 
 import io.jmix.core.JmixCoreConfiguration;
-import io.jmix.core.annotation.JmixComponent;
-import io.jmix.core.annotation.JmixProperty;
+import io.jmix.core.annotation.JmixModule;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan
-@JmixComponent(dependsOn = JmixCoreConfiguration.class)
+@JmixModule(dependsOn = JmixCoreConfiguration.class)
 public class TestSingleRunConfiguration {
 }

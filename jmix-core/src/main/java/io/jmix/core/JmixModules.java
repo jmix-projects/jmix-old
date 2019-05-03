@@ -30,20 +30,20 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 /**
- * Holds the list of {@link JmixComponentDescriptor}s.
+ * Holds the list of {@link JmixModuleDescriptor}s.
  */
 @ParametersAreNonnullByDefault
-public class JmixComponents {
+public class JmixModules {
 
     public static final Pattern SEPARATOR_PATTERN = Pattern.compile("\\s");
 
-    private final Logger log = LoggerFactory.getLogger(JmixComponents.class);
+    private final Logger log = LoggerFactory.getLogger(JmixModules.class);
 
-    private final List<JmixComponentDescriptor> components;
+    private final List<JmixModuleDescriptor> components;
 
     private final Environment environment;
 
-    public JmixComponents(Environment environment, List<JmixComponentDescriptor> components) {
+    public JmixModules(Environment environment, List<JmixModuleDescriptor> components) {
         this.environment = environment;
         this.components = components;
     }
@@ -51,7 +51,7 @@ public class JmixComponents {
     /**
      * @return the list of components
      */
-    public List<JmixComponentDescriptor> getComponents() {
+    public List<JmixModuleDescriptor> getComponents() {
         return Collections.unmodifiableList(components);
     }
 
@@ -60,8 +60,8 @@ public class JmixComponents {
      * @return component or null if not found
      */
     @Nullable
-    public JmixComponentDescriptor get(String componentId) {
-        for (JmixComponentDescriptor component : components) {
+    public JmixModuleDescriptor get(String componentId) {
+        for (JmixModuleDescriptor component : components) {
             if (component.getId().equals(componentId))
                 return component;
         }
@@ -72,12 +72,12 @@ public class JmixComponents {
     public String getProperty(String name) {
         List<String> values = new ArrayList<>();
 
-        List<JmixComponentDescriptor> components = getComponents();
-        ListIterator<JmixComponentDescriptor> iterator = components.listIterator(components.size());
+        List<JmixModuleDescriptor> components = getComponents();
+        ListIterator<JmixModuleDescriptor> iterator = components.listIterator(components.size());
 
         int index;
         while (iterator.hasPrevious()) {
-            JmixComponentDescriptor component = iterator.previous();
+            JmixModuleDescriptor component = iterator.previous();
 
             String compValue = component.getProperty(name);
             if (StringUtils.isNotEmpty(compValue)) {
@@ -104,17 +104,17 @@ public class JmixComponents {
         return Splitter.on(SEPARATOR_PATTERN).omitEmptyStrings().split(compValue);
     }
 
-    private static class JmixPropertySource extends EnumerablePropertySource<JmixComponents> {
+    private static class JmixPropertySource extends EnumerablePropertySource<JmixModules> {
 
-        public JmixPropertySource(JmixComponents source) {
-            super("JmixComponents properties", source);
+        public JmixPropertySource(JmixModules source) {
+            super("JmixModules properties", source);
         }
 
         @Nonnull
         @Override
         public String[] getPropertyNames() {
             Set<String> propertyNames = new HashSet<>();
-            for (JmixComponentDescriptor component : source.components) {
+            for (JmixModuleDescriptor component : source.components) {
                 propertyNames.addAll(component.getPropertyNames());
             }
             return propertyNames.toArray(new String[0]);

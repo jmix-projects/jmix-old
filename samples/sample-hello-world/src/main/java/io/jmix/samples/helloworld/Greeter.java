@@ -16,7 +16,7 @@
 
 package io.jmix.samples.helloworld;
 
-import io.jmix.core.JmixComponents;
+import io.jmix.core.JmixModules;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -25,9 +25,9 @@ import javax.inject.Inject;
 public class Greeter {
 
     @Inject
-    private JmixComponents jmixComponents;
+    private JmixModules jmixModules;
 
     public String sayHello(String name) {
-        return "Hello " + name + " from " + jmixComponents.getComponents();
+        return "Hello " + name + " from " + jmixModules.getComponents();
     }
 }

@@ -19,7 +19,7 @@ package io.jmix.data;
 import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.core.Metadata;
 import io.jmix.core.Stores;
-import io.jmix.core.annotation.JmixComponent;
+import io.jmix.core.annotation.JmixModule;
 import io.jmix.data.impl.JmixEclipseLinkJpaVendorAdapter;
 import io.jmix.data.impl.PersistenceConfigProcessor;
 import io.jmix.data.persistence.DbmsSpecifics;
@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -38,7 +37,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @ComponentScan
-@JmixComponent(dependsOn = JmixCoreConfiguration.class)
+@JmixModule(dependsOn = JmixCoreConfiguration.class)
 public class JmixDataConfiguration {
 
     protected Environment environment;

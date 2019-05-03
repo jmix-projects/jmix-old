@@ -17,7 +17,7 @@
 package io.jmix.samples.remoting;
 
 import io.jmix.core.JmixCoreConfiguration;
-import io.jmix.core.annotation.JmixComponent;
+import io.jmix.core.annotation.JmixModule;
 import io.jmix.data.JmixDataConfiguration;
 import io.jmix.remoting.JmixRemotingConfiguration;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -30,7 +30,7 @@ import javax.sql.DataSource;
 
 @SpringBootApplication
 @Import({JmixCoreConfiguration.class, JmixDataConfiguration.class, JmixRemotingConfiguration.class})
-@JmixComponent(dependsOn = JmixRemotingConfiguration.class)
+@JmixModule(dependsOn = JmixRemotingConfiguration.class)
 public class SampleRemotingApplication {
 
 	public static void main(String[] args) {

@@ -16,7 +16,7 @@
 
 package io.jmix.core;
 
-import io.jmix.core.annotation.JmixComponent;
+import io.jmix.core.annotation.JmixModule;
 import io.jmix.core.annotation.JmixProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,19 +42,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class JmixComponentsProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware, PriorityOrdered {
+public class JmixModulesProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware, PriorityOrdered {
 
-    private static final Logger log = LoggerFactory.getLogger(JmixComponentsProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(JmixModulesProcessor.class);
     private Environment environment;
-    private JmixComponents jmixComponents;
+    private JmixModules jmixModules;
 
-    public JmixComponents getJmixComponents() {
-        return jmixComponents;
+    public JmixModules getJmixModules() {
+        return jmixModules;
     }
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-        List<JmixComponentDescriptor> components = new ArrayList<>();
+        List<JmixModuleDescriptor> components = new ArrayList<>();
         List<String> componentIds = new ArrayList<>();
 
         for (String beanName : registry.getBeanDefinitionNames()) {
@@ -62,7 +62,7 @@ public class JmixComponentsProcessor implements BeanDefinitionRegistryPostProces
             if (!(beanDefinition instanceof AnnotatedBeanDefinition)) {
                 continue;
             }
-            if (!((AnnotatedBeanDefinition) beanDefinition).getMetadata().hasAnnotation(JmixComponent.class.getName())
+            if (!((AnnotatedBeanDefinition) beanDefinition).getMetadata().hasAnnotation(JmixModule.class.getName())
                     || ((AnnotatedBeanDefinition) beanDefinition).getFactoryMethodMetadata() != null) {
                 continue;
             }
@@ -78,7 +78,7 @@ public class JmixComponentsProcessor implements BeanDefinitionRegistryPostProces
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
-            JmixComponent componentAnnotation = AnnotationUtils.findAnnotation(beanClass, JmixComponent.class);
+            JmixModule componentAnnotation = AnnotationUtils.findAnnotation(beanClass, JmixModule.class);
             if (componentAnnotation == null) {
                 continue;
             }
@@ -87,11 +87,11 @@ public class JmixComponentsProcessor implements BeanDefinitionRegistryPostProces
                 componentIds.add(compId);
             }
 
-            JmixComponentDescriptor compDescriptor = components.stream()
+            JmixModuleDescriptor compDescriptor = components.stream()
                     .filter(descriptor -> descriptor.getId().equals(compId))
                     .findAny()
                     .orElseGet(() -> {
-                        JmixComponentDescriptor descriptor = new JmixComponentDescriptor(compId);
+                        JmixModuleDescriptor descriptor = new JmixModuleDescriptor(compId);
                         load(descriptor, componentAnnotation, components);
                         return descriptor;
                     });
@@ -109,40 +109,40 @@ public class JmixComponentsProcessor implements BeanDefinitionRegistryPostProces
 
         log.info("Using Jmix components: {}", components);
 
-        jmixComponents = new JmixComponents(environment, components);
+        jmixModules = new JmixModules(environment, components);
 
         if (environment instanceof ConfigurableEnvironment) {
             MutablePropertySources sources = ((ConfigurableEnvironment) environment).getPropertySources();
-            sources.addLast(new JmixPropertySource(jmixComponents));
+            sources.addLast(new JmixPropertySource(jmixModules));
         } else {
-            throw new IllegalStateException("Not a ConfigurableEnvironment, cannot register JmixComponents property source");
+            throw new IllegalStateException("Not a ConfigurableEnvironment, cannot register JmixModules property source");
         }
 
     }
 
-    private String getComponentId(JmixComponent jmixComponent, Class<?> aClass) {
-        String compId = jmixComponent.id();
+    private String getComponentId(JmixModule jmixModule, Class<?> aClass) {
+        String compId = jmixModule.id();
         if ("".equals(compId)) {
             compId = aClass.getPackage().getName();
         }
         return compId;
     }
 
-    private void load(JmixComponentDescriptor component, JmixComponent componentAnnotation,
-                      List<JmixComponentDescriptor> components) {
+    private void load(JmixModuleDescriptor component, JmixModule componentAnnotation,
+                      List<JmixModuleDescriptor> components) {
         for (Class<?> depClass : componentAnnotation.dependsOn()) {
-            JmixComponent depComponentAnnotation = AnnotationUtils.findAnnotation(depClass, JmixComponent.class);
+            JmixModule depComponentAnnotation = AnnotationUtils.findAnnotation(depClass, JmixModule.class);
             if (depComponentAnnotation == null) {
-                log.warn("Dependency class {} is not annotated with {}, ignoring it", depClass.getName(), JmixComponent.class.getName());
+                log.warn("Dependency class {} is not annotated with {}, ignoring it", depClass.getName(), JmixModule.class.getName());
                 continue;
             }
             String depCompId = getComponentId(depComponentAnnotation, depClass);
 
-            JmixComponentDescriptor depComp = components.stream()
+            JmixModuleDescriptor depComp = components.stream()
                     .filter(descriptor -> descriptor.getId().equals(depCompId))
                     .findAny()
                     .orElseGet(() -> {
-                        JmixComponentDescriptor descriptor = new JmixComponentDescriptor(depCompId);
+                        JmixModuleDescriptor descriptor = new JmixModuleDescriptor(depCompId);
                         load(descriptor, depComponentAnnotation, components);
                         components.add(descriptor);
                         return descriptor;
@@ -170,17 +170,17 @@ public class JmixComponentsProcessor implements BeanDefinitionRegistryPostProces
         this.environment = environment;
     }
 
-    private static class JmixPropertySource extends EnumerablePropertySource<JmixComponents> {
+    private static class JmixPropertySource extends EnumerablePropertySource<JmixModules> {
 
-        public JmixPropertySource(JmixComponents source) {
-            super("JmixComponents properties", source);
+        public JmixPropertySource(JmixModules source) {
+            super("JmixModules properties", source);
         }
 
         @Nonnull
         @Override
         public String[] getPropertyNames() {
             Set<String> propertyNames = new HashSet<>();
-            for (JmixComponentDescriptor component : source.getComponents()) {
+            for (JmixModuleDescriptor component : source.getComponents()) {
                 propertyNames.addAll(component.getPropertyNames());
             }
             return propertyNames.toArray(new String[0]);

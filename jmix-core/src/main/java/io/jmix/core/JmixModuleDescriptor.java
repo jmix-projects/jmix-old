@@ -20,16 +20,16 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 /**
- * Describes a Jmix component which the current application depends on.
+ * Describes a Jmix module which the current application depends on.
  */
-public class JmixComponentDescriptor implements Comparable<JmixComponentDescriptor> {
+public class JmixModuleDescriptor implements Comparable<JmixModuleDescriptor> {
 
     private final String id;
-    private final List<JmixComponentDescriptor> dependencies = new ArrayList<>();
+    private final List<JmixModuleDescriptor> dependencies = new ArrayList<>();
     private Properties properties;
     private Set<String> additiveProperties;
 
-    public JmixComponentDescriptor(String id) {
+    public JmixModuleDescriptor(String id) {
         this.id = id;
     }
 
@@ -44,7 +44,7 @@ public class JmixComponentDescriptor implements Comparable<JmixComponentDescript
      * INTERNAL.
      * Add a dependency to the component.
      */
-    public void addDependency(JmixComponentDescriptor other) {
+    public void addDependency(JmixModuleDescriptor other) {
         if (dependencies.contains(other))
             return;
         if (other.dependsOn(this))
@@ -56,8 +56,8 @@ public class JmixComponentDescriptor implements Comparable<JmixComponentDescript
     /**
      * Check if this component depends on the given component.
      */
-    public boolean dependsOn(JmixComponentDescriptor other) {
-        for (JmixComponentDescriptor dependency : dependencies) {
+    public boolean dependsOn(JmixModuleDescriptor other) {
+        for (JmixModuleDescriptor dependency : dependencies) {
             if (dependency.equals(other) || dependency.dependsOn(other))
                 return true;
         }
@@ -108,7 +108,7 @@ public class JmixComponentDescriptor implements Comparable<JmixComponentDescript
     }
 
     @Override
-    public int compareTo(JmixComponentDescriptor other) {
+    public int compareTo(JmixModuleDescriptor other) {
         if (this.dependsOn(other))
             return 1;
         if (other.dependsOn(this)) {
@@ -122,7 +122,7 @@ public class JmixComponentDescriptor implements Comparable<JmixComponentDescript
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        JmixComponentDescriptor that = (JmixComponentDescriptor) o;
+        JmixModuleDescriptor that = (JmixModuleDescriptor) o;
 
         return id.equals(that.id);
 

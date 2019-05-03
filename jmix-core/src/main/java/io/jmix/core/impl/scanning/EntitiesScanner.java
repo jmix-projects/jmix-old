@@ -16,8 +16,8 @@
 
 package io.jmix.core.impl.scanning;
 
-import io.jmix.core.JmixComponentDescriptor;
-import io.jmix.core.JmixComponents;
+import io.jmix.core.JmixModuleDescriptor;
+import io.jmix.core.JmixModules;
 import io.jmix.core.metamodel.annotations.MetaClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,9 +56,9 @@ public class EntitiesScanner extends AbstractClasspathScanner {
     }
 
     @Inject
-    public void setJmixComponents(JmixComponents jmixComponents) {
-        basePackages = jmixComponents.getComponents().stream()
-                .map(JmixComponentDescriptor::getId)
+    public void setJmixComponents(JmixModules jmixModules) {
+        basePackages = jmixModules.getComponents().stream()
+                .map(JmixModuleDescriptor::getId)
                 .collect(Collectors.toList());
     }
 

@@ -18,7 +18,7 @@ package com.sample.app;
 
 
 import io.jmix.data.JmixDataConfiguration;
-import io.jmix.core.annotation.JmixComponent;
+import io.jmix.core.annotation.JmixModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +28,7 @@ import org.springframework.core.env.Environment;
 
 @Configuration
 @ComponentScan
-@JmixComponent(dependsOn = JmixDataConfiguration.class)
+@JmixModule(dependsOn = JmixDataConfiguration.class)
 public class TestAppConfiguration {
 
     @Autowired

@@ -4,17 +4,21 @@ import com.sample.addon1.TestAddon1Configuration
 import com.sample.app.TestAppConfiguration
 import com.sample.app.TestBean
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.env.Environment
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
 @ContextConfiguration(classes = [TestAppConfiguration, TestAddon1Configuration, JmixCoreConfiguration])
-class JmixComponentsTest extends Specification {
+class JmixModulesTest extends Specification {
 
     @Autowired
-    private JmixComponents components
+    private JmixModules components
 
     @Autowired
     private TestBean testBean
+
+    @Autowired
+    private Environment environment
 
     def "test dependencies"() {
         expect:
@@ -58,5 +62,11 @@ class JmixComponentsTest extends Specification {
         expect:
 
         testBean.prop1 == 'addon1_prop1 app_prop1'
+    }
+
+    def "app property file overrides JmixProperty"() {
+        expect:
+
+        environment.getProperty('prop_to_override') == 'app_properties_file_prop3'
     }
 }

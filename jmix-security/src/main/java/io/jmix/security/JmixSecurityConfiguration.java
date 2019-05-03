@@ -17,13 +17,13 @@
 package io.jmix.security;
 
 import io.jmix.core.JmixCoreConfiguration;
-import io.jmix.core.annotation.JmixComponent;
+import io.jmix.core.annotation.JmixModule;
 import io.jmix.core.annotation.JmixProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@JmixComponent(dependsOn = JmixCoreConfiguration.class, properties = {
+@JmixModule(dependsOn = JmixCoreConfiguration.class, properties = {
         @JmixProperty(name = "jmix.viewsConfig", value = "io/jmix/security/views.xml", append = true),
         @JmixProperty(name = "jmix.defaultPermissionValuesConfig", value = "io/jmix/security/default-permission-values.xml")
 })
