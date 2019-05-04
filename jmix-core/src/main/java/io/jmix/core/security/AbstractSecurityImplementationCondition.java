@@ -30,7 +30,7 @@ public abstract class AbstractSecurityImplementationCondition implements Conditi
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         String property = context.getEnvironment().getProperty("jmix.securityImplementation");
         if (property == null) {
-            log.warn("Property jmix.securityImplementation is not set, using 'core' security implementation");
+            log.trace("Property jmix.securityImplementation is not set, using 'core' security implementation");
             property = "core";
         }
 

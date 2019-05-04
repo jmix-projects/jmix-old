@@ -46,13 +46,13 @@ import org.springframework.core.annotation.Order;
 })
 public class JmixCoreConfiguration {
 
-    @Bean
-    public static JmixModulesProcessor jmixComponentsProcessor() {
+    @Bean("jmix_ModulesProcessor")
+    public static JmixModulesProcessor modulesProcessor() {
         return new JmixModulesProcessor();
     }
 
-    @Bean
-    public JmixModules jmixComponents(JmixModulesProcessor processor) {
+    @Bean("jmix_Modules")
+    public JmixModules modules(JmixModulesProcessor processor) {
         return processor.getJmixModules();
     }
 

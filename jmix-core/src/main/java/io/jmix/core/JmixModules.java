@@ -18,26 +18,21 @@ package io.jmix.core;
 
 import com.google.common.base.Splitter;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.regex.Pattern;
 
 /**
  * Holds the list of {@link JmixModuleDescriptor}s.
  */
-@ParametersAreNonnullByDefault
 public class JmixModules {
 
     public static final Pattern SEPARATOR_PATTERN = Pattern.compile("\\s");
-
-    private final Logger log = LoggerFactory.getLogger(JmixModules.class);
 
     private final List<JmixModuleDescriptor> components;
 
@@ -102,27 +97,5 @@ public class JmixModules {
 
     private Iterable<String> split(String compValue) {
         return Splitter.on(SEPARATOR_PATTERN).omitEmptyStrings().split(compValue);
-    }
-
-    private static class JmixPropertySource extends EnumerablePropertySource<JmixModules> {
-
-        public JmixPropertySource(JmixModules source) {
-            super("JmixModules properties", source);
-        }
-
-        @Nonnull
-        @Override
-        public String[] getPropertyNames() {
-            Set<String> propertyNames = new HashSet<>();
-            for (JmixModuleDescriptor component : source.components) {
-                propertyNames.addAll(component.getPropertyNames());
-            }
-            return propertyNames.toArray(new String[0]);
-        }
-
-        @Override
-        public Object getProperty(String name) {
-            return source.getProperty(name);
-        }
     }
 }
