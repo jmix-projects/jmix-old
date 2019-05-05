@@ -2,9 +2,13 @@ package com.sample.app;
 
 
 import com.sample.addon1.TestAddon1Configuration;
+import io.jmix.core.JmixModules;
+import io.jmix.core.Resources;
 import io.jmix.core.annotation.JmixModule;
 import io.jmix.core.annotation.JmixProperty;
+import io.jmix.core.impl.JmixMessageSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -26,5 +30,12 @@ public class TestAppConfiguration {
     @Bean
     TestBean testBean() {
         return new TestBean(environment.getProperty("prop1"));
+    }
+
+    @Bean
+    MessageSource messageSource(JmixModules modules, Resources resources) {
+        JmixMessageSource messageSource = new JmixMessageSource(modules, resources);
+        messageSource.addBasenames("com/sample/app/some_messages");
+        return messageSource;
     }
 }

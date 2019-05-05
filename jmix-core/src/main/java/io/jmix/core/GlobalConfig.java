@@ -87,7 +87,7 @@ public interface GlobalConfig extends Config {
      * @return Configuration directory. {@link Scripting} searches for dynamic resources here.
      * Must not end with "/"
      */
-    @Property("cuba.confDir")
+    @Property("jmix.confDir")
     String getConfDir();
 
     /**

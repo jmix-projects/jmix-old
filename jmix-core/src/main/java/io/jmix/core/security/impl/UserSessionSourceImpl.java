@@ -68,7 +68,6 @@ public class UserSessionSourceImpl implements UserSessionSource {
 
     @Override
     public Locale getLocale() {
-        // todo user session locale
-        return null;
+        return getUserSession().getLocale();
     }
 }

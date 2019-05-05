@@ -17,7 +17,6 @@
 package io.jmix.core;
 
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.annotation.LocalizedValue;
 import io.jmix.core.metamodel.model.Instance;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -39,8 +38,6 @@ import java.util.function.Function;
 /**
  * Utility class to provide common functionality related to localized messages.
  * <br> Implemented as Spring bean to allow extension in application projects.
- * <br> A reference to this class can be obtained either via DI or by
- * {@link Messages#getTools()} method.
  */
 @Component(MessageTools.NAME)
 public class MessageTools {
@@ -49,7 +46,6 @@ public class MessageTools {
      * Prefix defining that the string is actually a key in a localized messages pack.
      */
     public static final String MARK = "msg://";
-    public static final String MAIN_MARK = "mainMsg://";
 
     public static final String NAME = "cuba_MessageTools";
 
@@ -78,7 +74,7 @@ public class MessageTools {
 
     /**
      * Get localized message by reference provided in the full format.
-     * @param ref   reference to message in the following format: {@code msg://message_pack/message_id}
+     * @param ref   reference to message in the following format: {@code msg://group/message_id}
      * @return      localized message or input string itself if it doesn't begin with {@code msg://}
      */
     public String loadString(String ref) {
@@ -87,7 +83,7 @@ public class MessageTools {
 
     /**
      * Get localized message by reference provided in the full format.
-     * @param ref   reference to message in the following format: {@code msg://message_pack/message_id}
+     * @param ref   reference to message in the following format: {@code msg://group/message_id}
      * @return      localized message or input string itself if it doesn't begin with {@code msg://}
      */
     public String loadString(String ref, Locale locale) {
@@ -96,43 +92,41 @@ public class MessageTools {
 
     /**
      * Get localized message by reference provided in full or brief format.
-     * @param messagesPack  messages pack to use if the second parameter is in brief format
+     * @param group         message group to use if the second parameter is in brief format
      * @param ref           reference to message in the following format:
      * <ul>
-     * <li>Full: {@code msg://message_pack/message_id}
+     * <li>Full: {@code msg://group/message_id}
      * <li>Brief: {@code msg://message_id}, in this case the first parameter is taken into account
-     * <li>Message from a main messages pack: {@code mainMsg://message_id}
      * </ul>
-     * @return localized message or input string itself if it doesn't begin with {@code msg://} or {@code mainMsg://}
+     * @return localized message or input string itself if it doesn't begin with {@code msg://}
      */
     @Nullable
-    public String loadString(@Nullable String messagesPack, @Nullable String ref) {
-        return loadString(messagesPack, ref, null);
+    public String loadString(@Nullable String group, @Nullable String ref) {
+        return loadString(group, ref, null);
     }
 
     /**
      * Get localized message by reference provided in full or brief format.
-     * @param messagesPack  messages pack to use if the second parameter is in brief format
+     * @param group         message group to use if the second parameter is in brief format
      * @param ref           reference to message in the following format:
      * @param locale        locale
      * <ul>
-     * <li>Full: {@code msg://message_pack/message_id}
+     * <li>Full: {@code msg://group/message_id}
      * <li>Brief: {@code msg://message_id}, in this case the first parameter is taken into account
-     * <li>Message from a main messages pack: {@code mainMsg://message_id}
      * </ul>
-     * @return localized message or input string itself if it doesn't begin with {@code msg://} or {@code mainMsg://}
+     * @return localized message or input string itself if it doesn't begin with {@code msg://}
      */
     @Nullable
-    public String loadString(@Nullable String messagesPack, @Nullable String ref, @Nullable Locale locale) {
+    public String loadString(@Nullable String group, @Nullable String ref, @Nullable Locale locale) {
         if (ref != null) {
             if (ref.startsWith(MARK)) {
                 String path = ref.substring(6);
                 final String[] strings = path.split("/");
-                if (strings.length == 1 && messagesPack != null) {
+                if (strings.length == 1 && group != null) {
                     if (locale == null) {
-                        ref = messages.getMessage(messagesPack, strings[0]);
+                        ref = messages.getMessage(group, strings[0]);
                     } else {
-                        ref = messages.getMessage(messagesPack, strings[0], locale);
+                        ref = messages.getMessage(group, strings[0], locale);
                     }
                 } else if (strings.length == 2) {
                     if (locale == null) {
@@ -142,15 +136,7 @@ public class MessageTools {
                     }
                 } else {
                     throw new UnsupportedOperationException("Unsupported resource string format: '" + ref
-                            + "', messagesPack=" + messagesPack);
-                }
-            } else if (ref.startsWith(MAIN_MARK)) {
-                String path = ref.substring(10);
-
-                if (locale == null) {
-                    return messages.getMainMessage(path);
-                } else {
-                    return messages.getMainMessage(path, locale);
+                            + "', group=" + group);
                 }
             }
         }
@@ -165,7 +151,7 @@ public class MessageTools {
     }
 
     /**
-     * @return a localized name of an entity with given locale or default if null. Messages pack must be located in the same package as entity.
+     * @return a localized name of an entity with given locale or default if null
      */
     public String getEntityCaption(MetaClass metaClass, @Nullable Locale locale) {
         Function<MetaClass, String> getMessage = locale != null ?
@@ -182,21 +168,21 @@ public class MessageTools {
     }
 
     /**
-     * @return a detailed localized name of an entity. Messages pack must be located in the same package as entity.
+     * @return a detailed localized name of an entity
      */
     public String getDetailedEntityCaption(MetaClass metaClass) {
         return getDetailedEntityCaption(metaClass, null);
     }
 
     /**
-     * @return a detailed localized name of an entity with given locale or default if null. Messages pack must be located in the same package as entity.
+     * @return a detailed localized name of an entity with given locale or default if null
      */
     public String getDetailedEntityCaption(MetaClass metaClass, @Nullable Locale locale) {
         return getEntityCaption(metaClass, locale) + " (" + metaClass.getName() + ")";
     }
 
     /**
-     * Get localized name of an entity property. Messages pack must be located in the same package as entity.
+     * Get localized name of an entity property.
      * @param metaClass     MetaClass containing the property
      * @param propertyName  property's name
      * @return              localized name
@@ -206,7 +192,7 @@ public class MessageTools {
     }
 
     /**
-     * Get localized name of an entity property. Messages pack must be located in the same package as entity.
+     * Get localized name of an entity property.
      *
      * @param metaClass    MetaClass containing the property
      * @param propertyName property's name
@@ -239,7 +225,7 @@ public class MessageTools {
     }
 
     /**
-     * Get localized name of an entity property. Messages pack must be located in the same package as entity.
+     * Get localized name of an entity property.
      *
      * @param property MetaProperty
      * @return localized name
@@ -299,7 +285,7 @@ public class MessageTools {
             return notNullMessage;
         }
 
-        return messages.formatMessage(messages.getMainMessagePack(),
+        return messages.formatMessage(
                 "validation.required.defaultMsg", getPropertyCaption(metaProperty));
     }
 
@@ -319,7 +305,7 @@ public class MessageTools {
             }
         }
 
-        return messages.formatMessage(messages.getMainMessagePack(),
+        return messages.formatMessage(
                 "validation.required.defaultMsg", getPropertyCaption(metaClass, propertyName));
     }
 
@@ -336,7 +322,7 @@ public class MessageTools {
                 && !"{javax.validation.constraints.NotNull.message}".equals(notNullMessage)) {
             if (notNullMessage.startsWith("{") && notNullMessage.endsWith("}")) {
                 notNullMessage = notNullMessage.substring(1, notNullMessage.length() - 1);
-                if (notNullMessage.startsWith(MAIN_MARK) || notNullMessage.startsWith(MARK)) {
+                if (notNullMessage.startsWith(MARK)) {
                     return loadString(notNullMessage);
                 }
             }
@@ -382,56 +368,6 @@ public class MessageTools {
         }
 
         return MARK + packageName + "/" + className + "." + property.getName();
-    }
-
-    /**
-     * Get localized value of an attribute based on {@link LocalizedValue} annotation.
-     *
-     * @param attribute attribute name
-     * @param instance  entity instance
-     * @return localized value or the value itself, if the value is null or the message pack can not be inferred
-     */
-    @Nullable
-    public String getLocValue(String attribute, Instance instance) {
-        String value = instance.getValue(attribute);
-        if (value == null)
-            return null;
-
-        String mp = inferMessagePack(attribute, instance);
-        if (mp == null)
-            return value;
-        else
-            return messages.getMessage(mp, value);
-    }
-
-    /**
-     * Returns message pack inferred from {@link LocalizedValue} annotation.
-     * @param attribute attribute name
-     * @param instance  entity instance
-     * @return          inferred message pack or null
-     */
-    @Nullable
-    public String inferMessagePack(String attribute, Instance instance) {
-        Objects.requireNonNull(attribute, "attribute is null");
-        Objects.requireNonNull(instance, "instance is null");
-
-        MetaClass metaClass = metadata.getSession().getClassNN(instance.getClass());
-        MetaProperty property = metaClass.getPropertyNN(attribute);
-        Map<String, Object> attributes = metadataTools.getMetaAnnotationAttributes(property.getAnnotations(), LocalizedValue.class);
-        String messagePack = (String) attributes.get("messagePack");
-        if (!StringUtils.isBlank(messagePack))
-            return messagePack;
-        else {
-            String messagePackExpr = (String) attributes.get("messagePackExpr");
-            if (!StringUtils.isBlank(messagePackExpr)) {
-                try {
-                    return instance.getValueEx(messagePackExpr);
-                } catch (Exception e) {
-                    log.error("Unable to infer message pack from expression: " + messagePackExpr, e);
-                }
-            }
-        }
-        return null;
     }
 
     /**
@@ -493,7 +429,7 @@ public class MessageTools {
      */
     public String getDefaultDateFormat(TemporalType temporalType) {
         return temporalType == TemporalType.DATE
-                ? messages.getMainMessage("dateFormat")
-                : messages.getMainMessage("dateTimeFormat");
+                ? messages.getMessage("dateFormat")
+                : messages.getMessage("dateTimeFormat");
     }
 }

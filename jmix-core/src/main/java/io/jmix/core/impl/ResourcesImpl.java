@@ -17,11 +17,11 @@
 package io.jmix.core.impl;
 
 import io.jmix.core.Resources;
-import io.jmix.core.Scripting;
 import org.apache.commons.io.IOUtils;
+import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -33,13 +33,14 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 @Component(Resources.NAME)
-public class ResourcesImpl extends DefaultResourceLoader implements Resources {
+public class ResourcesImpl implements Resources, ResourceLoaderAware {
 
     private final Environment environment;
 
+    private ResourceLoader delegate;
+
     @Inject
-    public ResourcesImpl(Environment environment, Scripting scripting) {
-        super(scripting.getClassLoader());
+    public ResourcesImpl(Environment environment) {
         this.environment = environment;
     }
 
@@ -60,16 +61,13 @@ public class ResourcesImpl extends DefaultResourceLoader implements Resources {
     @Override
     @Nullable
     public String getResourceAsString(String location) {
-        InputStream stream = getResourceAsStream(location);
-        if (stream == null)
-            return null;
-
-        try {
+        try (InputStream stream = getResourceAsStream(location)) {
+            if (stream == null)
+                return null;
             return IOUtils.toString(stream, StandardCharsets.UTF_8);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } finally {
-            IOUtils.closeQuietly(stream);
         }
     }
 
@@ -90,17 +88,27 @@ public class ResourcesImpl extends DefaultResourceLoader implements Resources {
     @Override
     public Resource getResource(String location) {
         if (ResourceUtils.isUrl(location)) {
-            return super.getResource(location);
+            return delegate.getResource(location);
         } else {
             if (location.startsWith("/"))
                 location = location.substring(1);
-            File file = new File(environment.getProperty("cuba.confDir"), location);
+            File file = new File(environment.getProperty("jmix.confDir"), location);
             if (file.exists()) {
                 location = file.toURI().toString();
             } else {
                 location = "classpath:" + location;
             }
-            return super.getResource(location);
+            return delegate.getResource(location);
         }
+    }
+
+    @Override
+    public ClassLoader getClassLoader() {
+        return delegate.getClassLoader();
+    }
+
+    @Override
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.delegate = resourceLoader;
     }
 }

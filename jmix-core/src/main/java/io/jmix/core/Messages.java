@@ -20,49 +20,44 @@ import javax.annotation.Nullable;
 import java.util.Locale;
 
 /**
- * Central infrastructure interface to work with localized messages.
- *
+ * Central interface to work with localized messages.
  */
 public interface Messages {
 
-    String NAME = "cuba_Messages";
-
-    /**
-     * Convenient access to {@link MessageTools} bean.
-     * @return  MessageTools instance
-     */
-    MessageTools getTools();
-
-    /**
-     * @return main message pack for this application tier
-     */
-    String getMainMessagePack();
+    String NAME = "jmix_Messages";
 
     /**
      * Returns localized message.<br>
      * Locale is determined by the current user session.
      *
-     * @param caller class determining the message pack as full package name
+     * @param key message key
+     * @return localized message or the key if the message not found
+     */
+    String getMessage(String key);
+
+    /**
+     * Returns localized message.
+     *
+     * @param key    message key
+     * @param locale message locale
+     * @return localized message or the key if the message not found
+     */
+    String getMessage(String key, Locale locale);
+
+    /**
+     * Returns localized message.<br>
+     * Locale is determined by the current user session.
+     *
+     * @param caller determines the message group as class' package name
      * @param key    message key
      * @return localized message or the key if the message not found
      */
     String getMessage(Class caller, String key);
 
     /**
-     * Get localized message and use it as a format string for parameters provided.<br>
-     * Locale is determined by the current user session.
+     * Returns localized message.
      *
-     * @param caller class determining the message pack as full package name
-     * @param key    message key
-     * @param params parameter values
-     * @return formatted string or the key in case of IllegalFormatException
-     */
-    String formatMessage(Class caller, String key, Object... params);
-
-    /**
-     * Returns localized message
-     *
-     * @param caller class determining the message pack as full package name
+     * @param caller determines the message group as class' package name
      * @param key    message key
      * @param locale message locale
      * @return localized message or the key if the message not found
@@ -70,23 +65,12 @@ public interface Messages {
     String getMessage(Class caller, String key, Locale locale);
 
     /**
-     * Get localized message and use it as a format string for parameters provided
-     *
-     * @param caller class determining the message pack as full package name
-     * @param key    message key
-     * @param locale message locale
-     * @param params parameter values
-     * @return formatted string or the key in case of IllegalFormatException
-     */
-    String formatMessage(Class caller, String key, Locale locale, Object... params);
-
-    /**
      * Returns localized message.<br>
      * Locale is determined by the current user session.
      *
-     * @param caller enum determining the message pack and key:
+     * @param caller enum determining the message group and key:
      *               <ul>
-     *               <li>pack - enum's full package name</li>
+     *               <li>group - enum's package name</li>
      *               <li>key - enum's short class name (after last dot), plus dot, plus enum value</li>
      *               </ul>
      * @return localized message or the key if the message not found
@@ -94,11 +78,11 @@ public interface Messages {
     String getMessage(Enum caller);
 
     /**
-     * Returns localized message
+     * Returns localized message.
      *
-     * @param caller enum determining the message pack and key:
+     * @param caller enum determining the message group and key:
      *               <ul>
-     *               <li>pack - enum's full package name</li>
+     *               <li>group - enum's package name</li>
      *               <li>key - enum's short class name (after last dot), plus dot, plus enum value</li>
      *               </ul>
      * @param locale message locale
@@ -107,93 +91,109 @@ public interface Messages {
     String getMessage(Enum caller, Locale locale);
 
     /**
-     * Returns localized message.<br>
+     * Returns localized message.
      * Locale is determined by the current user session.
-     * @param pack      package name to start searching the message. If the key is not found in this package,
-     *                  it will be searched in parent package, and so forth
+     *
+     * @param group     message group
      * @param key       message key
      * @return localized message or the key if the message not found
      */
-    String getMessage(String pack, String key);
+    String getMessage(String group, String key);
 
     /**
-     * Returns localized message using main message pack.<br>
-     * Locale is determined by the current user session.
+     * Returns localized message.
      *
-     * @param key message key
-     * @return localized message or the key if the message not found
-     */
-    String getMainMessage(String key);
-
-    /**
-     * Returns localized message
-     *
+     * @param group  message group
      * @param key    message key
      * @param locale message locale
      * @return localized message or the key if the message not found
      */
-    String getMainMessage(String key, Locale locale);
+    String getMessage(String group, String key, Locale locale);
 
     /**
      * Get localized message and use it as a format string for parameters provided.<br>
      * Locale is determined by the current user session.
      *
-     * @param pack   package name to start searching the message. If the key is not found in this package,
-     *               it will be searched in parent package, and so forth
      * @param key    message key
      * @param params parameter values
      * @return formatted string or the key in case of IllegalFormatException
      */
-    String formatMessage(String pack, String key, Object... params);
+    String formatMessage(String key, Object... params);
 
     /**
-     * Get localized message from main message pack and use it as a format string for parameters provided.<br>
-     * Locale is determined by the current user session.
+     * Get localized message and use it as a format string for parameters provided.<br>
      *
-     * @param key    message key
-     * @param params parameter values
-     * @return formatted string or the key in case of IllegalFormatException
-     */
-    String formatMainMessage(String key, Object... params);
-
-    /**
-     * Returns localized message
-     *
-     * @param packs  list of whitespace-separated package names. Searching of message is performed in reverse order -
-     *               starts from last name in the list. Each package is searched for the key, if the key is not found
-     *               in this package, it is searched in parent package, and so forth
      * @param key    message key
      * @param locale message locale
-     * @return localized message or the key if the message not found
+     * @param params parameter values
+     * @return formatted string or the key in case of IllegalFormatException
      */
-    String getMessage(String packs, String key, Locale locale);
+    String formatMessage(String key, Locale locale, Object... params);
+
+    /**
+     * Get localized message and use it as a format string for parameters provided.<br>
+     * Locale is determined by the current user session.
+     *
+     * @param caller determines the message group as class' package name
+     * @param key    message key
+     * @param params parameter values
+     * @return formatted string or the key in case of IllegalFormatException
+     */
+    String formatMessage(Class caller, String key, Object... params);
+
+    /**
+     * Get localized message and use it as a format string for parameters provided
+     *
+     * @param caller determines the message group as class' package name
+     * @param key    message key
+     * @param locale message locale
+     * @param params parameter values
+     * @return formatted string or the key in case of IllegalFormatException
+     */
+    String formatMessage(Class caller, String key, Locale locale, Object... params);
+
+    /**
+     * Get localized message and use it as a format string for parameters provided.<br>
+     * Locale is determined by the current user session.
+     *
+     * @param group  message group
+     * @param key    message key
+     * @param params parameter values
+     * @return formatted string or the key in case of IllegalFormatException
+     */
+    String formatMessage(String group, String key, Object... params);
+
+    /**
+     * Get localized message and use it as a format string for parameters provided
+     *
+     * @param group  message group
+     * @param key    message key
+     * @param locale message locale
+     * @param params parameter values
+     * @return formatted string or the key in case of IllegalFormatException
+     */
+    String formatMessage(String group, String key, Locale locale, Object... params);
 
     /**
      * Returns localized message or null if not found.
      *
-     * @param packs  list of whitespace-separated package names. Searching of message is performed in reverse order -
-     *               starts from last name in the list. Each package is searched for the key, if the key is not found
-     *               in this package, it is searched in parent package, and so forth
      * @param key    message key
      * @param locale message locale. If null, current user locale is used.
      * @return localized message or null if the message not found
      */
     @Nullable
-    String findMessage(String packs, String key, @Nullable Locale locale);
+    String findMessage(String key, @Nullable Locale locale);
 
     /**
-     * Get localized message and use it as a format string for parameters provided
+     * Returns localized message or null if not found.
      *
-     * @param pack   package name to start searching the message. If the key is not found in this package,
-     *               it will be searched in parent package, and so forth
+     * @param group  message group
      * @param key    message key
-     * @param locale message locale
-     * @param params parameter values
-     * @return formatted string or the key in case of IllegalFormatException
+     * @param locale message locale. If null, current user locale is used.
+     * @return localized message or null if the message not found
      */
-    String formatMessage(String pack, String key, Locale locale, Object... params);
-
-    int getCacheSize();
+    @Nullable
+    String findMessage(String group, String key, @Nullable Locale locale);
 
     void clearCache();
 }

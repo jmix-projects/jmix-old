@@ -36,6 +36,8 @@ public class UserSession implements Authentication {
 
     protected ClientDetails clientDetails = ClientDetails.UNKNOWN;
 
+    protected Locale locale = Locale.getDefault(); // todo user locale
+
     protected List<String> roles = new ArrayList<>();
 
     protected Map<String, Serializable> attributes = new ConcurrentHashMap<>();
@@ -71,6 +73,14 @@ public class UserSession implements Authentication {
 
     public void setClientDetails(ClientDetails clientDetails) {
         this.clientDetails = clientDetails;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 
     public List<String> getRoles() {

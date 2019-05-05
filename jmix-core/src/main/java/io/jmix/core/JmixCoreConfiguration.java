@@ -19,14 +19,17 @@ package io.jmix.core;
 import io.jmix.core.annotation.JmixModule;
 import io.jmix.core.annotation.JmixProperty;
 import io.jmix.core.compatibility.AppContext;
+import io.jmix.core.impl.JmixMessageSource;
 import io.jmix.core.security.JmixCoreSecurityConfiguration;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.core.annotation.Order;
 
@@ -42,7 +45,7 @@ import org.springframework.core.annotation.Order;
 @JmixModule(dependsOn = {}, properties = {
         @JmixProperty(name = "jmix.viewsConfig", value = "io/jmix/core/views.xml"),
         @JmixProperty(name = "jmix.workDir", value = "${user.dir}/.jmix/work"),
-        @JmixProperty(name = "cuba.confDir", value = "${user.dir}/.jmix/conf")
+        @JmixProperty(name = "jmix.confDir", value = "${user.dir}/.jmix/conf")
 })
 public class JmixCoreConfiguration {
 
@@ -54,6 +57,11 @@ public class JmixCoreConfiguration {
     @Bean("jmix_Modules")
     public JmixModules modules(JmixModulesProcessor processor) {
         return processor.getJmixModules();
+    }
+
+    @Bean
+    public MessageSource messageSource(JmixModules modules, Resources resources) {
+        return new JmixMessageSource(modules, resources);
     }
 
     @EventListener
