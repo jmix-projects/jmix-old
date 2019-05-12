@@ -45,7 +45,7 @@ import java.util.UUID;
 @SystemLevel
 public class KeyValueEntity
         extends AbstractInstance
-        implements Entity<Object>, JmixEnhancingDisabled {
+        implements Entity<Object>, HasInstanceMetaClass, JmixEnhancingDisabled {
 
     protected UUID uuid;
 
@@ -59,7 +59,7 @@ public class KeyValueEntity
         uuid = UuidProvider.createUuid();
     }
 
-    public MetaClass getMetaClass() {
+    public MetaClass getInstanceMetaClass() {
         if (metaClass == null)
             throw new IllegalStateException("metaClass is null");
         return metaClass;
@@ -68,7 +68,7 @@ public class KeyValueEntity
     /**
      * Sets a meta-class for this entity instance.
      */
-    public void setMetaClass(MetaClass metaClass) {
+    public void setInstanceMetaClass(MetaClass metaClass) {
         this.metaClass = metaClass;
     }
 

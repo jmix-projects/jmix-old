@@ -24,5 +24,8 @@ dependencies {
     testImplementation 'org.springframework:spring-test'
     testImplementation "org.spockframework:spock-core:$rootProject.spockVersion"
     testImplementation "org.spockframework:spock-spring:$rootProject.spockVersion"
+    testImplementation project(':jmix-data')
+    testImplementation 'org.apache.commons:commons-dbcp2'
+    testRuntimeOnly 'org.hsqldb:hsqldb:2.4.1'
     testRuntimeOnly 'org.slf4j:slf4j-simple'
 }

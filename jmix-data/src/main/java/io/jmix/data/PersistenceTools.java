@@ -16,6 +16,8 @@
 
 package io.jmix.data;
 
+import io.jmix.core.MetadataTools;
+import io.jmix.core.commons.db.QueryRunner;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.metamodel.datatypes.impl.EnumClass;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -49,6 +51,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -60,7 +63,7 @@ import java.util.*;
 @Component(PersistenceTools.NAME)
 public class PersistenceTools {
 
-    public static final String NAME = "cuba_PersistenceTools";
+    public static final String NAME = "jmix_PersistenceTools";
 
     @Inject
     protected Persistence persistence;
@@ -70,6 +73,9 @@ public class PersistenceTools {
 
     @Inject
     protected EntityStates entityStates;
+
+    @Inject
+    protected MetadataTools metadataTools;
 
     /**
      * Returns the set of dirty attributes (changed since the last load from the database).
@@ -89,7 +95,7 @@ public class PersistenceTools {
         HashSet<String> result = new HashSet<>();
         if (entityStates.isNew(entity)) {
             for (MetaProperty property : metadata.getClassNN(entity.getClass()).getProperties()) {
-                if (metadata.getTools().isPersistent(property))
+                if (metadataTools.isPersistent(property))
                     result.add(property.getName());
             }
         } else {
@@ -323,7 +329,7 @@ public class PersistenceTools {
                     Object value = row.get(fields.get(0));
                     if (value != null) {
                         ClassDescriptor refDescriptor = mapping.getReferenceDescriptor();
-                        DatabaseMapping refMapping = refDescriptor.getMappingForAttributeName(metadata.getTools().getPrimaryKeyName(metaClass));
+                        DatabaseMapping refMapping = refDescriptor.getMappingForAttributeName(metadataTools.getPrimaryKeyName(metaClass));
                         if (refMapping instanceof AbstractColumnMapping) {
                             Converter converter = ((AbstractColumnMapping) refMapping).getConverter();
                             if (converter != null) {
@@ -341,6 +347,53 @@ public class PersistenceTools {
             throw new RuntimeException(
                     String.format("Error retrieving reference ID from %s.%s", entity.getClass().getSimpleName(), property),
                     e);
+        }
+    }
+
+    /**
+     * Deletes records corresponding to the given entity instances from the database. Soft deletion is not considered.
+     * Only primary table is affected in case of inheritance.
+     * <p>
+     * Should be used only in tests or in other non-standard situations.
+     *
+     * @param entities instances to remove from the database.
+     */
+    public void deleteRecord(Entity... entities) {
+        if (entities == null)
+            return;
+        for (Entity entity : entities) {
+            if (entity == null)
+                continue;
+
+            MetaClass metaClass = metadata.getClassNN(entity.getClass());
+
+            String table = metadataTools.getDatabaseTable(metaClass);
+            String primaryKey = metadataTools.getPrimaryKeyName(metaClass);
+            if (table == null || primaryKey == null)
+                throw new RuntimeException("Unable to determine table or primary key name for " + entity);
+
+            deleteRecord(table, primaryKey, entity.getId());
+        }
+    }
+
+    /**
+     * Deletes records from the database.
+     * <p>
+     * Should be used only in tests or in other non-standard situations.
+     *
+     * @param table table name
+     * @param primaryKeyCol PK column name
+     * @param ids PK values of the records to delete
+     */
+    public void deleteRecord(String table, String primaryKeyCol, Object... ids) {
+        for (Object id : ids) {
+            String sql = "delete from " + table + " where " + primaryKeyCol + " = '" + id.toString() + "'";
+            QueryRunner runner = new QueryRunner(persistence.getDataSource());
+            try {
+                runner.update(sql);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

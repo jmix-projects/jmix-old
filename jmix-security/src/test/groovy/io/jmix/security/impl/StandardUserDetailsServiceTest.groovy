@@ -19,10 +19,10 @@ package io.jmix.security.impl
 import io.jmix.core.DataManager
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.data.JmixDataConfiguration
+import io.jmix.data.PersistenceTools
 import io.jmix.security.JmixSecurityConfiguration
 import io.jmix.security.entity.User
 import io.jmix.security.test.JmixSecurityTestConfiguration
-import io.jmix.security.test.TestSupport
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.test.context.ContextConfiguration
@@ -42,7 +42,7 @@ class StandardUserDetailsServiceTest extends Specification {
     DataManager dataManager
 
     @Inject
-    TestSupport testSupport
+    PersistenceTools persistenceTools
 
     def "load user"() {
 
@@ -59,6 +59,6 @@ class StandardUserDetailsServiceTest extends Specification {
 
         cleanup:
 
-        testSupport.deleteRecord(user)
+        persistenceTools.deleteRecord(user)
     }
 }

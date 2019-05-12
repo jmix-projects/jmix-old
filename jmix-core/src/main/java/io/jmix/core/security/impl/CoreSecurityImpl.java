@@ -69,12 +69,12 @@ public class CoreSecurityImpl implements Security {
 
     @Override
     public boolean isEntityAttrReadPermitted(MetaClass metaClass, String propertyPath) {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isSpecificPermitted(String name) {
-        return false;
+        return true;
     }
 
     @Override
