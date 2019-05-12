@@ -22,10 +22,10 @@ import io.jmix.core.compatibility.AppContext
 import io.jmix.core.security.CurrentUserSession
 import io.jmix.core.security.UserSessionManager
 import io.jmix.data.JmixDataConfiguration
+import io.jmix.data.PersistenceTools
 import io.jmix.security.JmixSecurityConfiguration
 import io.jmix.security.entity.User
 import io.jmix.security.test.JmixSecurityTestConfiguration
-import io.jmix.security.test.TestSupport
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestPropertySource
@@ -41,7 +41,7 @@ class AuthenticationTest extends Specification {
     DataManager dataManager
 
     @Inject
-    TestSupport testSupport
+    PersistenceTools persistenceTools
 
     @Inject
     UserSessionManager userSessionManager
@@ -71,7 +71,7 @@ class AuthenticationTest extends Specification {
 
         cleanup:
 
-        testSupport.deleteRecord(user)
+        persistenceTools.deleteRecord(user)
     }
 
 }

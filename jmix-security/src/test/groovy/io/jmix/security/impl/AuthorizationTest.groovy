@@ -24,11 +24,10 @@ import io.jmix.core.security.PermissionType
 import io.jmix.core.security.Security
 import io.jmix.core.security.UserSessionManager
 import io.jmix.data.JmixDataConfiguration
-import io.jmix.data.PersistenceSecurity
+import io.jmix.data.PersistenceTools
 import io.jmix.security.JmixSecurityConfiguration
 import io.jmix.security.entity.*
 import io.jmix.security.test.JmixSecurityTestConfiguration
-import io.jmix.security.test.TestSupport
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestPropertySource
@@ -44,7 +43,7 @@ class AuthorizationTest extends Specification {
     DataManager dataManager
 
     @Inject
-    TestSupport testSupport
+    PersistenceTools persistenceTools
 
     @Inject
     UserSessionManager userSessionManager
@@ -88,7 +87,7 @@ class AuthorizationTest extends Specification {
         cleanup:
 
         userSessionManager.removeSession()
-        testSupport.deleteRecord(userRole1, userRole2, permission11, role1, role2, user)
+        persistenceTools.deleteRecord(userRole1, userRole2, permission11, role1, role2, user)
     }
 
     def "create session and check constraints"() {
@@ -117,6 +116,6 @@ class AuthorizationTest extends Specification {
         cleanup:
 
         userSessionManager.removeSession()
-        testSupport.deleteRecord(user, constraint, group)
+        persistenceTools.deleteRecord(user, constraint, group)
     }
 }

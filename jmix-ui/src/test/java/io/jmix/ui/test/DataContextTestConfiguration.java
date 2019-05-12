@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package io.jmix.security.test;
+package io.jmix.ui.test;
 
+import io.jmix.core.JmixCoreConfiguration;
+import io.jmix.core.annotation.JmixComponent;
+import io.jmix.core.annotation.JmixProperty;
+import io.jmix.core.security.JmixCoreSecurityConfiguration;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,8 +28,11 @@ import org.springframework.context.annotation.PropertySource;
 import javax.sql.DataSource;
 
 @Configuration
-@PropertySource("classpath:/io/jmix/security/test/test-app.properties")
-public class JmixSecurityTestConfiguration {
+@PropertySource("classpath:/io/jmix/ui/test/test-data-app.properties")
+@JmixComponent(dependsOn = {JmixCoreConfiguration.class, JmixCoreSecurityConfiguration.class}, properties = {
+        @JmixProperty(name = "jmix.viewsConfig", value = "io/jmix/ui/test/test-views.xml", append = true)
+})
+public class DataContextTestConfiguration {
 
     @Bean
     protected DataSource dataSource() {
