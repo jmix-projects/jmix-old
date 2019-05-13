@@ -17,7 +17,7 @@
 package io.jmix.ui.test;
 
 import io.jmix.core.JmixCoreConfiguration;
-import io.jmix.core.annotation.JmixComponent;
+import io.jmix.core.annotation.JmixModule;
 import io.jmix.core.annotation.JmixProperty;
 import io.jmix.core.security.JmixCoreSecurityConfiguration;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -29,7 +29,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @PropertySource("classpath:/io/jmix/ui/test/test-data-app.properties")
-@JmixComponent(dependsOn = {JmixCoreConfiguration.class, JmixCoreSecurityConfiguration.class}, properties = {
+@JmixModule(dependsOn = {JmixCoreConfiguration.class, JmixCoreSecurityConfiguration.class}, properties = {
         @JmixProperty(name = "jmix.viewsConfig", value = "io/jmix/ui/test/test-views.xml", append = true)
 })
 public class DataContextTestConfiguration {
