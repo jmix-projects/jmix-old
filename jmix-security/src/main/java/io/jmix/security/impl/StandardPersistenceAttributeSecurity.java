@@ -19,16 +19,16 @@ package io.jmix.security.impl;
 import com.google.common.collect.Sets;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.*;
+import io.jmix.core.entity.BaseEntityInternalAccess;
+import io.jmix.core.entity.BaseGenericIdEntity;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.SecurityState;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Range;
 import io.jmix.core.security.Security;
-import io.jmix.data.impl.JmixEntityFetchGroup;
 import io.jmix.data.PersistenceAttributeSecurity;
-import io.jmix.data.RowLevelSecurityException;
-import io.jmix.security.SetupAttributeAccessEvent;
-import io.jmix.security.SetupAttributeAccessHandler;
+import io.jmix.data.impl.JmixEntityFetchGroup;
 import org.eclipse.persistence.queries.FetchGroup;
 import org.eclipse.persistence.queries.FetchGroupTracker;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,6 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static io.jmix.core.entity.BaseEntityInternalAccess.*;
-import static java.lang.String.format;
 
 @Component(PersistenceAttributeSecurity.NAME)
 public class StandardPersistenceAttributeSecurity implements PersistenceAttributeSecurity {
@@ -56,13 +55,7 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
     protected ServerConfig config;
 
     @Inject
-    protected SecurityTokenManager securityTokenManager;
-
-    @Inject
     protected EntityStates entityStates;
-
-    @Inject
-    protected ExtendedEntities extendedEntities;
 
     /**
      * Removes restricted attributes from a view.
@@ -149,26 +142,6 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
     }
 
     /**
-     * Should be called after persisting a new entity.
-     *
-     * @param entity new entity
-     * @param view entity view
-     */
-    @Override
-    public void afterPersist(Entity entity, View view) {
-        if (entity instanceof BaseGenericIdEntity) {
-            if (!isAttributeAccessEnabled()) {
-                return;
-            }
-            BaseGenericIdEntity genericIdEntity = (BaseGenericIdEntity) entity;
-            setupAttributeAccess(genericIdEntity);
-            if (view != null) {
-                metadataTools.traverseAttributesByView(view, genericIdEntity, new AttributeAccessVisitor(Sets.newHashSet(entity)));
-            }
-        }
-    }
-
-    /**
      * Should be called before merging an entity.
      *
      * @param entity detached entity
@@ -178,33 +151,14 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
         if (!config.getEntityAttributePermissionChecking()) {
             return;
         }
-        checkRequiredAttributes(entity);
         applySecurityToFetchGroup(entity);
         //apply fetch group constraints to embedded
         for (MetaProperty metaProperty : metadata.getClass(entity).getProperties()) {
             String name = metaProperty.getName();
             if (metadataTools.isEmbedded(metaProperty) && entityStates.isLoaded(entity, name)) {
                 Entity embedded = entity.getValue(name);
-                checkRequiredAttributes(embedded);
                 applySecurityToFetchGroup(embedded);
             }
-        }
-    }
-
-    /**
-     * Should be called after merging an entity and before transaction commit.
-     *
-     * @param entity detached entity
-     */
-    @Override
-    public void afterMerge(Entity entity) {
-        if (entity instanceof BaseGenericIdEntity) {
-            if (!isAttributeAccessEnabled()) {
-                return;
-            }
-            BaseGenericIdEntity genericIdEntity = (BaseGenericIdEntity) entity;
-            setupAttributeAccess(genericIdEntity);
-            metadataTools.traverseAttributes(genericIdEntity, new AttributeAccessVisitor(Sets.newHashSet(entity)));
         }
     }
 
@@ -223,110 +177,6 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
         }
     }
 
-    @Override
-    public void onLoad(Collection<? extends Entity> entities, View view) {
-        Preconditions.checkNotNullArgument(entities, "entities list is null");
-        if (!isAttributeAccessEnabled()) {
-            return;
-        }
-
-        for (Entity entity : entities) {
-            onLoad(entity, view);
-        }
-    }
-
-    @Override
-    public void onLoad(Entity entity, View view) {
-        if (entity instanceof BaseGenericIdEntity) {
-            if (!isAttributeAccessEnabled()) {
-                return;
-            }
-            BaseGenericIdEntity genericIdEntity = (BaseGenericIdEntity) entity;
-            setupAttributeAccess(genericIdEntity);
-            metadataTools.traverseLoadedAttributesByView(view, genericIdEntity, new AttributeAccessVisitor(Sets.newHashSet(entity)));
-        }
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends Entity> void setupAttributeAccess(T entity) {
-        if (entity instanceof BaseGenericIdEntity || entity instanceof EmbeddableEntity) {
-            SetupAttributeAccessEvent<T> event = new SetupAttributeAccessEvent<>(entity);
-            boolean handled = false;
-            Map<String, SetupAttributeAccessHandler> handlers = AppBeans.getAll(SetupAttributeAccessHandler.class);
-            if (handlers != null) {
-                for (SetupAttributeAccessHandler handler : handlers.values()) {
-                    MetaClass metaClass = extendedEntities.getOriginalOrThisMetaClass(metadata.getClass(entity));
-                    if (handler.supports(metaClass.getJavaClass())) {
-                        handled = true;
-                        handler.setupAccess(event);
-                    }
-                }
-            }
-            if (event.getReadonlyAttributes() != null) {
-                Set<String> attributes = event.getReadonlyAttributes();
-                SecurityState state = getOrCreateSecurityState(entity);
-                addReadonlyAttributes(state, attributes.toArray(new String[attributes.size()]));
-            }
-            if (event.getRequiredAttributes() != null) {
-                Set<String> attributes = event.getRequiredAttributes();
-                SecurityState state = getOrCreateSecurityState(entity);
-                addRequiredAttributes(state, attributes.toArray(new String[attributes.size()]));
-            }
-            if (event.getHiddenAttributes() != null) {
-                Set<String> attributes = event.getHiddenAttributes();
-                SecurityState state = getOrCreateSecurityState(entity);
-                addHiddenAttributes(state, attributes.toArray(new String[attributes.size()]));
-            }
-            if (handled) {
-                securityTokenManager.writeSecurityToken(entity);
-            }
-        }
-    }
-
-    /**
-     * Checks if attribute access enabled for the current entity type.
-     * It's based on the existence of SetupAttributeAccessHandler for the metaClass.
-     *
-     * @param metaClass - entity metaClass
-     */
-    @Override
-    public boolean isAttributeAccessEnabled(MetaClass metaClass) {
-        Map<String, SetupAttributeAccessHandler> handlers = AppBeans.getAll(SetupAttributeAccessHandler.class);
-        if (handlers != null) {
-            metaClass = extendedEntities.getOriginalOrThisMetaClass(metaClass);
-            for (SetupAttributeAccessHandler handler : handlers.values()) {
-                if (handler.supports(metaClass.getJavaClass())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Checks if attribute access enabled (if SetupAttributeAccessHandlers exist)
-     */
-    @Override
-    public boolean isAttributeAccessEnabled() {
-        Map<String, SetupAttributeAccessHandler> handlers = AppBeans.getAll(SetupAttributeAccessHandler.class);
-        return handlers != null && !handlers.isEmpty();
-    }
-
-    protected void checkRequiredAttributes(Entity entity) {
-        SecurityState securityState = getSecurityState(entity);
-        if (securityState != null && !securityState.getRequiredAttributes().isEmpty()) {
-            MetaClass metaClass = metadata.getClass(entity);
-            for (MetaProperty metaProperty : metaClass.getProperties()) {
-                String propertyName = metaProperty.getName();
-                if (BaseEntityInternalAccess.isRequired(securityState, propertyName) && entity.getValue(propertyName) == null) {
-                    throw new RowLevelSecurityException(format("Attribute [%s] is required for entity %s", propertyName, entity),
-                            metaClass.getName());
-                }
-            }
-        }
-    }
-
     protected void applySecurityToFetchGroup(Entity entity) {
         if (entity == null) {
             return;
@@ -334,24 +184,19 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
         MetaClass metaClass = metadata.getClassNN(entity.getClass());
         FetchGroupTracker fetchGroupTracker = (FetchGroupTracker) entity;
         FetchGroup fetchGroup = fetchGroupTracker._persistence_getFetchGroup();
-        SecurityState securityState = getSecurityState(entity);
         if (fetchGroup != null) {
             List<String> attributesToRemove = new ArrayList<>();
             for (String attrName : fetchGroup.getAttributeNames()) {
                 String[] parts = attrName.split("\\.");
-                if (parts.length > 0 && BaseEntityInternalAccess.isHiddenOrReadOnly(securityState, parts[0])) {
-                    attributesToRemove.add(attrName);
-                } else {
-                    MetaClass currentMetaClass = metaClass;
-                    for (String part : parts) {
-                        if (!security.isEntityAttrUpdatePermitted(currentMetaClass, part)) {
-                            attributesToRemove.add(attrName);
-                            break;
-                        }
-                        MetaProperty metaProperty = currentMetaClass.getPropertyNN(part);
-                        if (metaProperty.getRange().isClass()) {
-                            currentMetaClass = metaProperty.getRange().asClass();
-                        }
+                MetaClass currentMetaClass = metaClass;
+                for (String part : parts) {
+                    if (!security.isEntityAttrUpdatePermitted(currentMetaClass, part)) {
+                        attributesToRemove.add(attrName);
+                        break;
+                    }
+                    MetaProperty metaProperty = currentMetaClass.getPropertyNN(part);
+                    if (metaProperty.getRange().isClass()) {
+                        currentMetaClass = metaProperty.getRange().asClass();
                     }
                 }
             }
@@ -367,8 +212,7 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
                 if (metadataTools.isSystem(metaProperty)) {
                     attributeNames.add(propertyName);
                 }
-                if (security.isEntityAttrUpdatePermitted(metaClass, propertyName) &&
-                        !BaseEntityInternalAccess.isHiddenOrReadOnly(securityState, propertyName)) {
+                if (security.isEntityAttrUpdatePermitted(metaClass, propertyName)) {
                     attributeNames.add(metaProperty.getName());
                 }
             }
@@ -420,13 +264,6 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
                     setNullPropertyValue(entity, property);
                 }
             }
-            SecurityState securityState = BaseEntityInternalAccess.getSecurityState(entity);
-            if (securityState != null && securityState.getHiddenAttributes().contains(property.getName())) {
-                addInaccessibleAttribute(entity, property.getName());
-                if (!metadataTools.isSystem(property)) {
-                    setNullPropertyValue(entity, property);
-                }
-            }
         }
     }
 
@@ -440,29 +277,6 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
                 if (!metadataTools.isSystem(property) && !property.isReadOnly()) {
                     setNullPropertyValue(entity, property);
                 }
-            }
-            SecurityState securityState = BaseEntityInternalAccess.getSecurityState(entity);
-            if (securityState != null && securityState.getHiddenAttributes().contains(property.getName())) {
-                addInaccessibleAttribute(entity, property.getName());
-                if (!metadataTools.isSystem(property)) {
-                    setNullPropertyValue(entity, property);
-                }
-            }
-        }
-    }
-
-    protected class AttributeAccessVisitor implements EntityAttributeVisitor {
-        protected Set<Entity> visited;
-
-        public AttributeAccessVisitor(Set<Entity> visited) {
-            this.visited = visited;
-        }
-
-        @Override
-        public void visit(Entity entity, MetaProperty property) {
-            if (!visited.contains(entity)) {
-                visited.add(entity);
-                setupAttributeAccess(entity);
             }
         }
     }

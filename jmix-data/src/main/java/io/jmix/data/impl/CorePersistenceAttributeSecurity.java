@@ -51,47 +51,12 @@ public class CorePersistenceAttributeSecurity implements PersistenceAttributeSec
     }
 
     @Override
-    public void afterPersist(Entity entity, View view) {
-
-    }
-
-    @Override
     public void beforeMerge(Entity entity) {
-
-    }
-
-    @Override
-    public void afterMerge(Entity entity) {
 
     }
 
     @Override
     public void afterCommit(Entity entity) {
 
-    }
-
-    @Override
-    public void onLoad(Collection<? extends Entity> entities, View view) {
-
-    }
-
-    @Override
-    public void onLoad(Entity entity, View view) {
-
-    }
-
-    @Override
-    public <T extends Entity> void setupAttributeAccess(T entity) {
-
-    }
-
-    @Override
-    public boolean isAttributeAccessEnabled(MetaClass metaClass) {
-        return false;
-    }
-
-    @Override
-    public boolean isAttributeAccessEnabled() {
-        return false;
     }
 }

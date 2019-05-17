@@ -37,21 +37,7 @@ public interface PersistenceAttributeSecurity {
 
     void beforePersist(Entity entity);
 
-    void afterPersist(Entity entity, View view);
-
     void beforeMerge(Entity entity);
 
-    void afterMerge(Entity entity);
-
     void afterCommit(Entity entity);
-
-    void onLoad(Collection<? extends Entity> entities, View view);
-
-    void onLoad(Entity entity, View view);
-
-    <T extends Entity> void setupAttributeAccess(T entity);
-
-    boolean isAttributeAccessEnabled(MetaClass metaClass);
-
-    boolean isAttributeAccessEnabled();
 }

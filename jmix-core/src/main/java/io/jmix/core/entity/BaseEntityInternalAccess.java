@@ -123,57 +123,6 @@ public final class BaseEntityInternalAccess {
         state.filteredAttributes = filteredAttributes;
     }
 
-    public static String[] getReadonlyAttributes(SecurityState state) {
-        return state.readonlyAttributes;
-    }
-
-    public static void setReadonlyAttributes(SecurityState state, String[] readonlyAttributes) {
-        state.readonlyAttributes = readonlyAttributes;
-    }
-
-    public static void addReadonlyAttributes(SecurityState state, String[] readonlyAttributes) {
-        if (state.readonlyAttributes == null) {
-            state.readonlyAttributes = readonlyAttributes;
-        } else {
-            state.readonlyAttributes =
-                    ObjectArrays.concat(state.readonlyAttributes, readonlyAttributes, String.class);
-        }
-    }
-
-    public static String[] getRequiredAttributes(SecurityState state) {
-        return state.requiredAttributes;
-    }
-
-    public static void setRequiredAttributes(SecurityState state, String[] requiredAttributes) {
-        state.requiredAttributes = requiredAttributes;
-    }
-
-    public static void addRequiredAttributes(SecurityState state, String[] requiredAttributes) {
-        if (state.requiredAttributes == null) {
-            state.requiredAttributes = requiredAttributes;
-        } else {
-            state.requiredAttributes =
-                    ObjectArrays.concat(state.requiredAttributes, requiredAttributes, String.class);
-        }
-    }
-
-    public static String[] getHiddenAttributes(SecurityState state) {
-        return state.hiddenAttributes;
-    }
-
-    public static void setHiddenAttributes(SecurityState state, String[] hiddenAttributes) {
-        state.hiddenAttributes = hiddenAttributes;
-    }
-
-    public static void addHiddenAttributes(SecurityState state, String[] hiddenAttributes) {
-        if (state.hiddenAttributes == null) {
-            state.hiddenAttributes = hiddenAttributes;
-        } else {
-            state.hiddenAttributes =
-                    ObjectArrays.concat(state.hiddenAttributes, hiddenAttributes, String.class);
-        }
-    }
-
     public static boolean supportsSecurityState(Entity entity) {
         return entity instanceof BaseGenericIdEntity || entity instanceof EmbeddableEntity;
     }
@@ -228,21 +177,6 @@ public final class BaseEntityInternalAccess {
                     "Entity with type [%s] does not support security state", AppBeans.get(Metadata.class).getClass(entity).getName()));
         }
         return securityState;
-    }
-
-    public static boolean isHiddenOrReadOnly(SecurityState securityState, String attributeName) {
-        if (securityState == null) {
-            return false;
-        }
-        return securityState.getHiddenAttributes().contains(attributeName)
-                || securityState.getReadonlyAttributes().contains(attributeName);
-    }
-
-    public static boolean isRequired(SecurityState securityState, String attributeName) {
-        if (securityState == null) {
-            return false;
-        }
-        return securityState.getRequiredAttributes().contains(attributeName);
     }
 
     public static void setValue(Entity entity, String attribute, @Nullable Object value) {

@@ -26,7 +26,6 @@ import java.util.Collections;
  * Stores information about:
  * <ul>
  *   <li>data that has been filtered by row level security;
- *   <li>attributes that are hidden, read-only or required for this particular instance.
  * </ul>
  */
 public class SecurityState implements Serializable {
@@ -39,26 +38,5 @@ public class SecurityState implements Serializable {
 
     protected String[] filteredAttributes;
 
-    protected String[] readonlyAttributes;
-
-    protected String[] requiredAttributes;
-
-    protected String[] hiddenAttributes;
-
     protected byte[] securityToken;
-
-    public Collection<String> getReadonlyAttributes() {
-        return readonlyAttributes != null ? Collections.unmodifiableList(Arrays.asList(readonlyAttributes))
-                : Collections.emptyList();
-    }
-
-    public Collection<String> getRequiredAttributes() {
-        return requiredAttributes != null ? Collections.unmodifiableList(Arrays.asList(requiredAttributes))
-                : Collections.emptyList();
-    }
-
-    public Collection<String> getHiddenAttributes() {
-        return hiddenAttributes != null ? Collections.unmodifiableList(Arrays.asList(hiddenAttributes))
-                : Collections.emptyList();
-    }
 }

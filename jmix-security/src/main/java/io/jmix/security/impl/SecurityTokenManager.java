@@ -57,16 +57,10 @@ public class SecurityTokenManager {
     @Inject
     private MetadataTools metadataTools;
 
-    protected static final String READ_ONLY_ATTRIBUTES_KEY = "__readonlyAttributes";
-    protected static final String REQUIRED_ATTRIBUTES_KEY = "__requiredAttributes";
-    protected static final String HIDDEN_ATTRIBUTES_KEY = "__hiddenAttributes";
     protected static final String ENTITY_NAME_KEY = "__entityName";
     protected static final String ENTITY_ID_KEY = "__entityId";
 
     protected static final Set<String> SYSTEM_ATTRIBUTE_KEYS = new ImmutableSet.Builder<String>()
-            .add(READ_ONLY_ATTRIBUTES_KEY)
-            .add(REQUIRED_ATTRIBUTES_KEY)
-            .add(HIDDEN_ATTRIBUTES_KEY)
             .add(ENTITY_NAME_KEY)
             .add(ENTITY_ID_KEY)
             .build();
@@ -88,15 +82,6 @@ public class SecurityTokenManager {
                     filteredAttributes[i++] = entry.getKey();
                 }
                 setFilteredAttributes(securityState, filteredAttributes);
-            }
-            if (!securityState.getReadonlyAttributes().isEmpty()) {
-                jsonObject.put(READ_ONLY_ATTRIBUTES_KEY, securityState.getReadonlyAttributes());
-            }
-            if (!securityState.getHiddenAttributes().isEmpty()) {
-                jsonObject.put(HIDDEN_ATTRIBUTES_KEY, securityState.getHiddenAttributes());
-            }
-            if (!securityState.getRequiredAttributes().isEmpty()) {
-                jsonObject.put(REQUIRED_ATTRIBUTES_KEY, securityState.getRequiredAttributes());
             }
             MetaClass metaClass = metadata.getClassNN(entity.getClass());
             jsonObject.put(ENTITY_NAME_KEY, metaClass.getName());
@@ -142,18 +127,6 @@ public class SecurityTokenManager {
                         filteredData.put(elementName, convertId(id, metaProperty.getRange().asClass(), true));
                     }
                 }
-            }
-            if (jsonObject.has(READ_ONLY_ATTRIBUTES_KEY)) {
-                setReadonlyAttributes(securityState, parseJsonArrayAsStrings(
-                        jsonObject.getJSONArray(READ_ONLY_ATTRIBUTES_KEY)));
-            }
-            if (jsonObject.has(HIDDEN_ATTRIBUTES_KEY)) {
-                setHiddenAttributes(securityState, parseJsonArrayAsStrings(
-                        jsonObject.getJSONArray(HIDDEN_ATTRIBUTES_KEY)));
-            }
-            if (jsonObject.has(REQUIRED_ATTRIBUTES_KEY)) {
-                setRequiredAttributes(securityState, parseJsonArrayAsStrings(
-                        jsonObject.getJSONArray(REQUIRED_ATTRIBUTES_KEY)));
             }
             if (!metadataTools.hasCompositePrimaryKey(metaClass)
                     && !(entity instanceof EmbeddableEntity)) {

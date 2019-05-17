@@ -237,7 +237,6 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
         if (BaseEntityInternalAccess.getSecurityToken(entity) == null) {
             assertSecurityConstraints(entity, (e, metaProperty) -> entityStates.isDetached(entity)
                     && !entityStates.isLoaded(entity, metaProperty.getName()));
-            assertTokenForAttributeAccess(entity);
         }
     }
 
@@ -246,7 +245,6 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
         if (BaseEntityInternalAccess.getSecurityToken(entity) == null) {
             assertSecurityConstraints(entity,
                     (e, metaProperty) -> view != null && !view.containsProperty(metaProperty.getName()));
-            assertTokenForAttributeAccess(entity);
         }
     }
 
@@ -265,15 +263,6 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
                             metaClass.getName());
                 }
             }
-        }
-    }
-
-    protected void assertTokenForAttributeAccess(Entity entity) {
-        MetaClass metaClass = metadata.getClass(entity);
-        if (persistenceAttributeSecurity.isAttributeAccessEnabled(metaClass)) {
-            throw new RowLevelSecurityException(format("Could not read security token from entity %s, " +
-                    "even though there are active attribute access for the entity.", entity),
-                    metaClass.getName());
         }
     }
 

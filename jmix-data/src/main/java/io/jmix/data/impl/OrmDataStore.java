@@ -151,9 +151,6 @@ public class OrmDataStore implements DataStore {
             if (result != null && needToApplyInMemoryReadConstraints) {
                 persistenceSecurity.calculateFilteredData(result);
             }
-            if (result != null) {
-                attributeSecurity.onLoad(result, view);
-            }
 
             // todo dynamic attributes
 //            if (result instanceof BaseGenericIdEntity && context.isLoadDynamicAttributes()) {
@@ -233,7 +230,6 @@ public class OrmDataStore implements DataStore {
             if (needToApplyInMemoryReadConstraints) {
                 persistenceSecurity.calculateFilteredData((Collection<Entity>) resultList);
             }
-            attributeSecurity.onLoad(resultList, view);
 
             if (context.isJoinTransaction()) {
                 em.flush();
@@ -371,7 +367,6 @@ public class OrmDataStore implements DataStore {
                     if (!context.isDiscardCommitted()) {
                         View view = getViewFromContextOrNull(context, entity);
                         entityFetcher.fetch(entity, view, true);
-                        attributeSecurity.afterPersist(entity, view);
                     }
 
                     // todo dynamic attributes
@@ -402,7 +397,6 @@ public class OrmDataStore implements DataStore {
 
                     entityFetcher.fetch(merged, getViewFromContext(context, entity));
 
-                    attributeSecurity.afterMerge(merged);
                     if (isAuthorizationRequired(context))
                         checkOperationPermitted(merged, ConstraintOperationType.UPDATE);
 
@@ -437,7 +431,6 @@ public class OrmDataStore implements DataStore {
                     e = em.merge(entity);
                     entityFetcher.fetch(e, getViewFromContext(context, entity));
 
-                    attributeSecurity.afterMerge(e);
                 } else {
                     e = em.merge(entity);
                 }
@@ -672,8 +665,7 @@ public class OrmDataStore implements DataStore {
         View copy = View.copy(isAuthorizationRequired(context) ? attributeSecurity.createRestrictedView(view) : view);
         if (context.isLoadPartialEntities()
                 && !needToApplyInMemoryReadConstraints(context)
-                && !needToFilterByInMemoryReadConstraints(context)
-                && !needToApplyAttributeAccess(context)) {
+                && !needToFilterByInMemoryReadConstraints(context)) {
             copy.setLoadPartialEntities(true);
         }
         return copy;
@@ -983,10 +975,6 @@ public class OrmDataStore implements DataStore {
         return isAuthorizationRequired(context) && security.hasConstraints()
                 && needToApplyByPredicate(context, metaClass ->
                     security.hasInMemoryConstraints(metaClass, ConstraintOperationType.READ, ConstraintOperationType.ALL));
-    }
-
-    protected boolean needToApplyAttributeAccess(LoadContext context) {
-        return needToApplyByPredicate(context, metaClass -> attributeSecurity.isAttributeAccessEnabled(metaClass));
     }
 
     protected boolean needToApplyByPredicate(LoadContext context, Predicate<MetaClass> hasConstraints) {
