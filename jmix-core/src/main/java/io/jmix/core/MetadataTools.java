@@ -17,16 +17,17 @@
 package io.jmix.core;
 
 import com.google.common.collect.ImmutableList;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.*;
+import io.jmix.core.entity.annotation.IgnoreUserTimeZone;
+import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.annotations.NamePattern;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.core.metamodel.datatypes.TimeZoneAwareDatatype;
 import io.jmix.core.metamodel.model.*;
-import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.*;
-import io.jmix.core.entity.annotation.IgnoreUserTimeZone;
-import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.security.UserSessionSource;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Component;
@@ -198,28 +199,33 @@ public class MetadataTools {
     public String getInstanceName(Instance instance) {
         checkNotNullArgument(instance, "instance is null");
 
-        NamePatternRec rec = parseNamePattern(metadata.getClassNN(instance.getClass()));
+        MetaClass metaClass = metadata.getClassNN(instance.getClass());
+
+        NamePatternRec rec = parseNamePattern(metaClass);
         if (rec == null) {
             return instance.toString();
-        } else {
-            if (rec.methodName != null) {
-                try {
-                    Method method = instance.getClass().getMethod(rec.methodName);
-                    Object result = method.invoke(instance);
-                    return (String) result;
-                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                    throw new RuntimeException("Error getting instance name", e);
-                }
-            }
-
-            Object[] values = new Object[rec.fields.length];
-            for (int i = 0; i < rec.fields.length; i++) {
-                Object value = instance.getValue(rec.fields[i]);
-                values[i] = format(value);
-            }
-
-            return String.format(rec.format, values);
         }
+
+        if (rec.methodName != null) {
+            try {
+                Method method = instance.getClass().getMethod(rec.methodName);
+                Object result = method.invoke(instance);
+                return (String) result;
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                throw new RuntimeException("Error getting instance name", e);
+            }
+        }
+
+        Object[] values = new Object[rec.fields.length];
+        for (int i = 0; i < rec.fields.length; i++) {
+            String fieldName = rec.fields[i];
+            MetaProperty property = metaClass.getPropertyNN(fieldName);
+
+            Object value = instance.getValue(fieldName);
+            values[i] = format(value, property);
+        }
+
+        return String.format(rec.format, values);
     }
 
     /**
@@ -348,9 +354,9 @@ public class MetadataTools {
         Objects.requireNonNull(metaProperty, "metaProperty is null");
         OneToMany oneToMany = metaProperty.getAnnotatedElement().getAnnotation(OneToMany.class);
         if (oneToMany != null) {
-            final Collection<CascadeType> cascadeTypes = Arrays.asList(oneToMany.cascade());
-            if (cascadeTypes.contains(CascadeType.ALL) ||
-                    cascadeTypes.contains(CascadeType.MERGE)) {
+            CascadeType[] cascadeTypes = oneToMany.cascade();
+            if (ArrayUtils.contains(cascadeTypes, CascadeType.ALL) ||
+                    ArrayUtils.contains(cascadeTypes, CascadeType.MERGE)) {
                 return true;
             }
         }
