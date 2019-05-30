@@ -16,6 +16,9 @@ dependencies {
     api project(':jmix-core')
     api project(':jmix-security')
     api project(':jmix-ui')
+
+    // todo add themes JAR and widgets JAR here
+
     implementation 'org.springframework:spring-context'
     implementation 'com.vaadin:vaadin-spring-boot:3.1.1'
 }

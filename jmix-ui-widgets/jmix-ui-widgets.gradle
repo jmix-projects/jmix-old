@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-rootProject.name = 'jmix'
+apply plugin: 'java'
+apply plugin: 'java-library'
 
-include 'jmix-core'
-include 'jmix-data'
-include 'jmix-security'
-include 'jmix-remoting'
-include 'jmix-cuba'
-include 'jmix-ui'
-include 'jmix-ui-widgets'
+version = rootProject.jmixVersion
+sourceCompatibility = rootProject.sourceCompatibility
+targetCompatibility = rootProject.targetCompatibility
 
-include 'starters:starter-standard'
+def jmixUi = rootProject.project(':jmix-ui')
 
-include 'samples:sample-hello-world'
-include 'samples:sample-custom-security'
-include 'samples:sample-remoting'
+dependencies {
+    api "com.vaadin:vaadin-client:$jmixUi.vaadinVersion"
+    api "com.vaadin:vaadin-client-compiler:$jmixUi.vaadinVersion"
+    api "com.vaadin:vaadin-compatibility-client:$jmixUi.vaadinVersion"
 
-rootProject.children.each { p1 ->
-	p1.buildFileName = "${p1.name}.gradle"
-	p1.children.each { p2 ->
-		p2.buildFileName = "${p2.name}.gradle"
-	}
+    // todo debugging server
 }
+
+jar {
+    from sourceSets.main.allJava
+}
+
+// todo build JAR with JS

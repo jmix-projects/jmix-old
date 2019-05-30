@@ -29,7 +29,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.core.annotation.Order;
 
@@ -66,13 +65,13 @@ public class JmixCoreConfiguration {
 
     @EventListener
     @Order(Events.HIGHEST_CORE_PRECEDENCE + 10)
-    void onApplicationContextRefreshFirst(ContextRefreshedEvent event) {
+    public void onApplicationContextRefreshFirst(ContextRefreshedEvent event) {
         AppContext.Internals.setApplicationContext(event.getApplicationContext());
     }
 
     @EventListener
     @Order(Events.LOWEST_CORE_PRECEDENCE - 10)
-    void onApplicationContextRefreshLast(ContextRefreshedEvent event) {
+    public void onApplicationContextRefreshLast(ContextRefreshedEvent event) {
         AppContext.Internals.startContext();
     }
 }
