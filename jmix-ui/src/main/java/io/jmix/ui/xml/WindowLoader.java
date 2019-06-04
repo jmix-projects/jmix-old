@@ -15,8 +15,6 @@
  */
 package io.jmix.ui.xml;
 
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.xml.FacetLoader;
 import io.jmix.core.DevelopmentException;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.DialogWindow;

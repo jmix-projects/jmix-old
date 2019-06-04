@@ -41,7 +41,7 @@ import java.util.*;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class XmlInheritanceProcessor {
 
-    public static final String NAME = "cuba_XmlInheritanceProcessor";
+    public static final String NAME = "jmix_XmlInheritanceProcessor";
 
     private static final Logger log = LoggerFactory.getLogger(XmlInheritanceProcessor.class);
 

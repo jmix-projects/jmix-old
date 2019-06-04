@@ -16,9 +16,9 @@
 
 package io.jmix.ui.sys;
 
-import com.haulmont.cuba.gui.WebBrowserTools;
-import com.haulmont.cuba.web.AppUI;
 import com.vaadin.shared.ui.BorderStyle;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.generic.WebBrowserTools;
 
 import javax.annotation.Nullable;
 import java.util.Map;

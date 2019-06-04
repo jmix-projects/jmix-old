@@ -16,11 +16,9 @@
 
 package io.jmix.ui.components.impl;
 
-import com.vaadin.ui.AbstractOrderedLayout;
-import com.vaadin.ui.AbstractSingleComponentContainer;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.*;
 import io.jmix.ui.components.ComponentContainer;
+import io.jmix.ui.components.KeyCombination;
 import io.jmix.ui.components.ShortcutTriggeredEvent;
 
 import javax.annotation.Nullable;
@@ -178,5 +176,13 @@ public class WebComponentsHelper {
         }
 
         return targetComponent;
+    }
+
+    public static void setClickShortcut(Button button, String shortcut) {
+        KeyCombination closeCombination = KeyCombination.create(shortcut);
+        int[] closeModifiers = KeyCombination.Modifier.codes(closeCombination.getModifiers());
+        int closeCode = closeCombination.getKey().getCode();
+
+        button.setClickShortcut(closeCode, closeModifiers);
     }
 }

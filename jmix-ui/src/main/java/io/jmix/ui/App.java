@@ -23,7 +23,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import io.jmix.core.*;
 import io.jmix.core.security.LoginException;
-import io.jmix.core.security.NoUserSessionException;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.actions.Action;
@@ -100,8 +99,6 @@ public abstract class App {
     protected WindowConfig windowConfig;
     @Inject
     protected ThemeConstantsRepository themeConstantsRepository;
-    @Inject
-    protected UserSessionService userSessionService;
     @Inject
     protected UserSessionSource userSessionSource;
     @Inject
@@ -306,7 +303,8 @@ public abstract class App {
      * Used for ping middleware session and show session messages
      */
     public void onHeartbeat() {
-        Connection connection = getConnection();
+        // todo do we need this ?
+        /*Connection connection = getConnection();
 
         boolean sessionIsAlive = false;
         if (connection.isAuthenticated()) {
@@ -333,7 +331,7 @@ public abstract class App {
 
         if (sessionIsAlive) {
             events.publish(new SessionHeartbeatEvent(this));
-        }
+        }*/
     }
 
     /**

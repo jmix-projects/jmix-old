@@ -16,28 +16,6 @@
 
 package io.jmix.ui.sys;
 
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.Fragments;
-import com.haulmont.cuba.gui.UiComponents;
-import com.haulmont.cuba.gui.components.AbstractWindow;
-import com.haulmont.cuba.gui.components.Fragment;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.components.sys.FragmentImplementation;
-import com.haulmont.cuba.gui.components.sys.FrameImplementation;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.logging.ScreenLifeCycle;
-import com.haulmont.cuba.gui.model.impl.ScreenDataImpl;
-import com.haulmont.cuba.gui.screen.*;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
-import com.haulmont.cuba.gui.sys.FragmentHelper;
-import com.haulmont.cuba.gui.sys.FragmentHelper.FragmentLoaderInitTask;
-import com.haulmont.cuba.gui.sys.FragmentHelper.FragmentLoaderInjectTask;
-import com.haulmont.cuba.gui.xml.layout.ComponentLoader;
-import com.haulmont.cuba.gui.xml.layout.LayoutLoader;
-import com.haulmont.cuba.gui.xml.layout.loaders.ComponentLoaderContext;
-import com.haulmont.cuba.web.AppUI;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.AppUI;
@@ -51,21 +29,22 @@ import io.jmix.ui.generic.WindowConfig;
 import io.jmix.ui.generic.WindowInfo;
 import io.jmix.ui.logging.ScreenLifeCycle;
 import io.jmix.ui.model.impl.ScreenDataImpl;
-import io.jmix.ui.screen.FrameOwner;
-import io.jmix.ui.screen.ScreenFragment;
-import io.jmix.ui.screen.ScreenOptions;
-import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.*;
+import io.jmix.ui.sys.FragmentHelper.FragmentLoaderInitTask;
+import io.jmix.ui.sys.FragmentHelper.FragmentLoaderInjectTask;
+import io.jmix.ui.xml.ComponentLoader;
+import io.jmix.ui.xml.ComponentLoaderContext;
+import io.jmix.ui.xml.LayoutLoader;
 import org.dom4j.Element;
 import org.perf4j.StopWatch;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.inject.Inject;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
-import static com.haulmont.cuba.gui.logging.UIPerformanceLogger.createStopWatch;
-import static com.haulmont.cuba.gui.screen.UiControllerUtils.*;
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.logging.UIPerformanceLogger.createStopWatch;
 import static io.jmix.ui.screen.UiControllerUtils.*;
+import static java.util.Collections.emptyMap;
 
 @ParametersAreNonnullByDefault
 public class WebFragments implements Fragments {
@@ -168,9 +147,6 @@ public class WebFragments implements Fragments {
         loaderContext.setFrame(fragment);
         loaderContext.setParent(null);
         loaderContext.setScreenData(UiControllerUtils.getScreenData(parent));
-        if (parent instanceof LegacyFrame) {
-            loaderContext.setDsContext(((LegacyFrame) parent).getDsContext());
-        }
 
         // load XML if needed
         if (windowInfo.getTemplate() != null) {
@@ -183,8 +159,7 @@ public class WebFragments implements Fragments {
 
             LayoutLoader layoutLoader = beanLocator.getPrototype(LayoutLoader.NAME, innerContext);
 
-            Element rootElement = screenXmlLoader.load(windowInfo.getTemplate(), windowInfo.getId(),
-                    innerContext.getParams());
+            Element rootElement = screenXmlLoader.load(windowInfo.getTemplate(), windowInfo.getId(), emptyMap());
 
             String messagesPack = rootElement.attributeValue("messagesPack");
             if (messagesPack != null) {

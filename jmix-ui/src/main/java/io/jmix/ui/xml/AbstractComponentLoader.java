@@ -18,49 +18,18 @@ package io.jmix.ui.xml;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import com.haulmont.bali.util.ReflectionHelper;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.config.Config;
-import com.haulmont.cuba.core.global.*;
-import com.haulmont.cuba.core.sys.AppContext;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.UiComponents;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.Component.Alignment;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.components.actions.ItemTrackingAction;
-import com.haulmont.cuba.gui.components.data.HasValueSource;
-import com.haulmont.cuba.gui.components.data.value.ContainerValueSource;
-import com.haulmont.cuba.gui.components.validators.*;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.model.ScreenData;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
-import com.haulmont.cuba.gui.theme.ThemeConstants;
-import com.haulmont.cuba.gui.theme.ThemeConstantsManager;
-import com.haulmont.cuba.gui.xml.DeclarativeAction;
-import com.haulmont.cuba.gui.xml.DeclarativeTrackingAction;
-import com.haulmont.cuba.security.entity.ConstraintOperationType;
 import io.jmix.core.*;
-import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.config.Config;
 import io.jmix.core.security.ConstraintOperationType;
 import io.jmix.core.security.Security;
 import io.jmix.ui.ClientConfig;
 import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.BaseAction;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.Component.Alignment;
+import io.jmix.ui.components.data.ContainerValueSource;
 import io.jmix.ui.components.data.HasValueSource;
+import io.jmix.ui.generic.Actions;
 import io.jmix.ui.generic.GuiDevelopmentException;
 import io.jmix.ui.generic.UiComponents;
 import io.jmix.ui.icons.Icons;
@@ -81,13 +50,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.haulmont.cuba.gui.icons.Icons.ICON_NAME_REGEX;
 import static io.jmix.ui.icons.Icons.ICON_NAME_REGEX;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -561,7 +528,11 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
     }
 
     protected Action loadInvokeAction(ActionsHolder actionsHolder, Element element, String id, boolean shouldTrackSelection, String invokeMethod) {
-        BaseAction action;
+
+        throw new UnsupportedOperationException();
+
+        // todo implement
+        /*BaseAction action;
         String shortcut = loadShortcut(trimToNull(element.attributeValue("shortcut")));
         if (shouldTrackSelection) {
             action = new DeclarativeTrackingAction(
@@ -593,11 +564,15 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
             );
         }
         action.setPrimary(Boolean.parseBoolean(element.attributeValue("primary")));
-        return action;
+        return action;*/
     }
 
     protected Action loadStubAction(Element element, String id, boolean shouldTrackSelection) {
-        Action targetAction;
+        throw new UnsupportedOperationException();
+
+        // todo implement
+
+        /*Action targetAction;
 
         if (shouldTrackSelection) {
             targetAction = new ItemTrackingAction(id);
@@ -607,7 +582,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
 
         initAction(element, targetAction);
 
-        return targetAction;
+        return targetAction;*/
     }
 
     protected void initAction(Element element, Action targetAction) {

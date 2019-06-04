@@ -17,14 +17,14 @@
 package io.jmix.ui.screen;
 
 import com.google.common.collect.ImmutableMap;
-import com.haulmont.cuba.core.global.BeanLocator;
+import io.jmix.core.BeanLocator;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * Extensions API for {@link Screen} and {@link ScreenFragment}.

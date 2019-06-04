@@ -16,44 +16,36 @@
 
 package io.jmix.ui.sys;
 
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.Dialogs;
-import com.haulmont.cuba.gui.ScreenBuilders;
-import com.haulmont.cuba.gui.app.core.inputdialog.DialogActions;
-import com.haulmont.cuba.gui.app.core.inputdialog.InputDialog;
-import com.haulmont.cuba.gui.app.core.inputdialog.InputParameter;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.inputdialog.InputDialogAction;
-import com.haulmont.cuba.gui.executors.BackgroundWorker;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.theme.ThemeConstants;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.exception.ExceptionDialog;
-import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
-import com.haulmont.cuba.web.widgets.CubaButton;
-import com.haulmont.cuba.web.widgets.CubaLabel;
-import com.haulmont.cuba.web.widgets.CubaWindow;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.window.WindowMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
+import io.jmix.core.Messages;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.ClientConfig;
+import io.jmix.ui.actions.AbstractAction;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.DialogAction;
+import io.jmix.ui.components.ContentMode;
+import io.jmix.ui.components.KeyCombination;
+import io.jmix.ui.components.SizeUnit;
+import io.jmix.ui.executors.BackgroundWorker;
+import io.jmix.ui.generic.Dialogs;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.theme.ThemeConstants;
+import io.jmix.ui.widgets.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.Collection;
 import java.util.EnumSet;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
-import static com.haulmont.cuba.web.gui.components.WebComponentsHelper.setClickShortcut;
-import static com.haulmont.cuba.web.gui.components.WebWrapperUtils.*;
+import static io.jmix.ui.components.impl.WebComponentsHelper.setClickShortcut;
+import static io.jmix.ui.components.impl.WebWrapperUtils.*;
 
 public class WebDialogs implements Dialogs {
 
@@ -69,15 +61,9 @@ public class WebDialogs implements Dialogs {
     protected Icons icons;
     @Inject
     protected ClientConfig clientConfig;
-    protected ScreenBuilders screenBuilders;
 
     public WebDialogs(AppUI ui) {
         this.ui = ui;
-    }
-
-    @Inject
-    public void setScreenBuilders(ScreenBuilders screenBuilders) {
-        this.screenBuilders = screenBuilders;
     }
 
     @Override
@@ -115,16 +101,17 @@ public class WebDialogs implements Dialogs {
 
     @Override
     public InputDialogBuilder createInputDialog(FrameOwner owner) {
-        return new InputDialogBuilderImpl(owner);
+        // todo input dialogs
+        throw new UnsupportedOperationException();
     }
 
-    public CubaButton createButton(Action action) {
-        CubaButton button = new CubaButton();
+    public JmixButton createButton(Action action) {
+        JmixButton button = new JmixButton();
 
         if (action instanceof DialogAction) {
             DialogAction.Type type = ((DialogAction) action).getType();
 
-            button.setCaption(messages.getMainMessage(type.getMsgKey()));
+            button.setCaption(messages.getMessage(type.getMsgKey()));
             String iconPath = icons.get(type.getIconKey());
             button.setIcon(iconResolver.getIconResource(iconPath));
         }
@@ -146,8 +133,8 @@ public class WebDialogs implements Dialogs {
 
     public class OptionDialogBuilderImpl implements OptionDialogBuilder {
 
-        protected CubaWindow window;
-        protected CubaLabel messageLabel;
+        protected JmixWindow window;
+        protected JmixLabel messageLabel;
         protected VerticalLayout layout;
         protected HorizontalLayout buttonsContainer;
 
@@ -156,13 +143,13 @@ public class WebDialogs implements Dialogs {
         protected Action[] actions;
 
         public OptionDialogBuilderImpl() {
-            window = new CubaWindow();
+            window = new JmixWindow();
 
             window.setModal(true);
             window.setClosable(false);
             window.setResizable(false);
 
-            messageLabel = new CubaLabel();
+            messageLabel = new JmixLabel();
             messageLabel.setWidth(100, Sizeable.Unit.PERCENTAGE);
 
             layout = new VerticalLayout();
@@ -333,7 +320,7 @@ public class WebDialogs implements Dialogs {
 
             boolean hasPrimaryAction = false;
             for (Action action : actions) {
-                CubaButton button = createButton(action);
+                JmixButton button = createButton(action);
                 button.setClickHandler(mouseEventDetails -> {
                     try {
                         action.actionPerform(ui.getTopLevelWindow());
@@ -397,15 +384,15 @@ public class WebDialogs implements Dialogs {
     }
 
     public class MessageDialogBuilderImpl implements MessageDialogBuilder {
-        protected CubaWindow window;
-        protected CubaLabel messageLabel;
+        protected JmixWindow window;
+        protected JmixLabel messageLabel;
         protected VerticalLayout layout;
-        protected CubaButton okButton;
+        protected JmixButton okButton;
 
         protected MessageType type = MessageType.CONFIRMATION;
 
         public MessageDialogBuilderImpl() {
-            window = new CubaWindow();
+            window = new JmixWindow();
 
             window.setModal(true);
             window.setResizable(false);
@@ -415,7 +402,7 @@ public class WebDialogs implements Dialogs {
             layout.setMargin(false);
             layout.setSpacing(true);
 
-            messageLabel = new CubaLabel();
+            messageLabel = new JmixLabel();
             messageLabel.setStyleName("c-app-message-dialog-text");
             messageLabel.setWidth(100, Sizeable.Unit.PERCENTAGE);
 
@@ -702,129 +689,6 @@ public class WebDialogs implements Dialogs {
             }
             ui.addWindow(dialog);
             dialog.focus();
-        }
-    }
-
-    public class InputDialogBuilderImpl implements InputDialogBuilder {
-
-        protected InputDialog inputDialog;
-
-        public InputDialogBuilderImpl(FrameOwner owner) {
-            inputDialog = screenBuilders.screen(owner)
-                    .withScreenClass(InputDialog.class)
-                    .withOpenMode(OpenMode.DIALOG)
-                    .build();
-        }
-
-        @Override
-        public InputDialogBuilder withParameter(InputParameter parameter) {
-            inputDialog.setParameter(parameter);
-            return this;
-        }
-
-        @Override
-        public InputDialogBuilder withParameters(InputParameter... parameters) {
-            inputDialog.setParameters(parameters);
-            return this;
-        }
-
-        public Collection<InputParameter> getParameters() {
-            return inputDialog.getParameters();
-        }
-
-        @Override
-        public InputDialogBuilder withCloseListener(Consumer<InputDialog.InputDialogCloseEvent> listener) {
-            inputDialog.setCloseListener(listener);
-            return this;
-        }
-
-        public Consumer<InputDialog.InputDialogCloseEvent> getCloseListener() {
-            return inputDialog.getCloseListener();
-        }
-
-        @Override
-        public InputDialogBuilder withActions(InputDialogAction... actions) {
-            inputDialog.setActions(actions);
-            return this;
-        }
-
-        public Collection<Action> getActions() {
-            return inputDialog.getActions();
-        }
-
-        @Override
-        public InputDialogBuilder withActions(DialogActions actions) {
-            inputDialog.setDialogActions(actions);
-            return this;
-        }
-
-        @Override
-        public InputDialogBuilder withActions(DialogActions actions, Consumer<InputDialog.InputDialogResult> resultHandler) {
-            inputDialog.setDialogActions(actions);
-            inputDialog.setResultHandler(resultHandler);
-            return this;
-        }
-
-        public DialogActions getDialogActions() {
-            return inputDialog.getDialogActions();
-        }
-
-        @Nullable
-        public Consumer<InputDialog.InputDialogResult> getResultHandler() {
-            return inputDialog.getResultHandler();
-        }
-
-        @Override
-        public InputDialogBuilder withValidator(Function<InputDialog.ValidationContext, ValidationErrors> validator) {
-            inputDialog.setValidator(validator);
-            return this;
-        }
-
-        public Function<InputDialog.ValidationContext, ValidationErrors> getValidator() {
-            return inputDialog.getValidator();
-        }
-
-        @Override
-        public InputDialogBuilder withCaption(String caption) {
-            inputDialog.getDialogWindow().setCaption(caption);
-            return this;
-        }
-
-        @Override
-        public InputDialogBuilder withWidth(String width) {
-            inputDialog.getDialogWindow().setDialogWidth(width);
-            return this;
-        }
-
-        public float getWidth() {
-            return inputDialog.getDialogWindow().getDialogWidth();
-        }
-
-        @Override
-        public InputDialogBuilder withHeight(String height) {
-            inputDialog.getDialogWindow().setDialogHeight(height);
-            return this;
-        }
-
-        public float getHeight() {
-            return inputDialog.getDialogWindow().getDialogHeight();
-        }
-
-        @Nullable
-        public String getCaption() {
-            return inputDialog.getDialogWindow().getCaption();
-        }
-
-        @Override
-        public InputDialog show() {
-            InputDialog dialog = build();
-            dialog.show();
-            return dialog;
-        }
-
-        @Override
-        public InputDialog build() {
-            return inputDialog;
         }
     }
 }

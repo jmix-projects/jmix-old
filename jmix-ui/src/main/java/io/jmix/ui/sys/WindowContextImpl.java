@@ -16,9 +16,9 @@
 
 package io.jmix.ui.sys;
 
-import com.haulmont.cuba.gui.Screens.LaunchMode;
-import com.haulmont.cuba.gui.WindowContext;
-import com.haulmont.cuba.gui.components.Frame;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.generic.Screens.LaunchMode;
+import io.jmix.ui.generic.WindowContext;
 
 public class WindowContextImpl extends FrameContextImpl implements WindowContext {
 

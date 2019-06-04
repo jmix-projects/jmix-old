@@ -16,7 +16,7 @@
 
 package io.jmix.ui.screen;
 
-import com.haulmont.cuba.core.entity.Entity;
+import io.jmix.core.entity.Entity;
 
 /**
  * Interface for editor screen controllers.

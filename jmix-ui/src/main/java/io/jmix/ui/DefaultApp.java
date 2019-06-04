@@ -16,25 +16,20 @@
 package io.jmix.ui;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.Notifications;
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.security.global.LoginException;
-import com.haulmont.cuba.security.global.UserSession;
-import com.haulmont.cuba.web.app.loginwindow.AppLoginWindow;
-import com.haulmont.cuba.web.security.AnonymousUserCredentials;
-import com.haulmont.cuba.web.security.events.AppLoggedInEvent;
-import com.haulmont.cuba.web.security.events.AppLoggedOutEvent;
-import com.haulmont.cuba.web.security.events.AppStartedEvent;
-import com.haulmont.cuba.web.sys.RedirectHandler;
-import com.haulmont.cuba.web.sys.VaadinSessionScope;
 import com.vaadin.server.*;
+import com.vaadin.spring.annotation.VaadinSessionScope;
 import com.vaadin.ui.UI;
+import io.jmix.core.Messages;
+import io.jmix.core.security.AnonymousUserCredentials;
+import io.jmix.core.security.LoginException;
+import io.jmix.core.security.UserSession;
+import io.jmix.ui.events.AppLoggedInEvent;
+import io.jmix.ui.events.AppLoggedOutEvent;
+import io.jmix.ui.events.AppStartedEvent;
+import io.jmix.ui.generic.Notifications;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
@@ -43,16 +38,12 @@ import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Locale;
 import java.util.Objects;
 
-import static com.haulmont.cuba.web.Connection.StateChangeEvent;
-import static com.haulmont.cuba.web.Connection.UserSubstitutedEvent;
-import static com.haulmont.cuba.web.security.ExternalUserCredentials.isLoggedInWithExternalAuth;
-
 /**
  * Default {@link App} implementation that shows {@link AppLoginWindow} on start. Single instance of App is bound to
  * single HTTP session.
  */
 @Component(App.NAME)
-@Scope(VaadinSessionScope.NAME)
+@VaadinSessionScope
 public class DefaultApp extends App {
 
     private static final Logger log = LoggerFactory.getLogger(DefaultApp.class);
@@ -67,7 +58,7 @@ public class DefaultApp extends App {
         return connection;
     }
 
-    protected void connectionStateChanged(StateChangeEvent event) {
+    protected void connectionStateChanged(Connection.StateChangeEvent event) {
         Connection connection = event.getSource();
 
         log.debug("connectionStateChanged connected: {}, authenticated: {}",
@@ -109,7 +100,8 @@ public class DefaultApp extends App {
 
             initializeUi();
 
-            if (linkHandler != null && linkHandler.canHandleLink()) {
+            // todo navigation
+            /*if (linkHandler != null && linkHandler.canHandleLink()) {
                 linkHandler.handle();
                 linkHandler = null;
             }
@@ -120,7 +112,7 @@ public class DefaultApp extends App {
 
             if (redirectHandler != null && redirectHandler.scheduled()) {
                 redirectHandler.redirect();
-            }
+            }*/
 
             publishAppLoggedInEvent();
         } else {
@@ -153,8 +145,8 @@ public class DefaultApp extends App {
     protected void notifyMismatchedSessionUi(AppUI ui) {
         Messages messages = beanLocator.get(Messages.class);
 
-        String sessionChangedCaption = messages.getMainMessage("sessionChangedCaption");
-        String sessionChanged = messages.getMainMessage("sessionChanged");
+        String sessionChangedCaption = messages.getMessage("app.sessionChangedCaption");
+        String sessionChanged = messages.getMessage("app.sessionChanged");
 
         ui.getNotifications()
                 .create(Notifications.NotificationType.SYSTEM)
@@ -164,7 +156,7 @@ public class DefaultApp extends App {
                 .show();
     }
 
-    protected void userSubstituted(UserSubstitutedEvent event) {
+    protected void userSubstituted(Connection.UserSubstitutedEvent event) {
         cleanupBackgroundTasks();
         clearSettingsCache();
         removeAllWindows();
@@ -257,7 +249,7 @@ public class DefaultApp extends App {
 
     protected void preventSessionFixation(Connection connection, UserSession userSession) {
         if (connection.isAuthenticated()
-                && !isLoggedInWithExternalAuth(userSession)
+                // && !isLoggedInWithExternalAuth(userSession) todo external authentication
                 && webConfig.getUseSessionFixationProtection()
                 && VaadinService.getCurrentRequest() != null) {
 
@@ -292,10 +284,11 @@ public class DefaultApp extends App {
             }
 
             UserSession userSession = userSessionSource.getUserSession();
-            if (!userSession.isScreenPermitted(initialScreenId)) {
+            // todo screen permissions
+            /*if (!userSession.isScreenPermitted(initialScreenId)) {
                 log.info("Initial screen '{}' is not permitted", initialScreenId);
                 return loginScreenId;
-            }
+            }*/
 
             return initialScreenId;
         }
@@ -325,18 +318,5 @@ public class DefaultApp extends App {
                 throw ex;
             }
         }
-    }
-
-    /**
-     * @deprecated Use {@link Screens#create(Class, Screens.LaunchMode)} with {@link OpenMode#ROOT}
-     */
-    @Deprecated
-    @Override
-    public void navigateTo(String topLevelWindowId) {
-        cleanupBackgroundTasks();
-        clearSettingsCache();
-        removeAllWindows();
-
-        super.navigateTo(topLevelWindowId);
     }
 }

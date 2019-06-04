@@ -15,17 +15,14 @@
  */
 package io.jmix.ui.exception;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.Notifications;
-import com.haulmont.cuba.web.App;
-import com.haulmont.cuba.web.AppUI;
 import com.vaadin.server.ErrorEvent;
 import com.vaadin.ui.Window;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
 import io.jmix.ui.App;
 import io.jmix.ui.AppUI;
+import io.jmix.ui.generic.Notifications;
+import io.jmix.ui.widgets.ExceptionDialog;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -106,7 +103,7 @@ public class DefaultExceptionHandler implements ExceptionHandler {
                 (rootCause.getMessage() != null ? "\n" + rootCause.getMessage() : "");
 
         ui.getNotifications().create(Notifications.NotificationType.ERROR)
-                .withCaption(messages.getMainMessage("exceptionDialog.caption", app.getLocale()))
+                .withCaption(messages.getMessage("exceptionDialog.caption", app.getLocale()))
                 .withDescription(message)
                 .show();
     }

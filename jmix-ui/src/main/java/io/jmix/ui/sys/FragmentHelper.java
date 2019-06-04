@@ -59,7 +59,7 @@ public class FragmentHelper {
     @Inject
     protected Scripting scripting;
 
-    public static final String NAME = "cuba_FragmentHelper";
+    public static final String NAME = "jmix_FragmentHelper";
 
     @SuppressWarnings("unchecked")
     public ScreenFragment createController(WindowInfo windowInfo, Fragment fragment) {

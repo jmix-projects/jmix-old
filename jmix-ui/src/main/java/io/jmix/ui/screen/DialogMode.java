@@ -16,11 +16,12 @@
 
 package io.jmix.ui.screen;
 
-import com.haulmont.cuba.gui.components.DialogWindow;
-import com.haulmont.cuba.gui.components.DialogWindow.WindowMode;
+import io.jmix.ui.components.DialogWindow;
 
 import java.lang.annotation.Target;
 import java.lang.annotation.*;
+
+import static io.jmix.ui.components.DialogWindow.WindowMode;
 
 /**
  * Specifies parameters of {@link DialogWindow} if the window is opened as {@link OpenMode#DIALOG}.

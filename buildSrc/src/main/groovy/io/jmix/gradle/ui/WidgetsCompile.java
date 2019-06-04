@@ -134,7 +134,7 @@ public class WidgetsCompile extends WidgetsTask {
     protected List<File> collectClassPathEntries() {
         List<File> compilerClassPath = new ArrayList<>();
 
-        Configuration compileConfiguration = getProject().getConfigurations().findByName("compile");
+        Configuration compileConfiguration = getProject().getConfigurations().findByName("compileClasspath");
         if (compileConfiguration != null) {
             for (Project dependencyProject : collectProjectsWithDependency("vaadin-shared")) {
                 SourceSet dependencyMainSourceSet = getSourceSet(dependencyProject, "main");

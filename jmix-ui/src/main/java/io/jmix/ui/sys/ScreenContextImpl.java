@@ -16,10 +16,9 @@
 
 package io.jmix.ui.sys;
 
-import com.haulmont.cuba.gui.*;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.screen.ScreenContext;
-import com.haulmont.cuba.gui.screen.ScreenOptions;
+import io.jmix.ui.generic.*;
+import io.jmix.ui.screen.ScreenContext;
+import io.jmix.ui.screen.ScreenOptions;
 
 public class ScreenContextImpl implements ScreenContext {
 
@@ -30,7 +29,9 @@ public class ScreenContextImpl implements ScreenContext {
     protected final Dialogs dialogs;
     protected final Notifications notifications;
     protected final Fragments fragments;
-    protected final UrlRouting urlRouting;
+
+    // todo navigation
+    // protected final UrlRouting urlRouting;
 
     public ScreenContextImpl(WindowInfo windowInfo, ScreenOptions options, ScreenContext hostScreenContext) {
         this.windowInfo = windowInfo;
@@ -39,7 +40,8 @@ public class ScreenContextImpl implements ScreenContext {
         this.dialogs = hostScreenContext.getDialogs();
         this.fragments = hostScreenContext.getFragments();
         this.notifications = hostScreenContext.getNotifications();
-        this.urlRouting = hostScreenContext.getUrlRouting();
+        // todo navigation
+//        this.urlRouting = hostScreenContext.getUrlRouting();
         this.screens = hostScreenContext.getScreens();
     }
 
@@ -47,8 +49,8 @@ public class ScreenContextImpl implements ScreenContext {
                              Screens screens,
                              Dialogs dialogs,
                              Notifications notifications,
-                             Fragments fragments,
-                             UrlRouting urlRouting) {
+                             Fragments fragments/*,  // todo navigation
+                             UrlRouting urlRouting*/) {
         this.windowInfo = windowInfo;
         this.options = options;
 
@@ -56,7 +58,8 @@ public class ScreenContextImpl implements ScreenContext {
         this.dialogs = dialogs;
         this.notifications = notifications;
         this.fragments = fragments;
-        this.urlRouting = urlRouting;
+        // todo navigation
+//        this.urlRouting = urlRouting;
     }
 
     @Override
@@ -89,8 +92,9 @@ public class ScreenContextImpl implements ScreenContext {
         return fragments;
     }
 
-    @Override
+    // todo navigation
+    /*@Override
     public UrlRouting getUrlRouting() {
         return urlRouting;
-    }
+    }*/
 }

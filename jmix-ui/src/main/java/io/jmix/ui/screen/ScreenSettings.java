@@ -16,20 +16,9 @@
 
 package io.jmix.ui.screen;
 
-import com.haulmont.cuba.gui.components.HasPresentations;
-import com.haulmont.cuba.gui.components.HasSettings;
-import com.haulmont.cuba.gui.presentations.Presentations;
-import com.haulmont.cuba.gui.settings.Settings;
-import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
-
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
-import static com.haulmont.cuba.gui.ComponentsHelper.walkComponents;
 
 @Component(ScreenSettings.NAME)
 public class ScreenSettings {
@@ -37,13 +26,13 @@ public class ScreenSettings {
 
     private static final Logger log = LoggerFactory.getLogger(ScreenSettings.class);
 
-    /**
+    /* todo settings
      * Apply settings for screen.
      *
      * @param screen   screen
      * @param settings settings
      */
-    public void applySettings(Screen screen, Settings settings) {
+    /*public void applySettings(Screen screen, Settings settings) {
         checkNotNullArgument(screen);
         checkNotNullArgument(settings);
 
@@ -68,15 +57,15 @@ public class ScreenSettings {
                     }
                 }
         );
-    }
+    }*/
 
-    /**
+    /* todo settings
      * Save settings of screen.
      *
      * @param screen   screen
      * @param settings settings
      */
-    public void saveSettings(Screen screen, Settings settings) {
+    /*public void saveSettings(Screen screen, Settings settings) {
         checkNotNullArgument(screen);
         checkNotNullArgument(settings);
 
@@ -106,5 +95,5 @@ public class ScreenSettings {
                 }
         );
         settings.commit();
-    }
+    }*/
 }

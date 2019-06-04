@@ -41,7 +41,7 @@ import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 @Component(ScreenXmlParser.NAME)
 public class ScreenXmlParser {
     
-    public static final String NAME = "cuba_ScreenXmlParser";
+    public static final String NAME = "jmix_ScreenXmlParser";
 
     @Inject
     protected ThemeConstantsManager themeConstantsManager;

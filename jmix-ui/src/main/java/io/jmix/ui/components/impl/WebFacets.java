@@ -16,10 +16,11 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.Facets;
-import com.haulmont.cuba.gui.components.Facet;
-import com.haulmont.cuba.gui.xml.FacetProvider;
+import io.jmix.ui.components.Facet;
+import io.jmix.ui.generic.Facets;
+import io.jmix.ui.xml.FacetProvider;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -42,7 +43,7 @@ public class WebFacets implements Facets {
 
     protected Map<Class<? extends Facet>, FacetProvider> registrations = new HashMap<>();
 
-    @Inject
+    @Autowired(required = false)
     protected void setFacetRegistrations(List<FacetProvider> registrations) {
         this.registrations = registrations.stream()
                 .collect(toMap(FacetProvider::getFacetClass, identity()));

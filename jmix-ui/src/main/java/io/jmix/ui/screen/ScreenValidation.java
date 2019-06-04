@@ -17,20 +17,21 @@
 package io.jmix.ui.screen;
 
 import com.google.common.collect.Iterables;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.BeanValidation;
-import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.validation.groups.UiCrossFieldChecks;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.Dialogs;
-import com.haulmont.cuba.gui.Notifications;
-import com.haulmont.cuba.gui.Notifications.NotificationType;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
+import io.jmix.core.BeanValidation;
+import io.jmix.core.ConfigInterfaces;
+import io.jmix.core.Messages;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.validation.groups.UiCrossFieldChecks;
+import io.jmix.ui.ClientConfig;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.actions.DialogAction;
+import io.jmix.ui.components.*;
+import io.jmix.ui.generic.Dialogs;
+import io.jmix.ui.generic.Notifications;
+import io.jmix.ui.generic.Notifications.NotificationType;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -43,8 +44,8 @@ import javax.validation.Validator;
 import java.util.Collection;
 import java.util.Set;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
-import static com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.screen.UiControllerUtils.getScreenContext;
 
 @Component(ScreenValidation.NAME)
 public class ScreenValidation {
@@ -52,7 +53,7 @@ public class ScreenValidation {
     public static final String NAME = "cuba_ScreenValidation";
 
     @Inject
-    protected Configuration configuration;
+    protected ConfigInterfaces configuration;
     @Inject
     protected Messages messages;
     @Inject
@@ -66,10 +67,10 @@ public class ScreenValidation {
      * @param components components collection
      * @return validation errors
      */
-    public ValidationErrors validateUiComponents(Collection<com.haulmont.cuba.gui.components.Component> components) {
+    public ValidationErrors validateUiComponents(Collection<io.jmix.ui.components.Component> components) {
         ValidationErrors errors = new ValidationErrors();
 
-        for (com.haulmont.cuba.gui.components.Component component : components) {
+        for (io.jmix.ui.components.Component component : components) {
             if (component instanceof Validatable) {
                 Validatable validatable = (Validatable) component;
                 if (validatable.isValidateOnCommit()) {
@@ -141,7 +142,7 @@ public class ScreenValidation {
         Notifications notifications = getScreenContext(origin).getNotifications();
 
         notifications.create(NotificationType.valueOf(validationNotificationType))
-                .withCaption(messages.getMainMessage("validationFail.caption"))
+                .withCaption(messages.getMessage("validationFail.caption"))
                 .withDescription(buffer.toString())
                 .show();
 
@@ -149,7 +150,7 @@ public class ScreenValidation {
     }
 
     protected void focusProblemComponent(ValidationErrors errors) {
-        com.haulmont.cuba.gui.components.Component component = null;
+        io.jmix.ui.components.Component component = null;
         if (!errors.getAll().isEmpty()) {
             component = errors.getFirstComponent();
         }
@@ -196,8 +197,8 @@ public class ScreenValidation {
 
         Dialogs dialogs = getScreenContext(origin).getDialogs();
         dialogs.createOptionDialog()
-                .withCaption(messages.getMainMessage("closeUnsaved.caption"))
-                .withMessage(messages.getMainMessage("closeUnsaved"))
+                .withCaption(messages.getMessage("closeUnsaved.caption"))
+                .withMessage(messages.getMessage("closeUnsaved"))
                 .withType(Dialogs.MessageType.WARNING)
                 .withActions(
                         new DialogAction(DialogAction.Type.YES)
@@ -231,18 +232,18 @@ public class ScreenValidation {
 
         Dialogs dialogs = getScreenContext(origin).getDialogs();
         dialogs.createOptionDialog()
-                .withCaption(messages.getMainMessage("closeUnsaved.caption"))
-                .withMessage(messages.getMainMessage("saveUnsaved"))
+                .withCaption(messages.getMessage("closeUnsaved.caption"))
+                .withMessage(messages.getMessage("saveUnsaved"))
                 .withActions(
                         new DialogAction(DialogAction.Type.OK, Action.Status.PRIMARY)
-                                .withCaption(messages.getMainMessage("closeUnsaved.save"))
+                                .withCaption(messages.getMessage("closeUnsaved.save"))
                                 .withHandler(e -> {
 
                                     result.commit();
                                 }),
                         new BaseAction("discard")
                                 .withIcon(icons.get(CubaIcon.DIALOG_CANCEL))
-                                .withCaption(messages.getMainMessage("closeUnsaved.discard"))
+                                .withCaption(messages.getMessage("closeUnsaved.discard"))
                                 .withHandler(e -> {
 
                                     result.discard();

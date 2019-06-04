@@ -17,24 +17,24 @@
 package io.jmix.ui.screen;
 
 import com.google.common.base.Strings;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.bali.events.TriggerOnce;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.app.LockService;
-import com.haulmont.cuba.core.entity.BaseGenericIdEntity;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.*;
-import com.haulmont.cuba.gui.Notifications.NotificationType;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributesGuiTools;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.model.*;
-import com.haulmont.cuba.gui.util.OperationResult;
-import com.haulmont.cuba.gui.util.UnknownOperationResult;
-import com.haulmont.cuba.security.entity.EntityOp;
+import io.jmix.core.*;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.commons.events.TriggerOnce;
+import io.jmix.core.entity.BaseGenericIdEntity;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.ui.ClientConfig;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.ValidationErrors;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.model.*;
+import io.jmix.ui.util.OperationResult;
+import io.jmix.ui.util.UnknownOperationResult;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -70,14 +70,14 @@ public abstract class StandardEditor<T extends Entity> extends Screen implements
     protected void initActions(@SuppressWarnings("unused") InitEvent event) {
         Window window = getWindow();
 
-        Configuration configuration = getBeanLocator().get(Configuration.NAME);
+        ConfigInterfaces configuration = getBeanLocator().get(ConfigInterfaces.NAME);
         Messages messages = getBeanLocator().get(Messages.NAME);
         Icons icons = getBeanLocator().get(Icons.NAME);
 
         String commitShortcut = configuration.getConfig(ClientConfig.class).getCommitShortcut();
 
         Action commitAndCloseAction = new BaseAction(WINDOW_COMMIT_AND_CLOSE)
-                .withCaption(messages.getMainMessage("actions.Ok"))
+                .withCaption(messages.getMessage("actions.Ok"))
                 .withIcon(icons.get(CubaIcon.EDITOR_OK))
                 .withPrimary(true)
                 .withShortcut(commitShortcut)
@@ -86,14 +86,14 @@ public abstract class StandardEditor<T extends Entity> extends Screen implements
         window.addAction(commitAndCloseAction);
 
         Action commitAction = new BaseAction(WINDOW_COMMIT)
-                .withCaption(messages.getMainMessage("actions.Save"))
+                .withCaption(messages.getMessage("actions.Save"))
                 .withHandler(this::commit);
 
         window.addAction(commitAction);
 
         Action closeAction = new BaseAction(WINDOW_CLOSE)
                 .withIcon(icons.get(CubaIcon.EDITOR_CANCEL))
-                .withCaption(messages.getMainMessage("actions.Cancel"))
+                .withCaption(messages.getMessage("actions.Cancel"))
                 .withHandler(this::cancel);
 
         window.addAction(closeAction);
@@ -134,7 +134,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen implements
         if (action instanceof ChangeTrackerCloseAction
                 && ((ChangeTrackerCloseAction) action).isCheckForUnsavedChanges()
                 && hasUnsavedChanges()) {
-            Configuration configuration = getBeanLocator().get(Configuration.NAME);
+            ConfigInterfaces configuration = getBeanLocator().get(ConfigInterfaces.NAME);
             ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
 
             ScreenValidation screenValidation = getBeanLocator().get(ScreenValidation.NAME);
@@ -161,7 +161,6 @@ public abstract class StandardEditor<T extends Entity> extends Screen implements
             throw new IllegalStateException("No DataContext defined. Make sure the editor screen XML descriptor has <data> element");
         }
 
-        DynamicAttributesGuiTools tools = getBeanLocator().get(DynamicAttributesGuiTools.NAME);
         String screenId = getScreenContext().getWindowInfo().getId();
 
         InstanceLoader instanceLoader = null;
@@ -169,9 +168,11 @@ public abstract class StandardEditor<T extends Entity> extends Screen implements
         if (editedEntityContainer instanceof HasLoader) {
             if (((HasLoader) editedEntityContainer).getLoader() instanceof InstanceLoader) {
                 instanceLoader = getEditedEntityLoader();
+                // todo dynamic attributes
+                /*DynamicAttributesGuiTools tools = getBeanLocator().get(DynamicAttributesGuiTools.NAME);
                 if (tools.screenContainsDynamicAttributes(editedEntityContainer.getView(), screenId)) {
                     instanceLoader.setLoadDynamicAttributes(true);
-                }
+                }*/
             }
         }
 
@@ -182,7 +183,8 @@ public abstract class StandardEditor<T extends Entity> extends Screen implements
                     && instanceLoader.isLoadDynamicAttributes()
                     && getEntityStates().isNew(entityToEdit)
                     && mergedEntity instanceof BaseGenericIdEntity) {
-                tools.initDefaultAttributeValues((BaseGenericIdEntity) mergedEntity, mergedEntity.getMetaClass());
+                // todo dynamic attributes
+                // tools.initDefaultAttributeValues((BaseGenericIdEntity) mergedEntity, mergedEntity.getMetaClass());
             }
 
             fireEvent(InitEntityEvent.class, new InitEntityEvent<>(this, mergedEntity));
@@ -196,7 +198,8 @@ public abstract class StandardEditor<T extends Entity> extends Screen implements
     }
 
     protected void setupLock() {
-        InstanceContainer<T> container = getEditedEntityContainer();
+        // todo pessimistic locking
+        /*InstanceContainer<T> container = getEditedEntityContainer();
         Security security = getBeanLocator().get(Security.class);
 
         if (!getEntityStates().isNew(entityToEdit)
@@ -237,16 +240,17 @@ public abstract class StandardEditor<T extends Entity> extends Screen implements
 
                 this.readOnly = true;
             }
-        }
+        }*/
     }
 
     protected void releaseLock() {
-        if (isLocked()) {
+        // todo pessimistic locking
+        /*if (isLocked()) {
             Entity entity = getEditedEntityContainer().getItemOrNull();
             if (entity != null) {
                 getBeanLocator().get(LockService.class).unlock(getLockName(), entity.getId().toString());
             }
-        }
+        }*/
     }
 
     protected String getLockName() {
@@ -285,7 +289,9 @@ public abstract class StandardEditor<T extends Entity> extends Screen implements
         if (dataContext.isModified(entity) || dataContext.isRemoved(entity))
             return true;
 
-        for (MetaProperty property : entity.getMetaClass().getProperties()) {
+        Metadata metadata = getBeanLocator().get(Metadata.NAME);
+
+        for (MetaProperty property : metadata.getClass(entity).getProperties()) {
             if (property.getRange().isClass()) {
                 if (getEntityStates().isLoaded(entity, property.getName())) {
                     Object value = entity.getValue(property.getName());

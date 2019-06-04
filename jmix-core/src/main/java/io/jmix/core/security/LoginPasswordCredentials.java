@@ -16,6 +16,8 @@
 
 package io.jmix.core.security;
 
+import org.springframework.security.core.CredentialsContainer;
+
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
@@ -23,7 +25,7 @@ import java.util.Map;
 /**
  * Simple login and password credentials.
  */
-public class LoginPasswordCredentials extends AbstractClientCredentials {
+public class LoginPasswordCredentials extends AbstractClientCredentials implements CredentialsContainer {
 
     private static final long serialVersionUID = 348348249386685775L;
 

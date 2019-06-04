@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 
-@Component("cuba_AnnotationScanMetadataReaderFactory")
+@Component("jmix_AnnotationScanMetadataReaderFactory")
 public class AnnotationScanMetadataReaderFactory extends CachingMetadataReaderFactory {
 
     @Inject

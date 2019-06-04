@@ -1,3 +1,5 @@
+import io.jmix.gradle.ui.WidgetsCompile
+
 /*
  * Copyright 2019 Haulmont.
  *
@@ -16,6 +18,13 @@
 
 apply plugin: 'java'
 apply plugin: 'java-library'
+apply plugin: 'io.spring.dependency-management'
+
+dependencyManagement {
+    imports {
+        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+    }
+}
 
 version = rootProject.jmixVersion
 sourceCompatibility = rootProject.sourceCompatibility
@@ -24,11 +33,22 @@ targetCompatibility = rootProject.targetCompatibility
 def jmixUi = rootProject.project(':jmix-ui')
 
 dependencies {
+    api(project(':jmix-ui')) {
+        exclude group: 'javax.validation', module: 'validation-api'
+        exclude group: 'org.hibernate.validator', module: 'hibernate-validator'
+    }
+
+    api 'javax.validation:validation-api:1.0.0.GA'
+
     api "com.vaadin:vaadin-client:$jmixUi.vaadinVersion"
     api "com.vaadin:vaadin-client-compiler:$jmixUi.vaadinVersion"
     api "com.vaadin:vaadin-compatibility-client:$jmixUi.vaadinVersion"
+}
 
-    // todo debugging server
+configurations.all {
+    exclude group: 'org.springframework'
+    exclude group: 'org.springframework.security'
+    exclude group: 'org.eclipse.persistence'
 }
 
 jar {
@@ -36,3 +56,8 @@ jar {
 }
 
 // todo build JAR with JS
+
+task buildWidgets(type: WidgetsCompile) {
+    widgetSetClass = 'io.jmix.ui.widgets.WidgetSet'
+    strict = true
+}

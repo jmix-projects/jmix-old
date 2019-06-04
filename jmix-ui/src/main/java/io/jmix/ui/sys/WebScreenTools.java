@@ -16,40 +16,28 @@
 
 package io.jmix.ui.sys;
 
-import com.haulmont.cuba.core.global.ClientType;
-import com.haulmont.cuba.gui.ScreenTools;
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.components.Window;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.security.app.UserSettingService;
-import com.haulmont.cuba.web.WebConfig;
-import com.haulmont.cuba.web.gui.WebWindow;
-import org.apache.commons.lang3.StringUtils;
+import io.jmix.ui.generic.ScreenTools;
+import io.jmix.ui.generic.Screens;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import javax.inject.Inject;
 
 @Component(ScreenTools.NAME)
 public class WebScreenTools implements ScreenTools {
 
     private static final Logger log = LoggerFactory.getLogger(WebScreenTools.class);
 
-    @Inject
+    /*@Inject
     protected WebConfig webConfig;
-
     @Inject
     protected WindowConfig windowConfig;
-
     @Inject
-    protected UserSettingService userSettingService;
+    protected UserSettingService userSettingService;*/
 
     @Override
     public void openDefaultScreen(Screens screens) {
-        String defaultScreenId = webConfig.getDefaultScreenId();
+        // todo settings
+        /*String defaultScreenId = webConfig.getDefaultScreenId();
 
         if (webConfig.getUserCanChooseDefaultScreen()) {
             String userDefaultScreen = userSettingService.loadSetting(ClientType.WEB, "userDefaultScreen");
@@ -84,6 +72,6 @@ public class WebScreenTools implements ScreenTools {
 
         if (!webConfig.getDefaultScreenCanBeClosed()) {
             window.setCloseable(false);
-        }
+        }*/
     }
 }

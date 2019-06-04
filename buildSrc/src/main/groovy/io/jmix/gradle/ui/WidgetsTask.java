@@ -58,14 +58,14 @@ public abstract class WidgetsTask extends DefaultTask {
     }
 
     protected void collectProjectsWithDependency(Project project, String dependencyName, Set<Project> explored) {
-        Configuration compileConfiguration = project.getConfigurations().findByName("compile");
+        Configuration compileConfiguration = project.getConfigurations().getByName("compileClasspath");
         if (compileConfiguration != null) {
             for (Dependency dependencyItem : compileConfiguration.getAllDependencies()) {
                 if (dependencyItem instanceof ProjectDependency) {
                     Project dependencyProject = ((ProjectDependency) dependencyItem).getDependencyProject();
 
                     if (!explored.contains(dependencyProject)) {
-                        Configuration dependencyCompile = dependencyProject.getConfigurations().findByName("compile");
+                        Configuration dependencyCompile = dependencyProject.getConfigurations().findByName("compileClasspath");
                         if (dependencyCompile != null) {
                             Set<ResolvedArtifact> artifacts = dependencyCompile.getResolvedConfiguration().getResolvedArtifacts();
 

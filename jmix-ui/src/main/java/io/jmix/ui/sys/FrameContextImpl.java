@@ -15,16 +15,19 @@
  */
 package io.jmix.ui.sys;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.datatypes.impl.EnumClass;
-import com.haulmont.chile.core.model.Instance;
-import com.haulmont.chile.core.model.utils.InstanceUtils;
-import com.haulmont.cuba.gui.FrameContext;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.screen.MapScreenOptions;
-import com.haulmont.cuba.gui.screen.ScreenContext;
-import com.haulmont.cuba.gui.screen.ScreenOptions;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.metamodel.datatypes.impl.EnumClass;
+import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.metamodel.model.utils.InstanceUtils;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.HasValue;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.generic.FrameContext;
+import io.jmix.ui.screen.MapScreenOptions;
+import io.jmix.ui.screen.ScreenContext;
+import io.jmix.ui.screen.ScreenOptions;
+import io.jmix.ui.screen.UiControllerUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.*;
@@ -159,20 +162,6 @@ public class FrameContextImpl implements FrameContext {
             throw new RuntimeException("Component not found: " + componentName);
         if (component instanceof HasValue) {
             return ((HasValue) component).addValueChangeListener(listener);
-        } else if (component instanceof ListComponent) {
-            throw new UnsupportedOperationException("List component is not supported yet");
-        } else {
-            throw new RuntimeException("Unable to add listener to the component " + component);
-        }
-    }
-
-    @Override
-    public void removeValueChangeListener(String componentName, Consumer<HasValue.ValueChangeEvent> listener) {
-        Component component = frame.getComponent(componentName);
-        if (component == null)
-            throw new RuntimeException("Component not found: " + componentName);
-        if (component instanceof HasValue) {
-            ((HasValue) component).removeValueChangeListener(listener);
         } else if (component instanceof ListComponent) {
             throw new UnsupportedOperationException("List component is not supported yet");
         } else {

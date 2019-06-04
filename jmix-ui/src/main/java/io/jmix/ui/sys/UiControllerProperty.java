@@ -16,8 +16,8 @@
 
 package io.jmix.ui.sys;
 
-import static com.haulmont.bali.util.Preconditions.checkNotEmptyString;
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotEmptyString;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * Immutable POJO that stores name, value and type of property that will be injected

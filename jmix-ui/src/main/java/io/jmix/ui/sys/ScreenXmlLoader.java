@@ -39,7 +39,7 @@ import java.util.Map;
 @Component(ScreenXmlLoader.NAME)
 public class ScreenXmlLoader {
 
-    public static final String NAME = "cuba_ScreenXmlLoader";
+    public static final String NAME = "jmix_ScreenXmlLoader";
 
     @Inject
     protected Resources resources;

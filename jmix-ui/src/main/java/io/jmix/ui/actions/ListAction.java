@@ -16,9 +16,8 @@
 
 package io.jmix.ui.actions;
 
-import com.haulmont.cuba.gui.components.Action;
-import com.haulmont.cuba.gui.components.KeyCombination;
-import com.haulmont.cuba.gui.components.ListComponent;
+import io.jmix.ui.components.KeyCombination;
+import io.jmix.ui.components.ListComponent;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;

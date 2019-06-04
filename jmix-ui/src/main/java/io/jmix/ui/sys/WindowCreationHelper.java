@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 @org.springframework.stereotype.Component(WindowCreationHelper.NAME)
 public class WindowCreationHelper {
 
-    public static final String NAME = "cuba_WindowCreationHelper";
+    public static final String NAME = "jmix_WindowCreationHelper";
 
     private final Pattern INNER_COMPONENT_PATTERN = Pattern.compile("(.+?)\\[(.+?)]");
     private final Pattern COMPONENT_ACTION_PATTERN = Pattern.compile("(.+?)<(.+?)>");

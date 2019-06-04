@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.perf4j.StopWatch;
 import org.perf4j.slf4j.Slf4JStopWatch;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
@@ -30,7 +31,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -39,13 +39,12 @@ import java.util.stream.Collectors;
 @Component(WebJarResourceResolver.NAME)
 public class WebJarResourceResolver {
 
-    public static final String NAME = "cuba_WebJarResourceResolver";
+    public static final String NAME = "jmix_WebJarResourceResolver";
 
     public static final String VAADIN_PREFIX = "VAADIN/webjars/";
     public static final String CLASSPATH_WEBJAR_PREFIX = "META-INF/resources/webjars/";
 
-    @Inject
-    private Logger log;
+    private static final Logger log = LoggerFactory.getLogger(WebJarResourceResolver.class);
 
     protected SortedMap<String, String> fullPathIndex;
     protected Map<String, UrlHolder> mapping = new HashMap<>();

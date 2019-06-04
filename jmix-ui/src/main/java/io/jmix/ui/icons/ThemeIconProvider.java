@@ -16,13 +16,13 @@
 
 package io.jmix.ui.icons;
 
-import com.haulmont.bali.util.Preconditions;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import static com.haulmont.cuba.web.gui.icons.IconProvider.LOWEST_PLATFORM_PRECEDENCE;
+import static io.jmix.core.commons.util.Preconditions.checkNotEmptyString;
+import static io.jmix.ui.icons.IconProvider.LOWEST_PLATFORM_PRECEDENCE;
 
 @Component
 @Order(LOWEST_PLATFORM_PRECEDENCE - 20)
@@ -32,7 +32,7 @@ public class ThemeIconProvider implements IconProvider {
 
     @Override
     public Resource getIconResource(String iconPath) {
-        Preconditions.checkNotEmptyString(iconPath, "Icon path should not be empty");
+        checkNotEmptyString(iconPath, "Icon path should not be empty");
 
         String icon = iconPath.substring(THEME_PREFIX.length());
         return new ThemeResource(icon);

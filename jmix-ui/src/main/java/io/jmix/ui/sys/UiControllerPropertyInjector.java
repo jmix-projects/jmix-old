@@ -42,7 +42,7 @@ public class UiControllerPropertyInjector {
 
     private static final Logger log = LoggerFactory.getLogger(UiControllerPropertyInjector.class);
 
-    public static final String NAME = "cuba_UiControllerPropertyInjector";
+    public static final String NAME = "jmix_UiControllerPropertyInjector";
 
     protected final FrameOwner frameOwner;
     protected final List<UiControllerProperty> properties;

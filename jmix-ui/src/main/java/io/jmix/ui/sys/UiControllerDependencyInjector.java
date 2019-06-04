@@ -54,6 +54,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.lang.invoke.MethodHandle;
+import java.lang.reflect.Field;
 import java.lang.reflect.*;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class UiControllerDependencyInjector {
 
     private static final Logger log = LoggerFactory.getLogger(UiControllerDependencyInjector.class);
 
-    public static final String NAME = "cuba_UiControllerDependencyInjector";
+    public static final String NAME = "jmix_UiControllerDependencyInjector";
 
     protected FrameOwner frameOwner;
     protected ScreenOptions options;
@@ -89,7 +90,6 @@ public class UiControllerDependencyInjector {
 
     public UiControllerDependencyInjector(FrameOwner frameOwner, ScreenOptions options) {
         this.frameOwner = frameOwner;
-
         this.options = options;
     }
 

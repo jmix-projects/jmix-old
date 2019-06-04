@@ -16,8 +16,8 @@
 
 package io.jmix.ui.sys;
 
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.xml.layout.loaders.ComponentLoaderContext;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.xml.ComponentLoaderContext;
 
 public class FragmentContextImpl extends FrameContextImpl {
 

@@ -16,9 +16,9 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.EventHub;
-import com.haulmont.cuba.gui.components.Facet;
-import com.haulmont.cuba.gui.components.Frame;
+import io.jmix.core.commons.events.EventHub;
+import io.jmix.ui.components.Facet;
+import io.jmix.ui.components.Frame;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;

@@ -15,46 +15,28 @@
  */
 package io.jmix.ui.sys;
 
-import com.haulmont.cuba.core.global.*;
-import com.haulmont.cuba.gui.*;
-import com.haulmont.cuba.gui.Notifications.NotificationType;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.DialogWindow.WindowMode;
-import com.haulmont.cuba.gui.components.Window.HasWorkArea;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.components.mainwindow.AppWorkArea;
-import com.haulmont.cuba.gui.components.mainwindow.AppWorkArea.Mode;
-import com.haulmont.cuba.gui.data.DsContext;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.model.impl.ScreenDataImpl;
-import com.haulmont.cuba.gui.screen.*;
-import com.haulmont.cuba.gui.screen.Screen.*;
-import com.haulmont.cuba.gui.screen.compatibility.*;
-import com.haulmont.cuba.gui.sys.*;
-import com.haulmont.cuba.gui.theme.ThemeConstants;
-import com.haulmont.cuba.gui.util.UnknownOperationResult;
-import com.haulmont.cuba.gui.xml.layout.ComponentLoader;
-import com.haulmont.cuba.gui.xml.layout.LayoutLoader;
-import com.haulmont.cuba.gui.xml.layout.loaders.ComponentLoaderContext;
-import com.haulmont.cuba.security.entity.PermissionType;
-import com.haulmont.cuba.web.gui.WebWindow;
-import com.haulmont.cuba.web.gui.components.WebDialogWindow.GuiDialogWindow;
-import com.haulmont.cuba.web.gui.components.WebTabWindow;
-import com.haulmont.cuba.web.gui.components.mainwindow.WebAppWorkArea;
-import com.haulmont.cuba.web.widgets.*;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Layout;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.Messages;
 import io.jmix.core.UuidSource;
+import io.jmix.core.security.AccessDeniedException;
+import io.jmix.core.security.PermissionType;
 import io.jmix.core.security.Security;
 import io.jmix.ui.AppUI;
-import io.jmix.ui.ClientConfig;
 import io.jmix.ui.WebConfig;
-import io.jmix.ui.components.RootWindow;
-import io.jmix.ui.components.Window;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.actions.DialogAction;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.Window.HasWorkArea;
+import io.jmix.ui.components.impl.WebAppWorkArea;
+import io.jmix.ui.components.impl.WebDialogWindow.GuiDialogWindow;
+import io.jmix.ui.components.impl.WebTabWindow;
+import io.jmix.ui.components.impl.WebWindow;
 import io.jmix.ui.components.impl.WindowImplementation;
 import io.jmix.ui.generic.*;
+import io.jmix.ui.icons.CubaIcon;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.icons.Icons;
 import io.jmix.ui.logging.ScreenLifeCycle;
@@ -62,7 +44,13 @@ import io.jmix.ui.logging.UserActionsLogger;
 import io.jmix.ui.model.impl.ScreenDataImpl;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.screen.Screen.*;
+import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.util.OperationResult;
+import io.jmix.ui.util.UnknownOperationResult;
+import io.jmix.ui.widgets.*;
+import io.jmix.ui.xml.ComponentLoader;
+import io.jmix.ui.xml.ComponentLoaderContext;
+import io.jmix.ui.xml.LayoutLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 import org.perf4j.StopWatch;
@@ -78,10 +66,11 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.haulmont.cuba.gui.screen.FrameOwner.WINDOW_CLOSE_ACTION;
-import static com.haulmont.cuba.gui.screen.UiControllerUtils.*;
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.components.AppWorkArea.Mode;
+import static io.jmix.ui.components.AppWorkArea.State;
 import static io.jmix.ui.logging.UIPerformanceLogger.createStopWatch;
+import static io.jmix.ui.screen.FrameOwner.WINDOW_CLOSE_ACTION;
 import static io.jmix.ui.screen.UiControllerUtils.*;
 import static org.apache.commons.lang3.reflect.ConstructorUtils.invokeConstructor;
 
@@ -120,8 +109,6 @@ public class WebScreens implements Screens {
 
     @Inject
     protected WebConfig webConfig;
-    @Inject
-    protected ClientConfig clientConfig;
 
     protected AppUI ui;
 
@@ -184,8 +171,8 @@ public class WebScreens implements Screens {
                         this,
                         ui.getDialogs(),
                         ui.getNotifications(),
-                        ui.getFragments(),
-                        ui.getUrlRouting())
+                        ui.getFragments()/*, todo navigation
+                        ui.getUrlRouting()*/)
         );
         setScreenData(controller, new ScreenDataImpl());
 
@@ -328,17 +315,6 @@ public class WebScreens implements Screens {
         LayoutLoader layoutLoader = beanLocator.getPrototype(LayoutLoader.NAME, componentLoaderContext);
         ComponentLoader<Window> windowLoader = layoutLoader.createWindowContent(window, element);
 
-        if (controller instanceof LegacyFrame) {
-            screenViewsLoader.deployViews(element);
-
-            initDsContext(window, element, componentLoaderContext);
-
-            DsContext dsContext = ((LegacyFrame) controller).getDsContext();
-            if (dsContext != null) {
-                dsContext.setFrameContext(window.getContext());
-            }
-        }
-
         windowLoader.loadComponent();
     }
 
@@ -446,8 +422,8 @@ public class WebScreens implements Screens {
                 if (maxTabCount > 0
                         && workArea.getOpenedTabCount() + 1 > maxTabCount) {
                     ui.getNotifications()
-                            .create(NotificationType.WARNING)
-                            .withCaption(messages.formatMainMessage("tooManyOpenTabs.message", maxTabCount))
+                            .create(Notifications.NotificationType.WARNING)
+                            .withCaption(messages.formatMessage("tooManyOpenTabs.message", maxTabCount))
                             .show();
 
                     return OperationResult.fail();
@@ -485,12 +461,13 @@ public class WebScreens implements Screens {
     }
 
     protected void changeUrl(Screen screen) {
-        WebWindow webWindow = (WebWindow) screen.getWindow();
+        // todo navigation
+        /*WebWindow webWindow = (WebWindow) screen.getWindow();
         Map<String, String> params = webWindow.getResolvedState() != null
                 ? webWindow.getResolvedState().getParams()
                 : Collections.emptyMap();
 
-        ui.getUrlRouting().pushState(screen, params);
+        ui.getUrlRouting().pushState(screen, params);*/
     }
 
     protected void checkNotYetOpened(Screen screen) {
@@ -678,14 +655,14 @@ public class WebScreens implements Screens {
         }
 
         if (allWindowsRemoved) {
-            workArea.switchTo(AppWorkArea.State.INITIAL_LAYOUT);
+            workArea.switchTo(State.INITIAL_LAYOUT);
         }
     }
 
     protected void removeDialogWindow(Screen screen) {
         Window window = screen.getWindow();
 
-        CubaWindow cubaDialogWindow = window.unwrapComposition(CubaWindow.class);
+        JmixWindow cubaDialogWindow = window.unwrapComposition(JmixWindow.class);
         cubaDialogWindow.forceClose();
     }
 
@@ -996,11 +973,11 @@ public class WebScreens implements Screens {
             UnknownOperationResult result = new UnknownOperationResult();
 
             ui.getDialogs().createOptionDialog()
-                    .withCaption(messages.getMainMessage("closeUnsaved.caption"))
-                    .withMessage(messages.getMainMessage("discardChangesOnClose"))
+                    .withCaption(messages.getMessage("closeUnsaved.caption"))
+                    .withMessage(messages.getMessage("discardChangesOnClose"))
                     .withActions(
                             new BaseAction("closeApplication")
-                                    .withCaption(messages.getMainMessage("closeApplication"))
+                                    .withCaption(messages.getMessage("closeApplication"))
                                     .withIcon(icons.get(CubaIcon.DIALOG_OK))
                                     .withHandler(event -> {
                                         closeWindowsInternal();
@@ -1028,28 +1005,31 @@ public class WebScreens implements Screens {
     }
 
     public void saveScreenHistory() {
-        getOpenedWorkAreaScreensStream().forEach(s ->
+
+        // todo screen history
+        /*getOpenedWorkAreaScreensStream().forEach(s ->
                 screenHistorySupport.saveScreenHistory(s)
         );
 
         getDialogScreensStream().forEach(s ->
                 screenHistorySupport.saveScreenHistory(s)
-        );
+        );*/
     }
 
     public void saveScreenSettings() {
-        Screen rootScreen = getOpenedScreens().getRootScreen();
+        // todo settings
+        /*Screen rootScreen = getOpenedScreens().getRootScreen();
 
         saveSettings(rootScreen);
 
         getOpenedWorkAreaScreensStream().forEach(UiControllerUtils::saveSettings);
 
-        getDialogScreensStream().forEach(UiControllerUtils::saveSettings);
+        getDialogScreensStream().forEach(UiControllerUtils::saveSettings);*/
     }
 
     protected void showNewTabWindow(Screen screen) {
         WebAppWorkArea workArea = getConfiguredWorkArea();
-        workArea.switchTo(AppWorkArea.State.WINDOW_CONTAINER);
+        workArea.switchTo(State.WINDOW_CONTAINER);
 
         // work with new window
         createNewTabLayout(screen);
@@ -1072,7 +1052,9 @@ public class WebScreens implements Screens {
         WindowBreadCrumbs breadCrumbs = createWindowBreadCrumbs(screen);
         breadCrumbs.setWindowNavigateHandler(this::handleWindowBreadCrumbsNavigate);
         breadCrumbs.addWindow(screen.getWindow());
-        ((WebWindow) screen.getWindow()).setUrlStateMark(getConfiguredWorkArea().generateUrlStateMark());
+
+        // todo navigation
+        // ((WebWindow) screen.getWindow()).setUrlStateMark(getConfiguredWorkArea().generateUrlStateMark());
 
         TabWindowContainer windowContainer = new TabWindowContainerImpl();
         windowContainer.setPrimaryStyleName("c-app-window-wrap");
@@ -1126,7 +1108,7 @@ public class WebScreens implements Screens {
         } else {
             windowContainer.addStyleName("c-app-single-window");
 
-            CubaSingleModeContainer mainLayout = workArea.getSingleWindowContainer();
+            JmixSingleModeContainer mainLayout = workArea.getSingleWindowContainer();
 
             if (mainLayout.getWindowContainer() != null) {
                 // remove all windows from single stack
@@ -1142,7 +1124,7 @@ public class WebScreens implements Screens {
                 }
 
                 // after last window closed we need to switch back to window container
-                workArea.switchTo(AppWorkArea.State.WINDOW_CONTAINER);
+                workArea.switchTo(State.WINDOW_CONTAINER);
             }
 
             mainLayout.setWindowContainer(windowContainer);
@@ -1151,7 +1133,7 @@ public class WebScreens implements Screens {
 
     protected void showThisTabWindow(Screen screen) {
         WebAppWorkArea workArea = getConfiguredWorkArea();
-        workArea.switchTo(AppWorkArea.State.WINDOW_CONTAINER);
+        workArea.switchTo(State.WINDOW_CONTAINER);
 
         TabWindowContainer windowContainer;
         if (workArea.getMode() == Mode.TABBED) {
@@ -1176,7 +1158,8 @@ public class WebScreens implements Screens {
         windowContainer.addComponent(newWindowComposition);
 
         breadCrumbs.addWindow(newWindow);
-        ((WebWindow) newWindow).setUrlStateMark(workArea.generateUrlStateMark());
+        // todo navigation
+        // ((WebWindow) newWindow).setUrlStateMark(workArea.generateUrlStateMark());
 
         if (workArea.getMode() == Mode.TABBED) {
             TabSheetBehaviour tabSheet = workArea.getTabbedWindowContainer().getTabSheetBehaviour();
@@ -1209,10 +1192,11 @@ public class WebScreens implements Screens {
 
         WebAppWorkArea workArea = getConfiguredWorkAreaOrNull();
         if (workArea != null) {
-            ((WebWindow) window).setUrlStateMark(workArea.generateUrlStateMark());
+            // todo navigation
+            // ((WebWindow) window).setUrlStateMark(workArea.generateUrlStateMark());
         }
 
-        CubaWindow vWindow = window.unwrapComposition(CubaWindow.class);
+        JmixWindow vWindow = window.unwrapComposition(JmixWindow.class);
         vWindow.setErrorHandler(ui);
 
         String cubaId = "dialog_" + window.getId();
@@ -1289,36 +1273,6 @@ public class WebScreens implements Screens {
         }
     }
 
-    @Deprecated
-    protected void applyOpenTypeParameters(Window window, OpenType openType) {
-        if (window instanceof DialogWindow) {
-            DialogWindow dialogWindow = (DialogWindow) window;
-
-            if (openType.getCloseOnClickOutside() != null) {
-                dialogWindow.setCloseOnClickOutside(openType.getCloseOnClickOutside());
-            }
-            if (openType.getMaximized() != null) {
-                dialogWindow.setWindowMode(openType.getMaximized() ? WindowMode.MAXIMIZED : WindowMode.NORMAL);
-            }
-            if (openType.getModal() != null) {
-                dialogWindow.setModal(openType.getModal());
-            }
-            if (openType.getResizable() != null) {
-                dialogWindow.setResizable(openType.getResizable());
-            }
-            if (openType.getWidth() != null) {
-                dialogWindow.setDialogWidth(openType.getWidthString());
-            }
-            if (openType.getHeight() != null) {
-                dialogWindow.setDialogHeight(openType.getHeightString());
-            }
-        }
-
-        if (openType.getCloseable() != null) {
-            window.setCloseable(openType.getCloseable());
-        }
-    }
-
     /**
      * Content of each tab of AppWorkArea TabSheet.
      */
@@ -1386,8 +1340,8 @@ public class WebScreens implements Screens {
         public boolean isSelected() {
             checkAttached();
 
-            if (workAreaContainer instanceof CubaSingleModeContainer) {
-                return ((CubaSingleModeContainer) workAreaContainer).getWindowContainer() == windowContainer;
+            if (workAreaContainer instanceof JmixSingleModeContainer) {
+                return ((JmixSingleModeContainer) workAreaContainer).getWindowContainer() == windowContainer;
             }
 
             if (workAreaContainer instanceof HasTabSheetBehaviour) {

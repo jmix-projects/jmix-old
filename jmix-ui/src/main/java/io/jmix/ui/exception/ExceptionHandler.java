@@ -15,12 +15,11 @@
  */
 package io.jmix.ui.exception;
 
-import com.haulmont.cuba.web.App;
 import com.vaadin.server.ErrorEvent;
+import io.jmix.ui.App;
 
 /**
  * Interface to be implemented by exception handlers in Web-client.
- *
  */
 public interface ExceptionHandler {
     /**

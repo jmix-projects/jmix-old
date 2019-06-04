@@ -17,6 +17,7 @@
 package io.jmix.ui.icons;
 
 import com.vaadin.server.Resource;
+import io.jmix.ui.App;
 import io.jmix.ui.theme.ThemeConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

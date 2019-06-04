@@ -15,8 +15,6 @@
  */
 package io.jmix.ui.xml;
 
-import com.haulmont.cuba.gui.xml.layout.loaders.FragmentLoader;
-import com.haulmont.cuba.gui.xml.layout.loaders.WindowLoader;
 import io.jmix.core.BeanLocator;
 import io.jmix.ui.components.Fragment;
 import io.jmix.ui.components.Window;
@@ -71,11 +69,12 @@ public class LayoutLoader {
         return initLoader(element, loaderClass);
     }
 
-    protected FragmentLoader getFragmentLoader(Element element) {
+    // todo fragments
+    /*protected FragmentLoader getFragmentLoader(Element element) {
         Class<? extends ComponentLoader> loaderClass = config.getFragmentLoader();
 
         return (FragmentLoader) initLoader(element, loaderClass);
-    }
+    }*/
 
     protected WindowLoader getWindowLoader(Element element) {
         Class<? extends ComponentLoader> loaderClass = config.getWindowLoader();
@@ -117,15 +116,16 @@ public class LayoutLoader {
     }
 
     public ComponentLoader<Fragment> createFragmentContent(Fragment fragment, Element rootWindowElement) {
-        FragmentLoader fragmentLoader = getFragmentLoader(rootWindowElement);
+        /*FragmentLoader fragmentLoader = getFragmentLoader(rootWindowElement);
         fragmentLoader.setResultComponent(fragment);
 
         Element layout = rootWindowElement.element("layout");
         if (layout != null) {
             fragmentLoader.createContent(layout);
-        }
+        }*/
 
-        return fragmentLoader;
+        // return fragmentLoader;
+        throw new UnsupportedOperationException(); // todo fragments
     }
 
     public ComponentLoader<Window> createWindowContent(Window window, Element rootWindowElement) {
