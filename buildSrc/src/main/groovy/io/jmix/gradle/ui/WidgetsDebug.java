@@ -23,7 +23,7 @@ import org.gradle.api.file.FileCollection;
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.*;
-import org.gradle.internal.impldep.org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.util.*;
@@ -47,7 +47,7 @@ public class WidgetsDebug extends WidgetsTask {
 
     public WidgetsDebug() {
         setDescription("Debug GWT widgetset");
-        setGroup("Web resources");
+        setGroup("debug");
         // set default task dependsOn
         dependsOn(getProject().getTasks().getByPath(JavaPlugin.CLASSES_TASK_NAME));
     }

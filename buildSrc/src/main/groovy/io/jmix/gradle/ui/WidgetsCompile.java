@@ -22,7 +22,7 @@ import org.gradle.api.file.FileCollection;
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.*;
-import org.gradle.internal.impldep.org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class WidgetsCompile extends WidgetsTask {
 
     public WidgetsCompile() {
         setDescription("Builds GWT widgetset");
-        setGroup("Web resources");
+        setGroup("web");
         // set default task dependsOn
         dependsOn(getProject().getTasks().getByPath(JavaPlugin.CLASSES_TASK_NAME));
     }

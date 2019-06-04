@@ -16,6 +16,7 @@
 
 package io.jmix.gradle
 
+import io.jmix.gradle.ui.ThemeCompile
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -34,5 +35,7 @@ class JmixPlugin implements Plugin<Project> {
                 project.tasks.findByName('compileTestJava').doLast(new EnhancingAction('test'))
             }
         }
+
+        project.ext.ThemeCompile = ThemeCompile.class
     }
 }

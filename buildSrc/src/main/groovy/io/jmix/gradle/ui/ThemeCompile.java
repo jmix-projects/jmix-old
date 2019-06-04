@@ -16,23 +16,20 @@
 
 package io.jmix.gradle.ui;
 
+import com.google.common.base.Splitter;
 import com.vaadin.sass.internal.ScssContext;
 import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.internal.handler.SCSSErrorHandler;
 import com.yahoo.platform.yui.compressor.CssCompressor;
+import org.apache.commons.io.FileUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
-import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.artifacts.ResolvedArtifact;
-import org.gradle.api.artifacts.ResolvedConfiguration;
-import org.gradle.api.artifacts.ResolvedDependency;
+import org.gradle.api.artifacts.*;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.internal.impldep.com.google.common.base.Splitter;
-import org.gradle.internal.impldep.org.apache.commons.io.FileUtils;
 import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.CSSParseException;
 
@@ -49,8 +46,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
 
-import static org.gradle.internal.impldep.org.apache.commons.io.FileUtils.deleteDirectory;
-import static org.gradle.internal.impldep.org.apache.commons.io.FileUtils.forceMkdir;
+import static org.apache.commons.io.FileUtils.deleteDirectory;
+import static org.apache.commons.io.FileUtils.forceMkdir;
 
 public class ThemeCompile extends DefaultTask {
     public static final String VAADIN_STYLESHEETS_MANIFEST_KEY = "Vaadin-Stylesheets";
@@ -84,7 +81,7 @@ public class ThemeCompile extends DefaultTask {
 
     public ThemeCompile() {
         setDescription("Compile SCSS styles in theme");
-        setGroup("Web resources");
+        setGroup("web");
     }
 
     @OutputDirectory
@@ -482,8 +479,10 @@ public class ThemeCompile extends DefaultTask {
     }
 
     protected void prepareAppComponentsInclude(File themeBuildDir) {
-        Configuration appComponentConf = getProject().getRootProject().getConfigurations().getByName("appComponent");
-        if (appComponentConf.getDependencies().size() > 0) {
+        ConfigurationContainer configurations = getProject().getRootProject().getConfigurations();
+        Configuration appComponentConf = configurations.findByName("appComponent");
+        if (appComponentConf != null
+                && appComponentConf.getDependencies().size() > 0) {
             prepareAppComponentsIncludeConfiguration(themeBuildDir);
         }
     }
@@ -500,7 +499,12 @@ public class ThemeCompile extends DefaultTask {
         StringBuilder appComponentsIncludeBuilder = new StringBuilder();
         appComponentsIncludeBuilder.append("/* This file is managed automatically and will be overwritten */\n\n");
 
-        Configuration appComponentConf = getProject().getRootProject().getConfigurations().getByName("appComponent");
+        ConfigurationContainer configurations = getProject().getRootProject().getConfigurations();
+        Configuration appComponentConf = configurations.findByName("appComponent");
+        if (appComponentConf == null) {
+            return;
+        }
+
         ResolvedConfiguration resolvedConfiguration = appComponentConf.getResolvedConfiguration();
         Set<ResolvedDependency> dependencies = resolvedConfiguration.getFirstLevelModuleDependencies();
 

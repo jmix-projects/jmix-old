@@ -31,6 +31,8 @@ import java.util.*;
 
 public abstract class WidgetsTask extends DefaultTask {
 
+    protected static final String MAIN_SOURCE_SET = "main";
+
     protected List<String> excludes = new ArrayList<>();
 
     protected Set<String> compilerJvmArgs = new LinkedHashSet<>(Collections.singleton("-Djava.awt.headless=true"));
@@ -107,7 +109,7 @@ public abstract class WidgetsTask extends DefaultTask {
         List<File> sources = new ArrayList<>();
         List<File> files = new ArrayList<>();
 
-        SourceSet mainSourceSet = getSourceSet(getProject(), "main");
+        SourceSet mainSourceSet = getSourceSet(getProject(), MAIN_SOURCE_SET);
 
         sources.addAll(mainSourceSet.getJava().getSrcDirs());
         sources.addAll(getClassesDirs(mainSourceSet));
@@ -116,7 +118,7 @@ public abstract class WidgetsTask extends DefaultTask {
         for (Project dependencyProject : collectProjectsWithDependency("vaadin-client")) {
             getProject().getLogger().info("\tFound source project {} for widgetset building", dependencyProject.getName());
 
-            SourceSet depMainSourceSet = getSourceSet(dependencyProject, "main");
+            SourceSet depMainSourceSet = getSourceSet(dependencyProject, MAIN_SOURCE_SET);
 
             sources.addAll(depMainSourceSet.getJava().getSrcDirs());
             sources.addAll(getClassesDirs(depMainSourceSet));

@@ -1,3 +1,5 @@
+import io.jmix.gradle.ui.ThemeCompile
+
 /*
  * Copyright 2019 Haulmont.
  *
@@ -33,11 +35,18 @@ ext {
     vaadinVersion = '8.6.4-13-cuba'
 }
 
+configurations {
+    themes
+}
+
 dependencies {
     api project(':jmix-core')
     api "com.vaadin:vaadin-server:$project.vaadinVersion"
+    api "com.vaadin:vaadin-compatibility-server:$project.vaadinVersion"
     api "com.vaadin:vaadin-push:$project.vaadinVersion"
     api 'com.vaadin:vaadin-spring:3.1.1'
+
+    api 'org.perf4j:perf4j:0.9.16'
     
     testImplementation 'org.springframework:spring-test'
     testImplementation "org.spockframework:spock-core:$rootProject.spockVersion"
@@ -46,6 +55,8 @@ dependencies {
     testImplementation 'org.apache.commons:commons-dbcp2'
     testRuntimeOnly 'org.hsqldb:hsqldb:2.4.1'
     testRuntimeOnly 'org.slf4j:slf4j-simple'
+
+    themes "com.vaadin:vaadin-themes:$project.vaadinVersion"
 }
 
 jar {
@@ -55,4 +66,9 @@ jar {
     }
 }
 
-// todo build theme and pack JAR
+task buildThemes(type: ThemeCompile)
+
+task webArchive(dependsOn: buildThemes, type: Jar) {
+    from file("$buildDir/web")
+    classifier = 'themes'
+}
