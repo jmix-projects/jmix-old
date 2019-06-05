@@ -27,7 +27,7 @@ import io.jmix.ui.components.Component;
  */
 public interface UiComponents {
 
-    String NAME = "cuba_UiComponents";
+    String NAME = "jmix_UiComponents";
 
     /**
      * Create a component instance by its name.

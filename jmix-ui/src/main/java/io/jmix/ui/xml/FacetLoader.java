@@ -20,6 +20,7 @@ import io.jmix.ui.components.Facet;
 import io.jmix.ui.generic.Facets;
 import io.jmix.ui.xml.ComponentLoader.ComponentContext;
 import org.dom4j.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
@@ -36,14 +37,14 @@ import static java.util.stream.Collectors.toMap;
 @ParametersAreNonnullByDefault
 public class FacetLoader {
 
-    public static final String NAME = "cuba_FacetLoader";
+    public static final String NAME = "jmix_FacetLoader";
 
     protected Map<String, FacetProvider> registrations = new HashMap<>();
 
     @Inject
     protected Facets facets;
 
-    @Inject
+    @Autowired(required = false)
     protected void setFacetRegistrations(List<FacetProvider> registrations) {
         this.registrations = registrations.stream()
                 .collect(toMap(FacetProvider::getFacetTag, identity()));

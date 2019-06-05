@@ -37,7 +37,6 @@ dependencies {
         exclude group: 'javax.validation', module: 'validation-api'
         exclude group: 'org.hibernate.validator', module: 'hibernate-validator'
     }
-
     api 'javax.validation:validation-api:1.0.0.GA'
 
     api "com.vaadin:vaadin-client:$jmixUi.vaadinVersion"

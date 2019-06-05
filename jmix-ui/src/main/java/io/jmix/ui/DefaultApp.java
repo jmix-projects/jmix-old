@@ -85,6 +85,8 @@ public class DefaultApp extends App {
 
                 currentUi.setUserSession(connection.getSession());
 
+                WebConfig webConfig = configInterfaces.getConfig(WebConfig.class);
+
                 getAppUIs()
                         .stream()
                         .filter(ui ->
@@ -236,6 +238,7 @@ public class DefaultApp extends App {
 
         UserSession appUserSession = userSessionSource.getUserSession();
 
+        WebConfig webConfig = configInterfaces.getConfig(WebConfig.class);
         for (AppUI ui : getAppUIs()) {
             if (currentUi != ui
                     && Objects.equals(appUserSession, ui.getUserSession())
@@ -248,6 +251,7 @@ public class DefaultApp extends App {
     }
 
     protected void preventSessionFixation(Connection connection, UserSession userSession) {
+        WebConfig webConfig = configInterfaces.getConfig(WebConfig.class);
         if (connection.isAuthenticated()
                 // && !isLoggedInWithExternalAuth(userSession) todo external authentication
                 && webConfig.getUseSessionFixationProtection()
@@ -268,6 +272,8 @@ public class DefaultApp extends App {
 
     @Override
     protected String routeTopLevelWindowId() {
+        WebConfig webConfig = configInterfaces.getConfig(WebConfig.class);
+
         if (connection.isAuthenticated()) {
             return webConfig.getMainScreenId();
         } else {

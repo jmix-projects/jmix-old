@@ -21,7 +21,7 @@ package io.jmix.ui.generic;
  */
 public interface ScreenTools {
 
-    String NAME = "cuba_ScreenTools";
+    String NAME = "jmix_ScreenTools";
 
     /**
      * Opens default screen.

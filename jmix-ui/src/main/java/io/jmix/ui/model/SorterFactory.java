@@ -25,10 +25,10 @@ import javax.annotation.Nullable;
 /**
  * Factory bean for sorters.
  */
-@Component("cuba_SorterFactory")
+@Component("jmix_SorterFactory")
 public class SorterFactory {
 
-    public static final String NAME = "cuba_SorterFactory";
+    public static final String NAME = "jmix_SorterFactory";
 
     /**
      * Creates {@code Sorter}.

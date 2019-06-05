@@ -36,7 +36,7 @@ import java.util.*;
 @Component(ThemeConstantsRepository.NAME)
 public class ThemeConstantsRepository {
 
-    public static final String NAME = "cuba_ThemeConstantsRepository";
+    public static final String NAME = "jmix_ThemeConstantsRepository";
 
     private static final Logger log = LoggerFactory.getLogger(ThemeConstantsRepository.class);
 
@@ -60,7 +60,7 @@ public class ThemeConstantsRepository {
     }
 
     protected void init() {
-        String configName = AppContext.getProperty("cuba.themeConfig");
+        String configName = AppContext.getProperty("jmix.themeConfig");
         if (!StringUtils.isBlank(configName)) {
             Map<String, Map<String, String>> themeProperties = new HashMap<>();
 

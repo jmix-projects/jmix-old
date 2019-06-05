@@ -26,6 +26,8 @@ import java.util.Map;
 public class AnonymousUserCredentials extends AbstractClientCredentials {
     private static final long serialVersionUID = 3137392403475947L;
 
+    protected Object principal;
+
     public AnonymousUserCredentials() {
     }
 
@@ -42,6 +44,19 @@ public class AnonymousUserCredentials extends AbstractClientCredentials {
         super(locale, params);
     }
 
+    public AnonymousUserCredentials(Object principal, Locale locale, Map<String, Object> params) {
+        super(locale, params);
+
+        this.principal = principal;
+
+        setAuthenticated(true);
+    }
+
+    @Override
+    public Object getPrincipal() {
+        return principal;
+    }
+
     @Override
     public String toString() {
         return "AnonymousUserCredentials{}";
@@ -49,11 +64,6 @@ public class AnonymousUserCredentials extends AbstractClientCredentials {
 
     @Override
     public String getName() {
-        return "";
-    }
-
-    @Override
-    public Object getPrincipal() {
         return "";
     }
 }

@@ -16,16 +16,20 @@
 
 package io.jmix.ui.sys;
 
+import org.springframework.core.io.Resource;
+
 public final class UiControllerDefinition {
 
     private final String id;
     private final String controllerClass;
+    private final Resource resource;
     // private final RouteDefinition routeDefinition;
 
-    public UiControllerDefinition(String id, String controllerClass) {
+    public UiControllerDefinition(String id, String controllerClass, Resource resource) {
         this.id = id;
         this.controllerClass = controllerClass;
         // this.routeDefinition = null;
+        this.resource = resource;
     }
 
     // todo
@@ -48,6 +52,10 @@ public final class UiControllerDefinition {
         return routeDefinition;
     }
 */
+    public Resource getResource() {
+        return resource;
+    }
+
     @Override
     public String toString() {
         return "UiControllerDefinition{" +

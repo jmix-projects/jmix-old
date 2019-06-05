@@ -17,6 +17,7 @@
 package io.jmix.ui.sys;
 
 import com.google.common.base.Strings;
+import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
 import io.jmix.ui.actions.ActionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -21,7 +21,7 @@ import io.jmix.ui.executors.impl.TaskHandlerImpl;
 @SuppressWarnings("unused")
 public interface WatchDog {
 
-    String NAME = "cuba_BackgroundWorker_WatchDog";
+    String NAME = "jmix_BackgroundWorker_WatchDog";
 
     /**
      * Add task under WatchDog control.

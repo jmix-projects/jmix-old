@@ -23,7 +23,7 @@ package io.jmix.ui.components;
  * @see DOM
  */
 public interface HtmlAttributes {
-    String NAME = "cuba_HtmlAttributes";
+    String NAME = "jmix_HtmlAttributes";
 
     /**
      * Sets DOM attribute on the top most element of UI component.

@@ -16,6 +16,7 @@
 
 package io.jmix.ui.sys;
 
+import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
 import io.jmix.ui.screen.UiController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,12 +48,11 @@ public class UiControllersConfiguration extends AbstractScanConfiguration {
     protected List<String> basePackages = Collections.emptyList();
     protected List<UiControllerDefinition> explicitDefinitions = Collections.emptyList();
 
-    public UiControllersConfiguration() {
-    }
-
     @Inject
-    public void setApplicationContext(ApplicationContext applicationContext) {
+    public UiControllersConfiguration(ApplicationContext applicationContext,
+                                      AnnotationScanMetadataReaderFactory metadataReaderFactory) {
         this.applicationContext = applicationContext;
+        this.metadataReaderFactory = metadataReaderFactory;
     }
 
     public List<String> getBasePackages() {
@@ -103,7 +103,7 @@ public class UiControllersConfiguration extends AbstractScanConfiguration {
         // todo navigation
 //        RouteDefinition routeDefinition = extractRouteDefinition(metadataReader);
 
-        return new UiControllerDefinition(controllerId, className);
+        return new UiControllerDefinition(controllerId, className, metadataReader.getResource());
     }
 
     // todo navigation
@@ -158,11 +158,6 @@ public class UiControllersConfiguration extends AbstractScanConfiguration {
     @Override
     protected MetadataReaderFactory getMetadataReaderFactory() {
         return metadataReaderFactory;
-    }
-
-    @Inject
-    public void setMetadataReaderFactory(AnnotationScanMetadataReaderFactory metadataReaderFactory) {
-        this.metadataReaderFactory = metadataReaderFactory;
     }
 
     @Override

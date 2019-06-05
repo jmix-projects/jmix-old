@@ -66,7 +66,7 @@ import java.util.stream.Collectors;
  */
 public abstract class App {
 
-    public static final String NAME = "cuba_App";
+    public static final String NAME = "jmix_App";
 
     public static final String USER_SESSION_ATTR = "userSessionId";
 
@@ -89,13 +89,6 @@ public abstract class App {
     protected ExceptionHandlers exceptionHandlers;
 
     @Inject
-    protected GlobalConfig globalConfig;
-    @Inject
-    protected WebConfig webConfig;
-    @Inject
-    protected WebAuthConfig webAuthConfig;
-
-    @Inject
     protected WindowConfig windowConfig;
     @Inject
     protected ThemeConstantsRepository themeConstantsRepository;
@@ -110,6 +103,8 @@ public abstract class App {
     protected Events events;
     @Inject
     protected BeanLocator beanLocator;
+    @Inject
+    protected ConfigInterfaces configInterfaces;
 
     protected AppCookies cookies;
 
@@ -124,6 +119,9 @@ public abstract class App {
     }
 
     protected ThemeConstants loadTheme() {
+        WebConfig webConfig = configInterfaces.getConfig(WebConfig.class);
+        GlobalConfig globalConfig = configInterfaces.getConfig(GlobalConfig.class);
+
         String appWindowTheme = webConfig.getAppWindowTheme();
         String userAppTheme = cookies.getCookieValue(APP_THEME_COOKIE_PREFIX + globalConfig.getWebContextName());
         if (userAppTheme != null) {
@@ -213,6 +211,8 @@ public abstract class App {
 
         log.debug("Initializing application");
 
+        WebConfig webConfig = configInterfaces.getConfig(WebConfig.class);
+
         appLog = new AppLog(webConfig.getAppLogMaxItemsCount(), beanLocator.get(TimeSource.NAME));
 
         connection = createConnection();
@@ -227,6 +227,8 @@ public abstract class App {
     }
 
     protected Locale resolveLocale(@Nullable Locale requestLocale) {
+        GlobalConfig globalConfig = configInterfaces.getConfig(GlobalConfig.class);
+
         Map<String, Locale> locales = globalConfig.getAvailableLocales();
 
         if (globalConfig.getLocaleSelectVisible()) {
@@ -428,6 +430,8 @@ public abstract class App {
     }
 
     public void setUserAppTheme(String themeName) {
+        GlobalConfig globalConfig = configInterfaces.getConfig(GlobalConfig.class);
+
         addCookie(APP_THEME_COOKIE_PREFIX + globalConfig.getWebContextName(), themeName);
     }
 
@@ -448,6 +452,7 @@ public abstract class App {
      */
     public void removeAllWindows() {
         UserSession currentSession = AppUI.getCurrent().getUserSession();
+        WebConfig webConfig = configInterfaces.getConfig(WebConfig.class);
 
         List<AppUI> authenticatedUIs = getAppUIs()
                 .stream()

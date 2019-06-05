@@ -30,7 +30,7 @@ import java.util.function.Consumer;
  */
 public interface Connection {
 
-    String NAME = "cuba_Connection";
+    String NAME = "jmix_Connection";
 
     /**
      * Authenticates a user, starts session and changes state of the connection.

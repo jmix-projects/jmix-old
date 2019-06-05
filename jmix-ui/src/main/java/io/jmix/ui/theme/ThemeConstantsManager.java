@@ -18,7 +18,7 @@ package io.jmix.ui.theme;
 
 public interface ThemeConstantsManager {
 
-    String NAME = "cuba_ThemeManager";
+    String NAME = "jmix_ThemeManager";
 
     ThemeConstants getConstants();
 }

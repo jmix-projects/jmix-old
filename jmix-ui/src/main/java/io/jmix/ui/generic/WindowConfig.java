@@ -26,6 +26,7 @@ import io.jmix.core.Scripting;
 import io.jmix.core.commons.util.Dom4j;
 import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.components.Window;
 import io.jmix.ui.screen.*;
@@ -61,7 +62,7 @@ import java.util.regex.Pattern;
 @Component(WindowConfig.NAME)
 public class WindowConfig {
 
-    public static final String NAME = "cuba_WindowConfig";
+    public static final String NAME = "jmix_WindowConfig";
 
     public static final String WINDOW_CONFIG_XML_PROP = "cuba.windowConfig";
 
@@ -343,14 +344,15 @@ public class WindowConfig {
     }*/
 
     protected void registerScreen(String id, WindowInfo windowInfo) {
-        String controllerClassName = windowInfo.getControllerClassName();
-        if (controllerClassName != null) {
+        // todo
+        // String controllerClassName = windowInfo.getControllerClassName();
+        /*if (controllerClassName != null) {
             MetadataReader classMetadata = loadClassMetadata(controllerClassName);
             AnnotationMetadata annotationMetadata = classMetadata.getAnnotationMetadata();
 
             registerPrimaryEditor(windowInfo, annotationMetadata);
             registerPrimaryLookup(windowInfo, annotationMetadata);
-        }
+        }*/
 
         screens.put(id, windowInfo);
 
@@ -414,7 +416,7 @@ public class WindowConfig {
             Class entityClass = (Class) primaryEditorAnnotation.get("value");
             if (entityClass != null) {
                 MetaClass metaClass = metadata.getClass(entityClass);
-                MetaClass originalMetaClass = metadata.getExtendedEntities().getOriginalOrThisMetaClass(metaClass);
+                MetaClass originalMetaClass = extendedEntities.getOriginalOrThisMetaClass(metaClass);
                 primaryEditors.put(originalMetaClass.getJavaClass(), windowInfo);
             }
         }
@@ -427,7 +429,7 @@ public class WindowConfig {
             Class entityClass = (Class) primaryEditorAnnotation.get("value");
             if (entityClass != null) {
                 MetaClass metaClass = metadata.getClass(entityClass);
-                MetaClass originalMetaClass = metadata.getExtendedEntities().getOriginalOrThisMetaClass(metaClass);
+                MetaClass originalMetaClass = extendedEntities.getOriginalOrThisMetaClass(metaClass);
                 primaryLookups.put(originalMetaClass.getJavaClass(), windowInfo);
             }
         }

@@ -20,11 +20,10 @@ import com.google.common.reflect.TypeToken;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.DevelopmentException;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Fragment;
-import io.jmix.ui.components.HasDatatype;
-import io.jmix.ui.components.RootWindow;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.impl.WebButton;
 import io.jmix.ui.components.impl.WebFragment;
+import io.jmix.ui.components.impl.WebLabel;
 import io.jmix.ui.components.impl.WebRootWindow;
 import io.jmix.ui.generic.UiComponents;
 import org.apache.commons.lang3.StringUtils;
@@ -59,6 +58,8 @@ public class WebUiComponents implements UiComponents {
     {
         classes.put(RootWindow.NAME, WebRootWindow.class);
         classes.put(Fragment.NAME, WebFragment.class);
+        classes.put(Label.NAME, WebLabel.class);
+        classes.put(Button.NAME, WebButton.class);
 
         // todo components
     }

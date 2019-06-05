@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 
 @Component(ScreenSettings.NAME)
 public class ScreenSettings {
-    public static final String NAME = "cuba_ScreenSettings";
+    public static final String NAME = "jmix_ScreenSettings";
 
     private static final Logger log = LoggerFactory.getLogger(ScreenSettings.class);
 

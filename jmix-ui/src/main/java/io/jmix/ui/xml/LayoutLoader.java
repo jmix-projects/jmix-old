@@ -33,7 +33,7 @@ import java.lang.reflect.InvocationTargetException;
 @Component(LayoutLoader.NAME)
 public class LayoutLoader {
 
-    public static final String NAME = "cuba_LayoutLoader";
+    public static final String NAME = "jmix_LayoutLoader";
 
     protected ComponentLoader.Context context;
     protected UiComponents factory;

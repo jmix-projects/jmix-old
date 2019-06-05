@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  */
 public interface ExportDisplay {
 
-    String NAME = "cuba_ExportDisplay";
+    String NAME = "jmix_ExportDisplay";
 
     /**
      * Export an arbitrary resource defined by a ExportDataProvider.

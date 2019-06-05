@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-package io.jmix.core.commons.util;
+package io.jmix.ui.components.impl;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import io.jmix.ui.components.data.ContainerValueSource;
+import io.jmix.ui.components.data.ValueSource;
 import org.apache.commons.lang3.StringUtils;
 
-public final class HtmlUtils {
+import javax.annotation.Nullable;
 
-    public HtmlUtils() {
+public final class UiTestIds {
+
+    private UiTestIds() {
     }
 
-    /**
-     * Converts string with content to html string.
-     *
-     * @param text to be converted
-     * @return Converted string.
-     */
-    public static String convertToHtml(String text) {
-        String html = StringEscapeUtils.escapeHtml4(text);
-        html = StringUtils.replace(html, "\n", "<br/>");
-        html = StringUtils.replace(html, " ", "&nbsp;");
-        html = StringUtils.replace(html, "\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
-        return html;
+    @Nullable
+    public static String getInferredTestId(ValueSource<?> valueSource) {
+        if (valueSource instanceof ContainerValueSource) {
+            ContainerValueSource dcValueSource = (ContainerValueSource) valueSource;
+
+            return StringUtils.join(dcValueSource.getMetaPropertyPath().getPropertyNames(), "_");
+        }
+
+        return null;
     }
 }

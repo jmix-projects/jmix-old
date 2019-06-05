@@ -26,7 +26,7 @@ import io.jmix.ui.actions.ActionType;
  */
 public interface Actions {
 
-    String NAME = "cuba_Actions";
+    String NAME = "jmix_Actions";
 
     Action create(String actionTypeId);
 

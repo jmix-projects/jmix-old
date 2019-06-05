@@ -15,6 +15,8 @@
  */
 package io.jmix.ui.xml;
 
+import io.jmix.ui.components.Button;
+import io.jmix.ui.components.Label;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -23,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component(LayoutLoaderConfig.NAME)
 public class LayoutLoaderConfig {
 
-    public static final String NAME = "cuba_LayoutLoaderConfig";
+    public static final String NAME = "jmix_LayoutLoaderConfig";
 
     protected Map<String, Class<? extends ComponentLoader>> loaders = new ConcurrentHashMap<>();
 
@@ -34,6 +36,8 @@ public class LayoutLoaderConfig {
     }
 
     protected void initStandardLoaders() {
+        loaders.put(Label.NAME, LabelLoader.class);
+        loaders.put(Button.NAME, ButtonLoader.class);
     }
 
     public void registerLoader(String tagName, Class<? extends ComponentLoader> aClass) {

@@ -50,7 +50,7 @@ import static io.jmix.ui.screen.UiControllerUtils.getScreenContext;
 @Component(ScreenValidation.NAME)
 public class ScreenValidation {
 
-    public static final String NAME = "cuba_ScreenValidation";
+    public static final String NAME = "jmix_ScreenValidation";
 
     @Inject
     protected ConfigInterfaces configuration;

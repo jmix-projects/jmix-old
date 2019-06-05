@@ -28,6 +28,7 @@ import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -41,8 +42,7 @@ import java.util.List;
 @Component(Icons.NAME)
 public class IconsImpl implements Icons {
 
-    @Inject
-    private Logger log;
+    private static final Logger log = LoggerFactory.getLogger(IconsImpl.class);
 
     @Inject
     protected ThemeConstantsManager themeConstantsManager;

@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.sys;
+package io.jmix.ui.components;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
-import org.springframework.stereotype.Component;
+import java.util.function.Function;
 
-import javax.inject.Inject;
-
-@Component("jmix_AnnotationScanMetadataReaderFactory")
-public class AnnotationScanMetadataReaderFactory extends CachingMetadataReaderFactory {
-
-    @Inject
-    public AnnotationScanMetadataReaderFactory(ApplicationContext applicationContext) {
-        super(applicationContext);
-    }
+/**
+ * Object having a formatter.
+ */
+public interface HasFormatter<V> {
+    Function<V, String> getFormatter();
+    void setFormatter(Function<? super V, String> formatter);
 }
