@@ -72,3 +72,7 @@ task webArchive(dependsOn: buildThemes, type: Jar) {
     from file("$buildDir/web")
     classifier = 'themes'
 }
+
+artifacts {
+    archives webArchive
+}

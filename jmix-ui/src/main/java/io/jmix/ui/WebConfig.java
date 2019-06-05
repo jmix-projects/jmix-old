@@ -335,7 +335,7 @@ public interface WebConfig extends Config {
      * @return GWT widgetset class
      */
     @Property("cuba.web.widgetSet")
-    @Default("com.haulmont.cuba.web.widgets.WidgetSet")
+    @Default("io.jmix.ui.widgets.WidgetSet")
     String getWidgetSet();
 
     /**

@@ -55,9 +55,16 @@ jar {
     from sourceSets.main.allJava
 }
 
-// todo build JAR with JS
-
 task buildWidgets(type: WidgetsCompile) {
     widgetSetClass = 'io.jmix.ui.widgets.WidgetSet'
     strict = true
+}
+
+task webArchive(dependsOn: buildWidgets, type: Jar) {
+    from file("$buildDir/web")
+    classifier = 'js'
+}
+
+artifacts {
+    archives webArchive
 }

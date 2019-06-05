@@ -18,6 +18,7 @@ package io.jmix.ui;
 
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.server.*;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.spring.annotation.SpringUI;
@@ -42,8 +43,8 @@ import io.jmix.ui.sys.events.UiEventsMulticaster;
 import io.jmix.ui.theme.HaloTheme;
 import io.jmix.ui.theme.ThemeConstantsRepository;
 import io.jmix.ui.widgets.AppUIUtils;
-import io.jmix.ui.widgets.JmixTimer;
 import io.jmix.ui.widgets.JmixFileDownloader;
+import io.jmix.ui.widgets.JmixTimer;
 import io.jmix.ui.widgets.client.ui.AppUIClientRpc;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -59,7 +60,8 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Theme(HaloTheme.NAME)
+@Widgetset("io.jmix.ui.widgets.WidgetSet") // todo make it configurable from add-ons
+@Theme(HaloTheme.NAME)                     // todo make from config
 @Push(transport = Transport.WEBSOCKET_XHR)
 @SpringUI
 public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiContext {

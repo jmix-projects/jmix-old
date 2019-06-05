@@ -240,7 +240,7 @@ public class ThemeCompile extends DefaultTask {
     }
 
     protected void unpackVaadinAddonsThemes(File themesTmp) {
-        Configuration compileConfiguration = getProject().getConfigurations().getByName("compile");
+        Configuration compileConfiguration = getProject().getConfigurations().getByName("compileClasspath");
         Set<ResolvedArtifact> resolvedArtifacts = compileConfiguration.getResolvedConfiguration().getResolvedArtifacts();
 
         resolvedArtifacts.stream()
@@ -565,7 +565,7 @@ public class ThemeCompile extends DefaultTask {
         File addonsIncludeFile = new File(componentThemeDir, "vaadin-addons.scss");
 
         if (!addonsIncludeFile.exists()) {
-            Configuration compileConfiguration = getProject().getConfigurations().getByName("compile");
+            Configuration compileConfiguration = getProject().getConfigurations().getByName("compileClasspath");
 
             List<File> resolvedFiles = compileConfiguration.getResolvedConfiguration()
                     .getResolvedArtifacts().stream()
@@ -617,7 +617,7 @@ public class ThemeCompile extends DefaultTask {
 
     // find all dependencies of this app component
     protected List<File> findDependentJarsByAppComponent(String compId) {
-        Configuration compileConfiguration = getProject().getConfigurations().getByName("compile");
+        Configuration compileConfiguration = getProject().getConfigurations().getByName("compileClasspath");
         Set<ResolvedDependency> firstLevelModuleDependencies =
                 compileConfiguration.getResolvedConfiguration().getFirstLevelModuleDependencies();
 
