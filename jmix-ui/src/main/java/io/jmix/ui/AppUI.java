@@ -23,10 +23,7 @@ import com.vaadin.server.*;
 import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
-import io.jmix.core.BeanLocator;
-import io.jmix.core.Events;
-import io.jmix.core.GlobalConfig;
-import io.jmix.core.Messages;
+import io.jmix.core.*;
 import io.jmix.core.security.LoginException;
 import io.jmix.core.security.NoUserSessionException;
 import io.jmix.core.security.UserSession;
@@ -36,7 +33,6 @@ import io.jmix.ui.events.AppInitializedEvent;
 import io.jmix.ui.events.SessionHeartbeatEvent;
 import io.jmix.ui.events.UIRefreshEvent;
 import io.jmix.ui.exception.UiExceptionHandler;
-import io.jmix.ui.generic.*;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.sys.*;
 import io.jmix.ui.sys.events.UiEventsMulticaster;
@@ -74,11 +70,8 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     protected Messages messages;
     @Inject
     protected Events events;
-
     @Inject
-    protected GlobalConfig globalConfig;
-    @Inject
-    protected WebConfig webConfig;
+    protected ConfigInterfaces configuration;
 
 //    @Inject
 //    protected UserSettingsTools userSettingsTools; todo settings
@@ -252,6 +245,8 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
         // NavigationState requestedState = getUrlRouting().getState();
 
         try {
+            GlobalConfig globalConfig = configuration.getConfig(GlobalConfig.class);
+
             this.testMode = globalConfig.getTestMode();
             this.performanceTestMode = globalConfig.getPerformanceTestMode();
             // init error handlers

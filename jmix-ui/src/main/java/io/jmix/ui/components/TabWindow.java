@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.components;
 
-import io.jmix.ui.generic.UiComponents;
+import io.jmix.ui.UiComponents;
 
 /**
  * Tab window UI component.

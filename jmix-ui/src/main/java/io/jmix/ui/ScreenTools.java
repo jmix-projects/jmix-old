@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.generic;
+package io.jmix.ui;
 
 /**
- * Provides access to window parameters and component values.
+ * Helper bean for working with UI screens.
  */
-public interface WindowContext extends FrameContext {
+public interface ScreenTools {
+
+    String NAME = "jmix_ScreenTools";
+
     /**
-     * How the window is opened.
+     * Opens default screen.
+     * <p>
+     * Default screen can be defined with the {@code cuba.web.defaultScreenId} application property.
+     *
+     * @param screens {@link Screens} bean reference
      */
-    Screens.LaunchMode getLaunchMode();
+    void openDefaultScreen(Screens screens);
 }

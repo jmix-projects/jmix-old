@@ -16,7 +16,7 @@
 
 package io.jmix.ui.screen;
 
-import io.jmix.ui.generic.*;
+import io.jmix.ui.*;
 
 public interface ScreenContext {
     ScreenOptions getScreenOptions();

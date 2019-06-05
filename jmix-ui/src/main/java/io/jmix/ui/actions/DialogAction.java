@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.actions;
 
-import io.jmix.ui.generic.Dialogs;
+import io.jmix.ui.Dialogs;
 import io.jmix.ui.icons.CubaIcon;
 import io.jmix.ui.icons.Icons;
 

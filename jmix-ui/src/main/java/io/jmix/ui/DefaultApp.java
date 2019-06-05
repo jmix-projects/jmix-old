@@ -26,7 +26,6 @@ import io.jmix.core.security.UserSession;
 import io.jmix.ui.events.AppLoggedInEvent;
 import io.jmix.ui.events.AppLoggedOutEvent;
 import io.jmix.ui.events.AppStartedEvent;
-import io.jmix.ui.generic.Notifications;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

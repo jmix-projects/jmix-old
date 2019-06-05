@@ -23,7 +23,6 @@ import io.jmix.core.BeanLocator;
 import io.jmix.core.ConfigInterfaces;
 import io.jmix.ui.WebConfig;
 import io.jmix.ui.components.TabWindow;
-import io.jmix.ui.generic.MainTabSheetMode;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.widgets.JmixSingleModeContainer;
 import io.jmix.ui.widgets.TabWindowContainer;

@@ -22,7 +22,7 @@ import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.events.TriggerOnce;
 import io.jmix.ui.components.Fragment;
 import io.jmix.ui.components.impl.FragmentImplementation;
-import io.jmix.ui.generic.Fragments;
+import io.jmix.ui.Fragments;
 import io.jmix.ui.model.ScreenData;
 import org.springframework.context.ApplicationListener;
 

@@ -24,6 +24,7 @@ import io.jmix.core.config.defaults.*;
 import io.jmix.core.config.type.CommaSeparatedStringListTypeFactory;
 import io.jmix.core.config.type.Factory;
 import io.jmix.core.config.type.StringListTypeFactory;
+import io.jmix.ui.logging.AppLog;
 
 import java.util.List;
 
@@ -278,7 +279,7 @@ public interface WebConfig extends Config {
     boolean getUseRedirectWithBlankPageForLinkAction();
 
     /**
-     * @return Maximum number of items stored in the {@link com.haulmont.cuba.web.log.AppLog} queue
+     * @return Maximum number of items stored in the {@link AppLog} queue
      */
     @Property("cuba.web.appLogMaxItemsCount")
     @DefaultInt(10)

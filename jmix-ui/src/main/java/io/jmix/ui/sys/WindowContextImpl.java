@@ -17,8 +17,8 @@
 package io.jmix.ui.sys;
 
 import io.jmix.ui.components.Frame;
-import io.jmix.ui.generic.Screens.LaunchMode;
-import io.jmix.ui.generic.WindowContext;
+import io.jmix.ui.Screens.LaunchMode;
+import io.jmix.ui.components.WindowContext;
 
 public class WindowContextImpl extends FrameContextImpl implements WindowContext {
 

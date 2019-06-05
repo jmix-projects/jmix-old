@@ -20,7 +20,7 @@ import io.jmix.core.BeanLocator;
 import io.jmix.core.Scripting;
 import io.jmix.ui.components.Fragment;
 import io.jmix.ui.components.Frame;
-import io.jmix.ui.generic.WindowInfo;
+import io.jmix.ui.WindowInfo;
 import io.jmix.ui.logging.ScreenLifeCycle;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.ScreenFragment;
@@ -31,8 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.perf4j.StopWatch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;

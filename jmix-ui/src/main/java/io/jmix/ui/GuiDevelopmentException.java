@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.generic;
+package io.jmix.ui;
 
 import io.jmix.core.DevelopmentException;
 import io.jmix.ui.xml.ComponentLoader.ComponentContext;

@@ -23,7 +23,7 @@ import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.HasValue;
 import io.jmix.ui.components.ListComponent;
-import io.jmix.ui.generic.FrameContext;
+import io.jmix.ui.components.FrameContext;
 import io.jmix.ui.screen.MapScreenOptions;
 import io.jmix.ui.screen.ScreenContext;
 import io.jmix.ui.screen.ScreenOptions;

@@ -15,7 +15,6 @@
  */
 package io.jmix.ui.components;
 
-import io.jmix.ui.generic.FrameContext;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.ScreenFragment;

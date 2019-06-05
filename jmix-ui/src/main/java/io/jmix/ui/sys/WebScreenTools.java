@@ -16,8 +16,8 @@
 
 package io.jmix.ui.sys;
 
-import io.jmix.ui.generic.ScreenTools;
-import io.jmix.ui.generic.Screens;
+import io.jmix.ui.ScreenTools;
+import io.jmix.ui.Screens;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.sys;
 
-import io.jmix.ui.generic.WindowInfo;
+import io.jmix.ui.WindowInfo;
 import io.jmix.ui.screen.FrameOwner;
 
 import javax.annotation.Nonnull;

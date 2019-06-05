@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.generic.impl;
+package io.jmix.ui.sys;
 
 import com.google.common.reflect.TypeToken;
 import io.jmix.core.BeanLocator;
@@ -25,7 +25,7 @@ import io.jmix.ui.components.impl.WebButton;
 import io.jmix.ui.components.impl.WebFragment;
 import io.jmix.ui.components.impl.WebLabel;
 import io.jmix.ui.components.impl.WebRootWindow;
-import io.jmix.ui.generic.UiComponents;
+import io.jmix.ui.UiComponents;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;

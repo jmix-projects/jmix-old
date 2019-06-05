@@ -16,7 +16,6 @@
 package io.jmix.ui.components;
 
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.ui.generic.WindowContext;
 import io.jmix.ui.screen.CloseAction;
 import io.jmix.ui.screen.Screen;
 

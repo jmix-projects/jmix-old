@@ -19,7 +19,7 @@ import io.jmix.core.BeanLocator;
 import io.jmix.core.MessageTools;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
-import io.jmix.ui.generic.UiComponents;
+import io.jmix.ui.UiComponents;
 import io.jmix.ui.model.ScreenData;
 import io.jmix.ui.screen.ScreenOptions;
 import org.dom4j.Element;

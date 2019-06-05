@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.generic;
+package io.jmix.ui;
 
 import io.jmix.ui.components.ContentMode;
 import io.jmix.ui.components.HasUserOriginated;

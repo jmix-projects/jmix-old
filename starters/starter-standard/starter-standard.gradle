@@ -17,13 +17,8 @@ dependencies {
     api project(':jmix-security')
     api project(':jmix-ui')
 
-    // todo add themes JAR and widgets JAR here instead of classes
-//    api project(':jmix-ui-widgets-compiled')
-//    api project(':jmix-ui-themes-compiled')
+    implementation project(':jmix-ui-widgets-compiled')
+    implementation project(':jmix-ui-themes-compiled')
 
-    implementation(files(new File(project(':jmix-ui').buildDir, "web")))
-    implementation(files(new File(project(':jmix-ui-widgets').buildDir, "web")))
-
-    implementation 'org.springframework:spring-context'
     implementation 'com.vaadin:vaadin-spring-boot:3.1.1'
 }

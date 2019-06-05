@@ -20,7 +20,7 @@ import com.vaadin.ui.Notification;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.components.ContentMode;
 import io.jmix.ui.executors.BackgroundWorker;
-import io.jmix.ui.generic.Notifications;
+import io.jmix.ui.Notifications;
 
 import javax.inject.Inject;
 import java.util.function.Consumer;

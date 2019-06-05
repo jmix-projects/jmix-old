@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.generic;
+package io.jmix.ui.components;
 
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.metamodel.datatypes.impl.EnumClass;

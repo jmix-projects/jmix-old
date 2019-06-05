@@ -17,7 +17,7 @@ package io.jmix.ui.xml;
 
 import com.google.common.base.Strings;
 import io.jmix.ui.components.*;
-import io.jmix.ui.generic.GuiDevelopmentException;
+import io.jmix.ui.GuiDevelopmentException;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

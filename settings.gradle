@@ -22,7 +22,10 @@ include 'jmix-security'
 include 'jmix-remoting'
 include 'jmix-cuba'
 include 'jmix-ui'
+include 'jmix-ui-themes'
+include 'jmix-ui-themes-compiled'
 include 'jmix-ui-widgets'
+include 'jmix-ui-widgets-compiled'
 
 include 'starters:starter-standard'
 

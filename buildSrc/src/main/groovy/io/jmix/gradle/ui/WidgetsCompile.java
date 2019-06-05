@@ -16,27 +16,33 @@
 
 package io.jmix.gradle.ui;
 
+import com.google.common.base.Joiner;
+import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.logging.LogLevel;
 import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.*;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static org.apache.commons.io.FileUtils.deleteQuietly;
+import static org.apache.commons.io.FileUtils.iterateFiles;
+
 public class WidgetsCompile extends WidgetsTask {
 
-    protected String widgetSetsDir;
+    protected static final String GWT_XML_EXTENSION = "gwt.xml";
+
     @Input
-    protected String widgetSetClass;
+    protected String widgetSetsDir = "";
+    @Input
+    protected String widgetSetClass = "";
     @Input
     protected Map<String, Object> compilerArgs = new HashMap<>();
     @Input
@@ -69,17 +75,21 @@ public class WidgetsCompile extends WidgetsTask {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @TaskAction
     public void buildWidgetSet() {
-        if (widgetSetClass == null || widgetSetClass.isEmpty()) {
-            throw new IllegalStateException("Please specify \"String widgetSetClass\" for build widgetset");
-        }
-
         if (widgetSetsDir == null || widgetSetsDir.isEmpty()) {
             widgetSetsDir = getDefaultBuildDir();
         }
 
+        if (widgetSetClass == null || widgetSetClass.isEmpty()) {
+            // try to find
+            widgetSetClass = getDefaultWidgetSet();
+            if (widgetSetClass == null) {
+                throw new GradleException("Unable to find .gwt.xml file for widgets compilation");
+            }
+        }
+
         File widgetSetsDirectory = new File(widgetSetsDir);
         if (widgetSetsDirectory.exists()) {
-            FileUtils.deleteQuietly(widgetSetsDirectory);
+            deleteQuietly(widgetSetsDirectory);
         }
 
         // strip gwt-unitCache
@@ -90,7 +100,7 @@ public class WidgetsCompile extends WidgetsTask {
 
         File gwtJavaTmp = getProject().file("build/tmp/" + getName());
         if (gwtJavaTmp.exists()) {
-            FileUtils.deleteQuietly(gwtJavaTmp);
+            deleteQuietly(gwtJavaTmp);
         }
         gwtJavaTmp.mkdirs();
 
@@ -108,9 +118,45 @@ public class WidgetsCompile extends WidgetsTask {
             spec.setJvmArgs(gwtCompilerJvmArgs);
         });
 
-        FileUtils.deleteQuietly(new File(gwtWidgetSetTemp, "WEB-INF"));
+        deleteQuietly(new File(gwtWidgetSetTemp, "WEB-INF"));
 
         gwtWidgetSetTemp.renameTo(widgetSetsDirectory);
+    }
+
+    protected String getDefaultWidgetSet() {
+        SourceSetContainer sourceSets = getProject().getConvention()
+                .getPlugin(JavaPluginConvention.class)
+                .getSourceSets();
+
+        for (SourceSet sourceSet : sourceSets) {
+            for (File srcDir : sourceSet.getResources().getSrcDirs()) {
+                Iterator<File> gwtXmlFiles =
+                        iterateFiles(srcDir, new String[]{GWT_XML_EXTENSION}, true);
+
+                if (gwtXmlFiles.hasNext()) {
+                    File gwtXmlFile = gwtXmlFiles.next();
+
+                    Path relativePath = srcDir.toPath().relativize(gwtXmlFile.toPath());
+                    List<String> names = new ArrayList<>();
+
+                    for (int i = 0; i < relativePath.getNameCount(); i++) {
+                        if (i != relativePath.getNameCount() -1 ) {
+                            names.add(relativePath.getName(i).toString());
+                        } else {
+                            names.add(relativePath.getName(i).toString().replace("." + GWT_XML_EXTENSION, ""));
+                        }
+                    }
+
+                    String widgetSet = Joiner.on(".").join(names);
+
+                    getLogger().info("[WidgetsCompile] Found WidgetSet: {}", widgetSet);
+
+                    return widgetSet;
+                }
+            }
+        }
+
+        return null;
     }
 
     @InputFiles
@@ -128,7 +174,7 @@ public class WidgetsCompile extends WidgetsTask {
     }
 
     protected String getDefaultBuildDir() {
-        return getProject().getBuildDir().toString() + "/web/VAADIN/widgetsets";
+        return new File(getProject().getBuildDir(), "web/VAADIN/widgetsets").getAbsolutePath();
     }
 
     protected List<File> collectClassPathEntries() {

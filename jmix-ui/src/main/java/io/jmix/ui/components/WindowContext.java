@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.generic;
+package io.jmix.ui.components;
 
-public enum MainTabSheetMode {
-    DEFAULT,
-    MANAGED
+import io.jmix.ui.Screens;
+
+/**
+ * Provides access to window parameters and component values.
+ */
+public interface WindowContext extends FrameContext {
+    /**
+     * How the window is opened.
+     */
+    Screens.LaunchMode getLaunchMode();
 }

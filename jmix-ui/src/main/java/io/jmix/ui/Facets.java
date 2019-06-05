@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.generic;
+package io.jmix.ui;
 
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.ActionType;
+import io.jmix.core.BeanLocator;
+import io.jmix.ui.components.Facet;
 
 /**
- * Factory to create actions declared as {@link ActionType}.
- *
- * @see Action
+ * Factory to create UI facets.
+ * <br>
+ * An instance of the factory can be injected into screen controllers or obtained through {@link BeanLocator}.
  */
-public interface Actions {
+public interface Facets {
 
-    String NAME = "jmix_Actions";
+    String NAME = "jmix_Facets";
 
-    Action create(String actionTypeId);
-
-    Action create(String actionTypeId, String id);
-
-    <T extends Action> T create(Class<T> actionTypeClass);
-
-    <T extends Action> T create(Class<T> actionTypeClass, String id);
+    /**
+     * Create a facet instance by its class.
+     *
+     * @param facetClass facet class
+     * @param <T>        type of facet
+     * @return facet instance
+     */
+    <T extends Facet> T create(Class<T> facetClass);
 }

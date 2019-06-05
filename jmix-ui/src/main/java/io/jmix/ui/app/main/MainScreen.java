@@ -17,7 +17,7 @@
 package io.jmix.ui.app.main;
 
 import io.jmix.ui.components.Button;
-import io.jmix.ui.generic.Notifications;
+import io.jmix.ui.Notifications;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Subscribe;
 import io.jmix.ui.screen.UiController;

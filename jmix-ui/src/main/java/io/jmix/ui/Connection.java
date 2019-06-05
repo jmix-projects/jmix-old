@@ -71,7 +71,7 @@ public interface Connection {
      * Substitute a user in the current session with another user. This method creates a new UserSession instance,
      * but with the same session ID.
      * <p>New user is usually obtained from the current user's substitution list:
-     * see {@link com.haulmont.cuba.security.entity.User#getSubstitutions()}</p>
+     * see {@link User#getSubstitutions()}</p>
      *
      * @param substitutedUser new user
      */

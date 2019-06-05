@@ -21,7 +21,7 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
 import io.jmix.ui.App;
 import io.jmix.ui.AppUI;
-import io.jmix.ui.generic.Notifications;
+import io.jmix.ui.Notifications;
 import io.jmix.ui.widgets.ExceptionDialog;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;

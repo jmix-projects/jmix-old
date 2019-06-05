@@ -20,7 +20,7 @@ import io.jmix.ui.components.Component;
 import io.jmix.ui.components.DialogWindow;
 import io.jmix.ui.components.Facet;
 import io.jmix.ui.components.Window;
-import io.jmix.ui.generic.GuiDevelopmentException;
+import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.model.ScreenData;
 import io.jmix.ui.model.impl.ScreenDataXmlLoader;
 import io.jmix.ui.screen.UiControllerUtils;

@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.generic;
+package io.jmix.ui;
+
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.ActionType;
 
 /**
- * Helper bean for working with UI screens.
+ * Factory to create actions declared as {@link ActionType}.
+ *
+ * @see Action
  */
-public interface ScreenTools {
+public interface Actions {
 
-    String NAME = "jmix_ScreenTools";
+    String NAME = "jmix_Actions";
 
-    /**
-     * Opens default screen.
-     * <p>
-     * Default screen can be defined with the {@code cuba.web.defaultScreenId} application property.
-     *
-     * @param screens {@link Screens} bean reference
-     */
-    void openDefaultScreen(Screens screens);
+    Action create(String actionTypeId);
+
+    Action create(String actionTypeId, String id);
+
+    <T extends Action> T create(Class<T> actionTypeClass);
+
+    <T extends Action> T create(Class<T> actionTypeClass, String id);
 }

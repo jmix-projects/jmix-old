@@ -16,7 +16,7 @@
 
 package io.jmix.ui.sys;
 
-import io.jmix.ui.generic.*;
+import io.jmix.ui.*;
 import io.jmix.ui.screen.ScreenContext;
 import io.jmix.ui.screen.ScreenOptions;
 

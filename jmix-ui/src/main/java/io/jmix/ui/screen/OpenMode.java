@@ -16,7 +16,7 @@
 
 package io.jmix.ui.screen;
 
-import io.jmix.ui.generic.Screens;
+import io.jmix.ui.Screens;
 
 /**
  * Standard launch modes of {@link Screen}s.

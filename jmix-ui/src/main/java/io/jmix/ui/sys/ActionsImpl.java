@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.generic.impl;
+package io.jmix.ui.sys;
 
 import io.jmix.core.Scripting;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.ActionType;
-import io.jmix.ui.generic.Actions;
-import io.jmix.ui.sys.ActionDefinition;
-import io.jmix.ui.sys.ActionsConfiguration;
+import io.jmix.ui.Actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.exception;
 
-import io.jmix.ui.generic.*;
+import io.jmix.ui.*;
 
 /**
  * Interface to be implemented by exception handlers defined on GUI level.

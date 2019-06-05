@@ -1,0 +1,14 @@
+import io.jmix.gradle.ui.ThemeCompile
+
+apply plugin: 'java'
+apply plugin: 'java-library'
+
+def jmixUi = rootProject.project(':jmix-ui')
+
+compileJava.enabled = false
+
+dependencies {
+    api "com.vaadin:vaadin-themes:$jmixUi.vaadinVersion"
+}
+
+task buildThemes(type: ThemeCompile)

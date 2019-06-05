@@ -17,7 +17,7 @@
 package io.jmix.ui.components.impl;
 
 import io.jmix.ui.components.Component;
-import io.jmix.ui.generic.FrameContext;
+import io.jmix.ui.components.FrameContext;
 
 import javax.annotation.Nullable;
 

@@ -59,7 +59,7 @@ public class ThemeCompile extends DefaultTask {
     protected List<String> themes = new ArrayList<>();
 
     @Input
-    protected String scssDir = "themes";
+    protected String scssDir = "src/main/resources";
     protected String destDir;
 
     @Input
@@ -195,6 +195,7 @@ public class ThemeCompile extends DefaultTask {
         }
 
         unpackVaadinAddonsThemes(themesTmp);
+        unpackVaadinThemesDependencies(themesTmp, vaadinThemesRoot);
         unpackThemesConfDependencies(themesTmp, vaadinThemesRoot);
 
         // copy includes to build dir
@@ -251,9 +252,9 @@ public class ThemeCompile extends DefaultTask {
                             JarInputStream jarStream = new JarInputStream(is)) {
 
                         String vaadinStylesheets = getVaadinStylesheets(jarStream);
+
                         if (vaadinStylesheets != null) {
-                            getLogger()
-                                    .info("[ThemeCompile] unpack Vaadin addon styles {}", jarFile.getName());
+                            getLogger().info("[ThemeCompile] unpack Vaadin addon styles {}", jarFile.getName());
 
                             getProject().copy(copySpec ->
                                     copySpec.from(getProject().zipTree(jarFile))
@@ -266,26 +267,39 @@ public class ThemeCompile extends DefaultTask {
                 });
     }
 
+    protected void unpackVaadinThemesDependencies(File themesTmp, File vaadinThemesRoot) {
+        Configuration themesConf = getProject().getConfigurations().findByName("compileClasspath");
+        if (themesConf != null) {
+            List<File> themeArchives = collectThemeArchives(themesConf);
+
+            for (File archive : themeArchives) {
+                getLogger().info("[ThemeCompile] unpack vaadin-themes artifact {}", archive.getName());
+
+                if (archive.getName().startsWith("vaadin-themes")) {
+                    getProject().copy(copySpec ->
+                            copySpec.from(getProject().zipTree(archive))
+                                    .into(themesTmp)
+                                    .include("VAADIN/**")
+                                    .setExcludes(doNotUnpackPaths)
+                    );
+                }
+            }
+        }
+    }
+
     protected void unpackThemesConfDependencies(File themesTmp, File vaadinThemesRoot) {
-        Configuration themesConf = getProject().getConfigurations().findByName("themes");
+        Configuration themesConf = getProject().getConfigurations().findByName("compileClasspath");
         if (themesConf != null) {
             List<File> themeArchives = collectThemeArchives(themesConf);
 
             for (File archive : themeArchives) {
                 getLogger().info("[ThemeCompile] unpack themes artifact {}", archive.getName());
 
-                if (!archive.getName().contains("vaadin-themes")) {
+                if (!archive.getName().startsWith("vaadin-themes")) {
                     getProject().copy(copySpec ->
                                     copySpec.from(getProject().zipTree(archive))
                                         .into(vaadinThemesRoot)
                                         .setExcludes(doNotUnpackPaths)
-                    );
-                } else {
-                    getProject().copy(copySpec ->
-                                    copySpec.from(getProject().zipTree(archive))
-                                            .into(themesTmp)
-                                            .include("VAADIN/**")
-                                            .setExcludes(doNotUnpackPaths)
                     );
                 }
             }

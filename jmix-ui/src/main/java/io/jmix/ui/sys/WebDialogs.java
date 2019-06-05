@@ -31,7 +31,7 @@ import io.jmix.ui.components.ContentMode;
 import io.jmix.ui.components.KeyCombination;
 import io.jmix.ui.components.SizeUnit;
 import io.jmix.ui.executors.BackgroundWorker;
-import io.jmix.ui.generic.Dialogs;
+import io.jmix.ui.Dialogs;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.icons.Icons;
 import io.jmix.ui.screen.FrameOwner;

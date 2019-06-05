@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components;
 
-import io.jmix.ui.generic.UiComponents;
+import io.jmix.ui.UiComponents;
 
 /**
  * UI component that represents a top level window of application.

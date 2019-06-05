@@ -14,26 +14,9 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.generic;
+package io.jmix.ui.components;
 
-import io.jmix.core.BeanLocator;
-import io.jmix.ui.components.Facet;
-
-/**
- * Factory to create UI facets.
- * <br>
- * An instance of the factory can be injected into screen controllers or obtained through {@link BeanLocator}.
- */
-public interface Facets {
-
-    String NAME = "jmix_Facets";
-
-    /**
-     * Create a facet instance by its class.
-     *
-     * @param facetClass facet class
-     * @param <T>        type of facet
-     * @return facet instance
-     */
-    <T extends Facet> T create(Class<T> facetClass);
+public enum MainTabSheetMode {
+    DEFAULT,
+    MANAGED
 }

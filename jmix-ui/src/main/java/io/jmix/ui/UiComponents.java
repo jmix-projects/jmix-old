@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.generic;
+package io.jmix.ui;
 
 import com.google.common.reflect.TypeToken;
 import io.jmix.core.BeanLocator;
