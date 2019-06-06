@@ -33,6 +33,16 @@ include 'samples:sample-hello-world'
 include 'samples:sample-custom-security'
 include 'samples:sample-remoting'
 
+include 'samples:sample-custom-theme'
+include 'samples:sample-custom-theme:sct-main'
+include 'samples:sample-custom-theme:sct-themes'
+include 'samples:sample-custom-theme:sct-themes-compiled'
+
+include 'samples:sample-custom-widgets'
+include 'samples:sample-custom-widgets:scw-main'
+include 'samples:sample-custom-widgets:scw-widgets'
+include 'samples:sample-custom-widgets:scw-widgets-compiled'
+
 rootProject.children.each { p1 ->
 	p1.buildFileName = "${p1.name}.gradle"
 	p1.children.each { p2 ->
