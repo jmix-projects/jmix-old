@@ -2,7 +2,7 @@
 @import "addons";
 @import "custom-theme";
 
-.halo {
+.custom-theme {
   @include addons;
   @include custom-theme;
 }

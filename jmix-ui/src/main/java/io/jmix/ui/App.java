@@ -63,6 +63,7 @@ import java.util.stream.Collectors;
 public abstract class App {
 
     public static final String NAME = "jmix_App";
+    public static final String DEFAULT_THEME_NAME = "halo";
 
     public static final String USER_SESSION_ATTR = "userSessionId";
 
@@ -132,7 +133,8 @@ public abstract class App {
 
         ThemeConstants theme = themeConstantsRepository.getConstants(appWindowTheme);
         if (theme == null) {
-            throw new IllegalStateException("Unable to use theme constants '" + appWindowTheme + "'");
+            // fallback to default
+            theme = themeConstantsRepository.getConstants(DEFAULT_THEME_NAME);
         }
 
         return theme;
@@ -140,6 +142,10 @@ public abstract class App {
 
     protected void applyTheme(String appWindowTheme) {
         ThemeConstants theme = themeConstantsRepository.getConstants(appWindowTheme);
+        if (theme == null) {
+            // fallback to default
+            theme = themeConstantsRepository.getConstants(DEFAULT_THEME_NAME);
+        }
 
         if (theme == null) {
             log.warn("Unable to use theme constants '{}'", appWindowTheme);

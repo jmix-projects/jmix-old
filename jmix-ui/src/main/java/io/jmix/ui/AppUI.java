@@ -36,7 +36,6 @@ import io.jmix.ui.exception.UiExceptionHandler;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.sys.*;
 import io.jmix.ui.sys.events.UiEventsMulticaster;
-import io.jmix.ui.theme.HaloTheme;
 import io.jmix.ui.theme.ThemeConstantsRepository;
 import io.jmix.ui.widgets.AppUIUtils;
 import io.jmix.ui.widgets.JmixFileDownloader;
@@ -56,8 +55,8 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Widgetset("io.jmix.ui.widgets.WidgetSet") // todo make it configurable from add-ons
-@Theme(HaloTheme.NAME)                     // todo make from config
+@Widgetset("io.jmix.ui.widgets.WidgetSet")
+@Theme("${cuba.web.theme:halo}")
 @Push(transport = Transport.WEBSOCKET_XHR)
 @SpringUI
 public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiContext {
@@ -165,7 +164,6 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     protected App createApplication() {
         return beanLocator.getPrototype(App.NAME);
     }
-
 
     @Override
     public Screens getScreens() {
