@@ -53,7 +53,7 @@ public class WidgetsDebug extends WidgetsTask {
     }
 
     @TaskAction
-    public void buildWidgetSet() {
+    public void debugWidgets() {
         if (widgetSetClass == null || widgetSetClass.isEmpty()) {
             throw new IllegalStateException("Please specify \"String widgetSetClass\" for debug widgetset");
         }
@@ -173,7 +173,8 @@ public class WidgetsDebug extends WidgetsTask {
         for (Project dependencyProject : collectProjectsWithDependency("vaadin-client")) {
             for (File srcDir : getSourceSet(dependencyProject, "main").getJava().getSrcDirs()) {
                 if (srcDir.exists()) {
-                    args.addAll(Arrays.asList("-src", srcDir.getAbsolutePath()));
+                    args.add("-src");
+                    args.add(srcDir.getAbsolutePath());
                 }
             }
         }

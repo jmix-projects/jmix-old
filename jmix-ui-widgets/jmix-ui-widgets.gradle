@@ -54,4 +54,4 @@ jar {
     from sourceSets.main.allJava
 }
 
-task buildWidgets(type: WidgetsCompile)
+task compileWidgets(type: WidgetsCompile)

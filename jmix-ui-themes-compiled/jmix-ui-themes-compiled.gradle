@@ -1,3 +1,5 @@
+import io.jmix.gradle.JmixPlugin
+
 apply plugin: 'java'
 apply plugin: 'java-library'
 
@@ -6,4 +8,4 @@ compileJava.enabled = false
 def uiThemes = project(':jmix-ui-themes')
 def inputDir = new File(uiThemes.buildDir, 'web')
 
-sourceSets.main.output.dir(inputDir, builtBy: uiThemes.tasks.getByName('buildThemes'))
+sourceSets.main.output.dir(inputDir, builtBy: uiThemes.tasks.getByName(JmixPlugin.COMPILE_THEMES_TASK_NAME))

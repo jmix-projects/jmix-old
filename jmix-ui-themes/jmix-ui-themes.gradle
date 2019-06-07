@@ -7,8 +7,15 @@ def jmixUi = rootProject.project(':jmix-ui')
 
 compileJava.enabled = false
 
-dependencies {
-    api "com.vaadin:vaadin-themes:$jmixUi.vaadinVersion"
+configurations {
+    themes
 }
 
-task buildThemes(type: ThemeCompile)
+dependencies {
+    api "com.vaadin:vaadin-themes:$jmixUi.vaadinVersion"
+    themes "com.vaadin:vaadin-themes:$jmixUi.vaadinVersion"
+}
+
+task compileThemes(type: ThemeCompile) {
+    scssDir = 'src/main/resources'
+}

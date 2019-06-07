@@ -17,10 +17,18 @@
 package io.jmix.gradle
 
 import io.jmix.gradle.ui.ThemeCompile
+import io.jmix.gradle.ui.WidgetsCompile
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
 
 class JmixPlugin implements Plugin<Project> {
+
+    public static final String THEMES_CONFIGURATION_NAME = 'themes'
+    public static final String WIDGETS_CONFIGURATION_NAME = 'widgets'
+
+    public static final String COMPILE_THEMES_TASK_NAME = 'compileThemes'
+    public static final String COMPILE_WIDGETS_TASK_NAME = 'compileWidgets'
 
     @Override
     void apply(Project project) {
@@ -37,5 +45,27 @@ class JmixPlugin implements Plugin<Project> {
         }
 
         project.ext.ThemeCompile = ThemeCompile.class
+        Configuration themesConfiguration = project.configurations.create(THEMES_CONFIGURATION_NAME)
+
+        def compileThemes = project.tasks.create(COMPILE_THEMES_TASK_NAME, ThemeCompile.class)
+        compileThemes.enabled = false
+        project.afterEvaluate {
+            if (themesConfiguration.getDependencies().size() > 0) {
+                project.sourceSets.main.output.dir(compileThemes.outputDirectory, builtBy: compileThemes)
+                compileThemes.enabled = true
+            }
+        }
+
+        project.ext.WidgetsCompile = WidgetsCompile.class
+        Configuration widgetsConfiguration = project.configurations.create(WIDGETS_CONFIGURATION_NAME)
+
+        def compileWidgetsTask = project.tasks.create(COMPILE_WIDGETS_TASK_NAME, WidgetsCompile.class)
+        compileWidgetsTask.enabled = false
+        project.afterEvaluate {
+            if (widgetsConfiguration.size() > 0) {
+                project.sourceSets.main.output.dir(compileWidgetsTask.outputDirectory, builtBy: compileWidgetsTask)
+                compileWidgetsTask.enabled = true
+            }
+        }
     }
 }

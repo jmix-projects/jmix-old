@@ -22,10 +22,14 @@ import com.vaadin.sass.internal.ScssStylesheet;
 import com.vaadin.sass.internal.handler.SCSSDocumentHandlerImpl;
 import com.vaadin.sass.internal.handler.SCSSErrorHandler;
 import com.yahoo.platform.yui.compressor.CssCompressor;
+import io.jmix.gradle.JmixPlugin;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.GradleException;
-import org.gradle.api.artifacts.*;
+import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.artifacts.ConfigurationContainer;
+import org.gradle.api.artifacts.ResolvedArtifact;
+import org.gradle.api.artifacts.ResolvedDependency;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.OutputDirectory;
@@ -39,27 +43,23 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.zip.GZIPOutputStream;
 
-import static org.apache.commons.io.FileUtils.deleteDirectory;
-import static org.apache.commons.io.FileUtils.forceMkdir;
+import static org.apache.commons.io.FileUtils.*;
 
+// todo themes in projects
 public class ThemeCompile extends DefaultTask {
+
     public static final String VAADIN_STYLESHEETS_MANIFEST_KEY = "Vaadin-Stylesheets";
-    @Input
-    protected List<File> includes = new ArrayList<>();
-    @Input
-    protected List<String> includedAppComponentIds = new ArrayList<>();
+    public static final String COMPILE_CLASSPATH_CONFIGURATION = "compileClasspath";
+
     @Input
     protected List<String> themes = new ArrayList<>();
 
     @Input
-    protected String scssDir = "src/main/resources";
+    protected String scssDir = "src/main/themes";
     protected String destDir;
 
     @Input
@@ -95,22 +95,6 @@ public class ThemeCompile extends DefaultTask {
     @InputDirectory
     public File getSourceDirectory() {
         return getProject().file(scssDir);
-    }
-
-    public List<File> getIncludes() {
-        return includes;
-    }
-
-    public void setIncludes(List<File> includes) {
-        this.includes = includes;
-    }
-
-    public List<String> getIncludedAppComponentIds() {
-        return includedAppComponentIds;
-    }
-
-    public void setIncludedAppComponentIds(List<String> includedAppComponentIds) {
-        this.includedAppComponentIds = includedAppComponentIds;
     }
 
     public List<String> getThemes() {
@@ -162,7 +146,7 @@ public class ThemeCompile extends DefaultTask {
     }
 
     @TaskAction
-    public void buildThemes() throws IOException {
+    public void compileThemes() throws IOException {
         File stylesDirectory = getSourceDirectory();
         if (!stylesDirectory.exists()) {
             throw new FileNotFoundException(String.format("Unable to find SCSS themes root directory: %s",
@@ -195,22 +179,7 @@ public class ThemeCompile extends DefaultTask {
         }
 
         unpackVaadinAddonsThemes(themesTmp);
-        unpackVaadinThemesDependencies(themesTmp, vaadinThemesRoot);
-        unpackThemesConfDependencies(themesTmp, vaadinThemesRoot);
-
-        // copy includes to build dir
-        for (File includeThemeDir : includes) {
-            getLogger().info("[ThemeCompile] copy includes from {}", includeThemeDir.getName());
-
-            if (!includeThemeDir.exists()) {
-                throw new GradleException("Could not found include dir ${includeThemeDir.absolutePath}");
-            }
-
-            getProject().copy(copySpec ->
-                    copySpec.from(includeThemeDir)
-                            .into(new File(vaadinThemesRoot, includeThemeDir.getName()))
-            );
-        }
+        unpackThemesDependencies(themesTmp, vaadinThemesRoot);
 
         for (String themeDirName : themes) {
             buildTheme(themeDirName, stylesDirectory, vaadinThemesRoot);
@@ -229,19 +198,23 @@ public class ThemeCompile extends DefaultTask {
             File themeDestDir = new File(destinationDirectory, themeName);
             getLogger().info("[ThemeCompile] excluded theme '{}'", themeName);
 
-            FileUtils.deleteQuietly(themeDestDir);
+            deleteQuietly(themeDestDir);
         }
 
         for (String path : excludePaths) {
             File pathFile = new File(destinationDirectory, path);
             getLogger().info("[ThemeCompile] excluded path '{}'", path);
 
-            FileUtils.deleteQuietly(pathFile);
+            deleteQuietly(pathFile);
         }
     }
 
     protected void unpackVaadinAddonsThemes(File themesTmp) {
-        Configuration compileConfiguration = getProject().getConfigurations().getByName("compileClasspath");
+        Configuration compileConfiguration = getProject().getConfigurations().findByName(COMPILE_CLASSPATH_CONFIGURATION);
+        if (compileConfiguration == null) {
+            return;
+        }
+
         Set<ResolvedArtifact> resolvedArtifacts = compileConfiguration.getResolvedConfiguration().getResolvedArtifacts();
 
         resolvedArtifacts.stream()
@@ -267,39 +240,28 @@ public class ThemeCompile extends DefaultTask {
                 });
     }
 
-    protected void unpackVaadinThemesDependencies(File themesTmp, File vaadinThemesRoot) {
-        Configuration themesConf = getProject().getConfigurations().findByName("compileClasspath");
+    protected void unpackThemesDependencies(File themesTmp, File vaadinThemesRoot) {
+        Configuration themesConf = getProject().getConfigurations().findByName(JmixPlugin.THEMES_CONFIGURATION_NAME);
         if (themesConf != null) {
             List<File> themeArchives = collectThemeArchives(themesConf);
 
             for (File archive : themeArchives) {
-                getLogger().info("[ThemeCompile] unpack vaadin-themes artifact {}", archive.getName());
-
                 if (archive.getName().startsWith("vaadin-themes")) {
+                    getLogger().info("[ThemeCompile] unpack vaadin-themes artifact {}", archive.getName());
+
                     getProject().copy(copySpec ->
                             copySpec.from(getProject().zipTree(archive))
                                     .into(themesTmp)
                                     .include("VAADIN/**")
                                     .setExcludes(doNotUnpackPaths)
                     );
-                }
-            }
-        }
-    }
+                } else {
+                    getLogger().info("[ThemeCompile] unpack themes artifact {}", archive.getName());
 
-    protected void unpackThemesConfDependencies(File themesTmp, File vaadinThemesRoot) {
-        Configuration themesConf = getProject().getConfigurations().findByName("compileClasspath");
-        if (themesConf != null) {
-            List<File> themeArchives = collectThemeArchives(themesConf);
-
-            for (File archive : themeArchives) {
-                getLogger().info("[ThemeCompile] unpack themes artifact {}", archive.getName());
-
-                if (!archive.getName().startsWith("vaadin-themes")) {
                     getProject().copy(copySpec ->
-                                    copySpec.from(getProject().zipTree(archive))
-                                        .into(vaadinThemesRoot)
-                                        .setExcludes(doNotUnpackPaths)
+                            copySpec.from(getProject().zipTree(archive))
+                                    .into(vaadinThemesRoot)
+                                    .setExcludes(doNotUnpackPaths)
                     );
                 }
             }
@@ -355,7 +317,7 @@ public class ThemeCompile extends DefaultTask {
                             return element.getFile().getName().startsWith(".");
                         }));
 
-        prepareAppComponentsInclude(themeBuildDir);
+        generateAddonIncludes(themeBuildDir);
 
         getLogger().info("[ThemeCompile] compile theme '{}'", themeDir.getName());
 
@@ -492,197 +454,77 @@ public class ThemeCompile extends DefaultTask {
         }
     }
 
-    protected void prepareAppComponentsInclude(File themeBuildDir) {
-        ConfigurationContainer configurations = getProject().getRootProject().getConfigurations();
-        Configuration appComponentConf = configurations.findByName("appComponent");
-        if (appComponentConf != null
-                && appComponentConf.getDependencies().size() > 0) {
-            prepareAppComponentsIncludeConfiguration(themeBuildDir);
-        }
-    }
+    protected void generateAddonIncludes(File themeBuildDir) {
+        getLogger().info("[ThemeCompile] include styles from addons for '{}'", themeBuildDir.getName());
 
-    protected void prepareAppComponentsIncludeConfiguration(File themeBuildDir) {
-        getLogger().info("[ThemeCompile] include styles from app components using Gradle configuration");
-
-        File appComponentsIncludeFile = new File(themeBuildDir, "app-components.scss");
-        if (appComponentsIncludeFile.exists()) {
+        File addonIncludesFile = new File(themeBuildDir, "addons.scss");
+        if (addonIncludesFile.exists()) {
             // can be completely overridden in project
             return;
         }
 
-        StringBuilder appComponentsIncludeBuilder = new StringBuilder();
-        appComponentsIncludeBuilder.append("/* This file is managed automatically and will be overwritten */\n\n");
-
-        ConfigurationContainer configurations = getProject().getRootProject().getConfigurations();
-        Configuration appComponentConf = configurations.findByName("appComponent");
-        if (appComponentConf == null) {
-            return;
-        }
-
-        ResolvedConfiguration resolvedConfiguration = appComponentConf.getResolvedConfiguration();
-        Set<ResolvedDependency> dependencies = resolvedConfiguration.getFirstLevelModuleDependencies();
+        StringBuilder includesBuilder = new StringBuilder();
+        includesBuilder.append("/* This file is automatically managed and will be overwritten */\n\n");
 
         Set<ResolvedArtifact> addedArtifacts = new HashSet<>();
+        Set<String> includedPaths = new HashSet<>();
         List<String> includeMixins = new ArrayList<>();
-        Set<String> includedAddonsPaths = new HashSet<>();
-        Set<File> scannedJars = new HashSet<>();
 
-        walkDependenciesFromAppComponentsConfiguration(dependencies, addedArtifacts, artifact -> {
-            try (JarFile jarFile = new JarFile(artifact.getFile())) {
-                Manifest manifest = jarFile.getManifest();
-                if (manifest == null || manifest.getMainAttributes() == null) {
-                    return;
-                }
+        ConfigurationContainer configurations = getProject().getConfigurations();
 
-                String compId = manifest.getMainAttributes().getValue("");
-                String compVersion = manifest.getMainAttributes().getValue("");
-                if (compId == null || compVersion == null) {
-                    return;
-                }
-
-                getLogger().info("[ThemeCompile] include styles from app component {}", compId);
-
-                File componentThemeDir = new File(themeBuildDir, compId);
-                File addonsIncludeFile = new File(componentThemeDir, "vaadin-addons.scss");
-
-                List<File> dependentJarFiles = new ArrayList<>(findDependentJarsByAppComponent(compId));
-                dependentJarFiles.removeAll(scannedJars);
-                scannedJars.addAll(dependentJarFiles);
-
-                // ignore automatic lookup if defined file vaadin-addons.scss
-                if (!addonsIncludeFile.exists()) {
-                    findAndIncludeVaadinStyles(dependentJarFiles, includedAddonsPaths, includeMixins, appComponentsIncludeBuilder);
-                } else {
-                    getLogger().info("[ThemeCompile] ignore vaadin addon styles for {}", compId);
-                }
-
-                includeComponentScss(themeBuildDir, compId, appComponentsIncludeBuilder, includeMixins);
-            } catch (IOException e) {
-                throw new GradleException("Unable to form app-component includes for theme", e);
-            }
-        });
-
-        for (String includeAppComponentId : includedAppComponentIds) {
-            getLogger().info("[ThemeCompile] include styles from app component {}", includeAppComponentId);
-
-            // autowiring of vaadin addons from includes is not supported
-            includeComponentScss(themeBuildDir, includeAppComponentId, appComponentsIncludeBuilder, includeMixins);
+        Configuration themesConfiguration = configurations.findByName(JmixPlugin.THEMES_CONFIGURATION_NAME);
+        if (themesConfiguration != null) {
+            collectAddonIncludes(themesConfiguration, includesBuilder, addedArtifacts, includeMixins, includedPaths);
         }
-
-        appComponentsIncludeBuilder.append('\n');
-
-        // include project includes and vaadin addons
-        getLogger().info("[ThemeCompile] include styles from project and addons");
-
-        String currentProjectId = getProject().getGroup().toString();
-        File componentThemeDir = new File(themeBuildDir, currentProjectId);
-        File addonsIncludeFile = new File(componentThemeDir, "vaadin-addons.scss");
-
-        if (!addonsIncludeFile.exists()) {
-            Configuration compileConfiguration = getProject().getConfigurations().getByName("compileClasspath");
-
-            List<File> resolvedFiles = compileConfiguration.getResolvedConfiguration()
-                    .getResolvedArtifacts().stream()
-                    .map(ResolvedArtifact::getFile)
-                    .filter(f -> f.exists() && f.getName().endsWith(".jar") && !scannedJars.contains(f))
-                    .collect(Collectors.toList());
-
-            findAndIncludeVaadinStyles(resolvedFiles, includedAddonsPaths, includeMixins,
-                    appComponentsIncludeBuilder);
-        } else {
-            getLogger().info("[ThemeCompile] ignore vaadin addon styles for $currentProjectId");
+        Configuration compileConfiguration = configurations.findByName(COMPILE_CLASSPATH_CONFIGURATION);
+        if (compileConfiguration != null) {
+            collectAddonIncludes(compileConfiguration, includesBuilder, addedArtifacts, includeMixins, includedPaths);
         }
 
         // print mixins
-        appComponentsIncludeBuilder.append("\n@mixin app_components {\n");
+        includesBuilder.append("\n@mixin addons {\n");
         for (String mixin : includeMixins) {
-            appComponentsIncludeBuilder.append("  @include ").append(mixin).append(";\n");
+            includesBuilder.append("  @include ").append(mixin).append(";\n");
         }
-        appComponentsIncludeBuilder.append('}');
+        includesBuilder.append('}');
 
         try {
-            FileUtils.write(appComponentsIncludeFile, appComponentsIncludeBuilder.toString(), StandardCharsets.UTF_8);
+            FileUtils.write(addonIncludesFile, includesBuilder.toString(), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new GradleException("Unable to write CSS theme includes", e);
+            throw new GradleException("Unable to write addons.scss in " + themeBuildDir.getAbsolutePath(), e);
         }
-
-        getLogger().info("[ThemeCompile] app-components.scss initialized");
     }
 
-    protected void walkDependenciesFromAppComponentsConfiguration(Set<ResolvedDependency> dependencies,
-                                                                  Set<ResolvedArtifact> addedArtifacts,
-                                                                  Consumer<ResolvedArtifact> artifactAction) {
-        for (ResolvedDependency dependency : dependencies) {
-            walkDependenciesFromAppComponentsConfiguration(dependency.getChildren(), addedArtifacts, artifactAction);
+    protected void collectAddonIncludes(Configuration configuration, StringBuilder appComponentsIncludeBuilder,
+                                        Set<ResolvedArtifact> addedArtifacts, List<String> includeMixins, Set<String> includedPaths) {
+        Set<ResolvedDependency> dependencies = configuration.getResolvedConfiguration().getFirstLevelModuleDependencies();
 
-            for (ResolvedArtifact artifact : dependency.getModuleArtifacts()) {
-                if (addedArtifacts.contains(artifact)) {
-                    continue;
-                }
-
-                addedArtifacts.add(artifact);
-
-                if (artifact.getFile().getName().endsWith(".jar")) {
-                    artifactAction.accept(artifact);
-                }
+        walkDependencies(dependencies, addedArtifacts, artifact -> {
+            if (addedArtifacts.contains(artifact)) {
+                return;
             }
-        }
-    }
 
-    // find all dependencies of this app component
-    protected List<File> findDependentJarsByAppComponent(String compId) {
-        Configuration compileConfiguration = getProject().getConfigurations().getByName("compileClasspath");
-        Set<ResolvedDependency> firstLevelModuleDependencies =
-                compileConfiguration.getResolvedConfiguration().getFirstLevelModuleDependencies();
-
-        return firstLevelModuleDependencies.stream()
-                .flatMap(rd -> {
-                    if (compId.equals(rd.getModuleGroup())) {
-                        return rd.getAllModuleArtifacts().stream()
-                                .filter(ra -> ra.getFile().exists() && ra.getFile().getName().equals(".jar"))
-                                .map(ResolvedArtifact::getFile);
-                    }
-
-                    return Stream.empty();
-                }).collect(Collectors.toList());
-    }
-
-    protected void includeComponentScss(File themeBuildDir, String componentId,
-                                        StringBuilder appComponentsIncludeBuilder, List<String> includeMixins) {
-        File componentThemeDir = new File(themeBuildDir, componentId);
-        File componentIncludeFile = new File(componentThemeDir, "app-component.scss");
-
-        if (componentIncludeFile.exists()) {
-            appComponentsIncludeBuilder.append(
-                    String.format("@import \"%s/%s\";\n", componentThemeDir.getName(), componentIncludeFile.getName())
-            );
-
-            includeMixins.add(componentId.replace('.', '_'));
-        }
-    }
-
-    // find all vaadin addons in dependencies of this app component
-    protected void findAndIncludeVaadinStyles(List<File> dependentJarFiles, Set<String> includedAddonsPaths,
-                                              List<String> includeMixins, StringBuilder appComponentsIncludeBuilder) {
-        for (File file : dependentJarFiles) {
+            File file = artifact.getFile();
 
             try (FileInputStream is = new FileInputStream(file);
                  JarInputStream jarStream = new JarInputStream(is)) {
 
                 String vaadinStylesheets = getVaadinStylesheets(jarStream);
                 if (vaadinStylesheets != null) {
-                    includeVaadinStyles(vaadinStylesheets, includeMixins, includedAddonsPaths, appComponentsIncludeBuilder);
+                    includeVaadinStyles(vaadinStylesheets, includeMixins, includedPaths, appComponentsIncludeBuilder);
                 }
             } catch (IOException e) {
                 throw new GradleException("Unable to read SCSS theme includes", e);
             }
-        }
+        });
     }
 
     protected void includeVaadinStyles(String vaadinStylesheets, List<String> includeMixins, Set<String> includedPaths,
-                             StringBuilder appComponentsIncludeBuilder) {
-        List<String> vAddonIncludes = Splitter.on(",").omitEmptyStrings().trimResults()
-                                        .splitToList(vaadinStylesheets);
+                                       StringBuilder includeBuilder) {
+        List<String> vAddonIncludes = Splitter.on(",")
+                .omitEmptyStrings()
+                .trimResults()
+                .splitToList(vaadinStylesheets);
 
         for (String include : new LinkedHashSet<>(vAddonIncludes)) {
             if (!include.startsWith("/")) {
@@ -698,14 +540,33 @@ public class ThemeCompile extends DefaultTask {
             getLogger().info("[ThemeCompile] include vaadin addons styles '{}'", include);
 
             if (include.endsWith(".css")) {
-                appComponentsIncludeBuilder.append(String.format("@import url(\"../../..%s\");\n", include));
+                includeBuilder.append(String.format("@import url(\"../../..%s\");\n", include));
             } else {
                 String mixin = include.substring(include.lastIndexOf("/") + 1,
                         include.length() - ".scss".length());
 
-                appComponentsIncludeBuilder.append(String.format("@import \"../../..%s\";\n", include));
+                includeBuilder.append(String.format("@import \"../../..%s\";\n", include));
 
                 includeMixins.add(mixin);
+            }
+        }
+    }
+
+    protected void walkDependencies(Set<ResolvedDependency> dependencies, Set<ResolvedArtifact> addedArtifacts,
+                                    Consumer<ResolvedArtifact> artifactAction) {
+        for (ResolvedDependency dependency : dependencies) {
+            walkDependencies(dependency.getChildren(), addedArtifacts, artifactAction);
+
+            for (ResolvedArtifact artifact : dependency.getModuleArtifacts()) {
+                if (addedArtifacts.contains(artifact)) {
+                    continue;
+                }
+
+                addedArtifacts.add(artifact);
+
+                if (artifact.getFile().getName().endsWith(".jar")) {
+                    artifactAction.accept(artifact);
+                }
             }
         }
     }

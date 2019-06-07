@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright 2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-@import "halo-defaults";
-@import "addons";
-@import "halo";
+package io.jmix.sample.customtheme;
 
-.halo {
-  @include addons;
-  @include halo;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class CustomThemeApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(CustomThemeApplication.class, args);
+	}
 }

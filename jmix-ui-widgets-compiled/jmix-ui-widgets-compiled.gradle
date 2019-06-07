@@ -1,3 +1,5 @@
+import io.jmix.gradle.JmixPlugin
+
 apply plugin: 'java'
 apply plugin: 'java-library'
 
@@ -6,4 +8,4 @@ compileJava.enabled = false
 def uiWidgets = project(':jmix-ui-widgets')
 def inputDir = new File(uiWidgets.buildDir, 'web')
 
-sourceSets.main.output.dir(inputDir, builtBy: uiWidgets.tasks.getByName('buildWidgets'))
+sourceSets.main.output.dir(inputDir, builtBy: uiWidgets.tasks.getByName(JmixPlugin.COMPILE_WIDGETS_TASK_NAME))
