@@ -1,0 +1,18 @@
+apply plugin: 'java'
+
+dependencies {
+    implementation project(':jmix-ui')
+    compileOnly project(':jmix-ui-widgets')
+}
+
+jar {
+    // pack client Java sources
+    with copySpec {
+        from sourceSets.main.allJava
+        include "io/jmix/widgetsaddon/client/**"
+    }
+    // register exported widgetset
+    manifest {
+        attributes(['Vaadin-Widgetsets': 'io.jmix.widgetsaddon.WidgetsAddon'])
+    }
+}

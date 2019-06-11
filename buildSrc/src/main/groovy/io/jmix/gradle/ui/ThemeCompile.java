@@ -49,7 +49,6 @@ import java.util.zip.GZIPOutputStream;
 
 import static org.apache.commons.io.FileUtils.*;
 
-// todo themes in projects
 public class ThemeCompile extends DefaultTask {
 
     public static final String VAADIN_STYLESHEETS_MANIFEST_KEY = "Vaadin-Stylesheets";
@@ -455,13 +454,14 @@ public class ThemeCompile extends DefaultTask {
     }
 
     protected void generateAddonIncludes(File themeBuildDir) {
-        getLogger().info("[ThemeCompile] include styles from addons for '{}'", themeBuildDir.getName());
-
         File addonIncludesFile = new File(themeBuildDir, "addons.scss");
         if (addonIncludesFile.exists()) {
+            getLogger().info("[ThemeCompile] there is the customized addons.scss file in the project");
             // can be completely overridden in project
             return;
         }
+
+        getLogger().info("[ThemeCompile] include styles from addons for '{}'", themeBuildDir.getName());
 
         StringBuilder includesBuilder = new StringBuilder();
         includesBuilder.append("/* This file is automatically managed and will be overwritten */\n\n");
@@ -500,10 +500,6 @@ public class ThemeCompile extends DefaultTask {
         Set<ResolvedDependency> dependencies = configuration.getResolvedConfiguration().getFirstLevelModuleDependencies();
 
         walkDependencies(dependencies, addedArtifacts, artifact -> {
-            if (addedArtifacts.contains(artifact)) {
-                return;
-            }
-
             File file = artifact.getFile();
 
             try (FileInputStream is = new FileInputStream(file);

@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-import io.jmix.gradle.JmixPlugin
+package io.jmix.widgetsaddon.client;
 
-apply plugin: 'java'
-apply plugin: 'java-library'
+import com.vaadin.shared.ui.button.ButtonState;
 
-compileJava.enabled = false
+public class CustomButtonState extends ButtonState {
 
-def uiThemes = project(':jmix-ui-themes')
-def inputDir = new File(uiThemes.buildDir, 'web')
-
-sourceSets.main.output.dir(inputDir, builtBy: uiThemes.tasks.getByName(JmixPlugin.COMPILE_THEMES_TASK_NAME))
+    public String color = "";
+}

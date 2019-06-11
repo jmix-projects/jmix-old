@@ -22,7 +22,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CustomThemeApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CustomThemeApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CustomThemeApplication.class, args);
+    }
 }

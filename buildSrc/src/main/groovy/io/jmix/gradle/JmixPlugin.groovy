@@ -47,6 +47,12 @@ class JmixPlugin implements Plugin<Project> {
         project.ext.ThemeCompile = ThemeCompile.class
         Configuration themesConfiguration = project.configurations.create(THEMES_CONFIGURATION_NAME)
 
+        Configuration compileClasspathConfiguration = project.configurations.findByName('compileClasspath')
+        if (compileClasspathConfiguration != null) {
+            // dependency resolution for multi-module projects
+            compileClasspathConfiguration.extendsFrom(themesConfiguration)
+        }
+
         def compileThemes = project.tasks.create(COMPILE_THEMES_TASK_NAME, ThemeCompile.class)
         compileThemes.enabled = false
         project.afterEvaluate {
@@ -58,6 +64,9 @@ class JmixPlugin implements Plugin<Project> {
 
         project.ext.WidgetsCompile = WidgetsCompile.class
         Configuration widgetsConfiguration = project.configurations.create(WIDGETS_CONFIGURATION_NAME)
+
+        // exclude javax.validation from GWT classpath
+        widgetsConfiguration.exclude(group: 'org.hibernate.validator', module: 'hibernate-validator')
 
         def compileWidgetsTask = project.tasks.create(COMPILE_WIDGETS_TASK_NAME, WidgetsCompile.class)
         compileWidgetsTask.enabled = false

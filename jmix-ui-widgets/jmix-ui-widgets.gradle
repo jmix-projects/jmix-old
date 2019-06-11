@@ -1,5 +1,3 @@
-import io.jmix.gradle.ui.WidgetsCompile
-
 /*
  * Copyright 2019 Haulmont.
  *
@@ -15,6 +13,8 @@ import io.jmix.gradle.ui.WidgetsCompile
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import io.jmix.gradle.ui.WidgetsCompile
 
 apply plugin: 'java'
 apply plugin: 'java-library'
@@ -33,12 +33,7 @@ targetCompatibility = rootProject.targetCompatibility
 def jmixUi = rootProject.project(':jmix-ui')
 
 dependencies {
-    api(project(':jmix-ui')) {
-        exclude group: 'javax.validation', module: 'validation-api'
-        exclude group: 'org.hibernate.validator', module: 'hibernate-validator'
-    }
     api 'javax.validation:validation-api:1.0.0.GA'
-
     api "com.vaadin:vaadin-client:$jmixUi.vaadinVersion"
     api "com.vaadin:vaadin-client-compiler:$jmixUi.vaadinVersion"
     api "com.vaadin:vaadin-compatibility-client:$jmixUi.vaadinVersion"
@@ -54,4 +49,4 @@ jar {
     from sourceSets.main.allJava
 }
 
-task compileWidgets(type: WidgetsCompile)
+task compileWidgets(type: WidgetsCompile, dependsOn: classes)

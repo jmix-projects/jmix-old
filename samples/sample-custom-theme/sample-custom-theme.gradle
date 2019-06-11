@@ -1,12 +1,9 @@
-import io.jmix.gradle.JmixPlugin
-
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'war'
-
-apply plugin: JmixPlugin
+apply plugin: 'io.jmix'
 
 group = 'io.jmix.sample.customtheme'
 version = rootProject.jmixVersion
@@ -19,4 +16,5 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     themes project(':jmix-ui-themes')
+    themes project(':samples:sample-theme-addon')
 }

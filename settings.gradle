@@ -34,8 +34,10 @@ include 'samples:sample-hello-world'
 include 'samples:sample-custom-security'
 include 'samples:sample-remoting'
 
+include 'samples:sample-theme-addon'
 include 'samples:sample-custom-theme'
 
+include 'samples:sample-widgets-addon'
 include 'samples:sample-custom-widgets'
 
 rootProject.children.each { p1 ->

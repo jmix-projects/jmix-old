@@ -1,12 +1,9 @@
-import io.jmix.gradle.JmixPlugin
-
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'war'
-
-apply plugin: JmixPlugin
+apply plugin: 'io.jmix'
 
 group = 'io.jmix.sample.customwidgets'
 version = rootProject.jmixVersion
@@ -15,4 +12,13 @@ sourceCompatibility = rootProject.sourceCompatibility
 dependencies {
     implementation project(':starters:starter-standard')
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation project(':samples:sample-widgets-addon')
+
+    widgets project(':jmix-ui-widgets')
+    widgets project(':samples:sample-widgets-addon')
+}
+
+compileWidgets {
+    generate 'io.jmix.sample.customwidgets.CustomWidgetSet'
 }
