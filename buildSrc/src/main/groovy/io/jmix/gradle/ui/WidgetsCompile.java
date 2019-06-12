@@ -17,6 +17,7 @@
 package io.jmix.gradle.ui;
 
 import com.google.common.base.Joiner;
+import io.jmix.gradle.JmixPlugin;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.GradleException;
 import org.gradle.api.Project;
@@ -38,13 +39,15 @@ import java.util.jar.Manifest;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.apache.commons.io.FileUtils.deleteQuietly;
-import static org.apache.commons.io.FileUtils.iterateFiles;
+import static org.apache.commons.io.FileUtils.*;
 
 public class WidgetsCompile extends WidgetsTask {
 
     protected static final String GWT_XML_EXTENSION = "gwt.xml";
     protected static final String VAADIN_WIDGETSETS_MANIFEST_KEY = "Vaadin-Widgetsets";
+
+    protected static Set<String> STANDARD_WIDGETSETS =
+            new HashSet<>(Arrays.asList("com.vaadin.v7.Vaadin7WidgetSet", "com.vaadin.DefaultWidgetSet"));
 
     @Input
     protected String widgetSetsDir = "";
@@ -124,7 +127,7 @@ public class WidgetsCompile extends WidgetsTask {
         List<String> gwtCompilerJvmArgs = collectCompilerJvmArgs(gwtJavaTmp);
 
         if (generateWidgetSetFile) {
-            generateWidgetSetXml(compilerClassPath, widgetSetClass);
+            generateWidgetSetXml(compilerClassPath, gwtTemp, widgetSetClass);
         }
 
         getProject().javaexec(spec -> {
@@ -139,11 +142,11 @@ public class WidgetsCompile extends WidgetsTask {
         gwtWidgetSetTemp.renameTo(widgetSetsDirectory);
     }
 
-    protected void generateWidgetSetXml(List<File> compilerClassPath, String widgetSetClass) {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    protected void generateWidgetSetXml(List<File> compilerClassPath, File gwtTemp, String widgetSetClass) {
         StringBuilder gwtXmlBuilder = new StringBuilder();
-        gwtXmlBuilder.append("<module>");
-        gwtXmlBuilder.append("<inherits name=\"io.jmix.ui.widgets.WidgetSet\"/>");
-        gwtXmlBuilder.append("</module>");
+        gwtXmlBuilder.append("<module>\n");
+        gwtXmlBuilder.append("    <inherits name=\"io.jmix.ui.widgets.WidgetSet\"/>\n");
 
         for (File file : compilerClassPath) {
             if (file.getName().endsWith(".jar")) {
@@ -151,10 +154,10 @@ public class WidgetsCompile extends WidgetsTask {
                      JarInputStream jarStream = new JarInputStream(is)) {
 
                     String vaadinWidgetsets = getVaadinWidgetsets(jarStream);
-                    if (vaadinWidgetsets != null) {
+                    if (vaadinWidgetsets != null && !STANDARD_WIDGETSETS.contains(vaadinWidgetsets)) {
                         getLogger().info("[WidgetsCompile] Including widgets from {}", vaadinWidgetsets);
 
-                        gwtXmlBuilder.append("<inherits name=\"").append(vaadinWidgetsets).append("\"/>");
+                        gwtXmlBuilder.append("    <inherits name=\"").append(vaadinWidgetsets).append("\"/>\n");
                     }
                 } catch (IOException e) {
                     throw new GradleException("Unable to read widgets includes", e);
@@ -162,12 +165,50 @@ public class WidgetsCompile extends WidgetsTask {
             }
         }
 
-        File file = new File("" + widgetSetClass + ".gwt.xml"); // todo temp location
+        gwtXmlBuilder.append("</module>");
+
+        File widgetsetTmp = new File(gwtTemp, "widgetset-gen");
+        if (widgetsetTmp.exists()) {
+            deleteQuietly(widgetsetTmp);
+        }
+
         try {
+            forceMkdir(widgetsetTmp);
+        } catch (IOException e) {
+            throw new GradleException("Unable to create temp dir for generated widgetset file", e);
+        }
+
+        int packagePathIndex = widgetSetClass.lastIndexOf(".");
+        String packagePath = "";
+        String widgetSetFileName = widgetSetClass;
+        if (packagePathIndex >= 0) {
+            packagePath = widgetSetClass.substring(0, packagePathIndex);
+            widgetSetFileName = widgetSetClass.substring(packagePathIndex + 1);
+        }
+
+        packagePath = packagePath.replace(".", "/");
+
+        String widgetsetFilePath = widgetSetClass + "." + GWT_XML_EXTENSION;
+        if (!packagePath.isEmpty()) {
+            widgetsetFilePath = packagePath + "/" + widgetSetFileName + "." + GWT_XML_EXTENSION;
+        }
+
+        File file = new File(widgetsetTmp, widgetsetFilePath);
+        try {
+            File parentDir = file.getParentFile();
+            // generate package structure
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+
             FileUtils.write(file, gwtXmlBuilder.toString(), StandardCharsets.UTF_8);
+
+            getLogger().info("[WidgetsCompile] Generated widgetset XML {}", file.getAbsolutePath());
         } catch (IOException e) {
             throw new GradleException("Unable to write generated .gwt.xml file: " + file.getAbsolutePath(), e);
         }
+
+        compilerClassPath.add(widgetsetTmp);
     }
 
     @Nullable
@@ -261,9 +302,22 @@ public class WidgetsCompile extends WidgetsTask {
 
         List<File> compileClassPathArtifacts = StreamSupport
                 .stream(mainSourceSet.getCompileClasspath().spliterator(), false)
+                .filter(f -> !f.getName().startsWith("validation-api-2")
+                             && !f.getName().startsWith("hibernate-validator")) // exclude validation api 2+
                 .filter(f -> includedArtifact(f.getName()) && !compilerClassPath.contains(f))
                 .collect(Collectors.toList());
         compilerClassPath.addAll(compileClassPathArtifacts);
+
+        Configuration widgetsConfiguration =
+                getProject().getConfigurations().findByName(JmixPlugin.WIDGETS_CONFIGURATION_NAME);
+
+        if (widgetsConfiguration != null) {
+            List<File> widgetsDeps = widgetsConfiguration.getResolvedConfiguration().getFiles().stream()
+                    .filter(f -> includedArtifact(f.getName()) && !compilerClassPath.contains(f))
+                    .collect(Collectors.toList());
+
+            compilerClassPath.addAll(widgetsDeps);
+        }
 
         if (getProject().getLogger().isEnabled(LogLevel.DEBUG)) {
             StringBuilder sb = new StringBuilder();

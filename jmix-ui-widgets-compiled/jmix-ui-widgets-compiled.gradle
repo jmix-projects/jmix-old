@@ -17,9 +17,6 @@
 import io.jmix.gradle.JmixPlugin
 
 apply plugin: 'java'
-apply plugin: 'java-library'
-
-compileJava.enabled = false
 
 def uiWidgets = project(':jmix-ui-widgets')
 def inputDir = new File(uiWidgets.buildDir, 'web')

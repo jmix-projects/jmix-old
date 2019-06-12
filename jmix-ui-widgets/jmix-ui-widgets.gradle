@@ -33,16 +33,14 @@ targetCompatibility = rootProject.targetCompatibility
 def jmixUi = rootProject.project(':jmix-ui')
 
 dependencies {
+    api(jmixUi) {
+        exclude(group: 'org.hibernate.validator', module: 'hibernate-validator')
+        exclude(group: 'javax.validation', module: 'validation-api')
+    }
     api 'javax.validation:validation-api:1.0.0.GA'
     api "com.vaadin:vaadin-client:$jmixUi.vaadinVersion"
     api "com.vaadin:vaadin-client-compiler:$jmixUi.vaadinVersion"
     api "com.vaadin:vaadin-compatibility-client:$jmixUi.vaadinVersion"
-}
-
-configurations.all {
-    exclude group: 'org.springframework'
-    exclude group: 'org.springframework.security'
-    exclude group: 'org.eclipse.persistence'
 }
 
 jar {

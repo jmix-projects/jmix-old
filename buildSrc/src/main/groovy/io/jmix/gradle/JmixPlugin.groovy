@@ -20,7 +20,8 @@ import io.jmix.gradle.ui.ThemeCompile
 import io.jmix.gradle.ui.WidgetsCompile
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.Dependency
+import org.gradle.api.artifacts.ProjectDependency
 
 class JmixPlugin implements Plugin<Project> {
 
@@ -44,10 +45,15 @@ class JmixPlugin implements Plugin<Project> {
             }
         }
 
-        project.ext.ThemeCompile = ThemeCompile.class
-        Configuration themesConfiguration = project.configurations.create(THEMES_CONFIGURATION_NAME)
+        setupThemeCompile(project)
+        setupWidgetsCompile(project)
+    }
 
-        Configuration compileClasspathConfiguration = project.configurations.findByName('compileClasspath')
+    protected void setupThemeCompile(Project project) {
+        project.ext.ThemeCompile = ThemeCompile.class
+        def themesConfiguration = project.configurations.create(THEMES_CONFIGURATION_NAME)
+
+        def compileClasspathConfiguration = project.configurations.findByName('compileClasspath')
         if (compileClasspathConfiguration != null) {
             // dependency resolution for multi-module projects
             compileClasspathConfiguration.extendsFrom(themesConfiguration)
@@ -61,19 +67,36 @@ class JmixPlugin implements Plugin<Project> {
                 compileThemes.enabled = true
             }
         }
+    }
 
+    protected void setupWidgetsCompile(Project project) {
         project.ext.WidgetsCompile = WidgetsCompile.class
-        Configuration widgetsConfiguration = project.configurations.create(WIDGETS_CONFIGURATION_NAME)
+        def widgetsConfiguration = project.configurations.create(WIDGETS_CONFIGURATION_NAME)
 
-        // exclude javax.validation from GWT classpath
+        project.dependencies {
+            widgets 'javax.validation:validation-api:1.0.0.GA'
+        }
+
         widgetsConfiguration.exclude(group: 'org.hibernate.validator', module: 'hibernate-validator')
 
         def compileWidgetsTask = project.tasks.create(COMPILE_WIDGETS_TASK_NAME, WidgetsCompile.class)
         compileWidgetsTask.enabled = false
         project.afterEvaluate {
-            if (widgetsConfiguration.size() > 0) {
+            if (widgetsConfiguration.size() > 1) {
                 project.sourceSets.main.output.dir(compileWidgetsTask.outputDirectory, builtBy: compileWidgetsTask)
                 compileWidgetsTask.enabled = true
+
+                // dependency resolution for multi-module projects
+                for (Dependency d : widgetsConfiguration.getAllDependencies()) {
+                    if (d instanceof ProjectDependency) {
+                        project.logger.info("Project $project.name will depend on ${d.getDependencyProject().name}.jar")
+
+                        def jarTask = d.getDependencyProject().getTasks().findByName('jar')
+                        if (jarTask != null) {
+                            compileWidgetsTask.dependsOn(jarTask)
+                        }
+                    }
+                }
             }
         }
     }

@@ -1,7 +1,16 @@
 apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'io.spring.dependency-management'
+
+dependencyManagement {
+    imports {
+        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+    }
+}
 
 dependencies {
-    implementation project(':jmix-ui')
+    api project(':jmix-ui')
+
     compileOnly project(':jmix-ui-widgets')
 }
 
