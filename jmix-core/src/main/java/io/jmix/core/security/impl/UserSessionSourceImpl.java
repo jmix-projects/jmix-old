@@ -16,7 +16,6 @@
 
 package io.jmix.core.security.impl;
 
-import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.security.*;
 import org.springframework.stereotype.Component;
 

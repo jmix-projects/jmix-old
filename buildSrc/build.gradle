@@ -33,5 +33,13 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.javassist:javassist:3.24.1-GA'
+    implementation('org.javassist:javassist:3.24.1-GA')
+    implementation('commons-io:commons-io:2.6')
+    implementation('org.apache.commons:commons-lang3:3.9')
+    implementation('com.google.guava:guava:27.1-jre')
+
+    implementation('com.yahoo.platform.yui:yuicompressor:2.4.6')
+    implementation('com.vaadin:vaadin-sass-compiler:0.9.13') {
+        exclude(group: 'com.yahoo.platform.yui', module: 'yuicompressor')
+    }
 }

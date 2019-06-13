@@ -16,6 +16,7 @@
 
 package io.jmix.core.security;
 
+import io.jmix.core.security.impl.AnonymousAuthenticationProvider;
 import io.jmix.core.security.impl.CoreUserDetailsService;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +47,9 @@ public class JmixCoreSecurityConfiguration extends WebSecurityConfigurerAdapter 
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         UserDetailsService userDetailsService = new CoreUserDetailsService();
         auth.userDetailsService(userDetailsService);
+
         auth.authenticationProvider(new SystemAuthenticationProvider(userDetailsService));
+        auth.authenticationProvider(new AnonymousAuthenticationProvider(userDetailsService));
     }
 
     @Override

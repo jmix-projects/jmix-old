@@ -28,6 +28,7 @@ public class CoreUserDetailsService implements UserDetailsService {
 
     private List<User> users = Arrays.asList(
             new CoreUser("system", "{noop}", "System"),
+            new CoreUser("anonymous", "{noop}", "Anonymous"),
             new CoreUser("admin", "{noop}admin123", "Administrator")
     );
 

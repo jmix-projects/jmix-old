@@ -13,9 +13,8 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 dependencies {
-    api project(':jmix-core')
-    api project(':jmix-security')
-    api project(':jmix-ui')
-    implementation 'org.springframework:spring-context'
-    implementation 'com.vaadin:vaadin-spring-boot:3.1.1'
+    api project(':starters:starter-ui-minimal')
+
+    implementation project(':jmix-ui-widgets-compiled')
+    implementation project(':jmix-ui-themes-compiled')
 }

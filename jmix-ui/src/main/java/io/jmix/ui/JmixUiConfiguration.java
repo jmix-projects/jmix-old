@@ -18,11 +18,29 @@ package io.jmix.ui;
 
 import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.core.annotation.JmixModule;
+import io.jmix.core.annotation.JmixProperty;
+import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
+import io.jmix.ui.sys.UiControllersConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Collections;
+
 @Configuration
 @ComponentScan
-@JmixModule(dependsOn = JmixCoreConfiguration.class)
+@JmixModule(dependsOn = JmixCoreConfiguration.class, properties = {
+        @JmixProperty(name = "jmix.themeConfig", value = "io/jmix/ui/theme/halo-theme.properties"),
+})
 public class JmixUiConfiguration {
+
+    @Bean("jmix_UiControllers")
+    public UiControllersConfiguration screens(ApplicationContext applicationContext,
+                                              AnnotationScanMetadataReaderFactory metadataReaderFactory) {
+        UiControllersConfiguration uiControllers
+                = new UiControllersConfiguration(applicationContext, metadataReaderFactory);
+        uiControllers.setBasePackages(Collections.singletonList("io.jmix.ui.app"));
+        return uiControllers;
+    }
 }
