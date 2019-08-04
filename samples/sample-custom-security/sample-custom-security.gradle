@@ -10,7 +10,7 @@ sourceCompatibility = rootProject.sourceCompatibility
 
 dependencies {
     implementation project(':starters:starter-standard')
-    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.spockframework:spock-core:$rootProject.spockVersion"

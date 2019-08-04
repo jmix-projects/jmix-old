@@ -17,7 +17,6 @@
 package io.jmix.samples.customsecurity
 
 import io.jmix.core.security.Security
-import io.jmix.core.security.UserSession
 import io.jmix.core.security.UserSessionManager
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -26,7 +25,7 @@ import spock.lang.Specification
 
 import javax.inject.Inject
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class CustomSecurityImplTest extends Specification {
 
     @Inject
