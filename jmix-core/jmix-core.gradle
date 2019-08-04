@@ -15,6 +15,7 @@ sourceCompatibility = rootProject.sourceCompatibility
 targetCompatibility = rootProject.targetCompatibility
 
 dependencies {
+    api 'org.springframework.boot:spring-boot'
     api 'org.springframework:spring-context'
     api 'org.springframework:spring-webmvc'
     api 'org.apache.commons:commons-lang3'
