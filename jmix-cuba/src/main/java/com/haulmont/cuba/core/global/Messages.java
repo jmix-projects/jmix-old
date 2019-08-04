@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.cuba;
+package com.haulmont.cuba.core.global;
 
 import io.jmix.core.MessageTools;
 

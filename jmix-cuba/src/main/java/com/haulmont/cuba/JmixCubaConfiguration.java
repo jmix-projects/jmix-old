@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package io.jmix.cuba;
+package com.haulmont.cuba;
 
 import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.core.Messages;
 import io.jmix.core.annotation.JmixModule;
-import io.jmix.cuba.impl.MessagesImpl;
+import com.haulmont.cuba.core.global.impl.MessagesImpl;
 import io.jmix.data.JmixDataConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

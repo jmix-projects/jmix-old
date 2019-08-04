@@ -16,6 +16,8 @@
 
 package io.jmix.cuba
 
+import com.haulmont.cuba.JmixCubaConfiguration
+import com.haulmont.cuba.core.global.Messages
 import com.sample.app.foo.Bar
 import io.jmix.core.JmixCoreConfiguration
 import org.springframework.test.context.ContextConfiguration

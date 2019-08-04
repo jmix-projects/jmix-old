@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.cuba.impl;
+package com.haulmont.cuba.core.global.impl;
 
 import io.jmix.core.MessageTools;
-import io.jmix.cuba.Messages;
+import com.haulmont.cuba.core.global.Messages;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.cuba.impl;
+package com.haulmont.cuba.core.global.impl;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
