@@ -16,12 +16,12 @@
 
 package io.jmix.core.metamodel.datatypes.impl;
 
-import io.jmix.core.metamodel.annotations.JavaClass;
+import io.jmix.core.AppBeans;
+import io.jmix.core.metamodel.annotations.DatatypeDef;
+import io.jmix.core.metamodel.annotations.DateTimeFormat;
 import io.jmix.core.metamodel.datatypes.FormatStrings;
 import io.jmix.core.metamodel.datatypes.FormatStringsRegistry;
-import io.jmix.core.AppBeans;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -30,12 +30,9 @@ import java.time.format.FormatStyle;
 import java.time.temporal.TemporalQuery;
 import java.util.Locale;
 
-@JavaClass(LocalDate.class)
+@DatatypeDef(id = "localDate", javaClass = LocalDate.class, defaultForClass = true, value = "jmix_LocalDateDatatype")
+@DateTimeFormat("yyyy-MM-dd")
 public class LocalDateDatatype extends AbstractTemporalDatatype<LocalDate> {
-
-    public LocalDateDatatype(Element element) {
-        super(element);
-    }
 
     @Override
     public LocalDate parse(String value, Locale locale) throws ParseException {

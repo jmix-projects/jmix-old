@@ -16,21 +16,29 @@
 
 package io.jmix.core.metamodel.datatypes.impl;
 
-import io.jmix.core.AppBeans;
-import io.jmix.core.metamodel.annotations.JavaClass;
+import io.jmix.core.metamodel.annotations.DatatypeDef;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.FormatStrings;
 import io.jmix.core.metamodel.datatypes.FormatStringsRegistry;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Inject;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
-@JavaClass(Double.class)
+@DatatypeDef(id = "double", javaClass = Double.class, defaultForClass = true, value = "jmix_DoubleDatatype")
+@io.jmix.core.metamodel.annotations.NumberFormat(
+        pattern = "0.###",
+        decimalSeparator = ".",
+        groupingSeparator = ""
+)
 public class DoubleDatatype extends NumberDatatype implements Datatype<Double> {
+
+    @Inject
+    protected FormatStringsRegistry formatStringsRegistry;
 
     @Override
     public String format(Object value) {
@@ -43,7 +51,7 @@ public class DoubleDatatype extends NumberDatatype implements Datatype<Double> {
             return "";
         }
 
-        FormatStrings formatStrings = AppBeans.get(FormatStringsRegistry.class).getFormatStrings(locale);
+        FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(locale);
         if (formatStrings == null) {
             return format(value);
         }
@@ -68,7 +76,7 @@ public class DoubleDatatype extends NumberDatatype implements Datatype<Double> {
             return null;
         }
 
-        FormatStrings formatStrings = AppBeans.get(FormatStringsRegistry.class).getFormatStrings(locale);
+        FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(locale);
         if (formatStrings == null) {
             return parse(value);
         }
@@ -82,7 +90,4 @@ public class DoubleDatatype extends NumberDatatype implements Datatype<Double> {
     public String toString() {
         return getClass().getSimpleName();
     }
-
-    @Deprecated
-    public final static String NAME = "double";
 }

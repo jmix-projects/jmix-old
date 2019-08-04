@@ -16,10 +16,10 @@
 
 package io.jmix.core.metamodel.datatypes.impl;
 
-import io.jmix.core.metamodel.annotations.JavaClass;
+import io.jmix.core.metamodel.annotations.DatatypeDef;
+import io.jmix.core.metamodel.annotations.DateTimeFormat;
 import io.jmix.core.metamodel.datatypes.FormatStrings;
 import io.jmix.core.metamodel.datatypes.TimeZoneAwareDatatype;
-import org.dom4j.Element;
 
 import javax.annotation.Nullable;
 import java.time.LocalDateTime;
@@ -31,13 +31,10 @@ import java.time.temporal.TemporalQuery;
 import java.util.Locale;
 import java.util.TimeZone;
 
-@JavaClass(OffsetDateTime.class)
+@DatatypeDef(id = "offsetDateTime", javaClass = OffsetDateTime.class, defaultForClass = true, value = "jmix_OffsetDateTimeDatatype")
+@DateTimeFormat("yyyy-MM-dd HH:mm:ss.SSS Z")
 public class OffsetDateTimeDatatype extends AbstractTemporalDatatype<OffsetDateTime>
         implements TimeZoneAwareDatatype {
-
-    public OffsetDateTimeDatatype(Element element) {
-        super(element);
-    }
 
     @Override
     public String format(@Nullable Object value, Locale locale, TimeZone timeZone) {

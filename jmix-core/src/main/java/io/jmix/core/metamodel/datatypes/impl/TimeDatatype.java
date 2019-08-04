@@ -17,16 +17,15 @@
 package io.jmix.core.metamodel.datatypes.impl;
 
 import io.jmix.core.commons.util.ParamsMap;
-import io.jmix.core.metamodel.annotations.JavaClass;
+import io.jmix.core.metamodel.annotations.DatatypeDef;
+import io.jmix.core.metamodel.annotations.DateTimeFormat;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.FormatStrings;
 import io.jmix.core.metamodel.datatypes.FormatStringsRegistry;
 import io.jmix.core.metamodel.datatypes.ParameterizedDatatype;
-import io.jmix.core.AppBeans;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
 
-import java.sql.Time;
+import javax.inject.Inject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,15 +35,22 @@ import java.util.Map;
 
 /**
  * <code>TimeDatatype</code> works with <code>java.sql.Time</code> but is parametrized with <code>java.util.Date</code>
- * to avoid problems with casting, e.g. <code>org.apache.openjpa.util.java$util$Date$proxy</code>.
+ * to avoid problems with casting.
  */
-@JavaClass(Time.class)
+@DatatypeDef(id = "time", javaClass = java.sql.Time.class, defaultForClass = true, value = "jmix_TimeDatatype")
+@DateTimeFormat("HH:mm:ss")
 public class TimeDatatype implements Datatype<Date>, ParameterizedDatatype {
+
+    @Inject
+    protected FormatStringsRegistry formatStringsRegistry;
 
     private String formatPattern;
 
-    public TimeDatatype(Element element) {
-        formatPattern = element.attributeValue("format");
+    public TimeDatatype() {
+        DateTimeFormat dateTimeFormat = getClass().getAnnotation(DateTimeFormat.class);
+        if (dateTimeFormat != null) {
+            formatPattern = dateTimeFormat.value();
+        }
     }
 
     @Override
@@ -69,7 +75,7 @@ public class TimeDatatype implements Datatype<Date>, ParameterizedDatatype {
             return "";
         }
 
-        FormatStrings formatStrings = AppBeans.get(FormatStringsRegistry.class).getFormatStrings(locale);
+        FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(locale);
         if (formatStrings == null) {
             return format(value);
         }
@@ -101,7 +107,7 @@ public class TimeDatatype implements Datatype<Date>, ParameterizedDatatype {
             return null;
         }
 
-        FormatStrings formatStrings = AppBeans.get(FormatStringsRegistry.class).getFormatStrings(locale);
+        FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(locale);
         if (formatStrings == null) {
             return parse(value);
         }
@@ -119,7 +125,4 @@ public class TimeDatatype implements Datatype<Date>, ParameterizedDatatype {
     public String toString() {
         return getClass().getSimpleName();
     }
-
-    @Deprecated
-    public final static String NAME = "time";
 }

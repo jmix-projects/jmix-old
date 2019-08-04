@@ -17,15 +17,15 @@
 package io.jmix.core.metamodel.datatypes.impl;
 
 import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.metamodel.annotations.DateTimeFormat;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.FormatStrings;
 import io.jmix.core.metamodel.datatypes.FormatStringsRegistry;
 import io.jmix.core.metamodel.datatypes.ParameterizedDatatype;
-import io.jmix.core.AppBeans;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
@@ -35,10 +35,17 @@ import java.util.Locale;
 import java.util.Map;
 
 public abstract class AbstractTemporalDatatype<T extends Temporal> implements Datatype<T>, ParameterizedDatatype {
+
+    @Inject
+    protected FormatStringsRegistry formatStringsRegistry;
+
     protected String formatPattern;
 
-    public AbstractTemporalDatatype(Element element) {
-        this.formatPattern = element.attributeValue("format");
+    public AbstractTemporalDatatype() {
+        DateTimeFormat dateTimeFormat = getClass().getAnnotation(DateTimeFormat.class);
+        if (dateTimeFormat != null) {
+            formatPattern = dateTimeFormat.value();
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -63,7 +70,7 @@ public abstract class AbstractTemporalDatatype<T extends Temporal> implements Da
             return "";
         }
 
-        FormatStrings formatStrings = AppBeans.get(FormatStringsRegistry.class).getFormatStrings(locale);
+        FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(locale);
         if (formatStrings == null) {
             return format(value);
         }
@@ -95,7 +102,7 @@ public abstract class AbstractTemporalDatatype<T extends Temporal> implements Da
             return null;
         }
 
-        FormatStrings formatStrings = AppBeans.get(FormatStringsRegistry.class).getFormatStrings(locale);
+        FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(locale);
         if (formatStrings == null) {
             return parse(value);
         }

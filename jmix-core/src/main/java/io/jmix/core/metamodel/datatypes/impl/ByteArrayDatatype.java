@@ -16,7 +16,7 @@
 
 package io.jmix.core.metamodel.datatypes.impl;
 
-import io.jmix.core.metamodel.annotations.JavaClass;
+import io.jmix.core.metamodel.annotations.DatatypeDef;
 import io.jmix.core.metamodel.datatypes.Datatype;
 
 import java.nio.charset.StandardCharsets;
@@ -24,7 +24,7 @@ import java.text.ParseException;
 import java.util.Base64;
 import java.util.Locale;
 
-@JavaClass(byte[].class)
+@DatatypeDef(id = "byteArray", javaClass = byte[].class, defaultForClass = true, value = "jmix_ByteArrayDatatype")
 public class ByteArrayDatatype implements Datatype<byte[]> {
 
     @Override
@@ -60,7 +60,4 @@ public class ByteArrayDatatype implements Datatype<byte[]> {
     public String toString() {
         return getClass().getSimpleName();
     }
-
-    @Deprecated
-    public static final String NAME = "byteArray";
 }

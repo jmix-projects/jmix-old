@@ -16,9 +16,9 @@
 
 package io.jmix.core.metamodel.datatypes.impl;
 
-import io.jmix.core.metamodel.annotations.JavaClass;
+import io.jmix.core.metamodel.annotations.DatatypeDef;
+import io.jmix.core.metamodel.annotations.DateTimeFormat;
 import io.jmix.core.metamodel.datatypes.FormatStrings;
-import org.dom4j.Element;
 
 import java.time.OffsetTime;
 import java.time.format.DateTimeFormatter;
@@ -26,12 +26,9 @@ import java.time.format.FormatStyle;
 import java.time.temporal.TemporalQuery;
 import java.util.Locale;
 
-@JavaClass(OffsetTime.class)
+@DatatypeDef(id = "offsetTime", javaClass = OffsetTime.class, defaultForClass = true, value = "jmix_OffsetTimeDatatype")
+@DateTimeFormat("HH:mm:ss Z")
 public class OffsetTimeDatatype extends AbstractTemporalDatatype<OffsetTime> {
-
-    public OffsetTimeDatatype(Element element) {
-        super(element);
-    }
 
     @Override
     protected DateTimeFormatter getDateTimeFormatter() {

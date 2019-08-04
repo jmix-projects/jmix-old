@@ -19,6 +19,7 @@ package io.jmix.core.metamodel.datatypes.impl;
 import io.jmix.core.AppBeans;
 import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.metamodel.annotations.DatatypeDef;
+import io.jmix.core.metamodel.annotations.DateTimeFormat;
 import io.jmix.core.metamodel.datatypes.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,12 +33,16 @@ import java.util.Map;
 import java.util.TimeZone;
 
 @DatatypeDef(id = "dateTime", javaClass = Date.class, defaultForClass = true, value = "jmix_DateTimeDatatype")
+@DateTimeFormat("yyyy-MM-dd HH:mm:ss.SSS")
 public class DateTimeDatatype implements Datatype<Date>, ParameterizedDatatype, TimeZoneAwareDatatype {
 
     private String formatPattern;
 
     public DateTimeDatatype() {
-        formatPattern = "yyyy-MM-dd HH:mm:ss.SSS";
+        DateTimeFormat dateTimeFormat = getClass().getAnnotation(DateTimeFormat.class);
+        if (dateTimeFormat != null) {
+            formatPattern = dateTimeFormat.value();
+        }
     }
 
     @Override
@@ -47,7 +52,7 @@ public class DateTimeDatatype implements Datatype<Date>, ParameterizedDatatype, 
         } else {
             DateFormat format;
             if (formatPattern != null) {
-                format = new     SimpleDateFormat(formatPattern);
+                format = new SimpleDateFormat(formatPattern);
             } else {
                 format = DateFormat.getDateInstance();
             }
