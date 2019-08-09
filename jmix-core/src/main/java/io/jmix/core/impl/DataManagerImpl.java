@@ -129,11 +129,7 @@ public class DataManagerImpl extends DataManagerSupport implements DataManager {
         for (Map.Entry<String, CommitContext> entry : storeToContextMap.entrySet()) {
             DataStore dataStore = getDataStore(entry.getKey());
             Set<Entity> committed = dataStore.commit(entry.getValue());
-            if (!committed.isEmpty()) {
-                Entity committedEntity = committed.iterator().next();
-                adjustState(committedEntity);
-                result.addAll(committed);
-            }
+            result.addAll(committed);
         }
 
         if (!toRepeat.isEmpty()) {
@@ -162,12 +158,6 @@ public class DataManagerImpl extends DataManagerSupport implements DataManager {
         }
 
         return EntitySet.of(result);
-    }
-
-    protected void adjustState(Entity committedEntity) {
-        if (committedEntity instanceof BaseGenericIdEntity && metadataTools.isTransient(committedEntity.getClass())) {
-            BaseEntityInternalAccess.setNew((BaseGenericIdEntity) committedEntity, false);
-        }
     }
 
     @Override
