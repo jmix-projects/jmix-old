@@ -70,6 +70,10 @@ public class NoopDataContext implements DataContext {
     }
 
     @Override
+    public void evictAll() {
+    }
+
+    @Override
     public <T extends Entity> T create(Class<T> entityClass) {
         return null;
     }
@@ -85,8 +89,22 @@ public class NoopDataContext implements DataContext {
     }
 
     @Override
+    public void setModified(Entity entity, boolean modified) {
+    }
+
+    @Override
+    public Set<Entity> getModified() {
+        return Collections.emptySet();
+    }
+
+    @Override
     public boolean isRemoved(Entity entity) {
         return false;
+    }
+
+    @Override
+    public Set<Entity> getRemoved() {
+        return Collections.emptySet();
     }
 
     @Override

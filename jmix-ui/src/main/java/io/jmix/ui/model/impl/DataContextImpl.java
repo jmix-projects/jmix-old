@@ -149,7 +149,7 @@ public class DataContextImpl implements DataContext {
         T result;
         try {
             Set<Entity> merged = Sets.newIdentityHashSet();
-            result = (T) internalMerge(entity, merged);
+            result = (T) internalMerge(entity, merged, true);
         } finally {
             disableListeners = false;
         }
@@ -166,7 +166,7 @@ public class DataContextImpl implements DataContext {
             Set<Entity> merged = Sets.newIdentityHashSet();
 
             for (Entity entity : entities) {
-                Entity managed = internalMerge(entity, merged);
+                Entity managed = internalMerge(entity, merged, true);
                 managedList.add(managed);
             }
         } finally {
@@ -175,7 +175,7 @@ public class DataContextImpl implements DataContext {
         return EntitySet.of(managedList);
     }
 
-    protected Entity internalMerge(Entity entity, Set<Entity> mergedSet) {
+    protected Entity internalMerge(Entity entity, Set<Entity> mergedSet, boolean isRoot) {
         Map<Object, Entity> entityMap = content.computeIfAbsent(entity.getClass(), aClass -> new HashMap<>());
         Entity managed = entityMap.get(entity.getId());
 
@@ -193,7 +193,7 @@ public class DataContextImpl implements DataContext {
             managed = copyEntity(entity);
             entityMap.put(managed.getId(), managed);
 
-            mergeState(entity, managed, mergedSet);
+            mergeState(entity, managed, mergedSet, isRoot);
 
             managed.addPropertyChangeListener(propertyChangeListener);
 
@@ -208,7 +208,7 @@ public class DataContextImpl implements DataContext {
             }
 
             if (managed != entity) {
-                mergeState(entity, managed, mergedSet);
+                mergeState(entity, managed, mergedSet, isRoot);
             }
             return managed;
         }
@@ -225,34 +225,11 @@ public class DataContextImpl implements DataContext {
         return dstEntity;
     }
 
-    /*
-     * (1) src.new -> dst.new : copy all non-null                                   - should not happen (happens in setParent?)
-     * (2) src.new -> dst.det : do nothing                                          - should not happen
-     * (3) src.det -> dst.new : copy all loaded, make detached                      - normal situation after commit
-     * (4) src.det -> dst.det : if src.version >= dst.version, copy all loaded      - normal situation after commit (and in setParent?)
-     *                          if src.version < dst.version, do nothing            - should not happen
-     */
-    protected void mergeState(Entity srcEntity, Entity dstEntity, Set<Entity> mergedSet) {
+    protected void mergeState(Entity srcEntity, Entity dstEntity, Set<Entity> mergedSet, boolean isRoot) {
         EntityStates entityStates = getEntityStates();
 
         boolean srcNew = entityStates.isNew(srcEntity);
         boolean dstNew = entityStates.isNew(dstEntity);
-        if (srcNew && !dstNew) {
-            return;
-        }
-
-        boolean replaceCollections = dstNew && !srcNew;
-
-        if (!srcNew && !dstNew) {
-            if (srcEntity instanceof Versioned) {
-                int srcVer = Numbers.nullToZero(((Versioned) srcEntity).getVersion());
-                int dstVer = Numbers.nullToZero(((Versioned) dstEntity).getVersion());
-                if (srcVer < dstVer) {
-                    return;
-                }
-                replaceCollections = srcVer > dstVer;
-            }
-        }
 
         mergeSystemState(srcEntity, dstEntity);
 
@@ -267,8 +244,8 @@ public class DataContextImpl implements DataContext {
 
                 Object value = srcEntity.getValue(propertyName);
 
-                // ignore null values in new source entities
-                if (srcNew && value == null) {
+                // ignore null values in non-root source entities
+                if (!isRoot && value == null) {
                     continue;
                 }
 
@@ -285,8 +262,8 @@ public class DataContextImpl implements DataContext {
 
                 Object value = srcEntity.getValue(propertyName);
 
-                // ignore null values in new source entities
-                if (srcNew && value == null) {
+                // ignore null values in non-root source entities
+                if (!isRoot && value == null) {
                     continue;
                 }
 
@@ -297,16 +274,16 @@ public class DataContextImpl implements DataContext {
 
                 if (value instanceof Collection) {
                     if (value instanceof List) {
-                        mergeList((List) value, dstEntity, property.getName(), replaceCollections, mergedSet);
+                        mergeList((List) value, dstEntity, property.getName(), isRoot, mergedSet);
                     } else if (value instanceof Set) {
-                        mergeSet((Set) value, dstEntity, property.getName(), replaceCollections, mergedSet);
+                        mergeSet((Set) value, dstEntity, property.getName(), isRoot, mergedSet);
                     } else {
                         throw new UnsupportedOperationException("Unsupported collection type: " + value.getClass().getName());
                     }
                 } else {
                     Entity srcRef = (Entity) value;
                     if (!mergedSet.contains(srcRef)) {
-                        Entity managedRef = internalMerge(srcRef, mergedSet);
+                        Entity managedRef = internalMerge(srcRef, mergedSet, false);
                         ((AbstractInstance) dstEntity).setValue(propertyName, managedRef, false);
                         if (getMetadataTools().isEmbedded(property)) {
                             EmbeddedPropertyChangeListener listener = new EmbeddedPropertyChangeListener(dstEntity);
@@ -368,7 +345,7 @@ public class DataContextImpl implements DataContext {
         if (replace) {
             List<Entity> managedRefs = new ArrayList<>(list.size());
             for (Entity entity : list) {
-                Entity managedRef = internalMerge(entity, mergedSet);
+                Entity managedRef = internalMerge(entity, mergedSet, false);
                 managedRefs.add(managedRef);
             }
             List<Entity> dstList = createObservableList(managedRefs, managedEntity);
@@ -382,11 +359,11 @@ public class DataContextImpl implements DataContext {
             }
             if (dstList.size() == 0) {
                 for (Entity srcRef : list) {
-                    dstList.add(internalMerge(srcRef, mergedSet));
+                    dstList.add(internalMerge(srcRef, mergedSet, false));
                 }
             } else {
                 for (Entity srcRef : list) {
-                    Entity managedRef = internalMerge(srcRef, mergedSet);
+                    Entity managedRef = internalMerge(srcRef, mergedSet, false);
                     if (!dstList.contains(managedRef)) {
                         dstList.add(managedRef);
                     }
@@ -400,7 +377,7 @@ public class DataContextImpl implements DataContext {
         if (replace) {
             Set<Entity> managedRefs = new LinkedHashSet<>(set.size());
             for (Entity entity : set) {
-                Entity managedRef = internalMerge(entity, mergedSet);
+                Entity managedRef = internalMerge(entity, mergedSet, false);
                 managedRefs.add(managedRef);
             }
             Set<Entity> dstList = createObservableSet(managedRefs, managedEntity);
@@ -414,11 +391,11 @@ public class DataContextImpl implements DataContext {
             }
             if (dstSet.size() == 0) {
                 for (Entity srcRef : set) {
-                    dstSet.add(internalMerge(srcRef, mergedSet));
+                    dstSet.add(internalMerge(srcRef, mergedSet, false));
                 }
             } else {
                 for (Entity srcRef : set) {
-                    Entity managedRef = internalMerge(srcRef, mergedSet);
+                    Entity managedRef = internalMerge(srcRef, mergedSet, false);
                     dstSet.add(managedRef);
                 }
             }
@@ -446,7 +423,7 @@ public class DataContextImpl implements DataContext {
         checkNotNullArgument(entity, "entity is null");
 
         modifiedInstances.remove(entity);
-        if (!getEntityStates().isNew(entity)) {
+        if (!getEntityStates().isNew(entity) || parentContext != null) {
             removedInstances.add(entity);
         }
         removeListeners(entity);
@@ -460,6 +437,8 @@ public class DataContextImpl implements DataContext {
                 removeFromCollections(mergedEntity);
             }
         }
+
+        cleanupContextAfterRemoveEntity(this, entity);
     }
 
     protected void removeFromCollections(Entity entityToRemove) {
@@ -503,6 +482,19 @@ public class DataContextImpl implements DataContext {
     }
 
     @Override
+    public void evictAll() {
+        Set<Entity> tmpModifiedInstances = new HashSet<>(modifiedInstances);
+        Set<Entity> tmpRemovedInstances = new HashSet<>(removedInstances);
+
+        for (Entity entity : tmpModifiedInstances) {
+            evict(entity);
+        }
+        for (Entity entity : tmpRemovedInstances) {
+            evict(entity);
+        }
+    }
+
+    @Override
     public <T extends Entity> T create(Class<T> entityClass) {
         T entity = getMetadata().create(entityClass);
         return merge(entity);
@@ -534,8 +526,31 @@ public class DataContextImpl implements DataContext {
     }
 
     @Override
+    public void setModified(Entity entity, boolean modified) {
+        Entity merged = find(entity);
+        if (merged == null) {
+            return;
+        }
+        if (modified) {
+            modifiedInstances.add(merged);
+        } else {
+            modifiedInstances.remove(merged);
+        }
+    }
+
+    @Override
+    public Set<Entity> getModified() {
+        return Collections.unmodifiableSet(modifiedInstances);
+    }
+
+    @Override
     public boolean isRemoved(Entity entity) {
         return removedInstances.contains(entity);
+    }
+
+    @Override
+    public Set<Entity> getRemoved() {
+        return Collections.unmodifiableSet(removedInstances);
     }
 
     @Override
@@ -618,8 +633,31 @@ public class DataContextImpl implements DataContext {
         }
         for (Entity entity : removedInstances) {
             parentContext.remove(entity);
+            cleanupContextAfterRemoveEntity(parentContext, entity);
         }
         return committedEntities;
+    }
+
+    protected void cleanupContextAfterRemoveEntity(DataContextImpl context, Entity removedEntity) {
+        EntityStates entityStates = getEntityStates();
+        if (entityStates.isNew(removedEntity)) {
+            for (Entity modifiedInstance : new ArrayList<>(context.modifiedInstances)) {
+                if (entityStates.isNew(modifiedInstance) && entityHasReference(modifiedInstance, removedEntity)) {
+                    context.modifiedInstances.remove(modifiedInstance);
+                }
+            }
+        }
+    }
+
+    protected boolean entityHasReference(Entity entity, Entity refEntity) {
+        MetaClass metaClass = getMetadata().getClassNN(entity.getClass());
+        MetaClass refMetaClass = getMetadata().getClassNN(refEntity.getClass());
+
+        return metaClass.getProperties().stream()
+                .anyMatch(metaProperty ->
+                        metaProperty.getRange().isClass()
+                                && metaProperty.getRange().asClass().equals(refMetaClass)
+                                && Objects.equals(entity.getValue(metaProperty.getName()), refEntity));
     }
 
     protected EntitySet mergeCommitted(Set<Entity> committed) {
