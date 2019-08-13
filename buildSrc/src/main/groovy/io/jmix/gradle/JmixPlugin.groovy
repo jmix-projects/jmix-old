@@ -37,8 +37,10 @@ class JmixPlugin implements Plugin<Project> {
 
         project.afterEvaluate {
             if (project.entitiesEnhancing.enabled) {
-                // todo find a better way to provide classpath for EclipseLink weaver
-                project.dependencies.add('compile', 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-1-cuba')
+                project.configurations {
+                    enhancing
+                }
+                project.dependencies.add('enhancing', 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-1-cuba')
 
                 project.tasks.findByName('compileJava').doLast(new EnhancingAction('main'))
                 project.tasks.findByName('compileTestJava').doLast(new EnhancingAction('test'))

@@ -32,7 +32,8 @@ targetCompatibility = rootProject.targetCompatibility
 
 dependencies {
     api project(':jmix-core')
-    implementation 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-1-cuba'
+    // todo eclipselink
+//    api 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-1-cuba'
     implementation 'org.springframework:spring-orm'
     implementation 'org.springframework:spring-tx'
 

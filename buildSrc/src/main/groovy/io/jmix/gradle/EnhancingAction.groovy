@@ -45,6 +45,8 @@ class EnhancingAction implements Action<Task> {
         classPool.insertClassPath(sourceSet.java.outputDir.absolutePath)
 
         List<String> classNames = []
+        List<String> nonMappedClassNames = []
+
         srcDirs.each { File srcDir ->
             project.fileTree(srcDir).each { File file ->
                 if (file.name.endsWith('.java')) {
@@ -59,6 +61,8 @@ class EnhancingAction implements Action<Task> {
                                 || attribute.getAnnotation("javax.persistence.MappedSuperclass") != null
                                 || attribute.getAnnotation("javax.persistence.Embeddable") != null) {
                             classNames.add(className)
+                        } else if (attribute.getAnnotation("io.jmix.core.metamodel.annotations.MetaClass") != null) {
+                            nonMappedClassNames.add(className)
                         }
                     }
                 }
@@ -86,6 +90,7 @@ class EnhancingAction implements Action<Task> {
             project.javaexec {
                 main = 'org.eclipse.persistence.tools.weaving.jpa.StaticWeave'
                 classpath(
+                        project.configurations.enhancing.asFileTree.asPath,
                         sourceSet.compileClasspath,
                         sourceSet.java.outputDir
                 )
@@ -98,6 +103,38 @@ class EnhancingAction implements Action<Task> {
                 debug = project.hasProperty("debugEnhancing") ? Boolean.valueOf(project.getProperty("debugEnhancing")) : false
             }
 
+        }
+
+        List<String> allClassNames = classNames + nonMappedClassNames
+        if (!allClassNames.isEmpty()) {
+            project.logger.info "[JmixEnhancer] Start Jmix enhancing"
+
+            ClassPool pool = new ClassPool(null)
+            pool.appendSystemPath()
+
+            for (file in sourceSet.compileClasspath) {
+                pool.insertClassPath(file.getAbsolutePath())
+            }
+
+            String javaOutputDir = sourceSet.java.outputDir.absolutePath
+
+            pool.insertClassPath(javaOutputDir)
+            project.configurations.enhancing.files.each { File dep ->
+                pool.insertClassPath(dep.absolutePath)
+            }
+
+            def cubaEnhancer = new JmixEnhancer(pool, sourceSet.java.outputDir.absolutePath)
+            cubaEnhancer.logger = project.logger
+
+            for (className in allClassNames) {
+                def classFileName = className.replace('.', '/') + '.class'
+                def classFile = new File(javaOutputDir, classFileName)
+
+                if (classFile.exists()) {
+                    // skip files from dependencies, enhance only classes from `javaOutputDir`
+                    cubaEnhancer.run(className)
+                }
+            }
         }
     }
 }

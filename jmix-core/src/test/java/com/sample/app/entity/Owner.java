@@ -18,30 +18,21 @@ package com.sample.app.entity;
 
 import io.jmix.core.entity.StandardEntity;
 import io.jmix.core.metamodel.annotations.MetaProperty;
-import io.jmix.core.metamodel.annotations.NamePattern;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
 
-@Entity(name = "app_Pet")
-@NamePattern("%s|name")
-public class Pet extends StandardEntity {
+@Entity(name = "app_Owner")
+public class Owner extends StandardEntity {
 
-    private static final long serialVersionUID = 6106462788935207865L;
+    private static final long serialVersionUID = -552022260926623206L;
 
-    @Column(name = "NAME")
+    @Column(name = "name")
     private String name;
 
-    @MetaProperty
-    private String nick;
-
-    @MetaProperty
-    public String getDescription() {
-        return "Name: " + name + ", nick: " + nick;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "OWNER_ID")
-    private Owner owner;
+    @Embedded
+    private Address address;
 
     public String getName() {
         return name;
@@ -51,19 +42,11 @@ public class Pet extends StandardEntity {
         this.name = name;
     }
 
-    public String getNick() {
-        return nick;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setNick(String nick) {
-        this.nick = nick;
-    }
-
-    public Owner getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Owner owner) {
-        this.owner = owner;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }
