@@ -18,13 +18,6 @@ import io.jmix.gradle.ui.WidgetsCompile
 
 apply plugin: 'java'
 apply plugin: 'java-library'
-apply plugin: 'io.spring.dependency-management'
-
-dependencyManagement {
-    imports {
-        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
-    }
-}
 
 version = rootProject.jmixVersion
 sourceCompatibility = rootProject.sourceCompatibility
@@ -33,14 +26,18 @@ targetCompatibility = rootProject.targetCompatibility
 def jmixUi = rootProject.project(':jmix-ui')
 
 dependencies {
+    api platform(project(':jmix-platform'))
+
     api(jmixUi) {
         exclude(group: 'org.hibernate.validator', module: 'hibernate-validator')
         exclude(group: 'javax.validation', module: 'validation-api')
     }
-    api 'javax.validation:validation-api:1.0.0.GA'
-    api "com.vaadin:vaadin-client:$jmixUi.vaadinVersion"
-    api "com.vaadin:vaadin-client-compiler:$jmixUi.vaadinVersion"
-    api "com.vaadin:vaadin-compatibility-client:$jmixUi.vaadinVersion"
+    api('javax.validation:validation-api:1.0.0.GA') {
+        force = true
+    }
+    api 'com.vaadin:vaadin-client'
+    api 'com.vaadin:vaadin-client-compiler'
+    api 'com.vaadin:vaadin-compatibility-client'
 }
 
 jar {

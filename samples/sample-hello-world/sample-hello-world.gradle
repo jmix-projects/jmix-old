@@ -1,6 +1,5 @@
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
 apply plugin: 'war'
 
 group = 'io.jmix.sample.helloworld'

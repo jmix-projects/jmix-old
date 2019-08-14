@@ -43,13 +43,8 @@ buildscript {
     }
 }
 
-//plugins {
-//	id 'org.springframework.boot' version '2.1.2.RELEASE' apply false
-//}
-
 ext {
     jmixVersion = '0.0.1'
-    spockVersion = '1.2-groovy-2.5'
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
 }

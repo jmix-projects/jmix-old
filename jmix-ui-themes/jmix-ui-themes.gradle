@@ -18,15 +18,16 @@ import io.jmix.gradle.ui.ThemeCompile
 
 apply plugin: 'java'
 
-def jmixUi = rootProject.project(':jmix-ui')
-
 configurations {
     themes
 }
 
 dependencies {
-    implementation "com.vaadin:vaadin-themes:$jmixUi.vaadinVersion"
-    themes "com.vaadin:vaadin-themes:$jmixUi.vaadinVersion"
+    implementation platform(project(':jmix-platform'))
+    themes platform(project(':jmix-platform'))
+
+    implementation 'com.vaadin:vaadin-themes'
+    themes 'com.vaadin:vaadin-themes'
 }
 
 task compileThemes(type: ThemeCompile) {

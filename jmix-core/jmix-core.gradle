@@ -17,20 +17,15 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'java-library'
-apply plugin: 'io.spring.dependency-management'
 apply plugin: 'io.jmix'
-
-dependencyManagement {
-    imports {
-        mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
-    }
-}
 
 version = rootProject.jmixVersion
 sourceCompatibility = rootProject.sourceCompatibility
 targetCompatibility = rootProject.targetCompatibility
 
 dependencies {
+    api platform(project(':jmix-platform'))
+    
     api 'org.springframework.boot:spring-boot'
     api 'org.springframework:spring-context'
     api 'org.springframework:spring-webmvc'
@@ -45,23 +40,23 @@ dependencies {
     api 'org.springframework.security:spring-security-config'
     api 'org.springframework.security:spring-security-web'
 
-    api 'javax.inject:javax.inject:1'
-    api 'org.apache.commons:commons-collections4:4.2'
-    api 'commons-io:commons-io:2.6'
-    api 'org.apache.commons:commons-text:1.6'
-    api 'com.google.guava:guava:27.0.1-jre'
-    api 'org.dom4j:dom4j:2.1.1'
-    api 'javax.annotation:javax.annotation-api:1.3.2'
+    api 'javax.inject:javax.inject'
+    api 'org.apache.commons:commons-collections4'
+    api 'commons-io:commons-io'
+    api 'org.apache.commons:commons-text'
+    api 'com.google.guava:guava'
+    api 'org.dom4j:dom4j'
+    api 'javax.annotation:javax.annotation-api'
 
     // todo eclipselink
-//    api 'org.eclipse.persistence:javax.persistence:2.1.1'
-    api 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-1-cuba'
+//    api 'org.eclipse.persistence:javax.persistence'
+    api 'org.eclipse.persistence:org.eclipse.persistence.jpa'
 
-    implementation 'org.antlr:antlr-runtime:3.5.2'
+    implementation 'org.antlr:antlr-runtime'
 
     testImplementation 'org.springframework:spring-test'
-    testImplementation "org.spockframework:spock-core:$rootProject.spockVersion"
-    testImplementation "org.spockframework:spock-spring:$rootProject.spockVersion"
+    testImplementation "org.spockframework:spock-core"
+    testImplementation "org.spockframework:spock-spring"
     testRuntimeOnly 'org.slf4j:slf4j-simple'
 }
 

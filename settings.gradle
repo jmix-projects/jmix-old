@@ -16,6 +16,7 @@
 
 rootProject.name = 'jmix'
 
+include 'jmix-platform'
 include 'jmix-core'
 include 'jmix-data'
 include 'jmix-security'
