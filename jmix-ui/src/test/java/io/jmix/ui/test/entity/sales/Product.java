@@ -28,6 +28,8 @@ import java.util.List;
 @NamePattern("%s|name")
 public class Product extends StandardEntity {
 
+    private static final long serialVersionUID = -7245110045640511010L;
+
     @Column(name = "NAME")
     private String name;
 
@@ -35,7 +37,7 @@ public class Product extends StandardEntity {
     private BigDecimal price;
 
     @ManyToMany
-    @JoinTable(name = "PRODUCT_TAG_LINK",
+    @JoinTable(name = "TEST_PRODUCT_TAG_LINK",
             joinColumns = @JoinColumn(name = "PRODUCT_ID"),
             inverseJoinColumns = @JoinColumn(name = "TAG_ID"))
     private List<ProductTag> tags;

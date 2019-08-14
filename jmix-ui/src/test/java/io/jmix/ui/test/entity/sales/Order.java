@@ -33,6 +33,8 @@ import java.util.List;
 @NamePattern("No %s for %s|number,customer")
 public class Order extends StandardEntity {
 
+    private static final long serialVersionUID = -7408892681168157038L;
+
     @Column(name = "NUM")
     private String number;
 

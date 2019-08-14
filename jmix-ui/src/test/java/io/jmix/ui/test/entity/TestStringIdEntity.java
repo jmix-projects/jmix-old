@@ -13,29 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.test.entity.sec;
 
-import io.jmix.core.entity.StandardEntity;
-import io.jmix.core.metamodel.annotations.NamePattern;
+package io.jmix.ui.test.entity;
 
-import javax.persistence.*;
+import io.jmix.core.entity.BaseStringIdEntity;
 
-/**
- * User access group.
- */
-@Entity(name = "sec$Group")
-@Table(name = "SEC_GROUP")
-@NamePattern("%s|name")
-public class Group extends StandardEntity {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-    private static final long serialVersionUID = -4581386806900761785L;
+@Entity(name = "test$StringIdEntity")
+@Table(name = "TEST_STRING_ID_ENTITY")
+public class TestStringIdEntity extends BaseStringIdEntity {
+
+    private static final long serialVersionUID = 8115973479078477156L;
+
+    @Id
+    @Column(name = "CODE")
+    private String code;
 
     @Column(name = "NAME")
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PARENT_ID")
-    private Group parent;
+    @Override
+    public String getId() {
+        return code;
+    }
+
+    @Override
+    public void setId(String id) {
+        code = id;
+    }
 
     public String getName() {
         return name;
@@ -45,11 +54,11 @@ public class Group extends StandardEntity {
         this.name = name;
     }
 
-    public Group getParent() {
-        return parent;
+    public String getCode() {
+        return code;
     }
 
-    public void setParent(Group parent) {
-        this.parent = parent;
+    public void setCode(String code) {
+        this.code = code;
     }
 }

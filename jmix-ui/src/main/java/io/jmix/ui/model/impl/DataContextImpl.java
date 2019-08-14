@@ -17,19 +17,18 @@
 package io.jmix.ui.model.impl;
 
 import com.google.common.collect.Sets;
+import io.jmix.core.*;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.commons.util.Numbers;
+import io.jmix.core.entity.BaseGenericIdEntity;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.Versioned;
 import io.jmix.core.metamodel.model.Instance;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.impl.AbstractInstance;
-import io.jmix.core.entity.*;
-import io.jmix.core.*;
 import io.jmix.ui.model.DataContext;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.persistence.queries.FetchGroup;
-import org.eclipse.persistence.queries.FetchGroupTracker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -88,6 +87,10 @@ public class DataContextImpl implements DataContext {
 
     protected DataManager getDataManager() {
         return applicationContext.getBean(DataManager.NAME, DataManager.class);
+    }
+
+    protected EntitySystemStateSupport getEntitySystemStateSupport() {
+        return applicationContext.getBean(EntitySystemStateSupport.NAME, EntitySystemStateSupport.class);
     }
 
     @Nullable
@@ -309,12 +312,7 @@ public class DataContextImpl implements DataContext {
         if (dstEntity instanceof BaseGenericIdEntity) {
             ((BaseGenericIdEntity) dstEntity).setId(srcEntity.getId());
 
-            BaseEntityInternalAccess.copySystemState((BaseGenericIdEntity) srcEntity, (BaseGenericIdEntity) dstEntity);
-
-            if (srcEntity instanceof FetchGroupTracker && dstEntity instanceof FetchGroupTracker) {
-                FetchGroup srcFetchGroup = ((FetchGroupTracker) srcEntity)._persistence_getFetchGroup();
-                ((FetchGroupTracker) dstEntity)._persistence_setFetchGroup(srcFetchGroup);
-            }
+            getEntitySystemStateSupport().copySystemState((BaseGenericIdEntity) srcEntity, (BaseGenericIdEntity) dstEntity);
 
         }
 
@@ -325,18 +323,7 @@ public class DataContextImpl implements DataContext {
 
     protected void mergeSystemState(Entity srcEntity, Entity dstEntity) {
         if (dstEntity instanceof BaseGenericIdEntity) {
-            BaseEntityInternalAccess.copySystemState((BaseGenericIdEntity) srcEntity, (BaseGenericIdEntity) dstEntity);
-
-            // todo FetchGroups
-//            if (srcEntity instanceof FetchGroupTracker && dstEntity instanceof FetchGroupTracker) {
-//                FetchGroup srcFetchGroup = ((FetchGroupTracker) srcEntity)._persistence_getFetchGroup();
-//                FetchGroup dstFetchGroup = ((FetchGroupTracker) dstEntity)._persistence_getFetchGroup();
-//                if (srcFetchGroup == null || dstFetchGroup == null) {
-//                    ((FetchGroupTracker) dstEntity)._persistence_setFetchGroup(null);
-//                } else {
-//                    ((FetchGroupTracker) dstEntity)._persistence_setFetchGroup(FetchGroupUtils.mergeFetchGroups(srcFetchGroup, dstFetchGroup));
-//                }
-//            }
+            getEntitySystemStateSupport().mergeSystemState((BaseGenericIdEntity) srcEntity, (BaseGenericIdEntity) dstEntity);
         }
     }
 

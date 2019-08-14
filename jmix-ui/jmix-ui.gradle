@@ -18,6 +18,7 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'java-library'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'io.jmix'
 
 dependencyManagement {
     imports {
@@ -59,4 +60,8 @@ jar {
         from sourceSets.main.allJava
         include "io/jmix/ui/widgets/client/**"
     }
+}
+
+entitiesEnhancing {
+    enabled = true
 }

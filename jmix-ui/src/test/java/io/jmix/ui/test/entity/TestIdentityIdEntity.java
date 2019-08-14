@@ -14,16 +14,28 @@
  * limitations under the License.
  */
 
-package io.jmix.core.impl;
+package io.jmix.ui.test.entity;
 
-import io.jmix.core.PersistentAttributesLoadChecker;
-import org.springframework.stereotype.Component;
+import io.jmix.core.entity.BaseIdentityIdEntity;
 
-// todo impl
-@Component(PersistentAttributesLoadChecker.NAME)
-public class PersistentAttributesLoadCheckerImpl implements PersistentAttributesLoadChecker {
-    @Override
-    public boolean isLoaded(Object entity, String property) {
-        return false;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity(name = "test$IdentityIdEntity")
+@Table(name = "TEST_IDENTITY_ID_ENTITY")
+public class TestIdentityIdEntity extends BaseIdentityIdEntity {
+
+    private static final long serialVersionUID = 146993228195491648L;
+
+    @Column(name = "NAME")
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

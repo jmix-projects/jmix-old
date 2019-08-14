@@ -16,10 +16,9 @@
 
 package io.jmix.data;
 
-import io.jmix.core.JmixCoreConfiguration;
-import io.jmix.core.Metadata;
-import io.jmix.core.Stores;
+import io.jmix.core.*;
 import io.jmix.core.annotation.JmixModule;
+import io.jmix.data.impl.DataPersistentAttributesLoadChecker;
 import io.jmix.data.impl.JmixEclipseLinkJpaVendorAdapter;
 import io.jmix.data.impl.PersistenceConfigProcessor;
 import io.jmix.data.persistence.DbmsSpecifics;
@@ -71,6 +70,16 @@ public class JmixDataConfiguration {
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         transactionManager.setDataSource(dataSource());
         return transactionManager;
+    }
+
+    @Bean(name = PersistentAttributesLoadChecker.NAME)
+    protected PersistentAttributesLoadChecker persistentAttributesLoadChecker(BeanLocator beanLocator) {
+        return new DataPersistentAttributesLoadChecker(beanLocator);
+    }
+
+    @Bean(name = EntitySystemStateSupport.NAME)
+    protected EntitySystemStateSupport entitySystemStateSupport() {
+        return new DataEntitySystemStateSupport();
     }
 
     protected String createPersistenceXml(Metadata metadata, DbmsSpecifics dbmsSpecifics) {

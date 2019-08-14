@@ -28,6 +28,8 @@ import javax.persistence.Table;
 @NamePattern("%s|name")
 public class ProductTag extends StandardEntity {
 
+    private static final long serialVersionUID = 8176440331297951916L;
+
     @Column(name = "NAME")
     private String name;
 

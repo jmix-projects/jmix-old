@@ -35,11 +35,11 @@ public class User extends StandardEntity {
 
     private static final long serialVersionUID = 5007187642916030394L;
 
-    @Column(name = "LOGIN", length = 50, nullable = false)
+    @Column(name = "LOGIN", length = 50)
     protected String login;
 
     @SystemLevel
-    @Column(name = "LOGIN_LC", length = 50, nullable = false)
+    @Column(name = "LOGIN_LC", length = 50)
     protected String loginLowerCase;
 
     @SystemLevel

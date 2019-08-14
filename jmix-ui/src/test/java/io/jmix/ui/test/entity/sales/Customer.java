@@ -28,6 +28,8 @@ import javax.persistence.*;
 @NamePattern("%s|name")
 public class Customer extends StandardEntity {
 
+    private static final long serialVersionUID = -5023394946853765350L;
+
     @Column(name = "NAME")
     private String name;
 

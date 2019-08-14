@@ -30,6 +30,8 @@ import javax.persistence.Transient;
 @UnavailableInSecurityConstraints
 public abstract class BaseDbGeneratedIdEntity<K extends Number> extends BaseGenericIdEntity<IdProxy<K>> {
 
+    private static final long serialVersionUID = 4012145014806449285L;
+
     @Transient
     protected IdProxy<K> idProxy;
 
