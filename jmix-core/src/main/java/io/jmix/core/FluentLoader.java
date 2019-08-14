@@ -23,6 +23,7 @@ import io.jmix.core.queryconditions.Condition;
 
 import javax.persistence.TemporalType;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class FluentLoader<E extends Entity<K>, K> {
 
@@ -33,6 +34,7 @@ public class FluentLoader<E extends Entity<K>, K> {
 
     private View view;
     private String viewName;
+    private ViewBuilder viewBuilder;
     private boolean softDeletion = true;
     private boolean dynamicAttributes;
 
@@ -65,9 +67,17 @@ public class FluentLoader<E extends Entity<K>, K> {
             loadContext.setView(view);
         else if (!Strings.isNullOrEmpty(viewName))
             loadContext.setView(viewName);
+        else if (viewBuilder != null)
+            loadContext.setView(viewBuilder.build());
 
         loadContext.setSoftDeletion(softDeletion);
         loadContext.setLoadDynamicAttributes(dynamicAttributes);
+    }
+
+    private void createViewBuilder() {
+        if (viewBuilder == null) {
+            viewBuilder = AppBeans.getPrototype(ViewBuilder.NAME, entityClass);
+        }
     }
 
     /**
@@ -115,6 +125,18 @@ public class FluentLoader<E extends Entity<K>, K> {
      */
     public FluentLoader<E, K> view(String viewName) {
         this.viewName = viewName;
+        return this;
+    }
+
+    public FluentLoader<E, K> view(Consumer<ViewBuilder> viewBuilderConfigurer) {
+        createViewBuilder();
+        viewBuilderConfigurer.accept(viewBuilder);
+        return this;
+    }
+
+    public FluentLoader<E, K> viewProperties(String... properties) {
+        createViewBuilder();
+        viewBuilder.addAll(properties);
         return this;
     }
 
@@ -199,6 +221,18 @@ public class FluentLoader<E extends Entity<K>, K> {
          */
         public ById<E, K> view(String viewName) {
             loader.viewName = viewName;
+            return this;
+        }
+
+        public ById<E, K> view(Consumer<ViewBuilder> viewBuilderConfigurer) {
+            loader.createViewBuilder();
+            viewBuilderConfigurer.accept(loader.viewBuilder);
+            return this;
+        }
+
+        public ById<E, K> viewProperties(String... properties) {
+            loader.createViewBuilder();
+            loader.viewBuilder.addAll(properties);
             return this;
         }
 
@@ -301,6 +335,18 @@ public class FluentLoader<E extends Entity<K>, K> {
          */
         public ByQuery<E, K> view(String viewName) {
             loader.viewName = viewName;
+            return this;
+        }
+
+        public ByQuery<E, K> view(Consumer<ViewBuilder> viewBuilderConfigurer) {
+            loader.createViewBuilder();
+            viewBuilderConfigurer.accept(loader.viewBuilder);
+            return this;
+        }
+
+        public ByQuery<E, K> viewProperties(String... properties) {
+            loader.createViewBuilder();
+            loader.viewBuilder.addAll(properties);
             return this;
         }
 
