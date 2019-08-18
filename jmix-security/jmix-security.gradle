@@ -42,3 +42,20 @@ dependencies {
 entitiesEnhancing {
     enabled = true
 }
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier = 'sources'
+}
+
+publishing {
+    publications {
+        javaMaven(MavenPublication) {
+            groupId = 'io.jmix.security'
+            artifactId = 'jmix-security'
+
+            from components.java
+            artifact sourcesJar
+        }
+    }
+}

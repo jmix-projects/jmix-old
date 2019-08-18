@@ -16,6 +16,8 @@
 
 rootProject.name = 'jmix'
 
+includeBuild 'jmix-gradle-plugin'
+
 include 'jmix-platform'
 include 'jmix-core'
 include 'jmix-data'

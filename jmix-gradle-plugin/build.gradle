@@ -15,14 +15,14 @@
  */
 
 repositories {
-    if (rootProject.hasProperty('haulmontRepoUrl')) {
+    if (rootProject.hasProperty('jmixRepoUrl')) {
         maven {
-            url rootProject['haulmontRepoUrl']
+            url rootProject['jmixRepoUrl']
 
-            if (rootProject.hasProperty('haulmontRepoUser') && rootProject.hasProperty('haulmontRepoPassword')) {
+            if (rootProject.hasProperty('jmixRepoUser') && rootProject.hasProperty('jmixRepoPassword')) {
                 credentials {
-                    username rootProject['haulmontRepoUser']
-                    password rootProject['haulmontRepoPassword']
+                    username rootProject['jmixRepoUser']
+                    password rootProject['jmixRepoPassword']
                 }
             }
         }
@@ -32,7 +32,14 @@ repositories {
     }
 }
 
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'maven-publish'
+
 dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    
     implementation('org.javassist:javassist:3.24.1-GA')
     implementation('commons-io:commons-io:2.6')
     implementation('org.apache.commons:commons-lang3:3.9')
@@ -41,5 +48,25 @@ dependencies {
     implementation('com.yahoo.platform.yui:yuicompressor:2.4.6')
     implementation('com.vaadin:vaadin-sass-compiler:0.9.13') {
         exclude(group: 'com.yahoo.platform.yui', module: 'yuicompressor')
+    }
+}
+
+group = 'io.jmix.gradle'
+version = '0.0.1-SNAPSHOT'
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier = 'sources'
+}
+
+publishing {
+    publications {
+        javaMaven(MavenPublication) {
+            groupId = 'io.jmix.gradle'
+            artifactId = 'jmix-gradle-plugin'
+
+            from components.java
+            artifact sourcesJar
+        }
     }
 }

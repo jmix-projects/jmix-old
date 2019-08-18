@@ -56,3 +56,20 @@ jar {
 entitiesEnhancing {
     enabled = true
 }
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier = 'sources'
+}
+
+publishing {
+    publications {
+        javaMaven(MavenPublication) {
+            groupId = 'io.jmix.ui'
+            artifactId = 'jmix-ui'
+
+            from components.java
+            artifact sourcesJar
+        }
+    }
+}

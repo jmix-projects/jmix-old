@@ -19,14 +19,14 @@ buildscript {
         springBootVersion = '2.1.2.RELEASE'
     }
     repositories {
-        if (rootProject.hasProperty('haulmontRepoUrl')) {
+        if (rootProject.hasProperty('jmixRepoUrl')) {
             maven {
-                url rootProject['haulmontRepoUrl']
+                url rootProject['jmixRepoUrl']
 
-                if (rootProject.hasProperty('haulmontRepoUser') && rootProject.hasProperty('haulmontRepoPassword')) {
+                if (rootProject.hasProperty('jmixRepoUser') && rootProject.hasProperty('jmixRepoPassword')) {
                     credentials {
-                        username rootProject['haulmontRepoUser']
-                        password rootProject['haulmontRepoPassword']
+                        username rootProject['jmixRepoUser']
+                        password rootProject['jmixRepoPassword']
                     }
                 }
             }
@@ -38,33 +38,57 @@ buildscript {
         }
     }
     dependencies {
+        classpath("io.jmix.gradle:jmix-gradle-plugin:0.0.1-SNAPSHOT")
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.7.1")
     }
 }
 
 ext {
-    jmixVersion = '0.0.1'
+    jmixVersion = '0.0.1-SNAPSHOT'
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
 }
 
 allprojects {
     repositories {
-        if (rootProject.hasProperty('haulmontRepoUrl')) {
+        if (rootProject.hasProperty('jmixRepoUrl')) {
             maven {
-                url rootProject['haulmontRepoUrl']
+                url rootProject['jmixRepoUrl']
 
-                if (rootProject.hasProperty('haulmontRepoUser') && rootProject.hasProperty('haulmontRepoPassword')) {
+                if (rootProject.hasProperty('jmixRepoUser') && rootProject.hasProperty('jmixRepoPassword')) {
                     credentials {
-                        username rootProject['haulmontRepoUser']
-                        password rootProject['haulmontRepoPassword']
+                        username rootProject['jmixRepoUser']
+                        password rootProject['jmixRepoPassword']
                     }
                 }
             }
         } else {
             jcenter()
             maven { url "https://dl.bintray.com/cuba-platform/main" }
+        }
+    }
+}
+
+configure([project(':jmix-platform'), project(':jmix-core'), project(':jmix-cuba'), project(':jmix-data'), 
+           project(':jmix-remoting'), project(':jmix-security'), project(':jmix-ui'), 
+           project(':jmix-ui-themes'), project(':jmix-ui-themes-compiled'),
+           project(':jmix-ui-widgets'), project(':jmix-ui-widgets-compiled'),
+           project(':starters:starter-ui-minimal'), project(':starters:starter-standard')]) {
+
+    apply plugin: 'maven-publish'
+    
+    publishing {
+        if (rootProject.hasProperty('jmixUploadUrl')) {
+            repositories {
+                maven {
+                    url = jmixVersion.endsWith('SNAPSHOT') ? "$jmixUploadUrl/snapshots" : "$jmixUploadUrl/releases"
+                    credentials {
+                        username rootProject['jmixUploadUser']
+                        password rootProject['jmixUploadPassword']
+                    }
+                }
+            }
         }
     }
 }

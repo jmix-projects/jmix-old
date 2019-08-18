@@ -45,3 +45,14 @@ jar {
 }
 
 task compileWidgets(type: WidgetsCompile, dependsOn: classes)
+
+publishing {
+    publications {
+        javaMaven(MavenPublication) {
+            groupId = 'io.jmix.ui-widgets'
+            artifactId = 'jmix-ui-widgets'
+
+            from components.java
+        }
+    }
+}

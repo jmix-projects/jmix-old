@@ -18,6 +18,8 @@ import io.jmix.gradle.ui.ThemeCompile
 
 apply plugin: 'java'
 
+version = rootProject.jmixVersion
+
 configurations {
     themes
 }
@@ -32,4 +34,15 @@ dependencies {
 
 task compileThemes(type: ThemeCompile) {
     scssDir = 'src/main/resources'
+}
+
+publishing {
+    publications {
+        javaMaven(MavenPublication) {
+            groupId = 'io.jmix.ui-themes'
+            artifactId = 'jmix-ui-themes'
+
+            from components.java
+        }
+    }
 }

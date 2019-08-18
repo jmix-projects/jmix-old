@@ -11,3 +11,14 @@ dependencies {
     implementation project(':jmix-ui-widgets-compiled')
     implementation project(':jmix-ui-themes-compiled')
 }
+
+publishing {
+    publications {
+        javaMaven(MavenPublication) {
+            groupId = 'io.jmix.starter.standard'
+            artifactId = 'jmix-starter-standard'
+
+            from components.java
+        }
+    }
+}

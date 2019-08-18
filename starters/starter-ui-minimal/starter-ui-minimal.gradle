@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'java-library'
 
-group = 'io.jmix.starter.standard'
+group = 'io.jmix.starter.ui-minimal'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
@@ -11,4 +11,21 @@ dependencies {
     api project(':jmix-ui')
 
     api 'org.springframework.boot:spring-boot-autoconfigure'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier = 'sources'
+}
+
+publishing {
+    publications {
+        javaMaven(MavenPublication) {
+            groupId = 'io.jmix.starter.ui-minimal'
+            artifactId = 'jmix-starter-ui-minimal'
+
+            from components.java
+            artifact sourcesJar
+        }
+    }
 }

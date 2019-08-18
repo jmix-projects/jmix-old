@@ -18,7 +18,20 @@ import io.jmix.gradle.JmixPlugin
 
 apply plugin: 'java'
 
+version = rootProject.jmixVersion
+
 def uiWidgets = project(':jmix-ui-widgets')
 def inputDir = new File(uiWidgets.buildDir, 'widgets')
 
 sourceSets.main.output.dir(inputDir, builtBy: uiWidgets.tasks.getByName(JmixPlugin.COMPILE_WIDGETS_TASK_NAME))
+
+publishing {
+    publications {
+        javaMaven(MavenPublication) {
+            groupId = 'io.jmix.ui-widgets-compiled'
+            artifactId = 'jmix-ui-widgets-compiled'
+
+            from components.java
+        }
+    }
+}

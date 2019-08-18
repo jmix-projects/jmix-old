@@ -14,24 +14,4 @@
  * limitations under the License.
  */
 
-import io.jmix.gradle.JmixPlugin
-
-apply plugin: 'java'
-
-version = rootProject.jmixVersion
-
-def uiThemes = project(':jmix-ui-themes')
-def inputDir = new File(uiThemes.buildDir, 'themes')
-
-sourceSets.main.output.dir(inputDir, builtBy: uiThemes.tasks.getByName(JmixPlugin.COMPILE_THEMES_TASK_NAME))
-
-publishing {
-    publications {
-        javaMaven(MavenPublication) {
-            groupId = 'io.jmix.ui-themes-compiled'
-            artifactId = 'jmix-ui-themes-compiled'
-
-            from components.java
-        }
-    }
-}
+rootProject.name = 'jmix-gradle-plugin'
