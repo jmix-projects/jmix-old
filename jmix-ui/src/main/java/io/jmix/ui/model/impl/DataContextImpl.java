@@ -23,6 +23,7 @@ import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.Versioned;
+import io.jmix.core.impl.StandardSerialization;
 import io.jmix.core.metamodel.model.Instance;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -592,8 +593,8 @@ public class DataContextImpl implements DataContext {
 
     protected Set<Entity> commitToDataManager(CommitContext.ValidationType validationType, List<Class> validationGroups) {
         CommitContext commitContext = new CommitContext(
-                filterCommittedInstances(modifiedInstances),
-                filterCommittedInstances(removedInstances));
+                isolate(filterCommittedInstances(modifiedInstances)),
+                isolate(filterCommittedInstances(removedInstances)));
         if (validationType != null)
             commitContext.setValidationType(validationType);
         if (validationGroups != null)
@@ -609,6 +610,10 @@ public class DataContextImpl implements DataContext {
         return instances.stream()
                 .filter(entity -> !getMetadataTools().isEmbeddable(entity.getClass()))
                 .collect(Collectors.toList());
+    }
+
+    protected Collection isolate(Collection entities) {
+        return (Collection) StandardSerialization.deserialize(StandardSerialization.serialize(entities));
     }
 
     protected Set<Entity> commitToParentContext() {

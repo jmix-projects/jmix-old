@@ -19,6 +19,8 @@ package io.jmix.ui.model
 import io.jmix.core.EntityStates
 import io.jmix.core.metamodel.model.Instance
 import io.jmix.ui.test.DataContextSpec
+import io.jmix.ui.test.entity.TestIdentityIdEntity
+import io.jmix.ui.test.entity.TestJpaLifecycleCallbacksEntity
 import io.jmix.ui.test.entity.sales.Customer
 import io.jmix.ui.test.entity.sales.Order
 import io.jmix.ui.test.entity.sales.OrderLine
@@ -574,7 +576,7 @@ class DataContextMergeTest extends DataContextSpec {
         }
         mergedOrder.addPropertyChangeListener(listener)
 
-        when: "committing new instances - same instances are returned because of persist semantics, no merge back in context"
+        when: "committing new instances"
 
         context.commit()
         println 'After commit 1: ' + events
@@ -588,13 +590,12 @@ class DataContextMergeTest extends DataContextSpec {
         def line21 = context.find(OrderLine, line2.id)
         line21.version == 1
 
-        events['version'] == null       // update by ORM bypassing the setter
+        events['version'] == 1
         events['createTs'] == 1
         events['updateTs'] == 1
         events['number'] == null
-        events['orderLines'] == null
 
-        when: "committing new instances - different instances are returned, context merges them"
+        when: "updating instances"
 
         order11.number = '111'
         events.clear()
@@ -606,17 +607,76 @@ class DataContextMergeTest extends DataContextSpec {
 
         context.find(Order, order1.id).version == 2
 
-        events['version'] == 1      // in back-merge
+        events['version'] == 1
         events['createTs'] == null
-        events['updateTs'] == 2     // once in preUpdate and once in back-merge
+        events['updateTs'] == 1
         events['number'] == null
-        events['orderLines'] == 1   // in back-merge
 
         where:
 
         orderId << [uuid(0), uuid(1), uuid(2)]
         line1Id << [uuid(1), uuid(0), uuid(1)]
         line2Id << [uuid(2), uuid(2), uuid(0)]
+    }
+
+    def "state changed on persist notifies property listeners when merged back"() {
+        DataContext context = factory.createDataContext()
+
+        TestJpaLifecycleCallbacksEntity entity = new TestJpaLifecycleCallbacksEntity(name: 'test1')
+        def mergedEntity = context.merge(entity)
+
+        Instance.PropertyChangeListener listener = Mock()
+        mergedEntity.addPropertyChangeListener(listener)
+
+        when:
+
+        context.commit()
+
+        then:
+
+        1 * listener.propertyChanged({it.property == 'prePersistCounter'})
+    }
+
+    def "exception on commit keeps current state intact"() {
+        DataContext context = factory.createDataContext()
+
+        TestJpaLifecycleCallbacksEntity entity = new TestJpaLifecycleCallbacksEntity()
+        def mergedEntity = context.merge(entity)
+
+        when:
+
+        context.commit()
+
+        then:
+
+        thrown(Exception)
+        mergedEntity.getPrePersistCounter() == null
+    }
+
+    def "identity-id entity is merged after commit"() {
+        DataContext context = factory.createDataContext()
+
+        def entity = new TestIdentityIdEntity(name: 'test1')
+
+        when:
+
+        def mergedEntity = context.merge(entity)
+
+        Instance.PropertyChangeListener listener = Mock()
+        mergedEntity.addPropertyChangeListener(listener)
+
+        then:
+
+        context.find(entity).id.get() == null
+
+        when:
+
+        context.commit()
+
+        then:
+
+        context.find(entity).id.get() != null
+        0 * listener.propertyChanged({it.property == 'id'}) // is not invoked because id is set in copySystemState()
     }
 
     private UUID uuid(int val) {

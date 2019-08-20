@@ -21,7 +21,6 @@ import io.jmix.core.EntityStates
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.TimeSource
 import io.jmix.core.commons.db.QueryRunner
-import io.jmix.core.commons.util.Numbers
 import io.jmix.core.entity.*
 import io.jmix.data.JmixDataConfiguration
 import io.jmix.data.Persistence
@@ -33,8 +32,8 @@ import spock.lang.Specification
 
 import javax.inject.Inject
 
-import static io.jmix.ui.test.StandardSerialization.deserialize
-import static io.jmix.ui.test.StandardSerialization.serialize
+import static io.jmix.core.impl.StandardSerialization.deserialize
+import static io.jmix.core.impl.StandardSerialization.serialize
 
 @ContextConfiguration(classes = [JmixCoreConfiguration, JmixUiConfiguration, JmixDataConfiguration, DataContextTestConfiguration])
 class DataContextSpec extends Specification {
@@ -48,6 +47,7 @@ class DataContextSpec extends Specification {
 
     void cleanup() {
         def runner = new QueryRunner(persistence.getDataSource())
+        runner.update('delete from TEST_JPA_LIFECYCLE_CALLBACKS_ENTITY')
         runner.update('delete from TEST_IDENTITY_ID_ENTITY')
         runner.update('delete from TEST_STRING_ID_ENTITY')
         runner.update('delete from TEST_ORDER_LINE_PARAM')

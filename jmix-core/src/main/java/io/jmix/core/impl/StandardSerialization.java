@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.test;
+package io.jmix.core.impl;
 
 import org.apache.commons.lang3.ClassUtils;
 
@@ -34,9 +34,7 @@ public class StandardSerialization  {
         } catch (IOException ex) {
             throw new RuntimeException("Failed to serialize object", ex);
         } finally {
-            //Prevent close stream. Stream closed only by:
-            //com.haulmont.cuba.core.sys.remoting.HttpServiceExporter,
-            //com.haulmont.cuba.core.sys.remoting.ClusteredHttpInvokerRequestExecutor()
+            //Prevent close stream.
             //Only flush buffer to output stream
             if (!isObjectStream && out != null) {
                 try {

@@ -16,17 +16,13 @@
 
 package io.jmix.data
 
-import com.sample.app.TestAppConfiguration
+
 import com.sample.app.entity.TestAppEntity
-import io.jmix.core.JmixCoreConfiguration
-import io.jmix.data.test.JmixDataTestConfiguration
-import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification
+import io.jmix.data.test.DataSpec
 
 import javax.inject.Inject
 
-@ContextConfiguration(classes = [JmixCoreConfiguration, JmixDataConfiguration, JmixDataTestConfiguration, TestAppConfiguration])
-class PersistenceTest extends Specification {
+class PersistenceTest extends DataSpec {
 
     @Inject
     Persistence persistence

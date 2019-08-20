@@ -16,19 +16,15 @@
 
 package io.jmix.data
 
-import com.sample.app.TestAppConfiguration
+
 import com.sample.app.entity.TestAppEntity
-import io.jmix.data.test.JmixDataTestConfiguration
 import io.jmix.core.DataManager
 import io.jmix.core.EntityStates
-import io.jmix.core.JmixCoreConfiguration
-import org.springframework.test.context.ContextConfiguration
-import spock.lang.Specification
+import io.jmix.data.test.DataSpec
 
 import javax.inject.Inject
 
-@ContextConfiguration(classes = [JmixCoreConfiguration, JmixDataConfiguration, JmixDataTestConfiguration, TestAppConfiguration])
-class DataManagerTest extends Specification {
+class DataManagerTest extends DataSpec {
 
     @Inject
     DataManager dataManager
