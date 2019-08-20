@@ -40,7 +40,7 @@ class JmixPlugin implements Plugin<Project> {
                 project.configurations {
                     enhancing
                 }
-                project.dependencies.add('enhancing', 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-1-cuba')
+                project.dependencies.add('enhancing', 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-6-cuba')
 
                 project.tasks.findByName('compileJava').doLast(new EnhancingAction('main'))
                 project.tasks.findByName('compileTestJava').doLast(new EnhancingAction('test'))
