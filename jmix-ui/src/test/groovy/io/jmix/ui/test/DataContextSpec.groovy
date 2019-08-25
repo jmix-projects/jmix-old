@@ -25,6 +25,8 @@ import io.jmix.core.entity.*
 import io.jmix.data.JmixDataConfiguration
 import io.jmix.data.Persistence
 import io.jmix.ui.JmixUiConfiguration
+import io.jmix.ui.test.entity.TestNullableIdEntity
+import io.jmix.ui.test.entity.TestNullableIdItemEntity
 import org.eclipse.persistence.internal.queries.EntityFetchGroup
 import org.eclipse.persistence.queries.FetchGroupTracker
 import org.springframework.test.context.ContextConfiguration
@@ -46,7 +48,12 @@ class DataContextSpec extends Specification {
     }
 
     void cleanup() {
+        TestNullableIdEntity.sequence.set(0L)
+        TestNullableIdItemEntity.sequence.set(0L)
+
         def runner = new QueryRunner(persistence.getDataSource())
+        runner.update('delete from TEST_NULLABLE_ID_ITEM_ENTITY')
+        runner.update('delete from TEST_NULLABLE_ID_ENTITY')
         runner.update('delete from TEST_JPA_LIFECYCLE_CALLBACKS_ENTITY')
         runner.update('delete from TEST_IDENTITY_ID_ENTITY')
         runner.update('delete from TEST_STRING_ID_ENTITY')

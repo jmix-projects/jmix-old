@@ -16,10 +16,13 @@
 
 package io.jmix.ui.model.impl;
 
+import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.entity.EmbeddableEntity;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.model.CollectionChangeType;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.Sorter;
@@ -44,11 +47,16 @@ public class CollectionContainerImpl<E extends Entity>
 
     protected List<E> collection = new ArrayList<>();
 
-    protected Map<Object, Integer> idMap = new HashMap<>();
+    protected Map<IndexKey, Integer> idMap = new HashMap<>();
+
     protected Sorter sorter;
 
     public CollectionContainerImpl(ApplicationContext applicationContext, MetaClass metaClass) {
         super(applicationContext, metaClass);
+    }
+
+    protected MetadataTools getMetadataTools() {
+        return applicationContext.getBean(MetadataTools.NAME, MetadataTools.class);
     }
 
     @Override
@@ -72,11 +80,15 @@ public class CollectionContainerImpl<E extends Entity>
 
     @Override
     public List<E> getMutableItems() {
-        return new ObservableList<>(collection, idMap, (changeType, changes) -> {
-            buildIdMap();
-            clearItemIfNotExists();
-            fireCollectionChanged(changeType, changes);
-        });
+        return new ObservableList<>(collection, idMap,
+                (changeType, changes) -> {
+                    buildIdMap();
+                    clearItemIfNotExists();
+                    fireCollectionChanged(changeType, changes);
+                },
+                this::detachListener,
+                this::attachListener
+        );
     }
 
     @Override
@@ -109,23 +121,25 @@ public class CollectionContainerImpl<E extends Entity>
     }
 
     @Override
-    public int getItemIndex(Object entityId) {
-        if (entityId instanceof Entity && !(entityId instanceof EmbeddableEntity)) {
+    public int getItemIndex(Object entityOrId) {
+        IndexKey indexKey;
+        if (entityOrId instanceof Entity && !(entityOrId instanceof EmbeddableEntity)) {
             // if an entity instance is passed instead of id, check if the entity is of valid class and extract id
-            Entity entity = (Entity) entityId;
+            Entity entity = (Entity) entityOrId;
             if (!entityMetaClass.getJavaClass().isAssignableFrom(entity.getClass())) {
                 throw new IllegalArgumentException("Invalid entity class: " + entity.getClass());
-            } else {
-                entityId = entity.getId();
             }
+            indexKey = IndexKey.ofEntity(entity);
+        } else {
+            indexKey = IndexKey.of(entityOrId);
         }
-        Integer idx = idMap.get(entityId);
+        Integer idx = idMap.get(indexKey);
         return idx != null ? idx : -1;
     }
 
     @Override
-    public boolean containsItem(Object entityId) {
-        return getItemIndex(entityId) > -1;
+    public boolean containsItem(Object entityOrId) {
+        return getItemIndex(entityOrId) > -1;
     }
 
     @Override
@@ -178,6 +192,24 @@ public class CollectionContainerImpl<E extends Entity>
         }
     }
 
+    @Override
+    public void itemPropertyChanged(Instance.PropertyChangeEvent e) {
+        if (!listenersEnabled) {
+            return;
+        }
+        // if id has been changed, put the entity to the content with the new id
+        MetaProperty primaryKeyProperty = getMetadataTools().getPrimaryKeyProperty(e.getItem().getClass());
+        if (primaryKeyProperty != null && e.getProperty().equals(primaryKeyProperty.getName())) {
+            // we cannot remove the old entry because its hashCode is based on the entity instance but now the same
+            // instance has different hashCode based on id
+            @SuppressWarnings("unchecked")
+            E entity = (E) e.getItem();
+            idMap.put(IndexKey.ofEntity(entity), collection.indexOf(entity));
+        }
+
+        super.itemPropertyChanged(e);
+    }
+
     protected void fireCollectionChanged(CollectionChangeType type, Collection<? extends E> changes) {
         if (!listenersEnabled) {
             return;
@@ -203,7 +235,7 @@ public class CollectionContainerImpl<E extends Entity>
     protected void buildIdMap() {
         idMap.clear();
         for (int i = 0; i < collection.size(); i++) {
-            idMap.put(collection.get(i).getId(), i);
+            idMap.put(IndexKey.ofEntity(collection.get(i)), i);
         }
     }
 

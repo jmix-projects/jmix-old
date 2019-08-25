@@ -676,7 +676,7 @@ class DataContextMergeTest extends DataContextSpec {
         then:
 
         context.find(entity).id.get() != null
-        0 * listener.propertyChanged({it.property == 'id'}) // is not invoked because id is set in copySystemState()
+        0 * listener.propertyChanged({it.property == 'id'}) // is not invoked because id is set in copySystemState() by setDbGeneratedId() which is not enhanced
     }
 
     private UUID uuid(int val) {

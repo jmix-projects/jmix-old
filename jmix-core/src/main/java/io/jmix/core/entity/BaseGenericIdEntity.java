@@ -152,12 +152,15 @@ public abstract class BaseGenericIdEntity<T> extends AbstractInstance implements
         if (other == null || getClass() != other.getClass())
             return false;
 
+        if (getId() == null && ((BaseGenericIdEntity) other).getId() == null)
+            return false;
+
         return Objects.equals(getId(), ((BaseGenericIdEntity) other).getId());
     }
 
     @Override
     public int hashCode() {
-        return getId() != null ? getId().hashCode() : 0;
+        return getId() != null ? getId().hashCode() : super.hashCode();
     }
 
     @Override

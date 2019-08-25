@@ -44,8 +44,8 @@ public class InstanceContainerImpl<E extends Entity> implements InstanceContaine
 
     private static final Logger log = LoggerFactory.getLogger(InstanceContainerImpl.class);
 
-    protected Metadata metadata;
     protected E item;
+    protected ApplicationContext applicationContext;
     protected MetaClass entityMetaClass;
     protected View view;
 
@@ -56,8 +56,12 @@ public class InstanceContainerImpl<E extends Entity> implements InstanceContaine
     protected boolean listenersEnabled = true;
 
     public InstanceContainerImpl(ApplicationContext applicationContext, MetaClass entityMetaClass) {
+        this.applicationContext = applicationContext;
         this.entityMetaClass = entityMetaClass;
-        this.metadata = applicationContext.getBean(Metadata.NAME, Metadata.class);
+    }
+
+    protected Metadata getMetadata() {
+        return applicationContext.getBean(Metadata.NAME, Metadata.class);
     }
 
     @Nullable
@@ -86,7 +90,7 @@ public class InstanceContainerImpl<E extends Entity> implements InstanceContaine
 
         if (item != null) {
             MetaClass aClass = item instanceof HasInstanceMetaClass ?
-                    ((HasInstanceMetaClass) item).getInstanceMetaClass() : metadata.getClass(item);
+                    ((HasInstanceMetaClass) item).getInstanceMetaClass() : getMetadata().getClass(item);
             if (!aClass.equals(entityMetaClass) && !entityMetaClass.getDescendants().contains(aClass)) {
                 throw new DevelopmentException(String.format("Invalid item's metaClass '%s'", aClass),
                         ParamsMap.of("container", toString(), "metaClass", aClass));

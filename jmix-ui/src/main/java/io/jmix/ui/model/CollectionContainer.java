@@ -61,14 +61,18 @@ public interface CollectionContainer<E extends Entity> extends InstanceContainer
     E getItemOrNull(Object entityId);
 
     /**
-     * Returns the index in the items list of the entity with the given id or -1 if there is no such entity.
+     * Returns the index in the items list of the given entity or -1 if there is no such entity.
+     *
+     * @param entityOrId entity instance or its id
      */
-    int getItemIndex(Object entityId);
+    int getItemIndex(Object entityOrId);
 
     /**
-     * Returns true if an item with the given id exists in the container.
+     * Returns true if the given entity exists in the container.
+     *
+     * @param entityOrId entity instance or its id
      */
-    boolean containsItem(Object entityId);
+    boolean containsItem(Object entityOrId);
 
     /**
      * If the item with the same id exists in the container, it is replaced with the given instance. If not, the given

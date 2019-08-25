@@ -70,6 +70,8 @@ public class DataContextImpl implements DataContext {
 
     protected Map<Entity, Map<String, EmbeddedPropertyChangeListener>> embeddedPropertyListeners = new WeakHashMap<>();
 
+    protected Map<Entity, Entity> nullIdEntitiesMap = new IdentityHashMap<>();
+
     public DataContextImpl(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
@@ -134,14 +136,14 @@ public class DataContextImpl implements DataContext {
     @Override
     public <T extends Entity> T find(T entity) {
         checkNotNullArgument(entity, "entity is null");
-        return (T) find(entity.getClass(), entity.getId());
+        return (T) find(entity.getClass(), makeKey(entity));
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean contains(Entity entity) {
         checkNotNullArgument(entity, "entity is null");
-        return find(entity.getClass(), entity.getId()) != null;
+        return find(entity.getClass(), makeKey(entity)) != null;
     }
 
     @SuppressWarnings("unchecked")
@@ -152,7 +154,7 @@ public class DataContextImpl implements DataContext {
         disableListeners = true;
         T result;
         try {
-            Set<Entity> merged = Sets.newIdentityHashSet();
+            Map<Entity, Entity> merged = new IdentityHashMap<>();
             result = (T) internalMerge(entity, merged, true);
         } finally {
             disableListeners = false;
@@ -167,7 +169,7 @@ public class DataContextImpl implements DataContext {
         List<Entity> managedList = new ArrayList<>(entities.size());
         disableListeners = true;
         try {
-            Set<Entity> merged = Sets.newIdentityHashSet();
+            Map<Entity, Entity> merged = new IdentityHashMap<>();
 
             for (Entity entity : entities) {
                 Entity managed = internalMerge(entity, merged, true);
@@ -179,11 +181,24 @@ public class DataContextImpl implements DataContext {
         return EntitySet.of(managedList);
     }
 
-    protected Entity internalMerge(Entity entity, Set<Entity> mergedSet, boolean isRoot) {
+    protected Entity internalMerge(Entity entity, Map<Entity, Entity> mergedMap, boolean isRoot) {
         Map<Object, Entity> entityMap = content.computeIfAbsent(entity.getClass(), aClass -> new HashMap<>());
-        Entity managed = entityMap.get(entity.getId());
 
-        if (mergedSet.contains(entity)) {
+        Entity nullIdEntity = nullIdEntitiesMap.get(entity);
+        if (nullIdEntity != null) {
+            Entity managed = entityMap.get(makeKey(nullIdEntity));
+            if (managed != null) {
+                mergedMap.put(entity, managed);
+                mergeState(entity, managed, mergedMap, isRoot);
+                return managed;
+            } else {
+                throw new IllegalStateException("No managed instance for " + nullIdEntity);
+            }
+        }
+
+        Entity managed = entityMap.get(makeKey(entity));
+
+        if (mergedMap.containsKey(entity)) {
             if (managed != null) {
                 return managed;
             } else {
@@ -191,13 +206,13 @@ public class DataContextImpl implements DataContext {
                 log.debug("Instance was merged but managed instance is null: {}", entity);
             }
         }
-        mergedSet.add(entity);
 
         if (managed == null) {
             managed = copyEntity(entity);
-            entityMap.put(managed.getId(), managed);
+            entityMap.put(makeKey(managed), managed);
+            mergedMap.put(entity, managed);
 
-            mergeState(entity, managed, mergedSet, isRoot);
+            mergeState(entity, managed, mergedMap, isRoot);
 
             managed.addPropertyChangeListener(propertyChangeListener);
 
@@ -205,16 +220,21 @@ public class DataContextImpl implements DataContext {
                 modifiedInstances.add(managed);
                 fireChangeListener(managed);
             }
-            return managed;
         } else {
-            if (managed.getId() == null) {
-                throw new IllegalStateException("DataContext already contains an instance with null id: " + managed);
-            }
-
+            mergedMap.put(entity, managed);
             if (managed != entity) {
-                mergeState(entity, managed, mergedSet, isRoot);
+                mergeState(entity, managed, mergedMap, isRoot);
             }
-            return managed;
+        }
+        return managed;
+    }
+
+    protected Object makeKey(Entity entity) {
+        Object id = entity.getId();
+        if (id != null) {
+            return entity.getId();
+        } else {
+            return entity;
         }
     }
 
@@ -229,7 +249,7 @@ public class DataContextImpl implements DataContext {
         return dstEntity;
     }
 
-    protected void mergeState(Entity srcEntity, Entity dstEntity, Set<Entity> mergedSet, boolean isRoot) {
+    protected void mergeState(Entity srcEntity, Entity dstEntity, Map<Entity, Entity> mergedMap, boolean isRoot) {
         EntityStates entityStates = getEntityStates();
 
         boolean srcNew = entityStates.isNew(srcEntity);
@@ -278,16 +298,16 @@ public class DataContextImpl implements DataContext {
 
                 if (value instanceof Collection) {
                     if (value instanceof List) {
-                        mergeList((List) value, dstEntity, property.getName(), isRoot, mergedSet);
+                        mergeList((List) value, dstEntity, property.getName(), isRoot, mergedMap);
                     } else if (value instanceof Set) {
-                        mergeSet((Set) value, dstEntity, property.getName(), isRoot, mergedSet);
+                        mergeSet((Set) value, dstEntity, property.getName(), isRoot, mergedMap);
                     } else {
                         throw new UnsupportedOperationException("Unsupported collection type: " + value.getClass().getName());
                     }
                 } else {
                     Entity srcRef = (Entity) value;
-                    if (!mergedSet.contains(srcRef)) {
-                        Entity managedRef = internalMerge(srcRef, mergedSet, false);
+                    if (!mergedMap.containsKey(srcRef)) {
+                        Entity managedRef = internalMerge(srcRef, mergedMap, false);
                         ((AbstractInstance) dstEntity).setValue(propertyName, managedRef, false);
                         if (getMetadataTools().isEmbedded(property)) {
                             EmbeddedPropertyChangeListener listener = new EmbeddedPropertyChangeListener(dstEntity);
@@ -295,7 +315,7 @@ public class DataContextImpl implements DataContext {
                             embeddedPropertyListeners.computeIfAbsent(dstEntity, e -> new HashMap<>()).put(propertyName, listener);
                         }
                     } else {
-                        Entity managedRef = find(srcRef.getClass(), srcRef.getId());
+                        Entity managedRef = mergedMap.get(srcRef);
                         if (managedRef != null) {
                             ((AbstractInstance) dstEntity).setValue(propertyName, managedRef, false);
                         } else {
@@ -329,11 +349,11 @@ public class DataContextImpl implements DataContext {
     }
 
     protected void mergeList(List<Entity> list, Entity managedEntity, String propertyName, boolean replace,
-                             Set<Entity> mergedSet) {
+                             Map<Entity, Entity> mergedMap) {
         if (replace) {
             List<Entity> managedRefs = new ArrayList<>(list.size());
             for (Entity entity : list) {
-                Entity managedRef = internalMerge(entity, mergedSet, false);
+                Entity managedRef = internalMerge(entity, mergedMap, false);
                 managedRefs.add(managedRef);
             }
             List<Entity> dstList = createObservableList(managedRefs, managedEntity);
@@ -347,11 +367,11 @@ public class DataContextImpl implements DataContext {
             }
             if (dstList.size() == 0) {
                 for (Entity srcRef : list) {
-                    dstList.add(internalMerge(srcRef, mergedSet, false));
+                    dstList.add(internalMerge(srcRef, mergedMap, false));
                 }
             } else {
                 for (Entity srcRef : list) {
-                    Entity managedRef = internalMerge(srcRef, mergedSet, false);
+                    Entity managedRef = internalMerge(srcRef, mergedMap, false);
                     if (!dstList.contains(managedRef)) {
                         dstList.add(managedRef);
                     }
@@ -361,11 +381,11 @@ public class DataContextImpl implements DataContext {
     }
 
     protected void mergeSet(Set<Entity> set, Entity managedEntity, String propertyName, boolean replace,
-                            Set<Entity> mergedSet) {
+                            Map<Entity, Entity> mergedMap) {
         if (replace) {
             Set<Entity> managedRefs = new LinkedHashSet<>(set.size());
             for (Entity entity : set) {
-                Entity managedRef = internalMerge(entity, mergedSet, false);
+                Entity managedRef = internalMerge(entity, mergedMap, false);
                 managedRefs.add(managedRef);
             }
             Set<Entity> dstList = createObservableSet(managedRefs, managedEntity);
@@ -379,11 +399,11 @@ public class DataContextImpl implements DataContext {
             }
             if (dstSet.size() == 0) {
                 for (Entity srcRef : set) {
-                    dstSet.add(internalMerge(srcRef, mergedSet, false));
+                    dstSet.add(internalMerge(srcRef, mergedMap, false));
                 }
             } else {
                 for (Entity srcRef : set) {
-                    Entity managedRef = internalMerge(srcRef, mergedSet, false);
+                    Entity managedRef = internalMerge(srcRef, mergedMap, false);
                     dstSet.add(managedRef);
                 }
             }
@@ -419,9 +439,9 @@ public class DataContextImpl implements DataContext {
 
         Map<Object, Entity> entityMap = content.get(entity.getClass());
         if (entityMap != null) {
-            Entity mergedEntity = entityMap.get(entity.getId());
+            Entity mergedEntity = entityMap.get(makeKey(entity));
             if (mergedEntity != null) {
-                entityMap.remove(entity.getId());
+                entityMap.remove(makeKey(entity));
                 removeFromCollections(mergedEntity);
             }
         }
@@ -459,9 +479,9 @@ public class DataContextImpl implements DataContext {
 
         Map<Object, Entity> entityMap = content.get(entity.getClass());
         if (entityMap != null) {
-            Entity mergedEntity = entityMap.get(entity.getId());
+            Entity mergedEntity = entityMap.get(makeKey(entity));
             if (mergedEntity != null) {
-                entityMap.remove(entity.getId());
+                entityMap.remove(makeKey(entity));
                 removeListeners(entity);
             }
             modifiedInstances.remove(entity);
@@ -548,9 +568,13 @@ public class DataContextImpl implements DataContext {
         if (preCommitEvent.isCommitPrevented())
             return EntitySet.of(Collections.emptySet());
 
-        Set<Entity> committed = performCommit(preCommitEvent.getValidationType(), preCommitEvent.getValidationGroups());
-
-        EntitySet committedAndMerged = mergeCommitted(committed);
+        EntitySet committedAndMerged;
+        try {
+            Set<Entity> committed = performCommit(preCommitEvent.getValidationType(), preCommitEvent.getValidationGroups());
+            committedAndMerged = mergeCommitted(committed);
+        } finally {
+            nullIdEntitiesMap.clear();
+        }
 
         events.publish(PostCommitEvent.class, new PostCommitEvent(this, committedAndMerged));
 
@@ -606,14 +630,24 @@ public class DataContextImpl implements DataContext {
         }
     }
 
-    protected Collection filterCommittedInstances(Set<Entity> instances) {
+    protected List<Entity> filterCommittedInstances(Set<Entity> instances) {
         return instances.stream()
                 .filter(entity -> !getMetadataTools().isEmbeddable(entity.getClass()))
                 .collect(Collectors.toList());
     }
 
-    protected Collection isolate(Collection entities) {
-        return (Collection) StandardSerialization.deserialize(StandardSerialization.serialize(entities));
+    @SuppressWarnings("unchecked")
+    public Collection<Entity> isolate(List<Entity> entities) {
+        // re-serialize the whole collection to preserve links between objects
+        List isolatedEntities = (List) StandardSerialization.deserialize(StandardSerialization.serialize(entities));
+        for (int i = 0; i < isolatedEntities.size(); i++) {
+            Entity isolatedEntity = (Entity) isolatedEntities.get(i);
+            Entity entity = entities.get(i);
+            if (entity.getId() == null) {
+                nullIdEntitiesMap.put(isolatedEntity, entity);
+            }
+        }
+        return isolatedEntities;
     }
 
     protected Set<Entity> commitToParentContext() {
@@ -656,7 +690,8 @@ public class DataContextImpl implements DataContext {
         // transform into sorted collection to have reproducible behavior
         List<Entity> entitiesToMerge = new ArrayList<>();
         for (Entity entity : committed) {
-            if (contains(entity)) {
+            Entity e = nullIdEntitiesMap.getOrDefault(entity, entity);
+            if (contains(e)) {
                 entitiesToMerge.add(entity);
             }
         }
@@ -729,17 +764,17 @@ public class DataContextImpl implements DataContext {
     protected class PropertyChangeListener implements Instance.PropertyChangeListener {
         @Override
         public void propertyChanged(Instance.PropertyChangeEvent e) {
-            if (!disableListeners) {
-                // if id has been changed, update put the entity to the content with the new id
-                MetaProperty primaryKeyProperty = getMetadataTools().getPrimaryKeyProperty(e.getItem().getClass());
-                if (primaryKeyProperty != null && e.getProperty().equals(primaryKeyProperty.getName())) {
-                    Map<Object, Entity> entityMap = content.get(e.getItem().getClass());
-                    if (entityMap != null) {
-                        entityMap.remove(e.getPrevValue());
-                        entityMap.put(e.getValue(), (Entity) e.getItem());
-                    }
+            // if id has been changed, put the entity to the content with the new id
+            MetaProperty primaryKeyProperty = getMetadataTools().getPrimaryKeyProperty(e.getItem().getClass());
+            if (primaryKeyProperty != null && e.getProperty().equals(primaryKeyProperty.getName())) {
+                Map<Object, Entity> entityMap = content.get(e.getItem().getClass());
+                if (entityMap != null) {
+                    entityMap.remove(e.getPrevValue());
+                    entityMap.put(e.getValue(), (Entity) e.getItem());
                 }
+            }
 
+            if (!disableListeners) {
                 modifiedInstances.add((Entity) e.getItem());
                 fireChangeListener((Entity) e.getItem());
             }
