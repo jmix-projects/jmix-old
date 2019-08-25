@@ -122,6 +122,7 @@ public class CollectionContainerImpl<E extends Entity>
 
     @Override
     public int getItemIndex(Object entityOrId) {
+        checkNotNullArgument(entityOrId, "entity or id is null");
         IndexKey indexKey;
         if (entityOrId instanceof Entity && !(entityOrId instanceof EmbeddableEntity)) {
             // if an entity instance is passed instead of id, check if the entity is of valid class and extract id

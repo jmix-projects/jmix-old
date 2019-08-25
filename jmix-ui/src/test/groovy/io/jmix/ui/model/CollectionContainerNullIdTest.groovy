@@ -92,4 +92,32 @@ class CollectionContainerNullIdTest extends DataContextSpec {
         master.items[0].is(item1)
         propertyContainer.getItem(1L).is(item1)
     }
+
+    def "replace item"() {
+        def container = factory.createCollectionContainer(TestNullableIdEntity)
+        def context = factory.createDataContext()
+
+        def entity = context.merge(new TestNullableIdEntity(name: '111'))
+        container.getMutableItems().add(entity)
+
+        def entity2 = context.merge(new TestNullableIdEntity(name: '222'))
+
+        when:
+        container.replaceItem(entity2)
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        def committedEntity = context.commit().get(entity)
+
+        then:
+        committedEntity.is(entity)
+
+        when:
+        container.replaceItem(committedEntity)
+
+        then:
+        container.getItem(1L).is(entity)
+    }
 }
