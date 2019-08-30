@@ -118,6 +118,6 @@ class CollectionContainerNullIdTest extends DataContextSpec {
         container.replaceItem(committedEntity)
 
         then:
-        container.getItem(1L).is(entity)
+        container.getItem(entity.id).is(entity)
     }
 }
