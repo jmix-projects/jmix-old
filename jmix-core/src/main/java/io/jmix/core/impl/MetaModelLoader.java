@@ -57,7 +57,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @Component(MetaModelLoader.NAME)
 public class MetaModelLoader {
 
-    public static final String NAME = "cuba_MetaModelLoader";
+    public static final String NAME = "jmix_MetaModelLoader";
 
     protected static final String VALIDATION_MIN = "_min";
     protected static final String VALIDATION_MAX = "_max";
@@ -443,7 +443,7 @@ public class MetaModelLoader {
         Column column = field.getAnnotation(Column.class);
         Lob lob = field.getAnnotation(Lob.class);
         if (column != null && column.length() != 0 && lob == null) {
-            metaProperty.getAnnotations().put("length", column.length());
+            metaProperty.getAnnotations().put(MetadataTools.LENGTH_ANN_NAME, column.length());
         }
 
         Temporal temporal = field.getAnnotation(Temporal.class);

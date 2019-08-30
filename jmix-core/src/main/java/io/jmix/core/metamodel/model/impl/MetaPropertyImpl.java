@@ -16,11 +16,11 @@
 
 package io.jmix.core.metamodel.model.impl;
 
+import com.google.common.collect.ForwardingMap;
 import io.jmix.core.metamodel.model.*;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty {
@@ -166,6 +166,33 @@ public class MetaPropertyImpl extends MetadataObjectImpl implements MetaProperty
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
         withClones(clone -> clone.readOnly = readOnly);
+    }
+
+    @Override
+    public Map<String, Object> getAnnotations() {
+        if (domain.getDescendants().isEmpty()) {
+            return super.getAnnotations();
+        } else {
+            return new ForwardingMap<String, Object>() {
+                @Override
+                protected Map<String, Object> delegate() {
+                    return MetaPropertyImpl.super.getAnnotations();
+                }
+
+                @Override
+                public Object put(String key, Object value) {
+                    Object prevVal = super.put(key, value);
+                    withClones(clone -> clone.getAnnotations().put(key, value));
+                    return prevVal;
+                }
+
+                @Override
+                public void putAll(Map<? extends String, ?> map) {
+                    super.putAll(map);
+                    withClones(clone -> clone.getAnnotations().putAll(map));
+                }
+            };
+        }
     }
 
     protected void withClones(Consumer<MetaPropertyImpl> consumer) {

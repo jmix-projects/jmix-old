@@ -59,11 +59,12 @@ public class MetadataTools {
 
     public static final String NAME = "jmix_MetadataTools";
 
-    public static final String PRIMARY_KEY_ANN_NAME = "cuba.primaryKey";
-    public static final String EMBEDDED_ANN_NAME = "cuba.embedded";
-    public static final String TEMPORAL_ANN_NAME = "cuba.temporal";
-    public static final String SYSTEM_ANN_NAME = "cuba.system";
-    public static final String STORE_ANN_NAME = "cuba.storeName";
+    public static final String PRIMARY_KEY_ANN_NAME = "jmix.primaryKey";
+    public static final String EMBEDDED_ANN_NAME = "jmix.embedded";
+    public static final String TEMPORAL_ANN_NAME = "jmix.temporal";
+    public static final String SYSTEM_ANN_NAME = "jmix.system";
+    public static final String STORE_ANN_NAME = "jmix.storeName";
+    public static final String LENGTH_ANN_NAME = "jmix.length";
 
     public static final List<Class> SYSTEM_INTERFACES = ImmutableList.of(
             Instance.class,

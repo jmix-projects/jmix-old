@@ -102,7 +102,7 @@ public class ViewBuilderTest {
         assertNotNull(view.getProperty("owner"));
         View ownerView = view.getProperty("owner").getView();
         assertNotNull(ownerView);
-        assertTrue(containsSystemProperties(ownerView));
+        assertFalse(containsSystemProperties(ownerView));
         assertTrue(ownerView.containsProperty("name"));
         assertFalse(ownerView.containsProperty("address"));
     }
@@ -121,6 +121,11 @@ public class ViewBuilderTest {
 
         assertTrue(containsSystemProperties(view));
         assertTrue(view.containsProperty("name"));
+
+        view = ViewBuilder.of(Pet.class).addSystem().addView(View.LOCAL).build();
+
+        assertTrue(containsSystemProperties(view));
+        assertTrue(view.containsProperty("name"));
     }
 
     @Test
@@ -135,11 +140,11 @@ public class ViewBuilderTest {
     public void testLocal() {
         View petView = ViewBuilder.of(Pet.class).addView(View.LOCAL).build();
 
-        assertTrue(containsSystemProperties(petView));
+        assertFalse(containsSystemProperties(petView));
         assertTrue(petView.containsProperty("name"));
 
         View ownerView = ViewBuilder.of(Owner.class).addView(View.LOCAL).build();
-        assertTrue(containsSystemProperties(ownerView));
+        assertFalse(containsSystemProperties(ownerView));
         assertTrue(ownerView.containsProperty("name"));
         assertFalse(ownerView.containsProperty("address"));
     }
@@ -148,7 +153,7 @@ public class ViewBuilderTest {
     public void testBase() {
         View view = ViewBuilder.of(Pet.class).addView(View.BASE).build();
 
-        assertTrue(containsSystemProperties(view));
+        assertFalse(containsSystemProperties(view));
         assertTrue(view.containsProperty("name"));
     }
 
@@ -159,7 +164,7 @@ public class ViewBuilderTest {
                 .add("owner")
                 .build();
 
-        assertTrue(containsSystemProperties(view));
+        assertFalse(containsSystemProperties(view));
         assertTrue(view.containsProperty("name"));
 
         assertNotNull(view.getProperty("owner"));
@@ -175,7 +180,7 @@ public class ViewBuilderTest {
                 .add("owner.address.city")
                 .build();
 
-        assertTrue(containsSystemProperties(view));
+        assertFalse(containsSystemProperties(view));
         assertTrue(view.containsProperty("name"));
 
         assertNotNull(view.getProperty("owner"));

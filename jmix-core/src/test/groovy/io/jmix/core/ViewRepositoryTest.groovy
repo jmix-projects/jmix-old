@@ -19,6 +19,7 @@ package io.jmix.core
 import com.sample.addon1.TestAddon1Configuration
 import com.sample.addon1.entity.TestAddon1Entity
 import com.sample.app.TestAppConfiguration
+import com.sample.app.entity.Pet
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
@@ -30,7 +31,7 @@ class ViewRepositoryTest extends Specification {
     @Inject
     ViewRepository viewRepository
 
-    def "test"() {
+    def "view is deployed from add-on's view.xml file"() {
         when:
 
         def view = viewRepository.getView(TestAddon1Entity, 'test-view-1')
@@ -38,5 +39,25 @@ class ViewRepositoryTest extends Specification {
         then:
 
         view.containsProperty('name')
+    }
+
+    def "predefined views do not contain system properties"() {
+
+        def localView = viewRepository.getView(Pet.class, View.LOCAL)
+
+        expect:
+        !containsSystemProperties(localView)
+
+    }
+
+    private boolean containsSystemProperties(View view) {
+        return view.containsProperty("id") ||
+            view.containsProperty("version") ||
+            view.containsProperty("deleteTs") ||
+            view.containsProperty("deletedBy") ||
+            view.containsProperty("createTs") ||
+            view.containsProperty("createdBy") ||
+            view.containsProperty("updateTs") ||
+            view.containsProperty("updatedBy")
     }
 }

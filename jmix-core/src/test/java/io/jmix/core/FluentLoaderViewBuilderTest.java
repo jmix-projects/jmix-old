@@ -100,7 +100,7 @@ public class FluentLoaderViewBuilderTest {
                 .createLoadContext();
 
         view = loadContext.getView();
-        assertTrue(containsSystemProperties(view));
+        assertFalse(containsSystemProperties(view));
         checkPetView(view);
 
         loadContext = dataManager.load(Pet.class)
@@ -110,7 +110,7 @@ public class FluentLoaderViewBuilderTest {
                 .createLoadContext();
 
         view = loadContext.getView();
-        assertTrue(containsSystemProperties(view));
+        assertFalse(containsSystemProperties(view));
         checkPetView(view);
 
         loadContext = dataManager.load(Pet.class)
@@ -132,7 +132,7 @@ public class FluentLoaderViewBuilderTest {
                 .createLoadContext();
 
         view = loadContext.getView();
-        assertTrue(containsSystemProperties(view));
+        assertFalse(containsSystemProperties(view));
         checkPetView(view);
     }
 
