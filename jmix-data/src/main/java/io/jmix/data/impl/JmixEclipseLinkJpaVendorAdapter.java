@@ -16,6 +16,8 @@
 package io.jmix.data.impl;
 
 import io.jmix.core.EnvironmentUtils;
+import io.jmix.data.persistence.JmixIsNullExpressionOperator;
+import org.eclipse.persistence.expressions.ExpressionOperator;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaDialect;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
@@ -37,6 +39,8 @@ public class JmixEclipseLinkJpaVendorAdapter extends EclipseLinkJpaVendorAdapter
     public JmixEclipseLinkJpaVendorAdapter(Environment environment, JmixEclipseLinkJpaDialect jpaDialect) {
         this.environment = environment;
         this.jpaDialect = jpaDialect;
+
+        ExpressionOperator.addOperator(new JmixIsNullExpressionOperator());
         setGenerateDdl(false);
         setShowSql(true);
     }
