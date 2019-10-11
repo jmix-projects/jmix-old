@@ -17,6 +17,8 @@
 package io.jmix.ui.model
 
 import io.jmix.core.EntityStates
+import io.jmix.core.entity.BaseEntityInternalAccess
+import io.jmix.core.entity.SecurityState
 import io.jmix.core.metamodel.model.Instance
 import io.jmix.ui.test.DataContextSpec
 import io.jmix.ui.test.entity.TestIdentityIdEntity
@@ -614,9 +616,9 @@ class DataContextMergeTest extends DataContextSpec {
 
         where:
 
-        orderId << [uuid(0), uuid(1), uuid(2)]
-        line1Id << [uuid(1), uuid(0), uuid(1)]
-        line2Id << [uuid(2), uuid(2), uuid(0)]
+        orderId << [uuid(1), uuid(2), uuid(3)]
+        line1Id << [uuid(2), uuid(1), uuid(2)]
+        line2Id << [uuid(3), uuid(3), uuid(1)]
     }
 
     def "state changed on persist notifies property listeners when merged back"() {
@@ -677,6 +679,34 @@ class DataContextMergeTest extends DataContextSpec {
 
         context.find(entity).id.get() != null
         0 * listener.propertyChanged({it.property == 'id'}) // is not invoked because id is set in copySystemState() by setDbGeneratedId() which is not enhanced
+    }
+
+    def "system state should not be merged for non root entities"() {
+        DataContext context = factory.createDataContext()
+
+        Order order1 = new Order(amount: 1)
+        Order order2 = new Order(id: order1.id)
+        OrderLine line1 = new OrderLine(quantity: 1, order: order2)
+        order1.orderLines = [line1]
+
+        when: "parent entity has system state and child entity has link to the object without system state"
+
+        def securityState = new SecurityState()
+        BaseEntityInternalAccess.setSecurityState(order1, securityState)
+        BaseEntityInternalAccess.setNew(order1, true)
+        context.merge(order1)
+
+        order2.amount = 4
+        BaseEntityInternalAccess.setNew(order2, false)
+        context.merge(line1)
+
+        then:
+
+        def orderInContext = context.find(Order, order1.id)
+        orderInContext.amount == 4
+        BaseEntityInternalAccess.getSecurityState(orderInContext).is(securityState)
+        BaseEntityInternalAccess.isNew(orderInContext)
+
     }
 
     private UUID uuid(int val) {

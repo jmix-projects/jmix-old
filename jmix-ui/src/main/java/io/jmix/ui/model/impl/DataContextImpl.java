@@ -198,7 +198,7 @@ public class DataContextImpl implements DataContext {
 
         Entity managed = entityMap.get(makeKey(entity));
 
-        if (mergedMap.containsKey(entity)) {
+        if (!isRoot && mergedMap.containsKey(entity)) {
             if (managed != null) {
                 return managed;
             } else {
@@ -255,7 +255,7 @@ public class DataContextImpl implements DataContext {
         boolean srcNew = entityStates.isNew(srcEntity);
         boolean dstNew = entityStates.isNew(dstEntity);
 
-        mergeSystemState(srcEntity, dstEntity);
+        mergeSystemState(srcEntity, dstEntity, isRoot);
 
         MetaClass metaClass = getMetadata().getClassNN(srcEntity.getClass());
 
@@ -342,9 +342,11 @@ public class DataContextImpl implements DataContext {
         }
     }
 
-    protected void mergeSystemState(Entity srcEntity, Entity dstEntity) {
+    protected void mergeSystemState(Entity srcEntity, Entity dstEntity, boolean isRoot) {
         if (dstEntity instanceof BaseGenericIdEntity) {
-            getEntitySystemStateSupport().mergeSystemState((BaseGenericIdEntity) srcEntity, (BaseGenericIdEntity) dstEntity);
+            if (isRoot) {
+                getEntitySystemStateSupport().mergeSystemState((BaseGenericIdEntity) srcEntity, (BaseGenericIdEntity) dstEntity);
+            }
         }
     }
 
