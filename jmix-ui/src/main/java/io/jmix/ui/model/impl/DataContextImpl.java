@@ -22,6 +22,7 @@ import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.IdProxy;
 import io.jmix.core.entity.Versioned;
 import io.jmix.core.impl.StandardSerialization;
 import io.jmix.core.metamodel.model.Instance;
@@ -35,6 +36,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Consumer;
@@ -258,49 +261,50 @@ public class DataContextImpl implements DataContext {
         mergeSystemState(srcEntity, dstEntity, isRoot);
 
         MetaClass metaClass = getMetadata().getClassNN(srcEntity.getClass());
+        MetaProperty primaryKeyProperty = getMetadataTools().getPrimaryKeyProperty(metaClass);
 
         for (MetaProperty property : metaClass.getProperties()) {
             String propertyName = property.getName();
             if (!property.getRange().isClass()                                             // local
-                    && !property.isReadOnly()                                              // read-write
                     && (srcNew || entityStates.isLoaded(srcEntity, propertyName))          // loaded src
                     && (dstNew || entityStates.isLoaded(dstEntity, propertyName))) {       // loaded dst
 
                 Object value = srcEntity.getValue(propertyName);
 
-                // ignore null values in non-root source entities
-                if (!isRoot && value == null) {
+                // ignore null values in non-root source entities and do not try to assign IdProxy
+                if ((!isRoot && value == null)
+                        || (value instanceof IdProxy)) {
                     continue;
                 }
 
-                dstEntity.setValue(propertyName, value);
+                setPropertyValue(dstEntity, property, value);
             }
         }
 
         for (MetaProperty property : metaClass.getProperties()) {
             String propertyName = property.getName();
             if (property.getRange().isClass()                                              // refs and collections
-                    && !property.isReadOnly()                                              // read-write
                     && (srcNew || entityStates.isLoaded(srcEntity, propertyName))          // loaded src
                     && (dstNew || entityStates.isLoaded(dstEntity, propertyName))) {       // loaded dst
 
                 Object value = srcEntity.getValue(propertyName);
 
-                // ignore null values in non-root source entities
-                if (!isRoot && value == null) {
+                // ignore null values in non-root source entities and do not try to assign IdProxy
+                if ((!isRoot && value == null)
+                        || (value instanceof IdProxy)) {
                     continue;
                 }
 
                 if (value == null) {
-                    dstEntity.setValue(propertyName, null);
+                    setPropertyValue(dstEntity, property, null);
                     continue;
                 }
 
                 if (value instanceof Collection) {
                     if (value instanceof List) {
-                        mergeList((List) value, dstEntity, property.getName(), isRoot, mergedMap);
+                        mergeList((List) value, dstEntity, property, isRoot, mergedMap);
                     } else if (value instanceof Set) {
-                        mergeSet((Set) value, dstEntity, property.getName(), isRoot, mergedMap);
+                        mergeSet((Set) value, dstEntity, property, isRoot, mergedMap);
                     } else {
                         throw new UnsupportedOperationException("Unsupported collection type: " + value.getClass().getName());
                     }
@@ -328,6 +332,23 @@ public class DataContextImpl implements DataContext {
         }
     }
 
+    protected void setPropertyValue(Entity entity, MetaProperty property, Object value) {
+        if (!property.isReadOnly()) {
+            entity.setValue(property.getName(), value);
+        } else {
+            AnnotatedElement annotatedElement = property.getAnnotatedElement();
+            if (annotatedElement instanceof Field) {
+                Field field = (Field) annotatedElement;
+                field.setAccessible(true);
+                try {
+                    field.set(entity, value);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException("Unable to set property value", e);
+                }
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     protected void copySystemState(Entity srcEntity, Entity dstEntity) {
         if (dstEntity instanceof BaseGenericIdEntity) {
@@ -350,7 +371,7 @@ public class DataContextImpl implements DataContext {
         }
     }
 
-    protected void mergeList(List<Entity> list, Entity managedEntity, String propertyName, boolean replace,
+    protected void mergeList(List<Entity> list, Entity managedEntity, MetaProperty property, boolean replace,
                              Map<Entity, Entity> mergedMap) {
         if (replace) {
             List<Entity> managedRefs = new ArrayList<>(list.size());
@@ -359,13 +380,13 @@ public class DataContextImpl implements DataContext {
                 managedRefs.add(managedRef);
             }
             List<Entity> dstList = createObservableList(managedRefs, managedEntity);
-            managedEntity.setValue(propertyName, dstList);
+            setPropertyValue(managedEntity, property, dstList);
 
         } else {
-            List<Entity> dstList = managedEntity.getValue(propertyName);
+            List<Entity> dstList = managedEntity.getValue(property.getName());
             if (dstList == null) {
                 dstList = createObservableList(managedEntity);
-                managedEntity.setValue(propertyName, dstList);
+                setPropertyValue(managedEntity, property, dstList);
             }
             if (dstList.size() == 0) {
                 for (Entity srcRef : list) {
@@ -382,7 +403,7 @@ public class DataContextImpl implements DataContext {
         }
     }
 
-    protected void mergeSet(Set<Entity> set, Entity managedEntity, String propertyName, boolean replace,
+    protected void mergeSet(Set<Entity> set, Entity managedEntity, MetaProperty property, boolean replace,
                             Map<Entity, Entity> mergedMap) {
         if (replace) {
             Set<Entity> managedRefs = new LinkedHashSet<>(set.size());
@@ -390,14 +411,14 @@ public class DataContextImpl implements DataContext {
                 Entity managedRef = internalMerge(entity, mergedMap, false);
                 managedRefs.add(managedRef);
             }
-            Set<Entity> dstList = createObservableSet(managedRefs, managedEntity);
-            managedEntity.setValue(propertyName, dstList);
+            Set<Entity> dstSet = createObservableSet(managedRefs, managedEntity);
+            setPropertyValue(managedEntity, property, dstSet);
 
         } else {
-            Set<Entity> dstSet = managedEntity.getValue(propertyName);
+            Set<Entity> dstSet = managedEntity.getValue(property.getName());
             if (dstSet == null) {
                 dstSet = createObservableSet(managedEntity);
-                managedEntity.setValue(propertyName, dstSet);
+                setPropertyValue(managedEntity, property, dstSet);
             }
             if (dstSet.size() == 0) {
                 for (Entity srcRef : set) {

@@ -23,6 +23,7 @@ import io.jmix.core.metamodel.model.Instance
 import io.jmix.ui.test.DataContextSpec
 import io.jmix.ui.test.entity.TestIdentityIdEntity
 import io.jmix.ui.test.entity.TestJpaLifecycleCallbacksEntity
+import io.jmix.ui.test.entity.TestReadOnlyPropertyEntity
 import io.jmix.ui.test.entity.sales.Customer
 import io.jmix.ui.test.entity.sales.Order
 import io.jmix.ui.test.entity.sales.OrderLine
@@ -707,6 +708,20 @@ class DataContextMergeTest extends DataContextSpec {
         BaseEntityInternalAccess.getSecurityState(orderInContext).is(securityState)
         BaseEntityInternalAccess.isNew(orderInContext)
 
+    }
+
+    def "read-only properties are copied on merge"() {
+        DataContext context = factory.createDataContext()
+
+        def entity = new TestReadOnlyPropertyEntity(name: 'name1')
+        entity.initReadOnlyProperties()
+
+        when:
+        def mergedEntity = context.merge(entity)
+
+        then:
+        mergedEntity.getRoName() == 'roValue'
+        mergedEntity.getRoList().size() == 1
     }
 
     private UUID uuid(int val) {
