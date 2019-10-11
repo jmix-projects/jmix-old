@@ -142,17 +142,17 @@ public class MetadataImpl implements Metadata {
         return session.getClassNN(entity.getClass());
     }
 
-    protected <T> T __create(Class<T> entityClass) {
+    protected <T extends Entity> T __create(Class<T> entityClass) {
         @SuppressWarnings("unchecked")
         Class<T> extClass = extendedEntities.getEffectiveClass(entityClass);
         try {
-            T obj = extClass.newInstance();
-            assignIdentifier((Entity) obj);
-            assignUuid((Entity) obj);
-            createEmbedded((Entity) obj);
-            invokePostConstructMethods((Entity) obj);
+            T obj = extClass.getDeclaredConstructor().newInstance();
+            assignIdentifier(obj);
+            assignUuid(obj);
+            createEmbedded(obj);
+            invokePostConstructMethods(obj);
             return obj;
-        } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+        } catch (InstantiationException | InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
             throw new RuntimeException("Unable to create entity instance", e);
         }
     }
@@ -283,7 +283,7 @@ public class MetadataImpl implements Metadata {
     }
 
     @Override
-    public <T> T create(Class<T> entityClass) {
+    public <T extends Entity> T create(Class<T> entityClass) {
         return __create(entityClass);
     }
 
