@@ -19,17 +19,10 @@ package io.jmix.ui.web
 import com.haulmont.cuba.client.ClientUserSession
 import com.haulmont.cuba.client.testsupport.TestUserSessionSource
 import com.haulmont.cuba.core.app.PersistenceManagerService
-import com.haulmont.cuba.gui.UiComponents
-import com.haulmont.cuba.gui.model.DataComponents
-import com.haulmont.cuba.gui.theme.ThemeConstants
 import com.haulmont.cuba.security.global.UserSession
 import com.haulmont.cuba.web.App
-import com.haulmont.cuba.web.AppUI
 import com.haulmont.cuba.web.Connection
-import com.haulmont.cuba.web.DefaultApp
 import com.haulmont.cuba.web.container.CubaTestContainer
-import com.haulmont.cuba.web.security.ConnectionImpl
-import com.haulmont.cuba.web.sys.AppCookies
 import com.haulmont.cuba.web.testsupport.TestContainer
 import com.haulmont.cuba.web.testsupport.proxy.TestServiceProxy
 import com.haulmont.cuba.web.testsupport.ui.TestConnectorTracker
@@ -39,6 +32,14 @@ import com.haulmont.cuba.web.testsupport.ui.TestVaadinSession
 import com.vaadin.server.VaadinSession
 import com.vaadin.server.WebBrowser
 import com.vaadin.ui.UI
+import io.jmix.core.*
+import io.jmix.ui.AppUI
+import io.jmix.ui.DefaultApp
+import io.jmix.ui.UiComponents
+import io.jmix.ui.model.DataComponents
+import io.jmix.ui.sys.AppCookies
+import io.jmix.ui.sys.ConnectionImpl
+import io.jmix.ui.theme.ThemeConstants
 import org.apache.commons.lang3.reflect.FieldUtils
 import org.junit.ClassRule
 import spock.lang.Shared
@@ -74,14 +75,11 @@ class WebSpec extends Specification {
         sessionSource = cont.getBean(UserSessionSource) as TestUserSessionSource
 
         def serverSession = sessionSource.createTestSession()
-        def session = new ClientUserSession(serverSession)
         session.setAuthenticated(false)
 
         sessionSource.setSession(session)
 
         // all the rest is required for web components
-
-        TestServiceProxy.mock(PersistenceManagerService, new TestPersistenceManagerService())
 
         def injectFactory = cont.getApplicationContext().getAutowireCapableBeanFactory()
 

@@ -18,7 +18,7 @@ package io.jmix.ui.web.components.browserframe
 
 import com.haulmont.cuba.gui.components.BrowserFrame
 import com.haulmont.cuba.gui.screen.OpenMode
-import spec.cuba.web.UiScreenSpec
+import io.jmix.ui.web.UiScreenSpec
 import spec.cuba.web.components.browserframe.screens.*
 
 @SuppressWarnings("GroovyAssignabilityCheck")

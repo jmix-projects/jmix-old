@@ -27,6 +27,7 @@ import com.haulmont.cuba.gui.sys.UiControllersConfiguration
 import com.haulmont.cuba.security.app.UserManagementService
 import com.haulmont.cuba.web.testsupport.proxy.TestServiceProxy
 import com.haulmont.cuba.web.testsupport.ui.TestCachingStrategy
+import io.jmix.ui.sys.UiControllersConfiguration
 
 @SuppressWarnings(["GroovyAccessibility", "GroovyAssignabilityCheck"])
 class UiScreenSpec extends WebSpec {

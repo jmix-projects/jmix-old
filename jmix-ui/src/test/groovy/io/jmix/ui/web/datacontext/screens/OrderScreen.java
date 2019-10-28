@@ -30,6 +30,8 @@ import com.haulmont.cuba.gui.screen.UiController;
 import com.haulmont.cuba.gui.screen.UiDescriptor;
 import com.haulmont.cuba.web.testmodel.sales.Order;
 import com.haulmont.cuba.web.testmodel.sales.OrderLine;
+import io.jmix.ui.model.DataComponents;
+import io.jmix.ui.screen.Screen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

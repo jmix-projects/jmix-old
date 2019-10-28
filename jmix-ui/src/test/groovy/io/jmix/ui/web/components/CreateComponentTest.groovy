@@ -16,11 +16,9 @@
 
 package io.jmix.ui.web.components
 
-import com.haulmont.cuba.gui.Facets
-import com.haulmont.cuba.gui.components.*
-import com.haulmont.cuba.gui.components.mainwindow.*
-import com.haulmont.cuba.web.gui.components.JavaScriptComponent
-import spec.cuba.web.WebSpec
+
+import io.jmix.ui.web.WebSpec
+
 
 @SuppressWarnings("GroovyAccessibility")
 class CreateComponentTest extends WebSpec {
