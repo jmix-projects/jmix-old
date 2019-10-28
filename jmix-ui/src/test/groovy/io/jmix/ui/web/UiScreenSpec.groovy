@@ -16,17 +16,6 @@
 
 package io.jmix.ui.web
 
-import com.google.common.collect.HashMultimap
-import com.haulmont.cuba.client.sys.cache.ClientCacheManager
-import com.haulmont.cuba.client.sys.cache.DynamicAttributesCacheStrategy
-import com.haulmont.cuba.client.testsupport.TestUserSessionSource
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesCache
-import com.haulmont.cuba.core.global.UserSessionSource
-import com.haulmont.cuba.gui.config.WindowConfig
-import com.haulmont.cuba.gui.sys.UiControllersConfiguration
-import com.haulmont.cuba.security.app.UserManagementService
-import com.haulmont.cuba.web.testsupport.proxy.TestServiceProxy
-import com.haulmont.cuba.web.testsupport.ui.TestCachingStrategy
 import io.jmix.ui.sys.UiControllersConfiguration
 
 @SuppressWarnings(["GroovyAccessibility", "GroovyAssignabilityCheck"])
@@ -34,17 +23,11 @@ class UiScreenSpec extends WebSpec {
 
     void setup() {
         def clientCacheManager = cont.getBean(ClientCacheManager)
-        def dynamicAttributesCacheStrategy = new TestCachingStrategy()
-        def dynamicAttributesCache =
-                new DynamicAttributesCache(HashMultimap.create(), [:], new Date())
 
-        dynamicAttributesCacheStrategy.setData(dynamicAttributesCache)
-
-        clientCacheManager.addCachedObject(DynamicAttributesCacheStrategy.NAME, dynamicAttributesCacheStrategy)
-
-        TestServiceProxy.mock(UserManagementService, Mock(UserManagementService) {
-            getSubstitutedUsers(_) >> Collections.emptyList()
-        })
+// TODO VM
+//        TestServiceProxy.mock(UserManagementService, Mock(UserManagementService) {
+//            getSubstitutedUsers(_) >> Collections.emptyList()
+//        })
     }
 
     protected void exportScreensPackages(List<String> packages) {
@@ -66,14 +49,11 @@ class UiScreenSpec extends WebSpec {
     }
 
     void cleanup() {
-        TestServiceProxy.clear()
 
         resetScreensConfig()
 
-        def clientCacheManager = cont.getBean(ClientCacheManager)
-        clientCacheManager.cache.remove(DynamicAttributesCacheStrategy.NAME)
-
-        def userSessionSource = (TestUserSessionSource) cont.getBean(UserSessionSource.class)
-        userSessionSource.setSession(null)
+// TODO VM
+//        def userSessionSource = (TestUserSessionSource) cont.getBean(UserSessionSource.class)
+//        userSessionSource.setSession(null)
     }
 }

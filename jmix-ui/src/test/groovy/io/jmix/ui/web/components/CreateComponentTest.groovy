@@ -16,7 +16,11 @@
 
 package io.jmix.ui.web.components
 
-
+import io.jmix.ui.components.DialogWindow
+import io.jmix.ui.components.Fragment
+import io.jmix.ui.components.RootWindow
+import io.jmix.ui.components.TabWindow
+import io.jmix.ui.components.VBoxLayout
 import io.jmix.ui.web.WebSpec
 
 
