@@ -16,13 +16,13 @@
 
 package io.jmix.ui.builders;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.components.HasValue;
-import com.haulmont.cuba.gui.components.ListComponent;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.model.Nested;
-import com.haulmont.cuba.gui.screen.*;
+
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.Screens;
+import io.jmix.ui.components.HasValue;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.screen.*;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * Lookup screen builder that is not aware of concrete screen class. It's {@link #build()} method returns {@link Screen}.
@@ -162,7 +162,7 @@ public class LookupBuilder<E extends Entity> {
 
     /**
      * Sets {@code CollectionContainer} and returns the builder for chaining.
-     * <p>The container is updated after the lookup screen is closed. If the container is {@link Nested},
+     * <p>The container is updated after the lookup screen is closed. If the container is {@link io.jmix.ui.model.Nested},
      * the framework automatically initializes the reference to the parent entity and sets up data contexts
      * for added One-To-Many and Many-To-Many relations.
      */

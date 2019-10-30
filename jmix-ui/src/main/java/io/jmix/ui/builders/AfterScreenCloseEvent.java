@@ -16,8 +16,9 @@
 
 package io.jmix.ui.builders;
 
-import com.haulmont.cuba.gui.screen.CloseAction;
-import com.haulmont.cuba.gui.screen.Screen;
+
+import io.jmix.ui.screen.CloseAction;
+import io.jmix.ui.screen.Screen;
 
 import java.util.EventObject;
 

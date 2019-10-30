@@ -16,15 +16,15 @@
 
 package io.jmix.ui.builders;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.components.HasValue;
-import com.haulmont.cuba.gui.components.ListComponent;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.screen.LookupScreen;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.ScreenOptions;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.Screens;
+import io.jmix.ui.components.HasValue;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.screen.LookupScreen;
+import io.jmix.ui.screen.OpenMode;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.ScreenOptions;
 
 import java.util.Collection;
 import java.util.function.Consumer;

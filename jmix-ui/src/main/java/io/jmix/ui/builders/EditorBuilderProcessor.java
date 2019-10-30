@@ -16,40 +16,31 @@
 
 package io.jmix.ui.builders;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.DevelopmentException;
-import com.haulmont.cuba.core.global.ExtendedEntities;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.WindowParams;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.data.DataUnit;
-import com.haulmont.cuba.gui.components.data.HasValueSource;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.ContainerDataUnit;
-import com.haulmont.cuba.gui.components.data.meta.EntityOptions;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.model.DataContext;
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.model.Nested;
-import com.haulmont.cuba.gui.screen.*;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
+import io.jmix.core.DevelopmentException;
+import io.jmix.core.ExtendedEntities;
+import io.jmix.core.Metadata;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.ClientConfig;
+import io.jmix.ui.Screens;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.WindowInfo;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.data.*;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.model.DataContext;
+import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.model.Nested;
+import io.jmix.ui.screen.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.function.Consumer;
 
-import static com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext;
+import static io.jmix.ui.screen.UiControllerUtils.getScreenContext;
 
 @Component("cuba_EditorBuilderProcessor")
 public class EditorBuilderProcessor {
@@ -123,8 +114,8 @@ public class EditorBuilderProcessor {
                         ct.replaceItem(committedEntity);
                     }
                 }
-                if (listComponent instanceof com.haulmont.cuba.gui.components.Component.Focusable) {
-                    ((com.haulmont.cuba.gui.components.Component.Focusable) listComponent).focus();
+                if (listComponent instanceof io.jmix.ui.components.Component.Focusable) {
+                    ((io.jmix.ui.components.Component.Focusable) listComponent).focus();
                 }
             });
         }
@@ -166,8 +157,8 @@ public class EditorBuilderProcessor {
                     }
                 }
 
-                if (field instanceof com.haulmont.cuba.gui.components.Component.Focusable) {
-                    ((com.haulmont.cuba.gui.components.Component.Focusable) field).focus();
+                if (field instanceof io.jmix.ui.components.Component.Focusable) {
+                    ((io.jmix.ui.components.Component.Focusable) field).focus();
                 }
             });
         }
@@ -273,16 +264,19 @@ public class EditorBuilderProcessor {
                 throw new IllegalArgumentException("Screen id is not set");
             }
 
+            // TODO VM legacy
             // legacy screens support
             WindowInfo windowInfo = windowConfig.getWindowInfo(editorScreenId);
             ScreenOptions options = builder.getOptions();
 
-            if (LegacyFrame.class.isAssignableFrom(windowInfo.getControllerClass())
-                    && options == FrameOwner.NO_OPTIONS) {
-                HashMap<String, Object> paramsMap = new HashMap<>();
-                paramsMap.put(WindowParams.ITEM.name(), entity);
-                options = new MapScreenOptions(paramsMap);
-            }
+
+//
+//            if (LegacyFrame.class.isAssignableFrom(windowInfo.getControllerClass())
+//                    && options == FrameOwner.NO_OPTIONS) {
+//                HashMap<String, Object> paramsMap = new HashMap<>();
+//                paramsMap.put(WindowParams.ITEM.name(), entity);
+//                options = new MapScreenOptions(paramsMap);
+//            }
 
             screen = screens.create(editorScreenId, builder.getLaunchMode(), options);
         }

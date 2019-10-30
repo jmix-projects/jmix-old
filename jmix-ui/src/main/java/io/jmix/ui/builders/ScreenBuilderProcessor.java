@@ -16,14 +16,14 @@
 
 package io.jmix.ui.builders;
 
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.Screen;
+import io.jmix.ui.Screens;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.Screen;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Consumer;
 
-import static com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext;
+import static io.jmix.ui.screen.UiControllerUtils.getScreenContext;
 
 @Component("cuba_ScreenBuilderProcessor")
 public class ScreenBuilderProcessor {

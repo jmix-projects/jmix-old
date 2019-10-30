@@ -16,10 +16,10 @@
 
 package io.jmix.ui.builders;
 
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.ScreenOptions;
+import io.jmix.ui.Screens;
+import io.jmix.ui.screen.OpenMode;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.ScreenOptions;
 
 import java.util.function.Consumer;
 

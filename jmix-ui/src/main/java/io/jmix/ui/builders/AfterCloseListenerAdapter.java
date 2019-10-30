@@ -16,7 +16,8 @@
 
 package io.jmix.ui.builders;
 
-import com.haulmont.cuba.gui.screen.Screen;
+
+import io.jmix.ui.screen.Screen;
 
 import java.util.Objects;
 import java.util.function.Consumer;

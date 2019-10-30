@@ -16,15 +16,16 @@
 
 package io.jmix.ui.builders;
 
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.ScreenOptions;
+
+import io.jmix.ui.Screens;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.OpenMode;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.ScreenOptions;
 
 import java.util.function.Function;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * Screen builder that is not aware of concrete screen class. It's {@link #build()} method returns {@link Screen}.

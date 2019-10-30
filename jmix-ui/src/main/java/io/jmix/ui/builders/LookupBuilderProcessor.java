@@ -16,26 +16,28 @@
 
 package io.jmix.ui.builders;
 
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.ExtendedEntities;
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.components.HasValue;
-import com.haulmont.cuba.gui.components.ListComponent;
-import com.haulmont.cuba.gui.components.LookupPickerField;
-import com.haulmont.cuba.gui.components.SupportsUserAction;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.meta.ContainerDataUnit;
-import com.haulmont.cuba.gui.components.data.meta.EntityOptions;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.model.DataContext;
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.model.Nested;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.LookupScreen;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
+
+import io.jmix.core.ExtendedEntities;
+import io.jmix.core.Metadata;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.ui.Screens;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.components.HasValue;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.LookupPickerField;
+import io.jmix.ui.components.SupportsUserAction;
+import io.jmix.ui.components.data.ContainerDataUnit;
+import io.jmix.ui.components.data.EntityOptions;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.model.DataContext;
+import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.model.Nested;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.LookupScreen;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiControllerUtils;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -44,7 +46,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext;
+import static io.jmix.ui.screen.UiControllerUtils.getScreenContext;
 
 @Component("cuba_LookupBuilderProcessor")
 public class LookupBuilderProcessor {
@@ -53,6 +55,8 @@ public class LookupBuilderProcessor {
     protected WindowConfig windowConfig;
     @Inject
     protected ExtendedEntities extendedEntities;
+    @Inject
+    protected Metadata metadata;
 
     @SuppressWarnings("unchecked")
     public <E extends Entity> Screen buildLookup(LookupBuilder<E> builder) {
@@ -71,10 +75,10 @@ public class LookupBuilderProcessor {
         if (builder.getField() != null) {
             HasValue<E> field = builder.getField();
 
-            if (field instanceof com.haulmont.cuba.gui.components.Component.Focusable) {
+            if (field instanceof io.jmix.ui.components.Component.Focusable) {
                 screen.addAfterCloseListener(event -> {
                     // move focus to owner
-                    ((com.haulmont.cuba.gui.components.Component.Focusable) field).focus();
+                    ((io.jmix.ui.components.Component.Focusable) field).focus();
                 });
             }
             lookupScreen.setSelectHandler(items ->
@@ -87,10 +91,10 @@ public class LookupBuilderProcessor {
         if (builder.getListComponent() != null) {
             ListComponent<E> listComponent = builder.getListComponent();
 
-            if (listComponent instanceof com.haulmont.cuba.gui.components.Component.Focusable) {
+            if (listComponent instanceof io.jmix.ui.components.Component.Focusable) {
                 screen.addAfterCloseListener(event -> {
                     // move focus to owner
-                    ((com.haulmont.cuba.gui.components.Component.Focusable) listComponent).focus();
+                    ((io.jmix.ui.components.Component.Focusable) listComponent).focus();
                 });
             }
 
@@ -212,7 +216,7 @@ public class LookupBuilderProcessor {
             String property = ((Nested) collectionDc).getProperty();
             masterItem = masterDc.getItem();
 
-            MetaProperty metaProperty = masterItem.getMetaClass().getPropertyNN(property);
+            MetaProperty metaProperty = metadata.getClass(masterItem).getPropertyNN(property);
             inverseMetaProperty = metaProperty.getInverse();
 
             if (inverseMetaProperty != null
