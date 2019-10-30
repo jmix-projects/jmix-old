@@ -16,23 +16,38 @@
 
 package io.jmix.samples.ui;
 
+import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
+import io.jmix.ui.sys.UiControllersConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+
+import java.util.Collections;
 
 @SpringBootApplication
-public class HelloWorldApplication implements CommandLineRunner {
+public class SampleUIApplication implements CommandLineRunner {
 
 	@Autowired
 	private Greeter greeter;
 
 	public static void main(String[] args) {
-		SpringApplication.run(HelloWorldApplication.class, args);
+		SpringApplication.run(SampleUIApplication.class, args);
 	}
 
 	@Override
 	public void run(String... args) {
 		System.out.println(greeter.sayHello("there"));
+	}
+
+	@Bean("my_UiControllers")
+	public UiControllersConfiguration screens(ApplicationContext applicationContext,
+											  AnnotationScanMetadataReaderFactory metadataReaderFactory) {
+		UiControllersConfiguration uiControllers
+				= new UiControllersConfiguration(applicationContext, metadataReaderFactory);
+		uiControllers.setBasePackages(Collections.singletonList("io.jmix.samples.ui"));
+		return uiControllers;
 	}
 }
