@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.xml;
+package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.core.DevelopmentException;
 import io.jmix.ui.components.Component;
@@ -24,6 +24,8 @@ import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.model.ScreenData;
 import io.jmix.ui.model.impl.ScreenDataXmlLoader;
 import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.xml.FacetLoader;
+import io.jmix.ui.xml.layout.ComponentRootLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

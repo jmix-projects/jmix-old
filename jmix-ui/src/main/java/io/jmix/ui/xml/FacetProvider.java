@@ -17,7 +17,7 @@
 package io.jmix.ui.xml;
 
 import io.jmix.ui.components.Facet;
-import io.jmix.ui.xml.ComponentLoader.ComponentContext;
+import io.jmix.ui.xml.layout.ComponentLoader.ComponentContext;
 import org.dom4j.Element;
 
 /**

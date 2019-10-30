@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.xml;
+package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.core.BeanLocator;
 import io.jmix.ui.components.Fragment;
 import io.jmix.ui.components.Window;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.UiComponents;
+import io.jmix.ui.xml.layout.ComponentLoader;
+import io.jmix.ui.xml.layout.LayoutLoaderConfig;
 import org.dom4j.Element;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;

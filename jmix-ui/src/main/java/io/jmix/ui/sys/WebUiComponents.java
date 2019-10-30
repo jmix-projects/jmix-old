@@ -21,10 +21,7 @@ import io.jmix.core.BeanLocator;
 import io.jmix.core.DevelopmentException;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.ui.components.*;
-import io.jmix.ui.components.impl.WebButton;
-import io.jmix.ui.components.impl.WebFragment;
-import io.jmix.ui.components.impl.WebLabel;
-import io.jmix.ui.components.impl.WebRootWindow;
+import io.jmix.ui.components.impl.*;
 import io.jmix.ui.UiComponents;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -62,6 +59,20 @@ public class WebUiComponents implements UiComponents {
         classes.put(Button.NAME, WebButton.class);
 
         // todo components
+        classes.put(VBoxLayout.NAME, WebVBoxLayout.class);
+
+        /* Main window components */
+
+//        classes.put(AppMenu.NAME, WebAppMenu.class);
+        classes.put(AppWorkArea.NAME, WebAppWorkArea.class);
+//        classes.put(UserActionsButton.NAME, WebUserActionsButton.class);
+//        classes.put(LogoutButton.NAME, WebLogoutButton.class);
+//        classes.put(NewWindowButton.NAME, WebNewWindowButton.class);
+//        classes.put(UserIndicator.NAME, WebUserIndicator.class);
+//        classes.put(FoldersPane.NAME, WebFoldersPane.class);
+//        classes.put(FtsField.NAME, WebFtsField.class);
+//        classes.put(TimeZoneIndicator.NAME, WebTimeZoneIndicator.class);
+//        classes.put(SideMenu.NAME, WebSideMenu.class);
     }
 
     @SuppressWarnings("unchecked")

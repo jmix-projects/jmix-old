@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.xml;
+package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.ui.components.Label;
+import io.jmix.ui.xml.layout.loaders.AbstractComponentLoader;
 import org.apache.commons.lang3.StringUtils;
 
 public class LabelLoader extends AbstractComponentLoader<Label> {

@@ -34,7 +34,7 @@ import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.sys.ControllerUtils;
 import io.jmix.ui.theme.ThemeConstants;
-import io.jmix.ui.xml.ComponentLoader;
+import io.jmix.ui.xml.layout.ComponentLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;

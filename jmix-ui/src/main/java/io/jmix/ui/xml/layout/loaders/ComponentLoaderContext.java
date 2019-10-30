@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.xml;
+package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.model.ScreenData;
 import io.jmix.ui.screen.ScreenOptions;
 import io.jmix.ui.sys.UiControllerProperty;
-import io.jmix.ui.xml.ComponentLoader.InitTask;
-import io.jmix.ui.xml.ComponentLoader.InjectTask;
-import io.jmix.ui.xml.ComponentLoader.PostInitTask;
+import io.jmix.ui.xml.layout.ComponentLoader;
+import io.jmix.ui.xml.layout.ComponentLoader.InitTask;
+import io.jmix.ui.xml.layout.ComponentLoader.InjectTask;
+import io.jmix.ui.xml.layout.ComponentLoader.PostInitTask;
 
 import java.util.ArrayList;
 import java.util.Collections;

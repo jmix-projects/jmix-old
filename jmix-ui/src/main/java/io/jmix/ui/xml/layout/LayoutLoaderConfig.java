@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.xml;
+package io.jmix.ui.xml.layout;
 
+import io.jmix.ui.components.AppWorkArea;
 import io.jmix.ui.components.Button;
 import io.jmix.ui.components.Label;
+import io.jmix.ui.components.VBoxLayout;
+import io.jmix.ui.xml.layout.loaders.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -36,8 +39,10 @@ public class LayoutLoaderConfig {
     }
 
     protected void initStandardLoaders() {
+        loaders.put(VBoxLayout.NAME, VBoxLayoutLoader.class);
         loaders.put(Label.NAME, LabelLoader.class);
         loaders.put(Button.NAME, ButtonLoader.class);
+        loaders.put(AppWorkArea.NAME, AppWorkAreaLoader.class);
     }
 
     public void registerLoader(String tagName, Class<? extends ComponentLoader> aClass) {

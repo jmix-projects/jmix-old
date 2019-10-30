@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.xml;
+package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
@@ -41,6 +41,8 @@ import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
+import io.jmix.ui.xml.layout.ComponentLoader;
+import io.jmix.ui.xml.layout.LayoutLoaderConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.dom4j.Attribute;

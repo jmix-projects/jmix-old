@@ -13,11 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.xml;
+package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Strings;
 import io.jmix.ui.components.*;
 import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.xml.layout.ComponentLoader;
+import io.jmix.ui.xml.layout.loaders.AbstractComponentLoader;
+import io.jmix.ui.xml.layout.loaders.LayoutLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.xml;
+package io.jmix.ui.xml.layout;
 
 import io.jmix.ui.components.Component;
+import io.jmix.ui.xml.layout.ComponentLoader;
 import org.dom4j.Element;
 
 /**

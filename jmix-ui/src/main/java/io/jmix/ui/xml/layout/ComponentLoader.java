@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.xml;
+package io.jmix.ui.xml.layout;
 
 import io.jmix.core.BeanLocator;
 import io.jmix.core.MessageTools;
