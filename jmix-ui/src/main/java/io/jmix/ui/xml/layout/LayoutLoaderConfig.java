@@ -15,10 +15,7 @@
  */
 package io.jmix.ui.xml.layout;
 
-import io.jmix.ui.components.AppWorkArea;
-import io.jmix.ui.components.Button;
-import io.jmix.ui.components.Label;
-import io.jmix.ui.components.VBoxLayout;
+import io.jmix.ui.components.*;
 import io.jmix.ui.xml.layout.loaders.*;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +39,7 @@ public class LayoutLoaderConfig {
         loaders.put(VBoxLayout.NAME, VBoxLayoutLoader.class);
         loaders.put(Label.NAME, LabelLoader.class);
         loaders.put(Button.NAME, ButtonLoader.class);
+        loaders.put(LookupField.NAME, LookupFieldLoader.class);
         loaders.put(AppWorkArea.NAME, AppWorkAreaLoader.class);
     }
 

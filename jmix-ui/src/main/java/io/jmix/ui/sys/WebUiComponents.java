@@ -60,6 +60,7 @@ public class WebUiComponents implements UiComponents {
 
         // todo components
         classes.put(VBoxLayout.NAME, WebVBoxLayout.class);
+        classes.put(LookupField.NAME, WebLookupField.class);
 
         /* Main window components */
 

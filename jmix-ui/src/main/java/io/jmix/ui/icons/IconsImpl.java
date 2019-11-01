@@ -109,7 +109,8 @@ public class IconsImpl implements Icons {
         if (StringUtils.isNotEmpty(themeIcon))
             return themeIcon;
 
-        return iconsCache.getUnchecked(icon);
+//        return iconsCache.getUnchecked(icon); // todo vm
+        return null;
     }
 
     protected String getThemeIcon(String iconName) {
