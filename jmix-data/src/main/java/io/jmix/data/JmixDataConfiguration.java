@@ -27,7 +27,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
@@ -47,13 +46,6 @@ public class JmixDataConfiguration {
     }
 
     @Bean
-    protected DataSource dataSource() {
-        JndiObjectFactoryBean factoryBean = new JndiObjectFactoryBean();
-        factoryBean.setJndiName("java:comp/env/jdbc/JmixDataSource");
-        return (DataSource) factoryBean.getObject();
-    }
-
-    @Bean
     protected LocalContainerEntityManagerFactoryBean entityManagerFactory(
             DataSource dataSource, Metadata metadata, DbmsSpecifics dbmsSpecifics,
             JmixEclipseLinkJpaVendorAdapter jpaVendorAdapter) {
@@ -65,10 +57,10 @@ public class JmixDataConfiguration {
     }
 
     @Bean
-    protected JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+    protected JpaTransactionManager transactionManager(DataSource dataSource, EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
-        transactionManager.setDataSource(dataSource());
+        transactionManager.setDataSource(dataSource);
         return transactionManager;
     }
 

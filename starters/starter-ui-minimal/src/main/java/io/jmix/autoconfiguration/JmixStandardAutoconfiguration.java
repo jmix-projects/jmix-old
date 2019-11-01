@@ -17,12 +17,26 @@
 package io.jmix.autoconfiguration;
 
 import io.jmix.core.JmixCoreConfiguration;
+import io.jmix.data.JmixDataConfiguration;
 import io.jmix.security.JmixSecurityConfiguration;
 import io.jmix.ui.JmixUiConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.jndi.JndiObjectFactoryBean;
+
+import javax.sql.DataSource;
 
 @Configuration
-@Import({JmixCoreConfiguration.class, JmixSecurityConfiguration.class, JmixUiConfiguration.class})
+@Import({JmixCoreConfiguration.class, JmixDataConfiguration.class, JmixSecurityConfiguration.class, JmixUiConfiguration.class})
 public class JmixStandardAutoconfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean(DataSource.class)
+    protected DataSource dataSource() {
+        JndiObjectFactoryBean factoryBean = new JndiObjectFactoryBean();
+        factoryBean.setJndiName("java:comp/env/jdbc/JmixDataSource");
+        return (DataSource) factoryBean.getObject();
+    }
 }
