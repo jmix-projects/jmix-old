@@ -16,18 +16,21 @@
 
 package io.jmix.samples.ui.screen;
 
+import io.jmix.core.AppBeans;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.Metadata;
 import io.jmix.core.impl.MetadataImpl;
-import io.jmix.ui.Notifications;
-import io.jmix.ui.UiComponents;
+import io.jmix.samples.ui.screen.user.UserBrowse;
+import io.jmix.ui.*;
+import io.jmix.ui.builders.ScreenBuilder;
+import io.jmix.ui.components.AppWorkArea;
 import io.jmix.ui.components.Button;
 import io.jmix.ui.components.Label;
-import io.jmix.ui.screen.Screen;
-import io.jmix.ui.screen.Subscribe;
-import io.jmix.ui.screen.UiController;
-import io.jmix.ui.screen.UiDescriptor;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.screen.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 /**
@@ -35,13 +38,15 @@ import javax.inject.Inject;
  */
 @UiDescriptor("custom-main-screen.xml")
 @UiController("custom-main")
-public class CustomMainScreen extends Screen {
+public class CustomMainScreen extends Screen implements Window.HasWorkArea {
     @Inject
     protected Notifications notifications;
     @Inject
     private Metadata metadata;
     @Inject
     private UiComponents uiComponents;
+    @Inject
+    private ScreenBuilders screenBuilders;
 
 
     @Subscribe
@@ -50,10 +55,19 @@ public class CustomMainScreen extends Screen {
                 .withCaption("Welcome to Custom main screen")
                 .show();
 
-        Label<String> label = uiComponents.create(Label.TYPE_STRING);
-        label.setValue("");
+        Button button = uiComponents.create(Button.class);
+        button.setCaption("Users");
+        button.addClickListener(clickEvent -> {
+            screenBuilders
+                    .screen(this)
+                    .withScreenClass(UserBrowse.class)
+                    .withLaunchMode(OpenMode.ROOT)
+                    .show();
+        });
+        getWindow().add(button);
 
-        getWindow().add(label);
+        ClientConfig clientConfig = AppBeans.get(ConfigInterfaces.class).getConfig(ClientConfig.class);
+        clientConfig.getCloseShortcut();
     }
 
     @Subscribe("hiBtn")
@@ -61,5 +75,11 @@ public class CustomMainScreen extends Screen {
         notifications.create(Notifications.NotificationType.SYSTEM)
                 .withCaption("Still works...")
                 .show();
+    }
+
+    @Nullable
+    @Override
+    public AppWorkArea getWorkArea() {
+        return (AppWorkArea) getWindow().getComponent("workArea");
     }
 }

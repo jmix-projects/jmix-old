@@ -20,5 +20,10 @@
         <label value="Hello JMIX!" stylename="h2"/>
 
         <button id="hiBtn" caption="Hi !" stylename="primary"/>
+        <workArea id="workArea"
+                  height="100%">
+            <initialLayout spacing="true" margin="true">
+            </initialLayout>
+        </workArea>
     </layout>
 </window>
