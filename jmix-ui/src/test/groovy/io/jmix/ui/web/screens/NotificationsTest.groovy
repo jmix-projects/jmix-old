@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.screens
 
-import com.haulmont.cuba.gui.components.ContentMode
-import com.haulmont.cuba.gui.executors.BackgroundWorker
-import com.haulmont.cuba.web.AppUI
+import io.jmix.ui.components.ContentMode
+import io.jmix.ui.executors.BackgroundWorker
+import io.jmix.ui.appUI
 import com.haulmont.cuba.web.sys.WebNotifications
 import com.vaadin.shared.Position
 import com.vaadin.ui.Notification
@@ -45,17 +45,17 @@ class NotificationsTest extends Specification {
         notification
                 .withCaption('Greeting')
                 .withDescription('Hello world')
-                .withPosition(com.haulmont.cuba.gui.Notifications.Position.BOTTOM_CENTER)
+                .withPosition(io.jmix.ui.Notifications.Position.BOTTOM_CENTER)
                 .withContentMode(ContentMode.HTML)
-                .withType(com.haulmont.cuba.gui.Notifications.NotificationType.WARNING)
+                .withType(io.jmix.ui.Notifications.NotificationType.WARNING)
                 .withStyleName('open-notification')
 
         then:
 
         notification.caption == 'Greeting'
         notification.description == 'Hello world'
-        notification.position == com.haulmont.cuba.gui.Notifications.Position.BOTTOM_CENTER
-        notification.type == com.haulmont.cuba.gui.Notifications.NotificationType.WARNING
+        notification.position == io.jmix.ui.Notifications.Position.BOTTOM_CENTER
+        notification.type == io.jmix.ui.Notifications.NotificationType.WARNING
         notification.contentMode == ContentMode.HTML
         notification.styleName == 'open-notification'
 

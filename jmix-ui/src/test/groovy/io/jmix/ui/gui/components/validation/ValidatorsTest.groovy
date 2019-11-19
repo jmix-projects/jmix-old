@@ -16,13 +16,13 @@
 
 package io.jmix.ui.gui.components.validation
 
-import com.haulmont.chile.core.datatypes.DatatypeRegistry
-import com.haulmont.chile.core.datatypes.impl.DateTimeDatatype
-import com.haulmont.chile.core.datatypes.impl.LocalTimeDatatype
-import com.haulmont.cuba.core.global.TimeSource
-import com.haulmont.cuba.gui.components.*
-import com.haulmont.cuba.gui.components.validation.*
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.core.metamodel.datatypes.DatatypeRegistry
+import io.jmix.core.metamodel.datatypes.impl.DateTimeDatatype
+import io.jmix.core.metamodel.datatypes.impl.LocalTimeDatatype
+import io.jmix.core.TimeSource
+import io.jmix.ui.components.*
+import io.jmix.ui.components.validation.*
+import io.jmix.ui.screen.OpenMode
 import spec.cuba.gui.components.validation.screens.ValidatorsScreen
 import spec.cuba.web.UiScreenSpec
 

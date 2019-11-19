@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.clipboardtrigger
 
-import com.haulmont.cuba.gui.components.ClipboardTrigger
-import com.haulmont.cuba.gui.screen.OpenMode
-import com.haulmont.cuba.web.app.main.MainScreen
+import io.jmix.ui.components.ClipboardTrigger
+import io.jmix.ui.screen.OpenMode
+import io.jmix.ui.app.main.MainScreen
 import spec.cuba.web.UiScreenSpec
 import spec.cuba.web.clipboardtrigger.screens.ScreenWithClipboardTrigger
 
@@ -26,7 +26,7 @@ import spec.cuba.web.clipboardtrigger.screens.ScreenWithClipboardTrigger
 class ClipboardTriggerFacetTest extends UiScreenSpec {
 
     def setup() {
-        exportScreensPackages(['spec.cuba.web.clipboardtrigger.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.clipboardtrigger.screens', 'io.jmix.ui.app.main'])
     }
 
     def "open screen with ClipboardTrigger"() {

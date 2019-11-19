@@ -16,12 +16,12 @@
 
 package io.jmix.ui.web.components.composite
 
-import com.haulmont.cuba.gui.ScreenBuilders
-import com.haulmont.cuba.gui.components.Button
-import com.haulmont.cuba.gui.model.InstanceContainer
-import com.haulmont.cuba.gui.screen.OpenMode
-import com.haulmont.cuba.gui.screen.UiControllerUtils
-import com.haulmont.cuba.gui.xml.layout.LayoutLoaderConfig
+import io.jmix.ui.ScreenBuilders
+import io.jmix.ui.components.Button
+import io.jmix.ui.model.InstanceContainer
+import io.jmix.ui.screen.OpenMode
+import io.jmix.ui.screen.UiControllerUtils
+import io.jmix.ui.xml.layout.LayoutLoaderConfig
 import com.haulmont.cuba.web.gui.WebUiComponents
 import com.haulmont.cuba.web.testmodel.sales.OrderLine
 import spec.cuba.web.UiScreenSpec
@@ -37,7 +37,7 @@ import spec.cuba.web.components.composite.screens.CompositeFieldScreen
 class CompositeComponentTest extends UiScreenSpec {
 
     void setup() {
-        exportScreensPackages(['spec.cuba.web.components.composite.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.components.composite.screens', 'io.jmix.ui.app.main'])
 
         // Register composite components
         ((WebUiComponents) uiComponents).register(TestStepperField.NAME, TestStepperField)

@@ -16,8 +16,8 @@
 
 package io.jmix.ui.web.datacontext
 
-import com.haulmont.cuba.core.sys.serialization.Serialization
-import com.haulmont.cuba.core.sys.serialization.StandardSerialization
+import io.jmix.core.sys.serialization.Serialization
+import io.jmix.core.sys.serialization.StandardSerialization
 import com.haulmont.cuba.security.entity.Role
 import com.haulmont.cuba.security.entity.User
 import com.haulmont.cuba.security.entity.UserRole

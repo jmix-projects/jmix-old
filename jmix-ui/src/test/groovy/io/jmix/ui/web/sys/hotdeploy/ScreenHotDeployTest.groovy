@@ -16,10 +16,10 @@
 
 package io.jmix.ui.web.sys.hotdeploy
 
-import com.haulmont.cuba.core.sys.AppContext
-import com.haulmont.cuba.gui.NoSuchScreenException
-import com.haulmont.cuba.gui.config.WindowConfig
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.core.sys.AppContext
+import io.jmix.ui.NoSuchScreenException
+import io.jmix.ui.config.WindowConfig
+import io.jmix.ui.screen.OpenMode
 import spec.cuba.web.UiScreenSpec
 
 class ScreenHotDeployTest extends UiScreenSpec {
@@ -27,8 +27,8 @@ class ScreenHotDeployTest extends UiScreenSpec {
     protected static final String SCREEN_TO_HOT_DEPLOY = '''
 package spec.cuba.web.sys.hotdeploy.screens;
 
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiController;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiController;
 
 @UiController("HotDeployTestScreen")
 public class HotDeployTestScreen extends Screen {

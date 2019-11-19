@@ -17,12 +17,12 @@
 package io.jmix.ui.web.menu
 
 import com.haulmont.bali.util.Dom4j
-import com.haulmont.cuba.core.app.DataService
-import com.haulmont.cuba.core.global.LoadContext
-import com.haulmont.cuba.gui.app.security.user.edit.UserEditor
-import com.haulmont.cuba.gui.config.MenuItem
-import com.haulmont.cuba.gui.config.MenuItemCommands
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.core.app.DataService
+import io.jmix.core.LoadContext
+import io.jmix.ui.app.security.user.edit.UserEditor
+import io.jmix.ui.config.MenuItem
+import io.jmix.ui.config.MenuItemCommands
+import io.jmix.ui.screen.OpenMode
 import com.haulmont.cuba.security.entity.User
 import spec.cuba.web.UiScreenSpec
 import spec.cuba.web.menu.commandtargets.*
@@ -30,7 +30,7 @@ import spec.cuba.web.menu.commandtargets.*
 class MenuItemCommandsTest extends UiScreenSpec {
 
     void setup() {
-        exportScreensPackages(['spec.cuba.web.menu.commandtargets', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.menu.commandtargets', 'io.jmix.ui.app.main'])
 
         TestMenuItemConsumer.launched.set(false)
         TestMenuItemConsumer.beanLocatorSet.set(false)

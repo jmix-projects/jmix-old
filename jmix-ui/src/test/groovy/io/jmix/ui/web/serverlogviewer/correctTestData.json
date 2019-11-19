@@ -84,7 +84,7 @@
     "pattern": "at com[\\.]sun[\\.]proxy[\\.][\\$]Proxy"
   },
   {
-    "line": "12:36:27.955 DEBUG [http-nio-8080-exec-7] com.haulmont.cuba.gui.theme.ThemeConstantsRepository",
+    "line": "12:36:27.955 DEBUG [http-nio-8080-exec-7] io.jmix.ui.theme.ThemeConstantsRepository",
     "pattern": "http-nio-8080-exec-\\d*"
   },
   {

@@ -16,8 +16,8 @@
 
 package io.jmix.ui.web.components.grouptable
 
-import com.haulmont.cuba.gui.components.GroupTable
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.ui.components.GroupTable
+import io.jmix.ui.screen.OpenMode
 import spec.cuba.web.UiScreenSpec
 import spec.cuba.web.components.grouptable.screens.GroupTableLoadColumnsByIncludeScreen
 

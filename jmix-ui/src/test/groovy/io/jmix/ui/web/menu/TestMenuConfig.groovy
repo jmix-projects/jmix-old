@@ -17,9 +17,9 @@
 package io.jmix.ui.web.menu
 
 import com.haulmont.bali.util.Dom4j
-import com.haulmont.cuba.core.global.Messages
-import com.haulmont.cuba.gui.config.MenuConfig
-import com.haulmont.cuba.gui.config.MenuItem
+import io.jmix.core.Messages
+import io.jmix.ui.config.MenuConfig
+import io.jmix.ui.config.MenuItem
 
 class TestMenuConfig extends MenuConfig {
 

@@ -16,7 +16,7 @@
 
 <window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd">
     <data>
-        <instance id="taskDc" class="com.haulmont.cuba.core.entity.ScheduledTask" view="_local">
+        <instance id="taskDc" class="io.jmix.core.entity.ScheduledTask" view="_local">
             <loader/>
         </instance>
     </data>

@@ -16,10 +16,10 @@
 
 package io.jmix.ui.web.fragments.screens;
 
-import com.haulmont.cuba.gui.Fragments;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.Subscribe;
-import com.haulmont.cuba.gui.screen.UiController;
+import io.jmix.ui.Fragments;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.Subscribe;
+import io.jmix.ui.screen.UiController;
 
 import javax.inject.Inject;
 

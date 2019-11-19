@@ -17,12 +17,12 @@
 package io.jmix.ui.web.components.timefield
 
 import com.haulmont.chile.core.annotations.JavaClass
-import com.haulmont.chile.core.datatypes.Datatype
-import com.haulmont.chile.core.datatypes.impl.LocalTimeDatatype
-import com.haulmont.chile.core.datatypes.impl.OffsetTimeDatatype
-import com.haulmont.chile.core.datatypes.impl.TimeDatatype
-import com.haulmont.cuba.gui.components.TimeField
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.core.metamodel.datatypes.Datatype
+import io.jmix.core.metamodel.datatypes.impl.LocalTimeDatatype
+import io.jmix.core.metamodel.datatypes.impl.OffsetTimeDatatype
+import io.jmix.core.metamodel.datatypes.impl.TimeDatatype
+import io.jmix.ui.components.TimeField
+import io.jmix.ui.screen.OpenMode
 import spec.cuba.web.UiScreenSpec
 import spec.cuba.web.components.timefield.screens.TimeFieldDatatypeScreen
 
@@ -30,7 +30,7 @@ import spec.cuba.web.components.timefield.screens.TimeFieldDatatypeScreen
 class TimeFieldDatatypeTest extends UiScreenSpec {
 
     void setup() {
-        exportScreensPackages(['spec.cuba.web.components.timefield.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.components.timefield.screens', 'io.jmix.ui.app.main'])
     }
 
     def "datatype is applied from the screen descriptor"(String id, Class<Datatype> datatypeClass) {

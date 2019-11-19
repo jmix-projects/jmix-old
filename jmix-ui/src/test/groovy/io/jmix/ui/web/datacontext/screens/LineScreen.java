@@ -16,13 +16,13 @@
 
 package io.jmix.ui.web.datacontext.screens;
 
-import com.haulmont.cuba.gui.components.Table;
-import com.haulmont.cuba.gui.components.TextField;
-import com.haulmont.cuba.gui.model.CollectionPropertyContainer;
-import com.haulmont.cuba.gui.model.DataComponents;
-import com.haulmont.cuba.gui.model.DataContext;
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.screen.*;
+import io.jmix.ui.components.Table;
+import io.jmix.ui.components.TextField;
+import io.jmix.ui.model.CollectionPropertyContainer;
+import io.jmix.ui.model.DataComponents;
+import io.jmix.ui.model.DataContext;
+import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.screen.*;
 import com.haulmont.cuba.web.testmodel.sales.OrderLine;
 import com.haulmont.cuba.web.testmodel.sales.OrderLineParam;
 import org.slf4j.Logger;

@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.components
 
-import com.haulmont.cuba.gui.components.TextField
-import com.haulmont.cuba.gui.components.data.value.ContainerValueSource
-import com.haulmont.cuba.gui.model.InstanceContainer
+import io.jmix.ui.components.TextField
+import io.jmix.ui.components.data.value.ContainerValueSource
+import io.jmix.ui.model.InstanceContainer
 import com.haulmont.cuba.web.testmodel.sales.Customer
 import com.haulmont.cuba.web.testmodel.sales.Order
 import com.haulmont.cuba.web.testmodel.sales.OrderLine

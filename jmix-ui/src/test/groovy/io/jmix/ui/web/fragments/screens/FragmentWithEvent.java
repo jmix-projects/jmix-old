@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.fragments.screens;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.screen.ScreenFragment;
-import com.haulmont.cuba.gui.screen.UiController;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.screen.ScreenFragment;
+import io.jmix.ui.screen.UiController;
 
 import java.util.EventObject;
 import java.util.function.Consumer;

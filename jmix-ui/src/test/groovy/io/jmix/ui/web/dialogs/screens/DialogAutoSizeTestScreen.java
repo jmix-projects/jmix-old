@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.dialogs.screens;
 
-import com.haulmont.cuba.gui.screen.DialogMode;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiController;
+import io.jmix.ui.screen.DialogMode;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiController;
 
 @UiController
 @DialogMode(forceDialog = true, width = "AUTO", height = "AUTO")

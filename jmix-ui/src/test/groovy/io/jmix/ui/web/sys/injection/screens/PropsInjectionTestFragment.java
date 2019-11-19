@@ -16,11 +16,11 @@
 
 package io.jmix.ui.web.sys.injection.screens;
 
-import com.haulmont.cuba.gui.components.Label;
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.screen.ScreenFragment;
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.screen.UiDescriptor;
+import io.jmix.ui.components.Label;
+import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.screen.ScreenFragment;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 
 @UiController("PropsInjectionTestFragment")
 @UiDescriptor("props-injection-test-fragment.xml")

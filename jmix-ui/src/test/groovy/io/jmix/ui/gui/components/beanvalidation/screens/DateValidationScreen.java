@@ -16,9 +16,9 @@
 
 package io.jmix.ui.gui.components.beanvalidation.screens;
 
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.screen.UiDescriptor;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 
 @UiDescriptor("date-validation-screen.xml")
 @UiController

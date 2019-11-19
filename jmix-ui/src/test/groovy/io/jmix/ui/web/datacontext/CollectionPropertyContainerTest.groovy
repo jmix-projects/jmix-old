@@ -17,8 +17,8 @@
 package io.jmix.ui.web.datacontext
 
 
-import com.haulmont.cuba.gui.model.CollectionPropertyContainer
-import com.haulmont.cuba.gui.model.InstanceContainer
+import io.jmix.ui.model.CollectionPropertyContainer
+import io.jmix.ui.model.InstanceContainer
 import com.haulmont.cuba.web.testmodel.sales.Order
 import com.haulmont.cuba.web.testmodel.sales.OrderLine
 import spec.cuba.web.WebSpec

@@ -16,9 +16,9 @@
 
 package io.jmix.ui.gui.components.validation.screens;
 
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.screen.UiDescriptor;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 
 @UiDescriptor("validators-screen.xml")
 @UiController

@@ -17,10 +17,10 @@
 package io.jmix.ui.web.components.datepicker
 
 import com.haulmont.chile.core.annotations.JavaClass
-import com.haulmont.chile.core.datatypes.Datatype
-import com.haulmont.chile.core.datatypes.impl.*
-import com.haulmont.cuba.gui.components.DatePicker
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.core.metamodel.datatypes.Datatype
+import io.jmix.core.metamodel.datatypes.impl.*
+import io.jmix.ui.components.DatePicker
+import io.jmix.ui.screen.OpenMode
 import spec.cuba.web.UiScreenSpec
 import spec.cuba.web.components.datepicker.screens.DatePickerDatatypeScreen
 
@@ -28,7 +28,7 @@ class DatePickerDatatypeTest extends UiScreenSpec {
 
     @SuppressWarnings(["GroovyAssignabilityCheck", "GroovyAccessibility"])
     void setup() {
-        exportScreensPackages(['spec.cuba.web.components.datepicker.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.components.datepicker.screens', 'io.jmix.ui.app.main'])
     }
 
     def "datatype is applied from the screen descriptor"(String id, Class<Datatype> datatypeClass) {

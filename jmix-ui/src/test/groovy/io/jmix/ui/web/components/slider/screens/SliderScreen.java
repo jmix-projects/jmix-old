@@ -16,14 +16,14 @@
 
 package io.jmix.ui.web.components.slider.screens;
 
-import com.haulmont.cuba.core.entity.ScheduledTask;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.gui.components.Slider;
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.Subscribe;
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.screen.UiDescriptor;
+import io.jmix.core.entity.ScheduledTask;
+import io.jmix.core.Metadata;
+import io.jmix.ui.components.Slider;
+import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.Subscribe;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;

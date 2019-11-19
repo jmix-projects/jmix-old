@@ -17,15 +17,15 @@
 package io.jmix.ui.web.datacontext
 
 import com.haulmont.cuba.client.testsupport.TestSupport
-import com.haulmont.cuba.core.app.DataService
-import com.haulmont.cuba.core.entity.Entity
-import com.haulmont.cuba.core.global.CommitContext
-import com.haulmont.cuba.core.global.EntityStates
-import com.haulmont.cuba.core.global.Metadata
-import com.haulmont.cuba.core.sys.persistence.CubaEntityFetchGroup
-import com.haulmont.cuba.gui.model.DataComponents
-import com.haulmont.cuba.gui.model.DataContext
-import com.haulmont.cuba.gui.model.impl.NoopDataContext
+import io.jmix.core.app.DataService
+import io.jmix.core.entity.Entity
+import io.jmix.core.CommitContext
+import io.jmix.core.EntityStates
+import io.jmix.core.Metadata
+import io.jmix.core.sys.persistence.CubaEntityFetchGroup
+import io.jmix.ui.model.DataComponents
+import io.jmix.ui.model.DataContext
+import io.jmix.ui.model.impl.NoopDataContext
 import com.haulmont.cuba.security.entity.Role
 import com.haulmont.cuba.security.entity.User
 import com.haulmont.cuba.security.entity.UserRole
@@ -420,7 +420,7 @@ class DataContextTest extends Specification {
 
         then:
 
-        order1_1.orderLines instanceof com.haulmont.cuba.gui.model.impl.ObservableList
+        order1_1.orderLines instanceof io.jmix.ui.model.impl.ObservableList
 
         when:
 
@@ -429,7 +429,7 @@ class DataContextTest extends Specification {
         then:
 
         order2_1.is(order1_1)
-        order2_1.orderLines instanceof com.haulmont.cuba.gui.model.impl.ObservableList
+        order2_1.orderLines instanceof io.jmix.ui.model.impl.ObservableList
 
         when:
 

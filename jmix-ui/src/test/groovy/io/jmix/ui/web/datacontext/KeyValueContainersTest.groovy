@@ -16,14 +16,14 @@
 
 package io.jmix.ui.web.datacontext
 
-import com.haulmont.cuba.core.app.DataService
-import com.haulmont.cuba.core.entity.KeyValueEntity
-import com.haulmont.cuba.gui.components.TextField
-import com.haulmont.cuba.gui.components.data.value.ContainerValueSource
-import com.haulmont.cuba.gui.model.KeyValueCollectionContainer
-import com.haulmont.cuba.gui.model.KeyValueCollectionLoader
-import com.haulmont.cuba.gui.model.KeyValueContainer
-import com.haulmont.cuba.gui.model.KeyValueInstanceLoader
+import io.jmix.core.app.DataService
+import io.jmix.core.entity.KeyValueEntity
+import io.jmix.ui.components.TextField
+import io.jmix.ui.components.data.value.ContainerValueSource
+import io.jmix.ui.model.KeyValueCollectionContainer
+import io.jmix.ui.model.KeyValueCollectionLoader
+import io.jmix.ui.model.KeyValueContainer
+import io.jmix.ui.model.KeyValueInstanceLoader
 import com.haulmont.cuba.web.testmodel.sales.Customer
 import com.haulmont.cuba.web.testmodel.sales.Order
 import com.haulmont.cuba.web.testsupport.proxy.TestServiceProxy

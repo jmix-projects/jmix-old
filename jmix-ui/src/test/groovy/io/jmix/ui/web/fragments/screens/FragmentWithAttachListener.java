@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.fragments.screens;
 
-import com.haulmont.cuba.gui.screen.ScreenFragment;
-import com.haulmont.cuba.gui.screen.Subscribe;
-import com.haulmont.cuba.gui.screen.UiController;
+import io.jmix.ui.screen.ScreenFragment;
+import io.jmix.ui.screen.Subscribe;
+import io.jmix.ui.screen.UiController;
 
 import java.util.ArrayList;
 import java.util.List;

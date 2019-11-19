@@ -16,12 +16,12 @@
 
 package io.jmix.ui.web.datacontext
 
-import com.haulmont.cuba.core.app.DataService
-import com.haulmont.cuba.core.global.DataManager
-import com.haulmont.cuba.core.global.Metadata
-import com.haulmont.cuba.gui.model.DataComponents
-import com.haulmont.cuba.gui.model.InstanceContainer
-import com.haulmont.cuba.gui.model.InstanceLoader
+import io.jmix.core.app.DataService
+import io.jmix.core.DataManager
+import io.jmix.core.Metadata
+import io.jmix.ui.model.DataComponents
+import io.jmix.ui.model.InstanceContainer
+import io.jmix.ui.model.InstanceLoader
 import com.haulmont.cuba.web.container.CubaTestContainer
 import com.haulmont.cuba.web.testmodel.datacontext.Foo
 import com.haulmont.cuba.web.testsupport.TestContainer

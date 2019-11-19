@@ -16,10 +16,10 @@
 
 package io.jmix.ui.web.menu
 
-import com.haulmont.cuba.core.global.MessageTools
-import com.haulmont.cuba.gui.components.mainwindow.AppMenu
-import com.haulmont.cuba.gui.config.MenuConfig
-import com.haulmont.cuba.gui.config.MenuItem
+import io.jmix.core.MessageTools
+import io.jmix.ui.components.mainwindow.AppMenu
+import io.jmix.ui.config.MenuConfig
+import io.jmix.ui.config.MenuItem
 import com.haulmont.cuba.security.global.UserSession
 import com.haulmont.cuba.web.gui.components.mainwindow.WebAppMenu
 import com.haulmont.cuba.web.sys.MenuBuilder

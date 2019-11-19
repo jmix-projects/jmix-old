@@ -16,9 +16,9 @@
 
 package io.jmix.ui.gui.components.beanvalidation
 
-import com.haulmont.cuba.core.global.DateTimeTransformations
-import com.haulmont.cuba.gui.components.DatePicker
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.core.DateTimeTransformations
+import io.jmix.ui.components.DatePicker
+import io.jmix.ui.screen.OpenMode
 import com.haulmont.cuba.security.app.UserManagementService
 import com.haulmont.cuba.web.testsupport.proxy.TestServiceProxy
 import spec.cuba.gui.components.beanvalidation.screens.DateValidationScreen

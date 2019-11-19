@@ -16,8 +16,8 @@
 
 package io.jmix.ui.web.components.optionsgroup
 
-import com.haulmont.cuba.gui.components.OptionsGroup
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.ui.components.OptionsGroup
+import io.jmix.ui.screen.OpenMode
 import com.haulmont.cuba.web.testmodel.sales.OrderLine
 import com.haulmont.cuba.web.testmodel.sales.Product
 import spec.cuba.web.UiScreenSpec
@@ -29,7 +29,7 @@ class OptionsGroupTest extends UiScreenSpec {
 
     @SuppressWarnings(['GroovyAssignabilityCheck', 'GroovyAccessibility'])
     void setup() {
-        exportScreensPackages(['spec.cuba.web.components.optionsgroup.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.components.optionsgroup.screens', 'io.jmix.ui.app.main'])
     }
 
     def 'List value is propagated to ValueSource from multiselect OptionsGroup'() {

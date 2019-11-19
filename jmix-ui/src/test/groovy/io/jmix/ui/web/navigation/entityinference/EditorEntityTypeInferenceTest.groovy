@@ -16,8 +16,8 @@
 
 package io.jmix.ui.web.navigation.entityinference
 
-import com.haulmont.cuba.gui.config.WindowInfo
-import com.haulmont.cuba.gui.screen.FrameOwner
+import io.jmix.ui.config.WindowInfo
+import io.jmix.ui.screen.FrameOwner
 import com.haulmont.cuba.security.entity.User
 import com.haulmont.cuba.web.sys.navigation.EditorTypeExtractor
 import org.dom4j.tree.BaseElement

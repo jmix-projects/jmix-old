@@ -16,7 +16,7 @@
 
 package io.jmix.ui.web.navigation.entityinference.testscreens.withtype.byclass;
 
-import com.haulmont.cuba.gui.components.AbstractEditor;
+import io.jmix.ui.components.AbstractEditor;
 import com.haulmont.cuba.security.entity.User;
 
 public class ScreenExtAbstEditor extends AbstractEditor<User> {

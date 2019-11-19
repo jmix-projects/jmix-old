@@ -16,21 +16,21 @@
 
 package io.jmix.ui.web.fragments
 
-import com.haulmont.cuba.gui.components.Fragment
-import com.haulmont.cuba.gui.screen.OpenMode
-import com.haulmont.cuba.web.app.main.MainScreen
+import io.jmix.ui.components.Fragment
+import io.jmix.ui.screen.OpenMode
+import io.jmix.ui.app.main.MainScreen
 import spec.cuba.web.UiScreenSpec
 import spec.cuba.web.fragments.screens.FragmentWithAttachListener
 import spec.cuba.web.fragments.screens.ScreenWithFragment
 import spec.cuba.web.fragments.screens.ScreenWithXmlFragment
 
-import static com.haulmont.cuba.gui.screen.ScreenFragment.*
+import static io.jmix.ui.screen.ScreenFragment.*
 
 @SuppressWarnings(["GroovyAccessibility", "GroovyAssignabilityCheck"])
 class FragmentAttachTest extends UiScreenSpec {
 
     def setup() {
-        exportScreensPackages(['spec.cuba.web.fragments.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.fragments.screens', 'io.jmix.ui.app.main'])
     }
 
     def "open screen with declarative fragment"() {

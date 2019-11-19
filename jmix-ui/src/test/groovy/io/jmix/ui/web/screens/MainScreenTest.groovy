@@ -16,7 +16,7 @@
 
 package io.jmix.ui.web.screens
 
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.ui.screen.OpenMode
 import spec.cuba.web.UiScreenSpec
 
 import java.util.function.Consumer

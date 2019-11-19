@@ -17,8 +17,8 @@
 package io.jmix.ui.web.view.screens;
 
 
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.screen.*;
+import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.screen.*;
 import com.haulmont.cuba.security.entity.User;
 
 import javax.inject.Inject;

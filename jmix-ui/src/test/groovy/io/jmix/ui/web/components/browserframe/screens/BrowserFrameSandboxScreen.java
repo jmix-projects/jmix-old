@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.components.browserframe.screens;
 
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.screen.UiDescriptor;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 
 @UiController
 @UiDescriptor("browser-frame-sandbox-screen.xml")

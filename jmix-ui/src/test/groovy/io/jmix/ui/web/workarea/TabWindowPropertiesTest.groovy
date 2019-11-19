@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.workarea
 
-import com.haulmont.cuba.gui.components.Window
-import com.haulmont.cuba.gui.icons.CubaIcon
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.ui.components.Window
+import io.jmix.ui.icons.CubaIcon
+import io.jmix.ui.screen.OpenMode
 import com.haulmont.cuba.web.gui.components.WebTabWindow
 import com.vaadin.server.FontIcon
 import com.vaadin.ui.TabSheet
@@ -31,7 +31,7 @@ import javax.annotation.Nonnull
 class TabWindowPropertiesTest extends UiScreenSpec {
 
     void setup() {
-        exportScreensPackages(['spec.cuba.web.workarea.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.workarea.screens', 'io.jmix.ui.app.main'])
     }
 
     def "change window caption from screen"() {

@@ -16,13 +16,13 @@
 
 package io.jmix.ui.web.dataloadcoordinator.screens;
 
-import com.haulmont.cuba.core.global.LoadContext;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.gui.components.DataLoadCoordinator;
-import com.haulmont.cuba.gui.components.PickerField;
-import com.haulmont.cuba.gui.components.TextField;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.screen.*;
+import io.jmix.core.LoadContext;
+import io.jmix.core.Metadata;
+import io.jmix.ui.components.DataLoadCoordinator;
+import io.jmix.ui.components.PickerField;
+import io.jmix.ui.components.TextField;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.screen.*;
 import com.haulmont.cuba.web.testmodel.petclinic.Owner;
 import com.haulmont.cuba.web.testmodel.petclinic.OwnerCategory;
 import com.haulmont.cuba.web.testmodel.petclinic.Pet;

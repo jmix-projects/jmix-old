@@ -16,10 +16,10 @@
 
 package io.jmix.ui.web.components.composite.screens;
 
-import com.haulmont.cuba.gui.screen.EditedEntityContainer;
-import com.haulmont.cuba.gui.screen.StandardEditor;
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.screen.UiDescriptor;
+import io.jmix.ui.screen.EditedEntityContainer;
+import io.jmix.ui.screen.StandardEditor;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 import com.haulmont.cuba.web.testmodel.sales.OrderLine;
 
 @UiController

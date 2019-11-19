@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.navigation.entityinference.testscreens.notype.byinterface;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.screen.EditorScreen;
-import com.haulmont.cuba.gui.screen.Screen;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.screen.EditorScreen;
+import io.jmix.ui.screen.Screen;
 
 public class BaseEditorScreenNT extends Screen implements EditorScreen {
 

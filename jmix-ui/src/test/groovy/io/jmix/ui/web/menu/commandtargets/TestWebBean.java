@@ -16,8 +16,8 @@
 
 package io.jmix.ui.web.menu.commandtargets;
 
-import com.haulmont.cuba.gui.screen.event.ScreenClosedEvent;
-import com.haulmont.cuba.gui.screen.event.ScreenOpenedEvent;
+import io.jmix.ui.screen.event.ScreenClosedEvent;
+import io.jmix.ui.screen.event.ScreenOpenedEvent;
 import com.haulmont.cuba.web.gui.components.mainwindow.WebAppWorkArea.WorkAreaTabChangedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

@@ -16,10 +16,10 @@
 
 package io.jmix.ui.web.datacontext
 
-import com.haulmont.cuba.core.app.DataService
-import com.haulmont.cuba.core.global.Sort
-import com.haulmont.cuba.gui.model.CollectionContainer
-import com.haulmont.cuba.gui.model.CollectionLoader
+import io.jmix.core.app.DataService
+import io.jmix.core.Sort
+import io.jmix.ui.model.CollectionContainer
+import io.jmix.ui.model.CollectionLoader
 import com.haulmont.cuba.web.testmodel.sales.Product
 import com.haulmont.cuba.web.testsupport.proxy.TestServiceProxy
 import spec.cuba.web.WebSpec

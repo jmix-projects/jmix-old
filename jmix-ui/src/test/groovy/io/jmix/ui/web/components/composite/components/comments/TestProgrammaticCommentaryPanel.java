@@ -17,15 +17,15 @@
 package io.jmix.ui.web.components.composite.components.comments;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.MetadataTools;
-import com.haulmont.cuba.gui.UiComponents;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.data.DataGridItems;
-import com.haulmont.cuba.gui.components.data.datagrid.ContainerDataGridItems;
-import com.haulmont.cuba.gui.components.data.meta.ContainerDataUnit;
-import com.haulmont.cuba.gui.components.sys.ShowInfoAction;
-import com.haulmont.cuba.gui.model.CollectionContainer;
+import io.jmix.core.Messages;
+import io.jmix.core.MetadataTools;
+import io.jmix.ui.UiComponents;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.data.DataGridItems;
+import io.jmix.ui.components.data.datagrid.ContainerDataGridItems;
+import io.jmix.ui.components.data.meta.ContainerDataUnit;
+import io.jmix.ui.components.sys.ShowInfoAction;
+import io.jmix.ui.model.CollectionContainer;
 import com.haulmont.cuba.web.gui.components.CompositeComponent;
 import com.haulmont.cuba.web.gui.components.CompositeWithCaption;
 import com.haulmont.cuba.web.testmodel.compositecomponent.Comment;
@@ -168,7 +168,7 @@ public class TestProgrammaticCommentaryPanel extends CompositeComponent<VBoxLayo
             CollectionContainer<Comment> container = ((ContainerDataUnit<Comment>) items).getContainer();
             container.getMutableItems().add(comment);
         } else {
-            throw new IllegalStateException("Items must implement com.haulmont.cuba.gui.components.data.meta.ContainerDataUnit");
+            throw new IllegalStateException("Items must implement io.jmix.ui.components.data.meta.ContainerDataUnit");
         }
     }
 

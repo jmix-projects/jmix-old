@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.masterdetail
 
-import com.haulmont.cuba.gui.components.Table
-import com.haulmont.cuba.gui.screen.MasterDetailScreen
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.ui.components.Table
+import io.jmix.ui.screen.MasterDetailScreen
+import io.jmix.ui.screen.OpenMode
 import spec.cuba.web.UiScreenSpec
 import spec.cuba.web.masterdetail.screens.UserMasterDetail
 
@@ -28,7 +28,7 @@ import java.util.function.Consumer
 class MasterDetailInitEntityTest extends UiScreenSpec {
 
     void setup() {
-        exportScreensPackages(['spec.cuba.web.masterdetail.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.masterdetail.screens', 'io.jmix.ui.app.main'])
     }
 
     def "MasterDetailScreen fires InitEntityEvent on Create"() {

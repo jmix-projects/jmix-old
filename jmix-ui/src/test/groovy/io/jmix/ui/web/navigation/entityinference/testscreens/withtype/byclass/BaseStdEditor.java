@@ -16,7 +16,7 @@
 
 package io.jmix.ui.web.navigation.entityinference.testscreens.withtype.byclass;
 
-import com.haulmont.cuba.gui.screen.StandardEditor;
+import io.jmix.ui.screen.StandardEditor;
 import com.haulmont.cuba.security.entity.User;
 
 public class BaseStdEditor extends StandardEditor<User> {

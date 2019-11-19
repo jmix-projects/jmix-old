@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.dataloadcoordinator
 
-import com.haulmont.cuba.gui.components.DataLoadCoordinator
-import com.haulmont.cuba.gui.screen.OpenMode
-import com.haulmont.cuba.web.app.main.MainScreen
+import io.jmix.ui.components.DataLoadCoordinator
+import io.jmix.ui.screen.OpenMode
+import io.jmix.ui.app.main.MainScreen
 import com.haulmont.cuba.web.testmodel.petclinic.Address
 import com.haulmont.cuba.web.testmodel.petclinic.Owner
 import com.haulmont.cuba.web.testmodel.petclinic.OwnerCategory
@@ -30,7 +30,7 @@ import spock.lang.Unroll
 class DataLoadCoordinatorFacetTest extends UiScreenSpec {
 
     def setup() {
-        exportScreensPackages(['spec.cuba.web.dataloadcoordinator.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.dataloadcoordinator.screens', 'io.jmix.ui.app.main'])
     }
 
     @Unroll

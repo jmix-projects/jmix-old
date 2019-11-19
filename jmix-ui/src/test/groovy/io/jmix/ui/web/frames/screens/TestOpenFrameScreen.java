@@ -16,8 +16,8 @@
 
 package io.jmix.ui.web.frames.screens;
 
-import com.haulmont.cuba.gui.app.security.user.browse.UserBrowser;
-import com.haulmont.cuba.gui.components.AbstractWindow;
+import io.jmix.ui.app.security.user.browse.UserBrowser;
+import io.jmix.ui.components.AbstractWindow;
 
 import java.util.Map;
 

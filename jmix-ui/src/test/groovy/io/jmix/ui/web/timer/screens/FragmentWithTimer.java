@@ -16,11 +16,11 @@
 
 package io.jmix.ui.web.timer.screens;
 
-import com.haulmont.cuba.gui.components.Timer;
-import com.haulmont.cuba.gui.screen.ScreenFragment;
-import com.haulmont.cuba.gui.screen.Subscribe;
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.screen.UiDescriptor;
+import io.jmix.ui.components.Timer;
+import io.jmix.ui.screen.ScreenFragment;
+import io.jmix.ui.screen.Subscribe;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 
 import javax.inject.Inject;
 

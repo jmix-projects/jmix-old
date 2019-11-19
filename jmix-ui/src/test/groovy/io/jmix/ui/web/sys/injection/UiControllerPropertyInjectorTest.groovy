@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.sys.injection
 
-import com.haulmont.cuba.gui.components.Label
-import com.haulmont.cuba.gui.model.InstanceContainer
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.ui.components.Label
+import io.jmix.ui.model.InstanceContainer
+import io.jmix.ui.screen.OpenMode
 import spec.cuba.web.UiScreenSpec
 import spec.cuba.web.sys.injection.screens.PropsInjectionTestScreen
 
@@ -26,7 +26,7 @@ import spec.cuba.web.sys.injection.screens.PropsInjectionTestScreen
 class UiControllerPropertyInjectorTest extends UiScreenSpec {
 
     void setup() {
-        exportScreensPackages(['com.haulmont.cuba.web.app.main',
+        exportScreensPackages(['io.jmix.ui.app.main',
                                'spec.cuba.web.sys.injection.screens'])
     }
 

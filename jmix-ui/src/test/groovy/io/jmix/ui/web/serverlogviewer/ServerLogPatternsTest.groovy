@@ -18,9 +18,9 @@ package io.jmix.ui.web.serverlogviewer
 
 import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
-import com.haulmont.cuba.core.global.Resources
-import com.haulmont.cuba.core.sys.ResourcesImpl
-import com.haulmont.cuba.web.app.ui.serverlogviewer.ServerLogWindow
+import io.jmix.core.Resources
+import io.jmix.core.sys.ResourcesImpl
+import io.jmix.ui.app.ui.serverlogviewer.ServerLogWindow
 import spock.lang.Shared
 import spock.lang.Specification
 

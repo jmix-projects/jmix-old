@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.datacontext
 
-import com.haulmont.cuba.core.global.DataManager
-import com.haulmont.cuba.core.global.Metadata
-import com.haulmont.cuba.gui.model.DataComponents
+import io.jmix.core.DataManager
+import io.jmix.core.Metadata
+import io.jmix.ui.model.DataComponents
 import com.haulmont.cuba.web.container.CubaTestContainer
 import com.haulmont.cuba.web.testmodel.sales.OrderLine
 import com.haulmont.cuba.web.testmodel.sales.Product

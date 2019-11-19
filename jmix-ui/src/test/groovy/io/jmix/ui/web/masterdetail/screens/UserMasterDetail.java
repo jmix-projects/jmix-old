@@ -16,7 +16,7 @@
 
 package io.jmix.ui.web.masterdetail.screens;
 
-import com.haulmont.cuba.gui.screen.*;
+import io.jmix.ui.screen.*;
 import com.haulmont.cuba.security.entity.User;
 
 @UiController

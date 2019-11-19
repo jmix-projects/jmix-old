@@ -17,28 +17,28 @@
 package io.jmix.ui.web.dialogs
 
 import com.google.common.base.Strings
-import com.haulmont.chile.core.datatypes.DatatypeRegistry
-import com.haulmont.chile.core.datatypes.impl.*
-import com.haulmont.cuba.gui.app.core.inputdialog.DialogActions
-import com.haulmont.cuba.gui.app.core.inputdialog.InputDialog
-import com.haulmont.cuba.gui.app.core.inputdialog.InputParameter
-import com.haulmont.cuba.gui.components.*
-import com.haulmont.cuba.gui.components.inputdialog.InputDialogAction
-import com.haulmont.cuba.gui.screen.OpenMode
-import com.haulmont.cuba.gui.screen.Screen
+import io.jmix.core.metamodel.datatypes.DatatypeRegistry
+import io.jmix.core.metamodel.datatypes.impl.*
+import io.jmix.ui.app.core.inputdialog.DialogActions
+import io.jmix.ui.app.core.inputdialog.InputDialog
+import io.jmix.ui.app.core.inputdialog.InputParameter
+import io.jmix.ui.components.*
+import io.jmix.ui.components.inputdialog.InputDialogAction
+import io.jmix.ui.screen.OpenMode
+import io.jmix.ui.screen.Screen
 import com.haulmont.cuba.web.testmodel.sales.Status
 import com.haulmont.cuba.web.testmodel.sample.GoodInfo
 import spec.cuba.web.UiScreenSpec
 
-import static com.haulmont.cuba.gui.app.core.inputdialog.InputDialog.*
-import static com.haulmont.cuba.gui.app.core.inputdialog.InputDialog.InputDialogResult.ActionType.*
-import static com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.*
+import static io.jmix.ui.app.core.inputdialog.InputDialog.*
+import static io.jmix.ui.app.core.inputdialog.InputDialog.InputDialogResult.ActionType.*
+import static io.jmix.ui.app.core.inputdialog.InputParameter.*
 
 class InputDialogTest extends UiScreenSpec {
 
     @SuppressWarnings("GroovyAssignabilityCheck")
     void setup() {
-        exportScreensPackages(['com.haulmont.cuba.gui.app'])
+        exportScreensPackages(['io.jmix.ui.app'])
     }
 
     def "input parameter ids should be different"() {
@@ -47,14 +47,14 @@ class InputDialogTest extends UiScreenSpec {
         def mainWindow = screens.create("mainWindow", OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def dialogs = com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
+        def dialogs = io.jmix.ui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
 
         when: "the same id is used"
         dialogs.createInputDialog(mainWindow)
                 .withParameters(
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.parameter("same"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.parameter("same"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.parameter("not the same"))
+                        io.jmix.ui.app.core.inputdialog.InputParameter.parameter("same"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.parameter("same"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.parameter("not the same"))
                 .show()
         then:
         thrown(IllegalArgumentException)
@@ -62,9 +62,9 @@ class InputDialogTest extends UiScreenSpec {
         when: "different ids are used"
         InputDialog dialog = dialogs.createInputDialog(mainWindow)
                 .withParameters(
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.parameter("not the same 1"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.parameter("not the same 2"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.parameter("not the same 3"))
+                        io.jmix.ui.app.core.inputdialog.InputParameter.parameter("not the same 1"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.parameter("not the same 2"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.parameter("not the same 3"))
                 .build()
         then:
         dialog.show()
@@ -76,22 +76,22 @@ class InputDialogTest extends UiScreenSpec {
         def mainWindow = screens.create("mainWindow", OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def dialogs = com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
+        def dialogs = io.jmix.ui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
 
         when: "all types are used"
         InputDialog dialog = dialogs.createInputDialog(mainWindow)
                 .withParameters(
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.parameter("default"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.stringParameter("string"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.intParameter("int"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.doubleParameter("double"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.longParameter("long"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.bigDecimalParameter("bigDecimal"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.booleanParameter("boolean"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.entityParameter("entity", GoodInfo),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.timeParameter("time"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.dateParameter("date"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.dateTimeParameter("dateTime"))
+                        io.jmix.ui.app.core.inputdialog.InputParameter.parameter("default"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.stringParameter("string"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.intParameter("int"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.doubleParameter("double"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.longParameter("long"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.bigDecimalParameter("bigDecimal"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.booleanParameter("boolean"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.entityParameter("entity", GoodInfo),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.timeParameter("time"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.dateParameter("date"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.dateTimeParameter("dateTime"))
                 .show()
         then:
         def form = (Form) dialog.getWindow().getComponentNN("form")
@@ -130,13 +130,13 @@ class InputDialogTest extends UiScreenSpec {
         def mainWindow = screens.create("mainWindow", OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def dialogs = com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
+        def dialogs = io.jmix.ui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
 
         when: "YES NO CANCEL are created"
         InputDialog dialog = dialogs.createInputDialog(mainWindow)
                 .withParameters(
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.parameter("default"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.stringParameter("string"))
+                        io.jmix.ui.app.core.inputdialog.InputParameter.parameter("default"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.stringParameter("string"))
                 .withActions(DialogActions.YES_NO_CANCEL)
                 .show()
         then:
@@ -165,7 +165,7 @@ class InputDialogTest extends UiScreenSpec {
         def mainWindow = screens.create("mainWindow", OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def dialogs = com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
+        def dialogs = io.jmix.ui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
 
         def goodInfo = new GoodInfo()
         def defaultString = "default value"
@@ -173,17 +173,17 @@ class InputDialogTest extends UiScreenSpec {
         when: "dialog uses result handler"
         InputDialog dialog = dialogs.createInputDialog(mainWindow)
                 .withParameters(
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.parameter("string").withDefaultValue(defaultString),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.entityParameter("entity", GoodInfo).withDefaultValue(goodInfo))
+                        io.jmix.ui.app.core.inputdialog.InputParameter.parameter("string").withDefaultValue(defaultString),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.entityParameter("entity", GoodInfo).withDefaultValue(goodInfo))
                 .withActions(DialogActions.YES_NO, { result ->
                     switch (result.getCloseActionType()) {
-                        case com.haulmont.cuba.gui.app.core.inputdialog.InputDialog.InputDialogResult.ActionType.YES:
+                        case io.jmix.ui.app.core.inputdialog.InputDialog.InputDialogResult.ActionType.YES:
                             assert result.getValue("string") == defaultString
                             assert result.getValue("entity") == goodInfo
-                            assert result.getCloseAction() == com.haulmont.cuba.gui.app.core.inputdialog.InputDialog.INPUT_DIALOG_YES_ACTION
+                            assert result.getCloseAction() == io.jmix.ui.app.core.inputdialog.InputDialog.INPUT_DIALOG_YES_ACTION
                             break
-                        case com.haulmont.cuba.gui.app.core.inputdialog.InputDialog.InputDialogResult.ActionType.NO:
-                            assert result.getCloseAction() == com.haulmont.cuba.gui.app.core.inputdialog.InputDialog.INPUT_DIALOG_NO_ACTION
+                        case io.jmix.ui.app.core.inputdialog.InputDialog.InputDialogResult.ActionType.NO:
+                            assert result.getCloseAction() == io.jmix.ui.app.core.inputdialog.InputDialog.INPUT_DIALOG_NO_ACTION
                             break
                     }
                 })
@@ -207,26 +207,26 @@ class InputDialogTest extends UiScreenSpec {
         def mainWindow = screens.create("mainWindow", OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def dialogs = com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
+        def dialogs = io.jmix.ui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
         def dateValue = new Date()
         def stringValue = "Default value"
 
         when: "created custom action"
         InputDialog dialog = dialogs.createInputDialog(mainWindow)
                 .withParameters(
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.parameter("string").withDefaultValue(stringValue),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.dateParameter("date").withDefaultValue(dateValue))
+                        io.jmix.ui.app.core.inputdialog.InputParameter.parameter("string").withDefaultValue(stringValue),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.dateParameter("date").withDefaultValue(dateValue))
                 .withActions(
-                        com.haulmont.cuba.gui.components.inputdialog.InputDialogAction.action("ok").withHandler({
+                        io.jmix.ui.components.inputdialog.InputDialogAction.action("ok").withHandler({
                             InputDialogAction.InputDialogActionPerformed event ->
                                 InputDialog dialog = event.getInputDialog()
 
                                 assert dialog.getValue("string") == stringValue
                                 assert dialog.getValue("date") == dateValue
                         }),
-                        com.haulmont.cuba.gui.components.inputdialog.InputDialogAction.action("cancel").withHandler({
+                        io.jmix.ui.components.inputdialog.InputDialogAction.action("cancel").withHandler({
                             InputDialogAction.InputDialogActionPerformed event ->
-                                event.getInputDialog().close(com.haulmont.cuba.gui.app.core.inputdialog.InputDialog.INPUT_DIALOG_CANCEL_ACTION)
+                                event.getInputDialog().close(io.jmix.ui.app.core.inputdialog.InputDialog.INPUT_DIALOG_CANCEL_ACTION)
                         }))
                 .show()
 
@@ -269,19 +269,19 @@ class InputDialogTest extends UiScreenSpec {
     }
 
     protected InputDialog createDialogWithCloseListener(Screen mainWindow) {
-        def dialogs = com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
+        def dialogs = io.jmix.ui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
         def bigDecimalValue = 1234
 
         return dialogs.createInputDialog(mainWindow)
                 .withParameters(
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.bigDecimalParameter("bigDecimal").withDefaultValue(bigDecimalValue),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.booleanParameter("boolean").withDefaultValue(true))
+                        io.jmix.ui.app.core.inputdialog.InputParameter.bigDecimalParameter("bigDecimal").withDefaultValue(bigDecimalValue),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.booleanParameter("boolean").withDefaultValue(true))
                 .withCloseListener({ event ->
-                    if (event.getCloseAction() == com.haulmont.cuba.gui.app.core.inputdialog.InputDialog.INPUT_DIALOG_OK_ACTION) {
+                    if (event.getCloseAction() == io.jmix.ui.app.core.inputdialog.InputDialog.INPUT_DIALOG_OK_ACTION) {
                         assert event.getValue("bigDecimal") == bigDecimalValue
                         assert event.getValue("boolean") == true
                     } else {
-                        assert event.getCloseAction() == com.haulmont.cuba.gui.app.core.inputdialog.InputDialog.INPUT_DIALOG_CANCEL_ACTION
+                        assert event.getCloseAction() == io.jmix.ui.app.core.inputdialog.InputDialog.INPUT_DIALOG_CANCEL_ACTION
                     }
                 })
                 .show()
@@ -293,21 +293,21 @@ class InputDialogTest extends UiScreenSpec {
         def mainWindow = screens.create("mainWindow", OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def dialogs = com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
+        def dialogs = io.jmix.ui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
         def customValue = "default value"
         def dateTimeValue = new Date()
 
         when: "get value from custom field"
         InputDialog dialog = dialogs.createInputDialog(mainWindow)
                 .withParameters(
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.dateTimeParameter("dateTime").withDefaultValue(dateTimeValue),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.dateTimeParameter("dateTime").withDefaultValue(dateTimeValue),
                         new InputParameter("custom")
                             .withField({
                                 TextField field = uiComponents.create(TextField)
                                 field.setValue(customValue)
                                 return field}))
                 .withCloseListener({ event ->
-                    if (event.getCloseAction() == com.haulmont.cuba.gui.app.core.inputdialog.InputDialog.INPUT_DIALOG_OK_ACTION) {
+                    if (event.getCloseAction() == io.jmix.ui.app.core.inputdialog.InputDialog.INPUT_DIALOG_OK_ACTION) {
                         assert event.getValue("dateTime") == dateTimeValue
                         assert event.getValue("custom") == customValue
                     }})
@@ -324,12 +324,12 @@ class InputDialogTest extends UiScreenSpec {
         def mainWindow = screens.create("mainWindow", OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def dialogs = com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
+        def dialogs = io.jmix.ui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
 
         when: "custom field has incorrect value"
         InputDialog dialog = dialogs.createInputDialog(mainWindow)
                 .withParameters(
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.dateParameter("date"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.dateParameter("date"),
                         new InputParameter("custom")
                                 .withField({
                                     TextField field = uiComponents.create(TextField)
@@ -346,7 +346,7 @@ class InputDialogTest extends UiScreenSpec {
 
         when: "field is required"
         InputDialog reqDialog = dialogs.createInputDialog(mainWindow)
-                .withParameters(com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.intParameter("int").withRequired(true))
+                .withParameters(io.jmix.ui.app.core.inputdialog.InputParameter.intParameter("int").withRequired(true))
                 .show()
 
         then:
@@ -363,13 +363,13 @@ class InputDialogTest extends UiScreenSpec {
         def mainWindow = screens.create("mainWindow", OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def dialogs = com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
+        def dialogs = io.jmix.ui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
 
         when: "create dialog with default actions and custom validator"
         InputDialog dialog = dialogs.createInputDialog(mainWindow)
                 .withParameters(
-                    com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.stringParameter("phoneField"),
-                    com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.stringParameter("addressField"))
+                    io.jmix.ui.app.core.inputdialog.InputParameter.stringParameter("phoneField"),
+                    io.jmix.ui.app.core.inputdialog.InputParameter.stringParameter("addressField"))
                 .withValidator({ context ->
                     def phone = (String) context.getValue("phoneField")
                     def address = (String) context.getValue("addressField")
@@ -394,23 +394,23 @@ class InputDialogTest extends UiScreenSpec {
         screens.show(mainWindow)
 
         when: "validator and validationRequired in InputDialogAction"
-        def dialogs = com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
+        def dialogs = io.jmix.ui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
         def targetValue = 100100
         def date = new Date(targetValue)
 
         InputDialog dialogA = dialogs.createInputDialog(mainWindow)
                 .withParameters(
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.stringParameter("descriptionField"),
-                        com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.dateParameter("expirationDate").withDefaultValue(date))
+                        io.jmix.ui.app.core.inputdialog.InputParameter.stringParameter("descriptionField"),
+                        io.jmix.ui.app.core.inputdialog.InputParameter.dateParameter("expirationDate").withDefaultValue(date))
                 .withActions(
-                        com.haulmont.cuba.gui.components.inputdialog.InputDialogAction.action("okAction")
+                        io.jmix.ui.components.inputdialog.InputDialogAction.action("okAction")
                                 .withHandler({ event ->
-                                    event.getInputDialog().close(com.haulmont.cuba.gui.screen.FrameOwner.WINDOW_CLOSE_ACTION)
+                                    event.getInputDialog().close(io.jmix.ui.screen.FrameOwner.WINDOW_CLOSE_ACTION)
                                 }),
-                        com.haulmont.cuba.gui.components.inputdialog.InputDialogAction.action("cancelAction")
+                        io.jmix.ui.components.inputdialog.InputDialogAction.action("cancelAction")
                                 .withValidationRequired(false)
                                 .withHandler({ event ->
-                                    event.getInputDialog().close(com.haulmont.cuba.gui.screen.FrameOwner.WINDOW_CLOSE_ACTION)
+                                    event.getInputDialog().close(io.jmix.ui.screen.FrameOwner.WINDOW_CLOSE_ACTION)
                                 }))
                 .withValidator({ values ->
                     def expDate = (Date) values.getValue("expirationDate")
@@ -441,14 +441,14 @@ class InputDialogTest extends UiScreenSpec {
         screens.show(mainWindow)
 
         when: "validator and validationRequired in InputDialogAction"
-        def dialogs = com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
+        def dialogs = io.jmix.ui.screen.UiControllerUtils.getScreenContext(mainWindow).getDialogs()
 
         InputDialog dialog = dialogs.createInputDialog(mainWindow)
-                .withParameters(com.haulmont.cuba.gui.app.core.inputdialog.InputParameter.enumParameter("enumField", Status)
+                .withParameters(io.jmix.ui.app.core.inputdialog.InputParameter.enumParameter("enumField", Status)
                 .withDefaultValue(Status.OK))
                 .withActions(DialogActions.OK_CANCEL, { result ->
                     switch (result.closeActionType) {
-                        case com.haulmont.cuba.gui.app.core.inputdialog.InputDialog.InputDialogResult.ActionType.OK:
+                        case io.jmix.ui.app.core.inputdialog.InputDialog.InputDialogResult.ActionType.OK:
                             Status status = result.getValue("enumField")
                             assert status == Status.OK
                             break

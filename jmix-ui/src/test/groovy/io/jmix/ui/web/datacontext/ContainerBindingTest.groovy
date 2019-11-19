@@ -16,12 +16,12 @@
 
 package io.jmix.ui.web.datacontext
 
-import com.haulmont.cuba.gui.components.Table
-import com.haulmont.cuba.gui.components.TextField
-import com.haulmont.cuba.gui.components.data.table.ContainerTableItems
-import com.haulmont.cuba.gui.components.data.value.ContainerValueSource
-import com.haulmont.cuba.gui.model.CollectionContainer
-import com.haulmont.cuba.gui.model.InstanceContainer
+import io.jmix.ui.components.Table
+import io.jmix.ui.components.TextField
+import io.jmix.ui.components.data.table.ContainerTableItems
+import io.jmix.ui.components.data.value.ContainerValueSource
+import io.jmix.ui.model.CollectionContainer
+import io.jmix.ui.model.InstanceContainer
 import com.haulmont.cuba.web.testmodel.datacontext.Foo
 import spec.cuba.web.WebSpec
 

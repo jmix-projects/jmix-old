@@ -16,8 +16,8 @@
 
 package io.jmix.ui.web.menu.commandtargets;
 
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiController;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiController;
 import com.haulmont.cuba.security.entity.User;
 
 @UiController("cuba_PropertiesInjectionTestScreen")

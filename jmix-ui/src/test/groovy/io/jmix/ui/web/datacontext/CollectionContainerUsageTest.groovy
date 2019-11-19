@@ -16,19 +16,19 @@
 
 package io.jmix.ui.web.datacontext
 
-import com.haulmont.cuba.core.global.Sort
-import com.haulmont.cuba.gui.components.Table
-import com.haulmont.cuba.gui.components.data.table.ContainerTableItems
-import com.haulmont.cuba.gui.model.CollectionChangeType
-import com.haulmont.cuba.gui.model.CollectionContainer
-import com.haulmont.cuba.gui.model.DataContext
-import com.haulmont.cuba.gui.model.InstanceContainer
+import io.jmix.core.Sort
+import io.jmix.ui.components.Table
+import io.jmix.ui.components.data.table.ContainerTableItems
+import io.jmix.ui.model.CollectionChangeType
+import io.jmix.ui.model.CollectionContainer
+import io.jmix.ui.model.DataContext
+import io.jmix.ui.model.InstanceContainer
 import com.haulmont.cuba.web.testmodel.datacontext.Foo
 import spec.cuba.web.WebSpec
 
 import java.util.function.Consumer
 
-import static com.haulmont.cuba.gui.model.CollectionContainer.CollectionChangeEvent
+import static io.jmix.ui.model.CollectionContainer.CollectionChangeEvent
 
 class CollectionContainerUsageTest extends WebSpec {
 

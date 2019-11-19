@@ -16,18 +16,18 @@
 
 package io.jmix.ui.web.datacontext.screens;
 
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.gui.ScreenBuilders;
-import com.haulmont.cuba.gui.builders.EditorClassBuilder;
-import com.haulmont.cuba.gui.components.Table;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.model.DataComponents;
-import com.haulmont.cuba.gui.model.DataContext;
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.Subscribe;
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.screen.UiDescriptor;
+import io.jmix.core.Metadata;
+import io.jmix.ui.ScreenBuilders;
+import io.jmix.ui.builders.EditorClassBuilder;
+import io.jmix.ui.components.Table;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.model.DataComponents;
+import io.jmix.ui.model.DataContext;
+import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.Subscribe;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 import com.haulmont.cuba.web.testmodel.sales.Order;
 import com.haulmont.cuba.web.testmodel.sales.OrderLine;
 import io.jmix.ui.model.DataComponents;

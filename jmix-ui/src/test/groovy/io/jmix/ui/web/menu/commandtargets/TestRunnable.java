@@ -16,8 +16,8 @@
 
 package io.jmix.ui.web.menu.commandtargets;
 
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.sys.BeanLocatorAware;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.sys.BeanLocatorAware;
 
 public class TestRunnable implements Runnable, BeanLocatorAware {
 

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.web.fragments.screens;
 
-import com.haulmont.cuba.gui.screen.*;
+import io.jmix.ui.screen.*;
 
 import javax.inject.Inject;
 import java.util.function.Consumer;

@@ -16,8 +16,8 @@
 
 package io.jmix.ui.web.dataloadcoordinator.screens;
 
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.screen.UiDescriptor;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 
 @UiController("dlc-manual-noparam")
 @UiDescriptor("dlc-manual-noparam.xml")

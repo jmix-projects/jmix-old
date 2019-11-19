@@ -17,9 +17,9 @@
 package io.jmix.ui.web.timer
 
 
-import com.haulmont.cuba.gui.screen.OpenMode
-import com.haulmont.cuba.web.app.main.MainScreen
-import com.haulmont.cuba.web.widgets.CubaTimer
+import io.jmix.ui.screen.OpenMode
+import io.jmix.ui.app.main.MainScreen
+import io.jmix.ui.widgets.CubaTimer
 import spec.cuba.web.UiScreenSpec
 import spec.cuba.web.timer.screens.FragmentWithTimer
 import spec.cuba.web.timer.screens.ScreenWithNestedFragment
@@ -29,7 +29,7 @@ import spec.cuba.web.timer.screens.ScreenWithTimer
 class TimerFacetTest extends UiScreenSpec {
 
     def setup() {
-        exportScreensPackages(['spec.cuba.web.timer.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.timer.screens', 'io.jmix.ui.app.main'])
     }
 
     def "open screen with Timer facet"() {

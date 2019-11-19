@@ -16,10 +16,10 @@
 
 package io.jmix.ui.web.screens
 
-import com.haulmont.cuba.core.app.DataService
-import com.haulmont.cuba.core.global.LoadContext
-import com.haulmont.cuba.gui.app.security.user.browse.UserBrowser
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.core.app.DataService
+import io.jmix.core.LoadContext
+import io.jmix.ui.app.security.user.browse.UserBrowser
+import io.jmix.ui.screen.OpenMode
 import com.haulmont.cuba.security.entity.Group
 import com.haulmont.cuba.security.entity.User
 import com.haulmont.cuba.web.testsupport.proxy.TestServiceProxy

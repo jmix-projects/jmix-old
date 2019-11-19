@@ -16,15 +16,15 @@
 
 package io.jmix.ui.web.components.optionsgroup.screens;
 
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.gui.components.OptionsGroup;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.model.InstancePropertyContainer;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.Subscribe;
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.screen.UiDescriptor;
+import io.jmix.core.Metadata;
+import io.jmix.ui.components.OptionsGroup;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.model.InstancePropertyContainer;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.Subscribe;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 import com.haulmont.cuba.web.testmodel.sales.Catalog;
 import com.haulmont.cuba.web.testmodel.sales.Order;
 import com.haulmont.cuba.web.testmodel.sales.OrderLine;

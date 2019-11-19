@@ -16,7 +16,7 @@
 
 package io.jmix.ui.web.components
 
-import com.haulmont.cuba.gui.components.PickerField
+import io.jmix.ui.components.PickerField
 import com.haulmont.cuba.security.entity.Role
 import com.haulmont.cuba.security.entity.User
 import spec.cuba.web.WebSpec

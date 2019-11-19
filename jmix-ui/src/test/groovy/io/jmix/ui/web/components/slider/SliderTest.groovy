@@ -17,14 +17,14 @@
 package io.jmix.ui.web.components.slider
 
 import com.haulmont.chile.core.annotations.JavaClass
-import com.haulmont.chile.core.datatypes.Datatype
-import com.haulmont.chile.core.datatypes.impl.BigDecimalDatatype
-import com.haulmont.chile.core.datatypes.impl.DoubleDatatype
-import com.haulmont.chile.core.datatypes.impl.IntegerDatatype
-import com.haulmont.chile.core.datatypes.impl.LongDatatype
-import com.haulmont.cuba.core.entity.ScheduledTask
-import com.haulmont.cuba.gui.components.Slider
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.core.metamodel.datatypes.Datatype
+import io.jmix.core.metamodel.datatypes.impl.BigDecimalDatatype
+import io.jmix.core.metamodel.datatypes.impl.DoubleDatatype
+import io.jmix.core.metamodel.datatypes.impl.IntegerDatatype
+import io.jmix.core.metamodel.datatypes.impl.LongDatatype
+import io.jmix.core.entity.ScheduledTask
+import io.jmix.ui.components.Slider
+import io.jmix.ui.screen.OpenMode
 import spec.cuba.web.UiScreenSpec
 import spec.cuba.web.components.slider.screens.SliderScreen
 
@@ -32,7 +32,7 @@ import spec.cuba.web.components.slider.screens.SliderScreen
 class SliderTest extends UiScreenSpec {
 
     void setup() {
-        exportScreensPackages(['spec.cuba.web.components.slider.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.components.slider.screens', 'io.jmix.ui.app.main'])
     }
 
     def "Datatype is applied from the screen descriptor"(String id, Class<Datatype> datatypeClass) {

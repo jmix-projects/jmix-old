@@ -16,11 +16,11 @@
 
 package io.jmix.ui.web.menu.commandtargets;
 
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.sys.BeanLocatorAware;
-import com.haulmont.cuba.gui.config.MenuItem;
-import com.haulmont.cuba.gui.config.MenuItemRunnable;
-import com.haulmont.cuba.gui.screen.FrameOwner;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.sys.BeanLocatorAware;
+import io.jmix.ui.config.MenuItem;
+import io.jmix.ui.config.MenuItemRunnable;
+import io.jmix.ui.screen.FrameOwner;
 
 public class TestMenuItemRunnable implements MenuItemRunnable, BeanLocatorAware {
 

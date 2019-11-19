@@ -16,11 +16,11 @@
 
 package io.jmix.ui.web.datacontext
 
-import com.haulmont.cuba.core.app.DataService
-import com.haulmont.cuba.core.entity.Entity
-import com.haulmont.cuba.core.global.CommitContext
-import com.haulmont.cuba.gui.screen.OpenMode
-import com.haulmont.cuba.gui.screen.UiControllerUtils
+import io.jmix.core.app.DataService
+import io.jmix.core.entity.Entity
+import io.jmix.core.CommitContext
+import io.jmix.ui.screen.OpenMode
+import io.jmix.ui.screen.UiControllerUtils
 import com.haulmont.cuba.web.testmodel.sales.Order
 import com.haulmont.cuba.web.testmodel.sales.OrderLine
 import com.haulmont.cuba.web.testmodel.sales.OrderLineParam
@@ -33,7 +33,7 @@ import spock.lang.Unroll
 class CompositionScreensTest extends UiScreenSpec {
 
     void setup() {
-        exportScreensPackages(['spec.cuba.web.datacontext.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.datacontext.screens', 'io.jmix.ui.app.main'])
     }
 
     @Unroll

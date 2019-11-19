@@ -16,8 +16,8 @@
 
 package io.jmix.ui.web.workarea
 
-import com.haulmont.cuba.gui.screen.FrameOwner
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.ui.screen.FrameOwner
+import io.jmix.ui.screen.OpenMode
 import spec.cuba.web.UiScreenSpec
 import spec.cuba.web.menu.commandtargets.TestWebBean
 

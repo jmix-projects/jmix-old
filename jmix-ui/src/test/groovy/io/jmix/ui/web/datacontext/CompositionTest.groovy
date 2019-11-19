@@ -16,14 +16,14 @@
 
 package io.jmix.ui.web.datacontext
 
-import com.haulmont.cuba.core.app.DataService
-import com.haulmont.cuba.core.app.serialization.EntitySerializationAPI
-import com.haulmont.cuba.core.entity.Entity
-import com.haulmont.cuba.core.global.CommitContext
-import com.haulmont.cuba.gui.model.CollectionContainer
-import com.haulmont.cuba.gui.model.DataContext
-import com.haulmont.cuba.gui.model.InstanceContainer
-import com.haulmont.cuba.gui.model.InstanceLoader
+import io.jmix.core.app.DataService
+import io.jmix.core.app.serialization.EntitySerializationAPI
+import io.jmix.core.entity.Entity
+import io.jmix.core.CommitContext
+import io.jmix.ui.model.CollectionContainer
+import io.jmix.ui.model.DataContext
+import io.jmix.ui.model.InstanceContainer
+import io.jmix.ui.model.InstanceLoader
 import com.haulmont.cuba.web.testmodel.sales.Customer
 import com.haulmont.cuba.web.testmodel.sales.Order
 import com.haulmont.cuba.web.testmodel.sales.OrderLine

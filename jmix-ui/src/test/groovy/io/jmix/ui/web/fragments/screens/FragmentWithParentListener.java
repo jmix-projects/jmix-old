@@ -16,7 +16,7 @@
 
 package io.jmix.ui.web.fragments.screens;
 
-import com.haulmont.cuba.gui.screen.*;
+import io.jmix.ui.screen.*;
 
 @UiController
 public class FragmentWithParentListener extends ScreenFragment {

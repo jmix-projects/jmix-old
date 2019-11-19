@@ -16,10 +16,10 @@
 
 package io.jmix.ui.web.components.grouptable.screens;
 
-import com.haulmont.cuba.gui.screen.LoadDataBeforeShow;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.screen.UiDescriptor;
+import io.jmix.ui.screen.LoadDataBeforeShow;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 
 @UiDescriptor("grouptable-load-columns-by-include-screen.xml")
 @UiController

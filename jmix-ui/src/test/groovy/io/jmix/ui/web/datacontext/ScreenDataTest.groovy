@@ -17,9 +17,9 @@
 package io.jmix.ui.web.datacontext
 
 import com.haulmont.bali.util.Dom4j
-import com.haulmont.cuba.core.global.ViewRepository
-import com.haulmont.cuba.gui.model.*
-import com.haulmont.cuba.gui.model.impl.*
+import io.jmix.core.ViewRepository
+import io.jmix.ui.model.*
+import io.jmix.ui.model.impl.*
 import com.haulmont.cuba.security.entity.User
 import com.haulmont.cuba.web.testmodel.sales.Order
 import com.haulmont.cuba.web.testmodel.sales.OrderLine

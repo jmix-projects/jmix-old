@@ -17,13 +17,13 @@
 package io.jmix.ui.web.components.composite.components.comments;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.model.ScreenData;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.gui.xml.layout.loaders.AbstractComponentLoader;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.xml.layout.loaders.AbstractComponentLoader;
 import org.dom4j.Element;
 
 public class TestCommentaryPanelLoader extends AbstractComponentLoader<TestCommentaryPanel> {

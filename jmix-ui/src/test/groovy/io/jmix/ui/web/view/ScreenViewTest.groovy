@@ -17,7 +17,7 @@
 package io.jmix.ui.web.view
 
 
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.ui.screen.OpenMode
 import com.haulmont.cuba.security.entity.User
 import spec.cuba.web.UiScreenSpec
 import spec.cuba.web.view.screens.UserEditEmbeddedViewScreen
@@ -26,7 +26,7 @@ class ScreenViewTest extends UiScreenSpec {
 
 
     def setup() {
-        exportScreensPackages(['spec.cuba.web.view.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.view.screens', 'io.jmix.ui.app.main'])
     }
 
     def "Embedded view initialized in instance container"() {

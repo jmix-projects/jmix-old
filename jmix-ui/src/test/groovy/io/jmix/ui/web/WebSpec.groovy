@@ -18,9 +18,9 @@ package io.jmix.ui.web
 
 import com.haulmont.cuba.client.ClientUserSession
 import com.haulmont.cuba.client.testsupport.TestUserSessionSource
-import com.haulmont.cuba.core.app.PersistenceManagerService
+import io.jmix.core.app.PersistenceManagerService
 import com.haulmont.cuba.security.global.UserSession
-import com.haulmont.cuba.web.App
+import io.jmix.ui.app
 import com.haulmont.cuba.web.Connection
 import com.haulmont.cuba.web.container.CubaTestContainer
 import com.haulmont.cuba.web.testsupport.TestContainer
@@ -33,7 +33,7 @@ import com.vaadin.server.VaadinSession
 import com.vaadin.server.WebBrowser
 import com.vaadin.ui.UI
 import io.jmix.core.*
-import io.jmix.ui.AppUI
+import io.jmix.ui.appUI
 import io.jmix.ui.DefaultApp
 import io.jmix.ui.UiComponents
 import io.jmix.ui.model.DataComponents

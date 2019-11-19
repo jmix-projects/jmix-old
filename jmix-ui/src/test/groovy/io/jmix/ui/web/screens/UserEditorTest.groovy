@@ -16,16 +16,16 @@
 
 package io.jmix.ui.web.screens
 
-import com.haulmont.cuba.core.app.DataService
-import com.haulmont.cuba.core.global.LoadContext
-import com.haulmont.cuba.gui.WindowParams
-import com.haulmont.cuba.gui.app.security.role.edit.PermissionValue
-import com.haulmont.cuba.gui.app.security.user.edit.UserEditor
-import com.haulmont.cuba.gui.components.PickerField
-import com.haulmont.cuba.gui.components.TextField
-import com.haulmont.cuba.gui.screen.EditorScreen
-import com.haulmont.cuba.gui.screen.MapScreenOptions
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.core.app.DataService
+import io.jmix.core.LoadContext
+import io.jmix.ui.WindowParams
+import io.jmix.ui.app.security.role.edit.PermissionValue
+import io.jmix.ui.app.security.user.edit.UserEditor
+import io.jmix.ui.components.PickerField
+import io.jmix.ui.components.TextField
+import io.jmix.ui.screen.EditorScreen
+import io.jmix.ui.screen.MapScreenOptions
+import io.jmix.ui.screen.OpenMode
 import com.haulmont.cuba.security.entity.EntityOp
 import com.haulmont.cuba.security.entity.Group
 import com.haulmont.cuba.security.entity.PermissionType

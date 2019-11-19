@@ -16,8 +16,8 @@
 
 package io.jmix.ui.web.components.browserframe
 
-import com.haulmont.cuba.gui.components.BrowserFrame
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.ui.components.BrowserFrame
+import io.jmix.ui.screen.OpenMode
 import io.jmix.ui.web.UiScreenSpec
 import spec.cuba.web.components.browserframe.screens.*
 
@@ -25,7 +25,7 @@ import spec.cuba.web.components.browserframe.screens.*
 class BrowserFrameSetAttributesTest extends UiScreenSpec {
 
     void setup() {
-        exportScreensPackages(['spec.cuba.web.components.browserframe.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.components.browserframe.screens', 'io.jmix.ui.app.main'])
     }
 
     def "Sets allow attribute to BrowserFrame"() {

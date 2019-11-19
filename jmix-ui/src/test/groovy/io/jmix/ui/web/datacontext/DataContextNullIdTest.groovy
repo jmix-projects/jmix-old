@@ -16,7 +16,7 @@
 
 package io.jmix.ui.web.datacontext
 
-import com.haulmont.cuba.gui.model.DataComponents
+import io.jmix.ui.model.DataComponents
 import com.haulmont.cuba.web.container.CubaTestContainer
 import com.haulmont.cuba.web.testmodel.datacontext.TestStringIdEntity
 import com.haulmont.cuba.web.testsupport.TestContainer

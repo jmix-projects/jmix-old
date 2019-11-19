@@ -16,11 +16,11 @@
 
 package io.jmix.ui.web.components.composite.components.stepper;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.data.ValueSource;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.data.ValueSource;
 import com.haulmont.cuba.web.gui.components.*;
-import com.haulmont.cuba.web.widgets.CubaTextField;
+import io.jmix.ui.widgets.CubaTextField;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 

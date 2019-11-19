@@ -16,7 +16,7 @@
 
 package io.jmix.ui.web.navigation.entityinference.testscreens.notype.byclass;
 
-import com.haulmont.cuba.gui.screen.StandardEditor;
+import io.jmix.ui.screen.StandardEditor;
 
 public class BaseStdEditorNT extends StandardEditor {
 }

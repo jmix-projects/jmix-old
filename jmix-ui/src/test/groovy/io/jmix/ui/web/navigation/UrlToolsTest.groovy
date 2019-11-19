@@ -16,7 +16,7 @@
 
 package io.jmix.ui.web.navigation
 
-import com.haulmont.cuba.gui.navigation.NavigationState
+import io.jmix.ui.navigation.NavigationState
 import com.haulmont.cuba.web.sys.navigation.UrlTools
 import spec.cuba.web.UiScreenSpec
 

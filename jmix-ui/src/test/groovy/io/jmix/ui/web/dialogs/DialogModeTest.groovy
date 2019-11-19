@@ -16,8 +16,8 @@
 
 package io.jmix.ui.web.dialogs
 
-import com.haulmont.cuba.gui.components.DialogWindow
-import com.haulmont.cuba.gui.screen.OpenMode
+import io.jmix.ui.components.DialogWindow
+import io.jmix.ui.screen.OpenMode
 import spec.cuba.web.UiScreenSpec
 import spec.cuba.web.dialogs.screens.DialogAutoSizeTestScreen
 import spec.cuba.web.dialogs.screens.DialogSpecifiedSizeTestScreen
@@ -26,7 +26,7 @@ import spec.cuba.web.dialogs.screens.DialogSpecifiedSizeTestScreen
 class DialogModeTest extends UiScreenSpec {
 
     void setup() {
-        exportScreensPackages(['spec.cuba.web.dialogs.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.cuba.web.dialogs.screens', 'io.jmix.ui.app.main'])
     }
 
     def 'DialogMode supports AUTO width and height'() {

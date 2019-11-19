@@ -17,11 +17,11 @@
 package io.jmix.ui.web.menu
 
 import com.haulmont.cuba.client.testsupport.TestUserSessionSource
-import com.haulmont.cuba.core.config.Config
-import com.haulmont.cuba.core.global.Configuration
-import com.haulmont.cuba.core.global.MessageTools
-import com.haulmont.cuba.core.global.Messages
-import com.haulmont.cuba.gui.components.sys.WindowImplementation
+import io.jmix.core.config.Config
+import io.jmix.core.Configuration
+import io.jmix.core.MessageTools
+import io.jmix.core.Messages
+import io.jmix.ui.components.sys.WindowImplementation
 import spock.lang.Specification
 
 abstract class AbstractMenuBuilderSpecification extends Specification {

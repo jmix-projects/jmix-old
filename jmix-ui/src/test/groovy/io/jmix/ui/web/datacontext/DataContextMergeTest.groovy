@@ -16,13 +16,13 @@
 
 package io.jmix.ui.web.datacontext
 
-import com.haulmont.chile.core.model.Instance
-import com.haulmont.cuba.core.entity.BaseEntityInternalAccess
-import com.haulmont.cuba.core.entity.SecurityState
-import com.haulmont.cuba.core.global.EntityStates
-import com.haulmont.cuba.core.global.Metadata
-import com.haulmont.cuba.gui.model.DataComponents
-import com.haulmont.cuba.gui.model.DataContext
+import io.jmix.core.metamodel.model.Instance
+import io.jmix.core.entity.BaseEntityInternalAccess
+import io.jmix.core.entity.SecurityState
+import io.jmix.core.EntityStates
+import io.jmix.core.Metadata
+import io.jmix.ui.model.DataComponents
+import io.jmix.ui.model.DataContext
 import com.haulmont.cuba.security.entity.User
 import com.haulmont.cuba.web.container.CubaTestContainer
 import com.haulmont.cuba.web.testmodel.datacontext.TestReadOnlyPropertyEntity

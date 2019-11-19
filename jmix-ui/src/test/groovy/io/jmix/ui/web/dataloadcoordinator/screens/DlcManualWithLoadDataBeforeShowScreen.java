@@ -16,9 +16,9 @@
 
 package io.jmix.ui.web.dataloadcoordinator.screens;
 
-import com.haulmont.cuba.gui.screen.LoadDataBeforeShow;
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.screen.UiDescriptor;
+import io.jmix.ui.screen.LoadDataBeforeShow;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 
 @UiController("dlc-manual-with-load-data-before-show")
 @UiDescriptor("dlc-manual.xml")
