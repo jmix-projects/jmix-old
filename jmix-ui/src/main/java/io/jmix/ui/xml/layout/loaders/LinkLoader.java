@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.Link;
+import io.jmix.ui.components.Link;
 import org.apache.commons.lang3.StringUtils;
 
 public class LinkLoader extends AbstractComponentLoader<Link> {

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.DataGrid;
+import io.jmix.ui.components.DataGrid;
 
 public class DataGridLoader extends AbstractDataGridLoader<DataGrid> {
 

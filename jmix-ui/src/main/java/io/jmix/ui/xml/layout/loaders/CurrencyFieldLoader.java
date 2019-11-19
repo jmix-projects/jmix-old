@@ -16,11 +16,13 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.core.entity.annotation.CurrencyLabelPosition;
-import com.haulmont.cuba.core.entity.annotation.CurrencyValue;
-import com.haulmont.cuba.gui.components.CurrencyField;
-import com.haulmont.cuba.gui.components.DatasourceComponent;
-import com.haulmont.cuba.gui.components.HasConversionErrorMessage;
+import io.jmix.core.entity.annotation.CurrencyLabelPosition;
+import io.jmix.core.entity.annotation.CurrencyValue;
+import io.jmix.core.entity.annotation.CurrencyLabelPosition;
+import io.jmix.core.entity.annotation.CurrencyValue;
+import io.jmix.ui.components.CurrencyField;
+import io.jmix.ui.components.DatasourceComponent;
+import io.jmix.ui.components.HasConversionErrorMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

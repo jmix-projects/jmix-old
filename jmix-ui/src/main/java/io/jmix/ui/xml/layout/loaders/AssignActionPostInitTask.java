@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.ActionOwner;
-import com.haulmont.cuba.gui.components.Frame;
+import io.jmix.ui.components.ActionOwner;
+import io.jmix.ui.components.Frame;
 
 @Deprecated
 public class AssignActionPostInitTask extends ActionOwnerAssignActionPostInitTask {

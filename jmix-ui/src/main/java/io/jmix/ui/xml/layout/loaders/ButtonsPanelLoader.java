@@ -15,9 +15,9 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.bali.util.ReflectionHelper;
-import com.haulmont.cuba.gui.components.ButtonsPanel;
-import com.haulmont.cuba.gui.components.Component;
+import io.jmix.core.commons.util.ReflectionHelper;
+import io.jmix.ui.components.ButtonsPanel;
+import io.jmix.ui.components.Component;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Constructor;

@@ -16,14 +16,14 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.gui.actions.picker.ClearAction;
-import com.haulmont.cuba.gui.actions.picker.LookupAction;
-import com.haulmont.cuba.gui.components.Action;
-import com.haulmont.cuba.gui.components.Actions;
-import com.haulmont.cuba.gui.components.ActionsHolder;
-import com.haulmont.cuba.gui.components.LookupPickerField;
-import com.haulmont.cuba.gui.components.actions.GuiActionSupport;
+import io.jmix.core.Metadata;
+import io.jmix.ui.actions.picker.ClearAction;
+import io.jmix.ui.actions.picker.LookupAction;
+import io.jmix.ui.components.Action;
+import io.jmix.ui.components.Actions;
+import io.jmix.ui.components.ActionsHolder;
+import io.jmix.ui.components.LookupPickerField;
+import io.jmix.ui.components.actions.GuiActionSupport;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.CheckBox;
+import io.jmix.ui.components.CheckBox;
 
 public class CheckBoxLoader extends AbstractFieldLoader<CheckBox> {
     @Override

@@ -16,11 +16,11 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.CapsLockIndicator;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.PasswordField;
-import com.haulmont.cuba.gui.components.TextInputField;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.CapsLockIndicator;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.PasswordField;
+import io.jmix.ui.components.TextInputField;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

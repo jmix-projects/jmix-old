@@ -19,12 +19,16 @@ package io.jmix.ui.xml.layout.loaders;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import io.jmix.core.*;
+import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.config.Config;
+import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.ConstraintOperationType;
 import io.jmix.core.security.Security;
 import io.jmix.ui.ClientConfig;
 import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.actions.legacy.ItemTrackingAction;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.Component.Alignment;
 import io.jmix.ui.components.data.ContainerValueSource;
@@ -32,6 +36,7 @@ import io.jmix.ui.components.data.HasValueSource;
 import io.jmix.ui.Actions;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.UiComponents;
+import io.jmix.ui.components.validators.*;
 import io.jmix.ui.icons.Icons;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
@@ -41,6 +46,8 @@ import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
+import io.jmix.ui.xml.DeclarativeAction;
+import io.jmix.ui.xml.DeclarativeTrackingAction;
 import io.jmix.ui.xml.layout.ComponentLoader;
 import io.jmix.ui.xml.layout.LayoutLoaderConfig;
 import org.apache.commons.lang3.StringUtils;
@@ -52,8 +59,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkState;
@@ -109,14 +118,14 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
 
     protected ComponentContext getComponentContext() {
         checkState(context instanceof ComponentContext,
-                "'context' must implement com.haulmont.cuba.gui.xml.layout.ComponentLoader.ComponentContext");
+                "'context' must implement io.jmix.ui.xml.layout.ComponentLoader.ComponentContext");
 
         return (ComponentContext) context;
     }
 
     protected CompositeComponentContext getCompositeComponentContext() {
         checkState(context instanceof CompositeComponentContext,
-                "'context' must implement com.haulmont.cuba.gui.xml.layout.ComponentLoader.CompositeComponentContext");
+                "'context' must implement io.jmix.ui.xml.layout.ComponentLoader.CompositeComponentContext");
 
         return (CompositeComponentContext) context;
     }
@@ -376,6 +385,14 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         }
     }
 
+    // TODO VM
+    protected void loadSettingsEnabled(HasSettings component, Element element) {
+        String settingsEnabled = element.attributeValue("settingsEnabled");
+        if (StringUtils.isNotEmpty(settingsEnabled)) {
+            component.setSettingsEnabled(Boolean.parseBoolean(settingsEnabled));
+        }
+    }
+
     protected void loadWidth(Component component, Element element, @Nullable String defaultValue) {
         String width = element.attributeValue("width");
         if ("auto".equalsIgnoreCase(width)) {
@@ -448,10 +465,18 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         String actionId = element.attributeValue("action");
         if (!StringUtils.isEmpty(actionId)) {
             ComponentContext componentContext = getComponentContext();
-            // todo implement
-//            componentContext.addPostInitTask(
-//                    new ActionOwnerAssignActionPostInitTask(component, actionId, componentContext.getFrame())
-//            );
+            componentContext.addPostInitTask(
+                    new ActionOwnerAssignActionPostInitTask(component, actionId, componentContext.getFrame())
+            );
+        }
+    }
+
+    // todo vm
+    protected void loadPresentations(HasPresentations component, Element element) {
+        String presentations = element.attributeValue("presentations");
+        if (StringUtils.isNotEmpty(presentations)) {
+            component.usePresentations(Boolean.parseBoolean(presentations));
+            getComponentContext().addPostInitTask(new LoadPresentationsPostInitTask(component));
         }
     }
 
@@ -480,6 +505,69 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         }
 
         return iconPath;
+    }
+
+    @Deprecated
+    @SuppressWarnings("unchecked")
+    protected Consumer<?> loadValidator(Element validatorElement) {
+        String className = validatorElement.attributeValue("class");
+        String scriptPath = validatorElement.attributeValue("script");
+        String script = validatorElement.getText();
+
+        Consumer<?> validator = null;
+
+        if (StringUtils.isNotBlank(scriptPath) || StringUtils.isNotBlank(script)) {
+            validator = new ScriptValidator(validatorElement, context.getMessagesPack());
+        } else {
+            Class aClass = getScripting().loadClass(className);
+            if (aClass == null)
+                throw new GuiDevelopmentException(String.format("Class %s is not found", className), context);
+            if (!StringUtils.isBlank(context.getMessagesPack()))
+                try {
+                    validator = (Consumer<?>) ReflectionHelper.newInstance(aClass, validatorElement, context.getMessagesPack());
+                } catch (NoSuchMethodException e) {
+                    //
+                }
+            if (validator == null) {
+                try {
+                    validator = (Consumer<?>) ReflectionHelper.newInstance(aClass, validatorElement);
+                } catch (NoSuchMethodException e) {
+                    try {
+                        validator = (Consumer<?>) ReflectionHelper.newInstance(aClass);
+                    } catch (NoSuchMethodException e1) {
+                        // todo log warn
+                    }
+                }
+            }
+            if (validator == null) {
+                throw new GuiDevelopmentException(
+                        String.format("Validator class %s has no supported constructors", aClass), context);
+            }
+        }
+        return validator;
+    }
+
+    @Deprecated
+    protected Consumer<?> getDefaultValidator(MetaProperty property) {
+        Consumer<?> validator = null;
+        if (property.getRange().isDatatype()) {
+            Messages messages = getMessages();
+
+            Class type = property.getRange().asDatatype().getJavaClass();
+            if (type.equals(Integer.class)) {
+                validator = new IntegerValidator(messages.getMessage("validation.invalidNumber"));
+
+            } else if (type.equals(Long.class)) {
+                validator = new LongValidator(messages.getMessage("validation.invalidNumber"));
+
+            } else if (type.equals(Double.class) || type.equals(BigDecimal.class)) {
+                validator = new DoubleValidator(messages.getMessage("validation.invalidNumber"));
+
+            } else if (type.equals(java.sql.Date.class)) {
+                validator = new DateValidator(messages.getMessage("validation.invalidDate"));
+            }
+        }
+        return validator;
     }
 
     protected void loadActions(ActionsHolder actionsHolder, Element element) {
@@ -530,11 +618,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
     }
 
     protected Action loadInvokeAction(ActionsHolder actionsHolder, Element element, String id, boolean shouldTrackSelection, String invokeMethod) {
-
-        throw new UnsupportedOperationException();
-
-        // todo implement
-        /*BaseAction action;
+        BaseAction action;
         String shortcut = loadShortcut(trimToNull(element.attributeValue("shortcut")));
         if (shouldTrackSelection) {
             action = new DeclarativeTrackingAction(
@@ -566,15 +650,11 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
             );
         }
         action.setPrimary(Boolean.parseBoolean(element.attributeValue("primary")));
-        return action;*/
+        return action;
     }
 
     protected Action loadStubAction(Element element, String id, boolean shouldTrackSelection) {
-        throw new UnsupportedOperationException();
-
-        // todo implement
-
-        /*Action targetAction;
+        Action targetAction;
 
         if (shouldTrackSelection) {
             targetAction = new ItemTrackingAction(id);
@@ -584,7 +664,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
 
         initAction(element, targetAction);
 
-        return targetAction;*/
+        return targetAction;
     }
 
     protected void initAction(Element element, Action targetAction) {
@@ -616,6 +696,15 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         String shortcut = trimToNull(element.attributeValue("shortcut"));
         if (shortcut != null) {
             targetAction.setShortcut(loadShortcut(shortcut));
+        }
+
+        Element propertiesEl = element.element("properties");
+        if (propertiesEl != null) {
+            ActionCustomPropertyLoader propertyLoader = beanLocator.get(ActionCustomPropertyLoader.class);
+            for (Element propertyEl : propertiesEl.elements("property")) {
+                propertyLoader.load(targetAction,
+                        propertyEl.attributeValue("name"), propertyEl.attributeValue("value"));
+            }
         }
     }
 

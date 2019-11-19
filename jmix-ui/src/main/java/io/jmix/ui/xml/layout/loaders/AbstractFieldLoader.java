@@ -16,17 +16,19 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.core.metamodel.datatypes.Datatypes;
-import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.components.Buffered;
 import io.jmix.ui.components.Field;
 import io.jmix.ui.components.HasDatatype;
+import io.jmix.ui.components.validation.AbstractValidator;
+import io.jmix.ui.components.validation.ValidatorLoadFactory;
+import io.jmix.ui.components.validators.EmailValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class AbstractFieldLoader<T extends Field> extends AbstractComponentLoader<T> {
+public abstract class AbstractFieldLoader<T extends Field> extends AbstractDatasourceComponentLoader<T> {
 
     @Override
     public void loadComponent() {
@@ -74,17 +76,18 @@ public abstract class AbstractFieldLoader<T extends Field> extends AbstractCompo
     @SuppressWarnings("unchecked")
     protected void loadValidators(Field component, Element element) {
         List<Element> validatorElements = element.elements("validator");
-// todo VM
-//
-//        if (!validatorElements.isEmpty()) {
-//            for (Element validatorElement : validatorElements) {
-//                Consumer<?> validator = loadValidator(validatorElement);
-//                if (validator != null) {
-//                    component.addValidator(validator);
-//                }
-//            }
-//
-//        } else if (component.getDatasource() != null) {
+
+        if (!validatorElements.isEmpty()) {
+            for (Element validatorElement : validatorElements) {
+                Consumer<?> validator = loadValidator(validatorElement);
+                if (validator != null) {
+                    component.addValidator(validator);
+                }
+            }
+
+        }
+        //todo vm legacy
+//        else if (component.getDatasource() != null) {
 //            MetaProperty property = component.getMetaProperty();
 //            Consumer<?> validator = getDefaultValidator(property);
 //            if (validator != null) {
@@ -98,18 +101,17 @@ public abstract class AbstractFieldLoader<T extends Field> extends AbstractCompo
         Element validatorsHolder = element.element("validators");
         if (validatorsHolder != null) {
             List<Element> validators = validatorsHolder.elements();
-// todo VM
-//
-//            ValidatorLoadFactory loadFactory = beanLocator.get(ValidatorLoadFactory.NAME);
-//
-//            for (Element validatorElem : validators) {
-//                AbstractValidator validator = loadFactory.createValidator(validatorElem, context.getMessagesPack());
-//                if (validator != null) {
-//                    component.addValidator(validator);
-//                } else if (validatorElem.getName().equals("email")) {
-//                    component.addValidator(new EmailValidator(validatorElem, context.getMessagesPack()));
-//                }
-//            }
+
+            ValidatorLoadFactory loadFactory = beanLocator.get(ValidatorLoadFactory.NAME);
+
+            for (Element validatorElem : validators) {
+                AbstractValidator validator = loadFactory.createValidator(validatorElem, context.getMessagesPack());
+                if (validator != null) {
+                    component.addValidator(validator);
+                } else if (validatorElem.getName().equals("email")) {
+                    component.addValidator(new EmailValidator(validatorElem, context.getMessagesPack()));
+                }
+            }
         }
     }
 

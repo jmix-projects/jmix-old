@@ -17,12 +17,12 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.gui.components.ResizableTextArea;
-import com.haulmont.cuba.gui.components.TextArea;
+import io.jmix.ui.components.ResizableTextArea;
+import io.jmix.ui.components.TextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.haulmont.cuba.gui.components.ResizableTextArea.ResizeDirection;
+import static io.jmix.ui.components.ResizableTextArea.ResizeDirection;
 
 public class ResizableTextAreaLoader extends TextAreaLoader {
 

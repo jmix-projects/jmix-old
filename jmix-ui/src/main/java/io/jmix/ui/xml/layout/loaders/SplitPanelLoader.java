@@ -15,10 +15,10 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.SizeUnit;
-import com.haulmont.cuba.gui.components.SplitPanel;
-import com.haulmont.cuba.gui.components.VBoxLayout;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.SizeUnit;
+import io.jmix.ui.components.SplitPanel;
+import io.jmix.ui.components.VBoxLayout;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

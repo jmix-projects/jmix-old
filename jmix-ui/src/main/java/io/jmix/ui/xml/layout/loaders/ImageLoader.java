@@ -16,9 +16,9 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.Image;
-import com.haulmont.cuba.gui.data.Datasource;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.Image;
+import io.jmix.ui.data.Datasource;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

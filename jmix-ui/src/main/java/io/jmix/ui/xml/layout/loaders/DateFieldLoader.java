@@ -15,13 +15,14 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.core.global.DateTimeTransformations;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.DateField;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.DateTimeTransformations;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.DateField;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.EntityValueSource;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -72,7 +73,7 @@ public class DateFieldLoader extends AbstractFieldLoader<DateField> {
         if (StringUtils.isNotEmpty(dateFormat)) {
             formatStr = loadResourceString(dateFormat);
         } else if (StringUtils.isNotEmpty(mainDateFormat)) {
-            formatStr = getMessages().getMainMessage(mainDateFormat);
+            formatStr = getMessages().getMessage(mainDateFormat);
         }
         if (StringUtils.isNotEmpty(formatStr)) {
             resultComponent.setDateFormat(formatStr);

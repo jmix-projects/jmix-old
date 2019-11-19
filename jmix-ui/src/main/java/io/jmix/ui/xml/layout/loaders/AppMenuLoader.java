@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.mainwindow.AppMenu;
+import io.jmix.ui.components.mainwindow.AppMenu;
 
 public class AppMenuLoader extends AbstractComponentLoader<AppMenu> {
     @Override

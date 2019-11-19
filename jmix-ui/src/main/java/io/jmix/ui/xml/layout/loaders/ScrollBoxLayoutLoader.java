@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.ScrollBoxLayout;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.ScrollBoxLayout;
 import org.dom4j.Element;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;

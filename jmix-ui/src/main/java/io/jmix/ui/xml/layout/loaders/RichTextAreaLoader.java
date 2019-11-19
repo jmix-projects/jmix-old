@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.RichTextArea;
+import io.jmix.ui.components.RichTextArea;
 
 public class RichTextAreaLoader extends AbstractTextFieldLoader<RichTextArea> {
     @Override

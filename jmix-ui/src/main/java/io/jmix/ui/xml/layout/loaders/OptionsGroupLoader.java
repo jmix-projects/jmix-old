@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.OptionsGroup;
+import io.jmix.ui.components.OptionsGroup;
 import org.apache.commons.lang3.StringUtils;
 
 public class OptionsGroupLoader extends AbstractOptionsBaseLoader<OptionsGroup> {

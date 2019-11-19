@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.FileMultiUploadField;
+import io.jmix.ui.components.FileMultiUploadField;
 
 public class FileMultiUploadFieldLoader extends AbstractUploadFieldLoader<FileMultiUploadField> {
     @Override

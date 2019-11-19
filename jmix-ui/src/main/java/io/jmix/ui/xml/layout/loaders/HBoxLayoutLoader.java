@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.HBoxLayout;
+import io.jmix.ui.components.HBoxLayout;
 
 public class HBoxLayoutLoader extends AbstractBoxLoader<HBoxLayout> {
     @Override

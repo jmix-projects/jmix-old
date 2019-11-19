@@ -16,10 +16,13 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.sys.ValuePathHelper;
-import com.haulmont.cuba.gui.xml.layout.ComponentLoader;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.ActionsHolder;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.sys.ValuePathHelper;
 import io.jmix.ui.xml.layout.ComponentLoader;
 
 public abstract class AbstractAssignActionPostInitTask implements ComponentLoader.PostInitTask {

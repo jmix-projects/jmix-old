@@ -15,9 +15,9 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.PopupButton.PopupOpenDirection;
-import com.haulmont.cuba.gui.xml.layout.ComponentLoader;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.PopupButton.PopupOpenDirection;
+import io.jmix.ui.xml.layout.ComponentLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.mainwindow.UserIndicator;
+import io.jmix.ui.components.UserIndicator;
 
 public class UserIndicatorLoader extends AbstractComponentLoader<UserIndicator> {
     @Override

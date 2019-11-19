@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.TextField;
-import com.haulmont.cuba.gui.components.TextInputField;
+import io.jmix.ui.components.TextField;
+import io.jmix.ui.components.TextInputField;
 import org.dom4j.Element;
 
 public class TextFieldLoader extends AbstractTextFieldLoader<TextField> {

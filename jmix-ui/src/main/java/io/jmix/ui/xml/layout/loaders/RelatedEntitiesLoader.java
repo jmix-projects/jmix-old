@@ -16,12 +16,13 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.WindowManager.OpenType;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.ListComponent;
-import com.haulmont.cuba.gui.components.RelatedEntities;
-import com.haulmont.cuba.gui.config.WindowConfig;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.WindowManager.OpenType;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.RelatedEntities;
+import io.jmix.ui.config.WindowConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

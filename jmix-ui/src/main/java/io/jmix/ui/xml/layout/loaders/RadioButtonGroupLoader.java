@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.RadioButtonGroup;
+import io.jmix.ui.components.RadioButtonGroup;
 
 public class RadioButtonGroupLoader extends AbstractOptionsBaseLoader<RadioButtonGroup> {
 

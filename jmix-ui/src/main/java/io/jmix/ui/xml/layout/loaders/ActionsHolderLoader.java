@@ -16,14 +16,14 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.components.Action;
-import com.haulmont.cuba.gui.components.Actions;
-import com.haulmont.cuba.gui.components.ActionsHolder;
-import com.haulmont.cuba.gui.components.ListComponent;
-import com.haulmont.cuba.gui.components.actions.ListActionType;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.legacy.ListActionType;
+import io.jmix.ui.components.Actions;
+import io.jmix.ui.components.ActionsHolder;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.compatibility.LegacyFrame;
+import io.jmix.ui.components.compatibility.WindowManager;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

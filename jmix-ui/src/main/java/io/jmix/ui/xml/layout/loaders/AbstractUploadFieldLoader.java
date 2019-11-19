@@ -16,11 +16,11 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.BoxLayout;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.ComponentContainer;
-import com.haulmont.cuba.gui.components.UploadField;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.BoxLayout;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.ComponentContainer;
+import io.jmix.ui.components.UploadField;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

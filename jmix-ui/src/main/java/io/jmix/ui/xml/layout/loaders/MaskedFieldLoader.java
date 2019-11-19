@@ -16,8 +16,8 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.MaskedField;
-import com.haulmont.cuba.gui.components.MaskedField.ValueMode;
+import io.jmix.ui.components.MaskedField;
+import io.jmix.ui.components.MaskedField.ValueMode;
 import org.apache.commons.lang3.StringUtils;
 
 public class MaskedFieldLoader extends AbstractTextFieldLoader<MaskedField> {

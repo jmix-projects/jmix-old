@@ -21,8 +21,11 @@ import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.model.cuba.DsContext;
 import io.jmix.ui.screen.ScreenOptions;
 import org.dom4j.Element;
+
+import java.util.Map;
 
 /**
  * Base interface for loaders which create components by XML definitions.
@@ -56,6 +59,12 @@ public interface ComponentLoader<T extends Component> {
 
         void addInitTask(InitTask task);
         void executeInitTasks();
+
+        /* old API todo vm*/
+
+        Map<String, Object> getParams();
+        DsContext getDsContext();
+        Map<String, String> getAliasesMap();
     }
 
     interface CompositeComponentContext extends Context {

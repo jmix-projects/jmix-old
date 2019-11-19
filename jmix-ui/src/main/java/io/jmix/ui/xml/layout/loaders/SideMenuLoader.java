@@ -16,10 +16,10 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.Button;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.mainwindow.SideMenu;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.Button;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.mainwindow.SideMenu;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

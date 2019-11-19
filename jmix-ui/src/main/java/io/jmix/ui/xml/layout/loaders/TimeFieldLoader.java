@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.Field;
-import com.haulmont.cuba.gui.components.TimeField;
+import io.jmix.ui.components.Field;
+import io.jmix.ui.components.TimeField;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

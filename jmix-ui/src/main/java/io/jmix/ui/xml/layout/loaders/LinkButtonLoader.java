@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.LinkButton;
+import io.jmix.ui.components.LinkButton;
 
 public class LinkButtonLoader extends ButtonLoader {
 

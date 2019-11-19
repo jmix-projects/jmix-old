@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.ColorPicker;
+import io.jmix.ui.components.ColorPicker;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

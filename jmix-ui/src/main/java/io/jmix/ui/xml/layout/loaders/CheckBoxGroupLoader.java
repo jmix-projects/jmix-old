@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.CheckBoxGroup;
+import io.jmix.ui.components.CheckBoxGroup;
 
 public class CheckBoxGroupLoader extends AbstractOptionsBaseLoader<CheckBoxGroup> {
 

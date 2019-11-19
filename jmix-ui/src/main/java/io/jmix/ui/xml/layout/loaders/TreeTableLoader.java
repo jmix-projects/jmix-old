@@ -17,14 +17,14 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Strings;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.TreeTable;
-import com.haulmont.cuba.gui.components.data.TableItems;
-import com.haulmont.cuba.gui.components.data.table.ContainerTableItems;
-import com.haulmont.cuba.gui.components.data.table.ContainerTreeTableItems;
-import com.haulmont.cuba.gui.components.data.table.EmptyTreeTableItems;
-import com.haulmont.cuba.gui.model.CollectionContainer;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.TreeTable;
+import io.jmix.ui.components.data.TableItems;
+import io.jmix.ui.components.data.table.ContainerTableItems;
+import io.jmix.ui.components.data.table.ContainerTreeTableItems;
+import io.jmix.ui.components.data.table.EmptyTreeTableItems;
+import io.jmix.ui.model.CollectionContainer;
 import org.dom4j.Element;
 
 public class TreeTableLoader extends AbstractTableLoader<TreeTable> {

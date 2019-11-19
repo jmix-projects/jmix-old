@@ -15,10 +15,12 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.core.entity.annotation.CaseConversion;
-import com.haulmont.cuba.core.entity.annotation.ConversionType;
-import com.haulmont.cuba.gui.components.HasConversionErrorMessage;
-import com.haulmont.cuba.gui.components.TextInputField;
+import io.jmix.core.entity.annotation.CaseConversion;
+import io.jmix.core.entity.annotation.ConversionType;
+import io.jmix.core.entity.annotation.CaseConversion;
+import io.jmix.core.entity.annotation.ConversionType;
+import io.jmix.ui.components.HasConversionErrorMessage;
+import io.jmix.ui.components.TextInputField;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;

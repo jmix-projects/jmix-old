@@ -16,18 +16,18 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.ButtonsPanel;
-import com.haulmont.cuba.gui.components.CaptionMode;
-import com.haulmont.cuba.gui.components.Tree;
-import com.haulmont.cuba.gui.components.data.tree.ContainerTreeItems;
-import com.haulmont.cuba.gui.data.HierarchicalDatasource;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.model.ScreenData;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.gui.xml.layout.ComponentLoader;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.ButtonsPanel;
+import io.jmix.ui.components.CaptionMode;
+import io.jmix.ui.components.Tree;
+import io.jmix.ui.components.data.tree.ContainerTreeItems;
+import io.jmix.ui.data.HierarchicalDatasource;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.xml.layout.ComponentLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

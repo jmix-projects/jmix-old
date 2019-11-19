@@ -17,34 +17,30 @@ package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.DatatypeRegistry;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.chile.core.model.MetadataObject;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils;
-import com.haulmont.cuba.core.app.dynamicattributes.PropertyType;
-import com.haulmont.cuba.core.entity.CategoryAttribute;
-import com.haulmont.cuba.core.entity.LocaleHelper;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.data.TableItems;
-import com.haulmont.cuba.gui.components.data.table.ContainerTableItems;
-import com.haulmont.cuba.gui.components.data.table.EmptyTableItems;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.aggregation.AggregationStrategy;
-import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributesGuiTools;
-import com.haulmont.cuba.gui.model.*;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.gui.xml.DeclarativeColumnGenerator;
-import com.haulmont.cuba.gui.xml.layout.ComponentLoader;
+import io.jmix.core.*;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.metamodel.model.MetadataObject;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.AggregationInfo;
+import io.jmix.ui.components.ButtonsPanel;
+import io.jmix.ui.components.RowsCount;
+import io.jmix.ui.components.Table;
+import io.jmix.ui.components.data.TableItems;
+import io.jmix.ui.components.data.aggregation.AggregationStrategy;
+import io.jmix.ui.components.data.table.ContainerTableItems;
+import io.jmix.ui.components.data.table.EmptyTableItems;
+import io.jmix.ui.model.*;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.xml.DeclarativeColumnGenerator;
+import io.jmix.ui.xml.layout.ComponentLoader;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
@@ -54,7 +50,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
-import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -204,18 +199,21 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
         }
 
         if (collectionContainer != null) {
-            if (dataLoader instanceof CollectionLoader) {
-                addDynamicAttributes(resultComponent, metaClass, null, (CollectionLoader) dataLoader, availableColumns);
-            } else if (collectionContainer instanceof CollectionPropertyContainer) {
-                addDynamicAttributes(resultComponent, metaClass, null, null, availableColumns);
-            }
+            //todo dynamic attributes
+//            if (dataLoader instanceof CollectionLoader) {
+//                addDynamicAttributes(resultComponent, metaClass, null, (CollectionLoader) dataLoader, availableColumns);
+//            } else if (collectionContainer instanceof CollectionPropertyContainer) {
+//                addDynamicAttributes(resultComponent, metaClass, null, null, availableColumns);
+//            }
             //noinspection unchecked
             resultComponent.setItems(createContainerTableSource(collectionContainer));
         } else if (datasource != null) {
-            addDynamicAttributes(resultComponent, metaClass, datasource, null, availableColumns);
+            //todo dynamic attributes
+//            addDynamicAttributes(resultComponent, metaClass, datasource, null, availableColumns);
             resultComponent.setDatasource((CollectionDatasource) datasource);
         } else {
-            addDynamicAttributes(resultComponent, metaClass, null, null, availableColumns);
+            //todo dynamic attributes
+//            addDynamicAttributes(resultComponent, metaClass, null, null, availableColumns);
             //noinspection unchecked
             resultComponent.setItems(createEmptyTableItems(metaClass));
         }
@@ -258,9 +256,9 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
         return beanLocator.get(MetadataTools.NAME);
     }
 
-    protected DynamicAttributesGuiTools getDynamicAttributesGuiTools() {
-        return beanLocator.get(DynamicAttributesGuiTools.NAME);
-    }
+//    protected DynamicAttributesGuiTools getDynamicAttributesGuiTools() {
+//        return beanLocator.get(DynamicAttributesGuiTools.NAME);
+//    }
 
     protected void loadTextSelectionEnabled(Table table, Element element) {
         String textSelectionEnabled = element.attributeValue("textSelectionEnabled");
@@ -269,88 +267,89 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
         }
     }
 
-    protected void addDynamicAttributes(Table component, MetaClass metaClass, Datasource ds, CollectionLoader collectionLoader,
-                                        List<Table.Column> availableColumns) {
-        if (getMetadataTools().isPersistent(metaClass)) {
-            String windowId = getWindowId(context);
-            // May be no windowId, if a loader is used from a CompositeComponent
-            if (windowId == null) {
-                return;
-            }
-
-            List<CategoryAttribute> attributesToShow =
-                    getDynamicAttributesGuiTools().getSortedAttributesToShowOnTheScreen(metaClass,
-                            windowId, component.getId());
-            if (CollectionUtils.isNotEmpty(attributesToShow)) {
-                if (collectionLoader != null) {
-                    collectionLoader.setLoadDynamicAttributes(true);
-                } else if (ds != null) {
-                    ds.setLoadDynamicAttributes(true);
-                }
-                for (CategoryAttribute attribute : attributesToShow) {
-                    MetaPropertyPath metaPropertyPath = DynamicAttributesUtils.getMetaPropertyPath(metaClass, attribute);
-
-                    Object columnWithSameId = IterableUtils.find(availableColumns,
-                            o -> o.getId().equals(metaPropertyPath));
-
-                    if (columnWithSameId != null) {
-                        continue;
-                    }
-
-                    addDynamicAttributeColumn(component, attribute, metaPropertyPath);
-                }
-            }
-
-            if (ds != null) {
-                getDynamicAttributesGuiTools().listenDynamicAttributesChanges(ds);
-            }
-        }
-    }
-
-    protected void addDynamicAttributeColumn(Table component, CategoryAttribute attribute, MetaPropertyPath metaPropertyPath) {
-
-        Table.Column column = new Table.Column(metaPropertyPath);
-
-        column.setCaption(getDynamicAttributesGuiTools().getColumnCapture(attribute));
-
-        column.setDescription(attribute.getLocaleDescription());
-
-        if (attribute.getDataType().equals(PropertyType.STRING)) {
-            ClientConfig clientConfig = getConfiguration().getConfig(ClientConfig.class);
-            column.setMaxTextLength(clientConfig.getDynamicAttributesTableColumnMaxTextLength());
-        }
-
-        if (attribute.getDataType().equals(PropertyType.ENUMERATION)
-                && BooleanUtils.isNotTrue(attribute.getIsCollection())) {
-            column.setFormatter(value ->
-                    LocaleHelper.getEnumLocalizedValue((String) value, attribute.getEnumerationLocales())
-            );
-        }
-
-        if (!Strings.isNullOrEmpty(attribute.getConfiguration().getColumnAlignment())) {
-            column.setAlignment(Table.ColumnAlignment.valueOf(attribute.getConfiguration().getColumnAlignment()));
-        }
-
-        DecimalFormat formatter = getDynamicAttributesGuiTools().getDecimalFormat(attribute);
-        if (formatter != null) {
-            column.setFormatter(obj -> {
-                if (obj == null) {
-                    return null;
-                }
-                if (obj instanceof Number) {
-                    return formatter.format(obj);
-                }
-                return obj.toString();
-            });
-        }
-
-        //noinspection unchecked
-        component.addColumn(column);
-
-        if (attribute.getConfiguration().getColumnWidth() != null) {
-            column.setWidth(attribute.getConfiguration().getColumnWidth());
-        }
-    }
+    //todo dynamic attributes
+//    protected void addDynamicAttributes(Table component, MetaClass metaClass, Datasource ds, CollectionLoader collectionLoader,
+//                                        List<Table.Column> availableColumns) {
+//        if (getMetadataTools().isPersistent(metaClass)) {
+//            String windowId = getWindowId(context);
+//            // May be no windowId, if a loader is used from a CompositeComponent
+//            if (windowId == null) {
+//                return;
+//            }
+//
+//            List<CategoryAttribute> attributesToShow =
+//                    getDynamicAttributesGuiTools().getSortedAttributesToShowOnTheScreen(metaClass,
+//                            windowId, component.getId());
+//            if (CollectionUtils.isNotEmpty(attributesToShow)) {
+//                if (collectionLoader != null) {
+//                    collectionLoader.setLoadDynamicAttributes(true);
+//                } else if (ds != null) {
+//                    ds.setLoadDynamicAttributes(true);
+//                }
+//                for (CategoryAttribute attribute : attributesToShow) {
+//                    MetaPropertyPath metaPropertyPath = DynamicAttributesUtils.getMetaPropertyPath(metaClass, attribute);
+//
+//                    Object columnWithSameId = IterableUtils.find(availableColumns,
+//                            o -> o.getId().equals(metaPropertyPath));
+//
+//                    if (columnWithSameId != null) {
+//                        continue;
+//                    }
+//
+//                    addDynamicAttributeColumn(component, attribute, metaPropertyPath);
+//                }
+//            }
+//
+//            if (ds != null) {
+//                getDynamicAttributesGuiTools().listenDynamicAttributesChanges(ds);
+//            }
+//        }
+//    }
+//
+//    protected void addDynamicAttributeColumn(Table component, CategoryAttribute attribute, MetaPropertyPath metaPropertyPath) {
+//
+//        Table.Column column = new Table.Column(metaPropertyPath);
+//
+//        column.setCaption(getDynamicAttributesGuiTools().getColumnCapture(attribute));
+//
+//        column.setDescription(attribute.getLocaleDescription());
+//
+//        if (attribute.getDataType().equals(PropertyType.STRING)) {
+//            ClientConfig clientConfig = getConfiguration().getConfig(ClientConfig.class);
+//            column.setMaxTextLength(clientConfig.getDynamicAttributesTableColumnMaxTextLength());
+//        }
+//
+//        if (attribute.getDataType().equals(PropertyType.ENUMERATION)
+//                && BooleanUtils.isNotTrue(attribute.getIsCollection())) {
+//            column.setFormatter(value ->
+//                    LocaleHelper.getEnumLocalizedValue((String) value, attribute.getEnumerationLocales())
+//            );
+//        }
+//
+//        if (!Strings.isNullOrEmpty(attribute.getConfiguration().getColumnAlignment())) {
+//            column.setAlignment(Table.ColumnAlignment.valueOf(attribute.getConfiguration().getColumnAlignment()));
+//        }
+//
+//        DecimalFormat formatter = getDynamicAttributesGuiTools().getDecimalFormat(attribute);
+//        if (formatter != null) {
+//            column.setFormatter(obj -> {
+//                if (obj == null) {
+//                    return null;
+//                }
+//                if (obj instanceof Number) {
+//                    return formatter.format(obj);
+//                }
+//                return obj.toString();
+//            });
+//        }
+//
+//        //noinspection unchecked
+//        component.addColumn(column);
+//
+//        if (attribute.getConfiguration().getColumnWidth() != null) {
+//            column.setWidth(attribute.getConfiguration().getColumnWidth());
+//        }
+//    }
 
     protected void loadMultiLineCells(Table table, Element element) {
         String multiLineCells = element.attributeValue("multiLineCells");
@@ -415,12 +414,13 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
             // check property and add
             String propertyId = column.attributeValue("id");
             if (StringUtils.isNotEmpty(propertyId)) {
-                MetaPropertyPath dynamicAttributePath = DynamicAttributesUtils.getMetaPropertyPath(metaClass, propertyId);
+                //todo dynamic attributes
+//                MetaPropertyPath dynamicAttributePath = DynamicAttributesUtils.getMetaPropertyPath(metaClass, propertyId);
 
                 MetaPropertyPath mpp = metaClass.getPropertyPath(propertyId);
                 boolean isViewContainsProperty = mpp != null && getMetadataTools().viewContainsProperty(view, mpp);
 
-                if (isViewContainsProperty || dynamicAttributePath != null) {
+                if (isViewContainsProperty /*|| dynamicAttributePath != null*/) {
                     String visible = column.attributeValue("visible");
                     if (StringUtils.isEmpty(visible) || Boolean.parseBoolean(visible)) {
                         columns.add(loadColumn(column, metaClass));
@@ -570,17 +570,18 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
                 MetaProperty metaProperty = mpp.getMetaProperty();
                 String propertyName = metaProperty.getName();
 
-                if (DynamicAttributesUtils.isDynamicAttribute(metaProperty)) {
-                    CategoryAttribute categoryAttribute = DynamicAttributesUtils.getCategoryAttribute(metaProperty);
-
-                    columnCaption = LocaleHelper.isLocalizedValueDefined(categoryAttribute.getLocaleNames()) ?
-                            categoryAttribute.getLocaleName() :
-                            StringUtils.capitalize(categoryAttribute.getName());
-                    column.setDescription(categoryAttribute.getLocaleDescription());
-                } else {
+                //todo dynamic attributes
+//                if (DynamicAttributesUtils.isDynamicAttribute(metaProperty)) {
+//                    CategoryAttribute categoryAttribute = DynamicAttributesUtils.getCategoryAttribute(metaProperty);
+//
+//                    columnCaption = LocaleHelper.isLocalizedValueDefined(categoryAttribute.getLocaleNames()) ?
+//                            categoryAttribute.getLocaleName() :
+//                            StringUtils.capitalize(categoryAttribute.getName());
+//                    column.setDescription(categoryAttribute.getLocaleDescription());
+//                } else {
                     MetaClass propertyMetaClass = getMetadataTools().getPropertyEnclosingMetaClass(mpp);
                     columnCaption = getMessageTools().getPropertyCaption(propertyMetaClass, propertyName);
-                }
+//                }
             } else {
                 Class<?> declaringClass = metaClass.getJavaClass();
                 String className = declaringClass.getName();

@@ -17,9 +17,9 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Splitter;
-import com.haulmont.bali.util.ReflectionHelper;
-import com.haulmont.cuba.core.global.DevelopmentException;
-import com.haulmont.cuba.gui.components.Action;
+import io.jmix.core.DevelopmentException;
+import io.jmix.core.commons.util.ReflectionHelper;
+import io.jmix.ui.actions.Action;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;

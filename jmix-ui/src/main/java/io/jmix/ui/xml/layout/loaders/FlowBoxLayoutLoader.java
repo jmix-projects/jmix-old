@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.FlowBoxLayout;
+import io.jmix.ui.components.FlowBoxLayout;
 
 public class FlowBoxLayoutLoader extends ContainerLoader<FlowBoxLayout> {
     @Override

@@ -16,10 +16,11 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.gui.actions.picker.LookupAction;
-import com.haulmont.cuba.gui.actions.picker.OpenAction;
-import com.haulmont.cuba.gui.components.*;
+import io.jmix.core.Metadata;
+import io.jmix.core.Metadata;
+import io.jmix.ui.actions.picker.LookupAction;
+import io.jmix.ui.actions.picker.OpenAction;
+import io.jmix.ui.components.*;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

@@ -16,8 +16,8 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.CaptionMode;
-import com.haulmont.cuba.gui.components.SuggestionField;
+import io.jmix.ui.components.CaptionMode;
+import io.jmix.ui.components.SuggestionField;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

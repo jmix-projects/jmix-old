@@ -16,10 +16,10 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.Action;
-import com.haulmont.cuba.gui.components.ActionOwner;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.Frame;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.ActionOwner;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.Frame;
 
 public class ActionOwnerAssignActionPostInitTask extends AbstractAssignActionPostInitTask {
     public ActionOwnerAssignActionPostInitTask(ActionOwner component, String actionId, Frame frame) {

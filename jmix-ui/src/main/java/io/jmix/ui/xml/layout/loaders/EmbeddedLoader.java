@@ -16,8 +16,8 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.Embedded;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.Embedded;
 import org.apache.commons.lang3.StringUtils;
 
 import java.net.MalformedURLException;

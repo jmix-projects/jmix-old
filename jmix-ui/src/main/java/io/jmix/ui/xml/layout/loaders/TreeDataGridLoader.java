@@ -17,13 +17,13 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Strings;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.TreeDataGrid;
-import com.haulmont.cuba.gui.components.data.DataGridItems;
-import com.haulmont.cuba.gui.components.data.datagrid.ContainerTreeDataGridItems;
-import com.haulmont.cuba.gui.components.data.datagrid.EmptyTreeDataGridItems;
-import com.haulmont.cuba.gui.model.CollectionContainer;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.TreeDataGrid;
+import io.jmix.ui.components.data.DataGridItems;
+import io.jmix.ui.components.data.datagrid.ContainerTreeDataGridItems;
+import io.jmix.ui.components.data.datagrid.EmptyTreeDataGridItems;
+import io.jmix.ui.model.CollectionContainer;
 import org.dom4j.Element;
 
 public class TreeDataGridLoader extends AbstractDataGridLoader<TreeDataGrid> {

@@ -17,13 +17,13 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Splitter;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
-import com.haulmont.cuba.security.global.UserSession;
+import io.jmix.core.security.UserSession;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.compatibility.LegacyFrame;
+import io.jmix.ui.components.compatibility.WindowManager;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -67,7 +67,7 @@ public class BulkEditorLoader extends AbstractComponentLoader<BulkEditor> {
         Consumer<?> consumer = super.loadValidator(validatorElement);
         if (!(consumer instanceof Field.Validator)) {
             throw new GuiDevelopmentException(
-                    "BulkEditor validator must implement com.haulmont.cuba.gui.components.Field.Validator", context);
+                    "BulkEditor validator must implement io.jmix.ui.components.Field.Validator", context);
         }
         return (Field.Validator) consumer;
     }

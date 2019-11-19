@@ -17,7 +17,7 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.gui.components.CapsLockIndicator;
+import io.jmix.ui.components.CapsLockIndicator;
 
 public class CapsLockIndicatorLoader extends AbstractComponentLoader<CapsLockIndicator> {
 
@@ -46,7 +46,7 @@ public class CapsLockIndicatorLoader extends AbstractComponentLoader<CapsLockInd
             capsLockOnMessage = loadResourceString(capsLockOnMessage);
             resultComponent.setCapsLockOnMessage(capsLockOnMessage);
         } else {
-            resultComponent.setCapsLockOnMessage(getMessages().getMainMessage("capsLockIndicator.capsLockOnMessage"));
+            resultComponent.setCapsLockOnMessage(getMessages().getMessage("capsLockIndicator.capsLockOnMessage"));
         }
 
         String capsLockOffMessage = element.attributeValue("capsLockOffMessage");

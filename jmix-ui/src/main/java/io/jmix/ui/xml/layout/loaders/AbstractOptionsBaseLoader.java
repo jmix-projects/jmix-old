@@ -16,12 +16,14 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.CaptionMode;
-import com.haulmont.cuba.gui.components.DatasourceComponent;
-import com.haulmont.cuba.gui.components.OptionsField;
-import com.haulmont.cuba.gui.components.data.options.ContainerOptions;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
+import io.jmix.ui.components.CaptionMode;
+import io.jmix.ui.components.DatasourceComponent;
+import io.jmix.ui.components.OptionsField;
+import io.jmix.ui.components.data.options.ContainerOptions;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.data.Datasource;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

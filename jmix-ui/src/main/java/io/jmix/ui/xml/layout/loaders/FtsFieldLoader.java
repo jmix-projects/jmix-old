@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.mainwindow.FtsField;
+import io.jmix.ui.components.mainwindow.FtsField;
 
 public class FtsFieldLoader extends AbstractComponentLoader<FtsField> {
     @Override

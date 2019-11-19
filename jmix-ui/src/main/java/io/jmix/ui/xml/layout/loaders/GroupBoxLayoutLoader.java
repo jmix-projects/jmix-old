@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.GroupBoxLayout;
-import com.haulmont.cuba.gui.components.MarginInfo;
+import io.jmix.ui.components.GroupBoxLayout;
+import io.jmix.ui.components.MarginInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

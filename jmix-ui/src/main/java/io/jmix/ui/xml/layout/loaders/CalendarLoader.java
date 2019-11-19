@@ -17,16 +17,16 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.Calendar;
-import com.haulmont.cuba.gui.components.calendar.ContainerCalendarEventProvider;
-import com.haulmont.cuba.gui.components.data.calendar.EntityCalendarEventProvider;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.model.ScreenData;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.Calendar;
+import io.jmix.ui.components.calendar.ContainerCalendarEventProvider;
+import io.jmix.ui.components.data.calendar.EntityCalendarEventProvider;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.UiControllerUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

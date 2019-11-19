@@ -15,9 +15,9 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.TabSheet;
-import com.haulmont.cuba.gui.xml.layout.ComponentLoader;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.TabSheet;
+import io.jmix.ui.xml.layout.ComponentLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.mainwindow.NewWindowButton;
+import io.jmix.ui.components.mainwindow.NewWindowButton;
 
 public class NewWindowButtonLoader extends AbstractComponentLoader<NewWindowButton> {
     @Override

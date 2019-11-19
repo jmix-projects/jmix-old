@@ -16,8 +16,8 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.xml.layout.ComponentLoader;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.xml.layout.ComponentLoader;
 
 public class CompositeComponentLoaderContext implements ComponentLoader.CompositeComponentContext {
 

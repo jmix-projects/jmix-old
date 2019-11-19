@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.Component;
+import io.jmix.ui.components.Component;
 import org.dom4j.Element;
 
 public class TabComponentLoader extends VBoxLayoutLoader {

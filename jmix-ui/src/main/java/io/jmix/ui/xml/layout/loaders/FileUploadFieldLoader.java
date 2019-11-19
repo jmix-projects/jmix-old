@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.*;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.*;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

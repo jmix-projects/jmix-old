@@ -15,28 +15,28 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.core.global.DevelopmentException;
-import com.haulmont.cuba.gui.AppConfig;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.AbstractFrame;
-import com.haulmont.cuba.gui.components.Facet;
-import com.haulmont.cuba.gui.components.Fragment;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.DsContext;
-import com.haulmont.cuba.gui.data.impl.DatasourceImplementation;
-import com.haulmont.cuba.gui.data.impl.GenericDataSupplier;
-import com.haulmont.cuba.gui.logging.ScreenLifeCycle;
-import com.haulmont.cuba.gui.model.ScreenData;
-import com.haulmont.cuba.gui.model.impl.ScreenDataXmlLoader;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
-import com.haulmont.cuba.gui.sys.CompanionDependencyInjector;
-import com.haulmont.cuba.gui.sys.ScreenViewsLoader;
-import com.haulmont.cuba.gui.xml.FacetLoader;
-import com.haulmont.cuba.gui.xml.data.DsContextLoader;
-import com.haulmont.cuba.gui.xml.layout.ComponentRootLoader;
+import io.jmix.core.DevelopmentException;
+import io.jmix.ui.AppConfig;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.AbstractFrame;
+import io.jmix.ui.components.Facet;
+import io.jmix.ui.components.Fragment;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.data.Datasource;
+import io.jmix.ui.data.DsContext;
+import io.jmix.ui.data.impl.DatasourceImplementation;
+import io.jmix.ui.data.impl.GenericDataSupplier;
+import io.jmix.ui.logging.ScreenLifeCycle;
+import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.model.impl.ScreenDataXmlLoader;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.screen.compatibility.LegacyFrame;
+import io.jmix.ui.sys.CompanionDependencyInjector;
+import io.jmix.ui.sys.ScreenViewsLoader;
+import io.jmix.ui.xml.FacetLoader;
+import io.jmix.ui.xml.data.DsContextLoader;
+import io.jmix.ui.xml.layout.ComponentRootLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 import org.perf4j.StopWatch;
@@ -44,7 +44,7 @@ import org.perf4j.StopWatch;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static com.haulmont.cuba.gui.logging.UIPerformanceLogger.createStopWatch;
+import static io.jmix.ui.logging.UIPerformanceLogger.createStopWatch;
 
 public class FragmentLoader extends ContainerLoader<Fragment> implements ComponentRootLoader<Fragment> {
 

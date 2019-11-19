@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.mainwindow.TimeZoneIndicator;
+import io.jmix.ui.components.mainwindow.TimeZoneIndicator;
 
 public class TimeZoneIndicatorLoader extends AbstractComponentLoader<TimeZoneIndicator> {
     @Override

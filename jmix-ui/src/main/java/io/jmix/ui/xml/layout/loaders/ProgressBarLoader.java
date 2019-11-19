@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.ProgressBar;
+import io.jmix.ui.components.ProgressBar;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

@@ -16,17 +16,17 @@
 
 package io.jmix.ui.xml;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Security;
-import com.haulmont.cuba.gui.components.Action;
-import com.haulmont.cuba.gui.components.ActionsHolder;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.components.actions.ListAction;
-import com.haulmont.cuba.gui.components.compatibility.LegacyFragmentAdapter;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.security.entity.ConstraintOperationType;
+import io.jmix.core.AppBeans;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.security.ConstraintOperationType;
+import io.jmix.core.security.Security;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.ListAction;
+import io.jmix.ui.components.ActionsHolder;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.compatibility.LegacyFragmentAdapter;
+import io.jmix.ui.screen.FrameOwner;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;

@@ -17,34 +17,38 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Preconditions;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.Fragment;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.components.sys.FragmentImplementation;
-import com.haulmont.cuba.gui.components.sys.FrameImplementation;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.logging.ScreenLifeCycle;
-import com.haulmont.cuba.gui.model.impl.ScreenDataImpl;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.ScreenFragment;
-import com.haulmont.cuba.gui.screen.ScreenOptions;
-import com.haulmont.cuba.gui.sys.FragmentContextImpl;
-import com.haulmont.cuba.gui.sys.FragmentHelper;
-import com.haulmont.cuba.gui.sys.FragmentHelper.FragmentLoaderInjectTask;
-import com.haulmont.cuba.gui.sys.ScreenContextImpl;
-import com.haulmont.cuba.gui.xml.layout.ComponentLoader;
-import com.haulmont.cuba.gui.xml.layout.ScreenXmlLoader;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.WindowInfo;
+import io.jmix.ui.components.Fragment;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.impl.FragmentImplementation;
+import io.jmix.ui.components.impl.FrameImplementation;
+import io.jmix.ui.components.sys.FragmentImplementation;
+import io.jmix.ui.components.sys.FrameImplementation;
+import io.jmix.ui.config.WindowConfig;
+import io.jmix.ui.config.WindowInfo;
+import io.jmix.ui.logging.ScreenLifeCycle;
+import io.jmix.ui.model.impl.ScreenDataImpl;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.ScreenFragment;
+import io.jmix.ui.screen.ScreenOptions;
+import io.jmix.ui.sys.FragmentContextImpl;
+import io.jmix.ui.sys.FragmentHelper;
+import io.jmix.ui.sys.FragmentHelper.FragmentLoaderInjectTask;
+import io.jmix.ui.sys.ScreenContextImpl;
+import io.jmix.ui.sys.ScreenXmlLoader;
+import io.jmix.ui.xml.layout.ComponentLoader;
+import io.jmix.ui.xml.layout.ScreenXmlLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 import org.perf4j.StopWatch;
 
 import java.util.Objects;
 
-import static com.haulmont.cuba.gui.logging.UIPerformanceLogger.createStopWatch;
-import static com.haulmont.cuba.gui.screen.UiControllerUtils.*;
-import static com.haulmont.cuba.gui.sys.FragmentHelper.FragmentLoaderInitTask;
-import static com.haulmont.cuba.gui.sys.FragmentHelper.NAME;
+import static io.jmix.ui.logging.UIPerformanceLogger.createStopWatch;
+import static io.jmix.ui.screen.UiControllerUtils.*;
+import static io.jmix.ui.sys.FragmentHelper.FragmentLoaderInitTask;
+import static io.jmix.ui.sys.FragmentHelper.NAME;
 
 public class RuntimePropertiesFrameLoader extends ContainerLoader<Frame> {
 
@@ -62,7 +66,7 @@ public class RuntimePropertiesFrameLoader extends ContainerLoader<Frame> {
     @Override
     public void setContext(Context context) {
         Preconditions.checkArgument(context instanceof ComponentContext,
-                "'context' must implement com.haulmont.cuba.gui.xml.layout.ComponentLoader.ComponentContext");
+                "'context' must implement io.jmix.ui.xml.layout.ComponentLoader.ComponentContext");
         super.setContext(context);
     }
 

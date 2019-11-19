@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.TextArea;
+import io.jmix.ui.components.TextArea;
 import org.apache.commons.lang3.StringUtils;
 
 public class TextAreaLoader extends AbstractTextFieldLoader<TextArea> {

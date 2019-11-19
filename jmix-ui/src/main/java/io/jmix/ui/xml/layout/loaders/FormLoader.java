@@ -19,28 +19,28 @@ package io.jmix.ui.xml.layout.loaders;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils;
-import com.haulmont.cuba.core.entity.CategoryAttribute;
-import com.haulmont.cuba.core.global.MessageTools;
-import com.haulmont.cuba.core.global.MetadataTools;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.data.HasValueSource;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.ValueSourceProvider;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.components.data.options.ContainerOptions;
-import com.haulmont.cuba.gui.components.data.value.ContainerValueSource;
-import com.haulmont.cuba.gui.components.data.value.ContainerValueSourceProvider;
-import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributeComponentsGenerator;
-import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributesGuiTools;
-import com.haulmont.cuba.gui.model.*;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.gui.xml.layout.ComponentLoader;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.app.dynamicattributes.DynamicAttributesUtils;
+import io.jmix.core.entity.CategoryAttribute;
+import io.jmix.core.MessageTools;
+import io.jmix.core.MetadataTools;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.data.HasValueSource;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.ValueSourceProvider;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.options.ContainerOptions;
+import io.jmix.ui.components.data.value.ContainerValueSource;
+import io.jmix.ui.components.data.value.ContainerValueSourceProvider;
+import io.jmix.ui.dynamicattributes.DynamicAttributeComponentsGenerator;
+import io.jmix.ui.dynamicattributes.DynamicAttributesGuiTools;
+import io.jmix.ui.model.*;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.xml.layout.ComponentLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -50,8 +50,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils.getCategoryAttribute;
-import static com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils.isDynamicAttribute;
+import static io.jmix.core.app.dynamicattributes.DynamicAttributesUtils.getCategoryAttribute;
+import static io.jmix.core.app.dynamicattributes.DynamicAttributesUtils.isDynamicAttribute;
 
 public class FormLoader extends AbstractComponentLoader<Form> {
 
@@ -257,7 +257,7 @@ public class FormLoader extends AbstractComponentLoader<Form> {
 
         Component component = getUiComponentsGenerator().generate(context);
         Preconditions.checkState(component instanceof Field,
-                "Form field '%s' must implement com.haulmont.cuba.gui.components.Field", property);
+                "Form field '%s' must implement io.jmix.ui.components.Field", property);
         return (Field) component;
     }
 

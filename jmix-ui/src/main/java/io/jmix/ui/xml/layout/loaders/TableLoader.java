@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.Table;
+import io.jmix.ui.components.Table;
 
 public class TableLoader extends AbstractTableLoader<Table> {
     @Override

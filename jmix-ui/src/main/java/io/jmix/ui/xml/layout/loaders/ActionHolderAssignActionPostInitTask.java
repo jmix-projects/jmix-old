@@ -16,9 +16,9 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.Action;
-import com.haulmont.cuba.gui.components.ActionsHolder;
-import com.haulmont.cuba.gui.components.Frame;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.ActionsHolder;
+import io.jmix.ui.components.Frame;
 
 import java.util.ArrayList;
 import java.util.List;

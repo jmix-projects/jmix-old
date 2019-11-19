@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.mainwindow.LogoutButton;
+import io.jmix.ui.components.mainwindow.LogoutButton;
 
 public class LogoutButtonLoader extends AbstractComponentLoader<LogoutButton> {
     @Override

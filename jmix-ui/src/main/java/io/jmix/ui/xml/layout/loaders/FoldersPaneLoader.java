@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.mainwindow.FoldersPane;
+import io.jmix.ui.components.mainwindow.FoldersPane;
 
 public class FoldersPaneLoader extends AbstractComponentLoader<FoldersPane> {
     @Override

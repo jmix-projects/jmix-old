@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.mainwindow.UserActionsButton;
+import io.jmix.ui.components.mainwindow.UserActionsButton;
 
 public class UserActionsButtonLoader extends AbstractComponentLoader<UserActionsButton> {
 
