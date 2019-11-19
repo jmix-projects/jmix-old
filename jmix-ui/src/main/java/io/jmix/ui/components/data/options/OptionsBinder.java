@@ -21,9 +21,9 @@ import io.jmix.core.entity.Entity;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.HasValue;
 import io.jmix.ui.components.data.BindingState;
-import io.jmix.ui.components.data.EntityOptions;
+import io.jmix.ui.components.data.meta.EntityOptions;
 import io.jmix.ui.components.data.Options;
-import io.jmix.ui.components.data.OptionsBinding;
+import io.jmix.ui.components.data.meta.OptionsBinding;
 
 import java.util.stream.Stream;
 

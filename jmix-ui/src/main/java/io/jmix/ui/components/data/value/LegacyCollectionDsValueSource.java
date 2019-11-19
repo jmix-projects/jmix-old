@@ -16,22 +16,22 @@
 
 package io.jmix.ui.components.data.value;
 
-import com.haulmont.bali.events.EventHub;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.ExtendedEntities;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.core.global.MetadataTools;
-import com.haulmont.cuba.core.sys.BeanLocatorAware;
-import com.haulmont.cuba.gui.components.data.BindingState;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.NestedDatasource;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.ExtendedEntities;
+import io.jmix.core.Metadata;
+import io.jmix.core.MetadataTools;
+import io.jmix.core.commons.events.EventHub;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.impl.BeanLocatorAware;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.components.data.BindingState;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.NestedDatasource;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * This ValueSource implementation is used by Collection value components like TokenList while binding

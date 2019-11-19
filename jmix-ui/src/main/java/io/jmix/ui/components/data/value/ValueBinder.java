@@ -17,24 +17,28 @@
 package io.jmix.ui.components.data.value;
 
 import com.google.common.base.Strings;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.chile.core.model.MetadataObject;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils;
-import com.haulmont.cuba.core.entity.BaseGenericIdEntity;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.entity.KeyValueEntity;
-import com.haulmont.cuba.core.sys.BeanLocatorAware;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.Field;
-import com.haulmont.cuba.gui.components.HasValue;
-import com.haulmont.cuba.gui.components.data.BindingState;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.components.data.meta.ValueBinding;
-import com.haulmont.cuba.gui.components.validators.BeanPropertyValidator;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.BeanValidation;
+import io.jmix.core.MessageTools;
+import io.jmix.core.MetadataTools;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.BaseGenericIdEntity;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.KeyValueEntity;
+import io.jmix.core.impl.BeanLocatorAware;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.metamodel.model.MetadataObject;
+import io.jmix.core.security.Security;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.Field;
+import io.jmix.ui.components.HasValue;
+import io.jmix.ui.components.data.BindingState;
+import io.jmix.ui.components.data.EntityValueSource;
+import io.jmix.ui.components.data.ValueBinding;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.validators.BeanPropertyValidator;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.inject.Inject;
@@ -46,7 +50,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static com.haulmont.cuba.core.entity.BaseEntityInternalAccess.getFilteredAttributes;
+import static io.jmix.core.entity.BaseEntityInternalAccess.getFilteredAttributes;
 
 @org.springframework.stereotype.Component(ValueBinder.NAME)
 public class ValueBinder {
@@ -131,8 +135,9 @@ public class ValueBinder {
         MetaClass propertyEnclosingMetaClass = metadataTools.getPropertyEnclosingMetaClass(metaPropertyPath);
         Class enclosingJavaClass = propertyEnclosingMetaClass.getJavaClass();
 
-        if (enclosingJavaClass != KeyValueEntity.class
-                && !DynamicAttributesUtils.isDynamicAttribute(metaProperty)) {
+        if (enclosingJavaClass != KeyValueEntity.class)
+//                && !DynamicAttributesUtils.isDynamicAttribute(metaProperty)) { // todo dynamic attrs
+        {
             javax.validation.Validator validator = beanValidation.getValidator();
             BeanDescriptor beanDescriptor = validator.getConstraintsForClass(enclosingJavaClass);
 

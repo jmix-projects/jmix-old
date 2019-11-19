@@ -18,6 +18,9 @@ package io.jmix.ui.components.data;
 
 
 import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.components.CheckBoxGroup;
+import io.jmix.ui.components.LookupField;
+import io.jmix.ui.components.RadioButtonGroup;
 
 import java.util.EventObject;
 import java.util.function.Consumer;

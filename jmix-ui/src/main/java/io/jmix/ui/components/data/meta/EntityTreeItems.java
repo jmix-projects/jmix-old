@@ -14,11 +14,25 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.components.data;
+package io.jmix.ui.components.data.meta;
 
 import io.jmix.core.entity.Entity;
-import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.components.data.TreeItems;
 
-public interface ContainerDataUnit<E extends Entity> extends EntityDataUnit {
-    CollectionContainer<E> getContainer();
+import javax.annotation.Nullable;
+
+
+public interface EntityTreeItems<E extends Entity> extends TreeItems<E>, EntityDataUnit {
+    /**
+     * @return the current item contained in the source
+     */
+    @Nullable
+    E getSelectedItem();
+
+    /**
+     * Set current item in the source.
+     *
+     * @param item the item to set
+     */
+    void setSelectedItem(@Nullable E item);
 }

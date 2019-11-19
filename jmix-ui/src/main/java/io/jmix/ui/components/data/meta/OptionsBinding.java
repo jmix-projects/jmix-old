@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.components.data;
+package io.jmix.ui.components.data.meta;
 
 import io.jmix.ui.components.Component;
+import io.jmix.ui.components.data.Binding;
+import io.jmix.ui.components.data.Options;
 
 public interface OptionsBinding<I> extends Binding {
     Options<I> getSource();

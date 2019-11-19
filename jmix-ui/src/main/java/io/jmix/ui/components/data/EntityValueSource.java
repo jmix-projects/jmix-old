@@ -19,6 +19,7 @@ package io.jmix.ui.components.data;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.components.data.meta.EntityDataUnit;
 
 import javax.annotation.Nullable;
 import java.util.EventObject;

@@ -16,10 +16,10 @@
 
 package io.jmix.ui.components.data.value;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.ValueSourceProvider;
-import com.haulmont.cuba.gui.model.InstanceContainer;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.ValueSourceProvider;
+import io.jmix.ui.model.InstanceContainer;
 
 public class ContainerValueSourceProvider<E extends Entity> implements ValueSourceProvider {
 

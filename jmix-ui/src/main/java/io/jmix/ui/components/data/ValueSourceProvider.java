@@ -16,11 +16,14 @@
 
 package io.jmix.ui.components.data;
 
-import io.jmix.core.metamodel.model.MetaClass;
+/**
+ * Provides instances of {@link ValueSource}, for instance, for child components.
+ */
+public interface ValueSourceProvider {
 
-public interface EntityDataUnit extends DataUnit {
     /**
-     * @return {@link MetaClass} of an entity contained in the source
+     * @param property a property to get a {@link ValueSource}
+     * @return an instance of {@link ValueSource} for a given property
      */
-    MetaClass getEntityMetaClass();
+    ValueSource<?> getValueSource(String property);
 }

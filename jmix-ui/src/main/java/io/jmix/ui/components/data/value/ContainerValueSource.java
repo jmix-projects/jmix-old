@@ -17,24 +17,24 @@
 package io.jmix.ui.components.data.value;
 
 import com.google.common.base.Joiner;
-import com.haulmont.bali.events.EventHub;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.MetadataTools;
-import com.haulmont.cuba.core.sys.BeanLocatorAware;
-import com.haulmont.cuba.gui.components.data.BindingState;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.model.*;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.MetadataTools;
+import io.jmix.core.commons.events.EventHub;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.impl.BeanLocatorAware;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.components.data.BindingState;
+import io.jmix.ui.components.data.EntityValueSource;
+import io.jmix.ui.model.*;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.*;
 import java.util.function.Consumer;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class ContainerValueSource<E extends Entity, V> implements EntityValueSource<E, V>, BeanLocatorAware {
 

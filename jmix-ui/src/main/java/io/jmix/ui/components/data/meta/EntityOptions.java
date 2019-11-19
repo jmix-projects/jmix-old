@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.components.data;
+package io.jmix.ui.components.data.meta;
 
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.data.BindingState;
+import io.jmix.ui.components.data.Options;
 
 import java.util.EventObject;
 import java.util.function.Consumer;
