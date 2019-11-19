@@ -16,8 +16,8 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.grid.CubaEditorField;
 import com.vaadin.ui.Grid;
+import io.jmix.ui.widgets.grid.CubaEditorField;
 
 /**
  * Factory that generates components for {@link CubaGrid} editor.

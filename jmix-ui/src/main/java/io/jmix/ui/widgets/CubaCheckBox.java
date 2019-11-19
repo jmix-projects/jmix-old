@@ -16,8 +16,8 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.checkbox.CubaCheckBoxState;
 import com.vaadin.ui.CheckBox;
+import io.jmix.ui.widgets.client.checkbox.CubaCheckBoxState;
 
 public class CubaCheckBox extends CheckBox {
 

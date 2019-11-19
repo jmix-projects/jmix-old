@@ -16,13 +16,13 @@
 
 package io.jmix.ui.widgets.renderers;
 
-import com.haulmont.cuba.web.widgets.EnhancedUI;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ResourceReference;
 import com.vaadin.shared.communication.URLReference;
 import com.vaadin.ui.renderers.ClickableRenderer;
 import elemental.json.JsonValue;
+import io.jmix.ui.widgets.EnhancedUI;
 
 import java.net.MalformedURLException;
 import java.net.URL;

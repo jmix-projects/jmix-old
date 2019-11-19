@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.tabsheet;
 
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.tabsheet.DDTabSheetState;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.tabsheet.DDTabSheetState;
 import com.vaadin.shared.annotations.NoLayout;
 
 public class CubaMainTabSheetState extends DDTabSheetState {

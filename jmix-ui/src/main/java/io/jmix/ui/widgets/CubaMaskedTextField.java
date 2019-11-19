@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.textfield.CubaMaskedTextFieldState;
+import io.jmix.ui.widgets.client.textfield.CubaMaskedTextFieldState;
 
 public class CubaMaskedTextField extends CubaTextField {
 

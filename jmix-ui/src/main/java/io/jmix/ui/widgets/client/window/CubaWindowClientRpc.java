@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.window;
 
-import com.haulmont.cuba.web.widgets.client.tabsheet.ClientAction;
+import io.jmix.ui.widgets.client.tabsheet.ClientAction;
 import com.vaadin.shared.communication.ClientRpc;
 
 public interface CubaWindowClientRpc extends ClientRpc {

@@ -17,12 +17,6 @@
 package io.jmix.ui.widgets;
 
 import com.google.common.collect.Iterables;
-import com.haulmont.cuba.web.widgets.client.table.CubaTableClientRpc;
-import com.haulmont.cuba.web.widgets.client.table.CubaTableServerRpc;
-import com.haulmont.cuba.web.widgets.client.table.CubaTableState;
-import com.haulmont.cuba.web.widgets.compatibility.CubaValueChangeEvent;
-import com.haulmont.cuba.web.widgets.data.AggregationContainer;
-import com.haulmont.cuba.web.widgets.data.TableSortableContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.ShortcutListener;
@@ -38,6 +32,12 @@ import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.ContainerOrderedWrapper;
 import com.vaadin.v7.ui.Field;
+import io.jmix.ui.widgets.client.table.CubaTableClientRpc;
+import io.jmix.ui.widgets.client.table.CubaTableServerRpc;
+import io.jmix.ui.widgets.client.table.CubaTableState;
+import io.jmix.ui.widgets.compatibility.CubaValueChangeEvent;
+import io.jmix.ui.widgets.data.AggregationContainer;
+import io.jmix.ui.widgets.data.TableSortableContainer;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.*;

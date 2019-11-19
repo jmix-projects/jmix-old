@@ -16,11 +16,11 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.data.AggregationContainer;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
 import com.vaadin.v7.data.Property;
+import io.jmix.ui.widgets.data.AggregationContainer;
 
 import java.util.Map;
 import java.util.function.Consumer;

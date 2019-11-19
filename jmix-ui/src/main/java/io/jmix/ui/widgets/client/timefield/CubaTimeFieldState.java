@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.timefield;
 
-import com.haulmont.cuba.web.widgets.client.textfield.CubaMaskedTextFieldState;
+import io.jmix.ui.widgets.client.textfield.CubaMaskedTextFieldState;
 import com.vaadin.shared.annotations.NoLayout;
 
 public class CubaTimeFieldState extends CubaMaskedTextFieldState {

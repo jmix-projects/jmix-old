@@ -16,13 +16,14 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.listselect.CubaListSelectServerRpc;
 import com.haulmont.cuba.web.widgets.compatibility.CubaValueChangeEvent;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.v7.ui.ListSelect;
+import io.jmix.ui.widgets.client.listselect.CubaListSelectServerRpc;
+import io.jmix.ui.widgets.compatibility.CubaValueChangeEvent;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

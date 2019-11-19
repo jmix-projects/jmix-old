@@ -16,15 +16,15 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.data.AggregationContainer;
-import com.haulmont.cuba.web.widgets.data.GroupTableContainer;
-import com.haulmont.cuba.web.widgets.data.util.NullGroupTableContainer;
 import com.vaadin.event.Action;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.PaintException;
 import com.vaadin.server.PaintTarget;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.util.IndexedContainer;
+import io.jmix.ui.widgets.data.AggregationContainer;
+import io.jmix.ui.widgets.data.GroupTableContainer;
+import io.jmix.ui.widgets.data.util.NullGroupTableContainer;
 import org.apache.commons.collections4.CollectionUtils;
 
 import javax.annotation.Nullable;

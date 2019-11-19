@@ -21,7 +21,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
-import com.haulmont.cuba.web.widgets.client.javascriptcomponent.CubaJavaScriptComponentState;
+import io.jmix.ui.widgets.client.javascriptcomponent.CubaJavaScriptComponentState;
 import com.haulmont.cuba.web.widgets.serialization.DateJsonSerializer;
 import com.vaadin.ui.AbstractJavaScriptComponent;
 import com.vaadin.ui.Dependency;

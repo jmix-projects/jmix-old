@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.fieldgrouplayout.CubaFieldGroupLayoutState;
+import io.jmix.ui.widgets.client.fieldgrouplayout.CubaFieldGroupLayoutState;
 import com.vaadin.ui.GridLayout;
 
 import java.util.HashMap;

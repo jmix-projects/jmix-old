@@ -16,9 +16,9 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.resizabletextarea.CubaResizableTextAreaWrapperServerRpc;
-import com.haulmont.cuba.web.widgets.client.resizabletextarea.CubaResizableTextAreaWrapperState;
-import com.haulmont.cuba.web.widgets.client.resizabletextarea.ResizeDirection;
+import io.jmix.ui.widgets.client.resizabletextarea.CubaResizableTextAreaWrapperServerRpc;
+import io.jmix.ui.widgets.client.resizabletextarea.CubaResizableTextAreaWrapperState;
+import io.jmix.ui.widgets.client.resizabletextarea.ResizeDirection;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.ErrorMessage;

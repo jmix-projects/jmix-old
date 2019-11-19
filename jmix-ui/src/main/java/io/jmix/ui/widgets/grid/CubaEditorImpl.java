@@ -18,7 +18,6 @@ package io.jmix.ui.widgets.grid;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import com.haulmont.cuba.web.widgets.CubaEnhancedGrid;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.PropertySet;
 import com.vaadin.data.ValidationResult;
@@ -27,6 +26,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.components.grid.EditorImpl;
 import com.vaadin.util.ReflectTools;
+import io.jmix.ui.widgets.CubaEnhancedGrid;
 
 import java.util.*;
 import java.util.function.Function;

@@ -16,8 +16,8 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.groupbox.CubaGroupBoxServerRpc;
-import com.haulmont.cuba.web.widgets.client.groupbox.CubaGroupBoxState;
+import io.jmix.ui.widgets.client.groupbox.CubaGroupBoxServerRpc;
+import io.jmix.ui.widgets.client.groupbox.CubaGroupBoxState;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;

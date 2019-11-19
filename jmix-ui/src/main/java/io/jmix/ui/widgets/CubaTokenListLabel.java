@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.tokenlistlabel.CubaTokenListLabelServerRpc;
-import com.haulmont.cuba.web.widgets.client.tokenlistlabel.CubaTokenListLabelState;
+import io.jmix.ui.widgets.client.tokenlistlabel.CubaTokenListLabelServerRpc;
+import io.jmix.ui.widgets.client.tokenlistlabel.CubaTokenListLabelState;
 import com.vaadin.ui.CssLayout;
 
 import java.util.ArrayList;

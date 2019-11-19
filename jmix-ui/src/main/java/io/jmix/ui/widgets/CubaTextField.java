@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.textfield.CubaTextFieldState;
+import io.jmix.ui.widgets.client.textfield.CubaTextFieldState;
 import com.vaadin.event.Action;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.ShortcutListener;

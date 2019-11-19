@@ -16,14 +16,16 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.button.CubaCopyButtonExtensionServerRpc;
-import com.haulmont.cuba.web.widgets.client.button.CubaCopyButtonExtensionState;
+import io.jmix.ui.widgets.client.button.CubaCopyButtonExtensionServerRpc;
+import io.jmix.ui.widgets.client.button.CubaCopyButtonExtensionState;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Page;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Button;
 import com.vaadin.util.ReflectTools;
+import io.jmix.ui.widgets.client.button.CubaCopyButtonExtensionServerRpc;
+import io.jmix.ui.widgets.client.button.CubaCopyButtonExtensionState;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;

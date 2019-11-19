@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.fieldgroup;
 
-import com.haulmont.cuba.web.widgets.client.groupbox.CubaGroupBoxState;
+import io.jmix.ui.widgets.client.groupbox.CubaGroupBoxState;
 
 public class CubaFieldGroupState extends CubaGroupBoxState {
     {

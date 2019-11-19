@@ -16,7 +16,6 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.tree.EnhancedTreeDataProvider;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.HierarchicalQuery;
@@ -28,6 +27,7 @@ import com.vaadin.ui.components.grid.GridSelectionModel;
 import com.vaadin.ui.components.grid.MultiSelectionModel;
 import com.vaadin.ui.components.grid.NoSelectionModel;
 import com.vaadin.ui.components.grid.SingleSelectionModel;
+import io.jmix.ui.widgets.tree.EnhancedTreeDataProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;

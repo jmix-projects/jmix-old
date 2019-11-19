@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.richtextarea.CubaRichTextAreaState;
+import io.jmix.ui.widgets.client.richtextarea.CubaRichTextAreaState;
 import com.vaadin.ui.RichTextArea;
 
 import java.util.Map;

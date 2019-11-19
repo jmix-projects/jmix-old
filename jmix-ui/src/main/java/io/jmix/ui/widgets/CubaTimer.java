@@ -16,9 +16,9 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.timer.CubaTimerClientRpc;
-import com.haulmont.cuba.web.widgets.client.timer.CubaTimerServerRpc;
-import com.haulmont.cuba.web.widgets.client.timer.CubaTimerState;
+import io.jmix.ui.widgets.client.timer.CubaTimerClientRpc;
+import io.jmix.ui.widgets.client.timer.CubaTimerServerRpc;
+import io.jmix.ui.widgets.client.timer.CubaTimerState;
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.ui.AbstractComponent;
 import org.slf4j.Logger;

@@ -16,10 +16,10 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.optiongroup.CubaOptionGroupState;
-import com.haulmont.cuba.web.widgets.client.optiongroup.OptionGroupOrientation;
-import com.haulmont.cuba.web.widgets.compatibility.CubaValueChangeEvent;
 import com.vaadin.v7.ui.OptionGroup;
+import io.jmix.ui.widgets.client.optiongroup.CubaOptionGroupState;
+import io.jmix.ui.widgets.client.optiongroup.OptionGroupOrientation;
+import io.jmix.ui.widgets.compatibility.CubaValueChangeEvent;
 
 import java.util.function.Function;
 

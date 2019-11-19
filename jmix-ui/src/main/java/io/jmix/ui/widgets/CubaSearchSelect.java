@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.searchselect.CubaSearchSelectState;
+import io.jmix.ui.widgets.client.searchselect.CubaSearchSelectState;
 
 import java.util.function.Consumer;
 

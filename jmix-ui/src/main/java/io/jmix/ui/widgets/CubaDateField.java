@@ -16,10 +16,10 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.datefield.CubaDateFieldState;
 import com.vaadin.data.Result;
 import com.vaadin.event.Action;
 import com.vaadin.shared.ui.datefield.DateResolution;
+import io.jmix.ui.widgets.client.datefield.CubaDateFieldState;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;

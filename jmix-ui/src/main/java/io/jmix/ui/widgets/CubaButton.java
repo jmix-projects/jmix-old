@@ -16,11 +16,11 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.button.CubaButtonClientRpc;
-import com.haulmont.cuba.web.widgets.client.button.CubaButtonState;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import io.jmix.ui.widgets.client.button.CubaButtonClientRpc;
+import io.jmix.ui.widgets.client.button.CubaButtonState;
 import org.slf4j.LoggerFactory;
 
 import java.util.function.Consumer;

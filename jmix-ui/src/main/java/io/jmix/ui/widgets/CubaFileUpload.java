@@ -16,9 +16,9 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.fileupload.CubaFileUploadClientRpc;
-import com.haulmont.cuba.web.widgets.client.fileupload.CubaFileUploadServerRpc;
-import com.haulmont.cuba.web.widgets.client.fileupload.CubaFileUploadState;
+import io.jmix.ui.widgets.client.fileupload.CubaFileUploadClientRpc;
+import io.jmix.ui.widgets.client.fileupload.CubaFileUploadServerRpc;
+import io.jmix.ui.widgets.client.fileupload.CubaFileUploadState;
 import com.vaadin.server.*;
 import com.vaadin.server.communication.FileUploadHandler;
 import com.vaadin.ui.AbstractComponent;

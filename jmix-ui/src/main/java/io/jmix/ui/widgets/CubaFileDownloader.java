@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.downloader.CubaFileDownloaderClientRPC;
+import io.jmix.ui.widgets.client.downloader.CubaFileDownloaderClientRPC;
 import com.vaadin.server.*;
 import org.apache.commons.lang3.StringUtils;
 

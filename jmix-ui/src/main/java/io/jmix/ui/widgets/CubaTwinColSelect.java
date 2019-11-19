@@ -16,7 +16,7 @@
 package io.jmix.ui.widgets;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.web.widgets.client.twincolselect.CubaTwinColSelectState;
+import io.jmix.ui.widgets.client.twincolselect.CubaTwinColSelectState;
 import com.vaadin.data.provider.DataGenerator;
 import com.vaadin.ui.TwinColSelect;
 import elemental.json.JsonObject;

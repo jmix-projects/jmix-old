@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.textarea.CubaTextAreaState;
+import io.jmix.ui.widgets.client.textarea.CubaTextAreaState;
 import com.vaadin.ui.TextArea;
 
 import java.util.Objects;

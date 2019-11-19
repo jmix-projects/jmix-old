@@ -19,6 +19,7 @@ package io.jmix.ui.widgets;
 import com.haulmont.cuba.web.widgets.addons.aceeditor.AceEditor;
 import com.haulmont.cuba.web.widgets.client.sourcecodeeditor.CubaSourceCodeEditorClientRpc;
 import com.haulmont.cuba.web.widgets.client.sourcecodeeditor.CubaSourceCodeEditorState;
+import io.jmix.ui.widgets.client.sourcecodeeditor.CubaSourceCodeEditorState;
 
 public class CubaSourceCodeEditor extends AceEditor {
 

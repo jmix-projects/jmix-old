@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.table.CubaTableDragSourceExtensionServerRpc;
+import io.jmix.ui.widgets.client.table.CubaTableDragSourceExtensionServerRpc;
 import com.vaadin.ui.dnd.DragSourceExtension;
 import com.vaadin.v7.ui.Table;
 

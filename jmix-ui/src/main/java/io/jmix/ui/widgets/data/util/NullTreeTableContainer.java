@@ -16,11 +16,11 @@
 
 package io.jmix.ui.widgets.data.util;
 
-import com.haulmont.cuba.web.widgets.data.AggregationContainer;
-import com.haulmont.cuba.web.widgets.data.TreeTableContainer;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.util.ContainerHierarchicalWrapper;
+import io.jmix.ui.widgets.data.AggregationContainer;
+import io.jmix.ui.widgets.data.TreeTableContainer;
 
 import java.util.*;
 

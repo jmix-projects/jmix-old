@@ -16,17 +16,17 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.grid.CubaGridServerRpc;
-import com.haulmont.cuba.web.widgets.client.grid.CubaGridState;
-import com.haulmont.cuba.web.widgets.client.grid.CubsGridClientRpc;
-import com.haulmont.cuba.web.widgets.grid.CubaEditorField;
-import com.haulmont.cuba.web.widgets.grid.CubaEditorImpl;
-import com.haulmont.cuba.web.widgets.grid.CubaGridColumn;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.components.grid.Editor;
 import com.vaadin.ui.components.grid.GridSelectionModel;
 import com.vaadin.ui.renderers.AbstractRenderer;
+import io.jmix.ui.widgets.client.grid.CubaGridServerRpc;
+import io.jmix.ui.widgets.client.grid.CubaGridState;
+import io.jmix.ui.widgets.client.grid.CubsGridClientRpc;
+import io.jmix.ui.widgets.grid.CubaEditorField;
+import io.jmix.ui.widgets.grid.CubaEditorImpl;
+import io.jmix.ui.widgets.grid.CubaGridColumn;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -15,10 +15,10 @@
  */
 package io.jmix.ui.widgets.data.util;
 
-import com.haulmont.cuba.web.widgets.data.AggregationContainer;
-import com.haulmont.cuba.web.widgets.data.GroupTableContainer;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.util.ContainerOrderedWrapper;
+import io.jmix.ui.widgets.data.AggregationContainer;
+import io.jmix.ui.widgets.data.GroupTableContainer;
 
 import java.util.Collection;
 import java.util.Map;

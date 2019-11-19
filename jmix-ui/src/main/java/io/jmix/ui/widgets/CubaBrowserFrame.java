@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.browserframe.CubaBrowserFrameState;
+import io.jmix.ui.widgets.client.browserframe.CubaBrowserFrameState;
 
 import java.util.Objects;
 

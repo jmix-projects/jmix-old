@@ -16,9 +16,9 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.capslockindicator.CubaCapsLockIndicatorState;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Label;
+import io.jmix.ui.widgets.client.capslockindicator.CubaCapsLockIndicatorState;
 
 public class CubaCapsLockIndicator extends Label {
 

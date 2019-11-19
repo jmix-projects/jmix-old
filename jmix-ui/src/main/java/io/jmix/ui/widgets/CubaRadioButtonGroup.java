@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.radiobuttongroup.CubaRadioButtonGroupState;
+import io.jmix.ui.widgets.client.radiobuttongroup.CubaRadioButtonGroupState;
 import com.vaadin.shared.ui.Orientation;
 import com.vaadin.ui.RadioButtonGroup;
 

@@ -16,9 +16,9 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.verticalmenu.CubaSideMenuClientRpc;
-import com.haulmont.cuba.web.widgets.client.verticalmenu.CubaSideMenuServerRpc;
-import com.haulmont.cuba.web.widgets.client.verticalmenu.CubaSideMenuState;
+import io.jmix.ui.widgets.client.verticalmenu.CubaSideMenuClientRpc;
+import io.jmix.ui.widgets.client.verticalmenu.CubaSideMenuServerRpc;
+import io.jmix.ui.widgets.client.verticalmenu.CubaSideMenuState;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.AbstractComponent;

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.cubascrollboxlayout;
 
-import com.haulmont.cuba.web.widgets.client.cssactionslayout.CubaCssActionsLayoutState;
+import io.jmix.ui.widgets.client.cssactionslayout.CubaCssActionsLayoutState;
 
 public class CubaScrollBoxLayoutState extends CubaCssActionsLayoutState {
 

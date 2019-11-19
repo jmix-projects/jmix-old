@@ -16,8 +16,8 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.popupview.CubaPopupViewState;
-import com.haulmont.cuba.web.widgets.client.popupview.PopupPosition;
+import io.jmix.ui.widgets.client.popupview.CubaPopupViewState;
+import io.jmix.ui.widgets.client.popupview.PopupPosition;
 import com.vaadin.ui.PopupView;
 
 import java.util.Objects;

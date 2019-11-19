@@ -18,7 +18,7 @@ package io.jmix.ui.widgets;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
 import com.vaadin.event.Action;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.server.ErrorMessage;

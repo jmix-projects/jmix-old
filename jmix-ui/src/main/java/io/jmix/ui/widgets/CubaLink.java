@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.link.CubaLinkState;
+import io.jmix.ui.widgets.client.link.CubaLinkState;
 import com.vaadin.ui.Link;
 
 

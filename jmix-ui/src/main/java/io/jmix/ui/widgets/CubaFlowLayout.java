@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.flowlayout.CubaFlowLayoutState;
+import io.jmix.ui.widgets.client.flowlayout.CubaFlowLayoutState;
 import com.vaadin.ui.Layout;
 
 public class CubaFlowLayout extends CubaCssActionsLayout implements Layout.MarginHandler, Layout.SpacingHandler {

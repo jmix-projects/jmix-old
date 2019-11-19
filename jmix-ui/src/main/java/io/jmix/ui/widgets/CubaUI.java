@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.clientmanager.CubaUIClientRpc;
+import io.jmix.ui.widgets.client.clientmanager.CubaUIClientRpc;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;

@@ -16,9 +16,9 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.grid.CubaEditorField;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.components.grid.GridSelectionModel;
+import io.jmix.ui.widgets.grid.CubaEditorField;
 
 import java.util.Map;
 import java.util.function.Consumer;

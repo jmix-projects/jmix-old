@@ -16,7 +16,6 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.cssactionslayout.CubaCssActionsLayoutState;
 import com.vaadin.event.Action;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.ShortcutListener;
@@ -27,6 +26,7 @@ import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.LegacyComponent;
+import io.jmix.ui.widgets.client.cssactionslayout.CubaCssActionsLayoutState;
 
 import java.util.Map;
 

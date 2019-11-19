@@ -16,9 +16,9 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.split.CubaHorizontalSplitPanelServerRpc;
-import com.haulmont.cuba.web.widgets.client.split.CubaHorizontalSplitPanelState;
-import com.haulmont.cuba.web.widgets.client.split.SplitPanelDockMode;
+import io.jmix.ui.widgets.client.split.CubaHorizontalSplitPanelServerRpc;
+import io.jmix.ui.widgets.client.split.CubaHorizontalSplitPanelState;
+import io.jmix.ui.widgets.client.split.SplitPanelDockMode;
 import com.vaadin.ui.HorizontalSplitPanel;
 
 public class CubaHorizontalSplitPanel extends HorizontalSplitPanel {

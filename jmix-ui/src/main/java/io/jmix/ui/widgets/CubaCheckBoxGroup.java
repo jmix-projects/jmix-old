@@ -16,9 +16,9 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.checkboxgroup.CubaCheckBoxGroupState;
 import com.vaadin.shared.ui.Orientation;
 import com.vaadin.ui.CheckBoxGroup;
+import io.jmix.ui.widgets.client.checkboxgroup.CubaCheckBoxGroupState;
 
 public class CubaCheckBoxGroup<T> extends CheckBoxGroup<T> {
 

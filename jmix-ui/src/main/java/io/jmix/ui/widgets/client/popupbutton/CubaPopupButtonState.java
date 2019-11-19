@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.popupbutton;
 
-import com.haulmont.cuba.web.widgets.client.addons.popupbutton.PopupButtonState;
+import io.jmix.ui.widgets.client.addons.popupbutton.PopupButtonState;
 import com.vaadin.shared.annotations.NoLayout;
 
 public class CubaPopupButtonState extends PopupButtonState {

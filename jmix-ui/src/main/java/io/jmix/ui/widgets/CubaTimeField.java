@@ -16,8 +16,8 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.timefield.CubaTimeFieldState;
-import com.haulmont.cuba.web.widgets.client.timefield.TimeResolution;
+import io.jmix.ui.widgets.client.timefield.CubaTimeFieldState;
+import io.jmix.ui.widgets.client.timefield.TimeResolution;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.shared.communication.FieldRpc;
 import com.vaadin.shared.ui.textfield.AbstractTextFieldServerRpc;

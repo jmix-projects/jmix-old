@@ -17,9 +17,9 @@
 package io.jmix.ui.widgets;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.web.widgets.client.suggestionfield.CubaSuggestionFieldClientRpc;
-import com.haulmont.cuba.web.widgets.client.suggestionfield.CubaSuggestionFieldServerRpc;
-import com.haulmont.cuba.web.widgets.client.suggestionfield.CubaSuggestionFieldState;
+import io.jmix.ui.widgets.client.suggestionfield.CubaSuggestionFieldClientRpc;
+import io.jmix.ui.widgets.client.suggestionfield.CubaSuggestionFieldServerRpc;
+import io.jmix.ui.widgets.client.suggestionfield.CubaSuggestionFieldState;
 import com.vaadin.server.KeyMapper;
 import com.vaadin.server.SizeWithUnit;
 import com.vaadin.ui.AbstractField;

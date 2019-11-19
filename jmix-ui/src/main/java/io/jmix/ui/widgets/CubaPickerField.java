@@ -29,7 +29,7 @@ import com.vaadin.util.ReflectTools;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static com.haulmont.cuba.web.widgets.CubaPickerField.FieldValueChangeListener.FIELD_VALUE_CHANGE_METHOD;
+import static io.jmix.ui.widgets.CubaPickerField.FieldValueChangeListener.FIELD_VALUE_CHANGE_METHOD;
 
 public class CubaPickerField<T> extends com.vaadin.ui.CustomField<T> implements Action.Container {
 

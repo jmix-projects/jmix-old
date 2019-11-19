@@ -16,10 +16,10 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.client.tabsheet.ClientAction;
-import com.haulmont.cuba.web.widgets.client.window.CubaWindowClientRpc;
-import com.haulmont.cuba.web.widgets.client.window.CubaWindowServerRpc;
-import com.haulmont.cuba.web.widgets.client.window.CubaWindowState;
+import io.jmix.ui.widgets.client.tabsheet.ClientAction;
+import io.jmix.ui.widgets.client.window.CubaWindowClientRpc;
+import io.jmix.ui.widgets.client.window.CubaWindowServerRpc;
+import io.jmix.ui.widgets.client.window.CubaWindowState;
 import com.vaadin.event.Action;
 import com.vaadin.event.ConnectorEvent;
 import com.vaadin.event.ShortcutAction.KeyCode;
