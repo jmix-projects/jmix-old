@@ -13,11 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.jmix.ui.components.data.aggregation.impl;
 
-package io.jmix.ui.widgets.client.sourcecodeeditor;
+public class DoubleAggregation extends BasicNumberAggregation<Double> {
+    public DoubleAggregation() {
+        super(Double.class);
+    }
 
-import com.vaadin.shared.communication.ClientRpc;
-
-public interface CubaSourceCodeEditorClientRpc extends ClientRpc {
-    void resetEditHistory();
+    @Override
+    public Double convert(Double result) {
+        return result;
+    }
 }
