@@ -16,9 +16,9 @@
 
 package io.jmix.ui.components.validation;
 
-import com.haulmont.cuba.gui.components.validation.numbers.*;
-import com.haulmont.cuba.gui.components.validation.time.AbstractTimeValidator.*;
-import com.haulmont.cuba.gui.components.validation.time.TimeValidator;
+import io.jmix.ui.components.validation.numbers.*;
+import io.jmix.ui.components.validation.time.AbstractTimeValidator.*;
+import io.jmix.ui.components.validation.time.TimeValidator;
 
 import javax.annotation.Nullable;
 import java.math.BigDecimal;

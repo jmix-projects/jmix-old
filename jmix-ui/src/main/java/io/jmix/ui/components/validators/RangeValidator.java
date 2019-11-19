@@ -16,10 +16,11 @@
 
 package io.jmix.ui.components.validators;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.Field;
-import com.haulmont.cuba.gui.components.ValidationException;
+import io.jmix.core.AppBeans;
+import io.jmix.core.MessageTools;
+import io.jmix.core.Messages;
+import io.jmix.ui.components.Field;
+import io.jmix.ui.components.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -37,6 +38,7 @@ public class RangeValidator implements Field.Validator {
     protected String message;
     protected String messagesPack;
     protected Messages messages = AppBeans.get(Messages.NAME);
+    protected MessageTools messageTools = AppBeans.get(MessageTools.NAME);
 
     protected Class<? extends Comparable> type = String.class;
     protected Comparable minValue = null;
@@ -103,7 +105,7 @@ public class RangeValidator implements Field.Validator {
         if (!result) {
             String msg = null;
             if (message != null) {
-                msg = messages.getTools().loadString(messagesPack, message);
+                msg = messageTools.loadString(messagesPack, message);
             }
             if (msg == null) {
                 msg = "Value '%s' is not included in the range from '%s' to '%s'";

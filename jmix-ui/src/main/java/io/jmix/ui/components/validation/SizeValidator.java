@@ -16,10 +16,10 @@
 
 package io.jmix.ui.components.validation;
 
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.ValidationException;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.Messages;
+import io.jmix.ui.components.ValidationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,7 @@ import java.util.Map;
  * In order to provide your own implementation globally, create a subclass and register it in {@code web-spring.xml},
  * for example:
  * <pre>
- *     &lt;bean id="cuba_SizeValidator" class="com.haulmont.cuba.gui.components.validation.SizeValidator" scope="prototype"/&gt;
+ *     &lt;bean id="cuba_SizeValidator" class="io.jmix.ui.components.validation.SizeValidator" scope="prototype"/&gt;
  *     </pre>
  * Use {@link BeanLocator} when creating the validator programmatically.
  *
@@ -153,7 +153,7 @@ public class SizeValidator<T> extends AbstractValidator<T> {
         if (Collection.class.isAssignableFrom(clazz)) {
             int size = ((Collection) value).size();
             if (min > size || size > max) {
-                this.defaultMessage = messages.getMainMessage("validation.constraints.collectionSizeRange");
+                this.defaultMessage = messages.getMessage("validation.constraints.collectionSizeRange"); //todo getMainMessage
 
                 fireValidationException(
                         message == null ? defaultMessage : message,
@@ -162,7 +162,7 @@ public class SizeValidator<T> extends AbstractValidator<T> {
         } else if (clazz.equals(String.class)) {
             int length = ((String) value).length();
             if (min > length || length > max) {
-                this.defaultMessage = messages.getMainMessage("validation.constraints.sizeRange");
+                this.defaultMessage = messages.getMessage("validation.constraints.sizeRange"); //todo getMainMessage
 
                 fireValidationException(
                         message == null ? defaultMessage : message,

@@ -15,11 +15,12 @@
  */
 package io.jmix.ui.components.validators;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.BeanValidation;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.Field;
-import com.haulmont.cuba.gui.components.ValidationException;
+import io.jmix.core.AppBeans;
+import io.jmix.core.BeanValidation;
+import io.jmix.core.MessageTools;
+import io.jmix.core.Messages;
+import io.jmix.ui.components.Field;
+import io.jmix.ui.components.ValidationException;
 import org.dom4j.Element;
 import org.hibernate.validator.constraints.Email;
 
@@ -32,11 +33,13 @@ public class EmailValidator implements Field.Validator {
     protected String message;
     protected String messagesPack;
     protected Messages messages;
+    protected MessageTools messageTools;
 
     protected Validator validator;
 
     public EmailValidator() {
         messages = AppBeans.get(Messages.class);
+        messageTools = AppBeans.get(MessageTools.class);
         validator = AppBeans.get(BeanValidation.class)
                 .getValidator();
     }
@@ -50,8 +53,9 @@ public class EmailValidator implements Field.Validator {
     /**
      * INTERNAL. Used in tests.
      */
-    protected EmailValidator(Messages messages, Validator validator) {
+    protected EmailValidator(Messages messages, MessageTools messageTools, Validator validator) {
         this.messages = messages;
+        this.messageTools = messageTools;
         this.validator = validator;
     }
 
@@ -70,11 +74,11 @@ public class EmailValidator implements Field.Validator {
             boolean valid = validator.validateValue(EmailValidationPojo.class, "email", email).isEmpty();
             if (!valid) {
                 String msg = message != null ?
-                        messages.getTools().loadString(messagesPack, message)
+                        messageTools.loadString(messagesPack, message)
                         : null;
 
                 if (msg == null) {
-                    msg = messages.getMainMessage("validation.invalidEmail");
+                    msg = messages.getMessage("validation.invalidEmail"); //todo vm mainmessages
                 }
 
                 throw new ValidationException(String.format(msg, value));

@@ -16,10 +16,11 @@
 
 package io.jmix.ui.components.validators;
 
-import com.haulmont.cuba.core.global.BeanValidation;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.gui.components.HasValue;
+import io.jmix.core.BeanValidation;
+import io.jmix.core.MessageTools;
+import io.jmix.core.Messages;
+import io.jmix.core.Metadata;
+import io.jmix.ui.components.HasValue;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -52,6 +53,11 @@ public class BeanPropertyValidator extends AbstractBeanValidator {
     @Inject
     protected void setMessages(Messages messages) {
         this.messages = messages;
+    }
+
+    @Inject
+    protected void setMessageTools(MessageTools messageTools) {
+        this.messageTools = messageTools;
     }
 
     @Inject

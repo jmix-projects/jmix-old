@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.validation.time;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.TimeSource;
+import io.jmix.core.AppBeans;
+import io.jmix.core.TimeSource;
 
 import java.time.*;
 import java.util.Calendar;

@@ -16,9 +16,9 @@
 
 package io.jmix.ui.components.validation;
 
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.ValidationException;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.Messages;
+import io.jmix.ui.components.ValidationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ import java.util.Collection;
  * In order to provide your own implementation globally, create a subclass and register it in {@code web-spring.xml},
  * for example:
  * <pre>
- *     &lt;bean id="cuba_NotEmptyValidator" class="com.haulmont.cuba.gui.components.validation.NotEmptyValidator" scope="prototype"/&gt;
+ *     &lt;bean id="cuba_NotEmptyValidator" class="io.jmix.ui.components.validation.NotEmptyValidator" scope="prototype"/&gt;
  *     </pre>
  * Use {@link BeanLocator} when creating the validator programmatically.
  *
@@ -73,7 +73,7 @@ public class NotEmptyValidator<T> extends AbstractValidator<T> {
                 || (value instanceof String) && ((String) value).isEmpty()) {
             String message = getMessage();
             if (message == null) {
-                message = messages.getMainMessage("validation.constraints.notEmpty");
+                message = messages.getMessage("validation.constraints.notEmpty"); //todo getMainMessage
             }
 
             throw new ValidationException(message);

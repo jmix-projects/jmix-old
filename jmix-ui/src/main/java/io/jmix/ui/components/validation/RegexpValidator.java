@@ -16,11 +16,11 @@
 
 package io.jmix.ui.components.validation;
 
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.ValidationException;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.Messages;
+import io.jmix.ui.components.ValidationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,7 @@ import java.util.regex.Pattern;
  * In order to provide your own implementation globally, create a subclass and register it in {@code web-spring.xml},
  * for example:
  * <pre>
- *     &lt;bean id="cuba_RegexpValidator" class="com.haulmont.cuba.gui.components.validation.RegexpValidator" scope="prototype"/&gt;
+ *     &lt;bean id="cuba_RegexpValidator" class="io.jmix.ui.components.validation.RegexpValidator" scope="prototype"/&gt;
  *     </pre>
  * Use {@link BeanLocator} when creating the validator programmatically.
  *
@@ -86,7 +86,7 @@ public class RegexpValidator extends AbstractValidator<String> {
         if (!pattern.matcher((value)).matches()) {
             String message = getMessage();
             if (message == null) {
-                message = messages.getMainMessage("validation.constraints.regexp");
+                message = messages.getMessage("validation.constraints.regexp"); //todo getMainMessage
             }
 
             throw new ValidationException(getTemplateErrorMessage(message, ParamsMap.of("value", value)));

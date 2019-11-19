@@ -16,17 +16,19 @@
 
 package io.jmix.ui.components.validators;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.core.global.BeanValidation;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.core.global.validation.groups.UiComponentChecks;
-import com.haulmont.cuba.gui.components.CompositeValidationException;
+import io.jmix.core.BeanValidation;
+import io.jmix.core.MessageTools;
+import io.jmix.core.Messages;
+import io.jmix.core.Metadata;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.validation.groups.UiComponentChecks;
+import io.jmix.ui.components.CompositeValidationException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -41,6 +43,7 @@ public class AbstractBeanValidator implements Consumer {
 
     protected Metadata metadata;
     protected Messages messages;
+    protected MessageTools messageTools;
     protected BeanValidation beanValidation;
 
     protected AbstractBeanValidator(Class beanClass, String beanProperty) {
@@ -110,8 +113,8 @@ public class AbstractBeanValidator implements Consumer {
     public String getDefaultErrorMessage() {
         MetaClass metaClass = metadata.getClass(beanClass);
 
-        return messages.formatMainMessage("validation.defaultMsg",
-                messages.getTools().getPropertyCaption(metaClass, beanProperty));
+        return messages.formatMessage("validation.defaultMsg",
+                messageTools.getPropertyCaption(metaClass, beanProperty));
     }
 
     public static class BeanValidationViolationCause implements CompositeValidationException.ViolationCause {

@@ -16,9 +16,9 @@
 
 package io.jmix.ui.components.validation;
 
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.ValidationException;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.Messages;
+import io.jmix.ui.components.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -32,7 +32,7 @@ import javax.inject.Inject;
  * In order to provide your own implementation globally, create a subclass and register it in {@code web-spring.xml},
  * for example:
  * <pre>
- *     &lt;bean id="cuba_NotBlankValidator" class="com.haulmont.cuba.gui.components.validation.NotBlankValidator" scope="prototype"/&gt;
+ *     &lt;bean id="cuba_NotBlankValidator" class="io.jmix.ui.components.validation.NotBlankValidator" scope="prototype"/&gt;
  *     </pre>
  * Use {@link BeanLocator} when creating the validator programmatically.
  */
@@ -64,7 +64,7 @@ public class NotBlankValidator extends AbstractValidator<String> {
         if (StringUtils.isBlank(value)) {
             String message = getMessage();
             if (message == null) {
-                message = messages.getMainMessage("validation.constraints.notBlank");
+                message = messages.getMessage("validation.constraints.notBlank"); //todo getMainMessage
             }
 
             throw new ValidationException(message);

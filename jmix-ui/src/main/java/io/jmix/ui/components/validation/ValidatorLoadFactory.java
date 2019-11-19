@@ -18,9 +18,9 @@ package io.jmix.ui.components.validation;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.MessageTools;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.MessageTools;
+import io.jmix.core.commons.util.Preconditions;
 import org.dom4j.Element;
 import org.springframework.stereotype.Component;
 

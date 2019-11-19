@@ -16,20 +16,21 @@
 
 package io.jmix.ui.components.validation;
 
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.chile.core.datatypes.DatatypeRegistry;
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.ValidationException;
-import com.haulmont.cuba.gui.components.validation.numbers.NumberConstraint;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
+import io.jmix.core.Messages;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.Messages;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.ValidationException;
+import io.jmix.ui.components.validation.numbers.NumberConstraint;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 
-import static com.haulmont.cuba.gui.components.validation.ValidatorHelper.getNumberConstraint;
+import static io.jmix.ui.components.validation.ValidatorHelper.getNumberConstraint;
 
 /**
  * Negative validator checks that value should be a strictly less than 0.
@@ -39,7 +40,7 @@ import static com.haulmont.cuba.gui.components.validation.ValidatorHelper.getNum
  * In order to provide your own implementation globally, create a subclass and register it in {@code web-spring.xml},
  * for example:
  * <pre>
- *     &lt;bean id="cuba_NegativeValidator" class="com.haulmont.cuba.gui.components.validation.NegativeValidator" scope="prototype"/&gt;
+ *     &lt;bean id="cuba_NegativeValidator" class="io.jmix.ui.components.validation.NegativeValidator" scope="prototype"/&gt;
  *     </pre>
  * Use {@link BeanLocator} when creating the validator programmatically.
  *
@@ -96,7 +97,7 @@ public class NegativeValidator<T extends Number> extends AbstractValidator<T> {
         if (!constraint.isNegative()) {
             String message = getMessage();
             if (message == null) {
-                message = messages.getMainMessage("validation.constraints.negative");
+                message = messages.getMessage("validation.constraints.negative"); // todo getMainMessage
             }
 
             String formattedValue = formatValue(value);

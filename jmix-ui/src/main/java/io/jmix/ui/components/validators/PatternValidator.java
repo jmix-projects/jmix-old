@@ -15,11 +15,12 @@
  */
 package io.jmix.ui.components.validators;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.Field;
-import com.haulmont.cuba.gui.components.ValidationException;
-import com.haulmont.cuba.gui.components.validation.RegexpValidator;
+import io.jmix.core.AppBeans;
+import io.jmix.core.MessageTools;
+import io.jmix.core.Messages;
+import io.jmix.ui.components.Field;
+import io.jmix.ui.components.ValidationException;
+import io.jmix.ui.components.validation.RegexpValidator;
 import org.dom4j.Element;
 
 import java.util.regex.Pattern;
@@ -34,6 +35,7 @@ public class PatternValidator implements Field.Validator {
     protected String message;
     protected String messagesPack;
     protected Messages messages = AppBeans.get(Messages.NAME);
+    protected MessageTools messageTools = AppBeans.get(MessageTools.NAME);
 
     public PatternValidator(Element element, String messagesPack) {
         this(element.attributeValue("pattern"));
@@ -48,7 +50,7 @@ public class PatternValidator implements Field.Validator {
     @Override
     public void validate(Object value) throws ValidationException {
         if (value == null || !pattern.matcher(((String) value)).matches()) {
-            String msg = message != null ? messages.getTools().loadString(messagesPack, message) : "Invalid value '%s'";
+            String msg = message != null ? messageTools.loadString(messagesPack, message) : "Invalid value '%s'";
             throw new ValidationException(String.format(msg, value != null ? value : ""));
         }
     }

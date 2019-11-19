@@ -16,11 +16,11 @@
 
 package io.jmix.ui.components.validation;
 
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.DateTimeTransformations;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.ValidationException;
-import com.haulmont.cuba.gui.components.validation.time.TimeValidator;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.DateTimeTransformations;
+import io.jmix.core.Messages;
+import io.jmix.ui.components.ValidationException;
+import io.jmix.ui.components.validation.time.TimeValidator;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -37,7 +37,7 @@ import java.util.Date;
  * In order to provide your own implementation globally, create a subclass and register it in {@code web-spring.xml},
  * for example:
  * <pre>
- *    &lt;bean id="cuba_FutureValidator" class="com.haulmont.cuba.gui.components.validation.FutureValidator" scope="prototype"/&gt;
+ *    &lt;bean id="cuba_FutureValidator" class="io.jmix.ui.components.validation.FutureValidator" scope="prototype"/&gt;
  *    </pre>
  * Use {@link BeanLocator} when creating the validator programmatically.
  *
@@ -101,7 +101,7 @@ public class FutureValidator<T> extends AbstractValidator<T>   {
         if (!timeConstraint.isFuture()) {
             String message = getMessage();
             if (message == null) {
-                message =  messages.getMainMessage("validation.constraints.future");
+                message =  messages.getMessage("validation.constraints.future"); //todo getMainMessage
             }
 
             throw new ValidationException(message);

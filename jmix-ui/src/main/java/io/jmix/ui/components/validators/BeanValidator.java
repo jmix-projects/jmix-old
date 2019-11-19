@@ -16,11 +16,11 @@
 
 package io.jmix.ui.components.validators;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.BeanValidation;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.gui.components.Field;
+import io.jmix.core.AppBeans;
+import io.jmix.core.BeanValidation;
+import io.jmix.core.Messages;
+import io.jmix.core.Metadata;
+import io.jmix.ui.components.Field;
 
 /**
  * Validator that applies JSR303 rules for {@link Field} instance using {@link BeanValidation}.

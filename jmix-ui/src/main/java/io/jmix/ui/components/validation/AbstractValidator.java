@@ -16,15 +16,12 @@
 
 package io.jmix.ui.components.validation;
 
-import com.google.common.base.Strings;
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.DatatypeRegistry;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import groovy.text.GStringTemplateEngine;
+import io.jmix.core.Messages;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
+import io.jmix.core.security.UserSessionSource;
+import org.apache.commons.lang3.NotImplementedException;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -65,17 +62,20 @@ public abstract class AbstractValidator<T> implements Consumer<T> {
      * @return message with inserted values
      */
     protected String getTemplateErrorMessage(String errorMessage, Map<String, Object> values) {
-        if (!Strings.isNullOrEmpty(errorMessage)) {
-            StringWriter writer = new StringWriter();
-            try {
-                GStringTemplateEngine engine = new GStringTemplateEngine();
-                engine.createTemplate(errorMessage).make(values).writeTo(writer);
-                return writer.toString();
-            } catch (ClassNotFoundException | IOException e) {
-                throw new IllegalStateException(e);
-            }
-        }
-        return errorMessage;
+// todo VM
+        throw new NotImplementedException("");
+
+//        if (!Strings.isNullOrEmpty(errorMessage)) {
+//            StringWriter writer = new StringWriter();
+//            try {
+//                GStringTemplateEngine engine = new GStringTemplateEngine();
+//                engine.createTemplate(errorMessage).make(values).writeTo(writer);
+//                return writer.toString();
+//            } catch (ClassNotFoundException | IOException e) {
+//                throw new IllegalStateException(e);
+//            }
+//        }
+//        return errorMessage;
     }
 
     protected String formatValue(Object value) {

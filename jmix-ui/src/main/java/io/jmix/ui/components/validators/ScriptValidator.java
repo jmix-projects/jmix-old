@@ -15,11 +15,12 @@
  */
 package io.jmix.ui.components.validators;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.Scripting;
-import com.haulmont.cuba.gui.components.Field;
-import com.haulmont.cuba.gui.components.ValidationException;
+import io.jmix.core.AppBeans;
+import io.jmix.core.MessageTools;
+import io.jmix.core.Messages;
+import io.jmix.core.Scripting;
+import io.jmix.ui.components.Field;
+import io.jmix.ui.components.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -35,6 +36,7 @@ public class ScriptValidator implements Field.Validator {
     private boolean innerScript;
     private Map<String, Object> params;
     protected Messages messages = AppBeans.get(Messages.NAME);
+    protected MessageTools messageTools = AppBeans.get(MessageTools.NAME);
 
     public ScriptValidator(Element element, String messagesPack) {
         this.script = element.getText();
@@ -75,7 +77,7 @@ public class ScriptValidator implements Field.Validator {
             isValid = scripting.runGroovyScript(scriptPath, params);
         }
         if (!isValid) {
-            String msg = message != null ? messages.getTools().loadString(messagesPack, message) : "Invalid value '%s'";
+            String msg = message != null ? messageTools.loadString(messagesPack, message) : "Invalid value '%s'";
             throw new ValidationException(String.format(msg, value));
         }
     }

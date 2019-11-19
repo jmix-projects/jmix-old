@@ -16,10 +16,11 @@
 
 package io.jmix.ui.components.validators;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.Field;
-import com.haulmont.cuba.gui.components.ValidationException;
+import io.jmix.core.AppBeans;
+import io.jmix.core.MessageTools;
+import io.jmix.core.Messages;
+import io.jmix.ui.components.Field;
+import io.jmix.ui.components.ValidationException;
 import org.dom4j.Element;
 
 /**
@@ -31,6 +32,7 @@ public class StringValidator implements Field.Validator {
     protected String message;
     protected String messagesPack;
     protected Messages messages = AppBeans.get(Messages.NAME);
+    protected MessageTools messageTools = AppBeans.get(MessageTools.NAME);
 
     public StringValidator(Element element, String messagesPack) {
         this.message = element.attributeValue("message");
@@ -44,7 +46,7 @@ public class StringValidator implements Field.Validator {
     @Override
     public void validate(Object value) throws ValidationException {
         if (!(value instanceof String)) {
-            String msg = message != null ? messages.getTools().loadString(messagesPack, message) : "Invalid value '%s'";
+            String msg = message != null ? messageTools.loadString(messagesPack, message) : "Invalid value '%s'";
             throw new ValidationException(String.format(msg, value));
         }
     }

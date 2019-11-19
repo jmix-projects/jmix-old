@@ -16,15 +16,15 @@
 
 package io.jmix.ui.components.validation;
 
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.DatatypeRegistry;
-import com.haulmont.chile.core.datatypes.Datatypes;
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.ValidationException;
-import com.haulmont.cuba.gui.components.validation.numbers.NumberConstraint;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.Messages;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
+import io.jmix.core.metamodel.datatypes.Datatypes;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.ValidationException;
+import io.jmix.ui.components.validation.numbers.NumberConstraint;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Locale;
 
-import static com.haulmont.cuba.gui.components.validation.ValidatorHelper.getNumberConstraint;
+import static io.jmix.ui.components.validation.ValidatorHelper.getNumberConstraint;
 
 /**
  * DecimalMax validator checks that value must be less than or equal to the specified maximum.
@@ -44,7 +44,7 @@ import static com.haulmont.cuba.gui.components.validation.ValidatorHelper.getNum
  * In order to provide your own implementation globally, create a subclass and register it in {@code web-spring.xml},
  * for example:
  * <pre>
- *   &lt;bean id="cuba_DecimalMaxValidator" class="com.haulmont.cuba.gui.components.validation.DecimalMaxValidator" scope="prototype"/&gt;
+ *   &lt;bean id="cuba_DecimalMaxValidator" class="io.jmix.ui.components.validation.DecimalMaxValidator" scope="prototype"/&gt;
  *   </pre>
  * Use {@link BeanLocator} when creating the validator programmatically.
  *
@@ -177,8 +177,8 @@ public class DecimalMaxValidator<T> extends AbstractValidator<T> {
 
     protected String getDefaultMessage() {
         return inclusive ?
-                messages.getMainMessage("validation.constraints.decimalMaxInclusive")
-                : messages.getMainMessage("validation.constraints.decimalMax");
+                messages.getMessage("validation.constraints.decimalMaxInclusive") // todo main messages
+                : messages.getMessage("validation.constraints.decimalMax");
     }
 
     protected void fireValidationException(T value) {
