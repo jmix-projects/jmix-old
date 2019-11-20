@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.components.data.aggregation.impl;
 
-import com.haulmont.cuba.gui.components.AggregationInfo;
-import com.haulmont.cuba.gui.data.aggregation.Aggregation;
+import io.jmix.ui.components.AggregationInfo;
+import io.jmix.ui.components.data.aggregation.Aggregation;
 
 import java.util.Collection;
 import java.util.EnumSet;

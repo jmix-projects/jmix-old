@@ -27,7 +27,7 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.components.data.BindingState;
-import io.jmix.ui.components.data.EntityValueSource;
+import io.jmix.ui.components.data.meta.EntityValueSource;
 import io.jmix.ui.model.*;
 import org.apache.commons.collections4.CollectionUtils;
 

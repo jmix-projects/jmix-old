@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.components.data;
+package io.jmix.ui.components.data.meta;
 
 import io.jmix.ui.components.HasValue;
+import io.jmix.ui.components.data.Binding;
+import io.jmix.ui.components.data.BindingState;
+import io.jmix.ui.components.data.ValueSource;
 
 /**
  * Object that holds data binding information for {@link HasValue} UI component.

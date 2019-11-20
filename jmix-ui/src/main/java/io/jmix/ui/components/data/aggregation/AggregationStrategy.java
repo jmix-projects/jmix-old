@@ -16,9 +16,9 @@
 
 package io.jmix.ui.components.data.aggregation;
 
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.gui.components.AggregationInfo;
-import com.haulmont.cuba.gui.components.Table;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.components.AggregationInfo;
+import io.jmix.ui.components.Table;
 
 import java.util.Collection;
 

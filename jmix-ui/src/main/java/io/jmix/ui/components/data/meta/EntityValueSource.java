@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.components.data;
+package io.jmix.ui.components.data.meta;
 
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.ui.components.data.meta.EntityDataUnit;
+import io.jmix.ui.components.data.ValueSource;
 
 import javax.annotation.Nullable;
 import java.util.EventObject;

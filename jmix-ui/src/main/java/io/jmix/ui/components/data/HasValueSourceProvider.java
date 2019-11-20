@@ -14,26 +14,14 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.components.data.aggregation;
+package io.jmix.ui.components.data;
 
-import io.jmix.ui.components.AggregationInfo;
+/**
+ * An object having a ValueSourceProvider.
+ */
+public interface HasValueSourceProvider {
 
-import java.util.Collection;
-import java.util.EnumSet;
+    ValueSourceProvider getValueSourceProvider();
 
-public interface Aggregation<T> {
-
-    T sum(Collection<T> items);
-
-    T avg(Collection<T> items);
-
-    T min(Collection<T> items);
-
-    T max(Collection<T> items);
-
-    int count(Collection<T> items);
-
-    Class<T> getResultClass();
-
-    EnumSet<AggregationInfo.Type> getSupportedAggregationTypes();
+    void setValueSourceProvider(ValueSourceProvider provider);
 }

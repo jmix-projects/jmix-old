@@ -25,7 +25,7 @@ import io.jmix.core.impl.BeanLocatorAware;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.components.data.BindingState;
-import io.jmix.ui.components.data.EntityValueSource;
+import io.jmix.ui.components.data.meta.EntityValueSource;
 import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.model.cuba.impl.DatasourceImplementation;
 

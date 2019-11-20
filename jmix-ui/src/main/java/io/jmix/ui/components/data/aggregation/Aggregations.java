@@ -15,9 +15,9 @@
  */
 package io.jmix.ui.components.data.aggregation;
 
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.Datatypes;
-import com.haulmont.cuba.gui.data.aggregation.impl.*;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.datatypes.Datatypes;
+import io.jmix.ui.components.data.aggregation.impl.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
