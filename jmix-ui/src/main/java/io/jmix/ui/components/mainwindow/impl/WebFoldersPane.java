@@ -22,7 +22,7 @@ import com.haulmont.cuba.core.global.Configuration;
 import com.haulmont.cuba.gui.components.Frame;
 import com.haulmont.cuba.security.entity.SearchFolder;
 import com.haulmont.cuba.web.WebConfig;
-import com.haulmont.cuba.web.app.folders.CubaFoldersPane;
+import io.jmix.ui.App.folders.CubaFoldersPane;
 import com.haulmont.cuba.web.gui.components.WebAbstractComponent;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.IconGenerator;
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.function.Function;
 
-import static com.haulmont.cuba.web.app.folders.CubaFoldersPane.C_FOLDERS_PANE;
+import static io.jmix.ui.App.folders.CubaFoldersPane.C_FOLDERS_PANE;
 
 public class WebFoldersPane extends WebAbstractComponent<CubaFoldersPane> implements FoldersPane {
 

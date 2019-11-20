@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.Component;
+import io.jmix.ui.components.Component;
 
 /**
  * {@link CompositeComponent} having a caption.

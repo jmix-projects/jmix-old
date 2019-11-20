@@ -16,16 +16,16 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.security.entity.ConstraintOperationType;
+import io.jmix.core.security.ConstraintOperationType;
+import io.jmix.ui.components.compatibility.WindowManager;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * Use {@link com.haulmont.cuba.gui.actions.list.BulkEditAction} in new screens instead.
+ * Use {@link io.jmix.ui.actions.list.BulkEditAction} in new screens instead.
  *
- * @see com.haulmont.cuba.gui.BulkEditors
+ * @see io.jmix.ui.BulkEditors
  */
 public interface BulkEditor extends Component, Component.HasCaption, Component.BelongToFrame, Component.HasIcon,
                                     Component.Focusable, HasHtmlCaption, HasHtmlDescription {

@@ -15,12 +15,12 @@
  */
 package io.jmix.ui.components;
 
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.gui.components.filter.FilterDelegate;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.model.CollectionLoader;
-import com.haulmont.cuba.gui.model.DataLoader;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.ClientConfig;
+import io.jmix.ui.components.filter.FilterDelegate;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.model.CollectionLoader;
+import io.jmix.ui.model.DataLoader;
 import com.haulmont.cuba.security.entity.FilterEntity;
 
 import java.util.List;

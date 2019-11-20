@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.gui.components.autocomplete.AutoCompleteSupport;
-import com.haulmont.cuba.gui.components.autocomplete.Suggester;
+import io.jmix.ui.components.autocomplete.AutoCompleteSupport;
+import io.jmix.ui.components.autocomplete.Suggester;
 import org.apache.commons.lang3.StringUtils;
 
 /**

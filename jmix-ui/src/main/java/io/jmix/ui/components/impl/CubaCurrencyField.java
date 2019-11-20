@@ -16,15 +16,15 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.web.widgets.CubaLabel;
-import com.haulmont.cuba.web.widgets.CubaTextField;
-import com.haulmont.cuba.web.widgets.CurrencyLabelPosition;
 import com.vaadin.server.*;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomField;
 import com.vaadin.ui.TextField;
+import io.jmix.ui.widgets.CubaLabel;
+import io.jmix.ui.widgets.CubaTextField;
+import io.jmix.ui.widgets.CurrencyLabelPosition;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.function.Supplier;

@@ -16,13 +16,6 @@
 
 package io.jmix.ui.components.compatibility;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.components.AbstractFrame;
-import com.haulmont.cuba.gui.components.AbstractWindow;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.data.DsContext;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
 import io.jmix.ui.components.AbstractFrame;

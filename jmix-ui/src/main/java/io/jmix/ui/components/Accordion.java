@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.xml.layout.ComponentLoader;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.xml.layout.ComponentLoader;
 import org.dom4j.Element;
 
 import java.util.Collection;

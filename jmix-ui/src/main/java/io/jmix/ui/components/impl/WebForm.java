@@ -16,18 +16,22 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.app.security.role.edit.UiPermissionDescriptor;
-import com.haulmont.cuba.gui.app.security.role.edit.UiPermissionValue;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.data.ValueSourceProvider;
-import com.haulmont.cuba.gui.components.security.ActionsPermissions;
-import com.haulmont.cuba.gui.sys.TestIdManager;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.widgets.CubaFieldGroupLayout;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.app.security.role.edit.UiPermissionDescriptor;
+import io.jmix.ui.security.UiPermissionValue;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.data.ValueSourceProvider;
+import io.jmix.ui.components.security.ActionsPermissions;
+import io.jmix.ui.security.UiPermissionDescriptor;
+import io.jmix.ui.security.UiPermissionValue;
+import io.jmix.ui.sys.TestIdManager;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.widgets.CubaFieldGroupLayout;
 import com.vaadin.ui.GridLayout;
+import io.jmix.ui.widgets.CubaFieldGroupLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +41,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class WebForm extends WebAbstractComponent<CubaFieldGroupLayout> implements Form, UiPermissionAware {
 

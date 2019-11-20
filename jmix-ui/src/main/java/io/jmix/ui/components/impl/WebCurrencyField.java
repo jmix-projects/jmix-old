@@ -16,20 +16,20 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.DatatypeRegistry;
-import com.haulmont.chile.core.datatypes.ValueConversionException;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.annotation.CurrencyValue;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.CurrencyField;
-import com.haulmont.cuba.gui.components.data.ConversionException;
-import com.haulmont.cuba.gui.components.data.DataAwareComponentsTools;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
+import io.jmix.ui.components.data.ValueConversionException;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.entity.annotation.CurrencyValue;
+import io.jmix.core.Messages;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.CurrencyField;
+import io.jmix.ui.components.data.ConversionException;
+import io.jmix.ui.components.data.DataAwareComponentsTools;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.ValueSource;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -228,7 +228,7 @@ public class WebCurrencyField<V extends Number> extends WebV8AbstractField<CubaC
             String currencyName = (String) annotationProperties.get("currency");
             component.setCurrency(currencyName);
 
-            String labelPosition = ((com.haulmont.cuba.core.entity.annotation.CurrencyLabelPosition) annotationProperties.get("labelPosition")).name();
+            String labelPosition = ((io.jmix.core.entity.annotation.CurrencyLabelPosition) annotationProperties.get("labelPosition")).name();
             setCurrencyLabelPosition(CurrencyLabelPosition.valueOf(labelPosition));
         }
     }
@@ -296,11 +296,11 @@ public class WebCurrencyField<V extends Number> extends WebV8AbstractField<CubaC
         component.setTabIndex(tabIndex);
     }
 
-    protected com.haulmont.cuba.web.widgets.CurrencyLabelPosition toWidgetLabelPosition(CurrencyLabelPosition labelPosition) {
-        return com.haulmont.cuba.web.widgets.CurrencyLabelPosition.valueOf(labelPosition.name());
+    protected io.jmix.ui.widgets.CurrencyLabelPosition toWidgetLabelPosition(CurrencyLabelPosition labelPosition) {
+        return io.jmix.ui.widgets.CurrencyLabelPosition.valueOf(labelPosition.name());
     }
 
-    protected CurrencyLabelPosition fromWidgetLabelPosition(com.haulmont.cuba.web.widgets.CurrencyLabelPosition wLabelPosition) {
+    protected CurrencyLabelPosition fromWidgetLabelPosition(io.jmix.ui.widgets.CurrencyLabelPosition wLabelPosition) {
         return CurrencyLabelPosition.valueOf(wLabelPosition.name());
     }
 }

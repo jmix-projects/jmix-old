@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.gui.export.ExportDataProvider;
+import io.jmix.ui.export.ExportDataProvider;
 
 import javax.annotation.Nullable;
 import java.io.InputStream;

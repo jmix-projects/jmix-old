@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.TextArea;
-import com.haulmont.cuba.web.widgets.CubaTextArea;
+import io.jmix.ui.components.TextArea;
+import io.jmix.ui.widgets.CubaTextArea;
 import com.vaadin.shared.ui.ValueChangeMode;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -50,8 +50,8 @@ public class WebTextArea<V> extends WebAbstractTextArea<CubaTextArea, V>
 
     @Override
     public void setCaseConversion(CaseConversion caseConversion) {
-        com.haulmont.cuba.web.widgets.CaseConversion widgetCaseConversion =
-                com.haulmont.cuba.web.widgets.CaseConversion.valueOf(caseConversion.name());
+        io.jmix.ui.widgets.CaseConversion widgetCaseConversion =
+                io.jmix.ui.widgets.CaseConversion.valueOf(caseConversion.name());
         component.setCaseConversion(widgetCaseConversion);
     }
 }

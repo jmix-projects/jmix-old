@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.components;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.core.entity.FileDescriptor;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.FileDescriptor;
 
 import javax.annotation.Nullable;
 import java.io.InputStream;
@@ -46,7 +46,7 @@ public interface FileUploadField extends UploadField, Field<FileDescriptor>, Com
     }
 
     /**
-     * Get id for uploaded file in {@link com.haulmont.cuba.gui.upload.FileUploading}.
+     * Get id for uploaded file in {@link io.jmix.ui.upload.FileUploading}.
      * @return File Id.
      */
     UUID getFileId();
@@ -63,7 +63,7 @@ public interface FileUploadField extends UploadField, Field<FileDescriptor>, Com
     /**
      * Get content bytes for uploaded file.
      * @return Bytes for uploaded file.
-     * @deprecated Please use {@link FileUploadField#getFileId()} method and {@link com.haulmont.cuba.gui.upload.FileUploading}.
+     * @deprecated Please use {@link FileUploadField#getFileId()} method and {@link io.jmix.ui.upload.FileUploading}.
      */
     @Deprecated
     byte[] getBytes();

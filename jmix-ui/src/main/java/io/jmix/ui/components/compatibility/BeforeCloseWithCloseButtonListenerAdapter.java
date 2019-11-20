@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.compatibility;
 
-import com.haulmont.cuba.gui.components.CloseOriginType;
-import com.haulmont.cuba.gui.components.Window;
+import io.jmix.ui.components.CloseOriginType;
+import io.jmix.ui.components.Window;
 
 import java.util.function.Consumer;
 

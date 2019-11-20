@@ -16,28 +16,28 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.QueryUtils;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.components.SearchPickerField;
-import com.haulmont.cuba.gui.components.SecuredActionsHolder;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.meta.EntityOptions;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.components.data.meta.OptionsBinding;
-import com.haulmont.cuba.gui.components.data.options.DatasourceOptions;
-import com.haulmont.cuba.gui.components.data.options.OptionsBinder;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.web.App;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
-import com.haulmont.cuba.web.widgets.CubaPickerField;
-import com.haulmont.cuba.web.widgets.CubaSearchSelectPickerField;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.ClientConfig;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.Configuration;
+import io.jmix.core.Messages;
+import io.jmix.core.QueryUtils;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.SearchPickerField;
+import io.jmix.ui.components.SecuredActionsHolder;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.meta.EntityOptions;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.meta.OptionsBinding;
+import io.jmix.ui.components.data.options.DatasourceOptions;
+import io.jmix.ui.components.data.options.OptionsBinder;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.App;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.widgets.CubaPickerField;
+import io.jmix.ui.widgets.CubaSearchSelectPickerField;
 import com.vaadin.server.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -65,7 +65,7 @@ public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
     protected FilterPredicate filterPredicate;
 
     protected Function<? super V, String> optionIconProvider;
-    protected Function<? super V, com.haulmont.cuba.gui.components.Resource> optionImageProvider;
+    protected Function<? super V, io.jmix.ui.components.Resource> optionImageProvider;
     protected Function<? super V, String> optionStyleProvider;
 
     protected OptionsBinding<V> optionsBinding;
@@ -181,7 +181,7 @@ public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
             public void notFoundSuggestions(String filterString) {
                 Messages messages = beanLocator.get(Messages.NAME);
 
-                String message = messages.formatMessage("com.haulmont.cuba.gui", "searchSelect.notFound", filterString);
+                String message = messages.formatMessage("io.jmix.ui", "searchSelect.notFound", filterString);
                 App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
             }
 
@@ -190,7 +190,7 @@ public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
                 Messages messages = beanLocator.get(Messages.NAME);
 
                 String message = messages.formatMessage(
-                        "com.haulmont.cuba.gui", "searchSelect.minimumLengthOfFilter", minSearchStringLength);
+                        "io.jmix.ui", "searchSelect.minimumLengthOfFilter", minSearchStringLength);
                 App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
             }
         };
@@ -420,7 +420,7 @@ public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
 
     @SuppressWarnings("unchecked")
     @Override
-    public void setOptionImageProvider(Function<? super V, com.haulmont.cuba.gui.components.Resource> optionImageProvider) {
+    public void setOptionImageProvider(Function<? super V, io.jmix.ui.components.Resource> optionImageProvider) {
         if (this.optionImageProvider != optionImageProvider) {
             this.optionImageProvider = optionImageProvider;
 
@@ -433,12 +433,12 @@ public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
     }
 
     @Override
-    public Function<? super V, com.haulmont.cuba.gui.components.Resource> getOptionImageProvider() {
+    public Function<? super V, io.jmix.ui.components.Resource> getOptionImageProvider() {
         return optionImageProvider;
     }
 
     protected Resource generateOptionImage(V item) {
-        com.haulmont.cuba.gui.components.Resource resource;
+        io.jmix.ui.components.Resource resource;
         try {
             resource = optionImageProvider.apply(item);
         } catch (Exception e) {

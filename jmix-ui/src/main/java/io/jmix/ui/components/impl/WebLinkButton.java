@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.LinkButton;
+import io.jmix.ui.components.LinkButton;
 import com.vaadin.ui.themes.ValoTheme;
 import org.apache.commons.lang3.StringUtils;
 

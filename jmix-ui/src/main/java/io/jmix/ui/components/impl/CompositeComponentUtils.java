@@ -23,7 +23,7 @@ public final class CompositeComponentUtils {
 
     @SuppressWarnings("unchecked")
     public static void setRoot(CompositeComponent compositeComponent,
-                               com.haulmont.cuba.gui.components.Component root) {
+                               io.jmix.ui.components.Component root) {
         compositeComponent.setComposition(root);
     }
 

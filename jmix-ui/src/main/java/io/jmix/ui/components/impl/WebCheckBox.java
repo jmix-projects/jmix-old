@@ -15,11 +15,12 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.CheckBox;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.FieldGroup;
-import com.haulmont.cuba.gui.components.Form;
-import com.haulmont.cuba.web.widgets.CubaCheckBox;
+import io.jmix.ui.components.CheckBox;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.FieldGroup;
+import io.jmix.ui.components.Form;
+import io.jmix.ui.widgets.CubaCheckBox;
+import io.jmix.ui.widgets.CubaCheckBox;
 
 public class WebCheckBox extends WebV8AbstractField<com.vaadin.ui.CheckBox, Boolean, Boolean> implements CheckBox {
     public WebCheckBox() {

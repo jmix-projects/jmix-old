@@ -15,25 +15,25 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.FormatStringsRegistry;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.core.global.DateTimeTransformations;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.TimeField;
-import com.haulmont.cuba.gui.components.data.ConversionException;
-import com.haulmont.cuba.gui.components.data.DataAwareComponentsTools;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.web.widgets.CubaTimeField;
-import com.haulmont.cuba.web.widgets.client.timefield.TimeResolution;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.datatypes.FormatStringsRegistry;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.DateTimeTransformations;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.TimeField;
+import io.jmix.ui.components.data.ConversionException;
+import io.jmix.ui.components.data.DataAwareComponentsTools;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.widgets.CubaTimeField;
+import io.jmix.ui.widgets.client.timefield.TimeResolution;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.inject.Inject;
 import java.time.LocalTime;
 import java.util.Date;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class WebTimeField<V> extends WebV8AbstractField<CubaTimeField, LocalTime, V>
         implements TimeField<V>, InitializingBean {

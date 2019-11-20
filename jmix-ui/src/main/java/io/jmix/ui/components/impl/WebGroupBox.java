@@ -15,14 +15,14 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.web.widgets.CubaGroupBox;
-import com.haulmont.cuba.web.widgets.CubaHorizontalActionsLayout;
-import com.haulmont.cuba.web.widgets.CubaOrderedActionsLayout;
-import com.haulmont.cuba.web.widgets.CubaVerticalActionsLayout;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.*;
+import io.jmix.ui.widgets.CubaGroupBox;
+import io.jmix.ui.widgets.CubaHorizontalActionsLayout;
+import io.jmix.ui.widgets.CubaOrderedActionsLayout;
+import io.jmix.ui.widgets.CubaVerticalActionsLayout;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -397,16 +397,16 @@ public class WebGroupBox extends WebAbstractComponent<CubaGroupBox> implements G
     }
 
     @Override
-    public void setOuterMargin(com.haulmont.cuba.gui.components.MarginInfo marginInfo) {
+    public void setOuterMargin(io.jmix.ui.components.MarginInfo marginInfo) {
         MarginInfo vMargin = new MarginInfo(marginInfo.hasTop(), marginInfo.hasRight(), marginInfo.hasBottom(),
                 marginInfo.hasLeft());
         component.setOuterMargin(vMargin);
     }
 
     @Override
-    public com.haulmont.cuba.gui.components.MarginInfo getOuterMargin() {
+    public io.jmix.ui.components.MarginInfo getOuterMargin() {
         MarginInfo vMargin = component.getOuterMargin();
-        return new com.haulmont.cuba.gui.components.MarginInfo(vMargin.hasTop(), vMargin.hasRight(), vMargin.hasBottom(),
+        return new io.jmix.ui.components.MarginInfo(vMargin.hasTop(), vMargin.hasRight(), vMargin.hasBottom(),
                 vMargin.hasLeft());
     }
 

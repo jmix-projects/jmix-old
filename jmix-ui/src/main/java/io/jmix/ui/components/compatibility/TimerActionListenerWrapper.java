@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.compatibility;
 
-import com.haulmont.cuba.gui.components.Timer;
+import io.jmix.ui.components.Timer;
 
 import java.util.function.Consumer;
 

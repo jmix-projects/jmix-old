@@ -17,16 +17,16 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.ValueConversionException;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.TextArea;
-import com.haulmont.cuba.gui.components.data.ConversionException;
-import com.haulmont.cuba.gui.components.data.DataAwareComponentsTools;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.ui.components.data.ValueConversionException;
+import io.jmix.core.Messages;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.TextArea;
+import io.jmix.ui.components.data.ConversionException;
+import io.jmix.ui.components.data.DataAwareComponentsTools;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.ValueSource;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;

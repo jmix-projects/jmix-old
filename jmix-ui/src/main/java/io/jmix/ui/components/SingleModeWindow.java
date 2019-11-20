@@ -19,7 +19,7 @@ package io.jmix.ui.components;
 public interface SingleModeWindow extends Window {
     /**
      * Name that is used to register a client type specific screen implementation in
-     * {@link com.haulmont.cuba.gui.xml.layout.ComponentsFactory}
+     * {@link io.jmix.ui.xml.layout.ComponentsFactory}
      */
     String NAME = "singleModeWindow";
 

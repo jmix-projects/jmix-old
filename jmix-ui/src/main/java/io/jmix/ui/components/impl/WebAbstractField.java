@@ -15,15 +15,16 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.model.utils.InstanceUtils;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.ValueBinding;
-import com.haulmont.cuba.gui.components.data.value.ValueBinder;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.widgets.compatibility.CubaValueChangeEvent;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.metamodel.model.utils.InstanceUtils;
+import io.jmix.core.Messages;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.data.meta.ValueBinding;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.value.ValueBinder;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.widgets.compatibility.CubaValueChangeEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;

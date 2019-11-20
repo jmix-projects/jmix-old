@@ -15,16 +15,16 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.MetadataTools;
-import com.haulmont.cuba.gui.components.TwinColumn;
-import com.haulmont.cuba.gui.components.data.ConversionException;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.components.data.meta.OptionsBinding;
-import com.haulmont.cuba.gui.components.data.options.OptionsBinder;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
-import com.haulmont.cuba.web.widgets.CubaTwinColSelect;
+import io.jmix.core.AppBeans;
+import io.jmix.core.MetadataTools;
+import io.jmix.ui.components.TwinColumn;
+import io.jmix.ui.components.data.ConversionException;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.meta.OptionsBinding;
+import io.jmix.ui.components.data.options.OptionsBinder;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.widgets.CubaTwinColSelect;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;
 

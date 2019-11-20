@@ -16,10 +16,10 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.components.*;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.*;
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.AbstractComponent;

@@ -16,17 +16,17 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.SecuredActionsHolder;
-import com.haulmont.cuba.gui.components.SuggestionPickerField;
-import com.haulmont.cuba.gui.executors.BackgroundTask;
-import com.haulmont.cuba.gui.executors.BackgroundTaskHandler;
-import com.haulmont.cuba.gui.executors.BackgroundWorker;
-import com.haulmont.cuba.gui.executors.TaskLifeCycle;
-import com.haulmont.cuba.web.widgets.CubaPickerField;
-import com.haulmont.cuba.web.widgets.CubaSuggestionPickerField;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.SecuredActionsHolder;
+import io.jmix.ui.components.SuggestionPickerField;
+import io.jmix.ui.executors.BackgroundTask;
+import io.jmix.ui.executors.BackgroundTaskHandler;
+import io.jmix.ui.executors.BackgroundWorker;
+import io.jmix.ui.executors.TaskLifeCycle;
+import io.jmix.ui.widgets.CubaPickerField;
+import io.jmix.ui.widgets.CubaSuggestionPickerField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static com.haulmont.cuba.web.gui.components.WebLookupField.NULL_STYLE_GENERATOR;
+import static io.jmix.ui.components.impl.WebLookupField.NULL_STYLE_GENERATOR;
 
 public class WebSuggestionPickerField<V extends Entity> extends WebPickerField<V>
         implements SuggestionPickerField<V>, SecuredActionsHolder {

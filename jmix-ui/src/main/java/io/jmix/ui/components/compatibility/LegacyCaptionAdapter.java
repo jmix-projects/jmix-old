@@ -16,12 +16,12 @@
 
 package io.jmix.ui.components.compatibility;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.gui.components.CaptionMode;
-import com.haulmont.cuba.gui.components.HasItemCaptionProvider;
-import com.haulmont.cuba.gui.components.HasOptionCaptionProvider;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Metadata;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.CaptionMode;
+import io.jmix.ui.components.HasItemCaptionProvider;
+import io.jmix.ui.components.HasOptionCaptionProvider;
 
 import java.util.function.Function;
 
@@ -55,7 +55,7 @@ public class LegacyCaptionAdapter implements Function<Object, String> {
         if (captionMode == CaptionMode.PROPERTY
                 && captionProperty != null) {
 
-            if (entity.getMetaClass().getPropertyPath(captionProperty) == null) {
+            if (metadata.getClass(entity).getPropertyPath(captionProperty) == null) {
                 throw new IllegalArgumentException(String.format("Couldn't find property with name '%s'", captionProperty));
             }
 

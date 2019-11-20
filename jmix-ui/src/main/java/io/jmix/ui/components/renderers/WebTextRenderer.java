@@ -16,15 +16,15 @@
 
 package io.jmix.ui.components.renderers;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.DataGrid;
-import com.haulmont.cuba.web.gui.components.WebAbstractDataGrid.AbstractRenderer;
 import com.vaadin.ui.renderers.TextRenderer;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.components.impl.WebAbstractDataGrid;
 
 /**
  * A renderer for presenting simple plain-text string values.
  */
-public class WebTextRenderer extends AbstractRenderer<Entity, Object> implements DataGrid.TextRenderer {
+public class WebTextRenderer extends WebAbstractDataGrid.AbstractRenderer<Entity, Object> implements DataGrid.TextRenderer {
 
     public WebTextRenderer() {
         this("");

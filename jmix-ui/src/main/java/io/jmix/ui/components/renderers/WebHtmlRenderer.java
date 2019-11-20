@@ -16,15 +16,15 @@
 
 package io.jmix.ui.components.renderers;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.DataGrid;
-import com.haulmont.cuba.web.gui.components.WebAbstractDataGrid.AbstractRenderer;
 import com.vaadin.ui.renderers.HtmlRenderer;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.components.impl.WebAbstractDataGrid;
 
 /**
  * A renderer for presenting HTML content.
  */
-public class WebHtmlRenderer extends AbstractRenderer<Entity, String> implements DataGrid.HtmlRenderer {
+public class WebHtmlRenderer extends WebAbstractDataGrid.AbstractRenderer<Entity, String> implements DataGrid.HtmlRenderer {
 
     public WebHtmlRenderer() {
         this("");

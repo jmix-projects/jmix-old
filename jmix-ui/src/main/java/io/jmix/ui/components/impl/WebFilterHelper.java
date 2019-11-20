@@ -17,32 +17,32 @@
 package io.jmix.ui.components.impl;
 
 import com.haulmont.bali.datastruct.Node;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.core.entity.AbstractSearchFolder;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.entity.Folder;
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.gui.UiComponents;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.filter.ConditionsTree;
-import com.haulmont.cuba.gui.components.filter.FilterHelper;
-import com.haulmont.cuba.gui.components.filter.FtsFilterHelper;
-import com.haulmont.cuba.gui.components.filter.condition.AbstractCondition;
-import com.haulmont.cuba.gui.components.filter.condition.GroupCondition;
-import com.haulmont.cuba.gui.components.mainwindow.FoldersPane;
-import com.haulmont.cuba.gui.presentations.Presentations;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.ScreenFragment;
-import com.haulmont.cuba.web.AppUI;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.entity.AbstractSearchFolder;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.Folder;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.Configuration;
+import io.jmix.ui.UiComponents;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.filter.ConditionsTree;
+import io.jmix.ui.components.filter.FilterHelper;
+import io.jmix.ui.components.filter.FtsFilterHelper;
+import io.jmix.ui.components.filter.condition.AbstractCondition;
+import io.jmix.ui.components.filter.condition.GroupCondition;
+import io.jmix.ui.components.mainwindow.FoldersPane;
+import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.ScreenFragment;
+import io.jmix.ui.AppUI;
 import com.haulmont.cuba.web.WebConfig;
-import com.haulmont.cuba.web.app.folders.AppFolderEditWindow;
-import com.haulmont.cuba.web.app.folders.CubaFoldersPane;
-import com.haulmont.cuba.web.app.folders.FolderEditWindow;
+import io.jmix.ui.App.folders.AppFolderEditWindow;
+import io.jmix.ui.App.folders.CubaFoldersPane;
+import io.jmix.ui.App.folders.FolderEditWindow;
 import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
-import com.haulmont.cuba.web.widgets.CubaTextField;
-import com.haulmont.cuba.web.widgets.CubaTree;
+import io.jmix.ui.widgets.CubaTextField;
+import io.jmix.ui.widgets.CubaTree;
 import com.vaadin.shared.ui.grid.DropLocation;
 import com.vaadin.shared.ui.grid.DropMode;
 import com.vaadin.ui.Component;
@@ -53,7 +53,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
-import static com.haulmont.cuba.gui.screen.UiControllerUtils.getHostScreen;
+import static io.jmix.ui.screen.UiControllerUtils.getHostScreen;
 
 @org.springframework.stereotype.Component(FilterHelper.NAME)
 public class WebFilterHelper implements FilterHelper {
@@ -330,7 +330,7 @@ public class WebFilterHelper implements FilterHelper {
     }
 
     @Override
-    public void setComponentFocusable(com.haulmont.cuba.gui.components.Component component, boolean focusable) {
+    public void setComponentFocusable(io.jmix.ui.components.Component component, boolean focusable) {
         com.vaadin.ui.Component vComponent = component.unwrap(com.vaadin.ui.Component.class);
         if (vComponent instanceof Component.Focusable) {
             ((Component.Focusable) vComponent).setTabIndex(focusable ? 0 : -1);
@@ -374,7 +374,7 @@ public class WebFilterHelper implements FilterHelper {
     }
 
     @Override
-    public void setInternalDebugId(com.haulmont.cuba.gui.components.Component component, String id) {
+    public void setInternalDebugId(io.jmix.ui.components.Component component, String id) {
         AppUI ui = AppUI.getCurrent();
         if (ui != null && ui.isTestMode()) {
             component.unwrap(Component.class).setCubaId(id);
@@ -382,7 +382,7 @@ public class WebFilterHelper implements FilterHelper {
     }
 
     @Override
-    public com.haulmont.cuba.gui.components.ComponentContainer createSearchButtonGroupContainer() {
+    public io.jmix.ui.components.ComponentContainer createSearchButtonGroupContainer() {
         CssLayout layout = uiComponents.create(CssLayout.class);
         layout.addStyleName("v-component-group");
         return layout;

@@ -16,23 +16,23 @@
 
 package io.jmix.ui.components.renderers;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.DataGrid;
-import com.haulmont.cuba.web.gui.components.WebAbstractDataGrid.AbstractRenderer;
 import com.vaadin.ui.renderers.NumberRenderer;
 import com.vaadin.ui.renderers.Renderer;
+import io.jmix.core.AppBeans;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.components.impl.WebAbstractDataGrid;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * A renderer for presenting number values.
  */
-public class WebNumberRenderer extends AbstractRenderer<Entity, Number> implements DataGrid.NumberRenderer {
+public class WebNumberRenderer extends WebAbstractDataGrid.AbstractRenderer<Entity, Number> implements DataGrid.NumberRenderer {
 
     private Locale locale;
     private NumberFormat numberFormat;

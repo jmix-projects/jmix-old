@@ -17,13 +17,13 @@
 package io.jmix.ui.components;
 
 import com.google.common.reflect.TypeToken;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.data.DataGridItems;
-import com.haulmont.cuba.gui.components.data.TreeDataGridItems;
-import com.haulmont.cuba.gui.components.data.datagrid.DatasourceTreeDataGridItems;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.HierarchicalDatasource;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.data.DataGridItems;
+import io.jmix.ui.components.data.TreeDataGridItems;
+import io.jmix.ui.components.data.datagrid.DatasourceTreeDataGridItems;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.HierarchicalDatasource;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;

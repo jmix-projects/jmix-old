@@ -16,17 +16,17 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.BulkEditor;
-import com.haulmont.cuba.gui.components.Field;
-import com.haulmont.cuba.gui.components.ListComponent;
-import com.haulmont.cuba.gui.components.actions.BulkEditAction;
-import com.haulmont.cuba.security.entity.ConstraintOperationType;
+import io.jmix.core.security.ConstraintOperationType;
+import io.jmix.ui.components.BulkEditor;
+import io.jmix.ui.components.Field;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.actions.BulkEditAction;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.haulmont.cuba.gui.WindowManager.OpenType;
+import static io.jmix.ui.components.compatibility.WindowManager.OpenType;
 
 public class WebBulkEditor extends WebButton implements BulkEditor {
 

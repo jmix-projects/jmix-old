@@ -16,20 +16,20 @@
 
 package io.jmix.ui.components.calendar;
 
-import com.haulmont.bali.events.EventHub;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.model.CollectionContainer.CollectionChangeEvent;
-import com.haulmont.cuba.gui.model.InstanceContainer;
+import io.jmix.core.commons.events.EventHub;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.model.InstanceContainer;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+
 public class ContainerCalendarEventProvider<E extends Entity>
-        implements CalendarEventProvider, EntityCalendarEventProvider {
+        implements CalendarEventProvider, io.jmix.ui.components.data.calendar.EntityCalendarEventProvider {
 
     protected List<CalendarEvent> itemsCache;
 
@@ -54,7 +54,7 @@ public class ContainerCalendarEventProvider<E extends Entity>
         propertyChangeListener = this.container.addItemPropertyChangeListener(this::onItemPropertyChanged);
     }
 
-    protected void onCollectionChanged(CollectionChangeEvent<E> event) {
+    protected void onCollectionChanged(CollectionContainer.CollectionChangeEvent<E> event) {
         itemsCache = null;
         events.publish(EventSetChangeEvent.class, new EventSetChangeEvent(this));
     }

@@ -15,12 +15,12 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.filter.FilterDelegate;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.model.CollectionLoader;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.filter.FilterDelegate;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.model.CollectionLoader;
 import com.haulmont.cuba.security.entity.FilterEntity;
 import com.vaadin.server.Sizeable;
 import org.dom4j.Element;
@@ -188,13 +188,13 @@ public class WebFilter extends WebAbstractComponent<com.vaadin.ui.Component> imp
     }
 
     @Override
-    public void setMargin(com.haulmont.cuba.gui.components.MarginInfo marginInfo) {
+    public void setMargin(io.jmix.ui.components.MarginInfo marginInfo) {
         HasOuterMargin layout = (HasOuterMargin) delegate.getLayout();
         layout.setOuterMargin(marginInfo);
     }
 
     @Override
-    public com.haulmont.cuba.gui.components.MarginInfo getMargin() {
+    public io.jmix.ui.components.MarginInfo getMargin() {
         HasOuterMargin layout = (HasOuterMargin) delegate.getLayout();
         return layout.getOuterMargin();
     }

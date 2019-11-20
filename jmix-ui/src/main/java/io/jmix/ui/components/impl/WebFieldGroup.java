@@ -15,23 +15,28 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.app.security.role.edit.UiPermissionDescriptor;
-import com.haulmont.cuba.gui.app.security.role.edit.UiPermissionValue;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.security.ActionsPermissions;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.sys.TestIdManager;
-import com.haulmont.cuba.gui.theme.ThemeConstants;
-import com.haulmont.cuba.web.App;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.widgets.CubaFieldGroup;
-import com.haulmont.cuba.web.widgets.CubaFieldGroupLayout;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.AppBeans;
+import io.jmix.ui.App;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.app.security.role.edit.UiPermissionDescriptor;
+import io.jmix.ui.security.UiPermissionValue;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.security.ActionsPermissions;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.sys.TestIdManager;
+import io.jmix.ui.theme.ThemeConstants;
+import io.jmix.ui.App;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.widgets.CubaFieldGroup;
+import io.jmix.ui.widgets.CubaFieldGroupLayout;
+import io.jmix.ui.widgets.CubaFieldGroup;
+import io.jmix.ui.widgets.CubaFieldGroupLayout;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
@@ -47,7 +52,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 import static com.haulmont.cuba.web.gui.components.WebComponentsHelper.convertFieldGroupCaptionAlignment;
 
 public class WebFieldGroup extends WebAbstractComponent<CubaFieldGroupLayout> implements FieldGroup, UiPermissionAware {

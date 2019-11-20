@@ -16,22 +16,23 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.calendar.CalendarEvent;
-import com.haulmont.cuba.gui.components.calendar.CalendarEventProvider;
-import com.haulmont.cuba.gui.components.calendar.EntityCalendarEvent;
-import com.haulmont.cuba.gui.components.calendar.ListCalendarEventProvider;
-import com.haulmont.cuba.gui.components.data.calendar.EntityCalendarEventProvider;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.impl.CollectionDsHelper;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.Messages;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.calendar.CalendarEvent;
+import io.jmix.ui.components.calendar.CalendarEventProvider;
+import io.jmix.ui.components.calendar.EntityCalendarEvent;
+import io.jmix.ui.components.calendar.ListCalendarEventProvider;
+import io.jmix.ui.components.data.calendar.EntityCalendarEventProvider;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.data.impl.CollectionDsHelper;
 import com.haulmont.cuba.web.gui.components.calendar.CalendarEventProviderWrapper;
 import com.haulmont.cuba.web.gui.components.calendar.CalendarEventWrapper;
-import com.haulmont.cuba.web.widgets.CubaCalendar;
+import io.jmix.ui.widgets.CubaCalendar;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents;
+import io.jmix.ui.widgets.CubaCalendar;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -152,15 +153,15 @@ public class WebCalendar extends WebAbstractComponent<CubaCalendar>
             setEventProvider(null);
         } else {
             CollectionDsHelper.autoRefreshInvalid(datasource, true);
-            setEventProvider(new com.haulmont.cuba.gui.components.calendar.EntityCalendarEventProvider(datasource));
+            setEventProvider(new io.jmix.ui.components.calendar.EntityCalendarEventProvider(datasource));
         }
     }
 
     @Nullable
     @Override
     public CollectionDatasource getDatasource() {
-        return (calendarEventProvider instanceof com.haulmont.cuba.gui.components.calendar.EntityCalendarEventProvider)
-                ? ((com.haulmont.cuba.gui.components.calendar.EntityCalendarEventProvider) calendarEventProvider)
+        return (calendarEventProvider instanceof io.jmix.ui.components.calendar.EntityCalendarEventProvider)
+                ? ((io.jmix.ui.components.calendar.EntityCalendarEventProvider) calendarEventProvider)
                 .getDatasource()
                 : null;
     }

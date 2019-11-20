@@ -15,10 +15,10 @@
  */
 package io.jmix.ui.components;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.components.compatibility.TimerActionListenerWrapper;
-import com.haulmont.cuba.gui.components.compatibility.TimerStopListenerWrapper;
-import com.haulmont.cuba.gui.meta.*;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.components.compatibility.TimerActionListenerWrapper;
+import io.jmix.ui.components.compatibility.TimerStopListenerWrapper;
+import io.jmix.ui.meta.*;
 
 import java.util.EventObject;
 import java.util.function.Consumer;

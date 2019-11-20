@@ -23,9 +23,13 @@ import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils;
 import com.haulmont.cuba.gui.components.Table;
 import com.haulmont.cuba.web.widgets.CubaEnhancedTable;
 import com.vaadin.v7.data.Property;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.components.Table;
+import io.jmix.ui.widgets.CubaEnhancedTable;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.haulmont.cuba.web.gui.components.WebAbstractTable.MAX_TEXT_LENGTH_GAP;
+import static io.jmix.ui.components.impl.WebAbstractTable.MAX_TEXT_LENGTH_GAP;
 
 public class AbbreviatedColumnGenerator implements SystemTableColumnGenerator,
         CubaEnhancedTable.PlainTextGeneratedColumn {

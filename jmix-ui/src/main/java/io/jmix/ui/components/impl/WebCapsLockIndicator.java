@@ -16,8 +16,9 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.CapsLockIndicator;
-import com.haulmont.cuba.web.widgets.CubaCapsLockIndicator;
+import io.jmix.ui.components.CapsLockIndicator;
+import io.jmix.ui.widgets.CubaCapsLockIndicator;
+import io.jmix.ui.widgets.CubaCapsLockIndicator;
 
 public class WebCapsLockIndicator extends WebAbstractComponent<CubaCapsLockIndicator> implements CapsLockIndicator {
 

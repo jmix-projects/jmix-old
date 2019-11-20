@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.compatibility;
 
-import com.haulmont.cuba.gui.components.FileMultiUploadField;
+import io.jmix.ui.components.FileMultiUploadField;
 
 import java.util.function.Consumer;
 

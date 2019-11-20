@@ -16,14 +16,14 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.DatatypeRegistry;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.entity.FileDescriptor;
-import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.ComponentContainer;
-import com.haulmont.cuba.gui.components.UploadField;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
+import io.jmix.ui.ClientConfig;
+import io.jmix.core.entity.FileDescriptor;
+import io.jmix.core.Configuration;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.ComponentContainer;
+import io.jmix.ui.components.UploadField;
 
 import java.util.Set;
 

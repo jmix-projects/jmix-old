@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.gui.components.compatibility.LegacyCaptionAdapter;
+import io.jmix.ui.components.compatibility.LegacyCaptionAdapter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.function.Function;

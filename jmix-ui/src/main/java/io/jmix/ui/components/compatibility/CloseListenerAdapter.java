@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.compatibility;
 
-import com.haulmont.cuba.gui.components.Window;
+import io.jmix.ui.components.Window;
 
 @Deprecated
 public class CloseListenerAdapter implements Window.CloseListener {

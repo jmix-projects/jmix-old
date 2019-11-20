@@ -16,65 +16,68 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.DatatypeRegistry;
-import com.haulmont.chile.core.datatypes.ValueConversionException;
-import com.haulmont.chile.core.model.*;
-import com.haulmont.cuba.client.ClientConfig;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
+import io.jmix.ui.components.data.ValueConversionException;
+import io.jmix.core.metamodel.model.*;
+import io.jmix.ui.ClientConfig;
 import com.haulmont.cuba.client.sys.PersistenceManagerClient;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesTools;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils;
-import com.haulmont.cuba.core.app.keyvalue.KeyValueMetaClass;
-import com.haulmont.cuba.core.entity.CategoryAttribute;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.entity.LocaleHelper;
-import com.haulmont.cuba.gui.Notifications;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.LookupComponent.LookupSelectionChangeNotifier;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.components.columnmanager.ColumnManager;
-import com.haulmont.cuba.gui.components.data.AggregatableTableItems;
-import com.haulmont.cuba.gui.components.data.BindingState;
-import com.haulmont.cuba.gui.components.data.HasValueSource;
-import com.haulmont.cuba.gui.components.data.TableItems;
-import com.haulmont.cuba.gui.components.data.meta.ContainerDataUnit;
-import com.haulmont.cuba.gui.components.data.meta.DatasourceDataUnit;
-import com.haulmont.cuba.gui.components.data.meta.EmptyDataUnit;
-import com.haulmont.cuba.gui.components.data.meta.EntityTableItems;
-import com.haulmont.cuba.gui.components.data.table.DatasourceTableItems;
-import com.haulmont.cuba.gui.components.sys.ShowInfoAction;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.DsBuilder;
-import com.haulmont.cuba.gui.data.aggregation.Aggregation;
-import com.haulmont.cuba.gui.data.aggregation.Aggregations;
-import com.haulmont.cuba.gui.data.impl.DatasourceImplementation;
-import com.haulmont.cuba.gui.model.*;
-import com.haulmont.cuba.gui.model.impl.KeyValueContainerImpl;
-import com.haulmont.cuba.gui.presentations.Presentations;
-import com.haulmont.cuba.gui.presentations.PresentationsImpl;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.InstallTargetHandler;
-import com.haulmont.cuba.gui.screen.ScreenContext;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.gui.theme.ThemeConstants;
-import com.haulmont.cuba.gui.theme.ThemeConstantsManager;
+import io.jmix.core.app.dynamicattributes.DynamicAttributesTools;
+import io.jmix.core.app.dynamicattributes.DynamicAttributesUtils;
+import io.jmix.core.app.keyvalue.KeyValueMetaClass;
+import io.jmix.core.entity.CategoryAttribute;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.LocaleHelper;
+import io.jmix.ui.Notifications;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.LookupComponent.LookupSelectionChangeNotifier;
+import io.jmix.ui.components.actions.BaseAction;
+import io.jmix.ui.components.columnmanager.ColumnManager;
+import io.jmix.ui.components.data.AggregatableTableItems;
+import io.jmix.ui.components.data.BindingState;
+import io.jmix.ui.components.data.HasValueSource;
+import io.jmix.ui.components.data.TableItems;
+import io.jmix.ui.components.data.meta.ContainerDataUnit;
+import io.jmix.ui.components.data.meta.DatasourceDataUnit;
+import io.jmix.ui.components.data.meta.EmptyDataUnit;
+import io.jmix.ui.components.data.meta.EntityTableItems;
+import io.jmix.ui.components.data.table.DatasourceTableItems;
+import io.jmix.ui.components.sys.ShowInfoAction;
+import io.jmix.ui.components.table.SortableDataContainer;
+import io.jmix.ui.components.table.TableDataContainer;
+import io.jmix.ui.components.table.TableItemsEventsDelegate;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.data.DsBuilder;
+import io.jmix.ui.data.aggregation.Aggregation;
+import io.jmix.ui.data.aggregation.Aggregations;
+import io.jmix.ui.data.impl.DatasourceImplementation;
+import io.jmix.ui.model.*;
+import io.jmix.ui.model.impl.KeyValueContainerImpl;
+import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.presentations.PresentationsImpl;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.InstallTargetHandler;
+import io.jmix.ui.screen.ScreenContext;
+import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.theme.ThemeConstants;
+import io.jmix.ui.theme.ThemeConstantsManager;
 import com.haulmont.cuba.security.entity.EntityOp;
 import com.haulmont.cuba.security.entity.Presentation;
-import com.haulmont.cuba.web.AppUI;
+import io.jmix.ui.AppUI;
 import com.haulmont.cuba.web.WebConfig;
 import com.haulmont.cuba.web.gui.components.presentations.TablePresentations;
 import com.haulmont.cuba.web.gui.components.table.*;
 import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
-import com.haulmont.cuba.web.widgets.CubaButton;
-import com.haulmont.cuba.web.widgets.CubaEnhancedTable;
-import com.haulmont.cuba.web.widgets.CubaEnhancedTable.AggregationInputValueChangeContext;
-import com.haulmont.cuba.web.widgets.CubaUI;
-import com.haulmont.cuba.web.widgets.compatibility.CubaValueChangeEvent;
-import com.haulmont.cuba.web.widgets.data.AggregationContainer;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.widgets.CubaButton;
+import io.jmix.ui.widgets.CubaEnhancedTable;
+import io.jmix.ui.widgets.CubaEnhancedTable.AggregationInputValueChangeContext;
+import io.jmix.ui.widgets.CubaUI;
+import io.jmix.ui.widgets.compatibility.CubaValueChangeEvent;
+import io.jmix.ui.widgets.data.AggregationContainer;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
@@ -103,7 +106,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 @SuppressWarnings("deprecation")
 public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEnhancedTable, E extends Entity>
@@ -270,7 +273,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     }
 
     @Override
-    public Collection<com.haulmont.cuba.gui.components.Component> getInnerComponents() {
+    public Collection<io.jmix.ui.components.Component> getInnerComponents() {
         if (buttonsPanel != null) {
             return Collections.singletonList(buttonsPanel);
         }
@@ -1845,7 +1848,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     }
 
     @Override
-    public void setRowHeaderMode(com.haulmont.cuba.gui.components.Table.RowHeaderMode rowHeaderMode) {
+    public void setRowHeaderMode(io.jmix.ui.components.Table.RowHeaderMode rowHeaderMode) {
         switch (rowHeaderMode) {
             case NONE: {
                 component.setRowHeaderMode(com.vaadin.v7.ui.Table.RowHeaderMode.HIDDEN);
@@ -2410,7 +2413,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
                         E entity = entityTableSource.getItem(itemId);
 
-                        com.haulmont.cuba.gui.components.Component component = getColumnGenerator().generateCell(entity);
+                        io.jmix.ui.components.Component component = getColumnGenerator().generateCell(entity);
                         if (component == null) {
                             return null;
                         }
@@ -2472,7 +2475,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
     @Override
     public void addGeneratedColumn(String columnId, ColumnGenerator<? super E> generator,
-                                   Class<? extends com.haulmont.cuba.gui.components.Component> componentClass) {
+                                   Class<? extends io.jmix.ui.components.Component> componentClass) {
         // web ui doesn't make any improvements with componentClass known
         addGeneratedColumn(columnId, generator);
     }
@@ -2989,7 +2992,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     }
 
     @Override
-    public void showCustomPopup(com.haulmont.cuba.gui.components.Component popupComponent) {
+    public void showCustomPopup(io.jmix.ui.components.Component popupComponent) {
         Component vComponent = popupComponent.unwrap(com.vaadin.ui.Component.class);
         component.showCustomPopup(vComponent);
         component.setCustomPopupAutoClose(false);

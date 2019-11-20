@@ -16,10 +16,10 @@
 
 package io.jmix.ui.components.renderers;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.DataGrid;
-import com.haulmont.cuba.web.widgets.renderers.CubaClickableTextRenderer;
 import com.vaadin.ui.renderers.Renderer;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.widgets.renderers.CubaClickableTextRenderer;
 
 import java.util.function.Consumer;
 

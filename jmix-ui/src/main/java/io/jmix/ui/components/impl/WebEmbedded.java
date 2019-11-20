@@ -16,10 +16,10 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.gui.components.Embedded;
-import com.haulmont.cuba.gui.export.ExportDataProvider;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Configuration;
+import io.jmix.ui.components.Embedded;
+import io.jmix.ui.export.ExportDataProvider;
 import com.haulmont.cuba.web.WebConfig;
 import com.haulmont.cuba.web.controllers.ControllerUtils;
 import com.vaadin.server.*;

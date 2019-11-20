@@ -20,18 +20,18 @@ import com.google.common.base.Strings;
 import com.haulmont.chile.core.model.MetaProperty;
 import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesTools;
 import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.Table;
-import com.haulmont.cuba.gui.theme.ThemeConstants;
-import com.haulmont.cuba.web.App;
-import com.haulmont.cuba.web.widgets.CubaEnhancedTable;
-import com.haulmont.cuba.web.widgets.CubaResizableTextAreaWrapper;
-import com.haulmont.cuba.web.widgets.CubaTextArea;
 import com.haulmont.cuba.web.widgets.client.resizabletextarea.ResizeDirection;
 import com.vaadin.ui.VerticalLayout;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.App;
+import io.jmix.ui.components.Table;
+import io.jmix.ui.theme.ThemeConstants;
+import io.jmix.ui.widgets.CubaEnhancedTable;
+import io.jmix.ui.widgets.CubaResizableTextAreaWrapper;
+import io.jmix.ui.widgets.CubaTextArea;
 import org.apache.commons.lang3.StringUtils;
 
-import static com.haulmont.cuba.web.gui.components.WebAbstractTable.MAX_TEXT_LENGTH_GAP;
+import static io.jmix.ui.components.impl.WebAbstractTable.MAX_TEXT_LENGTH_GAP;
 
 public class AbbreviatedCellClickListener implements Table.CellClickListener {
 

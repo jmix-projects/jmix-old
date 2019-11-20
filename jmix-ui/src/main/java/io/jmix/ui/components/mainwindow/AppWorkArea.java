@@ -16,9 +16,9 @@
 
 package io.jmix.ui.components.mainwindow;
 
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.VBoxLayout;
-import com.haulmont.cuba.gui.screen.OpenMode;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.VBoxLayout;
+import io.jmix.ui.screen.OpenMode;
 
 import java.util.EventObject;
 import java.util.function.Consumer;

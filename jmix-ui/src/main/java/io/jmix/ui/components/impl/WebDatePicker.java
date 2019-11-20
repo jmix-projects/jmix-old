@@ -16,19 +16,20 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.core.global.DateTimeTransformations;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.DatePicker;
-import com.haulmont.cuba.gui.components.data.ConversionException;
-import com.haulmont.cuba.gui.components.data.DataAwareComponentsTools;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.web.widgets.CubaDatePicker;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.DateTimeTransformations;
+import io.jmix.core.Messages;
+import io.jmix.ui.components.DatePicker;
+import io.jmix.ui.components.data.ConversionException;
+import io.jmix.ui.components.data.DataAwareComponentsTools;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.widgets.CubaDatePicker;
 import com.vaadin.shared.ui.datefield.DateResolution;
 import com.vaadin.ui.InlineDateField;
+import io.jmix.ui.widgets.CubaDatePicker;
 
 import javax.inject.Inject;
 import java.time.*;

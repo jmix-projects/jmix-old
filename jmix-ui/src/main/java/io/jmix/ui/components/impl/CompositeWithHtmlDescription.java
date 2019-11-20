@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.HasHtmlDescription;
+import io.jmix.ui.components.HasHtmlDescription;
 
 /**
  * {@link CompositeComponent} having a HTML description.

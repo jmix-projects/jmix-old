@@ -15,9 +15,9 @@
  */
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.gui.components.Field.Validator;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
+import io.jmix.ui.components.Field.Validator;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
 
 import javax.annotation.Nullable;
 import java.util.List;

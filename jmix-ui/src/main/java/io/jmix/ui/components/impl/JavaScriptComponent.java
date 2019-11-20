@@ -16,9 +16,9 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.HasContextHelp;
-import com.haulmont.cuba.gui.components.HasRequiredIndicator;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.HasContextHelp;
+import io.jmix.ui.components.HasRequiredIndicator;
 import elemental.json.JsonArray;
 import elemental.json.JsonValue;
 
@@ -117,7 +117,7 @@ public interface JavaScriptComponent extends Component,
      * The state object should be a POJO.
      * <p>
      * CAUTION: {@link java.util.Date} fields serialized as strings
-     * with {@link com.haulmont.cuba.web.widgets.serialization.DateJsonSerializer#DATE_FORMAT} format.
+     * with {@link io.jmix.ui.widgets.serialization.DateJsonSerializer#DATE_FORMAT} format.
      *
      * @param state a state object to set
      */

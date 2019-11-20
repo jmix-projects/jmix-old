@@ -19,6 +19,8 @@ package io.jmix.ui.components.mainwindow;
 import com.haulmont.cuba.core.entity.AbstractSearchFolder;
 import com.haulmont.cuba.gui.components.Component;
 import com.haulmont.cuba.gui.components.HasSettings;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.HasSettings;
 
 import java.util.function.Function;
 

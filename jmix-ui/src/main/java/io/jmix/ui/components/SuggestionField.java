@@ -17,7 +17,7 @@
 package io.jmix.ui.components;
 
 import com.google.common.reflect.TypeToken;
-import com.haulmont.bali.util.Preconditions;
+import io.jmix.core.commons.util.Preconditions;
 
 import java.util.List;
 import java.util.Map;

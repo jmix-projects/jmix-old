@@ -122,4 +122,36 @@ public interface Frame
      * @return stream of registered non-visual components
      */
     Stream<Facet> getFacets();
+
+    /**
+     * Popup notification type.
+     */
+    enum NotificationType {
+        /** Tray popup with plain text message */
+        TRAY,
+        /** Tray popup with HTML message */
+        TRAY_HTML,
+        /** Standard popup with plain text message */
+        HUMANIZED,
+        /** Standard popup with HTML message */
+        HUMANIZED_HTML,
+        /** Warning popup with plain text message */
+        WARNING,
+        /** Warning popup with HTML message */
+        WARNING_HTML,
+        /** Error popup with plain text message */
+        ERROR,
+        /** Error popup with HTML message */
+        ERROR_HTML;
+
+        public static boolean isHTML(NotificationType type) {
+            return type == TRAY_HTML || type == HUMANIZED_HTML || type == WARNING_HTML || type == ERROR_HTML;
+        }
+    }
+
+
+    @Deprecated
+    interface Wrapper extends FrameOwner {
+        Frame getWrappedFrame();
+    }
 }

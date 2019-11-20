@@ -16,9 +16,9 @@
 
 package io.jmix.ui.components.renderers;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.DataGrid;
 import com.vaadin.ui.renderers.ButtonRenderer;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.DataGrid;
 
 import java.util.function.Consumer;
 

@@ -16,9 +16,9 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.options.EnumOptions;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.options.EnumOptions;
 
 import java.util.Collection;
 import java.util.List;

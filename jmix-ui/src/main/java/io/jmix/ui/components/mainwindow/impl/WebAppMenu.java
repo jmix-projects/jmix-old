@@ -17,16 +17,17 @@
 package io.jmix.ui.components.mainwindow.impl;
 
 import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.web.AppUI;
+import io.jmix.ui.AppUI;
 import com.haulmont.cuba.web.gui.components.WebAbstractComponent;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
+import io.jmix.ui.icons.IconResolver;
 import com.haulmont.cuba.web.sys.MenuBuilder;
-import com.haulmont.cuba.web.widgets.CubaMenuBar;
-import com.haulmont.cuba.web.widgets.CubaUI;
+import io.jmix.ui.widgets.CubaMenuBar;
+import io.jmix.ui.widgets.CubaUI;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.MenuBar;
 import io.jmix.ui.components.mainwindow.AppMenu;
+import io.jmix.ui.widgets.CubaUI;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 

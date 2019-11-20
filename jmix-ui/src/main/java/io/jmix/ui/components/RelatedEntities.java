@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.gui.WindowManager;
+import io.jmix.ui.components.compatibility.WindowManager;
 
 import javax.annotation.Nullable;
 

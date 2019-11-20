@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.table;
 
-import com.haulmont.cuba.gui.components.Table;
+import io.jmix.ui.components.Table;
 
 import javax.annotation.Nullable;
 

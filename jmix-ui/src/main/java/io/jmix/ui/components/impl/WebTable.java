@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.web.widgets.CubaTable;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.widgets.CubaTable;
 
 public class WebTable<E extends Entity> extends WebAbstractTable<CubaTable, E>  {
     public WebTable() {

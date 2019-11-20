@@ -16,11 +16,11 @@
 package io.jmix.ui.components;
 
 import com.google.common.reflect.TypeToken;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.data.TableItems;
-import com.haulmont.cuba.gui.components.data.table.DatasourceTreeTableItems;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.HierarchicalDatasource;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.data.TableItems;
+import io.jmix.ui.components.data.table.DatasourceTreeTableItems;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.HierarchicalDatasource;
 
 /**
  * TreeTable extends the {@link Table} component so that it can also visualize a hierarchy of its Items in a similar

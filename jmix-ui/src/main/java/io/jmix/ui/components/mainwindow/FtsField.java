@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.mainwindow;
 
-import com.haulmont.cuba.gui.components.Component;
+import io.jmix.ui.components.Component;
 
 public interface FtsField extends Component.BelongToFrame, Component.HasIcon, Component.HasCaption {
 

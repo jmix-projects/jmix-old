@@ -16,11 +16,11 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.components.PopupView;
-import com.haulmont.cuba.web.widgets.CubaPopupView;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.PopupView;
+import io.jmix.ui.widgets.CubaPopupView;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Label;
 import org.apache.commons.lang3.StringUtils;

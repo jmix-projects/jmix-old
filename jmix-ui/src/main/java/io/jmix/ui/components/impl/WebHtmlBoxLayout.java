@@ -15,13 +15,13 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.components.AttachNotifier;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.components.HtmlBoxLayout;
-import com.haulmont.cuba.web.widgets.CubaCustomLayout;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.AttachNotifier;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.HtmlBoxLayout;
+import io.jmix.ui.widgets.CubaCustomLayout;
 
 import javax.annotation.Nullable;
 import java.util.*;

@@ -17,7 +17,7 @@
 package io.jmix.ui.components;
 
 /**
- * @deprecated Use {@link com.haulmont.cuba.gui.components.ResizableTextArea.ResizeEvent}
+ * @deprecated Use {@link io.jmix.ui.components.ResizableTextArea.ResizeEvent}
  */
 @Deprecated
 public interface ResizeListener<T> {

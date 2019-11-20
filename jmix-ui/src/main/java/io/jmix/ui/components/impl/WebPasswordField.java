@@ -17,13 +17,13 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.gui.components.CapsLockIndicator;
-import com.haulmont.cuba.gui.components.PasswordField;
-import com.haulmont.cuba.gui.components.data.ConversionException;
-import com.haulmont.cuba.gui.components.data.DataAwareComponentsTools;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.web.widgets.CubaPasswordField;
+import io.jmix.ui.components.CapsLockIndicator;
+import io.jmix.ui.components.PasswordField;
+import io.jmix.ui.components.data.ConversionException;
+import io.jmix.ui.components.data.DataAwareComponentsTools;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.widgets.CubaPasswordField;
 import com.vaadin.shared.ui.ValueChangeMode;
 import org.springframework.beans.factory.InitializingBean;
 

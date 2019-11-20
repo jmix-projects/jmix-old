@@ -16,35 +16,35 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.core.global.MetadataTools;
-import com.haulmont.cuba.core.global.Security;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.LookupComponent.LookupSelectionChangeNotifier;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.components.data.BindingState;
-import com.haulmont.cuba.gui.components.data.TreeItems;
-import com.haulmont.cuba.gui.components.data.meta.EntityTreeItems;
-import com.haulmont.cuba.gui.components.data.tree.DatasourceTreeItems;
-import com.haulmont.cuba.gui.components.security.ActionsPermissions;
-import com.haulmont.cuba.gui.components.sys.ShortcutsDelegate;
-import com.haulmont.cuba.gui.components.sys.ShowInfoAction;
-import com.haulmont.cuba.gui.theme.ThemeConstants;
-import com.haulmont.cuba.gui.theme.ThemeConstantsManager;
-import com.haulmont.cuba.web.AppUI;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.Metadata;
+import io.jmix.core.MetadataTools;
+import io.jmix.core.Security;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.LookupComponent.LookupSelectionChangeNotifier;
+import io.jmix.ui.components.actions.BaseAction;
+import io.jmix.ui.components.data.BindingState;
+import io.jmix.ui.components.data.TreeItems;
+import io.jmix.ui.components.data.meta.EntityTreeItems;
+import io.jmix.ui.components.data.tree.DatasourceTreeItems;
+import io.jmix.ui.components.security.ActionsPermissions;
+import io.jmix.ui.components.sys.ShortcutsDelegate;
+import io.jmix.ui.components.sys.ShowInfoAction;
+import io.jmix.ui.theme.ThemeConstants;
+import io.jmix.ui.theme.ThemeConstantsManager;
+import io.jmix.ui.AppUI;
 import com.haulmont.cuba.web.gui.components.tree.TreeDataProvider;
 import com.haulmont.cuba.web.gui.components.tree.TreeSourceEventsDelegate;
 import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
-import com.haulmont.cuba.web.widgets.CubaCssActionsLayout;
-import com.haulmont.cuba.web.widgets.CubaTree;
-import com.haulmont.cuba.web.widgets.CubaUI;
-import com.haulmont.cuba.web.widgets.addons.contextmenu.TreeContextMenu;
-import com.haulmont.cuba.web.widgets.grid.CubaMultiSelectionModel;
-import com.haulmont.cuba.web.widgets.grid.CubaSingleSelectionModel;
-import com.haulmont.cuba.web.widgets.tree.EnhancedTreeDataProvider;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.widgets.CubaCssActionsLayout;
+import io.jmix.ui.widgets.CubaTree;
+import io.jmix.ui.widgets.CubaUI;
+import io.jmix.ui.widgets.addons.contextmenu.TreeContextMenu;
+import io.jmix.ui.widgets.grid.CubaMultiSelectionModel;
+import io.jmix.ui.widgets.grid.CubaSingleSelectionModel;
+import io.jmix.ui.widgets.tree.EnhancedTreeDataProvider;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.DataProvider;
@@ -73,8 +73,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
-import static com.haulmont.cuba.gui.ComponentsHelper.findActionById;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.ComponentsHelper.findActionById;
 
 public class WebTree<E extends Entity>
         extends WebAbstractComponent<CubaTree<E>>
@@ -647,7 +647,7 @@ public class WebTree<E extends Entity>
     }
 
     @Override
-    public Collection<com.haulmont.cuba.gui.components.Component> getInnerComponents() {
+    public Collection<io.jmix.ui.components.Component> getInnerComponents() {
         if (buttonsPanel != null) {
             return Collections.singletonList(buttonsPanel);
         }

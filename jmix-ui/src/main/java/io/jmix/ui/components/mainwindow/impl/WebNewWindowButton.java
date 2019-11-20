@@ -18,7 +18,7 @@ package io.jmix.ui.components.mainwindow.impl;
 
 import com.haulmont.cuba.web.controllers.ControllerUtils;
 import com.haulmont.cuba.web.gui.components.WebAbstractComponent;
-import com.haulmont.cuba.web.widgets.CubaButton;
+import io.jmix.ui.widgets.CubaButton;
 import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.ExternalResource;
 import io.jmix.ui.components.mainwindow.NewWindowButton;

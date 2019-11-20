@@ -16,15 +16,15 @@
 
 package io.jmix.ui.components.compatibility;
 
-import com.haulmont.cuba.gui.components.Window;
-import com.haulmont.cuba.gui.screen.Screen.AfterCloseEvent;
-import com.haulmont.cuba.gui.screen.StandardCloseAction;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.StandardCloseAction;
 
 import java.util.Objects;
 import java.util.function.Consumer;
 
 @Deprecated
-public class AfterCloseListenerAdapter implements Consumer<AfterCloseEvent> {
+public class AfterCloseListenerAdapter implements Consumer<Screen.AfterCloseEvent> {
 
     public static final String UNKNOWN_CLOSE_ACTION_ID = "unknown";
 
@@ -52,7 +52,7 @@ public class AfterCloseListenerAdapter implements Consumer<AfterCloseEvent> {
     }
 
     @Override
-    public void accept(AfterCloseEvent afterCloseEvent) {
+    public void accept(Screen.AfterCloseEvent afterCloseEvent) {
         if (afterCloseEvent.getCloseAction() instanceof StandardCloseAction) {
             String actionId = ((StandardCloseAction) afterCloseEvent.getCloseAction()).getActionId();
             closeListener.windowClosed(actionId);

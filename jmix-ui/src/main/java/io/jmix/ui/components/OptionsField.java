@@ -19,9 +19,11 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import io.jmix.core.metamodel.datatypes.impl.EnumClass;
 import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.options.DatasourceOptions;
 import io.jmix.ui.components.data.options.EnumOptions;
 import io.jmix.ui.components.data.options.ListOptions;
 import io.jmix.ui.components.data.options.MapOptions;
+import io.jmix.ui.model.cuba.CollectionDatasource;
 
 import java.util.List;
 import java.util.Map;
@@ -93,7 +95,32 @@ public interface OptionsField<V, I> extends Field<V>, HasOptionCaptionProvider<I
     /*
      * Deprecated API
      */
+    /**
+     * @return options datasource
+     * @deprecated Use {@link #getOptions()} instead.
+     */
+    @Deprecated
+    default CollectionDatasource getOptionsDatasource() {
+        Options<I> options = getOptions();
+        if (options instanceof DatasourceOptions) {
+            return ((DatasourceOptions) options).getDatasource();
+        }
+        return null;
+    }
 
+    /**
+     * @param datasource datasource
+     * @deprecated set options using {@link #setOptions(Options)} with {@link DatasourceOptions}.
+     */
+    @SuppressWarnings("unchecked")
+    @Deprecated
+    default void setOptionsDatasource(CollectionDatasource datasource) {
+        if (datasource == null) {
+            setOptions(null);
+        } else {
+            setOptions(new DatasourceOptions<>(datasource));
+        }
+    }
 
 
     /**

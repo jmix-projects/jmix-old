@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Factory to create UI components using {@link ComponentGenerationStrategy}.
  *
- * @see com.haulmont.cuba.gui.UiComponents
+ * @see io.jmix.ui.UiComponents
  */
 @org.springframework.stereotype.Component(UiComponentsGenerator.NAME)
 public class UiComponentsGenerator {

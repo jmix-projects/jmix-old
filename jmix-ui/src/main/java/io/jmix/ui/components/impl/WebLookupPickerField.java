@@ -16,22 +16,23 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.LookupPickerField;
-import com.haulmont.cuba.gui.components.SecuredActionsHolder;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.meta.EntityOptions;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.components.data.meta.OptionsBinding;
-import com.haulmont.cuba.gui.components.data.options.OptionsBinder;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.ClientConfig;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.Configuration;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.LookupPickerField;
+import io.jmix.ui.components.SecuredActionsHolder;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.meta.EntityOptions;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.meta.OptionsBinding;
+import io.jmix.ui.components.data.options.OptionsBinder;
 import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
-import com.haulmont.cuba.web.widgets.CubaComboBoxPickerField;
-import com.haulmont.cuba.web.widgets.CubaPickerField;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.widgets.CubaComboBoxPickerField;
+import io.jmix.ui.widgets.CubaPickerField;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -59,7 +60,7 @@ public class WebLookupPickerField<V extends Entity> extends WebPickerField<V>
     protected Consumer<String> newOptionHandler;
 
     protected Function<? super V, String> optionIconProvider;
-    protected Function<? super V, com.haulmont.cuba.gui.components.Resource> optionImageProvider;
+    protected Function<? super V, io.jmix.ui.components.Resource> optionImageProvider;
     protected Function<? super V, String> optionStyleProvider;
 
     protected OptionsBinding<V> optionsBinding;
@@ -318,7 +319,7 @@ public class WebLookupPickerField<V extends Entity> extends WebPickerField<V>
 
     @SuppressWarnings("unchecked")
     @Override
-    public void setOptionImageProvider(Function<? super V, com.haulmont.cuba.gui.components.Resource> optionImageProvider) {
+    public void setOptionImageProvider(Function<? super V, io.jmix.ui.components.Resource> optionImageProvider) {
         if (this.optionImageProvider != optionImageProvider) {
             this.optionImageProvider = optionImageProvider;
 
@@ -331,12 +332,12 @@ public class WebLookupPickerField<V extends Entity> extends WebPickerField<V>
     }
 
     @Override
-    public Function<? super V, com.haulmont.cuba.gui.components.Resource> getOptionImageProvider() {
+    public Function<? super V, io.jmix.ui.components.Resource> getOptionImageProvider() {
         return optionImageProvider;
     }
 
     protected Resource generateOptionImage(V item) {
-        com.haulmont.cuba.gui.components.Resource resource;
+        io.jmix.ui.components.Resource resource;
         try {
             resource = optionImageProvider.apply(item);
         } catch (Exception e) {

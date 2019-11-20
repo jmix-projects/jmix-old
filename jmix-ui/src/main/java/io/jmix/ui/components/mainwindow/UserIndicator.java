@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.mainwindow;
 
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.security.entity.User;
+import io.jmix.core.entity.User;
+import io.jmix.ui.components.Component;
 
 import java.util.function.Function;
 

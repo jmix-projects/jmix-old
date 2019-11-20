@@ -15,11 +15,11 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.web.widgets.CubaHorizontalSplitPanel;
-import com.haulmont.cuba.web.widgets.client.split.SplitPanelDockMode;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.*;
+import io.jmix.ui.widgets.CubaHorizontalSplitPanel;
+import io.jmix.ui.widgets.client.split.SplitPanelDockMode;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.AbstractSplitPanel;
 import com.vaadin.ui.VerticalSplitPanel;
@@ -32,7 +32,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class WebSplitPanel extends WebAbstractComponent<AbstractSplitPanel> implements SplitPanel {
 

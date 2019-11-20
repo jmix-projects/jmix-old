@@ -16,20 +16,20 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.entity.FileDescriptor;
-import com.haulmont.cuba.core.sys.BeanLocatorAware;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.components.FileDescriptorResource;
-import com.haulmont.cuba.gui.components.Image;
-import com.haulmont.cuba.gui.components.Resource;
-import com.haulmont.cuba.gui.components.StreamResource;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.web.widgets.CubaImage;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.FileDescriptor;
+import io.jmix.core.sys.BeanLocatorAware;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.components.FileDescriptorResource;
+import io.jmix.ui.components.Image;
+import io.jmix.ui.components.Resource;
+import io.jmix.ui.components.StreamResource;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.widgets.CubaImage;
 import com.vaadin.event.MouseEvents;
 import org.springframework.beans.factory.InitializingBean;
 

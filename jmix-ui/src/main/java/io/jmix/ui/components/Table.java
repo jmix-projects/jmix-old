@@ -16,23 +16,24 @@
 package io.jmix.ui.components;
 
 import com.google.common.reflect.TypeToken;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.MessageTools;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.gui.components.columnmanager.ColumnManager;
-import com.haulmont.cuba.gui.components.columnmanager.GroupColumnManager;
-import com.haulmont.cuba.gui.components.compatibility.TableCellClickListenerWrapper;
-import com.haulmont.cuba.gui.components.compatibility.TableColumnCollapseListenerWrapper;
-import com.haulmont.cuba.gui.components.data.TableItems;
-import com.haulmont.cuba.gui.components.data.table.DatasourceTableItems;
-import com.haulmont.cuba.gui.components.data.table.SortableDatasourceTableItems;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.model.InstanceContainer;
+import io.jmix.core.AppBeans;
+import io.jmix.core.MessageTools;
+import io.jmix.core.Metadata;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.columnmanager.ColumnManager;
+import io.jmix.ui.components.columnmanager.GroupColumnManager;
+import io.jmix.ui.components.compatibility.TableCellClickListenerWrapper;
+import io.jmix.ui.components.compatibility.TableColumnCollapseListenerWrapper;
+import io.jmix.ui.components.data.TableItems;
+import io.jmix.ui.components.data.table.DatasourceTableItems;
+import io.jmix.ui.components.data.table.SortableDatasourceTableItems;
+import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * Table UI component bound to entity type.
@@ -704,7 +705,7 @@ public interface Table<E extends Entity>
 
     /**
      * Show popup inside of Table, relative to last cell click event.<br>
-     * Call this method from {@link com.haulmont.cuba.gui.components.Table.CellClickListener} implementation.
+     * Call this method from {@link io.jmix.ui.components.Table.CellClickListener} implementation.
      *
      * @param popupComponent popup content
      */
@@ -712,7 +713,7 @@ public interface Table<E extends Entity>
 
     /**
      * Show autocloseable popup view with actions, relative to last cell click event.<br>
-     * Call this method from {@link com.haulmont.cuba.gui.components.Table.CellClickListener} implementation.<br>
+     * Call this method from {@link io.jmix.ui.components.Table.CellClickListener} implementation.<br>
      * Autocloseable means that after any click on action popup will be closed.
      *
      * @param actions actions

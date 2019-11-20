@@ -16,18 +16,18 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.WindowManager.OpenType;
-import com.haulmont.cuba.gui.components.data.HasValueSource;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.options.DatasourceOptions;
-import com.haulmont.cuba.gui.components.data.options.ListOptions;
-import com.haulmont.cuba.gui.components.data.options.MapOptions;
-import com.haulmont.cuba.gui.components.data.value.LegacyCollectionDsValueSource;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.screen.LookupScreen;
-import com.haulmont.cuba.gui.screen.Screen;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.compatibility.WindowManager.OpenType;
+import io.jmix.ui.components.data.HasValueSource;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.options.DatasourceOptions;
+import io.jmix.ui.components.data.options.ListOptions;
+import io.jmix.ui.components.data.options.MapOptions;
+import io.jmix.ui.components.data.value.LegacyCollectionDsValueSource;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.screen.LookupScreen;
+import io.jmix.ui.screen.Screen;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -317,7 +317,7 @@ public interface TokenList<V extends Entity> extends Field<Collection<V>>,
     boolean isMultiSelect();
 
     /**
-     * Enables multiselect mode. It leads to the passing {@link com.haulmont.cuba.gui.WindowParams#MULTI_SELECT} param
+     * Enables multiselect mode. It leads to the passing {@link io.jmix.ui.WindowParams#MULTI_SELECT} param
      * to the lookup screen.
      *
      * @param multiselect multiselect

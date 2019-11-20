@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.components;
 
-import com.haulmont.bali.events.Subscription;
+import io.jmix.core.commons.events.Subscription;
 
 import javax.annotation.Nullable;
 import java.util.EventObject;

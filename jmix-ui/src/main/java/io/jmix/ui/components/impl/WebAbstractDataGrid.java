@@ -18,53 +18,64 @@ package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.MetaPropertyPath;
+import io.jmix.core.MessageTools;
+import io.jmix.core.Messages;
+import io.jmix.core.MetadataTools;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
 import com.haulmont.cuba.client.sys.PersistenceManagerClient;
-import com.haulmont.cuba.core.app.keyvalue.KeyValueMetaClass;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.components.data.BindingState;
-import com.haulmont.cuba.gui.components.data.DataGridItems;
-import com.haulmont.cuba.gui.components.data.ValueSourceProvider;
-import com.haulmont.cuba.gui.components.data.meta.ContainerDataUnit;
-import com.haulmont.cuba.gui.components.data.meta.DatasourceDataUnit;
-import com.haulmont.cuba.gui.components.data.meta.EmptyDataUnit;
-import com.haulmont.cuba.gui.components.data.meta.EntityDataGridItems;
-import com.haulmont.cuba.gui.components.data.value.ContainerValueSource;
-import com.haulmont.cuba.gui.components.data.value.ContainerValueSourceProvider;
-import com.haulmont.cuba.gui.components.formatters.CollectionFormatter;
-import com.haulmont.cuba.gui.components.security.ActionsPermissions;
-import com.haulmont.cuba.gui.components.sys.ShortcutsDelegate;
-import com.haulmont.cuba.gui.components.sys.ShowInfoAction;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.DsBuilder;
-import com.haulmont.cuba.gui.data.impl.DatasourceImplementation;
-import com.haulmont.cuba.gui.model.*;
-import com.haulmont.cuba.gui.model.impl.KeyValueContainerImpl;
-import com.haulmont.cuba.gui.screen.ScreenValidation;
-import com.haulmont.cuba.gui.theme.ThemeConstants;
-import com.haulmont.cuba.gui.theme.ThemeConstantsManager;
-import com.haulmont.cuba.web.App;
-import com.haulmont.cuba.web.AppUI;
+import io.jmix.core.app.keyvalue.KeyValueMetaClass;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.security.Security;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.actions.BaseAction;
+import io.jmix.ui.components.data.BindingState;
+import io.jmix.ui.components.data.DataGridItems;
+import io.jmix.ui.components.data.ValueSourceProvider;
+import io.jmix.ui.components.data.meta.ContainerDataUnit;
+import io.jmix.ui.components.data.meta.DatasourceDataUnit;
+import io.jmix.ui.components.data.meta.EmptyDataUnit;
+import io.jmix.ui.components.data.meta.EntityDataGridItems;
+import io.jmix.ui.components.data.value.ContainerValueSource;
+import io.jmix.ui.components.data.value.ContainerValueSourceProvider;
+import io.jmix.ui.components.datagrid.DataGridDataProvider;
+import io.jmix.ui.components.datagrid.DataGridItemsEventsDelegate;
+import io.jmix.ui.components.formatters.CollectionFormatter;
+import io.jmix.ui.components.renderers.RendererWrapper;
+import io.jmix.ui.components.renderers.WebTextRenderer;
+import io.jmix.ui.components.security.ActionsPermissions;
+import io.jmix.ui.components.sys.ShortcutsDelegate;
+import io.jmix.ui.components.sys.ShowInfoAction;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.data.DsBuilder;
+import io.jmix.ui.data.impl.DatasourceImplementation;
+import io.jmix.ui.model.*;
+import io.jmix.ui.model.impl.KeyValueContainerImpl;
+import io.jmix.ui.screen.ScreenValidation;
+import io.jmix.ui.sys.ShortcutsDelegate;
+import io.jmix.ui.theme.ThemeConstants;
+import io.jmix.ui.theme.ThemeConstantsManager;
+import io.jmix.ui.App;
+import io.jmix.ui.AppUI;
 import com.haulmont.cuba.web.gui.components.datagrid.DataGridDataProvider;
 import com.haulmont.cuba.web.gui.components.datagrid.DataGridItemsEventsDelegate;
 import com.haulmont.cuba.web.gui.components.datagrid.SortableDataGridDataProvider;
 import com.haulmont.cuba.web.gui.components.renderers.*;
 import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
 import com.haulmont.cuba.web.gui.components.valueproviders.*;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
-import com.haulmont.cuba.web.widgets.CubaCssActionsLayout;
-import com.haulmont.cuba.web.widgets.CubaEnhancedGrid;
-import com.haulmont.cuba.web.widgets.CubaGridEditorFieldFactory;
-import com.haulmont.cuba.web.widgets.CubaUI;
-import com.haulmont.cuba.web.widgets.data.SortableDataProvider;
-import com.haulmont.cuba.web.widgets.grid.*;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.widgets.CubaCssActionsLayout;
+import io.jmix.ui.widgets.CubaEnhancedGrid;
+import io.jmix.ui.widgets.CubaGridEditorFieldFactory;
+import io.jmix.ui.widgets.CubaUI;
+import io.jmix.ui.widgets.data.SortableDataProvider;
+import io.jmix.ui.widgets.grid.*;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.ValidationResult;
@@ -84,6 +95,9 @@ import com.vaadin.ui.DescriptionGenerator;
 import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.components.grid.*;
+import io.jmix.ui.widgets.CubaEnhancedGrid;
+import io.jmix.ui.widgets.ShortcutListenerDelegate;
+import io.jmix.ui.widgets.grid.CubaGridContextMenu;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
@@ -106,10 +120,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
-import static com.haulmont.cuba.gui.ComponentsHelper.findActionById;
-import static com.haulmont.cuba.gui.components.Window.Lookup.LOOKUP_ENTER_PRESSED_ACTION_ID;
-import static com.haulmont.cuba.gui.components.Window.Lookup.LOOKUP_ITEM_CLICK_ACTION_ID;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.ComponentsHelper.findActionById;
+import static io.jmix.ui.components.Window.Lookup.LOOKUP_ENTER_PRESSED_ACTION_ID;
+import static io.jmix.ui.components.Window.Lookup.LOOKUP_ITEM_CLICK_ACTION_ID;
 
 public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E>, E extends Entity>
         extends WebAbstractComponent<C>
@@ -492,7 +506,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
     }
 
     @Override
-    public Collection<com.haulmont.cuba.gui.components.Component> getInnerComponents() {
+    public Collection<io.jmix.ui.components.Component> getInnerComponents() {
         if (buttonsPanel != null) {
             return Collections.singletonList(buttonsPanel);
         }
@@ -1498,7 +1512,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         protected CubaEditorField createCustomField(final Field columnComponent) {
             if (!(columnComponent instanceof Buffered)) {
                 throw new IllegalArgumentException("Editor field must implement " +
-                        "com.haulmont.cuba.gui.components.Buffered");
+                        "io.jmix.ui.components.Buffered");
             }
 
             Component content = WebComponentsHelper.getComposition(columnComponent);
@@ -2989,7 +3003,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
     }
 
     protected Component getRowDetails(E item) {
-        com.haulmont.cuba.gui.components.Component component = detailsGenerator.getDetails(item);
+        io.jmix.ui.components.Component component = detailsGenerator.getDetails(item);
         return component != null ? component.unwrapComposition(Component.class) : null;
     }
 
@@ -3941,7 +3955,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
     protected abstract static class AbstractStaticCellImpl implements StaticCell {
 
         protected StaticRow<?> row;
-        protected com.haulmont.cuba.gui.components.Component component;
+        protected io.jmix.ui.components.Component component;
 
         public AbstractStaticCellImpl(StaticRow<?> row) {
             this.row = row;
@@ -3953,12 +3967,12 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         }
 
         @Override
-        public com.haulmont.cuba.gui.components.Component getComponent() {
+        public io.jmix.ui.components.Component getComponent() {
             return component;
         }
 
         @Override
-        public void setComponent(com.haulmont.cuba.gui.components.Component component) {
+        public void setComponent(io.jmix.ui.components.Component component) {
             this.component = component;
         }
     }
@@ -3993,7 +4007,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         }
 
         @Override
-        public void setComponent(com.haulmont.cuba.gui.components.Component component) {
+        public void setComponent(io.jmix.ui.components.Component component) {
             super.setComponent(component);
             gridCell.setComponent(component.unwrap(Component.class));
         }
@@ -4049,7 +4063,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         }
 
         @Override
-        public void setComponent(com.haulmont.cuba.gui.components.Component component) {
+        public void setComponent(io.jmix.ui.components.Component component) {
             super.setComponent(component);
             gridCell.setComponent(component.unwrap(Component.class));
         }

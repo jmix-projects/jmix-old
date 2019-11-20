@@ -16,28 +16,28 @@
 
 package io.jmix.ui.components.renderers;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.DataGrid;
-import com.haulmont.cuba.web.gui.components.WebAbstractDataGrid.AbstractRenderer;
 import com.vaadin.data.ValueProvider;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.renderers.ComponentRenderer;
 import com.vaadin.ui.renderers.Renderer;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.components.impl.WebAbstractDataGrid;
 
 /**
  * A renderer for UI components.
  */
-public class WebComponentRenderer<T extends Entity> extends AbstractRenderer<T, com.vaadin.ui.Component>
+public class WebComponentRenderer<T extends Entity> extends WebAbstractDataGrid.AbstractRenderer<T, Component>
         implements DataGrid.ComponentRenderer {
 
     @Override
-    protected Renderer<Component> createImplementation() {
+    protected Renderer<com.vaadin.ui.Component> createImplementation() {
         return new ComponentRenderer();
     }
 
     @Override
-    public ValueProvider<Component, Component> getPresentationValueProvider() {
-        return (ValueProvider<Component, Component>) value ->
+    public ValueProvider<Component, com.vaadin.ui.Component> getPresentationValueProvider() {
+        return (ValueProvider<Component, com.vaadin.ui.Component>) value ->
                 value.unwrap(com.vaadin.ui.Component.class);
     }
 }

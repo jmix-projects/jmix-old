@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.core.global.DataLoadContext;
+import io.jmix.core.DataLoadContext;
 
 import java.util.function.Function;
 

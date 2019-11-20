@@ -16,17 +16,17 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.Action;
-import com.haulmont.cuba.gui.components.ListComponent;
-import com.haulmont.cuba.gui.components.RelatedEntities;
-import com.haulmont.cuba.gui.components.actions.RelatedAction;
-import com.haulmont.cuba.gui.components.data.meta.EntityDataUnit;
-import com.haulmont.cuba.gui.components.security.RelatedEntitiesSecurity;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.sys.ScreensHelper;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.Messages;
+import io.jmix.ui.components.Action;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.RelatedEntities;
+import io.jmix.ui.components.actions.RelatedAction;
+import io.jmix.ui.components.data.meta.EntityDataUnit;
+import io.jmix.ui.components.security.RelatedEntitiesSecurity;
+import io.jmix.ui.config.WindowInfo;
+import io.jmix.ui.sys.ScreensHelper;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Label;
 import org.apache.commons.lang3.StringUtils;
@@ -37,8 +37,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
-import static com.haulmont.cuba.gui.WindowManager.OpenType;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.components.compatibility.WindowManager.OpenType;
 
 public class WebRelatedEntities extends WebPopupButton implements RelatedEntities {
 

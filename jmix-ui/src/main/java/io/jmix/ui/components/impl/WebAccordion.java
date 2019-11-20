@@ -16,26 +16,26 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.app.security.role.edit.UiPermissionDescriptor;
-import com.haulmont.cuba.gui.app.security.role.edit.UiPermissionValue;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.data.DsContext;
-import com.haulmont.cuba.gui.data.impl.DsContextImplementation;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
-import com.haulmont.cuba.gui.settings.Settings;
-import com.haulmont.cuba.gui.sys.TestIdManager;
-import com.haulmont.cuba.gui.xml.layout.ComponentLoader;
-import com.haulmont.cuba.gui.xml.layout.ComponentsFactory;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
-import com.haulmont.cuba.web.widgets.CubaAccordion;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.AbstractComponent;
+import io.jmix.core.AppBeans;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.compatibility.LegacyFrame;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.model.cuba.DsContext;
+import io.jmix.ui.model.cuba.impl.DsContextImplementation;
+import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.security.UiPermissionDescriptor;
+import io.jmix.ui.security.UiPermissionValue;
+import io.jmix.ui.settings.Settings;
+import io.jmix.ui.sys.TestIdManager;
+import io.jmix.ui.widgets.CubaAccordion;
+import io.jmix.ui.xml.layout.ComponentLoader;
+import io.jmix.ui.xml.layout.ComponentsFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 import org.slf4j.LoggerFactory;
@@ -45,8 +45,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
-import static com.haulmont.cuba.gui.ComponentsHelper.walkComponents;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.ComponentsHelper.walkComponents;
 
 public class WebAccordion extends WebAbstractComponent<CubaAccordion>
         implements Accordion, UiPermissionAware, SupportsChildrenSelection {
@@ -407,7 +407,7 @@ public class WebAccordion extends WebAbstractComponent<CubaAccordion>
             tabContent.setFrame(((ComponentLoader.ComponentContext) context).getFrame());
         } else {
             throw new IllegalStateException("'context' must implement " +
-                    "com.haulmont.cuba.gui.xml.layout.ComponentLoader.ComponentContext");
+                    "io.jmix.ui.xml.layout.ComponentLoader.ComponentContext");
         }
 
         return tab;

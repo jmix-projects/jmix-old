@@ -16,27 +16,29 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.collect.Lists;
-import com.haulmont.chile.core.datatypes.ValueConversionException;
-import com.haulmont.chile.core.model.Instance;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.GroupTable;
-import com.haulmont.cuba.gui.components.Table;
-import com.haulmont.cuba.gui.components.columnmanager.GroupColumnManager;
-import com.haulmont.cuba.gui.components.data.GroupTableItems;
-import com.haulmont.cuba.gui.components.data.TableItems;
-import com.haulmont.cuba.gui.components.data.meta.EntityTableItems;
-import com.haulmont.cuba.gui.data.GroupInfo;
+import io.jmix.ui.components.data.ValueConversionException;
+import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.app.dynamicattributes.DynamicAttributesUtils;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.GroupTable;
+import io.jmix.ui.components.Table;
+import io.jmix.ui.components.columnmanager.GroupColumnManager;
+import io.jmix.ui.components.data.GroupTableItems;
+import io.jmix.ui.components.data.TableItems;
+import io.jmix.ui.components.data.meta.EntityTableItems;
+import io.jmix.ui.components.table.GroupTableDataContainer;
+import io.jmix.ui.components.table.TableDataContainer;
+import io.jmix.ui.data.GroupInfo;
 import com.haulmont.cuba.web.gui.components.table.GroupTableDataContainer;
 import com.haulmont.cuba.web.gui.components.table.TableDataContainer;
 import com.haulmont.cuba.web.gui.components.table.TableItemsEventsDelegate;
-import com.haulmont.cuba.web.widgets.CubaEnhancedTable.AggregationInputValueChangeContext;
-import com.haulmont.cuba.web.widgets.CubaGroupTable;
-import com.haulmont.cuba.web.widgets.CubaGroupTable.GroupAggregationContext;
-import com.haulmont.cuba.web.widgets.CubaGroupTable.GroupAggregationInputValueChangeContext;
-import com.haulmont.cuba.web.widgets.data.AggregationContainer;
+import io.jmix.ui.widgets.CubaEnhancedTable.AggregationInputValueChangeContext;
+import io.jmix.ui.widgets.CubaGroupTable;
+import io.jmix.ui.widgets.CubaGroupTable.GroupAggregationContext;
+import io.jmix.ui.widgets.CubaGroupTable.GroupAggregationInputValueChangeContext;
+import io.jmix.ui.widgets.data.AggregationContainer;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
@@ -49,7 +51,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.emptyToNull;
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 @SuppressWarnings("deprecation")
 public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupTable, E>

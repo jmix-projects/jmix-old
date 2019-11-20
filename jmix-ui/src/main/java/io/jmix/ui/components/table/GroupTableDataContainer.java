@@ -20,6 +20,7 @@ import com.haulmont.cuba.gui.components.data.BindingState;
 import com.haulmont.cuba.gui.components.data.GroupTableItems;
 import com.haulmont.cuba.gui.data.GroupInfo;
 import com.haulmont.cuba.web.widgets.data.GroupTableContainer;
+import io.jmix.ui.widgets.data.GroupTableContainer;
 
 import java.util.*;
 

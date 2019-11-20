@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.core.global.DataLoadContext;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
+import io.jmix.core.DataLoadContext;
+import io.jmix.ui.model.cuba.CollectionDatasource;
 
 import java.util.EventObject;
 import java.util.function.Consumer;

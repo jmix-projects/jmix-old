@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.BrowserFrame;
-import com.haulmont.cuba.web.widgets.CubaBrowserFrame;
+import io.jmix.ui.components.BrowserFrame;
+import io.jmix.ui.widgets.CubaBrowserFrame;
 
 import java.util.EnumSet;
 import java.util.stream.Collectors;

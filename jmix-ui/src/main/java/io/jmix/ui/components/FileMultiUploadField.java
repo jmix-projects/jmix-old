@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.components;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.components.compatibility.FileMultiUploadFieldQueueUploadCompleteListener;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.components.compatibility.FileMultiUploadFieldQueueUploadCompleteListener;
 
 import java.util.EventObject;
 import java.util.Map;

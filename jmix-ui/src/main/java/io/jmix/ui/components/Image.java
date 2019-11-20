@@ -16,14 +16,14 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.FileDescriptor;
-import com.haulmont.cuba.gui.components.data.HasValueSource;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.components.data.value.DatasourceValueSource;
-import com.haulmont.cuba.gui.data.Datasource;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.entity.FileDescriptor;
+import io.jmix.ui.components.data.HasValueSource;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.value.DatasourceValueSource;
+import io.jmix.ui.model.cuba.Datasource;
 
 import javax.annotation.Nullable;
 import java.util.EventObject;

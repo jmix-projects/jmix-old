@@ -19,7 +19,7 @@ package io.jmix.ui.components;
 /**
  * A resource that is located in classpath with the given <code>path</code>.
  * <p>
- * For obtaining resources the {@link com.haulmont.cuba.core.global.Resources} infrastructure interface is using.
+ * For obtaining resources the {@link io.jmix.core.global.Resources} infrastructure interface is using.
  * <p>
  * For example if your resource is located in the web module and has the following path: "com/company/app/web/images/image.png",
  * ClassPathResource's path should be: "/com/company/app/web/images/image.png".

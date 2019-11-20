@@ -16,23 +16,25 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.gui.ScreenBuilders;
-import com.haulmont.cuba.gui.UiComponents;
-import com.haulmont.cuba.gui.WindowParams;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityOptions;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.components.data.value.LegacyCollectionDsValueSource;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.screen.*;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.Messages;
+import io.jmix.core.Metadata;
+import io.jmix.ui.ScreenBuilders;
+import io.jmix.ui.UiComponents;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.WindowParams;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.actions.BaseAction;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.EntityOptions;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.value.LegacyCollectionDsValueSource;
+import io.jmix.ui.config.WindowConfig;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.screen.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -47,7 +49,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static com.haulmont.cuba.gui.WindowManager.OpenType;
+import static io.jmix.ui.components.compatibility.WindowManager.OpenType;
 
 public class WebTokenList<V extends Entity>
         extends WebV8AbstractField<CubaTokenList<V>, Collection<V>, Collection<V>>

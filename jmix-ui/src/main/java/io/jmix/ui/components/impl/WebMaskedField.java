@@ -16,21 +16,22 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.ValueConversionException;
-import com.haulmont.chile.core.model.Range;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.MaskedField;
-import com.haulmont.cuba.gui.components.data.ConversionException;
-import com.haulmont.cuba.gui.components.data.DataAwareComponentsTools;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.ui.components.data.ValueConversionException;
+import io.jmix.core.metamodel.model.Range;
+import io.jmix.core.Messages;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.MaskedField;
+import io.jmix.ui.components.data.ConversionException;
+import io.jmix.ui.components.data.DataAwareComponentsTools;
+import io.jmix.ui.components.data.meta.EntityValueSource;
 import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
-import com.haulmont.cuba.web.widgets.CubaMaskedTextField;
+import io.jmix.ui.widgets.CubaMaskedTextField;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.shared.ui.ValueChangeMode;
+import io.jmix.ui.widgets.ShortcutListenerDelegate;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.InitializingBean;
 

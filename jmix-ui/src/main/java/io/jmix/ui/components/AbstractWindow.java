@@ -15,22 +15,28 @@
  */
 package io.jmix.ui.components;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.Events;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.DialogOptions;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.data.DsContext;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.screen.*;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
-import com.haulmont.cuba.gui.settings.Settings;
-import com.haulmont.cuba.gui.util.OperationResult;
-import com.haulmont.cuba.gui.util.UnknownOperationResult;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.ClientConfig;
+import io.jmix.core.Configuration;
+import io.jmix.core.Events;
+import io.jmix.core.Messages;
+import io.jmix.ui.DialogOptions;
+import io.jmix.ui.WindowInfo;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.components.actions.BaseAction;
+import io.jmix.ui.components.compatibility.LegacyFrame;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.config.WindowInfo;
+import io.jmix.ui.model.cuba.DsContext;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.model.cuba.DsContext;
+import io.jmix.ui.screen.*;
+import io.jmix.ui.screen.compatibility.LegacyFrame;
+import io.jmix.ui.settings.Settings;
+import io.jmix.ui.util.OperationResult;
+import io.jmix.ui.util.UnknownOperationResult;
 import org.dom4j.Element;
 import org.springframework.core.annotation.Order;
 
@@ -109,7 +115,7 @@ public class AbstractWindow extends Screen implements Window, LegacyFrame, Compo
                         // Because 'editWindowActions' and 'extendedEditWindowActions' frames
                         // can be misused in not-editor screens, we need to provide
                         // 'enableEditing' action stub, in order to prevent breaking changes.
-                        throw new IllegalStateException("Only com.haulmont.cuba.gui.screen.ReadOnlyAwareScreen " +
+                        throw new IllegalStateException("Only io.jmix.ui.screen.ReadOnlyAwareScreen " +
                                 "inheritors must support the 'enableEditing' action");
                     });
             enableEditingAction.setVisible(false);

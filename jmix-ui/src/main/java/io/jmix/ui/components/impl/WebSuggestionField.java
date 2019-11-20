@@ -16,15 +16,15 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.core.global.MetadataTools;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.SuggestionField;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.executors.BackgroundTask;
-import com.haulmont.cuba.gui.executors.BackgroundTaskHandler;
-import com.haulmont.cuba.gui.executors.BackgroundWorker;
-import com.haulmont.cuba.gui.executors.TaskLifeCycle;
-import com.haulmont.cuba.web.widgets.CubaSuggestionField;
+import io.jmix.core.MetadataTools;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.SuggestionField;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.executors.BackgroundTask;
+import io.jmix.ui.executors.BackgroundTaskHandler;
+import io.jmix.ui.executors.BackgroundWorker;
+import io.jmix.ui.executors.TaskLifeCycle;
+import io.jmix.ui.widgets.CubaSuggestionField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -36,7 +36,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 
-import static com.haulmont.cuba.web.gui.components.WebLookupField.NULL_STYLE_GENERATOR;
+import static io.jmix.ui.components.impl.WebLookupField.NULL_STYLE_GENERATOR;
 
 public class WebSuggestionField<V> extends WebV8AbstractField<CubaSuggestionField<V>, V, V>
         implements SuggestionField<V>, InitializingBean {

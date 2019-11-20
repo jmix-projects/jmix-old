@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.gui.model.DataLoader;
-import com.haulmont.cuba.gui.model.InstanceContainer;
+import io.jmix.ui.model.DataLoader;
+import io.jmix.ui.model.InstanceContainer;
 
 import javax.annotation.Nullable;
 import java.util.List;

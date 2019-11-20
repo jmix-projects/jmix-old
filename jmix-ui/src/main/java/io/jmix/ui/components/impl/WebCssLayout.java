@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.CssLayout;
-import com.haulmont.cuba.web.widgets.CubaCssActionsLayout;
+import io.jmix.ui.components.CssLayout;
+import io.jmix.ui.widgets.CubaCssActionsLayout;
 
 public class WebCssLayout extends WebAbstractOrderedLayout<com.vaadin.ui.CssLayout> implements CssLayout {
     public WebCssLayout() {

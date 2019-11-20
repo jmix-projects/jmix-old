@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.gui.components.data.HasValueSource;
+import io.jmix.ui.components.data.HasValueSource;
 
 /**
  * Progress bar is a component that visually displays the progress of some task.

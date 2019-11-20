@@ -16,17 +16,17 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.core.global.MetadataTools;
-import com.haulmont.cuba.gui.components.RadioButtonGroup;
-import com.haulmont.cuba.gui.components.data.DataAwareComponentsTools;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.components.data.meta.OptionsBinding;
-import com.haulmont.cuba.gui.components.data.options.OptionsBinder;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
-import com.haulmont.cuba.web.widgets.CubaRadioButtonGroup;
 import com.vaadin.server.Resource;
+import io.jmix.core.MetadataTools;
+import io.jmix.ui.components.RadioButtonGroup;
+import io.jmix.ui.components.data.DataAwareComponentsTools;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.meta.OptionsBinding;
+import io.jmix.ui.components.data.options.OptionsBinder;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.widgets.CubaRadioButtonGroup;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -38,7 +38,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.haulmont.cuba.web.gui.components.WebLookupField.NULL_ITEM_ICON_GENERATOR;
+import static io.jmix.ui.components.impl.WebLookupField.NULL_ITEM_ICON_GENERATOR;
 
 public class WebRadioButtonGroup<V> extends WebV8AbstractField<CubaRadioButtonGroup<V>, V, V>
         implements RadioButtonGroup<V>, InitializingBean {

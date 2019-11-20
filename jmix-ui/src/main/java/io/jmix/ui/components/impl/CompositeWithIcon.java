@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.icons.Icons;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.icons.Icons;
 
 /**
  * {@link CompositeComponent} having an icon.

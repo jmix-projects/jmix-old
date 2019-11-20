@@ -15,9 +15,9 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.components.ButtonsPanel;
-import com.haulmont.cuba.gui.components.VisibilityChangeNotifier;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.components.ButtonsPanel;
+import io.jmix.ui.components.VisibilityChangeNotifier;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.function.Consumer;

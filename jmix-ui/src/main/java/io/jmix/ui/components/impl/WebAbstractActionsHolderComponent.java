@@ -17,20 +17,20 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.gui.components.Action;
-import com.haulmont.cuba.gui.components.KeyCombination;
-import com.haulmont.cuba.gui.components.SecuredActionsHolder;
-import com.haulmont.cuba.gui.components.security.ActionsPermissions;
-import com.haulmont.cuba.gui.components.sys.ShortcutsDelegate;
-import com.haulmont.cuba.gui.theme.ThemeConstants;
-import com.haulmont.cuba.gui.theme.ThemeConstantsManager;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
-import com.haulmont.cuba.web.widgets.CubaButton;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.ActionsPermissions;
+import io.jmix.ui.components.KeyCombination;
+import io.jmix.ui.components.SecuredActionsHolder;
+import io.jmix.ui.sys.ShortcutsDelegate;
+import io.jmix.ui.theme.ThemeConstants;
+import io.jmix.ui.theme.ThemeConstantsManager;
+import io.jmix.ui.widgets.JmixButton;
+import io.jmix.ui.widgets.ShortcutListenerDelegate;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
@@ -39,8 +39,8 @@ import java.beans.PropertyChangeEvent;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
-import static com.haulmont.cuba.gui.ComponentsHelper.findActionById;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.ComponentsHelper.findActionById;
 
 /**
  * Base class for action holders with shortcuts support
@@ -50,7 +50,7 @@ public abstract class WebAbstractActionsHolderComponent<T extends com.vaadin.ui.
         extends WebAbstractComponent<T> implements SecuredActionsHolder {
 
     protected List<Action> actionList = new ArrayList<>(5);
-    protected Map<Action, CubaButton> actionButtons = new HashMap<>(5);
+    protected Map<Action, JmixButton> actionButtons = new HashMap<>(5);
 
     protected VerticalLayout contextMenuPopup;
 
@@ -107,7 +107,7 @@ public abstract class WebAbstractActionsHolderComponent<T extends com.vaadin.ui.
 
     protected void actionPropertyChanged(PropertyChangeEvent evt) {
         Action action = (Action) evt.getSource();
-        CubaButton button = actionButtons.get(action);
+        JmixButton button = actionButtons.get(action);
 
         if (Action.PROP_ICON.equals(evt.getPropertyName())) {
             setContextMenuButtonIcon(button, showIconsForPopupMenuActions
@@ -124,7 +124,7 @@ public abstract class WebAbstractActionsHolderComponent<T extends com.vaadin.ui.
         }
     }
 
-    protected void setContextMenuButtonCaption(CubaButton button, String caption, KeyCombination shortcutCombination) {
+    protected void setContextMenuButtonCaption(JmixButton button, String caption, KeyCombination shortcutCombination) {
         if (!Strings.isNullOrEmpty(caption)
                 && shortcutCombination != null) {
             caption = caption + " (" + shortcutCombination.format() + ")";
@@ -133,7 +133,7 @@ public abstract class WebAbstractActionsHolderComponent<T extends com.vaadin.ui.
         button.setCaption(caption);
     }
 
-    protected void setContextMenuButtonIcon(CubaButton button, String icon) {
+    protected void setContextMenuButtonIcon(JmixButton button, String icon) {
         if (!StringUtils.isEmpty(icon)) {
             Resource iconResource = getIconResource(icon);
             button.setIcon(iconResource);
@@ -142,7 +142,7 @@ public abstract class WebAbstractActionsHolderComponent<T extends com.vaadin.ui.
         }
     }
 
-    protected void setContextMenuButtonAction(CubaButton button, Action action) {
+    protected void setContextMenuButtonAction(JmixButton button, Action action) {
         setContextMenuButtonIcon(button, showIconsForPopupMenuActions
                 ? action.getIcon()
                 : null);
@@ -190,7 +190,7 @@ public abstract class WebAbstractActionsHolderComponent<T extends com.vaadin.ui.
         }
 
         if (StringUtils.isNotEmpty(action.getCaption())) {
-            CubaButton contextMenuButton = createContextMenuButton();
+            JmixButton contextMenuButton = createContextMenuButton();
             initContextMenuButton(contextMenuButton, action);
 
             int visibleActionsIndex = 0;
@@ -215,7 +215,7 @@ public abstract class WebAbstractActionsHolderComponent<T extends com.vaadin.ui.
         actionsPermissions.apply(action);
     }
 
-    protected void initContextMenuButton(CubaButton contextMenuButton, Action action) {
+    protected void initContextMenuButton(JmixButton contextMenuButton, Action action) {
         contextMenuButton.setStyleName("c-cm-button");
         setContextMenuButtonAction(contextMenuButton, action);
     }
@@ -224,7 +224,7 @@ public abstract class WebAbstractActionsHolderComponent<T extends com.vaadin.ui.
         action.refreshState();
     }
 
-    protected abstract CubaButton createContextMenuButton();
+    protected abstract JmixButton createContextMenuButton();
 
     @Override
     public void removeAction(@Nullable Action action) {

@@ -16,9 +16,8 @@
 
 package io.jmix.ui.components.calendar;
 
-import com.haulmont.bali.events.EventHub;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.components.calendar.CalendarEvent.EventChangeEvent;
+import io.jmix.core.commons.events.EventHub;
+import io.jmix.core.commons.events.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ public class ListCalendarEventProvider implements CalendarEventProvider {
 
     protected List<CalendarEvent> eventList = new ArrayList<>();
 
-    protected Consumer<EventChangeEvent> eventChangeListener = eventChangeEvent ->
+    protected Consumer<CalendarEvent.EventChangeEvent> eventChangeListener = eventChangeEvent ->
             fireEventSetChange();
 
     protected EventHub events = new EventHub();

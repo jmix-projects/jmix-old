@@ -17,7 +17,7 @@
 package io.jmix.ui.components;
 
 import com.google.common.reflect.TypeToken;
-import com.haulmont.cuba.core.entity.Entity;
+import io.jmix.core.entity.Entity;
 
 /**
  * SuggestionPickerField adds to PickerField the ability to search an entity by user input.

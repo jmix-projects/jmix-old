@@ -16,16 +16,16 @@
 
 package io.jmix.ui.components.renderers;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.DataGrid;
-import com.haulmont.cuba.web.gui.components.WebAbstractDataGrid.AbstractRenderer;
-import com.haulmont.cuba.web.widgets.renderers.CubaCheckBoxRenderer;
 import com.vaadin.ui.renderers.Renderer;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.components.impl.WebAbstractDataGrid;
+import io.jmix.ui.widgets.renderers.CubaCheckBoxRenderer;
 
 /**
  * A renderer that represents a boolean values as a graphical check box icons.
  */
-public class WebCheckBoxRenderer extends AbstractRenderer<Entity, Boolean> implements DataGrid.CheckBoxRenderer {
+public class WebCheckBoxRenderer extends WebAbstractDataGrid.AbstractRenderer<Entity, Boolean> implements DataGrid.CheckBoxRenderer {
 
     @Override
     protected Renderer<Boolean> createImplementation() {

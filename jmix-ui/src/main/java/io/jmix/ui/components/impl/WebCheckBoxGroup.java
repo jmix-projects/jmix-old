@@ -16,18 +16,20 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.core.global.MetadataTools;
-import com.haulmont.cuba.gui.components.CheckBoxGroup;
-import com.haulmont.cuba.gui.components.data.ConversionException;
-import com.haulmont.cuba.gui.components.data.DataAwareComponentsTools;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.components.data.meta.OptionsBinding;
-import com.haulmont.cuba.gui.components.data.options.OptionsBinder;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
-import com.haulmont.cuba.web.widgets.CubaCheckBoxGroup;
+import io.jmix.core.MetadataTools;
+import io.jmix.ui.components.CheckBoxGroup;
+import io.jmix.ui.components.data.ConversionException;
+import io.jmix.ui.components.data.DataAwareComponentsTools;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.OptionsBinding;
+import io.jmix.ui.components.data.options.OptionsBinder;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.widgets.CubaCheckBoxGroup;
 import com.vaadin.server.Resource;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.widgets.CubaCheckBoxGroup;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;

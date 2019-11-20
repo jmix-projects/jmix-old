@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.HasHtmlCaption;
+import io.jmix.ui.components.HasHtmlCaption;
 
 /**
  * {@link CompositeComponent} having a HTML caption.

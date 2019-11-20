@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.chile.core.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaClass;
 
 /**
  * The interface is implemented by generic filter components. It contains low-level methods

@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.gui.components.FileResource;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.components.FileResource;
 
 import java.io.File;
 

@@ -15,17 +15,18 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.security.ActionsPermissions;
-import com.haulmont.cuba.gui.sys.TestIdManager;
-import com.haulmont.cuba.gui.theme.ThemeConstants;
-import com.haulmont.cuba.gui.theme.ThemeConstantsManager;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.widgets.CubaButton;
-import com.haulmont.cuba.web.widgets.CubaPopupButton;
-import com.haulmont.cuba.web.widgets.CubaPopupButtonLayout;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.security.ActionsPermissions;
+import io.jmix.ui.sys.TestIdManager;
+import io.jmix.ui.theme.ThemeConstants;
+import io.jmix.ui.theme.ThemeConstantsManager;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.widgets.CubaButton;
+import io.jmix.ui.widgets.CubaPopupButton;
+import io.jmix.ui.widgets.CubaPopupButtonLayout;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.Registration;
@@ -38,8 +39,8 @@ import java.beans.PropertyChangeEvent;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
-import static com.haulmont.cuba.gui.ComponentsHelper.findActionById;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.ComponentsHelper.findActionById;
 
 public class WebPopupButton extends WebAbstractComponent<CubaPopupButton> implements PopupButton, SecuredActionsHolder {
 

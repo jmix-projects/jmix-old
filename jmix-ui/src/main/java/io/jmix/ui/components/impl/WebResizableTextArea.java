@@ -16,11 +16,11 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.gui.components.ResizableTextArea;
-import com.haulmont.cuba.web.widgets.CubaResizableTextAreaWrapper;
-import com.haulmont.cuba.web.widgets.CubaTextArea;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.components.ResizableTextArea;
+import io.jmix.ui.widgets.CubaResizableTextAreaWrapper;
+import io.jmix.ui.widgets.CubaTextArea;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.ValueChangeMode;
@@ -194,8 +194,8 @@ public class WebResizableTextArea<V> extends WebAbstractTextArea<CubaTextArea, V
 
     @Override
     public void setCaseConversion(CaseConversion caseConversion) {
-        com.haulmont.cuba.web.widgets.CaseConversion widgetCaseConversion =
-                com.haulmont.cuba.web.widgets.CaseConversion.valueOf(caseConversion.name());
+        io.jmix.ui.widgets.CaseConversion widgetCaseConversion =
+                io.jmix.ui.widgets.CaseConversion.valueOf(caseConversion.name());
         component.setCaseConversion(widgetCaseConversion);
     }
 

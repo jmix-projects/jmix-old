@@ -16,9 +16,9 @@
 
 package io.jmix.ui.components.compatibility;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.Window;
-import com.haulmont.cuba.gui.screen.LookupScreen;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.screen.LookupScreen;
 
 import java.util.function.Predicate;
 

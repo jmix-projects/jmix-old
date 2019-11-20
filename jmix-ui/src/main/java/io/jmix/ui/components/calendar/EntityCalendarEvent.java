@@ -16,10 +16,10 @@
 
 package io.jmix.ui.components.calendar;
 
-import com.haulmont.bali.events.EventHub;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.model.Instance;
-import com.haulmont.cuba.core.entity.Entity;
+import io.jmix.core.commons.events.EventHub;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.Instance;
 import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.Date;

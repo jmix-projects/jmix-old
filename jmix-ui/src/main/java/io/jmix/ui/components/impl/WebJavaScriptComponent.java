@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.web.widgets.CubaJavaScriptComponent;
+import io.jmix.ui.widgets.CubaJavaScriptComponent;
 import com.vaadin.ui.Dependency;
 import com.vaadin.ui.HasDependencies;
 import com.vaadin.ui.JavaScriptFunction;

@@ -16,15 +16,15 @@
 
 package io.jmix.ui.components.renderers;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.DataGrid;
-import com.haulmont.cuba.web.gui.components.WebAbstractDataGrid.AbstractRenderer;
-import com.haulmont.cuba.web.gui.components.WebWrapperUtils;
 import com.vaadin.ui.renderers.ClickableRenderer;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.components.impl.WebAbstractDataGrid;
+import io.jmix.ui.components.impl.WebWrapperUtils;
 
 import java.util.function.Consumer;
 
-public abstract class WebAbstractClickableRenderer<T extends Entity, V> extends AbstractRenderer<T, V>
+public abstract class WebAbstractClickableRenderer<T extends Entity, V> extends WebAbstractDataGrid.AbstractRenderer<T, V>
         implements DataGrid.HasRendererClickListener<T> {
 
     protected Consumer<DataGrid.RendererClickEvent<T>> listener;

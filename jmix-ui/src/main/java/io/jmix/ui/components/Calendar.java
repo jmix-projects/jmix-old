@@ -16,13 +16,13 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.calendar.CalendarEvent;
-import com.haulmont.cuba.gui.components.calendar.CalendarEventProvider;
-import com.haulmont.cuba.gui.components.calendar.ContainerCalendarEventProvider;
-import com.haulmont.cuba.gui.components.calendar.EntityCalendarEventProvider;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.calendar.ContainerCalendarEventProvider;
+import io.jmix.ui.components.calendar.EntityCalendarEventProvider;
+import io.jmix.ui.model.cuba.CollectionDatasource;
 
 import javax.annotation.Nullable;
 import java.time.DayOfWeek;

@@ -16,12 +16,14 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.core.entity.FileDescriptor;
-import com.haulmont.cuba.web.widgets.CubaButton;
-import com.haulmont.cuba.web.widgets.UploadComponent;
+import io.jmix.core.entity.FileDescriptor;
+import io.jmix.ui.widgets.CubaButton;
+import io.jmix.ui.widgets.UploadComponent;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
+import io.jmix.ui.widgets.JmixButton;
+import io.jmix.ui.widgets.UploadComponent;
 import org.apache.commons.lang3.StringUtils;
 
 // todo CssLayout
@@ -178,7 +180,7 @@ public class CubaFileUploadWrapper extends CustomField<FileDescriptor> {
         container.setSpacing(true);
         container.addStyleName("c-fileupload-container");
 
-        fileNameButton = new CubaButton();
+        fileNameButton = new JmixButton();
         fileNameButton.setWidth(100, Unit.PERCENTAGE);
         fileNameButton.addStyleName(ValoTheme.BUTTON_LINK);
         fileNameButton.addStyleName("c-fileupload-filename");
@@ -188,7 +190,7 @@ public class CubaFileUploadWrapper extends CustomField<FileDescriptor> {
 
         container.addComponent(uploadComponent);
 
-        clearButton = new CubaButton("");
+        clearButton = new JmixButton("");
         clearButton.setStyleName("c-fileupload-clear");
         container.addComponent(clearButton);
         setShowClearButton(showClearButton);

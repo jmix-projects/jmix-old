@@ -17,15 +17,15 @@
 package io.jmix.ui.components.impl;
 
 
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.DatatypeRegistry;
-import com.haulmont.chile.core.datatypes.impl.IntegerDatatype;
-import com.haulmont.chile.core.datatypes.impl.LongDatatype;
-import com.haulmont.cuba.gui.components.Slider;
-import com.haulmont.cuba.gui.components.data.ConversionException;
-import com.haulmont.cuba.gui.components.data.DataAwareComponentsTools;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.web.widgets.CubaSlider;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
+import io.jmix.core.metamodel.datatypes.impl.IntegerDatatype;
+import io.jmix.core.metamodel.datatypes.impl.LongDatatype;
+import io.jmix.ui.components.Slider;
+import io.jmix.ui.components.data.ConversionException;
+import io.jmix.ui.components.data.DataAwareComponentsTools;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.widgets.CubaSlider;
 import org.springframework.util.NumberUtils;
 
 import javax.inject.Inject;

@@ -16,9 +16,9 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.cuba.web.AppUI;
+import io.jmix.ui.AppUI;
 import com.haulmont.cuba.web.gui.components.WebAbstractComponent;
-import com.haulmont.cuba.web.widgets.CubaButton;
+import io.jmix.ui.widgets.CubaButton;
 import io.jmix.ui.components.mainwindow.LogoutButton;
 import org.apache.commons.lang3.StringUtils;
 

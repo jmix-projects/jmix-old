@@ -17,7 +17,7 @@
 package io.jmix.ui.components;
 
 
-import com.haulmont.cuba.gui.app.security.role.edit.UiPermissionDescriptor;
+import io.jmix.ui.security.UiPermissionDescriptor;
 
 /**
  * State of subcomponents can be managed by UI permissions.

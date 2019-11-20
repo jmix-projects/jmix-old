@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.bali.events.Subscription;
+import io.jmix.core.commons.events.Subscription;
 
 import java.util.EventObject;
 import java.util.Set;

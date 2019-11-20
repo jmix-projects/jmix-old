@@ -16,12 +16,12 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.screen.EditorScreen;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.screen.Screen;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.screen.EditorScreen;
+import io.jmix.ui.screen.OpenMode;
+import io.jmix.ui.screen.Screen;
 
 import javax.annotation.Nullable;
 import java.util.EventObject;

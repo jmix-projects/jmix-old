@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.gui.components.ThemeResource;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.components.ThemeResource;
 
 public class WebThemeResource extends WebAbstractResource implements WebResource, ThemeResource {
 

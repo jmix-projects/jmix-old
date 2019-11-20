@@ -17,8 +17,8 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.collect.ImmutableMap;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.components.*;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.components.*;
 import com.vaadin.shared.util.SharedUtil;
 import com.vaadin.ui.AbstractEmbedded;
 

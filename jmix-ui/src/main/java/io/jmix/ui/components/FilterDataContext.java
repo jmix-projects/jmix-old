@@ -16,13 +16,13 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.core.global.filter.ParameterInfo;
-import com.haulmont.cuba.core.global.filter.ParametersHelper;
-import com.haulmont.cuba.gui.components.filter.Param;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.model.DataLoader;
+import io.jmix.core.AppBeans;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.core.filter.ParameterInfo;
+import io.jmix.core.filter.ParametersHelper;
+import io.jmix.ui.components.filter.Param;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.model.DataLoader;
 import com.haulmont.cuba.security.global.UserSession;
 
 import java.util.*;

@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.gui.components.UrlResource;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.components.UrlResource;
 import com.vaadin.server.ExternalResource;
 
 import java.net.URL;

@@ -16,11 +16,11 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.RichTextArea;
-import com.haulmont.cuba.gui.components.data.ConversionException;
-import com.haulmont.cuba.web.widgets.CubaRichTextArea;
-import com.haulmont.cuba.web.widgets.client.richtextarea.CubaRichTextAreaState;
+import io.jmix.core.Messages;
+import io.jmix.ui.components.RichTextArea;
+import io.jmix.ui.components.data.ConversionException;
+import io.jmix.ui.widgets.CubaRichTextArea;
+import io.jmix.ui.widgets.client.richtextarea.CubaRichTextAreaState;
 import com.vaadin.shared.ui.ValueChangeMode;
 import org.springframework.beans.factory.InitializingBean;
 

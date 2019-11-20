@@ -16,18 +16,18 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.options.DatasourceOptions;
-import com.haulmont.cuba.gui.components.data.value.DatasourceValueSource;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.options.DatasourceOptions;
+import io.jmix.ui.components.data.value.DatasourceValueSource;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * Contains information for {@link ComponentGenerationStrategy} when creating components using {@link UiComponentsGenerator}.

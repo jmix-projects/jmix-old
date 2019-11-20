@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.ResourceView.HasStreamSettings;
+import io.jmix.ui.components.ResourceView.HasStreamSettings;
 import com.vaadin.server.DownloadStream;
 import com.vaadin.server.StreamResource;
 

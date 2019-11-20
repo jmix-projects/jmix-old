@@ -16,23 +16,23 @@
 
 package io.jmix.ui.components.renderers;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.DataGrid;
-import com.haulmont.cuba.web.gui.components.WebAbstractDataGrid.AbstractRenderer;
 import com.vaadin.ui.renderers.LocalDateTimeRenderer;
+import io.jmix.core.AppBeans;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.components.impl.WebAbstractDataGrid;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * A renderer for presenting LocalDateTime values.
  */
-public class WebLocalDateTimeRenderer extends AbstractRenderer<Entity, LocalDateTime>
+public class WebLocalDateTimeRenderer extends WebAbstractDataGrid.AbstractRenderer<Entity, LocalDateTime>
         implements DataGrid.LocalDateTimeRenderer {
 
     private Locale locale;

@@ -16,13 +16,13 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.HtmlAttributes;
-import com.haulmont.cuba.web.widgets.HtmlAttributesExtension;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.HtmlAttributes;
+import io.jmix.ui.widgets.HtmlAttributesExtension;
 import org.apache.commons.lang3.StringUtils;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
-import static com.haulmont.cuba.web.widgets.client.html.HtmlAttributesExtensionState.DEFAULT_SELECTOR;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.widgets.client.html.HtmlAttributesExtensionState.DEFAULT_SELECTOR;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 
 @org.springframework.stereotype.Component(HtmlAttributes.NAME)

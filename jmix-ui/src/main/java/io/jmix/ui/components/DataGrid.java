@@ -18,18 +18,18 @@ package io.jmix.ui.components;
 
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.data.DataGridItems;
-import com.haulmont.cuba.gui.components.data.ValueSourceProvider;
-import com.haulmont.cuba.gui.components.data.datagrid.DatasourceDataGridItems;
-import com.haulmont.cuba.gui.components.data.datagrid.SortableDatasourceDataGridItems;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.CollectionDatasource.Sortable;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.model.InstanceContainer;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.data.DataGridItems;
+import io.jmix.ui.components.data.ValueSourceProvider;
+import io.jmix.ui.components.data.datagrid.DatasourceDataGridItems;
+import io.jmix.ui.components.data.datagrid.SortableDatasourceDataGridItems;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -40,7 +40,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static com.haulmont.cuba.gui.components.MouseEventDetails.MouseButton;
+import static io.jmix.ui.components.MouseEventDetails.MouseButton;
 
 /**
  * A grid component for displaying tabular data bound to entity type.
@@ -200,8 +200,8 @@ public interface DataGrid<E extends Entity> extends ListComponent<E>, HasButtons
             setItems(null);
         } else {
             DataGridItems<E> dataGridItems;
-            if (datasource instanceof Sortable) {
-                dataGridItems = new SortableDatasourceDataGridItems<>((Sortable) datasource);
+            if (datasource instanceof CollectionDatasource.Sortable) {
+                dataGridItems = new SortableDatasourceDataGridItems<>((CollectionDatasource.Sortable) datasource);
             } else {
                 dataGridItems = new DatasourceDataGridItems<>(datasource);
             }

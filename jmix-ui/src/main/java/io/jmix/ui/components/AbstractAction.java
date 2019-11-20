@@ -17,10 +17,11 @@ package io.jmix.ui.components;
 
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
-import com.haulmont.bali.events.EventHub;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.icons.Icons;
+import io.jmix.core.commons.events.EventHub;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Messages;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.icons.Icons;
 
 import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;

@@ -21,6 +21,8 @@ import io.jmix.core.metamodel.model.utils.InstanceUtils;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.components.HasValue;
 import io.jmix.ui.components.data.*;
+import io.jmix.ui.components.data.meta.ValueBinding;
+import io.jmix.ui.components.data.value.ValueBinder;
 import org.slf4j.LoggerFactory;
 
 import java.util.function.Consumer;

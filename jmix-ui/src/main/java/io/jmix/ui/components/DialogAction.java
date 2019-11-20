@@ -15,10 +15,10 @@
  */
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.gui.Dialogs;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
+import io.jmix.ui.Dialogs;
+import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
 
 /**
  * Standard action for option dialogs.

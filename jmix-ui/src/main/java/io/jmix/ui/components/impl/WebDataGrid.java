@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.web.widgets.CubaGrid;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.widgets.CubaGrid;
 
 public class WebDataGrid<E extends Entity> extends WebAbstractDataGrid<CubaGrid<E>, E> {
 

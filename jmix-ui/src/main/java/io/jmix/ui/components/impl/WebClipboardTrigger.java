@@ -16,16 +16,17 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.components.Button;
-import com.haulmont.cuba.gui.components.ClipboardTrigger;
-import com.haulmont.cuba.gui.components.TextInputField;
-import com.haulmont.cuba.web.widgets.CubaCopyButtonExtension;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.components.Button;
+import io.jmix.ui.components.ClipboardTrigger;
+import io.jmix.ui.components.TextInputField;
+import io.jmix.ui.widgets.CubaCopyButtonExtension;
+import io.jmix.ui.widgets.CubaCopyButtonExtension;
 
 import java.util.function.Consumer;
 
-import static com.haulmont.cuba.web.widgets.CubaCopyButtonExtension.browserSupportCopy;
-import static com.haulmont.cuba.web.widgets.CubaCopyButtonExtension.copyWith;
+import static io.jmix.ui.widgets.CubaCopyButtonExtension.browserSupportCopy;
+import static io.jmix.ui.widgets.CubaCopyButtonExtension.copyWith;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 
 public class WebClipboardTrigger extends WebAbstractFacet implements ClipboardTrigger {

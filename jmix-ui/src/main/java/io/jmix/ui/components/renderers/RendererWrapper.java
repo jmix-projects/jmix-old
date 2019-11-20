@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.renderers;
 
-import com.haulmont.cuba.gui.components.DataGrid;
+import io.jmix.ui.components.DataGrid;
 
 public interface RendererWrapper<T> extends DataGrid.Renderer {
 

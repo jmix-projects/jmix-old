@@ -16,20 +16,20 @@
 
 package io.jmix.ui.components.renderers;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.DataGrid;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.web.gui.components.WebAbstractDataGrid.AbstractRenderer;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
-import com.haulmont.cuba.web.widgets.renderers.CubaIconRenderer;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.renderers.Renderer;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.components.impl.WebAbstractDataGrid;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.widgets.renderers.CubaIconRenderer;
 
 import javax.inject.Inject;
 
 public class WebIconRenderer<T extends Entity>
-        extends AbstractRenderer<T, Resource> implements DataGrid.IconRenderer<T> {
+        extends WebAbstractDataGrid.AbstractRenderer<T, Resource> implements DataGrid.IconRenderer<T> {
 
     protected Icons icons;
     protected IconResolver iconResolver;

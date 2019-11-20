@@ -16,10 +16,10 @@
 
 package io.jmix.ui.components.compatibility;
 
-import com.haulmont.cuba.gui.components.AbstractFrame;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.screen.ScreenFragment;
+import io.jmix.ui.components.AbstractFrame;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.screen.ScreenFragment;
 
 import javax.annotation.Nullable;
 

@@ -15,31 +15,33 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.core.app.FileStorageService;
-import com.haulmont.cuba.core.global.DataManager;
-import com.haulmont.cuba.core.global.FileStorageException;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.Security;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.Notifications;
-import com.haulmont.cuba.gui.Notifications.NotificationType;
-import com.haulmont.cuba.gui.components.ComponentContainer;
-import com.haulmont.cuba.gui.components.FileUploadField;
-import com.haulmont.cuba.gui.components.Window;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.data.DataSupplier;
-import com.haulmont.cuba.gui.data.DsContext;
-import com.haulmont.cuba.gui.export.ExportDisplay;
-import com.haulmont.cuba.gui.export.FileDataProvider;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
-import com.haulmont.cuba.gui.upload.FileUploadingAPI;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.app.FileStorageService;
+import io.jmix.core.DataManager;
+import io.jmix.core.FileStorageException;
+import io.jmix.core.Messages;
+import io.jmix.core.Security;
+import io.jmix.core.security.Security;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.Notifications;
+import io.jmix.ui.Notifications.NotificationType;
+import io.jmix.ui.components.ComponentContainer;
+import io.jmix.ui.components.FileUploadField;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.data.DataSupplier;
+import io.jmix.ui.model.cuba.DsContext;
+import io.jmix.ui.export.ExportDisplay;
+import io.jmix.ui.export.FileDataProvider;
+import io.jmix.ui.screen.compatibility.LegacyFrame;
+import io.jmix.ui.upload.FileUploadingAPI;
 import com.haulmont.cuba.security.entity.EntityOp;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
-import com.haulmont.cuba.web.widgets.CubaFileUpload;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.widgets.CubaFileUpload;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import io.jmix.ui.widgets.CubaFileUpload;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -55,7 +57,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.haulmont.cuba.gui.ComponentsHelper.getScreenContext;
+import static io.jmix.ui.ComponentsHelper.getScreenContext;
 import static com.haulmont.cuba.web.gui.FileUploadTypesHelper.convertToMIME;
 
 public class WebFileUploadField extends WebAbstractUploadField<CubaFileUploadWrapper>
@@ -397,7 +399,7 @@ public class WebFileUploadField extends WebAbstractUploadField<CubaFileUploadWra
         if (dropZone == null) {
             uploadButton.setDropZone(null);
         } else {
-            com.haulmont.cuba.gui.components.Component target = dropZone.getTarget();
+            io.jmix.ui.components.Component target = dropZone.getTarget();
             if (target instanceof Window.Wrapper) {
                 target = ((Window.Wrapper) target).getWrappedWindow();
             }

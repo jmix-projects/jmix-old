@@ -16,15 +16,15 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.core.global.Events;
-import com.haulmont.cuba.core.global.FtsConfigHelper;
-import com.haulmont.cuba.gui.ScreenTools;
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.components.dev.LayoutAnalyzerContextMenuProvider;
-import com.haulmont.cuba.gui.components.mainwindow.FoldersPane;
-import com.haulmont.cuba.gui.components.mainwindow.FtsField;
-import com.haulmont.cuba.gui.events.UserRemovedEvent;
-import com.haulmont.cuba.gui.events.UserSubstitutionsChangedEvent;
+import io.jmix.core.Events;
+import io.jmix.core.FtsConfigHelper;
+import io.jmix.ui.ScreenTools;
+import io.jmix.ui.Screens;
+import io.jmix.ui.components.dev.LayoutAnalyzerContextMenuProvider;
+import io.jmix.ui.components.mainwindow.FoldersPane;
+import io.jmix.ui.components.mainwindow.FtsField;
+import io.jmix.ui.events.UserRemovedEvent;
+import io.jmix.ui.events.UserSubstitutionsChangedEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
@@ -86,11 +86,11 @@ public class AbstractMainWindow extends AbstractTopLevelWindow
         }
     }
 
-    protected void initFtsField(FtsField ftsField) {
-        if (ftsField != null && !FtsConfigHelper.getEnabled()) {
-            ftsField.setVisible(false);
-        }
-    }
+//    protected void initFtsField(FtsField ftsField) {
+//        if (ftsField != null && !FtsConfigHelper.getEnabled()) {
+//            ftsField.setVisible(false);
+//        }
+//    }
 
     protected void initLayoutAnalyzerContextMenu(Component contextMenuTarget) {
         LayoutAnalyzerContextMenuProvider laContextMenuProvider =
@@ -98,7 +98,7 @@ public class AbstractMainWindow extends AbstractTopLevelWindow
         laContextMenuProvider.initContextMenu(this, contextMenuTarget);
     }
 
-    @Order(Events.LOWEST_PLATFORM_PRECEDENCE - 100)
+    @Order(Events.LOWEST_CORE_PRECEDENCE - 100)
     @EventListener
     protected void onUserSubstitutionsChange(UserSubstitutionsChangedEvent event) {
         UserIndicator userIndicator = getUserIndicator();
@@ -107,7 +107,7 @@ public class AbstractMainWindow extends AbstractTopLevelWindow
         }
     }
 
-    @Order(Events.LOWEST_PLATFORM_PRECEDENCE - 100)
+    @Order(Events.LOWEST_CORE_PRECEDENCE - 100)
     @EventListener
     protected void onUserRemove(UserRemovedEvent event) {
         UserIndicator userIndicator = getUserIndicator();

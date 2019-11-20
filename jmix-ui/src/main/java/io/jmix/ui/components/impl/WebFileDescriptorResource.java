@@ -16,12 +16,12 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.core.entity.FileDescriptor;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.FileLoader;
-import com.haulmont.cuba.core.global.FileStorageException;
-import com.haulmont.cuba.gui.components.FileDescriptorResource;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.entity.FileDescriptor;
+import io.jmix.core.AppBeans;
+import io.jmix.core.FileLoader;
+import io.jmix.core.FileStorageException;
+import io.jmix.ui.components.FileDescriptorResource;
 import com.vaadin.server.StreamResource;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;

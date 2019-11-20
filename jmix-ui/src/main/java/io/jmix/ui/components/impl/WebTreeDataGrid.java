@@ -17,15 +17,17 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.TreeDataGrid;
-import com.haulmont.cuba.gui.components.data.BindingState;
-import com.haulmont.cuba.gui.components.data.DataGridItems;
-import com.haulmont.cuba.gui.components.data.TreeDataGridItems;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.TreeDataGrid;
+import io.jmix.ui.components.data.BindingState;
+import io.jmix.ui.components.data.DataGridItems;
+import io.jmix.ui.components.data.TreeDataGridItems;
 import com.haulmont.cuba.web.gui.components.datagrid.DataGridDataProvider;
 import com.haulmont.cuba.web.gui.components.datagrid.HierarchicalDataGridDataProvider;
-import com.haulmont.cuba.web.widgets.CubaTreeGrid;
+import io.jmix.ui.components.datagrid.DataGridDataProvider;
+import io.jmix.ui.components.datagrid.HierarchicalDataGridDataProvider;
+import io.jmix.ui.widgets.CubaTreeGrid;
 import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.TreeDataProvider;
@@ -40,7 +42,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class WebTreeDataGrid<E extends Entity> extends WebAbstractDataGrid<CubaTreeGrid<E>, E>
         implements TreeDataGrid<E> {

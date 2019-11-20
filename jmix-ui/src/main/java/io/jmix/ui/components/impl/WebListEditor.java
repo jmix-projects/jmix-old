@@ -16,13 +16,13 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.components.HBoxLayout;
-import com.haulmont.cuba.gui.components.ListEditor;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.listeditor.ListEditorDelegate;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.AppBeans;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.HBoxLayout;
+import io.jmix.ui.components.ListEditor;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.listeditor.ListEditorDelegate;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
 import org.apache.commons.collections4.CollectionUtils;

@@ -16,14 +16,18 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.web.App;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Messages;
+import io.jmix.ui.App;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.actions.BaseAction;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.App;
+import io.jmix.ui.model.cuba.CollectionDatasource;
 
 public class ShowLinkAction extends BaseAction {
     public static final String ACTION_ID = "showLink";
@@ -46,7 +50,7 @@ public class ShowLinkAction extends BaseAction {
     }
 
     @Override
-    public void actionPerform(com.haulmont.cuba.gui.components.Component component) {
+    public void actionPerform(io.jmix.ui.components.Component component) {
         if (ds == null) {
             return;
         }

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.gui.components.data.Options;
+import io.jmix.ui.components.data.Options;
 
 import java.util.function.Function;
 

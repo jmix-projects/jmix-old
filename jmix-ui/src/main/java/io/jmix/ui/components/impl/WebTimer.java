@@ -16,18 +16,18 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.core.global.RemoteException;
-import com.haulmont.cuba.gui.components.Fragment;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.components.Timer;
-import com.haulmont.cuba.gui.components.Window;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.ScreenFragment;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.RemoteException;
+import io.jmix.ui.components.Fragment;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.Timer;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.ScreenFragment;
+import io.jmix.ui.screen.UiControllerUtils;
 import com.haulmont.cuba.security.global.NoUserSessionException;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.widgets.CubaTimer;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.widgets.CubaTimer;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.ui.Component;
 import org.apache.commons.lang3.exception.ExceptionUtils;

@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.table;
 
-import com.haulmont.cuba.gui.components.data.TreeTableItems;
-import com.haulmont.cuba.web.widgets.data.TreeTableContainer;
+import io.jmix.ui.components.data.TreeTableItems;
+import io.jmix.ui.widgets.data.TreeTableContainer;
 
 import java.util.Collection;
 

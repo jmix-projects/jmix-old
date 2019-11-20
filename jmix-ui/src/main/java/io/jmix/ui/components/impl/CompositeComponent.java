@@ -17,13 +17,13 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Preconditions;
-import com.haulmont.bali.events.EventHub;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.bali.events.TriggerOnce;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.sys.TestIdManager;
-import com.haulmont.cuba.web.AppUI;
+import io.jmix.core.commons.events.EventHub;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.commons.events.TriggerOnce;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.*;
+import io.jmix.ui.sys.TestIdManager;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
@@ -411,7 +411,7 @@ public class CompositeComponent<T extends Component>
 
     /**
      * An Event that is fired right before the composite component instance is returned
-     * by {@link com.haulmont.cuba.gui.UiComponents} bean. By this time a composite component
+     * by {@link io.jmix.ui.UiComponents} bean. By this time a composite component
      * is created, has context, all beans are injected and composition is loaded from descriptor if present.
      */
     @TriggerOnce

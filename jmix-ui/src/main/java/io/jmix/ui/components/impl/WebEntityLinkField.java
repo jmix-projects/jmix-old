@@ -16,31 +16,38 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.Datatypes;
-import com.haulmont.chile.core.model.Instance;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.entity.SoftDelete;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.Notifications;
-import com.haulmont.cuba.gui.ScreenBuilders;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.ContainerDataUnit;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.components.data.value.ContainerValueSource;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.DataSupplier;
-import com.haulmont.cuba.gui.data.impl.DatasourceImplementation;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.screen.*;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
-import com.haulmont.cuba.web.widgets.CubaButtonField;
+import io.jmix.core.*;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.datatypes.Datatypes;
+import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.SoftDelete;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.Notifications;
+import io.jmix.ui.ScreenBuilders;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.compatibility.LegacyFrame;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.ContainerDataUnit;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.value.ContainerValueSource;
+import io.jmix.ui.config.WindowConfig;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.data.DataSupplier;
+import io.jmix.ui.data.impl.DatasourceImplementation;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.DataSupplier;
+import io.jmix.ui.model.cuba.impl.DatasourceImplementation;
+import io.jmix.ui.screen.*;
+import io.jmix.ui.screen.compatibility.LegacyFrame;
+import io.jmix.ui.widgets.CubaButtonField;
+import io.jmix.ui.widgets.CubaButtonField;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -50,7 +57,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static com.haulmont.cuba.gui.WindowManager.OpenType;
+import static io.jmix.ui.components.compatibility.WindowManager.OpenType;
 
 public class WebEntityLinkField<V> extends WebV8AbstractField<CubaButtonField<V>, V, V>
         implements EntityLinkField<V>, InitializingBean {

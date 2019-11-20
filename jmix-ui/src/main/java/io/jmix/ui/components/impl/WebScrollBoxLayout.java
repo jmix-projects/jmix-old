@@ -15,14 +15,14 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.HtmlAttributes.CSS;
-import com.haulmont.cuba.web.widgets.CubaHorizontalActionsLayout;
-import com.haulmont.cuba.web.widgets.CubaScrollBoxLayout;
-import com.haulmont.cuba.web.widgets.CubaVerticalActionsLayout;
-import com.haulmont.cuba.web.widgets.HtmlAttributesExtension;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.HtmlAttributes.CSS;
+import io.jmix.ui.widgets.CubaHorizontalActionsLayout;
+import io.jmix.ui.widgets.CubaScrollBoxLayout;
+import io.jmix.ui.widgets.CubaVerticalActionsLayout;
+import io.jmix.ui.widgets.HtmlAttributesExtension;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
@@ -345,16 +345,16 @@ public class WebScrollBoxLayout extends WebAbstractComponent<CubaScrollBoxLayout
     }
 
     @Override
-    public void setMargin(com.haulmont.cuba.gui.components.MarginInfo marginInfo) {
+    public void setMargin(io.jmix.ui.components.MarginInfo marginInfo) {
         MarginInfo vMargin = new MarginInfo(marginInfo.hasTop(), marginInfo.hasRight(), marginInfo.hasBottom(),
                 marginInfo.hasLeft());
         component.setMargin(vMargin);
     }
 
     @Override
-    public com.haulmont.cuba.gui.components.MarginInfo getMargin() {
+    public io.jmix.ui.components.MarginInfo getMargin() {
         MarginInfo vMargin = getContent().getMargin();
-        return new com.haulmont.cuba.gui.components.MarginInfo(vMargin.hasTop(), vMargin.hasRight(), vMargin.hasBottom(),
+        return new io.jmix.ui.components.MarginInfo(vMargin.hasTop(), vMargin.hasRight(), vMargin.hasBottom(),
                 vMargin.hasLeft());
     }
 

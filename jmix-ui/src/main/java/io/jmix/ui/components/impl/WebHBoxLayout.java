@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.HBoxLayout;
-import com.haulmont.cuba.web.widgets.CubaHorizontalActionsLayout;
+import io.jmix.ui.components.HBoxLayout;
+import io.jmix.ui.widgets.CubaHorizontalActionsLayout;
 
 public class WebHBoxLayout extends WebAbstractBox<CubaHorizontalActionsLayout> implements HBoxLayout{
 

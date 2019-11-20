@@ -16,24 +16,25 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.ValueConversionException;
-import com.haulmont.chile.core.model.Range;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.MetadataTools;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.TextField;
-import com.haulmont.cuba.gui.components.data.ConversionException;
-import com.haulmont.cuba.gui.components.data.DataAwareComponentsTools;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.ui.components.data.ValueConversionException;
+import io.jmix.core.metamodel.model.Range;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.Messages;
+import io.jmix.core.MetadataTools;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.TextField;
+import io.jmix.ui.components.data.ConversionException;
+import io.jmix.ui.components.data.DataAwareComponentsTools;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.EntityValueSource;
 import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
-import com.haulmont.cuba.web.widgets.CubaTextField;
+import io.jmix.ui.widgets.CubaTextField;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.shared.ui.ValueChangeMode;
+import io.jmix.ui.widgets.ShortcutListenerDelegate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -255,8 +256,8 @@ public class WebTextField<V> extends WebV8AbstractField<CubaTextField, String, V
 
     @Override
     public void setCaseConversion(CaseConversion caseConversion) {
-        com.haulmont.cuba.web.widgets.CaseConversion widgetCaseConversion =
-                com.haulmont.cuba.web.widgets.CaseConversion.valueOf(caseConversion.name());
+        io.jmix.ui.widgets.CaseConversion widgetCaseConversion =
+                io.jmix.ui.widgets.CaseConversion.valueOf(caseConversion.name());
         component.setCaseConversion(widgetCaseConversion);
     }
 

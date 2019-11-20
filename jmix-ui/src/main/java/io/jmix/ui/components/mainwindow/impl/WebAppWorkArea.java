@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.cuba.client.ClientConfig;
+import io.jmix.ui.ClientConfig;
 import com.haulmont.cuba.core.global.BeanLocator;
 import com.haulmont.cuba.core.global.Configuration;
 import com.haulmont.cuba.core.global.Events;
@@ -31,9 +31,9 @@ import com.haulmont.cuba.gui.screen.FrameOwner;
 import com.haulmont.cuba.gui.screen.Screen;
 import com.haulmont.cuba.gui.screen.UiControllerUtils;
 import com.haulmont.cuba.gui.util.OperationResult;
-import com.haulmont.cuba.web.AppUI;
+import io.jmix.ui.AppUI;
 import com.haulmont.cuba.web.WebConfig;
-import com.haulmont.cuba.web.app.UserSettingsTools;
+import io.jmix.ui.App.UserSettingsTools;
 import com.haulmont.cuba.web.gui.MainTabSheetMode;
 import com.haulmont.cuba.web.gui.ManagedMainTabSheetMode;
 import com.haulmont.cuba.web.gui.WebWindow;
@@ -41,9 +41,9 @@ import com.haulmont.cuba.web.gui.components.WebAbstractComponent;
 import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
 import com.haulmont.cuba.web.sys.TabWindowContainer;
 import com.haulmont.cuba.web.sys.WindowBreadCrumbs;
-import com.haulmont.cuba.web.widgets.*;
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.drophandlers.DefaultTabSheetDropHandler;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
+import io.jmix.ui.widgets.*;
+import io.jmix.ui.widgets.addons.dragdroplayouts.drophandlers.DefaultTabSheetDropHandler;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.dd.DragAndDropEvent;

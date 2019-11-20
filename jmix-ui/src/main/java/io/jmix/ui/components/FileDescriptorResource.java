@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.core.entity.FileDescriptor;
+import io.jmix.core.entity.FileDescriptor;
 
 /**
  * A resource that can be obtained from the <code>FileStorage</code> using the given <code>FileDescriptor</code>.

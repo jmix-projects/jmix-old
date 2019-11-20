@@ -15,19 +15,20 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.QueryUtils;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.components.SearchField;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.options.DatasourceOptions;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.web.App;
-import com.haulmont.cuba.web.widgets.CubaComboBox;
-import com.haulmont.cuba.web.widgets.CubaSearchSelect;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Messages;
+import io.jmix.core.QueryUtils;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.SearchField;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.options.DatasourceOptions;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.App;
+import io.jmix.ui.widgets.CubaComboBox;
+import io.jmix.ui.widgets.CubaSearchSelect;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
@@ -68,14 +69,14 @@ public class WebSearchField<V extends Entity> extends WebLookupField<V> implemen
 
             @Override
             public void notFoundSuggestions(String filterString) {
-                String message = messages.formatMessage("com.haulmont.cuba.gui", "searchSelect.notFound", filterString);
+                String message = messages.formatMessage("io.jmix.ui", "searchSelect.notFound", filterString);
                 App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
             }
 
             @Override
             public void needMinSearchStringLength(String filterString, int minSearchStringLength) {
                 String message = messages.formatMessage(
-                        "com.haulmont.cuba.gui", "searchSelect.minimumLengthOfFilter", minSearchStringLength);
+                        "io.jmix.ui", "searchSelect.minimumLengthOfFilter", minSearchStringLength);
                 App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
             }
         };

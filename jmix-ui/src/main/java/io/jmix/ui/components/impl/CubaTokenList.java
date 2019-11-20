@@ -16,18 +16,18 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.model.Instance;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.TokenList;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.web.widgets.CubaScrollBoxLayout;
-import com.haulmont.cuba.web.widgets.CubaTokenListLabel;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomField;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.Instance;
+import io.jmix.ui.components.TokenList;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.widgets.CubaScrollBoxLayout;
+import io.jmix.ui.widgets.CubaTokenListLabel;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.*;

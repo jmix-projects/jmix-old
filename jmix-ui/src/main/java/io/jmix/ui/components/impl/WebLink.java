@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.Link;
-import com.haulmont.cuba.web.widgets.CubaLink;
+import io.jmix.ui.components.Link;
+import io.jmix.ui.widgets.CubaLink;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Resource;
 

@@ -15,14 +15,15 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.web.widgets.CubaGridLayout;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.*;
+import io.jmix.ui.widgets.CubaGridLayout;
 import com.vaadin.event.LayoutEvents;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.shared.ui.MarginInfo;
+import io.jmix.ui.widgets.CubaGridLayout;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -223,16 +224,16 @@ public class WebGridLayout extends WebAbstractComponent<CubaGridLayout> implemen
     }
 
     @Override
-    public void setMargin(com.haulmont.cuba.gui.components.MarginInfo marginInfo) {
+    public void setMargin(io.jmix.ui.components.MarginInfo marginInfo) {
         MarginInfo vMargin = new MarginInfo(marginInfo.hasTop(), marginInfo.hasRight(), marginInfo.hasBottom(),
                 marginInfo.hasLeft());
         component.setMargin(vMargin);
     }
 
     @Override
-    public com.haulmont.cuba.gui.components.MarginInfo getMargin() {
+    public io.jmix.ui.components.MarginInfo getMargin() {
         MarginInfo vMargin = component.getMargin();
-        return new com.haulmont.cuba.gui.components.MarginInfo(vMargin.hasTop(), vMargin.hasRight(), vMargin.hasBottom(),
+        return new io.jmix.ui.components.MarginInfo(vMargin.hasTop(), vMargin.hasRight(), vMargin.hasBottom(),
                 vMargin.hasLeft());
     }
 

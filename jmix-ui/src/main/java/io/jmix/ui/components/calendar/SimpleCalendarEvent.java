@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.calendar;
 
-import com.haulmont.bali.events.EventHub;
-import com.haulmont.bali.events.Subscription;
+import io.jmix.core.commons.events.EventHub;
+import io.jmix.core.commons.events.Subscription;
 
 import java.util.Date;
 import java.util.function.Consumer;

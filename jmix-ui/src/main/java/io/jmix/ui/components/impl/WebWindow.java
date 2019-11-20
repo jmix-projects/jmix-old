@@ -503,7 +503,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
             Component child = componentsIterator.next();
 
             // todo implement
-            /*if (child instanceof com.haulmont.cuba.gui.components.TabSheet
+            /*if (child instanceof io.jmix.ui.components.TabSheet
                     || child instanceof Accordion) {
                 // #PL-3176
                 // we don't know about selected tab after request

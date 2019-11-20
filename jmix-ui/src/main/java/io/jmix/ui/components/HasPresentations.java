@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.gui.presentations.Presentations;
+import io.jmix.ui.presentations.Presentations;
 
 /**
  * Component having presentations.

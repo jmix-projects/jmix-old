@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.HasContextHelp;
+import io.jmix.ui.components.HasContextHelp;
 
 import java.util.function.Consumer;
 

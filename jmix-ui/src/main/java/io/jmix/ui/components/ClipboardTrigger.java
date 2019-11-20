@@ -16,11 +16,11 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.meta.PropertyType;
-import com.haulmont.cuba.gui.meta.StudioEvent;
-import com.haulmont.cuba.gui.meta.StudioFacet;
-import com.haulmont.cuba.gui.meta.StudioProperty;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.meta.PropertyType;
+import io.jmix.ui.meta.StudioEvent;
+import io.jmix.ui.meta.StudioFacet;
+import io.jmix.ui.meta.StudioProperty;
 
 import java.util.EventObject;
 import java.util.function.Consumer;

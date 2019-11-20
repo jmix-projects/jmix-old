@@ -17,17 +17,17 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.gui.components.HighlightMode;
-import com.haulmont.cuba.gui.components.SourceCodeEditor;
-import com.haulmont.cuba.gui.components.autocomplete.AutoCompleteSupport;
-import com.haulmont.cuba.gui.components.autocomplete.Suggester;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.widgets.CubaSourceCodeEditor;
-import com.haulmont.cuba.web.widgets.addons.aceeditor.AceEditor;
-import com.haulmont.cuba.web.widgets.addons.aceeditor.AceMode;
-import com.haulmont.cuba.web.widgets.addons.aceeditor.Suggestion;
-import com.haulmont.cuba.web.widgets.addons.aceeditor.SuggestionExtension;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.components.HighlightMode;
+import io.jmix.ui.components.SourceCodeEditor;
+import io.jmix.ui.components.autocomplete.AutoCompleteSupport;
+import io.jmix.ui.components.autocomplete.Suggester;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.widgets.CubaSourceCodeEditor;
+import io.jmix.ui.widgets.addons.aceeditor.AceEditor;
+import io.jmix.ui.widgets.addons.aceeditor.AceMode;
+import io.jmix.ui.widgets.addons.aceeditor.Suggestion;
+import io.jmix.ui.widgets.addons.aceeditor.SuggestionExtension;
 import com.vaadin.server.ClientConnector;
 import org.apache.commons.lang3.StringUtils;
 
@@ -213,17 +213,17 @@ public class WebSourceCodeEditor extends WebV8AbstractField<CubaSourceCodeEditor
         component.setTabIndex(tabIndex);
     }
 
-    protected class SourceCodeEditorSuggester implements com.haulmont.cuba.web.widgets.addons.aceeditor.Suggester {
+    protected class SourceCodeEditorSuggester implements io.jmix.ui.widgets.addons.aceeditor.Suggester {
         @Override
         public List<Suggestion> getSuggestions(String text, int cursor) {
             if (suggester == null) {
                 return Collections.emptyList();
             }
 
-            List<com.haulmont.cuba.gui.components.autocomplete.Suggestion> suggestions =
+            List<io.jmix.ui.components.autocomplete.Suggestion> suggestions =
                     suggester.getSuggestions(getAutoCompleteSupport(), text, cursor);
             List<Suggestion> vSuggestions = new ArrayList<>();
-            for (com.haulmont.cuba.gui.components.autocomplete.Suggestion s : suggestions) {
+            for (io.jmix.ui.components.autocomplete.Suggestion s : suggestions) {
                 vSuggestions.add(new Suggestion(s.getDisplayText(), "", s.getValueText(),
                         s.getStartPosition(), s.getEndPosition()));
             }

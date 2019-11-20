@@ -43,6 +43,11 @@ import com.haulmont.cuba.web.gui.components.WebAbstractTable;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.TableFieldFactory;
+import io.jmix.core.MetadataTools;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.security.Security;
+import io.jmix.ui.components.impl.WebAbstractTable;
+import io.jmix.ui.model.InstanceContainer;
 
 import javax.annotation.Nullable;
 import java.util.Map;

@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.core.entity.Entity;
+import io.jmix.core.entity.Entity;
 
 import java.util.Collection;
 

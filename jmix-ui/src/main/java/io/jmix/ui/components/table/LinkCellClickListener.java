@@ -34,6 +34,11 @@ import com.haulmont.cuba.gui.data.DataSupplier;
 import com.haulmont.cuba.gui.data.impl.DatasourceImplementation;
 import com.haulmont.cuba.gui.screen.FrameOwner;
 import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.Table;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.components.compatibility.WindowManager;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 

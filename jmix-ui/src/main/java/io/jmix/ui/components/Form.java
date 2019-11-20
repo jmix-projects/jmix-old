@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.gui.components.data.HasValueSourceProvider;
+import io.jmix.ui.components.data.HasValueSourceProvider;
 
 import java.util.Collection;
 

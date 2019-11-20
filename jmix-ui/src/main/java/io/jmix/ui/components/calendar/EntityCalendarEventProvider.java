@@ -16,11 +16,11 @@
 
 package io.jmix.ui.components.calendar;
 
-import com.haulmont.bali.events.EventHub;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
+import io.jmix.core.commons.events.EventHub;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class EntityCalendarEventProvider implements CalendarEventProvider,
-        com.haulmont.cuba.gui.components.data.calendar.EntityCalendarEventProvider  {
+        io.jmix.ui.components.data.calendar.EntityCalendarEventProvider  {
 
     protected List<CalendarEvent> itemsCache;
     protected CollectionDatasource datasource;

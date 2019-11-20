@@ -17,15 +17,15 @@ package io.jmix.ui.components.impl;
 
 import com.haulmont.bali.datastruct.Node;
 import com.haulmont.bali.datastruct.Tree;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.TreeTable;
-import com.haulmont.cuba.gui.components.data.TableItems;
-import com.haulmont.cuba.gui.components.data.TreeTableItems;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.TreeTable;
+import io.jmix.ui.components.data.TableItems;
+import io.jmix.ui.components.data.TreeTableItems;
 import com.haulmont.cuba.web.gui.components.table.TableDataContainer;
 import com.haulmont.cuba.web.gui.components.table.TableItemsEventsDelegate;
 import com.haulmont.cuba.web.gui.components.table.TreeTableDataContainer;
-import com.haulmont.cuba.web.widgets.CubaTreeTable;
-import com.haulmont.cuba.web.widgets.data.AggregationContainer;
+import io.jmix.ui.widgets.CubaTreeTable;
+import io.jmix.ui.widgets.data.AggregationContainer;
 
 import java.util.*;
 import java.util.function.Function;

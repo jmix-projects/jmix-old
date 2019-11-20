@@ -16,14 +16,14 @@
 package io.jmix.ui.components;
 
 import com.google.common.reflect.TypeToken;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.data.TableItems;
-import com.haulmont.cuba.gui.components.data.table.DatasourceGroupTableItems;
-import com.haulmont.cuba.gui.components.data.table.DatasourceTableItems;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.GroupDatasource;
-import com.haulmont.cuba.gui.data.GroupInfo;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.components.data.TableItems;
+import io.jmix.ui.components.data.table.DatasourceGroupTableItems;
+import io.jmix.ui.components.data.table.DatasourceTableItems;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.GroupDatasource;
+import io.jmix.ui.model.cuba.GroupInfo;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

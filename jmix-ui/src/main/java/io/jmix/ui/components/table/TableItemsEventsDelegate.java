@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.table;
 
-import com.haulmont.cuba.gui.components.data.TableItems;
+import io.jmix.ui.components.data.TableItems;
 
 public interface TableItemsEventsDelegate<I> {
     void tableSourceItemSetChanged(TableItems.ItemSetChangeEvent<I> event);

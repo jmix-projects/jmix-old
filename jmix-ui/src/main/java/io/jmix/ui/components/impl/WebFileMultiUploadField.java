@@ -16,19 +16,20 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.FileStorageException;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.Notifications;
-import com.haulmont.cuba.gui.Notifications.NotificationType;
-import com.haulmont.cuba.gui.components.ComponentContainer;
-import com.haulmont.cuba.gui.components.FileMultiUploadField;
-import com.haulmont.cuba.gui.components.Window;
-import com.haulmont.cuba.gui.upload.FileUploadingAPI;
-import com.haulmont.cuba.web.widgets.CubaFileUpload;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.ClientConfig;
+import io.jmix.core.Configuration;
+import io.jmix.core.FileStorageException;
+import io.jmix.core.Messages;
+import io.jmix.ui.Notifications;
+import io.jmix.ui.Notifications.NotificationType;
+import io.jmix.ui.components.ComponentContainer;
+import io.jmix.ui.components.FileMultiUploadField;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.upload.FileUploadingAPI;
+import io.jmix.ui.widgets.CubaFileUpload;
 import com.vaadin.ui.Component;
+import io.jmix.ui.widgets.CubaFileUpload;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -40,7 +41,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static com.haulmont.cuba.gui.ComponentsHelper.getScreenContext;
+import static io.jmix.ui.ComponentsHelper.getScreenContext;
 import static com.haulmont.cuba.web.gui.FileUploadTypesHelper.convertToMIME;
 
 public class WebFileMultiUploadField extends WebAbstractUploadComponent<CubaFileUpload>
@@ -203,7 +204,7 @@ public class WebFileMultiUploadField extends WebAbstractUploadComponent<CubaFile
         if (dropZone == null) {
             component.setDropZone(null);
         } else {
-            com.haulmont.cuba.gui.components.Component target = dropZone.getTarget();
+            io.jmix.ui.components.Component target = dropZone.getTarget();
             if (target instanceof Window.Wrapper) {
                 target = ((Window.Wrapper) target).getWrappedWindow();
             }

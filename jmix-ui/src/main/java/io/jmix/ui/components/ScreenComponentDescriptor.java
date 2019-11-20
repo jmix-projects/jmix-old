@@ -17,12 +17,12 @@
 package io.jmix.ui.components;
 
 import com.google.common.base.Strings;
-import com.haulmont.chile.core.annotations.MetaProperty;
-import com.haulmont.cuba.core.entity.BaseUuidEntity;
-import com.haulmont.cuba.core.entity.annotation.SystemLevel;
+import io.jmix.core.entity.BaseUuidEntity;
+import io.jmix.core.entity.annotation.SystemLevel;
+import io.jmix.core.metamodel.annotations.MetaProperty;
 import org.dom4j.Element;
 
-@com.haulmont.chile.core.annotations.MetaClass(name = "sec$ScreenComponentDescriptor")
+@io.jmix.core.metamodel.annotations.MetaClass(name = "sec$ScreenComponentDescriptor")
 @SystemLevel
 public class ScreenComponentDescriptor extends BaseUuidEntity {
 

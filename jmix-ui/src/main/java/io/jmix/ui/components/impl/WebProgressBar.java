@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.gui.components.ProgressBar;
-import com.haulmont.cuba.gui.components.data.ConversionException;
+import io.jmix.ui.components.ProgressBar;
+import io.jmix.ui.components.data.ConversionException;
 
 /**
  * Web realization of progress bar depending on vaadin {@link ProgressBar} component.

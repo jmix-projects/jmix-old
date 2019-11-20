@@ -16,11 +16,12 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.ColorPicker;
-import com.haulmont.cuba.gui.components.data.ConversionException;
-import com.haulmont.cuba.web.widgets.CubaColorPickerWrapper;
+import io.jmix.core.Messages;
+import io.jmix.ui.components.ColorPicker;
+import io.jmix.ui.components.data.ConversionException;
+import io.jmix.ui.widgets.CubaColorPickerWrapper;
 import com.vaadin.shared.ui.colorpicker.Color;
+import io.jmix.ui.widgets.CubaColorPickerWrapper;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.inject.Inject;

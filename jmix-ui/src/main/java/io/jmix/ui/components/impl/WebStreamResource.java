@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.gui.components.StreamResource;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.components.StreamResource;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.InputStream;

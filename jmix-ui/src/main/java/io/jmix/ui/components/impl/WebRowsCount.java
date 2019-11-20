@@ -15,25 +15,27 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.core.entity.KeyValueEntity;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.data.DataUnit;
-import com.haulmont.cuba.gui.components.data.meta.ContainerDataUnit;
-import com.haulmont.cuba.gui.components.data.meta.DatasourceDataUnit;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.CollectionDatasource.Operation;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.impl.WeakCollectionChangeListener;
-import com.haulmont.cuba.gui.executors.BackgroundTask;
-import com.haulmont.cuba.gui.executors.BackgroundTaskHandler;
-import com.haulmont.cuba.gui.executors.BackgroundWorker;
-import com.haulmont.cuba.gui.executors.TaskLifeCycle;
-import com.haulmont.cuba.gui.model.*;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.web.gui.icons.IconResolver;
-import com.haulmont.cuba.web.widgets.CubaRowsCount;
+import io.jmix.core.*;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.KeyValueEntity;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.data.DataUnit;
+import io.jmix.ui.components.data.meta.ContainerDataUnit;
+import io.jmix.ui.components.data.meta.DatasourceDataUnit;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.data.CollectionDatasource.Operation;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.data.impl.WeakCollectionChangeListener;
+import io.jmix.ui.executors.BackgroundTask;
+import io.jmix.ui.executors.BackgroundTaskHandler;
+import io.jmix.ui.executors.BackgroundWorker;
+import io.jmix.ui.executors.TaskLifeCycle;
+import io.jmix.ui.model.*;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.widgets.CubaRowsCount;
 import com.vaadin.shared.Registration;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -46,7 +48,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements RowsCount, VisibilityChangeNotifier,
         Component.HasXmlDescriptor {
@@ -545,7 +547,7 @@ public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements
         protected CollectionContainer container;
 
         protected Consumer<CollectionContainer.CollectionChangeEvent> containerCollectionChangeListener;
-        protected com.haulmont.cuba.gui.model.impl.WeakCollectionChangeListener weakContainerCollectionChangeListener;
+        protected io.jmix.ui.model.impl.WeakCollectionChangeListener weakContainerCollectionChangeListener;
 
         @Nullable
         protected BaseCollectionLoader loader;
@@ -560,7 +562,7 @@ public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements
                 onCollectionChanged();
             };
 
-            weakContainerCollectionChangeListener = new com.haulmont.cuba.gui.model.impl.WeakCollectionChangeListener (
+            weakContainerCollectionChangeListener = new io.jmix.ui.model.impl.WeakCollectionChangeListener (
                     container, containerCollectionChangeListener);
 
             onCollectionChanged();

@@ -16,27 +16,29 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.core.global.MetadataTools;
-import com.haulmont.cuba.gui.components.Action;
-import com.haulmont.cuba.gui.components.KeyCombination;
-import com.haulmont.cuba.gui.components.PickerField;
-import com.haulmont.cuba.gui.components.SecuredActionsHolder;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.components.security.ActionsPermissions;
-import com.haulmont.cuba.gui.sys.TestIdManager;
-import com.haulmont.cuba.web.AppUI;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.ui.ClientConfig;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.Configuration;
+import io.jmix.core.Metadata;
+import io.jmix.core.MetadataTools;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.Action;
+import io.jmix.ui.components.ActionsPermissions;
+import io.jmix.ui.components.KeyCombination;
+import io.jmix.ui.components.PickerField;
+import io.jmix.ui.components.SecuredActionsHolder;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.security.ActionsPermissions;
+import io.jmix.ui.sys.TestIdManager;
+import io.jmix.ui.AppUI;
 import com.haulmont.cuba.web.gui.components.valueproviders.EntityNameValueProvider;
 import com.haulmont.cuba.web.theme.HaloTheme;
-import com.haulmont.cuba.web.widgets.CubaButton;
-import com.haulmont.cuba.web.widgets.CubaPickerField;
+import io.jmix.ui.widgets.CubaButton;
+import io.jmix.ui.widgets.CubaPickerField;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Resource;
@@ -52,8 +54,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
-import static com.haulmont.cuba.gui.ComponentsHelper.findActionById;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.ComponentsHelper.findActionById;
 
 public class WebPickerField<V extends Entity> extends WebV8AbstractField<CubaPickerField<V>, V, V>
         implements PickerField<V>, SecuredActionsHolder, InitializingBean {

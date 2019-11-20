@@ -15,14 +15,13 @@
  */
 package io.jmix.ui.components.compatibility;
 
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.screen.Screen;
-import io.jmix.ui.Screens;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.*;
+import io.jmix.ui.components.*;
+import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.screen.OpenMode;
+import io.jmix.ui.screen.Screen;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

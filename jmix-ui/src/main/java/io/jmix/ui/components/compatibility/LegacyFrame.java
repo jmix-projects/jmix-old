@@ -16,8 +16,8 @@
 
 package io.jmix.ui.components.compatibility;
 
-import com.haulmont.cuba.gui.FrameContext;
-import com.haulmont.cuba.gui.data.DsContext;
+import io.jmix.ui.components.*;
+import io.jmix.ui.model.cuba.DsContext;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;

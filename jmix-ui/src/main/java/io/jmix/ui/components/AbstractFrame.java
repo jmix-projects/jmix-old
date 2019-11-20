@@ -15,13 +15,19 @@
  */
 package io.jmix.ui.components;
 
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.data.DsContext;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.screen.*;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
+import io.jmix.ui.ClientConfig;
+import io.jmix.core.DevelopmentException;
+import io.jmix.core.Events;
+import io.jmix.core.Messages;
+import io.jmix.ui.Notifications;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.compatibility.LegacyFrame;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.model.cuba.DsContext;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.model.cuba.DsContext;
+import io.jmix.ui.screen.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.Order;
 
@@ -90,7 +96,7 @@ public class AbstractFrame extends ScreenFragment implements Frame, Frame.Wrappe
     public void init(Map<String, Object> params) {
     }
 
-    @Order(Events.HIGHEST_PLATFORM_PRECEDENCE + 10)
+    @Order(Events.HIGHEST_CORE_PRECEDENCE + 10)
     @Subscribe
     protected void init(InitEvent initEvent) {
         Map<String, Object> params = Collections.emptyMap();
@@ -406,7 +412,7 @@ public class AbstractFrame extends ScreenFragment implements Frame, Frame.Wrappe
         Configuration configuration = AppBeans.get(Configuration.NAME);
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
 
-        NotificationType notificationType = NotificationType.valueOf(clientConfig.getValidationNotificationType());
+        Notifications.NotificationType notificationType = Notifications.NotificationType.valueOf(clientConfig.getValidationNotificationType());
         showNotification(messages.getMainMessage("validationFail.caption"), buffer.toString(), notificationType);
     }
 
