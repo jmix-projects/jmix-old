@@ -15,28 +15,27 @@
  */
 package io.jmix.ui.actions.legacy;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.Range;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.Dialogs;
-import com.haulmont.cuba.gui.components.Action;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.DialogAction;
-import com.haulmont.cuba.gui.components.DialogAction.Type;
-import com.haulmont.cuba.gui.components.ListComponent;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.PropertyDatasource;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.security.entity.EntityAttrAccess;
-import com.haulmont.cuba.security.entity.EntityOp;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Messages;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.Range;
+import io.jmix.core.security.EntityAttrAccess;
+import io.jmix.core.security.EntityOp;
+import io.jmix.ui.ClientConfig;
+import io.jmix.ui.Dialogs;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.DialogAction;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.ComponentsHelper;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.PropertyDatasource;
 import org.springframework.context.annotation.Scope;
 
 import java.util.HashSet;
@@ -136,7 +135,7 @@ public class RemoveAction extends ItemTrackingAction
         this.autocommit = autocommit;
 
         Messages messages = AppBeans.get(Messages.NAME);
-        this.caption = messages.getMainMessage("actions.Remove");
+        this.caption = messages.getMessage("actions.Remove"); // todo getMainMessage
 
         this.icon = AppBeans.get(Icons.class).get(CubaIcon.REMOVE_ACTION);
 
@@ -224,7 +223,7 @@ public class RemoveAction extends ItemTrackingAction
                 .withCaption(getConfirmationTitle())
                 .withMessage(getConfirmationMessage())
                 .withActions(
-                        new DialogAction(Type.OK, Status.PRIMARY).withHandler(event -> {
+                        new DialogAction(DialogAction.Type.OK, Status.PRIMARY).withHandler(event -> {
                             try {
                                 remove(selected);
                             } finally {
@@ -238,7 +237,7 @@ public class RemoveAction extends ItemTrackingAction
                                 target.setSelected(filtered);
                             }
                         }),
-                        new DialogAction(Type.CANCEL).withHandler(event -> {
+                        new DialogAction(DialogAction.Type.CANCEL).withHandler(event -> {
                             // move focus to owner
                             if (target instanceof Component.Focusable) {
                                 ((Component.Focusable) target).focus();

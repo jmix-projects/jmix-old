@@ -15,10 +15,13 @@
  */
 package io.jmix.ui.actions.legacy;
 
-import com.haulmont.bali.util.ParamsMap;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Messages;
+import io.jmix.core.commons.util.ParamsMap;
 import com.haulmont.chile.core.model.MetaClass;
 import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.client.ClientConfig;
+import io.jmix.core.security.EntityOp;
+import io.jmix.ui.ClientConfig;
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.Configuration;
@@ -34,6 +37,16 @@ import com.haulmont.cuba.gui.icons.Icons;
 import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
 import com.haulmont.cuba.security.entity.EntityOp;
 import com.haulmont.cuba.security.global.UserSession;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.components.compatibility.WindowManager.OpenType;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
 import org.springframework.context.annotation.Scope;
 
 import java.util.*;

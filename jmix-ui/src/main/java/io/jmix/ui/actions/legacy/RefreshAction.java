@@ -15,14 +15,15 @@
  */
 package io.jmix.ui.actions.legacy;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.ListComponent;
-import com.haulmont.cuba.gui.components.data.meta.EmptyDataUnit;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Messages;
+import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.data.meta.EmptyDataUnit;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.model.cuba.CollectionDatasource;
 import org.springframework.context.annotation.Scope;
 
 import java.util.Collections;
@@ -90,7 +91,7 @@ public class RefreshAction extends BaseAction {
         this.owner = target;
 
         Messages messages = AppBeans.get(Messages.NAME);
-        this.caption = messages.getMainMessage("actions.Refresh");
+        this.caption = messages.getMessage("actions.Refresh"); // todo getMainMessage
 
         this.icon = AppBeans.get(Icons.class).get(CubaIcon.REFRESH_ACTION);
     }

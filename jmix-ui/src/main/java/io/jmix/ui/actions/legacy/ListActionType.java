@@ -16,7 +16,9 @@
 package io.jmix.ui.actions.legacy;
 
 import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.DataGrid;
 import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.Table;
 
 /**
  * Enumerates standard list action types. Can create a corresponding action instance with default parameters.
