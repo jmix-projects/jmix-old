@@ -15,38 +15,28 @@
  */
 package io.jmix.ui.actions.legacy;
 
+import com.haulmont.cuba.core.global.Configuration;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
 import io.jmix.core.commons.util.ParamsMap;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityOp;
+import io.jmix.core.security.UserSession;
+import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.ClientConfig;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.WindowManager.OpenType;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.PropertyDatasource;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
-import com.haulmont.cuba.security.entity.EntityOp;
-import com.haulmont.cuba.security.global.UserSession;
+import io.jmix.ui.WindowConfig;
 import io.jmix.ui.actions.Action;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.ListComponent;
-import io.jmix.ui.components.Window;
-import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.components.compatibility.WindowManager.OpenType;
 import io.jmix.ui.icons.CubaIcon;
 import io.jmix.ui.icons.Icons;
 import io.jmix.ui.model.cuba.CollectionDatasource;
 import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.PropertyDatasource;
+import io.jmix.ui.screen.legacy.AbstractEditor;
 import org.springframework.context.annotation.Scope;
 
 import java.util.*;
@@ -57,7 +47,7 @@ import java.util.function.Supplier;
  * Standard list action to edit an entity instance.
  * <p>
  * Action's behaviour can be customized by providing arguments to constructor, setting properties, or overriding
- * methods {@link #afterCommit(com.haulmont.cuba.core.entity.Entity)}, {@link #afterWindowClosed(com.haulmont.cuba.gui.components.Window)}
+ * methods {@link #afterCommit(Entity)}, {@link #afterWindowClosed(Window)}
  * <p>
  * In order to provide your own implementation globally, create a subclass and register it in {@code web-spring.xml},
  * for example:
@@ -68,7 +58,7 @@ import java.util.function.Supplier;
  */
 @org.springframework.stereotype.Component("cuba_EditAction")
 @Scope("prototype")
-public class EditAction extends ItemTrackingAction
+public class LegacyEditAction extends ItemTrackingAction
         implements Action.HasOpenType, Action.HasBeforeActionPerformedHandler, Action.DisabledWhenScreenReadOnly {
 
     public static final String ACTION_ID = ListActionType.EDIT.getId();
@@ -111,7 +101,7 @@ public class EditAction extends ItemTrackingAction
      * Creates an action with default id, opening the edit screen in THIS tab.
      * @param target    component containing this action
      */
-    public static EditAction create(ListComponent target) {
+    public static LegacyEditAction create(ListComponent target) {
         return AppBeans.getPrototype("cuba_EditAction", target);
     }
 
@@ -120,7 +110,7 @@ public class EditAction extends ItemTrackingAction
      * @param target    component containing this action
      * @param openType  how to open the editor screen
      */
-    public static EditAction create(ListComponent target, OpenType openType) {
+    public static LegacyEditAction create(ListComponent target, OpenType openType) {
         return AppBeans.getPrototype("cuba_EditAction", target, openType);
     }
 
@@ -130,7 +120,7 @@ public class EditAction extends ItemTrackingAction
      * @param openType  how to open the editor screen
      * @param id        action name
      */
-    public static EditAction create(ListComponent target, OpenType openType, String id) {
+    public static LegacyEditAction create(ListComponent target, OpenType openType, String id) {
         return AppBeans.getPrototype("cuba_EditAction", target, openType, id);
     }
 
@@ -138,7 +128,7 @@ public class EditAction extends ItemTrackingAction
      * The simplest constructor. The action has default name and opens the editor screen in THIS tab.
      * @param target    component containing this action
      */
-    public EditAction(ListComponent target) {
+    public LegacyEditAction(ListComponent target) {
         this(target, OpenType.THIS_TAB, ACTION_ID);
     }
 
@@ -147,7 +137,7 @@ public class EditAction extends ItemTrackingAction
      * @param target    component containing this action
      * @param openType  how to open the editor screen
      */
-    public EditAction(ListComponent target, OpenType openType) {
+    public LegacyEditAction(ListComponent target, OpenType openType) {
         this(target, openType, ACTION_ID);
     }
 
@@ -157,7 +147,7 @@ public class EditAction extends ItemTrackingAction
      * @param openType  how to open the editor screen
      * @param id        action name
      */
-    public EditAction(ListComponent target, OpenType openType, String id) {
+    public LegacyEditAction(ListComponent target, OpenType openType, String id) {
         super(id);
 
         this.target = target;
@@ -522,15 +512,15 @@ public class EditAction extends ItemTrackingAction
         private Window bulkEditorWindow;
         private String actionId;
 
-        public BulkEditorCloseEvent(EditAction action, Window bulkEditorWindow, String actionId) {
+        public BulkEditorCloseEvent(LegacyEditAction action, Window bulkEditorWindow, String actionId) {
             super(action);
             this.bulkEditorWindow = bulkEditorWindow;
             this.actionId = actionId;
         }
 
         @Override
-        public EditAction getSource() {
-            return (EditAction) super.getSource();
+        public LegacyEditAction getSource() {
+            return (LegacyEditAction) super.getSource();
         }
 
         public Window getBulkEditorWindow() {

@@ -45,7 +45,7 @@ import java.util.function.Supplier;
  */
 @org.springframework.stereotype.Component("cuba_RefreshAction")
 @Scope("prototype")
-public class RefreshAction extends BaseAction {
+public class LegacyRefreshAction extends BaseAction {
 
     public static final String ACTION_ID = ListActionType.REFRESH.getId();
 
@@ -61,7 +61,7 @@ public class RefreshAction extends BaseAction {
      * Creates an action with default id.
      * @param target    component containing this action
      */
-    public static RefreshAction create(ListComponent target) {
+    public static LegacyRefreshAction create(ListComponent target) {
         return AppBeans.getPrototype("cuba_RefreshAction", target);
     }
 
@@ -69,7 +69,7 @@ public class RefreshAction extends BaseAction {
      * Creates an action with the given id.
      * @param target    component containing this action
      */
-    public static RefreshAction create(ListComponent target, String id) {
+    public static LegacyRefreshAction create(ListComponent target, String id) {
         return AppBeans.getPrototype("cuba_RefreshAction", target, id);
     }
 
@@ -77,7 +77,7 @@ public class RefreshAction extends BaseAction {
      * The simplest constructor. The action has default name.
      * @param target    component containing this action
      */
-    public RefreshAction(ListComponent target) {
+    public LegacyRefreshAction(ListComponent target) {
         this(target, ACTION_ID);
     }
 
@@ -86,7 +86,7 @@ public class RefreshAction extends BaseAction {
      * @param target        component containing this action
      * @param id            action's identifier
      */
-    public RefreshAction(ListComponent target, String id) {
+    public LegacyRefreshAction(ListComponent target, String id) {
         super(id);
         this.owner = target;
 

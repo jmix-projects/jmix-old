@@ -16,29 +16,28 @@
 
 package io.jmix.ui.actions.picker;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.entity.SoftDelete;
 import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.DevelopmentException;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.Notifications;
-import com.haulmont.cuba.gui.Notifications.NotificationType;
-import com.haulmont.cuba.gui.ScreenBuilders;
-import com.haulmont.cuba.gui.builders.EditorBuilder;
-import com.haulmont.cuba.gui.components.ActionType;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.PickerField;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.meta.StudioAction;
-import com.haulmont.cuba.gui.meta.StudioDelegate;
-import com.haulmont.cuba.gui.meta.StudioPropertiesItem;
-import com.haulmont.cuba.gui.screen.*;
-import com.haulmont.cuba.gui.sys.ActionScreenInitializer;
+import io.jmix.core.DevelopmentException;
+import io.jmix.core.Messages;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.SoftDelete;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.ui.ClientConfig;
+import io.jmix.ui.Notifications;
+import io.jmix.ui.ScreenBuilders;
+import io.jmix.ui.actions.ActionType;
+import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.builders.EditorBuilder;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.ComponentsHelper;
+import io.jmix.ui.components.PickerField;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.meta.StudioAction;
+import io.jmix.ui.meta.StudioDelegate;
+import io.jmix.ui.meta.StudioPropertiesItem;
+import io.jmix.ui.screen.*;
+import io.jmix.ui.sys.ActionScreenInitializer;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Nullable;
@@ -260,7 +259,7 @@ public class OpenAction extends BaseAction implements PickerField.PickerFieldAct
             ScreenContext screenContext = ComponentsHelper.getScreenContext(pickerField);
             Notifications notifications = screenContext.getNotifications();
 
-            notifications.create(NotificationType.HUMANIZED)
+            notifications.create(Notifications.NotificationType.HUMANIZED)
                     .withDescription(messages.getMainMessage("OpenAction.objectIsDeleted"))
                     .show();
 

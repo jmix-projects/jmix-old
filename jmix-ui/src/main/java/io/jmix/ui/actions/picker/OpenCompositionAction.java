@@ -16,8 +16,8 @@
 
 package io.jmix.ui.actions.picker;
 
-import com.haulmont.cuba.gui.components.ActionType;
-import com.haulmont.cuba.gui.meta.StudioAction;
+import io.jmix.ui.actions.ActionType;
+import io.jmix.ui.meta.StudioAction;
 
 /**
  * Standard picker field action for opening an entity instance if it is a one-to-one composition.

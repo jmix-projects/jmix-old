@@ -22,6 +22,7 @@ import io.jmix.core.Messages;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityAttrAccess;
+import io.jmix.core.security.EntityOp;
 import io.jmix.ui.ClientConfig;
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.gui.WindowManager;
@@ -45,7 +46,10 @@ import io.jmix.ui.components.Tree;
 import io.jmix.ui.components.Window;
 import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
 import io.jmix.ui.model.cuba.*;
+import io.jmix.ui.screen.legacy.AbstractEditor;
 import org.springframework.context.annotation.Scope;
 
 import java.util.Collections;
@@ -57,7 +61,7 @@ import java.util.function.Supplier;
  * Standard list action to create a new entity instance.
  * <p>
  * Action's behaviour can be customized by providing arguments to constructor, setting properties, or overriding
- * methods {@link #afterCommit(com.haulmont.cuba.core.entity.Entity)}, {@link #afterWindowClosed(com.haulmont.cuba.gui.components.Window)}
+ * methods {@link #afterCommit(Entity)}, {@link #afterWindowClosed(Window)}
  * <p>
  * In order to provide your own implementation globally, create a subclass and register it in {@code web-spring.xml},
  * for example:
@@ -68,7 +72,7 @@ import java.util.function.Supplier;
  */
 @org.springframework.stereotype.Component("cuba_CreateAction")
 @Scope("prototype")
-public class CreateAction extends ListAction
+public class LegacyCreateAction extends ListAction
         implements Action.HasOpenType, Action.HasBeforeActionPerformedHandler, Action.DisabledWhenScreenReadOnly {
 
     public static final String ACTION_ID = ListActionType.CREATE.getId();
@@ -115,7 +119,7 @@ public class CreateAction extends ListAction
      * Creates an action with default id, opening the editor screen in THIS tab.
      * @param target    component containing this action
      */
-    public static CreateAction create(ListComponent target) {
+    public static LegacyCreateAction create(ListComponent target) {
         return AppBeans.getPrototype("cuba_CreateAction", target);
     }
 
@@ -124,7 +128,7 @@ public class CreateAction extends ListAction
      * @param target    component containing this action
      * @param openType  how to open the editor screen
      */
-    public static CreateAction create(ListComponent target, WindowManager.OpenType openType) {
+    public static LegacyCreateAction create(ListComponent target, WindowManager.OpenType openType) {
         return AppBeans.getPrototype("cuba_CreateAction", target, openType);
     }
 
@@ -134,7 +138,7 @@ public class CreateAction extends ListAction
      * @param openType  how to open the editor screen
      * @param id        action name
      */
-    public static CreateAction create(ListComponent target, WindowManager.OpenType openType, String id) {
+    public static LegacyCreateAction create(ListComponent target, WindowManager.OpenType openType, String id) {
         return AppBeans.getPrototype("cuba_CreateAction", target, openType, id);
     }
 
@@ -142,7 +146,7 @@ public class CreateAction extends ListAction
      * The simplest constructor. The action has default name and opens the editor screen in THIS tab.
      * @param target    component containing this action
      */
-    public CreateAction(ListComponent target) {
+    public LegacyCreateAction(ListComponent target) {
         this(target, WindowManager.OpenType.THIS_TAB, ACTION_ID);
     }
 
@@ -151,7 +155,7 @@ public class CreateAction extends ListAction
      * @param target    component containing this action
      * @param openType  how to open the editor screen
      */
-    public CreateAction(ListComponent target, WindowManager.OpenType openType) {
+    public LegacyCreateAction(ListComponent target, WindowManager.OpenType openType) {
         this(target, openType, ACTION_ID);
     }
 
@@ -161,7 +165,7 @@ public class CreateAction extends ListAction
      * @param openType  how to open the editor screen
      * @param id        action name
      */
-    public CreateAction(ListComponent target, WindowManager.OpenType openType, String id) {
+    public LegacyCreateAction(ListComponent target, WindowManager.OpenType openType, String id) {
         super(id, null);
 
         this.primary = true;

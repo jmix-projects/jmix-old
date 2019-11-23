@@ -15,6 +15,7 @@
  */
 package io.jmix.ui.actions.legacy;
 
+import io.jmix.ui.Actions;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.DataGrid;
 import io.jmix.ui.components.ListComponent;
@@ -31,42 +32,42 @@ public enum ListActionType {
     CREATE("create") {
         @Override
         public Action createAction(ListComponent holder) {
-            return CreateAction.create(holder);
+            return LegacyCreateAction.create(holder);
         }
     },
 
     EDIT("edit") {
         @Override
         public Action createAction(ListComponent holder) {
-            return EditAction.create(holder);
+            return LegacyEditAction.create(holder);
         }
     },
 
     REMOVE("remove") {
         @Override
         public Action createAction(ListComponent holder) {
-            return RemoveAction.create(holder);
+            return LegacyRemoveAction.create(holder);
         }
     },
 
     REFRESH("refresh") {
         @Override
         public Action createAction(ListComponent holder) {
-            return RefreshAction.create(holder);
+            return LegacyRefreshAction.create(holder);
         }
     },
 
     ADD("add") {
         @Override
         public Action createAction(ListComponent holder) {
-            return AddAction.create(holder);
+            return LegacyAddAction.create(holder);
         }
     },
 
     EXCLUDE("exclude") {
         @Override
         public Action createAction(ListComponent holder) {
-            return ExcludeAction.create(holder);
+            return LegacyExcludeAction.create(holder);
         }
     },
 
@@ -74,7 +75,7 @@ public enum ListActionType {
         @Override
         public Action createAction(ListComponent holder) {
             if (holder instanceof Table || holder instanceof DataGrid)
-                return ExcelAction.create(holder);
+                return LegacyExcelAction.create(holder);
             else
                 throw new IllegalArgumentException("Only Table and DataGrid can contain EXCEL action");
         }

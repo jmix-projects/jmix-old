@@ -15,26 +15,33 @@
  */
 package io.jmix.ui.actions.legacy;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.WindowManager.OpenType;
-import com.haulmont.cuba.gui.components.Action;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.ListComponent;
 import com.haulmont.cuba.gui.components.Window;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.NestedDatasource;
-import com.haulmont.cuba.gui.data.PropertyDatasource;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.security.entity.EntityAttrAccess;
+import io.jmix.core.AppBeans;
+import io.jmix.core.ExtendedEntities;
+import io.jmix.core.Messages;
+import io.jmix.core.Metadata;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.security.EntityAttrAccess;
+import io.jmix.core.security.Security;
+import io.jmix.ui.ClientConfig;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.WindowInfo;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.ListAction;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.ComponentsHelper;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.components.compatibility.WindowManager.OpenType;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.NestedDatasource;
+import io.jmix.ui.model.cuba.PropertyDatasource;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.Nullable;
@@ -58,7 +65,7 @@ import java.util.function.Supplier;
  */
 @org.springframework.stereotype.Component("cuba_AddAction")
 @Scope("prototype")
-public class AddAction extends ListAction
+public class LegacyAddAction extends ListAction
         implements Action.HasOpenType, Action.HasBeforeActionPerformedHandler, Action.DisabledWhenScreenReadOnly {
 
     public static final String ACTION_ID = ListActionType.ADD.getId();
@@ -80,7 +87,7 @@ public class AddAction extends ListAction
      * Creates an action with default id, opening the lookup screen in THIS tab.
      * @param target    component containing this action
      */
-    public static AddAction create(ListComponent target) {
+    public static LegacyAddAction create(ListComponent target) {
         return AppBeans.getPrototype("cuba_AddAction", target);
     }
 
@@ -89,7 +96,7 @@ public class AddAction extends ListAction
      * @param target    component containing this action
      * @param handler   lookup handler. If null, an instance of {@link DefaultHandler} will be used.
      */
-    public static AddAction create(ListComponent target, @Nullable Window.Lookup.Handler handler) {
+    public static LegacyAddAction create(ListComponent target, @Nullable Window.Lookup.Handler handler) {
         return AppBeans.getPrototype("cuba_AddAction", target, handler);
     }
 
@@ -99,8 +106,8 @@ public class AddAction extends ListAction
      * @param handler   lookup handler. If null, an instance of {@link DefaultHandler} will be used.
      * @param openType  how to open the editor screen
      */
-    public static AddAction create(ListComponent target, @Nullable Window.Lookup.Handler handler,
-                                   OpenType openType) {
+    public static LegacyAddAction create(ListComponent target, @Nullable Window.Lookup.Handler handler,
+                                         OpenType openType) {
         return AppBeans.getPrototype("cuba_AddAction", target, handler, openType);
     }
 
@@ -111,8 +118,8 @@ public class AddAction extends ListAction
      * @param openType  how to open the editor screen
      * @param id        action's name
      */
-    public static AddAction create(ListComponent target, @Nullable Window.Lookup.Handler handler,
-                                   OpenType openType, String id) {
+    public static LegacyAddAction create(ListComponent target, @Nullable Window.Lookup.Handler handler,
+                                         OpenType openType, String id) {
         return AppBeans.getPrototype("cuba_AddAction", target, handler, openType, id);
     }
 
@@ -123,7 +130,7 @@ public class AddAction extends ListAction
      *
      * @param target    component containing this action
      */
-    public AddAction(ListComponent target) {
+    public LegacyAddAction(ListComponent target) {
         this(target, null, OpenType.THIS_TAB, ACTION_ID);
     }
 
@@ -132,7 +139,7 @@ public class AddAction extends ListAction
      * @param target    component containing this action
      * @param handler   lookup handler. If null, an instance of {@link DefaultHandler} will be used.
      */
-    public AddAction(ListComponent target, @Nullable Window.Lookup.Handler handler) {
+    public LegacyAddAction(ListComponent target, @Nullable Window.Lookup.Handler handler) {
         this(target, handler, OpenType.THIS_TAB, ACTION_ID);
     }
 
@@ -142,7 +149,7 @@ public class AddAction extends ListAction
      * @param handler   lookup handler. If null, an instance of {@link DefaultHandler} will be used.
      * @param openType  how to open the editor screen
      */
-    public AddAction(ListComponent target, @Nullable Window.Lookup.Handler handler, OpenType openType) {
+    public LegacyAddAction(ListComponent target, @Nullable Window.Lookup.Handler handler, OpenType openType) {
         this(target, handler, openType, ACTION_ID);
     }
 
@@ -153,8 +160,8 @@ public class AddAction extends ListAction
      * @param openType  how to open the editor screen
      * @param id        action's name
      */
-    public AddAction(ListComponent target, @Nullable Window.Lookup.Handler handler,
-                     OpenType openType, String id) {
+    public LegacyAddAction(ListComponent target, @Nullable Window.Lookup.Handler handler,
+                           OpenType openType, String id) {
         super(id, null);
 
         this.target = target;

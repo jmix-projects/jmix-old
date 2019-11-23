@@ -56,7 +56,7 @@ import java.util.Set;
  */
 @org.springframework.stereotype.Component("cuba_RemoveAction")
 @Scope("prototype")
-public class RemoveAction extends ItemTrackingAction
+public class LegacyRemoveAction extends ItemTrackingAction
         implements Action.HasBeforeActionPerformedHandler, Action.DisabledWhenScreenReadOnly {
 
     public static final String ACTION_ID = ListActionType.REMOVE.getId();
@@ -82,7 +82,7 @@ public class RemoveAction extends ItemTrackingAction
      * Creates an action with default id. Autocommit is set to true.
      * @param target    component containing this action
      */
-    public static RemoveAction create(ListComponent target) {
+    public static LegacyRemoveAction create(ListComponent target) {
         return AppBeans.getPrototype("cuba_RemoveAction", target);
     }
 
@@ -91,7 +91,7 @@ public class RemoveAction extends ItemTrackingAction
      * @param target    component containing this action
      * @param autocommit    whether to commit datasource immediately
      */
-    public static RemoveAction create(ListComponent target, boolean autocommit) {
+    public static LegacyRemoveAction create(ListComponent target, boolean autocommit) {
         return AppBeans.getPrototype("cuba_RemoveAction", target, autocommit);
     }
 
@@ -101,7 +101,7 @@ public class RemoveAction extends ItemTrackingAction
      * @param autocommit    whether to commit datasource immediately
      * @param id            action's identifier
      */
-    public static RemoveAction create(ListComponent target, boolean autocommit, String id) {
+    public static LegacyRemoveAction create(ListComponent target, boolean autocommit, String id) {
         return AppBeans.getPrototype("cuba_RemoveAction", target, autocommit, id);
     }
 
@@ -109,7 +109,7 @@ public class RemoveAction extends ItemTrackingAction
      * The simplest constructor. The action has default name and autocommit=true.
      * @param target    component containing this action
      */
-    public RemoveAction(ListComponent target) {
+    public LegacyRemoveAction(ListComponent target) {
         this(target, true, ACTION_ID);
     }
 
@@ -118,7 +118,7 @@ public class RemoveAction extends ItemTrackingAction
      * @param target        component containing this action
      * @param autocommit    whether to commit datasource immediately
      */
-    public RemoveAction(ListComponent target, boolean autocommit) {
+    public LegacyRemoveAction(ListComponent target, boolean autocommit) {
         this(target, autocommit, ACTION_ID);
     }
 
@@ -128,7 +128,7 @@ public class RemoveAction extends ItemTrackingAction
      * @param autocommit    whether to commit datasource immediately
      * @param id            action's identifier
      */
-    public RemoveAction(ListComponent target, boolean autocommit, String id) {
+    public LegacyRemoveAction(ListComponent target, boolean autocommit, String id) {
         super(id);
 
         this.target = target;

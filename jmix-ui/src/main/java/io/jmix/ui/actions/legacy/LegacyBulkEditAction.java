@@ -33,6 +33,11 @@ import com.haulmont.cuba.gui.theme.ThemeConstants;
 import com.haulmont.cuba.gui.theme.ThemeConstantsManager;
 import com.haulmont.cuba.security.entity.ConstraintOperationType;
 import com.haulmont.cuba.security.global.UserSession;
+import io.jmix.core.AppBeans;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.BulkEditor;
+import io.jmix.ui.components.Field;
+import io.jmix.ui.components.ListComponent;
 import org.springframework.context.annotation.Scope;
 
 import java.util.Collections;
@@ -52,7 +57,7 @@ import static com.haulmont.cuba.gui.ComponentsHelper.getScreenContext;
  */
 @org.springframework.stereotype.Component("cuba_BulkEditAction")
 @Scope("prototype")
-public class BulkEditAction extends ItemTrackingAction implements Action.HasBeforeActionPerformedHandler {
+public class LegacyBulkEditAction extends ItemTrackingAction implements Action.HasBeforeActionPerformedHandler {
 
     protected OpenType openType = OpenType.DIALOG;
     protected String exclude;
@@ -69,11 +74,11 @@ public class BulkEditAction extends ItemTrackingAction implements Action.HasBefo
      * Creates an action with default id.
      * @param target    component containing this action
      */
-    public static BulkEditAction create(ListComponent target) {
+    public static LegacyBulkEditAction create(ListComponent target) {
         return AppBeans.getPrototype("cuba_BulkEditAction", target);
     }
 
-    public BulkEditAction(ListComponent target) {
+    public LegacyBulkEditAction(ListComponent target) {
         super(target, "bulkEdit");
 
         this.icon = AppBeans.get(Icons.class).get(CubaIcon.BULK_EDIT_ACTION);

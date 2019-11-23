@@ -18,6 +18,7 @@ package io.jmix.ui.actions;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import io.jmix.core.AppBeans;
+import io.jmix.core.Messages;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.ui.components.ActionOwner;
 import io.jmix.ui.components.Component;
@@ -53,12 +54,17 @@ public abstract class AbstractAction implements Action {
 
     protected EventHub eventHub;
 
+    // legacy field
+    @Deprecated
+    private Messages messages;
+
     protected AbstractAction() {
         // do not init messages here
     }
 
     protected AbstractAction(String id) {
         this.id = id;
+        this.messages = AppBeans.get(Messages.NAME); // legacy behaviour
     }
 
     protected AbstractAction(String id, @Nullable String shortcut) {
@@ -93,7 +99,16 @@ public abstract class AbstractAction implements Action {
 
     @Override
     public String getCaption() {
-        return caption;
+        return caption == null ? getDefaultCaption() : caption;
+    }
+
+    protected String getDefaultCaption() {
+        if (messages != null) {
+            // legacy behaviour
+            return messages.getMessage(getClass(), id);
+        } else {
+            return null;
+        }
     }
 
     @Override

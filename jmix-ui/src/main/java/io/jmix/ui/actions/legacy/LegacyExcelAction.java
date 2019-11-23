@@ -27,6 +27,22 @@ import com.haulmont.cuba.gui.export.ExcelExporter;
 import com.haulmont.cuba.gui.export.ExportDisplay;
 import com.haulmont.cuba.gui.icons.CubaIcon;
 import com.haulmont.cuba.gui.icons.Icons;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Messages;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.Dialogs;
+import io.jmix.ui.Notifications;
+import io.jmix.ui.actions.AbstractAction;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.actions.DialogAction;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.Table;
+import io.jmix.ui.export.ExportDisplay;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
 import org.springframework.context.annotation.Scope;
 
 import java.util.List;
@@ -34,6 +50,7 @@ import java.util.stream.Collectors;
 
 import static com.haulmont.cuba.gui.ComponentsHelper.getScreenContext;
 import static com.haulmont.cuba.gui.export.ExcelExporter.ExportMode;
+import static io.jmix.ui.components.ComponentsHelper.getScreenContext;
 
 /**
  * Standard table action to export the list of entities to XLS.
@@ -49,7 +66,7 @@ import static com.haulmont.cuba.gui.export.ExcelExporter.ExportMode;
  */
 @org.springframework.stereotype.Component("cuba_ExcelAction")
 @Scope("prototype")
-public class ExcelAction extends BaseAction implements Action.HasBeforeActionPerformedHandler {
+public class LegacyExcelAction extends BaseAction implements Action.HasBeforeActionPerformedHandler {
 
     public static final String ACTION_ID = ListActionType.EXCEL.getId();
 
@@ -70,7 +87,7 @@ public class ExcelAction extends BaseAction implements Action.HasBeforeActionPer
      * Creates an action with default id.
      * @param target    component containing this action
      */
-    public static ExcelAction create(ListComponent target) {
+    public static LegacyExcelAction create(ListComponent target) {
         return AppBeans.getPrototype("cuba_ExcelAction", target);
     }
 
@@ -79,7 +96,7 @@ public class ExcelAction extends BaseAction implements Action.HasBeforeActionPer
      * @param target    component containing this action
      * @param display   ExportDisplay implementation
      */
-    public static ExcelAction create(ListComponent target, ExportDisplay display) {
+    public static LegacyExcelAction create(ListComponent target, ExportDisplay display) {
         return AppBeans.getPrototype("cuba_ExcelAction", target, display);
     }
 
@@ -89,7 +106,7 @@ public class ExcelAction extends BaseAction implements Action.HasBeforeActionPer
      * @param display   ExportDisplay implementation
      * @param id            action's name
      */
-    public static ExcelAction create(ListComponent target, ExportDisplay display, String id) {
+    public static LegacyExcelAction create(ListComponent target, ExportDisplay display, String id) {
         return AppBeans.getPrototype("cuba_ExcelAction", target, display, id);
     }
 
@@ -97,7 +114,7 @@ public class ExcelAction extends BaseAction implements Action.HasBeforeActionPer
      * The simplest constructor. The action uses default name and other parameters.
      * @param table     table containing this action
      */
-    public ExcelAction(Table table) {
+    public LegacyExcelAction(Table table) {
         this(table, AppConfig.createExportDisplay(table.getFrame()), ACTION_ID);
     }
 
@@ -107,8 +124,8 @@ public class ExcelAction extends BaseAction implements Action.HasBeforeActionPer
      * @param table     table containing this action
      * @param display   ExportDisplay implementation
      */
-    public ExcelAction(Table table, ExportDisplay display) {
-        this(table, display, ACTION_ID);
+    public LegacyExcelAction(Table table, ExportDisplay display) {
+        this.LegacyExcelAction(table, display, ACTION_ID);
     }
 
     /**
@@ -118,7 +135,7 @@ public class ExcelAction extends BaseAction implements Action.HasBeforeActionPer
      * {@link ExcelExporter}
      * @param id            action's name
      */
-    public ExcelAction(Table table, ExportDisplay display, String id) {
+    public LegacyExcelAction(Table table, ExportDisplay display, String id) {
         this((ListComponent) table, display, id);
     }
 
@@ -127,7 +144,7 @@ public class ExcelAction extends BaseAction implements Action.HasBeforeActionPer
      *
      * @param listComponent listComponent containing this action
      */
-    public ExcelAction(ListComponent listComponent) {
+    public LegacyExcelAction(ListComponent listComponent) {
         this(listComponent, AppConfig.createExportDisplay(listComponent.getFrame()), ACTION_ID);
     }
 
@@ -138,8 +155,8 @@ public class ExcelAction extends BaseAction implements Action.HasBeforeActionPer
      * @param listComponent listComponent containing this action
      * @param display       ExportDisplay implementation
      */
-    public ExcelAction(ListComponent listComponent, ExportDisplay display) {
-        this(listComponent, display, ACTION_ID);
+    public LegacyExcelAction(ListComponent listComponent, ExportDisplay display) {
+        this.LegacyExcelAction(listComponent, display, ACTION_ID);
     }
 
     /**
@@ -150,7 +167,7 @@ public class ExcelAction extends BaseAction implements Action.HasBeforeActionPer
      *                      {@link ExcelExporter}
      * @param id            action's name
      */
-    public ExcelAction(ListComponent listComponent, ExportDisplay display, String id) {
+    public LegacyExcelAction(ListComponent listComponent, ExportDisplay display, String id) {
         super(id);
         this.listComponent = listComponent;
         this.display = display;
@@ -217,7 +234,7 @@ public class ExcelAction extends BaseAction implements Action.HasBeforeActionPer
                     .withActions(
                             exportSelectedAction,
                             exportAllAction,
-                            new DialogAction(Type.CANCEL)
+                            new DialogAction(DialogAction.Type.CANCEL)
                     )
                     .show();
         }
@@ -246,7 +263,7 @@ public class ExcelAction extends BaseAction implements Action.HasBeforeActionPer
         if (exporter.isXlsMaxRowNumberExceeded()) {
             Notifications notifications = getScreenContext(listComponent).getNotifications();
 
-            notifications.create(NotificationType.WARNING)
+            notifications.create(Notifications.NotificationType.WARNING)
                     .withCaption(messages.getMainMessage("actions.warningExport.title"))
                     .withDescription(messages.getMainMessage("actions.warningExport.message"))
                     .show();

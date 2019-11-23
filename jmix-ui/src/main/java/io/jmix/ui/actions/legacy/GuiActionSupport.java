@@ -16,20 +16,23 @@
 
 package io.jmix.ui.actions.legacy;
 
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.BaseGenericIdEntity;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.entity.annotation.Lookup;
-import com.haulmont.cuba.gui.actions.picker.ClearAction;
-import com.haulmont.cuba.gui.actions.picker.LookupAction;
-import com.haulmont.cuba.gui.actions.picker.OpenAction;
-import com.haulmont.cuba.gui.components.Actions;
-import com.haulmont.cuba.gui.components.PickerField;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributesGuiTools;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
+import io.jmix.core.EntityStates;
+import io.jmix.core.MetadataTools;
+import io.jmix.core.View;
+import io.jmix.core.ViewRepository;
+import io.jmix.core.entity.BaseGenericIdEntity;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.annotation.Lookup;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.Actions;
+import io.jmix.ui.actions.picker.ClearAction;
+import io.jmix.ui.actions.picker.LookupAction;
+import io.jmix.ui.actions.picker.OpenAction;
+import io.jmix.ui.components.PickerField;
+import io.jmix.ui.components.compatibility.LegacyFrame;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.model.cuba.Datasource;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
@@ -47,8 +50,8 @@ public class GuiActionSupport {
     protected ViewRepository viewRepository;
     @Inject
     protected EntityStates entityStates;
-    @Inject
-    protected DynamicAttributesGuiTools dynamicAttributesGuiTools;
+//    @Inject
+//    protected DynamicAttributesGuiTools dynamicAttributesGuiTools;
 
     @Inject
     protected MetadataTools metadataTools;

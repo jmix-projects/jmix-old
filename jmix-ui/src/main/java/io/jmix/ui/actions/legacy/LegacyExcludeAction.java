@@ -32,6 +32,23 @@ import com.haulmont.cuba.gui.data.PropertyDatasource;
 import com.haulmont.cuba.gui.icons.CubaIcon;
 import com.haulmont.cuba.gui.icons.Icons;
 import com.haulmont.cuba.security.entity.EntityAttrAccess;
+import io.jmix.core.AppBeans;
+import io.jmix.core.ExtendedEntities;
+import io.jmix.core.Messages;
+import io.jmix.core.Metadata;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.security.EntityAttrAccess;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.NestedDatasource;
+import io.jmix.ui.model.cuba.PropertyDatasource;
 import org.springframework.context.annotation.Scope;
 
 import java.util.Set;
@@ -48,7 +65,7 @@ import java.util.Set;
  */
 @org.springframework.stereotype.Component("cuba_ExcludeAction")
 @Scope("prototype")
-public class ExcludeAction extends RemoveAction implements Action.DisabledWhenScreenReadOnly {
+public class LegacyExcludeAction extends LegacyRemoveAction implements Action.DisabledWhenScreenReadOnly {
 
     public static final String ACTION_ID = ListActionType.EXCLUDE.getId();
 
@@ -58,7 +75,7 @@ public class ExcludeAction extends RemoveAction implements Action.DisabledWhenSc
      * Creates an action with default id. Autocommit and Confirm properties are set to false.
      * @param target    component containing this action
      */
-    public static ExcludeAction create(ListComponent target) {
+    public static LegacyExcludeAction create(ListComponent target) {
         return AppBeans.getPrototype("cuba_ExcludeAction", target);
     }
 
@@ -68,7 +85,7 @@ public class ExcludeAction extends RemoveAction implements Action.DisabledWhenSc
      * @param autocommit    whether to commit datasource immediately
      * @param confirm       whether to show the confirmation dialog to user
      */
-    public static ExcludeAction create(ListComponent target, boolean autocommit, boolean confirm) {
+    public static LegacyExcludeAction create(ListComponent target, boolean autocommit, boolean confirm) {
         return AppBeans.getPrototype("cuba_ExcludeAction", target, autocommit, confirm);
     }
 
@@ -79,7 +96,7 @@ public class ExcludeAction extends RemoveAction implements Action.DisabledWhenSc
      * @param confirm       whether to show the confirmation dialog to user
      * @param id            action's name
      */
-    public static ExcludeAction create(ListComponent target, boolean autocommit, boolean confirm, String id) {
+    public static LegacyExcludeAction create(ListComponent target, boolean autocommit, boolean confirm, String id) {
         return AppBeans.getPrototype("cuba_ExcludeAction", target, autocommit, confirm, id);
     }
 
@@ -87,7 +104,7 @@ public class ExcludeAction extends RemoveAction implements Action.DisabledWhenSc
      * The simplest constructor. Autocommit and Confirm properties are set to false, the action has default name.
      * @param target     component containing this action
      */
-    public ExcludeAction(ListComponent target) {
+    public LegacyExcludeAction(ListComponent target) {
         this(target, false, false, ACTION_ID);
     }
 
@@ -97,7 +114,7 @@ public class ExcludeAction extends RemoveAction implements Action.DisabledWhenSc
      * @param autocommit    whether to commit datasource immediately
      * @param confirm       whether to show the confirmation dialog to user
      */
-    public ExcludeAction(ListComponent target, boolean autocommit, boolean confirm) {
+    public LegacyExcludeAction(ListComponent target, boolean autocommit, boolean confirm) {
         this(target, autocommit, confirm, ACTION_ID);
     }
 
@@ -108,7 +125,7 @@ public class ExcludeAction extends RemoveAction implements Action.DisabledWhenSc
      * @param confirm       whether to show the confirmation dialog to user
      * @param id            action's name
      */
-    public ExcludeAction(ListComponent target, boolean autocommit, boolean confirm, String id) {
+    public LegacyExcludeAction(ListComponent target, boolean autocommit, boolean confirm, String id) {
         super(target, autocommit, id);
 
         this.confirm = confirm;

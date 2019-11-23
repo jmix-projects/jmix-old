@@ -16,23 +16,23 @@
 
 package io.jmix.ui.actions.picker;
 
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.components.ActionType;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.PickerField;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.meta.StudioAction;
-import com.haulmont.cuba.gui.model.DataContext;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
+import io.jmix.core.Messages;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.ui.ClientConfig;
+import io.jmix.ui.actions.ActionType;
+import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.PickerField;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.meta.StudioAction;
+import io.jmix.ui.model.DataContext;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.UiControllerUtils;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Nullable;

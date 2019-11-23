@@ -16,16 +16,17 @@
 
 package io.jmix.ui.actions.legacy;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.MessageTools;
-import com.haulmont.cuba.gui.WindowManager.OpenType;
-import com.haulmont.cuba.gui.components.Action;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.ListComponent;
-import com.haulmont.cuba.gui.components.RelatedEntities;
 import com.haulmont.cuba.gui.relatedentities.RelatedEntitiesAPI;
+import io.jmix.core.AppBeans;
+import io.jmix.core.MessageTools;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.ListAction;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.RelatedEntities;
+import io.jmix.ui.components.compatibility.WindowManager.OpenType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 
@@ -42,7 +43,7 @@ import javax.inject.Inject;
  */
 @org.springframework.stereotype.Component("cuba_RelatedAction")
 @Scope("prototype")
-public class RelatedAction extends ListAction implements Action.HasBeforeActionPerformedHandler {
+public class LegacyRelatedAction extends ListAction implements Action.HasBeforeActionPerformedHandler {
 
     public static final String ACTION_ID = "related";
 
@@ -63,11 +64,11 @@ public class RelatedAction extends ListAction implements Action.HasBeforeActionP
      * Creates an action with the given id.
      * @param target    component containing this action
      */
-    public static RelatedAction create(String id, ListComponent target, MetaClass metaClass, MetaProperty metaProperty) {
+    public static LegacyRelatedAction create(String id, ListComponent target, MetaClass metaClass, MetaProperty metaProperty) {
         return AppBeans.getPrototype("cuba_RelatedAction", id, target, metaClass, metaProperty);
     }
 
-    public RelatedAction(String id, ListComponent target, MetaClass metaClass, MetaProperty metaProperty) {
+    public LegacyRelatedAction(String id, ListComponent target, MetaClass metaClass, MetaProperty metaProperty) {
         super(id);
 
         this.target = target;
