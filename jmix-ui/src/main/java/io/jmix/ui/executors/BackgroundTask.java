@@ -234,7 +234,7 @@ public abstract class BackgroundTask<T, V> {
     /**
      * Listener of the task life cycle events, complementary to the tasks own methods:
      * {@link BackgroundTask#progress(List)}, {@link BackgroundTask#done(Object)},
-     * {@link com.haulmont.cuba.gui.executors.BackgroundTask#canceled()}.
+     * {@link io.jmix.ui.executors.BackgroundTask#canceled()}.
      *
      * @param <T> progress measurement unit
      * @param <V> result type

@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.components;
-
-import java.lang.annotation.*;
+package io.jmix.ui.screen;
 
 /**
- * Indicates that {@link Action} can be created with {@link Actions} factory and can be used in screen XML descriptor.
+ * Interface for screen controllers that support read-only mode.
  */
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface ActionType {
-    String VALUE_ATTRIBUTE = "value";
+public interface ReadOnlyAwareScreen {
 
     /**
-     * @return id of action type
+     * @return whether a screen controller in read-only mode.
      */
-    String value();
+    boolean isReadOnly();
+
+    /**
+     * Changes the read-only mode.
+     *
+     * @param readOnly {@code true} to enable the read-only mode, {@code false} otherwise
+     */
+    void setReadOnly(boolean readOnly);
 }

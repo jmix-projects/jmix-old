@@ -16,11 +16,11 @@
 
 package io.jmix.ui.sys;
 
-import com.haulmont.cuba.gui.builders.EditorBuilder;
-import com.haulmont.cuba.gui.builders.LookupBuilder;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.ScreenOptions;
+import io.jmix.ui.builders.EditorBuilder;
+import io.jmix.ui.builders.LookupBuilder;
+import io.jmix.ui.screen.OpenMode;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.ScreenOptions;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
