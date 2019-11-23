@@ -19,11 +19,9 @@ package io.jmix.ui;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.builders.*;
-import io.jmix.ui.components.ListComponent;
-import io.jmix.ui.components.LookupPickerField;
-import io.jmix.ui.components.PickerField;
+import io.jmix.ui.components.*;
 import io.jmix.ui.components.data.DataUnit;
-import io.jmix.ui.components.data.EntityDataUnit;
+import io.jmix.ui.components.data.meta.EntityDataUnit;
 import io.jmix.ui.screen.FrameOwner;
 import org.springframework.stereotype.Component;
 

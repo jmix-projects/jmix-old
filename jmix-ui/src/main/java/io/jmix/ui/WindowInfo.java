@@ -155,7 +155,7 @@ public class WindowInfo {
     }
 
     /* todo navigation
-     * @return route definition configured with {@link com.haulmont.cuba.gui.Route} annotation
+     * @return route definition configured with {@link io.jmix.ui.Route} annotation
      */
     /*public RouteDefinition getRouteDefinition() {
         return routeDefinition;
