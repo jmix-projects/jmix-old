@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.model.cuba;
 
-import com.haulmont.cuba.core.entity.Entity;
+import io.jmix.core.entity.Entity;
 
 /**
  * Datasource containing an entity instance which is loaded as a non-embedded property of another entity instance.

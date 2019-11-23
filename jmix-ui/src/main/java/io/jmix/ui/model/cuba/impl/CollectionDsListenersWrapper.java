@@ -16,9 +16,10 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.bali.events.EventRouter;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
+import io.jmix.core.commons.events.EventRouter;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.CollectionDatasource;
 
 public class CollectionDsListenersWrapper implements
         Datasource.ItemChangeListener,

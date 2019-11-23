@@ -16,15 +16,16 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.chile.core.model.Range;
-import com.haulmont.cuba.gui.WindowParams;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.DsContext;
-import com.haulmont.cuba.gui.data.PropertyDatasource;
+import io.jmix.core.*;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.metamodel.model.Range;
+import io.jmix.ui.WindowParams;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.DsContext;
+import io.jmix.ui.model.cuba.PropertyDatasource;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;

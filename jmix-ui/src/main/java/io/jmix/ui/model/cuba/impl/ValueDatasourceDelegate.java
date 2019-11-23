@@ -16,21 +16,21 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.datatypes.Enumeration;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.core.app.keyvalue.KeyValueMetaClass;
-import com.haulmont.cuba.core.app.keyvalue.KeyValueMetaProperty;
-import com.haulmont.cuba.core.entity.KeyValueEntity;
-import com.haulmont.cuba.core.global.ValueLoadContext;
+import io.jmix.core.ValueLoadContext;
+import io.jmix.core.entity.KeyValueEntity;
+import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
+import io.jmix.core.impl.keyvalue.KeyValueMetaProperty;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.datatypes.Enumeration;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
 
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class ValueDatasourceDelegate {
 

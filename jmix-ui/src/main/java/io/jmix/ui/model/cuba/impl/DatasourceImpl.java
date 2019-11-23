@@ -15,13 +15,19 @@
  */
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.DataSupplier;
-import com.haulmont.cuba.gui.data.DsContext;
+import io.jmix.core.AppBeans;
+import io.jmix.core.DevelopmentException;
+import io.jmix.core.EntityStates;
+import io.jmix.core.View;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.data.DataSupplier;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.DataSupplier;
+import io.jmix.ui.model.cuba.DsContext;
 
 import javax.annotation.Nullable;
 import java.util.Collections;

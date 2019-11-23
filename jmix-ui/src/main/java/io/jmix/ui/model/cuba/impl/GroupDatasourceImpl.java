@@ -15,12 +15,12 @@
  */
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.GroupDatasource;
-import com.haulmont.cuba.gui.data.GroupInfo;
-import com.haulmont.cuba.gui.model.impl.EntityValuesComparator;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.GroupDatasource;
+import io.jmix.ui.model.cuba.GroupInfo;
+import io.jmix.ui.model.impl.EntityValuesComparator;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -18,9 +18,10 @@ package io.jmix.ui.model.cuba.impl;
 
 import com.haulmont.bali.datastruct.Node;
 import com.haulmont.bali.datastruct.Tree;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.data.HierarchicalDatasource;
-import com.haulmont.cuba.gui.logging.UIPerformanceLogger;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.data.HierarchicalDatasource;
+import io.jmix.ui.logging.UIPerformanceLogger;
+import io.jmix.ui.model.cuba.HierarchicalDatasource;
 import org.perf4j.StopWatch;
 import org.perf4j.slf4j.Slf4JStopWatch;
 import org.slf4j.LoggerFactory;

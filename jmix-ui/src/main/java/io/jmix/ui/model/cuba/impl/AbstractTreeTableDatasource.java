@@ -17,10 +17,11 @@
 package io.jmix.ui.model.cuba.impl;
 
 import com.haulmont.bali.datastruct.Node;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.data.HierarchicalDatasource;
-import com.haulmont.cuba.gui.model.impl.EntityValuesComparator;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.data.HierarchicalDatasource;
+import io.jmix.ui.model.cuba.HierarchicalDatasource;
+import io.jmix.ui.model.impl.EntityValuesComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

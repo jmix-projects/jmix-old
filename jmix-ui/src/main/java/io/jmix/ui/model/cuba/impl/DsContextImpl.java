@@ -15,22 +15,27 @@
  */
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.impl.AbstractInstance;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.filter.ParameterInfo;
-import com.haulmont.cuba.gui.FrameContext;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.data.*;
-import com.haulmont.cuba.gui.data.impl.compatibility.DsContextCommitListenerWrapper;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
+import io.jmix.core.AppBeans;
+import io.jmix.core.CommitContext;
+import io.jmix.core.Metadata;
+import io.jmix.core.View;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.filter.ParameterInfo;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.impl.AbstractInstance;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.FrameContext;
+import io.jmix.ui.components.compatibility.LegacyFrame;
+import io.jmix.ui.data.*;
+import io.jmix.ui.model.cuba.*;
+import io.jmix.ui.model.cuba.impl.compatibility.DsContextCommitListenerWrapper;
+import io.jmix.ui.screen.FrameOwner;
 
 import java.util.*;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class DsContextImpl implements DsContextImplementation {
 

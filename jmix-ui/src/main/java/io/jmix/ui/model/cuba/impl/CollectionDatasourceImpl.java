@@ -17,18 +17,21 @@ package io.jmix.ui.model.cuba.impl;
 
 import com.google.common.base.Preconditions;
 import com.haulmont.bali.collections.ReadOnlyLinkedMapValuesView;
-import com.haulmont.chile.core.model.Instance;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.filter.Condition;
-import com.haulmont.cuba.core.global.filter.DenyingClause;
-import com.haulmont.cuba.core.global.filter.LogicalCondition;
-import com.haulmont.cuba.core.global.filter.LogicalOp;
-import com.haulmont.cuba.gui.components.AggregationInfo;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.logging.UIPerformanceLogger;
+import io.jmix.core.AppBeans;
+import io.jmix.core.LoadContext;
+import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.ClientConfig;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.filter.Condition;
+import io.jmix.core.filter.DenyingClause;
+import io.jmix.core.filter.LogicalCondition;
+import io.jmix.core.filter.LogicalOp;
+import io.jmix.ui.components.AggregationInfo;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.logging.UIPerformanceLogger;
 import com.haulmont.cuba.security.entity.EntityOp;
+import io.jmix.ui.model.cuba.CollectionDatasource;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.perf4j.StopWatch;
 import org.perf4j.slf4j.Slf4JStopWatch;
@@ -36,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * Most commonly used {@link CollectionDatasource} implementation.

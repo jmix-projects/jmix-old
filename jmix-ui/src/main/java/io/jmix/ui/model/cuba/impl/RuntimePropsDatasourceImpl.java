@@ -16,19 +16,22 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributes;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesMetaClass;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesMetaProperty;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils;
-import com.haulmont.cuba.core.entity.*;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.DevelopmentException;
-import com.haulmont.cuba.core.global.PersistenceHelper;
-import com.haulmont.cuba.core.global.View;
-import com.haulmont.cuba.gui.data.*;
-import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributesGuiTools;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.app.dynamicattributes.DynamicAttributes;
+import io.jmix.core.app.dynamicattributes.DynamicAttributesMetaClass;
+import io.jmix.core.app.dynamicattributes.DynamicAttributesMetaProperty;
+import io.jmix.core.app.dynamicattributes.DynamicAttributesUtils;
+import io.jmix.core.entity.*;
+import io.jmix.core.AppBeans;
+import io.jmix.core.DevelopmentException;
+import io.jmix.core.PersistenceHelper;
+import io.jmix.core.View;
+import io.jmix.ui.data.*;
+import io.jmix.ui.dynamicattributes.DynamicAttributesGuiTools;
+import io.jmix.ui.model.cuba.DataSupplier;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.DsContext;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -36,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * Specific datasource for dynamic attributes.

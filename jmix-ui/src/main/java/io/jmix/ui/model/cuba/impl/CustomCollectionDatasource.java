@@ -16,8 +16,8 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.model.cuba.CollectionDatasource;
 
 import java.util.Collection;
 import java.util.Map;

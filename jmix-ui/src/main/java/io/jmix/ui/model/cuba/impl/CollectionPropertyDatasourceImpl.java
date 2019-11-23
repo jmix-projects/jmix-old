@@ -16,15 +16,21 @@
 package io.jmix.ui.model.cuba.impl;
 
 import com.google.common.collect.Iterables;
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.chile.core.model.*;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.filter.QueryFilter;
-import com.haulmont.cuba.gui.components.AggregationInfo;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.model.impl.EntityValuesComparator;
+import io.jmix.core.AppBeans;
+import io.jmix.core.DevelopmentException;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.metamodel.model.*;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.filter.QueryFilter;
+import io.jmix.core.security.EntityAttrAccess;
+import io.jmix.core.security.EntityOp;
+import io.jmix.core.security.Security;
+import io.jmix.ui.components.AggregationInfo;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.impl.EntityValuesComparator;
 import com.haulmont.cuba.security.entity.EntityAttrAccess;
 import com.haulmont.cuba.security.entity.EntityOp;
 import com.haulmont.cuba.security.entity.PermissionType;
@@ -34,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class CollectionPropertyDatasourceImpl<T extends Entity<K>, K>
         extends
@@ -51,7 +57,7 @@ public class CollectionPropertyDatasourceImpl<T extends Entity<K>, K>
     protected T item;
     protected boolean cascadeProperty;
 
-    protected SortInfo<MetaPropertyPath>[] sortInfos;
+    protected CollectionDatasource.Sortable.SortInfo<MetaPropertyPath>[] sortInfos;
     protected boolean listenersSuspended;
     protected final LinkedList<CollectionChangeEvent<T,K>> suspendedEvents = new LinkedList<>();
 

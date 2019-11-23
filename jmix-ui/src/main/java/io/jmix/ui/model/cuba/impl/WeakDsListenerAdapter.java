@@ -16,8 +16,8 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
 
 import java.lang.ref.WeakReference;
 

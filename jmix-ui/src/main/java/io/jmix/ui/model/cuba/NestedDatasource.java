@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.model.cuba;
 
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.entity.Entity;
 
 /**
  * Datasource containing entity instance which is loaded as a property of another entity instance.

@@ -15,16 +15,21 @@
  */
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.bali.events.EventRouter;
-import com.haulmont.chile.core.model.Instance;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.core.global.PersistenceHelper;
-import com.haulmont.cuba.core.global.View;
-import com.haulmont.cuba.gui.data.*;
-import com.haulmont.cuba.gui.executors.BackgroundWorker;
+import io.jmix.core.commons.events.EventRouter;
+import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Metadata;
+import io.jmix.core.PersistenceHelper;
+import io.jmix.core.View;
+import io.jmix.ui.data.*;
+import io.jmix.ui.executors.BackgroundWorker;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.executors.BackgroundWorker;
+import io.jmix.ui.model.cuba.DataSupplier;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.DsContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +44,7 @@ public abstract class AbstractDatasource<T extends Entity> implements Datasource
     protected String id;
     protected boolean modified;
     protected boolean allowCommit = true;
-    protected CommitMode commitMode = CommitMode.DATASTORE;
+    protected Datasource.CommitMode commitMode = CommitMode.DATASTORE;
     protected Datasource parentDs;
     protected Metadata metadata = AppBeans.get(Metadata.NAME);
 

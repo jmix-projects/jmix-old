@@ -15,10 +15,9 @@
  */
 package io.jmix.ui.model.cuba;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.core.app.DataService;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.DataManager;
+import io.jmix.core.DataManager;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
 
 /**
  * Interface for CRUD operations on screen level.
@@ -30,7 +29,7 @@ import com.haulmont.cuba.core.global.DataManager;
  * type annotated with {@code @Inject}.</p>
  *
  */
-public interface DataSupplier extends DataManager, DataService /* for backward compatibility */ {
+public interface DataSupplier extends DataManager /*, todo vm DataService /* for backward compatibility */ {
 
     /**
      * Do not try to obtain DataSupplier through {@code AppBeans.get()} or by injection to regular Spring beans.

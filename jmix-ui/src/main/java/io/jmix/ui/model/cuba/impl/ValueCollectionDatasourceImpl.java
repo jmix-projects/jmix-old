@@ -16,15 +16,18 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.core.app.keyvalue.KeyValueMetaClass;
-import com.haulmont.cuba.core.entity.KeyValueEntity;
-import com.haulmont.cuba.core.global.View;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.DataSupplier;
-import com.haulmont.cuba.gui.data.DsContext;
-import com.haulmont.cuba.gui.logging.UIPerformanceLogger;
+import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.app.keyvalue.KeyValueMetaClass;
+import io.jmix.core.entity.KeyValueEntity;
+import io.jmix.core.View;
+import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.data.DataSupplier;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.DataSupplier;
+import io.jmix.ui.model.cuba.DsContext;
+import io.jmix.ui.logging.UIPerformanceLogger;
 import org.perf4j.StopWatch;
 import org.perf4j.slf4j.Slf4JStopWatch;
 import org.slf4j.LoggerFactory;

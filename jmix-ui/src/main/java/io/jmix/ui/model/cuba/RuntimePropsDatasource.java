@@ -16,17 +16,14 @@
 
 package io.jmix.ui.model.cuba;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesMetaProperty;
-import com.haulmont.cuba.core.entity.Entity;
-
-import java.util.Collection;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
 
 public interface RuntimePropsDatasource<T extends Entity> extends Datasource<T> {
 
     Datasource getMainDs();
 
-    Collection<DynamicAttributesMetaProperty> getPropertiesFilteredByCategory();
+//    Collection<DynamicAttributesMetaProperty> getPropertiesFilteredByCategory();
 
     MetaClass resolveCategorizedEntityClass();
 }

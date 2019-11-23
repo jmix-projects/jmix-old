@@ -15,11 +15,11 @@
  */
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.CommitContext;
-import com.haulmont.cuba.core.global.filter.ParameterInfo;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.DsContext;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.CommitContext;
+import io.jmix.core.filter.ParameterInfo;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.DsContext;
 
 import java.util.Set;
 

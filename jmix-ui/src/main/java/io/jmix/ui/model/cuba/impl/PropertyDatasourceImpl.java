@@ -15,17 +15,17 @@
  */
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.chile.core.model.Instance;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.impl.AbstractInstance;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.DevelopmentException;
-import com.haulmont.cuba.core.global.PersistenceHelper;
-import com.haulmont.cuba.core.global.View;
-import com.haulmont.cuba.core.global.ViewProperty;
-import com.haulmont.cuba.gui.data.*;
+import io.jmix.core.DevelopmentException;
+import io.jmix.core.PersistenceHelper;
+import io.jmix.core.View;
+import io.jmix.core.ViewProperty;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.impl.AbstractInstance;
+import io.jmix.ui.model.cuba.*;
 
 import javax.annotation.Nullable;
 import java.util.*;

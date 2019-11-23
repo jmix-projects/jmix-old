@@ -16,7 +16,7 @@
 
 package io.jmix.ui.model.cuba;
 
-import com.haulmont.cuba.core.entity.Entity;
+import io.jmix.core.entity.Entity;
 
 import java.util.Collection;
 

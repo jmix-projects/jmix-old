@@ -16,11 +16,11 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.model.MetaClass;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.model.MetaClass;
 
 /**
- * Base interface of datasources that work with {@link com.haulmont.cuba.core.entity.KeyValueEntity}.
+ * Base interface of datasources that work with {@link io.jmix.core.entity.KeyValueEntity}.
  */
 public interface ValueDatasource {
 

@@ -15,11 +15,12 @@
  */
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.core.entity.BaseGenericIdEntity;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.entity.KeyValueEntity;
-import com.haulmont.cuba.gui.data.DataSupplier;
+import io.jmix.core.*;
+import io.jmix.core.entity.BaseGenericIdEntity;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.KeyValueEntity;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.ui.model.cuba.DataSupplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

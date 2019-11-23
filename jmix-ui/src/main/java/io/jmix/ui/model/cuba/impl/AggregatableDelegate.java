@@ -15,15 +15,15 @@
  */
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.chile.core.datatypes.Datatypes;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.chile.core.model.Range;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.components.AggregationInfo;
-import com.haulmont.cuba.gui.data.aggregation.Aggregation;
-import com.haulmont.cuba.gui.data.aggregation.AggregationStrategy;
-import com.haulmont.cuba.gui.data.aggregation.Aggregations;
+import io.jmix.core.AppBeans;
+import io.jmix.core.metamodel.datatypes.Datatypes;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.metamodel.model.Range;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.AggregationInfo;
+import io.jmix.ui.components.data.aggregation.Aggregation;
+import io.jmix.ui.components.data.aggregation.AggregationStrategy;
+import io.jmix.ui.components.data.aggregation.Aggregations;
 
 import java.util.*;
 import java.util.stream.Collectors;

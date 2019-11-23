@@ -16,10 +16,10 @@
 package io.jmix.ui.model.cuba.impl;
 
 import com.google.common.collect.ImmutableList;
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.data.*;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.model.cuba.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.commons.lang3.ArrayUtils;

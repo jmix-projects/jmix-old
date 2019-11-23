@@ -16,18 +16,17 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.Datasource.ItemPropertyChangeListener;
+import io.jmix.ui.model.cuba.Datasource;
 
 import java.lang.ref.WeakReference;
 
-public class WeakItemPropertyChangeListener implements ItemPropertyChangeListener {
+public class WeakItemPropertyChangeListener implements Datasource.ItemPropertyChangeListener {
 
     private final Datasource datasource;
-    private final WeakReference<ItemPropertyChangeListener> reference;
+    private final WeakReference<Datasource.ItemPropertyChangeListener> reference;
 
     public WeakItemPropertyChangeListener(Datasource datasource,
-                                          ItemPropertyChangeListener itemPropertyChangeListener) {
+                                          Datasource.ItemPropertyChangeListener itemPropertyChangeListener) {
         this.datasource = datasource;
         this.reference = new WeakReference<>(itemPropertyChangeListener);
     }
@@ -35,7 +34,7 @@ public class WeakItemPropertyChangeListener implements ItemPropertyChangeListene
     @SuppressWarnings("unchecked")
     @Override
     public void itemPropertyChanged(Datasource.ItemPropertyChangeEvent e) {
-        ItemPropertyChangeListener itemPropertyChangeListener = reference.get();
+        Datasource.ItemPropertyChangeListener itemPropertyChangeListener = reference.get();
         if (itemPropertyChangeListener != null) {
             itemPropertyChangeListener.itemPropertyChanged(e);
         } else {

@@ -18,8 +18,8 @@ package io.jmix.ui.model.cuba.impl;
 
 import com.haulmont.bali.datastruct.Node;
 import com.haulmont.bali.datastruct.Tree;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.NestedDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.data.NestedDatasource;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

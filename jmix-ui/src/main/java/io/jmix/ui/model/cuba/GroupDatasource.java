@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.model.cuba;
 
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.entity.Entity;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

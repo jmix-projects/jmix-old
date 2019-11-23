@@ -15,12 +15,12 @@
  */
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.chile.core.model.Instance;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
+import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
 import com.haulmont.cuba.client.sys.PersistenceManagerClient;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Metadata;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Metadata;
 
 import java.util.Collection;
 import java.util.Comparator;

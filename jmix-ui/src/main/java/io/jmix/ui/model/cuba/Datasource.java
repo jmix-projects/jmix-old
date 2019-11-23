@@ -15,9 +15,9 @@
  */
 package io.jmix.ui.model.cuba;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.View;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.View;
 
 import javax.annotation.Nullable;
 
@@ -185,7 +185,7 @@ public interface Datasource<T extends Entity> {
     @FunctionalInterface
     interface ItemChangeListener<T extends Entity> {
         /**
-         * Current item changed, that is now {@link com.haulmont.cuba.gui.data.Datasource#getItem()} returns a different
+         * Current item changed, that is now {@link Datasource#getItem()} returns a different
          * instance.
          */
         void itemChanged(ItemChangeEvent<T> e);

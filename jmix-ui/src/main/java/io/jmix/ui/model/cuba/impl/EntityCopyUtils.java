@@ -16,13 +16,13 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.impl.AbstractInstance;
-import com.haulmont.cuba.core.entity.BaseDbGeneratedIdEntity;
-import com.haulmont.cuba.core.entity.BaseEntityInternalAccess;
-import com.haulmont.cuba.core.entity.BaseGenericIdEntity;
-import com.haulmont.cuba.core.entity.Entity;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.impl.AbstractInstance;
+import io.jmix.core.entity.BaseDbGeneratedIdEntity;
+import io.jmix.core.entity.BaseEntityInternalAccess;
+import io.jmix.core.entity.BaseGenericIdEntity;
+import io.jmix.core.entity.Entity;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.ArrayList;

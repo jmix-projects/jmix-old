@@ -16,8 +16,8 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.Datasource.ItemChangeListener;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.Datasource.ItemChangeListener;
 
 import java.lang.ref.WeakReference;
 

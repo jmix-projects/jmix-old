@@ -15,9 +15,9 @@
  */
 package io.jmix.ui.model.cuba;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.CommitContext;
-import com.haulmont.cuba.gui.FrameContext;
+import io.jmix.core.CommitContext;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.FrameContext;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -150,13 +150,13 @@ public interface DsContext {
      * This listener allows to intercept commit events.
      * <br> Should be used to augment {@link CommitContext} with entities which must be committed in the
      * same transaction as datasources content. To do this, add needed entity instances to
-     * {@link com.haulmont.cuba.core.global.CommitContext#getCommitInstances()} or
-     * {@link com.haulmont.cuba.core.global.CommitContext#getRemoveInstances()} collections.
+     * {@link CommitContext#getCommitInstances()} or
+     * {@link CommitContext#getRemoveInstances()} collections.
      *
-     * @deprecated Use {@link com.haulmont.cuba.gui.data.DsContext.BeforeCommitListener} and {@link com.haulmont.cuba.gui.data.DsContext.AfterCommitListener}
+     * @deprecated Use {@link DsContext.BeforeCommitListener} and {@link DsContext.AfterCommitListener}
      *
-     * @see DsContext#addListener(com.haulmont.cuba.gui.data.DsContext.CommitListener)
-     * @see DsContext#removeListener(com.haulmont.cuba.gui.data.DsContext.CommitListener)
+     * @see DsContext#addListener(DsContext.CommitListener)
+     * @see DsContext#removeListener(DsContext.CommitListener)
      * @see CommitListenerAdapter
      */
     @Deprecated
@@ -179,8 +179,8 @@ public interface DsContext {
     /**
      * An abstract adapter class for {@link CommitListener}. Use it if you need to implement only one of two methods.
      *
-     * @see DsContext#addListener(com.haulmont.cuba.gui.data.DsContext.CommitListener)
-     * @see DsContext#removeListener(com.haulmont.cuba.gui.data.DsContext.CommitListener)
+     * @see DsContext#addListener(DsContext.CommitListener)
+     * @see DsContext#removeListener(DsContext.CommitListener)
      */
     @Deprecated
     abstract class CommitListenerAdapter implements CommitListener {
@@ -196,8 +196,8 @@ public interface DsContext {
      * This listener allows to intercept commit events.
      * <br> Should be used to augment {@link CommitContext} with entities which must be committed in the
      * same transaction as datasources content. To do this, add needed entity instances to
-     * {@link com.haulmont.cuba.core.global.CommitContext#getCommitInstances()} or
-     * {@link com.haulmont.cuba.core.global.CommitContext#getRemoveInstances()} collections.
+     * {@link CommitContext#getCommitInstances()} or
+     * {@link CommitContext#getRemoveInstances()} collections.
      */
     interface BeforeCommitListener {
         /**
