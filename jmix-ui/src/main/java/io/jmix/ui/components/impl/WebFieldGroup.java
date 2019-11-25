@@ -15,26 +15,19 @@
  */
 package io.jmix.ui.components.impl;
 
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.core.entity.Entity;
 import io.jmix.core.AppBeans;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.App;
 import io.jmix.ui.AppUI;
-import io.jmix.ui.ComponentsHelper;
-import io.jmix.ui.app.security.role.edit.UiPermissionDescriptor;
-import io.jmix.ui.security.UiPermissionValue;
 import io.jmix.ui.components.*;
-import io.jmix.ui.components.security.ActionsPermissions;
-import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.model.cuba.CollectionDatasource;
 import io.jmix.ui.model.cuba.Datasource;
-import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.security.UiPermissionDescriptor;
+import io.jmix.ui.security.UiPermissionValue;
 import io.jmix.ui.sys.TestIdManager;
 import io.jmix.ui.theme.ThemeConstants;
-import io.jmix.ui.App;
-import io.jmix.ui.AppUI;
-import io.jmix.ui.widgets.CubaFieldGroup;
-import io.jmix.ui.widgets.CubaFieldGroupLayout;
 import io.jmix.ui.widgets.CubaFieldGroup;
 import io.jmix.ui.widgets.CubaFieldGroupLayout;
 import org.apache.commons.lang3.BooleanUtils;
@@ -52,8 +45,8 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 import static com.haulmont.cuba.web.gui.components.WebComponentsHelper.convertFieldGroupCaptionAlignment;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class WebFieldGroup extends WebAbstractComponent<CubaFieldGroupLayout> implements FieldGroup, UiPermissionAware {
 

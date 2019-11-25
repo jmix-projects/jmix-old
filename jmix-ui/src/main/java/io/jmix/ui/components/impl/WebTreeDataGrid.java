@@ -17,22 +17,20 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
+import com.vaadin.data.TreeData;
+import com.vaadin.data.provider.DataProvider;
+import com.vaadin.data.provider.TreeDataProvider;
+import com.vaadin.shared.Registration;
+import com.vaadin.ui.Grid;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
 import io.jmix.ui.components.TreeDataGrid;
 import io.jmix.ui.components.data.BindingState;
 import io.jmix.ui.components.data.DataGridItems;
 import io.jmix.ui.components.data.TreeDataGridItems;
-import com.haulmont.cuba.web.gui.components.datagrid.DataGridDataProvider;
-import com.haulmont.cuba.web.gui.components.datagrid.HierarchicalDataGridDataProvider;
 import io.jmix.ui.components.datagrid.DataGridDataProvider;
 import io.jmix.ui.components.datagrid.HierarchicalDataGridDataProvider;
 import io.jmix.ui.widgets.CubaTreeGrid;
-import com.vaadin.data.TreeData;
-import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.TreeDataProvider;
-import com.vaadin.shared.Registration;
-import com.vaadin.ui.Grid;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;

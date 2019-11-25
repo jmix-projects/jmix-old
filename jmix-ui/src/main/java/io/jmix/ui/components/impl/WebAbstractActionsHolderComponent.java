@@ -40,7 +40,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
-import static io.jmix.ui.ComponentsHelper.findActionById;
+import static io.jmix.ui.components.ComponentsHelper.findActionById;
 
 /**
  * Base class for action holders with shortcuts support

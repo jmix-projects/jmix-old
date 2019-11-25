@@ -25,7 +25,7 @@ import io.jmix.core.Messages;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.AppUI;
-import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.data.ConversionException;

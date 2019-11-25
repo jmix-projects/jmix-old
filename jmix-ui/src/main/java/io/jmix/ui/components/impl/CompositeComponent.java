@@ -21,7 +21,7 @@ import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.events.TriggerOnce;
 import io.jmix.ui.AppUI;
-import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.*;
 import io.jmix.ui.sys.TestIdManager;
 import org.apache.commons.lang3.StringUtils;

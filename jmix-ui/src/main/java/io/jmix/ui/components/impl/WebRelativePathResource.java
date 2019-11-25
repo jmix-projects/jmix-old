@@ -16,10 +16,9 @@
 
 package io.jmix.ui.components.impl;
 
+import com.vaadin.server.ExternalResource;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.components.RelativePathResource;
-import com.haulmont.cuba.web.controllers.ControllerUtils;
-import com.vaadin.server.ExternalResource;
 import io.jmix.ui.sys.ControllerUtils;
 
 import java.net.MalformedURLException;

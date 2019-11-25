@@ -16,7 +16,7 @@
 package io.jmix.ui.components.impl;
 
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.AttachNotifier;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;

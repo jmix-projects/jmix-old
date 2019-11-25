@@ -33,6 +33,7 @@ import io.jmix.ui.components.data.meta.OptionsBinding;
 import io.jmix.ui.components.data.options.DatasourceOptions;
 import io.jmix.ui.components.data.options.OptionsBinder;
 import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.model.cuba.CollectionDatasource;
 import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.App;
 import io.jmix.ui.icons.IconResolver;

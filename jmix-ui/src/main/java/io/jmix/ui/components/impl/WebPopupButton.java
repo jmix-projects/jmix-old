@@ -16,7 +16,7 @@
 package io.jmix.ui.components.impl;
 
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.security.ActionsPermissions;
@@ -40,7 +40,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
-import static io.jmix.ui.ComponentsHelper.findActionById;
+import static io.jmix.ui.components.ComponentsHelper.findActionById;
 
 public class WebPopupButton extends WebAbstractComponent<CubaPopupButton> implements PopupButton, SecuredActionsHolder {
 

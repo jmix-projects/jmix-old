@@ -21,7 +21,7 @@ import com.vaadin.ui.AbstractComponent;
 import io.jmix.core.AppBeans;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.ui.AppUI;
-import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.icons.IconResolver;
@@ -46,7 +46,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
-import static io.jmix.ui.ComponentsHelper.walkComponents;
+import static io.jmix.ui.components.ComponentsHelper.walkComponents;
 
 public class WebAccordion extends WebAbstractComponent<CubaAccordion>
         implements Accordion, UiPermissionAware, SupportsChildrenSelection {

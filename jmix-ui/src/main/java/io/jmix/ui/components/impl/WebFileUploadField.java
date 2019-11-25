@@ -21,15 +21,18 @@ import io.jmix.core.DataManager;
 import io.jmix.core.FileStorageException;
 import io.jmix.core.Messages;
 import io.jmix.core.Security;
+import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
-import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.Notifications.NotificationType;
 import io.jmix.ui.components.ComponentContainer;
 import io.jmix.ui.components.FileUploadField;
 import io.jmix.ui.components.Window;
+import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.components.data.ValueSource;
 import io.jmix.ui.data.DataSupplier;
+import io.jmix.ui.model.cuba.DataSupplier;
 import io.jmix.ui.model.cuba.DsContext;
 import io.jmix.ui.export.ExportDisplay;
 import io.jmix.ui.export.FileDataProvider;
@@ -57,7 +60,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static io.jmix.ui.ComponentsHelper.getScreenContext;
+import static io.jmix.ui.components.ComponentsHelper.getScreenContext;
 import static com.haulmont.cuba.web.gui.FileUploadTypesHelper.convertToMIME;
 
 public class WebFileUploadField extends WebAbstractUploadField<CubaFileUploadWrapper>

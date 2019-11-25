@@ -35,6 +35,7 @@ import io.jmix.ui.widgets.CubaComboBoxPickerField;
 import io.jmix.ui.widgets.CubaPickerField;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Resource;
+import io.jmix.ui.widgets.ShortcutListenerDelegate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 

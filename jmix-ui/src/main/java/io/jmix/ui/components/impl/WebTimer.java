@@ -18,6 +18,7 @@ package io.jmix.ui.components.impl;
 
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.RemoteException;
+import io.jmix.core.security.NoUserSessionException;
 import io.jmix.ui.components.Fragment;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.Timer;

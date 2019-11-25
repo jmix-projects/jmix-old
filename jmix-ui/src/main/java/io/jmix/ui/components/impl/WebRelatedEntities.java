@@ -16,19 +16,19 @@
 
 package io.jmix.ui.components.impl;
 
-import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.Messages;
-import io.jmix.ui.components.Action;
-import io.jmix.ui.components.ListComponent;
-import io.jmix.ui.components.RelatedEntities;
-import io.jmix.ui.components.actions.RelatedAction;
-import io.jmix.ui.components.data.meta.EntityDataUnit;
-import io.jmix.ui.components.security.RelatedEntitiesSecurity;
-import io.jmix.ui.config.WindowInfo;
-import io.jmix.ui.sys.ScreensHelper;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Label;
+import io.jmix.core.Messages;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.ui.WindowInfo;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.legacy.LegacyRelatedAction;
+import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.RelatedEntities;
+import io.jmix.ui.components.data.meta.EntityDataUnit;
+import io.jmix.ui.components.security.RelatedEntitiesSecurity;
+import io.jmix.ui.sys.ScreensHelper;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
@@ -80,8 +80,8 @@ public class WebRelatedEntities extends WebPopupButton implements RelatedEntitie
         this.openType = openType;
 
         for (Action action : getActions()) {
-            if (action instanceof RelatedAction) {
-                ((RelatedAction) action).setOpenType(openType);
+            if (action instanceof LegacyRelatedAction) {
+                ((LegacyRelatedAction) action).setOpenType(openType);
             }
         }
     }
@@ -176,7 +176,7 @@ public class WebRelatedEntities extends WebPopupButton implements RelatedEntitie
         WindowInfo defaultScreen = screensHelper.getDefaultBrowseScreen(metaProperty.getRange().asClass());
         if (defaultScreen != null
                 || (propertyOption != null && StringUtils.isNotEmpty(propertyOption.getScreen()))) {
-            RelatedAction relatedAction = RelatedAction.create("related" + actionOrder.size(), listComponent, metaClass, metaProperty);
+            LegacyRelatedAction relatedAction = LegacyRelatedAction.create("related" + actionOrder.size(), listComponent, metaClass, metaProperty);
             relatedAction.setOpenType(openType);
 
             if (defaultScreen != null) {

@@ -41,7 +41,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static io.jmix.ui.ComponentsHelper.getScreenContext;
+import static io.jmix.ui.components.ComponentsHelper.getScreenContext;
 import static com.haulmont.cuba.web.gui.FileUploadTypesHelper.convertToMIME;
 
 public class WebFileMultiUploadField extends WebAbstractUploadComponent<CubaFileUpload>

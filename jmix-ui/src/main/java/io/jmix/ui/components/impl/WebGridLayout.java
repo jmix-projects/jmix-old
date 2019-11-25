@@ -17,7 +17,7 @@ package io.jmix.ui.components.impl;
 
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.*;
 import io.jmix.ui.widgets.CubaGridLayout;
 import com.vaadin.event.LayoutEvents;
@@ -31,6 +31,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import static com.haulmont.cuba.web.gui.components.WebWrapperUtils.toVaadinAlignment;
+import static io.jmix.ui.components.impl.WebWrapperUtils.toVaadinAlignment;
 
 public class WebGridLayout extends WebAbstractComponent<CubaGridLayout> implements GridLayout {
 

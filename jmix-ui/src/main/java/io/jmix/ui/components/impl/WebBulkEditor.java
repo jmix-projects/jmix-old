@@ -17,10 +17,10 @@
 package io.jmix.ui.components.impl;
 
 import io.jmix.core.security.ConstraintOperationType;
+import io.jmix.ui.actions.legacy.LegacyBulkEditAction;
 import io.jmix.ui.components.BulkEditor;
 import io.jmix.ui.components.Field;
 import io.jmix.ui.components.ListComponent;
-import io.jmix.ui.components.actions.BulkEditAction;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +33,7 @@ public class WebBulkEditor extends WebButton implements BulkEditor {
     protected String exclude;
     protected List<String> includeProperties = Collections.emptyList();
     protected OpenType openType = OpenType.DIALOG;
-    protected BulkEditAction bulkEditAction;
+    protected LegacyBulkEditAction bulkEditAction;
     protected ListComponent listComponent;
     protected Map<String, Field.Validator> fieldValidators;
     protected List<Field.Validator> modelValidators;
@@ -98,7 +98,7 @@ public class WebBulkEditor extends WebButton implements BulkEditor {
             boolean enabled = isEnabled();
             boolean visible = isVisible();
 
-            bulkEditAction = BulkEditAction.create(listComponent);
+            bulkEditAction = LegacyBulkEditAction.create(listComponent);
             setAction(bulkEditAction);
 
             if (openType != null) {

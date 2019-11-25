@@ -15,15 +15,14 @@
  */
 package io.jmix.ui.components.impl;
 
+import io.jmix.core.Messages;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.metamodel.model.utils.InstanceUtils;
-import io.jmix.core.Messages;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.components.*;
-import io.jmix.ui.components.data.meta.ValueBinding;
 import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.meta.ValueBinding;
 import io.jmix.ui.components.data.value.ValueBinder;
-import io.jmix.ui.AppUI;
 import io.jmix.ui.widgets.compatibility.CubaValueChangeEvent;
 
 import java.util.ArrayList;

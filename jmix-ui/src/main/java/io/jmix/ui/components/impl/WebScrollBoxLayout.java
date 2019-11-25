@@ -16,7 +16,7 @@
 package io.jmix.ui.components.impl;
 
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.HtmlAttributes.CSS;
 import io.jmix.ui.widgets.CubaHorizontalActionsLayout;

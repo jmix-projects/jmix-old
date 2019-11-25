@@ -24,6 +24,9 @@ import io.jmix.ui.components.data.TreeTableItems;
 import com.haulmont.cuba.web.gui.components.table.TableDataContainer;
 import com.haulmont.cuba.web.gui.components.table.TableItemsEventsDelegate;
 import com.haulmont.cuba.web.gui.components.table.TreeTableDataContainer;
+import io.jmix.ui.components.table.TableDataContainer;
+import io.jmix.ui.components.table.TableItemsEventsDelegate;
+import io.jmix.ui.components.table.TreeTableDataContainer;
 import io.jmix.ui.widgets.CubaTreeTable;
 import io.jmix.ui.widgets.data.AggregationContainer;
 

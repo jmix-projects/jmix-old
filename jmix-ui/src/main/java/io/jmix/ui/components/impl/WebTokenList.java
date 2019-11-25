@@ -16,22 +16,21 @@
 
 package io.jmix.ui.components.impl;
 
-import io.jmix.core.entity.Entity;
 import io.jmix.core.Messages;
 import io.jmix.core.Metadata;
+import io.jmix.core.entity.Entity;
 import io.jmix.ui.ScreenBuilders;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowParams;
 import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.BaseAction;
 import io.jmix.ui.components.*;
-import io.jmix.ui.components.actions.BaseAction;
 import io.jmix.ui.components.data.Options;
 import io.jmix.ui.components.data.ValueSource;
 import io.jmix.ui.components.data.meta.EntityOptions;
 import io.jmix.ui.components.data.meta.EntityValueSource;
 import io.jmix.ui.components.data.value.LegacyCollectionDsValueSource;
-import io.jmix.ui.config.WindowConfig;
 import io.jmix.ui.icons.CubaIcon;
 import io.jmix.ui.icons.Icons;
 import io.jmix.ui.screen.*;

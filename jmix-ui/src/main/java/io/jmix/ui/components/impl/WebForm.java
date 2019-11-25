@@ -16,21 +16,15 @@
 
 package io.jmix.ui.components.impl;
 
+import com.vaadin.ui.GridLayout;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.AppUI;
-import io.jmix.ui.ComponentsHelper;
-import io.jmix.ui.app.security.role.edit.UiPermissionDescriptor;
-import io.jmix.ui.security.UiPermissionValue;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.data.ValueSourceProvider;
-import io.jmix.ui.components.security.ActionsPermissions;
 import io.jmix.ui.security.UiPermissionDescriptor;
 import io.jmix.ui.security.UiPermissionValue;
 import io.jmix.ui.sys.TestIdManager;
-import io.jmix.ui.AppUI;
-import io.jmix.ui.widgets.CubaFieldGroupLayout;
-import com.vaadin.ui.GridLayout;
 import io.jmix.ui.widgets.CubaFieldGroupLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +35,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class WebForm extends WebAbstractComponent<CubaFieldGroupLayout> implements Form, UiPermissionAware {

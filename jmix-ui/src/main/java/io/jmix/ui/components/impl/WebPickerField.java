@@ -55,7 +55,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
-import static io.jmix.ui.ComponentsHelper.findActionById;
+import static io.jmix.ui.components.ComponentsHelper.findActionById;
 
 public class WebPickerField<V extends Entity> extends WebV8AbstractField<CubaPickerField<V>, V, V>
         implements PickerField<V>, SecuredActionsHolder, InitializingBean {

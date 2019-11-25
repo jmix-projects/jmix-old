@@ -16,21 +16,20 @@
 
 package io.jmix.ui.components.impl;
 
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.event.ShortcutListener;
+import com.vaadin.shared.ui.ValueChangeMode;
+import io.jmix.core.Messages;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.metamodel.datatypes.Datatype;
-import io.jmix.ui.components.data.ValueConversionException;
 import io.jmix.core.metamodel.model.Range;
-import io.jmix.core.Messages;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.components.MaskedField;
 import io.jmix.ui.components.data.ConversionException;
 import io.jmix.ui.components.data.DataAwareComponentsTools;
+import io.jmix.ui.components.data.ValueConversionException;
 import io.jmix.ui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
 import io.jmix.ui.widgets.CubaMaskedTextField;
-import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.event.ShortcutListener;
-import com.vaadin.shared.ui.ValueChangeMode;
 import io.jmix.ui.widgets.ShortcutListenerDelegate;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.InitializingBean;
