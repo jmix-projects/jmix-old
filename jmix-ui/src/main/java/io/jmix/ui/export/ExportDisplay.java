@@ -15,6 +15,7 @@
  */
 package io.jmix.ui.export;
 
+import io.jmix.core.entity.FileDescriptor;
 import io.jmix.ui.components.Frame;
 
 import javax.annotation.Nullable;
@@ -45,21 +46,21 @@ public interface ExportDisplay {
      */
     void show(ExportDataProvider dataProvider, String resourceName);
 
-    // todo files
-//    /**
-//     * Export a file from file storage.
-//     *
-//     * @param fileDescriptor file descriptor
-//     * @param format         export format, can be null
-//     */
-//    void show(FileDescriptor fileDescriptor, @Nullable ExportFormat format);
-//
-//    /**
-//     * Export a file from file storage.
-//     *
-//     * @param fileDescriptor file descriptor
-//     */
-//    void show(FileDescriptor fileDescriptor);
+
+    /**
+     * Export a file from file storage.
+     *
+     * @param fileDescriptor file descriptor
+     * @param format         export format, can be null
+     */
+    void show(FileDescriptor fileDescriptor, @Nullable ExportFormat format);
+
+    /**
+     * Export a file from file storage.
+     *
+     * @param fileDescriptor file descriptor
+     */
+    void show(FileDescriptor fileDescriptor);
 
     /**
      * @return true if export display should open a new window with the file content

@@ -16,12 +16,13 @@
 
 package io.jmix.ui.components.impl;
 
+import com.vaadin.event.MouseEvents;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.FileDescriptor;
-import io.jmix.core.sys.BeanLocatorAware;
+import io.jmix.core.impl.BeanLocatorAware;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.components.FileDescriptorResource;
 import io.jmix.ui.components.Image;
@@ -30,7 +31,6 @@ import io.jmix.ui.components.StreamResource;
 import io.jmix.ui.components.data.ValueSource;
 import io.jmix.ui.components.data.meta.EntityValueSource;
 import io.jmix.ui.widgets.CubaImage;
-import com.vaadin.event.MouseEvents;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.io.ByteArrayInputStream;

@@ -21,6 +21,7 @@ import io.jmix.core.DataManager;
 import io.jmix.core.FileStorageException;
 import io.jmix.core.Messages;
 import io.jmix.core.Security;
+import io.jmix.core.entity.FileDescriptor;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
 import io.jmix.ui.components.ComponentsHelper;
@@ -52,7 +53,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.inject.Inject;
-import java.io.*;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
