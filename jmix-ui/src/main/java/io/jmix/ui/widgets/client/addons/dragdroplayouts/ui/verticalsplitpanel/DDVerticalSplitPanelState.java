@@ -13,8 +13,8 @@
  */
 package io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.verticalsplitpanel;
 
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.DDLayoutState;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.DragAndDropAwareState;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.DDLayoutState;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.DragAndDropAwareState;
 import com.vaadin.shared.ui.splitpanel.VerticalSplitPanelState;
 
 public class DDVerticalSplitPanelState extends VerticalSplitPanelState

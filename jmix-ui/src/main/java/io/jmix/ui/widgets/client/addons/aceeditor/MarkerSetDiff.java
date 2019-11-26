@@ -13,9 +13,9 @@
  */
 package io.jmix.ui.widgets.client.addons.aceeditor;
 
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDiff.TransportMarkerAddition;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDiff.TransportMarkerDiff;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDiff.TransportMarkerSetDiff;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDiff.TransportMarkerAddition;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDiff.TransportMarkerDiff;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDiff.TransportMarkerSetDiff;
 
 import java.io.Serializable;
 import java.util.*;

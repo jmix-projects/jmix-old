@@ -13,7 +13,7 @@
  */
 package io.jmix.ui.widgets.client.addons.aceeditor;
 
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDiff.TransportMarkerDiff;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDiff.TransportMarkerDiff;
 
 // TODO This is not the best way to diff markers.
 // This is just stupid line-col diff without considering the

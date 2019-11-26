@@ -13,9 +13,9 @@
  */
 package io.jmix.ui.widgets.client.addons.aceeditor;
 
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDoc.TransportMarker;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDoc.TransportMarkerAnnotation;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDoc.TransportRowAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDoc.TransportMarker;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDoc.TransportMarkerAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDoc.TransportRowAnnotation;
 
 import java.io.Serializable;
 import java.util.Map;

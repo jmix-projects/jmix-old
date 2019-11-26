@@ -13,8 +13,8 @@
  */
 package io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.verticallayout;
 
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.DDLayoutState;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.DragAndDropAwareState;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.DDLayoutState;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.DragAndDropAwareState;
 import com.vaadin.shared.annotations.DelegateToWidget;
 import com.vaadin.shared.ui.orderedlayout.VerticalLayoutState;
 

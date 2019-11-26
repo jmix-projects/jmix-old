@@ -13,7 +13,7 @@
  */
 package io.jmix.ui.widgets.client.addons.aceeditor;
 
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDoc.TransportRange;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDoc.TransportRange;
 import com.vaadin.shared.AbstractFieldState;
 
 import java.util.HashMap;

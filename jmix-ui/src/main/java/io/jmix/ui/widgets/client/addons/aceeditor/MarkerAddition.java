@@ -13,7 +13,7 @@
  */
 package io.jmix.ui.widgets.client.addons.aceeditor;
 
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDiff.TransportMarkerAddition;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDiff.TransportMarkerAddition;
 
 public class MarkerAddition {
 	private final AceMarker marker;

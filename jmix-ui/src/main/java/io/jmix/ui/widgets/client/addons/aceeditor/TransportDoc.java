@@ -13,8 +13,8 @@
  */
 package io.jmix.ui.widgets.client.addons.aceeditor;
 
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceAnnotation.MarkerAnnotation;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceAnnotation.RowAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceAnnotation.MarkerAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceAnnotation.RowAnnotation;
 
 import java.io.Serializable;
 import java.util.Map;

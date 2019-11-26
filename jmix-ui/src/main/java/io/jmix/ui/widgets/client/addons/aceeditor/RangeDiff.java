@@ -13,7 +13,7 @@
  */
 package io.jmix.ui.widgets.client.addons.aceeditor;
 
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDiff.TransportRangeDiff;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDiff.TransportRangeDiff;
 
 public class RangeDiff {
 	private final int drow1;
