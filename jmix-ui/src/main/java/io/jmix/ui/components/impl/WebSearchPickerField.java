@@ -16,13 +16,15 @@
 
 package io.jmix.ui.components.impl;
 
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.ui.ClientConfig;
-import io.jmix.core.entity.Entity;
-import io.jmix.core.Configuration;
+import com.vaadin.server.Resource;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.Messages;
 import io.jmix.core.QueryUtils;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
 import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.App;
+import io.jmix.ui.ClientConfig;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.SearchPickerField;
 import io.jmix.ui.components.SecuredActionsHolder;
@@ -32,14 +34,11 @@ import io.jmix.ui.components.data.meta.EntityValueSource;
 import io.jmix.ui.components.data.meta.OptionsBinding;
 import io.jmix.ui.components.data.options.DatasourceOptions;
 import io.jmix.ui.components.data.options.OptionsBinder;
-import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.model.cuba.CollectionDatasource;
 import io.jmix.ui.model.cuba.Datasource;
-import io.jmix.ui.App;
-import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.widgets.CubaPickerField;
 import io.jmix.ui.widgets.CubaSearchSelectPickerField;
-import com.vaadin.server.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
@@ -51,8 +50,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.haulmont.cuba.web.gui.components.WebLookupField.NULL_ITEM_ICON_GENERATOR;
-import static com.haulmont.cuba.web.gui.components.WebLookupField.NULL_STYLE_GENERATOR;
+import static io.jmix.ui.components.impl.WebLookupField.NULL_ITEM_ICON_GENERATOR;
+import static io.jmix.ui.components.impl.WebLookupField.NULL_STYLE_GENERATOR;
 
 public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
         implements SearchPickerField<V>, SecuredActionsHolder {
@@ -105,7 +104,7 @@ public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
     public void afterPropertiesSet() {
         super.afterPropertiesSet();
 
-        Configuration configuration = beanLocator.get(Configuration.NAME, Configuration.class);
+        ConfigInterfaces configuration = beanLocator.get(ConfigInterfaces.NAME, ConfigInterfaces.class);
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
         setPageLength(clientConfig.getLookupFieldPageLength());
     }

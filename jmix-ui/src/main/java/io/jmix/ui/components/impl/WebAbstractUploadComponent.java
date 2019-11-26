@@ -16,13 +16,12 @@
 
 package io.jmix.ui.components.impl;
 
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
+import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.ClientConfig;
-import io.jmix.core.Configuration;
-import io.jmix.core.security.UserSessionSource;
-import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.components.ComponentContainer;
 import io.jmix.ui.components.UploadField;
 
@@ -71,7 +70,7 @@ public abstract class WebAbstractUploadComponent<T extends com.vaadin.ui.Abstrac
                 fileSizeLimitString = doubleDatatype.format(fileSizeInMb, userSessionSource.getLocale());
             }
         } else {
-            Configuration configuration = beanLocator.get(Configuration.NAME);
+            ConfigInterfaces configuration = beanLocator.get(ConfigInterfaces.NAME);
             fileSizeLimitString = String.valueOf(configuration.getConfig(ClientConfig.class).getMaxUploadSizeMb());
         }
         return fileSizeLimitString;

@@ -17,6 +17,7 @@ package io.jmix.ui.components;
 
 import com.google.common.reflect.TypeToken;
 import io.jmix.core.AppBeans;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.DevelopmentException;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
@@ -221,7 +222,7 @@ public interface PickerField<V extends Entity> extends Field<V>, ActionsHolder, 
 
         protected boolean editable = true;
 
-        protected ClientConfig clientConfig = AppBeans.<Configuration>get(Configuration.NAME).getConfig(ClientConfig.class);
+        protected ClientConfig clientConfig = AppBeans.<ConfigInterfaces>get(ConfigInterfaces.NAME).getConfig(ClientConfig.class);
 
         public StandardAction(String id, PickerField pickerField) {
             super(id);

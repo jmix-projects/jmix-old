@@ -16,7 +16,7 @@
 
 package io.jmix.ui.actions.picker;
 
-import com.haulmont.cuba.core.global.Configuration;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.DevelopmentException;
 import io.jmix.core.Messages;
 import io.jmix.core.entity.Entity;
@@ -68,7 +68,7 @@ public class LookupAction<E extends Entity> extends BaseAction implements Picker
     protected ScreenBuilders screenBuilders;
     protected Icons icons;
     protected Messages messages;
-    protected Configuration configuration;
+    protected ConfigInterfaces configuration;
 
     protected boolean editable = true;
 
@@ -260,7 +260,7 @@ public class LookupAction<E extends Entity> extends BaseAction implements Picker
     }
 
     @Inject
-    protected void setConfiguration(Configuration configuration) {
+    protected void setConfiguration(ConfigInterfaces configuration) {
         this.configuration = configuration;
     }
 

@@ -16,33 +16,31 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.ui.ClientConfig;
-import io.jmix.core.entity.Entity;
-import io.jmix.core.Configuration;
+import com.haulmont.cuba.web.gui.components.valueproviders.EntityNameValueProvider;
+import com.vaadin.data.ValueProvider;
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.Resource;
+import com.vaadin.shared.Registration;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.ClientConfig;
 import io.jmix.ui.actions.Action;
-import io.jmix.ui.components.Action;
 import io.jmix.ui.components.ActionsPermissions;
 import io.jmix.ui.components.KeyCombination;
 import io.jmix.ui.components.PickerField;
 import io.jmix.ui.components.SecuredActionsHolder;
 import io.jmix.ui.components.data.ValueSource;
 import io.jmix.ui.components.data.meta.EntityValueSource;
-import io.jmix.ui.components.security.ActionsPermissions;
 import io.jmix.ui.sys.TestIdManager;
-import io.jmix.ui.AppUI;
-import com.haulmont.cuba.web.gui.components.valueproviders.EntityNameValueProvider;
-import com.haulmont.cuba.web.theme.HaloTheme;
+import io.jmix.ui.theme.HaloTheme;
 import io.jmix.ui.widgets.CubaButton;
 import io.jmix.ui.widgets.CubaPickerField;
-import com.vaadin.data.ValueProvider;
-import com.vaadin.event.ShortcutAction;
-import com.vaadin.server.Resource;
-import com.vaadin.shared.Registration;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -88,7 +86,7 @@ public class WebPickerField<V extends Entity> extends WebV8AbstractField<CubaPic
     }
 
     @Inject
-    protected void setConfiguration(Configuration configuration) {
+    protected void setConfiguration(ConfigInterfaces configuration) {
         actionHandler = new WebPickerFieldActionHandler(configuration);
         component.addActionHandler(actionHandler);
     }
@@ -526,7 +524,7 @@ public class WebPickerField<V extends Entity> extends WebV8AbstractField<CubaPic
 
         protected List<Action> actionList = new ArrayList<>(4);
 
-        public WebPickerFieldActionHandler(Configuration configuration) {
+        public WebPickerFieldActionHandler(ConfigInterfaces configuration) {
             ClientConfig config = configuration.getConfig(ClientConfig.class);
             String[] strModifiers = StringUtils.split(config.getPickerShortcutModifiers().toUpperCase(), "-");
             modifiers = new int[strModifiers.length];

@@ -25,6 +25,7 @@ import com.vaadin.event.Action;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
 import io.jmix.core.AppBeans;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.Messages;
 import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.ParamsMap;
@@ -89,7 +90,7 @@ public class MainTabSheetActionHandler implements Action.Handler {
         actions.add(closeAllTabs);
 
         if (target != null) {
-            Configuration configuration = AppBeans.get(Configuration.NAME);
+            ConfigInterfaces configuration = AppBeans.get(ConfigInterfaces.NAME);
             ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
             if (clientConfig.getManualScreenSettingsSaving()) {
                 actions.add(saveSettings);

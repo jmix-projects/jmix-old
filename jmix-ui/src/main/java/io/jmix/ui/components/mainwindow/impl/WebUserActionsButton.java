@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.cuba.core.global.Configuration;
+import io.jmix.core.ConfigInterfaces;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.UI;
@@ -148,7 +148,7 @@ public class WebUserActionsButton extends WebAbstractComponent<CubaMenuBar>
             throw new IllegalStateException("Logout button is not attached to UI");
         }
 
-        String loginScreenId = beanLocator.get(Configuration.class)
+        String loginScreenId = beanLocator.get(ConfigInterfaces.class)
                 .getConfig(WebConfig.class)
                 .getLoginScreenId();
 

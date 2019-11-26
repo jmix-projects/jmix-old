@@ -16,7 +16,7 @@
 
 package io.jmix.ui.actions.picker;
 
-import com.haulmont.cuba.core.global.Configuration;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.DevelopmentException;
 import io.jmix.core.Messages;
 import io.jmix.core.entity.Entity;
@@ -63,7 +63,7 @@ public class OpenAction extends BaseAction implements PickerField.PickerFieldAct
     protected Icons icons;
 
     protected Messages messages;
-    protected Configuration configuration;
+    protected ConfigInterfaces configuration;
 
     @Inject
     protected ScreenBuilders screenBuilders;
@@ -183,7 +183,7 @@ public class OpenAction extends BaseAction implements PickerField.PickerFieldAct
     }
 
     @Inject
-    protected void setConfiguration(Configuration configuration) {
+    protected void setConfiguration(ConfigInterfaces configuration) {
         this.configuration = configuration;
     }
 

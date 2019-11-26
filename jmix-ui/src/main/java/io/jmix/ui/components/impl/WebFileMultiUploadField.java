@@ -16,19 +16,18 @@
 
 package io.jmix.ui.components.impl;
 
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.ui.ClientConfig;
-import io.jmix.core.Configuration;
+import com.vaadin.ui.Component;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.FileStorageException;
 import io.jmix.core.Messages;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.ClientConfig;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.Notifications.NotificationType;
 import io.jmix.ui.components.ComponentContainer;
 import io.jmix.ui.components.FileMultiUploadField;
 import io.jmix.ui.components.Window;
 import io.jmix.ui.upload.FileUploadingAPI;
-import io.jmix.ui.widgets.CubaFileUpload;
-import com.vaadin.ui.Component;
 import io.jmix.ui.widgets.CubaFileUpload;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -41,8 +40,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static io.jmix.ui.components.ComponentsHelper.getScreenContext;
 import static com.haulmont.cuba.web.gui.FileUploadTypesHelper.convertToMIME;
+import static io.jmix.ui.components.ComponentsHelper.getScreenContext;
 
 public class WebFileMultiUploadField extends WebAbstractUploadComponent<CubaFileUpload>
         implements FileMultiUploadField, InitializingBean {
@@ -78,7 +77,7 @@ public class WebFileMultiUploadField extends WebAbstractUploadComponent<CubaFile
         impl.setDropZonePrompt(messages.getMainMessage("upload.dropZonePrompt"));
         impl.setDescription(null);
 
-        Configuration configuration = beanLocator.get(Configuration.NAME);
+        ConfigInterfaces configuration = beanLocator.get(ConfigInterfaces.NAME);
         int maxUploadSizeMb = configuration.getConfig(ClientConfig.class).getMaxUploadSizeMb();
         int maxSizeBytes = maxUploadSizeMb * BYTES_IN_MEGABYTE;
 

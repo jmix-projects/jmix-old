@@ -16,11 +16,13 @@
 
 package io.jmix.ui.components.impl;
 
+import com.vaadin.event.ShortcutAction;
+import com.vaadin.server.Resource;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.ui.ClientConfig;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.Configuration;
 import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.ClientConfig;
 import io.jmix.ui.components.LookupPickerField;
 import io.jmix.ui.components.SecuredActionsHolder;
 import io.jmix.ui.components.data.Options;
@@ -28,13 +30,9 @@ import io.jmix.ui.components.data.meta.EntityOptions;
 import io.jmix.ui.components.data.meta.EntityValueSource;
 import io.jmix.ui.components.data.meta.OptionsBinding;
 import io.jmix.ui.components.data.options.OptionsBinder;
-import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
-import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.widgets.CubaComboBoxPickerField;
 import io.jmix.ui.widgets.CubaPickerField;
-import com.vaadin.event.ShortcutAction;
-import com.vaadin.server.Resource;
 import io.jmix.ui.widgets.ShortcutListenerDelegate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -99,7 +97,7 @@ public class WebLookupPickerField<V extends Entity> extends WebPickerField<V>
     public void afterPropertiesSet() {
         super.afterPropertiesSet();
 
-        Configuration configuration = beanLocator.get(Configuration.NAME);
+        ConfigInterfaces configuration = beanLocator.get(ConfigInterfaces.NAME);
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
         setPageLength(clientConfig.getLookupFieldPageLength());
     }

@@ -18,6 +18,7 @@ package io.jmix.ui.model.cuba.impl;
 import com.google.common.base.Preconditions;
 import com.haulmont.bali.collections.ReadOnlyLinkedMapValuesView;
 import io.jmix.core.AppBeans;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.LoadContext;
 import io.jmix.core.metamodel.model.Instance;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
@@ -52,15 +53,15 @@ import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
  */
 public class CollectionDatasourceImpl<T extends Entity<K>, K>
         extends
-            AbstractCollectionDatasource<T, K>
+        AbstractCollectionDatasource<T, K>
         implements
-            CollectionDatasource.Indexed<T, K>,
-            CollectionDatasource.Sortable<T, K>,
-            CollectionDatasource.Aggregatable<T, K>,
-            CollectionDatasource.Suspendable<T, K>,
-            CollectionDatasource.SupportsPaging<T, K>,
-            CollectionDatasource.SupportsApplyToSelected<T, K>,
-            CollectionDatasource.SupportsSortDelegate<T, K> {
+        CollectionDatasource.Indexed<T, K>,
+        CollectionDatasource.Sortable<T, K>,
+        CollectionDatasource.Aggregatable<T, K>,
+        CollectionDatasource.Suspendable<T, K>,
+        CollectionDatasource.SupportsPaging<T, K>,
+        CollectionDatasource.SupportsApplyToSelected<T, K>,
+        CollectionDatasource.SupportsSortDelegate<T, K> {
 
     protected LinkedMap data = new LinkedMap();
 
@@ -86,7 +87,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
 
     protected int firstResult;
 
-    protected boolean sortOnDb = AppBeans.<Configuration>get(Configuration.NAME)
+    protected boolean sortOnDb = AppBeans.<ConfigInterfaces>get(ConfigInterfaces.NAME)
             .getConfig(ClientConfig.class).getCollectionDatasourceDbSortEnabled();
 
     protected LoadContext.Query lastQuery;
@@ -605,7 +606,8 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
     /**
      * Load data from middleware into {@link #data} field.
      * <p>In case of error sets {@link #dataLoadError} field to the exception object.</p>
-     * @param params    datasource parameters, as described in {@link CollectionDatasource#refresh(Map)}
+     *
+     * @param params datasource parameters, as described in {@link CollectionDatasource#refresh(Map)}
      */
     protected void loadData(Map<String, Object> params) {
         Security security = AppBeans.get(Security.NAME);
@@ -637,8 +639,8 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
      * This method is invoked by {@link #loadData(Map)} method immediately before loading entities from {@code DataSupplier}.
      * <br>If you override this method, be sure to call {@code super()}.
      *
-     * @param params    datasource parameters, as described in {@link CollectionDatasource#refresh(Map)}
-     * @return          LoadContext which will be used to load data
+     * @param params datasource parameters, as described in {@link CollectionDatasource#refresh(Map)}
+     * @return LoadContext which will be used to load data
      */
     protected LoadContext beforeLoadData(Map<String, Object> params) {
         final LoadContext context = new LoadContext(metaClass);
@@ -675,9 +677,9 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
      * <p>If you override this method, be sure to call {@code super()}. If you process the loaded entities somehow,
      * call {@code super()} after processing.
      *
-     * @param params        datasource parameters, as described in {@link CollectionDatasource#refresh(Map)}
-     * @param context       {@code LoadContext} which was used for loading data
-     * @param entities      loaded entities
+     * @param params   datasource parameters, as described in {@link CollectionDatasource#refresh(Map)}
+     * @param context  {@code LoadContext} which was used for loading data
+     * @param entities loaded entities
      */
     protected void afterLoadData(@SuppressWarnings("unused") Map<String, Object> params, LoadContext context, Collection<T> entities) {
         detachListener(data.values());

@@ -15,9 +15,8 @@
  */
 package io.jmix.ui.screen.legacy;
 
-import com.haulmont.cuba.client.ClientConfig;
-import com.haulmont.cuba.core.global.Configuration;
 import io.jmix.core.AppBeans;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.Messages;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.entity.Entity;
@@ -46,7 +45,7 @@ public class SelectAction extends AbstractAction {
         this.window = window;
         this.primary = true;
 
-        Configuration configuration = AppBeans.get(Configuration.class);
+        ConfigInterfaces configuration = AppBeans.get(ConfigInterfaces.class);
         setShortcut(configuration.getConfig(ClientConfig.class).getCommitShortcut());
 
         Messages messages = AppBeans.get(Messages.NAME);

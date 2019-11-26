@@ -15,16 +15,12 @@
  */
 package io.jmix.ui.components;
 
+import io.jmix.core.*;
 import io.jmix.ui.ClientConfig;
-import io.jmix.core.DevelopmentException;
-import io.jmix.core.Events;
-import io.jmix.core.Messages;
 import io.jmix.ui.Notifications;
-import io.jmix.ui.components.compatibility.WindowManager;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.components.compatibility.WindowManager;
-import io.jmix.ui.model.cuba.DsContext;
 import io.jmix.ui.icons.Icons;
 import io.jmix.ui.model.cuba.DsContext;
 import io.jmix.ui.screen.*;
@@ -409,7 +405,7 @@ public class AbstractFrame extends ScreenFragment implements Frame, Frame.Wrappe
             buffer.append(error.description).append("\n");
         }
 
-        Configuration configuration = AppBeans.get(Configuration.NAME);
+        ConfigInterfaces configuration = AppBeans.get(ConfigInterfaces.NAME);
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
 
         Notifications.NotificationType notificationType = Notifications.NotificationType.valueOf(clientConfig.getValidationNotificationType());

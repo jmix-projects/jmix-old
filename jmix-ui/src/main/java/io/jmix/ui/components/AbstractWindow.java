@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.components;
 
-import io.jmix.core.Configuration;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.Events;
 import io.jmix.core.Messages;
 import io.jmix.core.commons.events.Subscription;
@@ -147,7 +147,7 @@ public class AbstractWindow extends Screen implements Window, LegacyFrame, Compo
             if (closeAction instanceof ChangeTrackerCloseAction
                     && ((ChangeTrackerCloseAction) closeAction).isCheckForUnsavedChanges()
                     && hasUnsavedChanges()) {
-                Configuration configuration = getBeanLocator().get(Configuration.NAME);
+                ConfigInterfaces configuration = getBeanLocator().get(ConfigInterfaces.NAME);
                 ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
 
                 ScreenValidation screenValidation = getBeanLocator().get(ScreenValidation.NAME);

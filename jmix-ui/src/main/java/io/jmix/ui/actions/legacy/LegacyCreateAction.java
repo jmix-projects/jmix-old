@@ -16,10 +16,7 @@
 package io.jmix.ui.actions.legacy;
 
 import com.haulmont.cuba.gui.data.*;
-import io.jmix.core.AppBeans;
-import io.jmix.core.ExtendedEntities;
-import io.jmix.core.Messages;
-import io.jmix.core.Metadata;
+import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -167,7 +164,7 @@ public class LegacyCreateAction extends ListAction
 
         this.icon = AppBeans.get(Icons.class).get(CubaIcon.CREATE_ACTION);
 
-        Configuration configuration = AppBeans.get(Configuration.NAME);
+        ConfigInterfaces configuration = AppBeans.get(ConfigInterfaces.NAME);
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
         setShortcut(clientConfig.getTableInsertShortcut());
 

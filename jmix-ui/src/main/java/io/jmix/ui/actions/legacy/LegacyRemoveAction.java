@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.actions.legacy;
 
-import com.haulmont.cuba.core.global.Configuration;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
 import io.jmix.core.entity.Entity;
@@ -139,7 +139,7 @@ public class LegacyRemoveAction extends ItemTrackingAction
 
         this.icon = AppBeans.get(Icons.class).get(CubaIcon.REMOVE_ACTION);
 
-        Configuration configuration = AppBeans.get(Configuration.NAME);
+        ConfigInterfaces configuration = AppBeans.get(ConfigInterfaces.NAME);
         ClientConfig config = configuration.getConfig(ClientConfig.class);
         setShortcut(config.getTableRemoveShortcut());
     }

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.cuba.core.global.Configuration;
+import io.jmix.core.ConfigInterfaces;
 import com.haulmont.cuba.gui.UrlRouting;
 import com.haulmont.cuba.gui.components.TabSheet.SelectedTabChangeEvent;
 import com.haulmont.cuba.gui.navigation.NavigationState;
@@ -210,7 +210,7 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
     }
 
     protected HasTabSheetBehaviour createTabbedModeContainer() {
-        Configuration configuration = beanLocator.get(Configuration.NAME);
+        ConfigInterfaces configuration = beanLocator.get(ConfigInterfaces.NAME);
         WebConfig webConfig = configuration.getConfig(WebConfig.class);
 
         if (webConfig.getMainTabSheetMode() == MainTabSheetMode.DEFAULT) {
@@ -525,7 +525,7 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
     }
 
     protected ShortcutListener createCloseShortcut(RootWindow topLevelWindow) {
-        Configuration configuration = beanLocator.get(Configuration.NAME);
+        ConfigInterfaces configuration = beanLocator.get(ConfigInterfaces.NAME);
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
         String closeShortcut = clientConfig.getCloseShortcut();
         KeyCombination combination = KeyCombination.create(closeShortcut);
@@ -538,7 +538,7 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
     }
 
     protected ShortcutListener createNextWindowTabShortcut(RootWindow topLevelWindow) {
-        Configuration configuration = beanLocator.get(Configuration.NAME);
+        ConfigInterfaces configuration = beanLocator.get(ConfigInterfaces.NAME);
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
 
         String nextTabShortcut = clientConfig.getNextTabShortcut();
@@ -567,7 +567,7 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
     }
 
     protected ShortcutListener createPreviousWindowTabShortcut(RootWindow topLevelWindow) {
-        Configuration configuration = beanLocator.get(Configuration.NAME);
+        ConfigInterfaces configuration = beanLocator.get(ConfigInterfaces.NAME);
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
 
         String previousTabShortcut = clientConfig.getPreviousTabShortcut();
@@ -711,7 +711,7 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
             return true;
         }
 
-        Configuration configuration = beanLocator.get(Configuration.NAME);
+        ConfigInterfaces configuration = beanLocator.get(ConfigInterfaces.NAME);
         WebConfig webConfig = configuration.getConfig(WebConfig.class);
 
         if (webConfig.getDefaultScreenCanBeClosed()) {

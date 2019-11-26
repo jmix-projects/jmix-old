@@ -149,7 +149,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
     // Beans
 
-    protected Configuration configuration;
+    protected ConfigInterfaces configuration;
     protected IconResolver iconResolver;
     protected MetadataTools metadataTools;
     protected Security security;
@@ -224,7 +224,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     }
 
     @Inject
-    public void setConfiguration(Configuration configuration) {
+    public void setConfiguration(ConfigInterfaces configuration) {
         this.configuration = configuration;
 
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);

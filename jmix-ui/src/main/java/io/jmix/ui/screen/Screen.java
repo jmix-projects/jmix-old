@@ -17,9 +17,11 @@
 package io.jmix.ui.screen;
 
 import io.jmix.core.BeanLocator;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.events.TriggerOnce;
+import io.jmix.ui.ClientConfig;
 import io.jmix.ui.components.Window;
 import io.jmix.ui.components.impl.WindowImplementation;
 import io.jmix.ui.Screens;
@@ -359,15 +361,15 @@ public abstract class Screen implements FrameOwner {
         return true;
     }
 
-    /* todo settings
+    /**
      * @param action close action
      * @return true if UI settings should be saved
      */
-    /*protected boolean isSaveSettingsOnClose(@SuppressWarnings("unused") CloseAction action) {
-        Configuration configuration = beanLocator.get(Configuration.NAME);
+    protected boolean isSaveSettingsOnClose(@SuppressWarnings("unused") CloseAction action) {
+        ConfigInterfaces configuration = beanLocator.get(ConfigInterfaces.NAME);
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
         return !clientConfig.getManualScreenSettingsSaving();
-    }*/
+    }
 
     /**
      * @return true if screen can be opened multiple times from a navigation menu

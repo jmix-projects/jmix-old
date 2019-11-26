@@ -16,28 +16,11 @@
 package io.jmix.ui.screen.legacy;
 
 import com.google.common.collect.Iterables;
-import com.haulmont.chile.core.datatypes.Datatypes;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.client.ClientConfig;
 import com.haulmont.cuba.core.app.LockService;
-import com.haulmont.cuba.core.entity.BaseGenericIdEntity;
 import com.haulmont.cuba.core.entity.Categorized;
 import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.validation.groups.UiCrossFieldChecks;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.GuiDevelopmentException;
-import com.haulmont.cuba.gui.WindowParams;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
 import com.haulmont.cuba.gui.data.*;
-import com.haulmont.cuba.gui.data.impl.CollectionPropertyDatasourceImpl;
-import com.haulmont.cuba.gui.data.impl.DatasourceImplementation;
-import com.haulmont.cuba.gui.data.impl.DsContextImplementation;
-import com.haulmont.cuba.gui.data.impl.EntityCopyUtils;
-import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributesGuiTools;
-import com.haulmont.cuba.gui.screen.ReadOnlyAwareScreen;
 import com.haulmont.cuba.gui.screen.ReadOnlyScreensSupport;
-import com.haulmont.cuba.gui.util.OperationResult;
 import com.haulmont.cuba.security.entity.EntityOp;
 import io.jmix.core.*;
 import io.jmix.core.entity.BaseGenericIdEntity;
@@ -48,6 +31,7 @@ import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.Security;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.core.validation.groups.UiCrossFieldChecks;
+import io.jmix.ui.ClientConfig;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.WindowParams;
 import io.jmix.ui.actions.Action;
@@ -98,7 +82,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
         Component commitAndCloseButton =
                 ComponentsHelper.findComponent(getFrame(), WINDOW_COMMIT_AND_CLOSE);
 
-        Configuration configuration = getBeanLocator().get(Configuration.NAME);
+        ConfigInterfaces configuration = getBeanLocator().get(ConfigInterfaces.NAME);
 
         boolean commitAndCloseButtonExists = false;
         String commitShortcut = configuration.getConfig(ClientConfig.class).getCommitShortcut();
