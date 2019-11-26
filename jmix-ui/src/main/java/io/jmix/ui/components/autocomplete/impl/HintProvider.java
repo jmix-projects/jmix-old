@@ -24,6 +24,7 @@ import com.haulmont.cuba.core.sys.jpql.pointer.CollectionPointer;
 import com.haulmont.cuba.core.sys.jpql.pointer.EntityPointer;
 import com.haulmont.cuba.core.sys.jpql.pointer.NoPointer;
 import com.haulmont.cuba.core.sys.jpql.pointer.Pointer;
+import io.jmix.core.impl.jpql.DomainModel;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.apache.commons.lang3.StringUtils;

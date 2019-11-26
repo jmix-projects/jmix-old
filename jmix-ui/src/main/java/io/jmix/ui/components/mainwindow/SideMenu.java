@@ -16,8 +16,6 @@
 
 package io.jmix.ui.components.mainwindow;
 
-import com.haulmont.cuba.gui.components.Button;
-import com.haulmont.cuba.gui.components.Component;
 import io.jmix.ui.components.Button;
 import io.jmix.ui.components.Component;
 

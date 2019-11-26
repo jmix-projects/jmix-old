@@ -17,9 +17,9 @@
 package io.jmix.ui.components.mainwindow.impl;
 
 import io.jmix.ui.AppUI;
-import com.haulmont.cuba.web.gui.components.WebAbstractComponent;
-import io.jmix.ui.widgets.CubaButton;
+import io.jmix.ui.components.impl.WebAbstractComponent;
 import io.jmix.ui.components.mainwindow.LogoutButton;
+import io.jmix.ui.widgets.CubaButton;
 import org.apache.commons.lang3.StringUtils;
 
 public class WebLogoutButton extends WebAbstractComponent<CubaButton> implements LogoutButton {

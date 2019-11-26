@@ -16,17 +16,17 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.ui.GuiDevelopmentException;
-import io.jmix.ui.WindowManager.OpenType;
 import io.jmix.ui.components.CaptionMode;
 import io.jmix.ui.components.LookupField;
 import io.jmix.ui.components.TokenList;
+import io.jmix.ui.components.compatibility.WindowManager.OpenType;
 import io.jmix.ui.components.data.options.ContainerOptions;
 import io.jmix.ui.components.data.value.LegacyCollectionDsValueSource;
-import io.jmix.ui.data.CollectionDatasource;
-import io.jmix.ui.data.Datasource;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.UiControllerUtils;
 import org.apache.commons.lang3.StringUtils;

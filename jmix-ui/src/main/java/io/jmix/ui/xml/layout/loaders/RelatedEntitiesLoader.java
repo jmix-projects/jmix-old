@@ -18,11 +18,10 @@ package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.WindowConfig;
-import io.jmix.ui.WindowManager.OpenType;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.ListComponent;
 import io.jmix.ui.components.RelatedEntities;
-import io.jmix.ui.config.WindowConfig;
+import io.jmix.ui.components.compatibility.WindowManager.OpenType;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

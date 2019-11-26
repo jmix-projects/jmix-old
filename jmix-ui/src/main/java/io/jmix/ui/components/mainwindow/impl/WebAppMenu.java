@@ -16,17 +16,16 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import io.jmix.ui.AppUI;
-import com.haulmont.cuba.web.gui.components.WebAbstractComponent;
-import io.jmix.ui.icons.IconResolver;
 import com.haulmont.cuba.web.sys.MenuBuilder;
-import io.jmix.ui.widgets.CubaMenuBar;
-import io.jmix.ui.widgets.CubaUI;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.MenuBar;
+import io.jmix.core.AppBeans;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.components.impl.WebAbstractComponent;
 import io.jmix.ui.components.mainwindow.AppMenu;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.widgets.CubaMenuBar;
 import io.jmix.ui.widgets.CubaUI;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -38,7 +37,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class WebAppMenu extends WebAbstractComponent<CubaMenuBar> implements AppMenu {
 

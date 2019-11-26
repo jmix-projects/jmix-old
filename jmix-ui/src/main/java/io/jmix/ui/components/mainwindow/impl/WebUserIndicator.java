@@ -16,19 +16,23 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.cuba.gui.Dialogs;
 import com.haulmont.cuba.security.app.UserManagementService;
-import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.security.entity.UserSubstitution;
-import com.haulmont.cuba.security.global.UserSession;
-import io.jmix.ui.AppUI;
 import com.haulmont.cuba.web.actions.ChangeSubstUserAction;
 import com.haulmont.cuba.web.actions.DoNotChangeSubstUserAction;
-import com.haulmont.cuba.web.gui.components.WebAbstractComponent;
-import io.jmix.ui.widgets.CubaComboBox;
 import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
+import io.jmix.core.Messages;
+import io.jmix.core.MetadataTools;
+import io.jmix.core.entity.User;
+import io.jmix.core.security.UserSession;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.Dialogs;
+import io.jmix.ui.components.impl.WebAbstractComponent;
 import io.jmix.ui.components.mainwindow.UserIndicator;
+import io.jmix.ui.widgets.CubaComboBox;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -36,10 +40,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.haulmont.cuba.gui.ComponentsHelper.getScreenContext;
 import static com.vaadin.server.Sizeable.Unit;
+import static io.jmix.ui.components.ComponentsHelper.getScreenContext;
 
-public class WebUserIndicator extends WebAbstractComponent<com.vaadin.ui.CssLayout> implements UserIndicator {
+public class WebUserIndicator extends WebAbstractComponent<CssLayout> implements UserIndicator {
 
     protected static final String USER_INDICATOR_STYLENAME = "c-userindicator";
 

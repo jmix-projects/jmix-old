@@ -17,21 +17,21 @@
 package io.jmix.ui.components.mainwindow.impl;
 
 import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.Security;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.screen.Screen;
-import io.jmix.ui.AppUI;
-import com.haulmont.cuba.web.WebConfig;
-import com.haulmont.cuba.web.gui.components.WebAbstractComponent;
-import io.jmix.ui.icons.IconResolver;
-import io.jmix.ui.widgets.CubaMenuBar;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.UI;
+import io.jmix.core.Messages;
+import io.jmix.core.security.Security;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.WebConfig;
+import io.jmix.ui.components.impl.WebAbstractComponent;
 import io.jmix.ui.components.mainwindow.UserActionsButton;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.screen.OpenMode;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.widgets.CubaMenuBar;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;

@@ -16,11 +16,11 @@
 
 package io.jmix.ui.relatedentities;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.screen.FrameOwner;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.screen.FrameOwner;
 
 import java.util.Collection;
 import java.util.Map;

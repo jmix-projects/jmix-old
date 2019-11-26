@@ -40,6 +40,19 @@ import com.haulmont.cuba.gui.data.impl.DsContextImplementation;
 import com.haulmont.cuba.gui.screen.*;
 import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
 import com.haulmont.cuba.security.entity.FilterEntity;
+import io.jmix.core.*;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.WindowParams;
+import io.jmix.ui.components.Filter;
+import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.compatibility.LegacyFrame;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.model.cuba.impl.DsContextImplementation;
+import io.jmix.ui.screen.FrameOwner;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentHelper;
@@ -53,6 +66,7 @@ import java.util.stream.Collectors;
 
 import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
 import static com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 @Component(RelatedEntitiesAPI.NAME)
 public class RelatedEntitiesBean implements RelatedEntitiesAPI {

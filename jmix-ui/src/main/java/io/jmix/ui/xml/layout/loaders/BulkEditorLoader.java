@@ -19,7 +19,7 @@ package io.jmix.ui.xml.layout.loaders;
 import com.google.common.base.Splitter;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;
-import io.jmix.ui.ComponentsHelper;
+import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.compatibility.LegacyFrame;

@@ -15,28 +15,18 @@
  */
 package io.jmix.ui.actions.legacy;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
+import com.haulmont.cuba.gui.data.*;
+import io.jmix.core.AppBeans;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.Messages;
+import io.jmix.core.Metadata;
+import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityAttrAccess;
 import io.jmix.core.security.EntityOp;
-import io.jmix.ui.ClientConfig;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.data.*;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
-import com.haulmont.cuba.security.entity.EntityAttrAccess;
-import com.haulmont.cuba.security.entity.EntityOp;
-import io.jmix.core.AppBeans;
-import io.jmix.core.Metadata;
-import io.jmix.core.entity.Entity;
 import io.jmix.core.security.Security;
+import io.jmix.ui.ClientConfig;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.ListAction;

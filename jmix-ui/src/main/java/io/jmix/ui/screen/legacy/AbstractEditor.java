@@ -39,6 +39,28 @@ import com.haulmont.cuba.gui.screen.ReadOnlyAwareScreen;
 import com.haulmont.cuba.gui.screen.ReadOnlyScreensSupport;
 import com.haulmont.cuba.gui.util.OperationResult;
 import com.haulmont.cuba.security.entity.EntityOp;
+import io.jmix.core.*;
+import io.jmix.core.entity.BaseGenericIdEntity;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.datatypes.Datatypes;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.security.Security;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.core.validation.groups.UiCrossFieldChecks;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.WindowParams;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.actions.DialogAction;
+import io.jmix.ui.components.*;
+import io.jmix.ui.model.cuba.*;
+import io.jmix.ui.model.cuba.impl.CollectionPropertyDatasourceImpl;
+import io.jmix.ui.model.cuba.impl.DatasourceImplementation;
+import io.jmix.ui.model.cuba.impl.DsContextImplementation;
+import io.jmix.ui.model.cuba.impl.EntityCopyUtils;
+import io.jmix.ui.screen.ReadOnlyAwareScreen;
+import io.jmix.ui.util.OperationResult;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -192,10 +214,12 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
 
         DatasourceImplementation parentDs = (DatasourceImplementation) ((DatasourceImplementation) ds).getParent();
 
-        DynamicAttributesGuiTools dynamicAttributesGuiTools = getBeanLocator().get(DynamicAttributesGuiTools.NAME);
-        if (dynamicAttributesGuiTools.screenContainsDynamicAttributes(ds.getView(), getFrame().getId())) {
-            ds.setLoadDynamicAttributes(true);
-        }
+        // todo dynamic attributes
+
+//        DynamicAttributesGuiTools dynamicAttributesGuiTools = getBeanLocator().get(DynamicAttributesGuiTools.NAME);
+//        if (dynamicAttributesGuiTools.screenContainsDynamicAttributes(ds.getView(), getFrame().getId())) {
+//            ds.setLoadDynamicAttributes(true);
+//        }
 
         Class<? extends Entity> entityClass = item.getClass();
         Object entityId = item.getId();

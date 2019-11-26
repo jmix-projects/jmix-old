@@ -15,13 +15,16 @@
  */
 package io.jmix.ui.screen.legacy;
 
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.Fragments;
-import com.haulmont.cuba.gui.components.LookupComponent.LookupSelectionChangeNotifier;
-import com.haulmont.cuba.gui.components.Window.Lookup;
-import com.haulmont.cuba.gui.components.actions.BaseAction;
-import com.haulmont.cuba.gui.screen.ScreenFragment;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
+import io.jmix.core.Messages;
+import io.jmix.ui.Fragments;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.components.AbstractWindow;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.LookupComponent;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.screen.ScreenFragment;
+import io.jmix.ui.screen.UiControllerUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -32,7 +35,7 @@ import java.util.function.Predicate;
 /**
  * Base class for lookup screen controllers.
  */
-public class AbstractLookup extends AbstractWindow implements Lookup {
+public class AbstractLookup extends AbstractWindow implements Window.Lookup {
 
     private Predicate<ValidationContext> lookupValidator;
     private Consumer<Collection> lookupHandler;
@@ -118,8 +121,8 @@ public class AbstractLookup extends AbstractWindow implements Lookup {
         }
 
         Component lookupComponent = getLookupComponent();
-        if (lookupComponent instanceof LookupSelectionChangeNotifier) {
-            LookupSelectionChangeNotifier selectionNotifier = (LookupSelectionChangeNotifier) lookupComponent;
+        if (lookupComponent instanceof LookupComponent.LookupSelectionChangeNotifier) {
+            LookupComponent.LookupSelectionChangeNotifier selectionNotifier = (LookupComponent.LookupSelectionChangeNotifier) lookupComponent;
             if (selectAction != null) {
                 //noinspection unchecked
                 selectionNotifier.addLookupValueChangeListener(valueChangeEvent ->

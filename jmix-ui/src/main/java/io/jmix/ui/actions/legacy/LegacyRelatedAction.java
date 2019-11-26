@@ -16,7 +16,6 @@
 
 package io.jmix.ui.actions.legacy;
 
-import com.haulmont.cuba.gui.relatedentities.RelatedEntitiesAPI;
 import io.jmix.core.AppBeans;
 import io.jmix.core.MessageTools;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -27,6 +26,7 @@ import io.jmix.ui.components.Component;
 import io.jmix.ui.components.ListComponent;
 import io.jmix.ui.components.RelatedEntities;
 import io.jmix.ui.components.compatibility.WindowManager.OpenType;
+import io.jmix.ui.relatedentities.RelatedEntitiesAPI;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 

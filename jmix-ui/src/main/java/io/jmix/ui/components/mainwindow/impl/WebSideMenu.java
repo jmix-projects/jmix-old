@@ -16,18 +16,18 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.cuba.gui.components.AbstractAction;
-import com.haulmont.cuba.gui.components.Button;
-import com.haulmont.cuba.gui.components.Component;
-import io.jmix.ui.AppUI;
-import com.haulmont.cuba.web.gui.components.WebAbstractComponent;
-import io.jmix.ui.icons.IconResolver;
 import com.haulmont.cuba.web.sys.SideMenuBuilder;
-import com.haulmont.cuba.web.theme.HaloTheme;
-import io.jmix.ui.widgets.CubaSideMenu;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.Resource;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.actions.AbstractAction;
+import io.jmix.ui.components.Button;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.impl.WebAbstractComponent;
 import io.jmix.ui.components.mainwindow.SideMenu;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.theme.HaloTheme;
+import io.jmix.ui.widgets.CubaSideMenu;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class WebSideMenu extends WebAbstractComponent<CubaSideMenu> implements SideMenu {
 

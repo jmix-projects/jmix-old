@@ -24,6 +24,7 @@ import io.jmix.core.config.defaults.*;
 import io.jmix.core.config.type.CommaSeparatedStringListTypeFactory;
 import io.jmix.core.config.type.Factory;
 import io.jmix.core.config.type.StringListTypeFactory;
+import io.jmix.ui.components.MainTabSheetMode;
 import io.jmix.ui.logging.AppLog;
 
 import java.util.List;
@@ -361,26 +362,26 @@ public interface WebConfig extends Config {
     @DefaultString("0.8")
     String getPageInitialScale();
 
-    /* todo main tabsheet modes
+    /**
      * Sets whether default {@link io.jmix.ui.widgets.CubaMainTabSheet} or
      * {@link io.jmix.ui.widgets.CubaManagedTabSheet} will be used in AppWorkArea.
      *
      * @return one of {@link MainTabSheetMode} values
      */
-    /*@Property("cuba.web.mainTabSheetMode")
+    @Property("cuba.web.mainTabSheetMode")
     @Default("DEFAULT")
     @Factory(factory = MainTabSheetModeFactory.class)
-    MainTabSheetMode getMainTabSheetMode();*/
+    MainTabSheetMode getMainTabSheetMode();
 
-    /* todo main tabsheet modes
+    /**
      * Sets how the managed main TabSheet switches its tabs: hides or unloads them.
      *
      * @return one of {@link ManagedMainTabSheetMode} values
      */
-    /*@Property("cuba.web.managedMainTabSheetMode")
+    @Property("cuba.web.managedMainTabSheetMode")
     @Default("HIDE_TABS")
     @Factory(factory = ManagedMainTabSheetModeFactory.class)
-    ManagedMainTabSheetMode getManagedMainTabSheetMode();*/
+    ManagedMainTabSheetMode getManagedMainTabSheetMode();
 
     /**
      * @return Template path for Internal Server Error page (HTTP Status 500).

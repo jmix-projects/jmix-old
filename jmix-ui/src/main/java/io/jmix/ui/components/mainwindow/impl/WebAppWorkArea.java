@@ -16,34 +16,11 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import io.jmix.ui.ClientConfig;
-import com.haulmont.cuba.core.global.BeanLocator;
 import com.haulmont.cuba.core.global.Configuration;
-import com.haulmont.cuba.core.global.Events;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.Screens.OpenedScreens;
-import com.haulmont.cuba.gui.UiComponents;
 import com.haulmont.cuba.gui.UrlRouting;
 import com.haulmont.cuba.gui.components.TabSheet.SelectedTabChangeEvent;
 import com.haulmont.cuba.gui.navigation.NavigationState;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.gui.util.OperationResult;
-import io.jmix.ui.AppUI;
-import com.haulmont.cuba.web.WebConfig;
-import io.jmix.ui.App.UserSettingsTools;
-import com.haulmont.cuba.web.gui.MainTabSheetMode;
 import com.haulmont.cuba.web.gui.ManagedMainTabSheetMode;
-import com.haulmont.cuba.web.gui.WebWindow;
-import com.haulmont.cuba.web.gui.components.WebAbstractComponent;
-import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
-import com.haulmont.cuba.web.sys.TabWindowContainer;
-import com.haulmont.cuba.web.sys.WindowBreadCrumbs;
-import io.jmix.ui.widgets.*;
-import io.jmix.ui.widgets.addons.dragdroplayouts.drophandlers.DefaultTabSheetDropHandler;
-import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -53,7 +30,21 @@ import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.Events;
+import io.jmix.ui.App.UserSettingsTools;
+import io.jmix.ui.*;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.impl.WebAbstractComponent;
+import io.jmix.ui.components.impl.WebWindow;
 import io.jmix.ui.components.mainwindow.AppWorkArea;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.util.OperationResult;
+import io.jmix.ui.widgets.*;
+import io.jmix.ui.widgets.addons.dragdroplayouts.drophandlers.DefaultTabSheetDropHandler;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
@@ -66,8 +57,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
-import static com.haulmont.cuba.gui.Screens.WindowStack;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 import static java.util.Collections.singletonList;
 
 public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements AppWorkArea, HasInnerComponents {
@@ -368,7 +358,7 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
     }
 
     @Override
-    public Collection<com.haulmont.cuba.gui.components.Component> getInnerComponents() {
+    public Collection<io.jmix.ui.components.Component> getInnerComponents() {
         if (state == State.INITIAL_LAYOUT) {
             return singletonList(getInitialLayout());
         }
@@ -470,8 +460,8 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
     protected void closeAllTabWindows(ComponentContainer container) {
         AppUI ui = (AppUI) component.getUI();
 
-        OpenedScreens openedScreens = ui.getScreens().getOpenedScreens();
-        for (WindowStack windowStack : openedScreens.getWorkAreaStacks()) {
+        Screens.OpenedScreens openedScreens = ui.getScreens().getOpenedScreens();
+        for (Screens.WindowStack windowStack : openedScreens.getWorkAreaStacks()) {
             boolean closed = closeWindowStack(windowStack);
 
             if (!closed) {
@@ -489,7 +479,7 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
         tabsToClose.forEach(tabSheetBehaviour::closeTab);
     }
 
-    protected boolean closeWindowStack(WindowStack windowStack) {
+    protected boolean closeWindowStack(Screens.WindowStack windowStack) {
         boolean closed = true;
 
         Collection<Screen> tabScreens = windowStack.getBreadcrumbs();
@@ -696,11 +686,11 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
             boolean focused = false;
             String focusComponentId = window.getFocusComponent();
             if (focusComponentId != null) {
-                com.haulmont.cuba.gui.components.Component focusComponent = window.getComponent(focusComponentId);
-                if (focusComponent instanceof com.haulmont.cuba.gui.components.Component.Focusable
+                io.jmix.ui.components.Component focusComponent = window.getComponent(focusComponentId);
+                if (focusComponent instanceof io.jmix.ui.components.Component.Focusable
                         && focusComponent.isEnabledRecursive()
                         && focusComponent.isVisibleRecursive()) {
-                    ((com.haulmont.cuba.gui.components.Component.Focusable) focusComponent).focus();
+                    ((io.jmix.ui.components.Component.Focusable) focusComponent).focus();
                     focused = true;
                 }
             }

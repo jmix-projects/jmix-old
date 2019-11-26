@@ -16,28 +16,32 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.chile.core.model.MetaClass;
-import io.jmix.ui.ClientConfig;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.ComponentsHelper;
 import com.haulmont.cuba.gui.Notifications;
 import com.haulmont.cuba.gui.Notifications.NotificationType;
-import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.app.core.dev.LayoutAnalyzer;
 import com.haulmont.cuba.gui.app.core.dev.LayoutTip;
-import com.haulmont.cuba.gui.components.AbstractEditor;
-import com.haulmont.cuba.gui.components.Window;
 import com.haulmont.cuba.gui.components.sys.ShowInfoAction;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.security.global.UserSession;
-import com.haulmont.cuba.web.sys.WindowBreadCrumbs;
-import io.jmix.ui.widgets.HasTabSheetBehaviour;
-import io.jmix.ui.widgets.TabSheetBehaviour;
 import com.vaadin.event.Action;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Messages;
+import io.jmix.core.Metadata;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.security.UserSession;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.ClientConfig;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.WindowInfo;
+import io.jmix.ui.components.ComponentsHelper;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.screen.legacy.AbstractEditor;
+import io.jmix.ui.widgets.HasTabSheetBehaviour;
+import io.jmix.ui.widgets.TabSheetBehaviour;
+import io.jmix.ui.widgets.WindowBreadCrumbs;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -160,7 +164,7 @@ public class MainTabSheetActionHandler implements Action.Handler {
     }
 
     @Nullable
-    protected com.haulmont.cuba.gui.components.Window getWindow(Object target) {
+    protected io.jmix.ui.components.Window getWindow(Object target) {
         if (target instanceof Layout) {
             Layout layout = (Layout) target;
             for (Component component : layout) {
@@ -175,20 +179,20 @@ public class MainTabSheetActionHandler implements Action.Handler {
     }
 
     protected void restoreToDefaults(Object target) {
-        com.haulmont.cuba.gui.components.Window window = getWindow(target);
+        io.jmix.ui.components.Window window = getWindow(target);
         if (window != null) {
             window.deleteSettings();
         }
     }
 
     protected void saveSettings(Object target) {
-        com.haulmont.cuba.gui.components.Window window = getWindow(target);
+        io.jmix.ui.components.Window window = getWindow(target);
         if (window != null) {
             window.saveSettings();
         }
     }
 
-    protected com.haulmont.cuba.gui.components.Window.Editor findEditor(Layout layout) {
+    protected io.jmix.ui.components.Window.Editor findEditor(Layout layout) {
         for (Object component : layout) {
             if (component instanceof WindowBreadCrumbs) {
                 WindowBreadCrumbs breadCrumbs = (WindowBreadCrumbs) component;
@@ -199,7 +203,7 @@ public class MainTabSheetActionHandler implements Action.Handler {
         return null;
     }
 
-    protected com.haulmont.cuba.gui.components.Window findWindow(Layout layout) {
+    protected io.jmix.ui.components.Window findWindow(Layout layout) {
         for (Object component : layout) {
             if (component instanceof WindowBreadCrumbs) {
                 WindowBreadCrumbs breadCrumbs = (WindowBreadCrumbs) component;

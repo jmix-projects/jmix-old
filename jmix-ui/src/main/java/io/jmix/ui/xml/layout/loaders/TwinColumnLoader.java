@@ -20,8 +20,6 @@ import io.jmix.ui.components.CaptionMode;
 import io.jmix.ui.components.DatasourceComponent;
 import io.jmix.ui.components.TwinColumn;
 import io.jmix.ui.components.data.options.ContainerOptions;
-import io.jmix.ui.data.CollectionDatasource;
-import io.jmix.ui.data.Datasource;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.ScreenData;

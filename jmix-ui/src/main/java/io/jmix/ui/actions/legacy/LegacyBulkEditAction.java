@@ -16,35 +16,32 @@
 
 package io.jmix.ui.actions.legacy;
 
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.gui.Notifications;
-import com.haulmont.cuba.gui.Notifications.NotificationType;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.WindowManager.OpenType;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.icons.CubaIcon;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.theme.ThemeConstants;
-import com.haulmont.cuba.gui.theme.ThemeConstantsManager;
-import com.haulmont.cuba.security.entity.ConstraintOperationType;
-import com.haulmont.cuba.security.global.UserSession;
 import io.jmix.core.AppBeans;
+import io.jmix.core.Messages;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.security.ConstraintOperationType;
+import io.jmix.core.security.UserSession;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.Notifications;
+import io.jmix.ui.Notifications.NotificationType;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.WindowInfo;
 import io.jmix.ui.actions.Action;
-import io.jmix.ui.components.BulkEditor;
-import io.jmix.ui.components.Field;
-import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.components.compatibility.WindowManager.OpenType;
+import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icons.Icons;
+import io.jmix.ui.screen.OpenMode;
+import io.jmix.ui.theme.ThemeConstants;
+import io.jmix.ui.theme.ThemeConstantsManager;
 import org.springframework.context.annotation.Scope;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.haulmont.cuba.gui.ComponentsHelper.getScreenContext;
+import static io.jmix.ui.components.ComponentsHelper.getScreenContext;
 
 /**
  * Action used in {@link BulkEditor} visual component.

@@ -25,6 +25,7 @@ import io.jmix.ui.components.impl.WindowImplementation;
 import io.jmix.ui.Screens;
 import io.jmix.ui.WindowInfo;
 import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.settings.Settings;
 import io.jmix.ui.util.OperationResult;
 import org.springframework.context.ApplicationListener;
 
@@ -52,7 +53,7 @@ public abstract class Screen implements FrameOwner {
 
     private Window window;
 
-    // private Settings settings; todo settings
+     private Settings settings;
 
     private EventHub eventHub = new EventHub();
 
@@ -401,41 +402,41 @@ public abstract class Screen implements FrameOwner {
                 && this.getId().equals(openedScreen.getId());
     }
 
-    /* todo settings
+    /**
      * @return screen settings
      */
-    /*protected Settings getSettings() {
+    protected Settings getSettings() {
         return settings;
-    }*/
+    }
 
-    /* todo settings
+    /**
      * Saves screen settings.
      */
-    /*protected void saveSettings() {
+    protected void saveSettings() {
         if (settings != null) {
             ScreenSettings screenSettings = getBeanLocator().get(ScreenSettings.NAME);
             screenSettings.saveSettings(this, settings);
         }
-    }*/
+    }
 
-    /* todo settings
+    /**
      * Applies screen settings to UI components.
      *
      * @param settings screen settings
      */
-    /*protected void applySettings(Settings settings) {
+    protected void applySettings(Settings settings) {
         this.settings = settings;
 
         ScreenSettings screenSettings = getBeanLocator().get(ScreenSettings.NAME);
         screenSettings.applySettings(this, settings);
-    }*/
+    }
 
-    /* todo settings
+    /**
      * Deletes screen settings associated with this screen.
      */
-    /*protected void deleteSettings() {
+    protected void deleteSettings() {
         settings.delete();
-    }*/
+    }
 
     /**
      * Event sent when the screen controller and all its declaratively defined components are created, and dependency

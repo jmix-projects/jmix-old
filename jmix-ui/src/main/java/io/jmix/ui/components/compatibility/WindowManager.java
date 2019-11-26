@@ -18,6 +18,7 @@ package io.jmix.ui.components.compatibility;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
 import io.jmix.ui.*;
+import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.*;
 import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.screen.OpenMode;
@@ -34,12 +35,6 @@ import java.util.Map;
  */
 @Deprecated
 public interface WindowManager extends Screens {
-
-    /**
-     * Constant that is passed to {@link Window#close(String)} and {@link Window#close(String, boolean)} methods when
-     * the screen is closed by window manager. Propagated to {@link Window.CloseListener#windowClosed}.
-     */
-    String MAIN_MENU_ACTION_ID = "mainMenu";
 
     /**
      * How to open a screen: {@link #NEW_TAB}, {@link #THIS_TAB}, {@link #DIALOG}, {@link #NEW_WINDOW}.

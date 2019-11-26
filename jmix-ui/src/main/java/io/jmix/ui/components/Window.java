@@ -21,10 +21,8 @@ import io.jmix.core.validation.groups.UiCrossFieldChecks;
 import io.jmix.ui.ClientConfig;
 import io.jmix.ui.components.compatibility.*;
 import io.jmix.ui.model.cuba.Datasource;
-import io.jmix.ui.screen.CloseAction;
-import io.jmix.ui.screen.EditorScreen;
-import io.jmix.ui.screen.LookupScreen;
-import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.*;
+import io.jmix.ui.settings.Settings;
 import io.jmix.ui.xml.layout.ComponentsFactory;
 
 import javax.annotation.Nullable;
@@ -130,6 +128,35 @@ public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
      */
     @Override
     WindowContext getContext();
+
+    /**
+     * This method is called by the framework after opening the screen to apply user settings to all components.
+     */
+    default void applySettings(Settings settings) {
+        UiControllerUtils.applySettings(getFrameOwner(), settings);
+    }
+
+    /**
+     * This method is called by the framework when closing the screen
+     * to save user settings if they have been changed.
+     */
+    default void saveSettings() {
+        UiControllerUtils.saveSettings(getFrameOwner());
+    }
+    
+    /**
+     * @return object encapsulating user settings for the current screen
+     */
+    default Settings getSettings() {
+        return UiControllerUtils.getSettings(getFrameOwner());
+    }
+
+    /**
+     * This method is called by the framework on reset to defaults action
+     */
+    default void deleteSettings() {
+        UiControllerUtils.deleteSettings(getFrameOwner());
+    }
 
     /**
      * Set a component to be focused after the screen is opened.

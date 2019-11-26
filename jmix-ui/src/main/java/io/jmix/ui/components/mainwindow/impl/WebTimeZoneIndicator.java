@@ -16,11 +16,11 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.cuba.core.global.BeanLocator;
 import com.haulmont.cuba.core.global.TimeZones;
-import com.haulmont.cuba.core.global.UserSessionSource;
-import com.haulmont.cuba.web.gui.components.WebAbstractComponent;
 import com.vaadin.ui.Label;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.impl.WebAbstractComponent;
 import io.jmix.ui.components.mainwindow.TimeZoneIndicator;
 import org.apache.commons.lang3.StringUtils;
 

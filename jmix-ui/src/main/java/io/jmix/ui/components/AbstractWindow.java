@@ -15,25 +15,20 @@
  */
 package io.jmix.ui.components;
 
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.ui.ClientConfig;
 import io.jmix.core.Configuration;
 import io.jmix.core.Events;
 import io.jmix.core.Messages;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.ClientConfig;
 import io.jmix.ui.DialogOptions;
 import io.jmix.ui.WindowInfo;
-import io.jmix.ui.components.compatibility.WindowManager;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.BaseAction;
-import io.jmix.ui.components.actions.BaseAction;
 import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.components.compatibility.WindowManager;
-import io.jmix.ui.config.WindowInfo;
-import io.jmix.ui.model.cuba.DsContext;
 import io.jmix.ui.icons.Icons;
 import io.jmix.ui.model.cuba.DsContext;
 import io.jmix.ui.screen.*;
-import io.jmix.ui.screen.compatibility.LegacyFrame;
 import io.jmix.ui.settings.Settings;
 import io.jmix.ui.util.OperationResult;
 import io.jmix.ui.util.UnknownOperationResult;
@@ -91,7 +86,7 @@ public class AbstractWindow extends Screen implements Window, LegacyFrame, Compo
         return frame;
     }
 
-    @Order(Events.HIGHEST_PLATFORM_PRECEDENCE + 10)
+    @Order(Events.HIGHEST_CORE_PRECEDENCE + 10)
     @Subscribe
     protected void init(InitEvent initEvent) {
         Map<String, Object> params = new HashMap<>(0);
@@ -123,13 +118,13 @@ public class AbstractWindow extends Screen implements Window, LegacyFrame, Compo
         }
     }
 
-    @Order(Events.HIGHEST_PLATFORM_PRECEDENCE + 10)
+    @Order(Events.HIGHEST_CORE_PRECEDENCE + 10)
     @Subscribe
     protected void afterShow(AfterShowEvent event) {
         ready();
     }
 
-    @Order(Events.HIGHEST_PLATFORM_PRECEDENCE + 10)
+    @Order(Events.HIGHEST_CORE_PRECEDENCE + 10)
     @Subscribe
     protected void beforeClose(Screen.BeforeCloseEvent event) {
         CloseAction closeAction = event.getCloseAction();
@@ -926,12 +921,12 @@ public class AbstractWindow extends Screen implements Window, LegacyFrame, Compo
     }
 
     @Override
-    public Subscription addBeforeWindowCloseListener(Consumer<BeforeCloseEvent> listener) {
+    public Subscription addBeforeWindowCloseListener(Consumer<Window.BeforeCloseEvent> listener) {
         return ((Window) frame).addBeforeWindowCloseListener(listener);
     }
 
     @Override
-    public void removeBeforeWindowCloseListener(Consumer<BeforeCloseEvent> listener) {
+    public void removeBeforeWindowCloseListener(Consumer<Window.BeforeCloseEvent> listener) {
         ((Window) frame).removeBeforeWindowCloseListener(listener);
     }
 
