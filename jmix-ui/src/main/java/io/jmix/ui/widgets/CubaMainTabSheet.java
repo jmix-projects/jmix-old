@@ -17,7 +17,7 @@ package io.jmix.ui.widgets;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.DDTabSheet;
+import io.jmix.ui.widgets.addons.dragdroplayouts.DDTabSheet;
 import io.jmix.ui.widgets.client.tabsheet.ClientAction;
 import io.jmix.ui.widgets.client.tabsheet.CubaMainTabSheetClientRpc;
 import io.jmix.ui.widgets.client.tabsheet.CubaMainTabSheetServerRpc;

@@ -92,7 +92,7 @@ public class CubaTree<T> extends Tree<T> implements Action.ShortcutNotifier {
     public void setDataProvider(DataProvider<T, ?> dataProvider) {
         if (!(dataProvider instanceof EnhancedTreeDataProvider)) {
             throw new IllegalArgumentException("DataProvider must implement " +
-                    "com.haulmont.cuba.web.widgets.tree.EnhancedTreeDataProvider");
+                    "io.jmix.ui.widgets.tree.EnhancedTreeDataProvider");
         }
 
         super.setDataProvider(dataProvider);

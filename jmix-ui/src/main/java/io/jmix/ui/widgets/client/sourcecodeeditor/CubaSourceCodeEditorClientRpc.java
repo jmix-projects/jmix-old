@@ -16,10 +16,8 @@
 
 package io.jmix.ui.widgets.client.sourcecodeeditor;
 
-import io.jmix.ui.widgets.client.addons.aceeditor.AceEditorState;
+import com.vaadin.shared.communication.ClientRpc;
 
-public class CubaSourceCodeEditorState extends AceEditorState {
-
-    public boolean handleTabKey = true;
-    public int printMarginColumn = 80;
+public interface CubaSourceCodeEditorClientRpc extends ClientRpc {
+    void resetEditHistory();
 }

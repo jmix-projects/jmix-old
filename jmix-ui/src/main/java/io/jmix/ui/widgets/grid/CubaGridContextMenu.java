@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.grid;
 
-import com.haulmont.cuba.web.widgets.addons.contextmenu.GridContextMenu;
+import io.jmix.ui.widgets.addons.contextmenu.GridContextMenu;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.ContextClickEvent.ContextClickListener;
 import com.vaadin.shared.ui.grid.GridConstants;

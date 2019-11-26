@@ -16,7 +16,6 @@
 
 package io.jmix.ui.widgets;
 
-import com.haulmont.cuba.web.widgets.compatibility.CubaValueChangeEvent;
 import com.vaadin.server.AbstractErrorMessage;
 import com.vaadin.server.CompositeErrorMessage;
 import com.vaadin.server.ErrorMessage;

@@ -34,8 +34,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static com.haulmont.cuba.web.widgets.ContentSwitchMode.HIDE;
-import static com.haulmont.cuba.web.widgets.ContentSwitchMode.UNLOAD;
+import static io.jmix.ui.widgets.ContentSwitchMode.HIDE;
+import static io.jmix.ui.widgets.ContentSwitchMode.UNLOAD;
 
 public class CubaManagedTabSheet extends CubaTabSheetCssLayout
         implements Component.Focusable, FieldEvents.FocusNotifier, FieldEvents.BlurNotifier, HasTabSheetBehaviour {

@@ -18,9 +18,9 @@ package io.jmix.ui.widgets;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
-import com.haulmont.cuba.web.widgets.data.AggregationContainer;
-import com.haulmont.cuba.web.widgets.data.TableSortableContainer;
-import com.haulmont.cuba.web.widgets.data.util.NullTreeTableContainer;
+import io.jmix.ui.widgets.data.AggregationContainer;
+import io.jmix.ui.widgets.data.TableSortableContainer;
+import io.jmix.ui.widgets.data.util.NullTreeTableContainer;
 import com.vaadin.event.Action;
 import com.vaadin.event.ActionManager;
 import com.vaadin.event.ShortcutListener;
