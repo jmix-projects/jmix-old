@@ -13,13 +13,13 @@
  */
 package io.jmix.ui.widgets.addons.aceeditor;
 
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceAnnotation.MarkerAnnotation;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceAnnotation.RowAnnotation;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.*;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDiff.TransportSetDiffForMarkerAnnotations;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDiff.TransportSetDiffForRowAnnotations;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDoc.TransportMarkerAnnotation;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDoc.TransportRowAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceAnnotation.MarkerAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceAnnotation.RowAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.*;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDiff.TransportSetDiffForMarkerAnnotations;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDiff.TransportSetDiffForRowAnnotations;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDoc.TransportMarkerAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDoc.TransportRowAnnotation;
 import name.fraser.neil.plaintext.diff_match_patch;
 import name.fraser.neil.plaintext.diff_match_patch.Patch;
 

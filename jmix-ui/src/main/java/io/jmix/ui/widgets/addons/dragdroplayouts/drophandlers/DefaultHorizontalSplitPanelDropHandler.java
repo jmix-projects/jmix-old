@@ -13,10 +13,10 @@
  */
 package io.jmix.ui.widgets.addons.dragdroplayouts.drophandlers;
 
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.DDHorizontalSplitPanel;
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.DDHorizontalSplitPanel.HorizontalSplitPanelTargetDetails;
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.events.HorizontalLocationIs;
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.events.LayoutBoundTransferable;
+import io.jmix.ui.widgets.addons.dragdroplayouts.DDHorizontalSplitPanel;
+import io.jmix.ui.widgets.addons.dragdroplayouts.DDHorizontalSplitPanel.HorizontalSplitPanelTargetDetails;
+import io.jmix.ui.widgets.addons.dragdroplayouts.events.HorizontalLocationIs;
+import io.jmix.ui.widgets.addons.dragdroplayouts.events.LayoutBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Not;

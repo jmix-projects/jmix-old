@@ -13,11 +13,11 @@
  */
 package io.jmix.ui.widgets.addons.dragdroplayouts;
 
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.drophandlers.AbstractDefaultLayoutDropHandler;
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.interfaces.*;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.DragCaptionInfo;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.DDLayoutState;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.DragAndDropAwareState;
+import io.jmix.ui.widgets.addons.dragdroplayouts.drophandlers.AbstractDefaultLayoutDropHandler;
+import io.jmix.ui.widgets.addons.dragdroplayouts.interfaces.*;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.DragCaptionInfo;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.DDLayoutState;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.DragAndDropAwareState;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.server.KeyMapper;

@@ -13,11 +13,11 @@
  */
 package io.jmix.ui.widgets.addons.dragdroplayouts;
 
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.events.LayoutBoundTransferable;
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.interfaces.*;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.Constants;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.gridlayout.DDGridLayoutState;
+import io.jmix.ui.widgets.addons.dragdroplayouts.events.LayoutBoundTransferable;
+import io.jmix.ui.widgets.addons.dragdroplayouts.interfaces.*;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.Constants;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.gridlayout.DDGridLayoutState;
 import com.vaadin.event.Transferable;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.event.dd.DropTarget;

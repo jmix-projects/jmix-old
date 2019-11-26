@@ -13,8 +13,8 @@
  */
 package io.jmix.ui.widgets.addons.dragdroplayouts.drophandlers;
 
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.DDHorizontalLayout.HorizontalLayoutTargetDetails;
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.events.LayoutBoundTransferable;
+import io.jmix.ui.widgets.addons.dragdroplayouts.DDHorizontalLayout.HorizontalLayoutTargetDetails;
+import io.jmix.ui.widgets.addons.dragdroplayouts.events.LayoutBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.shared.ui.dd.HorizontalDropLocation;
 import com.vaadin.ui.*;

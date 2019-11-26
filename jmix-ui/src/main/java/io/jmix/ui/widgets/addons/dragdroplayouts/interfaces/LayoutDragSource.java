@@ -13,7 +13,7 @@
  */
 package io.jmix.ui.widgets.addons.dragdroplayouts.interfaces;
 
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
 import com.vaadin.event.dd.DragSource;
 
 /**

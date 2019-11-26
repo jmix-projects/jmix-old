@@ -13,7 +13,7 @@
  */
 package io.jmix.ui.widgets.addons.dragdroplayouts.details;
 
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.DDAccordion;
+import io.jmix.ui.widgets.addons.dragdroplayouts.DDAccordion;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.dd.VerticalDropLocation;

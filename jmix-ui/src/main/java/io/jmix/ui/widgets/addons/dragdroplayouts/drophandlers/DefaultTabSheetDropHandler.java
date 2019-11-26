@@ -13,10 +13,10 @@
  */
 package io.jmix.ui.widgets.addons.dragdroplayouts.drophandlers;
 
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.DDTabSheet;
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.DDTabSheet.TabSheetTargetDetails;
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.events.HorizontalLocationIs;
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.events.LayoutBoundTransferable;
+import io.jmix.ui.widgets.addons.dragdroplayouts.DDTabSheet;
+import io.jmix.ui.widgets.addons.dragdroplayouts.DDTabSheet.TabSheetTargetDetails;
+import io.jmix.ui.widgets.addons.dragdroplayouts.events.HorizontalLocationIs;
+import io.jmix.ui.widgets.addons.dragdroplayouts.events.LayoutBoundTransferable;
 import com.vaadin.event.dd.DragAndDropEvent;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.event.dd.acceptcriteria.Not;

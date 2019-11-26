@@ -16,10 +16,10 @@
 
 package io.jmix.ui.widgets.addons.contextmenu;
 
-import com.haulmont.cuba.web.widgets.client.addons.contextmenu.ContextMenuClientRpc;
-import com.haulmont.cuba.web.widgets.client.addons.contextmenu.ContextMenuItemState;
-import com.haulmont.cuba.web.widgets.client.addons.contextmenu.ContextMenuServerRpc;
-import com.haulmont.cuba.web.widgets.client.addons.contextmenu.ContextMenuState;
+import io.jmix.ui.widgets.client.addons.contextmenu.ContextMenuClientRpc;
+import io.jmix.ui.widgets.client.addons.contextmenu.ContextMenuItemState;
+import io.jmix.ui.widgets.client.addons.contextmenu.ContextMenuServerRpc;
+import io.jmix.ui.widgets.client.addons.contextmenu.ContextMenuState;
 import com.vaadin.event.ContextClickEvent;
 import com.vaadin.event.ContextClickEvent.ContextClickListener;
 import com.vaadin.event.ContextClickEvent.ContextClickNotifier;

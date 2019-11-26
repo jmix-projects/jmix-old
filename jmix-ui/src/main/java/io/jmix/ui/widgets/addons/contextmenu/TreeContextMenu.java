@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.addons.contextmenu;
 
-import com.haulmont.cuba.web.widgets.addons.contextmenu.ContextMenu.ContextMenuOpenListener.ContextMenuOpenEvent;
+import io.jmix.ui.widgets.addons.contextmenu.ContextMenu.ContextMenuOpenListener.ContextMenuOpenEvent;
 import com.vaadin.ui.Tree;
 import com.vaadin.ui.Tree.TreeContextClickEvent;
 

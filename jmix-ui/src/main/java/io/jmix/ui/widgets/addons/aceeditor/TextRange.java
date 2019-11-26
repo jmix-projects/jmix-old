@@ -13,8 +13,8 @@
  */
 package io.jmix.ui.widgets.addons.aceeditor;
 
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceRange;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.Util;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceRange;
+import io.jmix.ui.widgets.client.addons.aceeditor.Util;
 
 public class TextRange extends AceRange {
 

@@ -13,8 +13,8 @@
  */
 package io.jmix.ui.widgets.addons.popupbutton;
 
-import com.haulmont.cuba.web.widgets.client.addons.popupbutton.PopupButtonServerRpc;
-import com.haulmont.cuba.web.widgets.client.addons.popupbutton.PopupButtonState;
+import io.jmix.ui.widgets.client.addons.popupbutton.PopupButtonServerRpc;
+import io.jmix.ui.widgets.client.addons.popupbutton.PopupButtonState;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.*;
 import com.vaadin.util.ReflectTools;

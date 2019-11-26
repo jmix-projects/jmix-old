@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.addons.contextmenu;
 
-import com.haulmont.cuba.web.widgets.addons.contextmenu.ContextMenu.ContextMenuOpenListener.ContextMenuOpenEvent;
+import io.jmix.ui.widgets.addons.contextmenu.ContextMenu.ContextMenuOpenListener.ContextMenuOpenEvent;
 import com.vaadin.shared.ui.grid.GridConstants.Section;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.Column;

@@ -13,7 +13,7 @@
  */
 package io.jmix.ui.widgets.addons.dragdroplayouts.events;
 
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.Constants;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.Constants;
 import com.vaadin.event.TransferableImpl;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.Component;

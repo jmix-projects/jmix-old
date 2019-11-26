@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.addons.aceeditor;
 
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportSuggestion;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportSuggestion;
 
 /**
  * A single suggestion.

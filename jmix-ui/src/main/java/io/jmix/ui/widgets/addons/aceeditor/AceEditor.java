@@ -13,13 +13,13 @@
  */
 package io.jmix.ui.widgets.addons.aceeditor;
 
-import com.haulmont.cuba.web.widgets.WebJarResource;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.*;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceAnnotation.MarkerAnnotation;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceAnnotation.RowAnnotation;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceMarker.OnTextChange;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceMarker.Type;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDoc.TransportRange;
+import io.jmix.ui.widgets.WebJarResource;
+import io.jmix.ui.widgets.client.addons.aceeditor.*;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceAnnotation.MarkerAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceAnnotation.RowAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceMarker.OnTextChange;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceMarker.Type;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDoc.TransportRange;
 import com.vaadin.event.FieldEvents.*;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.AbstractField;

@@ -13,7 +13,7 @@
  */
 package io.jmix.ui.widgets.addons.dragdroplayouts.interfaces;
 
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.DragCaption;
+import io.jmix.ui.widgets.addons.dragdroplayouts.DragCaption;
 import com.vaadin.ui.Component;
 
 /**

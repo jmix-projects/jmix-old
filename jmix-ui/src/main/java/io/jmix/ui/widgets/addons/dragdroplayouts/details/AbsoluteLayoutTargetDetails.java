@@ -13,8 +13,8 @@
  */
 package io.jmix.ui.widgets.addons.dragdroplayouts.details;
 
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.DDAbsoluteLayout;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.Constants;
+import io.jmix.ui.widgets.addons.dragdroplayouts.DDAbsoluteLayout;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.Constants;
 import com.vaadin.event.dd.TargetDetailsImpl;
 import com.vaadin.shared.MouseEventDetails;
 
