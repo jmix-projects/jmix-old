@@ -20,8 +20,6 @@ import io.jmix.ui.components.CaptionMode;
 import io.jmix.ui.components.DatasourceComponent;
 import io.jmix.ui.components.OptionsField;
 import io.jmix.ui.components.data.options.ContainerOptions;
-import io.jmix.ui.data.CollectionDatasource;
-import io.jmix.ui.data.Datasource;
 import io.jmix.ui.model.cuba.CollectionDatasource;
 import io.jmix.ui.model.cuba.Datasource;
 import org.apache.commons.lang3.StringUtils;
