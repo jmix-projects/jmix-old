@@ -16,32 +16,18 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.cuba.security.app.UserManagementService;
-import com.haulmont.cuba.security.entity.UserSubstitution;
-import com.haulmont.cuba.web.actions.ChangeSubstUserAction;
-import com.haulmont.cuba.web.actions.DoNotChangeSubstUserAction;
-import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
-import io.jmix.core.Messages;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.entity.User;
-import io.jmix.core.security.UserSession;
-import io.jmix.core.security.UserSessionSource;
-import io.jmix.ui.AppUI;
-import io.jmix.ui.Dialogs;
 import io.jmix.ui.components.impl.WebAbstractComponent;
 import io.jmix.ui.components.mainwindow.UserIndicator;
 import io.jmix.ui.widgets.CubaComboBox;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 
 import static com.vaadin.server.Sizeable.Unit;
-import static io.jmix.ui.components.ComponentsHelper.getScreenContext;
 
 public class WebUserIndicator extends WebAbstractComponent<CssLayout> implements UserIndicator {
 
@@ -64,132 +50,134 @@ public class WebUserIndicator extends WebAbstractComponent<CssLayout> implements
         this.metadataTools = metadataTools;
     }
 
-    @Override
-    public void refreshUserSubstitutions() {
-        component.removeAllComponents();
+    // todo user substitution
 
-        UserSessionSource uss = beanLocator.get(UserSessionSource.NAME);
-        List<UserSubstitution> substitutions = getUserSubstitutions();
-
-        AppUI ui = AppUI.getCurrent();
-
-        User currentOrSubstitutedUser = uss.getUserSession().getCurrentOrSubstitutedUser();
-        if (substitutions.isEmpty()) {
-            String substitutedUserCaption = getSubstitutedUserCaption(currentOrSubstitutedUser);
-
-            userComboBox = null;
-
-            userNameLabel = new Label(substitutedUserCaption);
-            userNameLabel.setStyleName("c-user-select-label");
-            userNameLabel.setSizeUndefined();
-
-            if (ui != null && ui.isTestMode()) {
-                userNameLabel.setCubaId("currentUserLabel");
-            }
-
-            component.addComponent(userNameLabel);
-            component.setDescription(substitutedUserCaption);
-        } else {
-            userNameLabel = null;
-
-            userComboBox = new CubaComboBox<>();
-            userComboBox.setEmptySelectionAllowed(false);
-            userComboBox.setItemCaptionGenerator(this::getSubstitutedUserCaption);
-            userComboBox.setStyleName("c-user-select-combobox");
-
-            if (ui != null) {
-                if (ui.isTestMode()) {
-                    userComboBox.setCubaId("substitutedUserSelect");
-                }
-                if (ui.isPerformanceTestMode()) {
-                    userComboBox.setId(ui.getTestIdManager().getTestId("substitutedUserSelect"));
-                }
-            }
-            List<User> options = new ArrayList<>();
-            User sessionUser = uss.getUserSession().getUser();
-            options.add(sessionUser);
-
-            for (UserSubstitution substitution : substitutions) {
-                User substitutedUser = substitution.getSubstitutedUser();
-                options.add(substitutedUser);
-            }
-
-            userComboBox.setItems(options);
-
-            userComboBox.setValue(currentOrSubstitutedUser);
-            userComboBox.addValueChangeListener(this::substitutedUserChanged);
-
-            component.addComponent(userComboBox);
-            component.setDescription(null);
-        }
-
-        adjustWidth();
-        adjustHeight();
-    }
-
-    protected void substitutedUserChanged(ValueChangeEvent<User> event) {
-        UserSessionSource uss = beanLocator.get(UserSessionSource.NAME);
-
-        User newUser = event.getValue();
-        UserSession userSession = uss.getUserSession();
-        if (userSession == null) {
-            throw new RuntimeException("No user session found");
-        }
-
-        User oldUser = userSession.getSubstitutedUser() == null ? userSession.getUser() : userSession.getSubstitutedUser();
-
-        if (!oldUser.equals(newUser)) {
-            String newUserName = StringUtils.isBlank(newUser.getName()) ? newUser.getLogin() : newUser.getName();
-
-            Messages messages = beanLocator.get(Messages.NAME);
-
-            Dialogs dialogs = getScreenContext(this).getDialogs();
-
-            dialogs.createOptionDialog()
-                    .withCaption(messages.getMainMessage("substUserSelectDialog.title"))
-                    .withMessage(messages.formatMainMessage("substUserSelectDialog.msg", newUserName))
-                    .withType(Dialogs.MessageType.WARNING)
-                    .withActions(
-                            new ChangeSubstUserAction(userComboBox.getValue()) {
-                                @Override
-                                public void doRevert() {
-                                    super.doRevert();
-
-                                    revertToCurrentUser();
-                                }
-                            }, new DoNotChangeSubstUserAction() {
-                                @Override
-                                public void actionPerform(com.haulmont.cuba.gui.components.Component component) {
-                                    super.actionPerform(component);
-
-                                    revertToCurrentUser();
-                                }
-                            })
-                    .show();
-        }
-    }
-
-    protected String getSubstitutedUserCaption(User user) {
-        if (userNameFormatter != null) {
-            return userNameFormatter.apply(user);
-        } else {
-            return metadataTools.getInstanceName(user);
-        }
-    }
-
-    protected List<UserSubstitution> getUserSubstitutions() {
-        UserManagementService userManagementService = beanLocator.get(UserManagementService.NAME);
-        UserSessionSource uss = beanLocator.get(UserSessionSource.NAME);
-
-        return userManagementService.getSubstitutedUsers(uss.getUserSession().getUser().getId());
-    }
-
-    protected void revertToCurrentUser() {
-        UserSessionSource uss = beanLocator.get(UserSessionSource.NAME);
-        UserSession us = uss.getUserSession();
-
-        userComboBox.setValue(us.getCurrentOrSubstitutedUser());
-    }
+//    @Override
+//    public void refreshUserSubstitutions() {
+//        component.removeAllComponents();
+//
+//        UserSessionSource uss = beanLocator.get(UserSessionSource.NAME);
+//        List<UserSubstitution> substitutions = getUserSubstitutions();
+//
+//        AppUI ui = AppUI.getCurrent();
+//
+//        User currentOrSubstitutedUser = uss.getUserSession().getCurrentOrSubstitutedUser();
+//        if (substitutions.isEmpty()) {
+//            String substitutedUserCaption = getSubstitutedUserCaption(currentOrSubstitutedUser);
+//
+//            userComboBox = null;
+//
+//            userNameLabel = new Label(substitutedUserCaption);
+//            userNameLabel.setStyleName("c-user-select-label");
+//            userNameLabel.setSizeUndefined();
+//
+//            if (ui != null && ui.isTestMode()) {
+//                userNameLabel.setCubaId("currentUserLabel");
+//            }
+//
+//            component.addComponent(userNameLabel);
+//            component.setDescription(substitutedUserCaption);
+//        } else {
+//            userNameLabel = null;
+//
+//            userComboBox = new CubaComboBox<>();
+//            userComboBox.setEmptySelectionAllowed(false);
+//            userComboBox.setItemCaptionGenerator(this::getSubstitutedUserCaption);
+//            userComboBox.setStyleName("c-user-select-combobox");
+//
+//            if (ui != null) {
+//                if (ui.isTestMode()) {
+//                    userComboBox.setCubaId("substitutedUserSelect");
+//                }
+//                if (ui.isPerformanceTestMode()) {
+//                    userComboBox.setId(ui.getTestIdManager().getTestId("substitutedUserSelect"));
+//                }
+//            }
+//            List<User> options = new ArrayList<>();
+//            User sessionUser = uss.getUserSession().getUser();
+//            options.add(sessionUser);
+//
+//            for (UserSubstitution substitution : substitutions) {
+//                User substitutedUser = substitution.getSubstitutedUser();
+//                options.add(substitutedUser);
+//            }
+//
+//            userComboBox.setItems(options);
+//
+//            userComboBox.setValue(currentOrSubstitutedUser);
+//            userComboBox.addValueChangeListener(this::substitutedUserChanged);
+//
+//            component.addComponent(userComboBox);
+//            component.setDescription(null);
+//        }
+//
+//        adjustWidth();
+//        adjustHeight();
+//    }
+//
+//    protected void substitutedUserChanged(ValueChangeEvent<User> event) {
+//        UserSessionSource uss = beanLocator.get(UserSessionSource.NAME);
+//
+//        User newUser = event.getValue();
+//        UserSession userSession = uss.getUserSession();
+//        if (userSession == null) {
+//            throw new RuntimeException("No user session found");
+//        }
+//
+//        User oldUser = userSession.getSubstitutedUser() == null ? userSession.getUser() : userSession.getSubstitutedUser();
+//
+//        if (!oldUser.equals(newUser)) {
+//            String newUserName = StringUtils.isBlank(newUser.getName()) ? newUser.getLogin() : newUser.getName();
+//
+//            Messages messages = beanLocator.get(Messages.NAME);
+//
+//            Dialogs dialogs = getScreenContext(this).getDialogs();
+//
+//            dialogs.createOptionDialog()
+//                    .withCaption(messages.getMainMessage("substUserSelectDialog.title"))
+//                    .withMessage(messages.formatMainMessage("substUserSelectDialog.msg", newUserName))
+//                    .withType(Dialogs.MessageType.WARNING)
+//                    .withActions(
+//                            new ChangeSubstUserAction(userComboBox.getValue()) {
+//                                @Override
+//                                public void doRevert() {
+//                                    super.doRevert();
+//
+//                                    revertToCurrentUser();
+//                                }
+//                            }, new DoNotChangeSubstUserAction() {
+//                                @Override
+//                                public void actionPerform(io.jmix.ui.components.Component component) {
+//                                    super.actionPerform(component);
+//
+//                                    revertToCurrentUser();
+//                                }
+//                            })
+//                    .show();
+//        }
+//    }
+//
+//    protected String getSubstitutedUserCaption(User user) {
+//        if (userNameFormatter != null) {
+//            return userNameFormatter.apply(user);
+//        } else {
+//            return metadataTools.getInstanceName(user);
+//        }
+//    }
+//
+//    protected List<UserSubstitution> getUserSubstitutions() {
+//        UserManagementService userManagementService = beanLocator.get(UserManagementService.NAME);
+//        UserSessionSource uss = beanLocator.get(UserSessionSource.NAME);
+//
+//        return userManagementService.getSubstitutedUsers(uss.getUserSession().getUser().getId());
+//    }
+//
+//    protected void revertToCurrentUser() {
+//        UserSessionSource uss = beanLocator.get(UserSessionSource.NAME);
+//        UserSession us = uss.getUserSession();
+//
+//        userComboBox.setValue(us.getCurrentOrSubstitutedUser());
+//    }
 
     @Override
     public void setWidth(String width) {
@@ -240,7 +228,7 @@ public class WebUserIndicator extends WebAbstractComponent<CssLayout> implements
     @Override
     public void setUserNameFormatter(Function<? super User, String> userNameFormatter) {
         this.userNameFormatter = userNameFormatter;
-        refreshUserSubstitutions();
+//        refreshUserSubstitutions();
     }
 
     @SuppressWarnings("unchecked")

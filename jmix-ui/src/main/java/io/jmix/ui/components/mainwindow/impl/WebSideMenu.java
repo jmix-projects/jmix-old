@@ -16,7 +16,6 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.cuba.web.sys.SideMenuBuilder;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.Resource;
 import io.jmix.ui.AppUI;
@@ -26,6 +25,7 @@ import io.jmix.ui.components.Component;
 import io.jmix.ui.components.impl.WebAbstractComponent;
 import io.jmix.ui.components.mainwindow.SideMenu;
 import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.menu.SideMenuBuilder;
 import io.jmix.ui.theme.HaloTheme;
 import io.jmix.ui.widgets.CubaSideMenu;
 

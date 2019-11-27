@@ -25,7 +25,8 @@ public interface UserIndicator extends Component.BelongToFrame {
 
     String NAME = "userIndicator";
 
-    void refreshUserSubstitutions();
+    // todo user substitutions
+//    void refreshUserSubstitutions();
 
     /**
      * Assign a formatter that change user name caption.

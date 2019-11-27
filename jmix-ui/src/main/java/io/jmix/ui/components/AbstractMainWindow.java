@@ -16,27 +16,19 @@
 
 package io.jmix.ui.components;
 
-import io.jmix.core.Events;
-import io.jmix.core.FtsConfigHelper;
 import io.jmix.ui.ScreenTools;
 import io.jmix.ui.Screens;
-import io.jmix.ui.components.dev.LayoutAnalyzerContextMenuProvider;
-import io.jmix.ui.components.mainwindow.FoldersPane;
-import io.jmix.ui.components.mainwindow.FtsField;
-import io.jmix.ui.events.UserRemovedEvent;
-import io.jmix.ui.events.UserSubstitutionsChangedEvent;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 /**
+ *
  * Legacy base class for a controller of application Main window.
  */
 public class AbstractMainWindow extends AbstractTopLevelWindow
-        implements Window.HasWorkArea, Window.HasUserIndicator, Window.HasFoldersPane {
+        implements Window.HasWorkArea, Window.HasUserIndicator /*, Window.HasFoldersPane*/ {
 
     protected static final String APP_LOGO_IMAGE = "application.logoImage";
 
@@ -47,7 +39,7 @@ public class AbstractMainWindow extends AbstractTopLevelWindow
 
     protected AppWorkArea workArea;
     protected UserIndicator userIndicator;
-    protected FoldersPane foldersPane;
+//    protected FoldersPane foldersPane; // todo folders pane
 
     public AbstractMainWindow() {
         addInitListener(this::initComponents);
@@ -56,7 +48,7 @@ public class AbstractMainWindow extends AbstractTopLevelWindow
     protected void initComponents(@SuppressWarnings("unused") InitEvent e) {
         workArea = getWorkArea();
         userIndicator = getUserIndicator();
-        foldersPane = getFoldersPane();
+//        foldersPane = getFoldersPane();
     }
 
     @Override
@@ -71,11 +63,12 @@ public class AbstractMainWindow extends AbstractTopLevelWindow
         return (UserIndicator) getComponent("userIndicator");
     }
 
-    @Nullable
-    @Override
-    public FoldersPane getFoldersPane() {
-        return (FoldersPane) getComponent("foldersPane");
-    }
+    //todo folders pane
+//    @Nullable
+//    @Override
+//    public FoldersPane getFoldersPane() {
+//        return (FoldersPane) getComponent("foldersPane");
+//    }
 
     protected void initLogoImage(Image logoImage) {
         String logoImagePath = messages.getMainMessage(APP_LOGO_IMAGE);
@@ -86,35 +79,39 @@ public class AbstractMainWindow extends AbstractTopLevelWindow
         }
     }
 
+    // todo fts
 //    protected void initFtsField(FtsField ftsField) {
 //        if (ftsField != null && !FtsConfigHelper.getEnabled()) {
 //            ftsField.setVisible(false);
 //        }
 //    }
 
-    protected void initLayoutAnalyzerContextMenu(Component contextMenuTarget) {
-        LayoutAnalyzerContextMenuProvider laContextMenuProvider =
-                getBeanLocator().get(LayoutAnalyzerContextMenuProvider.NAME);
-        laContextMenuProvider.initContextMenu(this, contextMenuTarget);
-    }
+    //todo layout context analyzer
+//    protected void initLayoutAnalyzerContextMenu(Component contextMenuTarget) {
+//        LayoutAnalyzerContextMenuProvider laContextMenuProvider =
+//                getBeanLocator().get(LayoutAnalyzerContextMenuProvider.NAME);
+//        laContextMenuProvider.initContextMenu(this, contextMenuTarget);
+//    }
 
-    @Order(Events.LOWEST_CORE_PRECEDENCE - 100)
-    @EventListener
-    protected void onUserSubstitutionsChange(UserSubstitutionsChangedEvent event) {
-        UserIndicator userIndicator = getUserIndicator();
-        if (userIndicator != null) {
-            userIndicator.refreshUserSubstitutions();
-        }
-    }
+    //todo UserSubstitutionsChangedEvent
+//    @Order(Events.LOWEST_CORE_PRECEDENCE - 100)
+//    @EventListener
+//    protected void onUserSubstitutionsChange(UserSubstitutionsChangedEvent event) {
+//        UserIndicator userIndicator = getUserIndicator();
+//        if (userIndicator != null) {
+//            userIndicator.refreshUserSubstitutions();
+//        }
+//    }
 
-    @Order(Events.LOWEST_CORE_PRECEDENCE - 100)
-    @EventListener
-    protected void onUserRemove(UserRemovedEvent event) {
-        UserIndicator userIndicator = getUserIndicator();
-        if (userIndicator != null) {
-            userIndicator.refreshUserSubstitutions();
-        }
-    }
+    // todo UserRemovedEvent
+//    @Order(Events.LOWEST_CORE_PRECEDENCE - 100)
+//    @EventListener
+//    protected void onUserRemove(UserRemovedEvent event) {
+//        UserIndicator userIndicator = getUserIndicator();
+//        if (userIndicator != null) {
+//            userIndicator.refreshUserSubstitutions();
+//        }
+//    }
 
     @Override
     public void ready() {

@@ -15,16 +15,8 @@
  */
 package io.jmix.ui.menu;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.Resources;
-import com.haulmont.cuba.core.sys.AppContext;
-import com.haulmont.cuba.core.sys.xmlparsing.Dom4jTools;
-import com.haulmont.cuba.gui.components.KeyCombination;
-import com.haulmont.cuba.gui.icons.Icons;
-import com.haulmont.cuba.gui.theme.ThemeConstants;
-import com.haulmont.cuba.gui.theme.ThemeConstantsManager;
 import io.jmix.core.AppBeans;
+import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
 import io.jmix.core.Resources;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
@@ -50,7 +42,6 @@ import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import static com.haulmont.cuba.gui.icons.Icons.ICON_NAME_REGEX;
 import static io.jmix.ui.icons.Icons.ICON_NAME_REGEX;
 
 /**
@@ -72,6 +63,9 @@ public class MenuConfig {
 
     @Inject
     protected Messages messages;
+
+    @Inject
+    protected MessageTools messageTools;
 
     @Inject
     protected ThemeConstantsManager themeConstantsManager;
@@ -353,7 +347,7 @@ public class MenuConfig {
     }
 
     protected String loadResourceString(String caption) {
-        return messages.getTools().loadString(messages.getMainMessagePack(), caption);
+        return messageTools.loadString(messages.getMainMessagePack(), caption);
     }
 
     protected String loadThemeString(String value) {

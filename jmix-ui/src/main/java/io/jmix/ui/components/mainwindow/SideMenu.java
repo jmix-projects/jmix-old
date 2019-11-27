@@ -18,6 +18,7 @@ package io.jmix.ui.components.mainwindow;
 
 import io.jmix.ui.components.Button;
 import io.jmix.ui.components.Component;
+import io.jmix.ui.menu.MenuConfig;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -31,7 +32,7 @@ public interface SideMenu extends Component.BelongToFrame, Component.Focusable {
     String NAME = "sideMenu";
 
     /**
-     * Load menu structure from {@link com.haulmont.cuba.gui.config.MenuConfig}
+     * Load menu structure from {@link MenuConfig}
      */
     void loadMenuConfig();
 
