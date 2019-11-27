@@ -16,14 +16,14 @@
 
 package io.jmix.ui.components.autocomplete;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.sys.jpql.DomainModel;
-import com.haulmont.cuba.core.sys.jpql.DomainModelBuilder;
-import com.haulmont.cuba.core.sys.jpql.DomainModelWithCaptionsBuilder;
-import com.haulmont.cuba.gui.components.autocomplete.impl.HintProvider;
-import com.haulmont.cuba.gui.components.autocomplete.impl.HintRequest;
-import com.haulmont.cuba.gui.components.autocomplete.impl.HintResponse;
-import com.haulmont.cuba.gui.components.autocomplete.impl.Option;
+import io.jmix.core.AppBeans;
+import io.jmix.core.impl.jpql.DomainModel;
+import io.jmix.core.impl.jpql.DomainModelBuilder;
+import io.jmix.core.impl.jpql.DomainModelWithCaptionsBuilder;
+import io.jmix.ui.components.autocomplete.impl.HintProvider;
+import io.jmix.ui.components.autocomplete.impl.HintRequest;
+import io.jmix.ui.components.autocomplete.impl.HintResponse;
+import io.jmix.ui.components.autocomplete.impl.Option;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

@@ -16,15 +16,14 @@
 
 package io.jmix.ui.components.autocomplete.impl;
 
-import com.haulmont.cuba.core.sys.jpql.*;
-import com.haulmont.cuba.core.sys.jpql.model.Attribute;
-import com.haulmont.cuba.core.sys.jpql.model.JpqlEntityModel;
-import com.haulmont.cuba.core.sys.jpql.model.NoJpqlEntityModel;
-import com.haulmont.cuba.core.sys.jpql.pointer.CollectionPointer;
-import com.haulmont.cuba.core.sys.jpql.pointer.EntityPointer;
-import com.haulmont.cuba.core.sys.jpql.pointer.NoPointer;
-import com.haulmont.cuba.core.sys.jpql.pointer.Pointer;
-import io.jmix.core.impl.jpql.DomainModel;
+import io.jmix.core.impl.jpql.*;
+import io.jmix.core.impl.jpql.model.Attribute;
+import io.jmix.core.impl.jpql.model.JpqlEntityModel;
+import io.jmix.core.impl.jpql.model.NoJpqlEntityModel;
+import io.jmix.core.impl.jpql.pointer.CollectionPointer;
+import io.jmix.core.impl.jpql.pointer.EntityPointer;
+import io.jmix.core.impl.jpql.pointer.NoPointer;
+import io.jmix.core.impl.jpql.pointer.Pointer;
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.CommonTree;
 import org.apache.commons.lang3.StringUtils;

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.autocomplete.impl;
 
-import com.haulmont.cuba.core.sys.jpql.InferredType;
+import io.jmix.core.impl.jpql.InferredType;
 
 import java.util.Set;
 

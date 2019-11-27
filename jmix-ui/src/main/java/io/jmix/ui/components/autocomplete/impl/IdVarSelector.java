@@ -16,12 +16,12 @@
 
 package io.jmix.ui.components.autocomplete.impl;
 
-import com.haulmont.cuba.core.sys.jpql.DomainModel;
-import com.haulmont.cuba.core.sys.jpql.ErrorRec;
-import com.haulmont.cuba.core.sys.jpql.QueryVariableContext;
-import com.haulmont.cuba.core.sys.jpql.tree.IdentificationVariableNode;
-import com.haulmont.cuba.core.sys.jpql.tree.JoinVariableNode;
-import com.haulmont.cuba.core.sys.jpql.tree.QueryNode;
+import io.jmix.core.impl.jpql.DomainModel;
+import io.jmix.core.impl.jpql.ErrorRec;
+import io.jmix.core.impl.jpql.QueryVariableContext;
+import io.jmix.core.impl.jpql.tree.IdentificationVariableNode;
+import io.jmix.core.impl.jpql.tree.JoinVariableNode;
+import io.jmix.core.impl.jpql.tree.QueryNode;
 import org.antlr.runtime.tree.CommonErrorNode;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.TreeVisitorAction;
