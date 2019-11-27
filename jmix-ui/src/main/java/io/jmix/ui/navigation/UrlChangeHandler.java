@@ -16,33 +16,25 @@
 
 package io.jmix.ui.navigation;
 
-import com.haulmont.cuba.core.global.AccessDeniedException;
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.Security;
-import com.haulmont.cuba.gui.Notifications.NotificationType;
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.components.CloseOriginType;
-import com.haulmont.cuba.gui.components.RootWindow;
-import com.haulmont.cuba.gui.components.Window;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.gui.sys.RouteDefinition;
-import com.haulmont.cuba.gui.util.OperationResult;
-import com.haulmont.cuba.security.entity.PermissionType;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.WebConfig;
-import com.haulmont.cuba.web.controllers.ControllerUtils;
-import com.haulmont.cuba.web.gui.UrlHandlingMode;
-import com.haulmont.cuba.web.gui.WebWindow;
-import com.haulmont.cuba.web.sys.RedirectHandler;
-import com.haulmont.cuba.web.sys.navigation.accessfilter.NavigationFilter;
-import com.haulmont.cuba.web.sys.navigation.accessfilter.NavigationFilter.AccessCheckResult;
 import com.vaadin.server.Page;
+import io.jmix.core.BeanLocator;
+import io.jmix.core.Messages;
+import io.jmix.core.security.AccessDeniedException;
+import io.jmix.core.security.PermissionType;
+import io.jmix.core.security.Security;
+import io.jmix.ui.*;
+import io.jmix.ui.components.CloseOriginType;
+import io.jmix.ui.components.RootWindow;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.components.impl.WebWindow;
+import io.jmix.ui.navigation.accessfilter.NavigationFilter;
+import io.jmix.ui.navigation.accessfilter.NavigationFilter.AccessCheckResult;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.OpenMode;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.sys.ControllerUtils;
+import io.jmix.ui.util.OperationResult;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -223,7 +215,7 @@ public class UrlChangeHandler implements InitializingBean {
 
     public void showNotification(String msg) {
         ui.getNotifications()
-                .create(NotificationType.TRAY)
+                .create(Notifications.NotificationType.TRAY)
                 .withCaption(msg)
                 .show();
     }
@@ -243,7 +235,7 @@ public class UrlChangeHandler implements InitializingBean {
                 : NavigationState.EMPTY;
     }
 
-    public AccessCheckResult navigationAllowed(NavigationState requestedState) {
+    public NavigationFilter.AccessCheckResult navigationAllowed(NavigationState requestedState) {
         NavigationState currentState = ui.getHistory().getNow();
 
         for (NavigationFilter filter : navigationFilters) {

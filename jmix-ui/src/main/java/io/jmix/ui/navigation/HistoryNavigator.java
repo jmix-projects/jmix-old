@@ -16,15 +16,15 @@
 
 package io.jmix.ui.navigation;
 
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.components.RootWindow;
-import com.haulmont.cuba.gui.components.Window;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.util.OperationResult;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.sys.navigation.accessfilter.NavigationFilter;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.Screens;
+import io.jmix.ui.WindowInfo;
+import io.jmix.ui.components.RootWindow;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.navigation.accessfilter.NavigationFilter;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.util.OperationResult;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

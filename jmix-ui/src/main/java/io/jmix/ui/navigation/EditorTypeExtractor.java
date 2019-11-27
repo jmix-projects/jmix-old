@@ -16,11 +16,11 @@
 
 package io.jmix.ui.navigation;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.components.AbstractEditor;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.screen.EditorScreen;
-import com.haulmont.cuba.gui.screen.StandardEditor;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.WindowInfo;
+import io.jmix.ui.screen.EditorScreen;
+import io.jmix.ui.screen.StandardEditor;
+import io.jmix.ui.screen.legacy.AbstractEditor;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.ParameterizedType;

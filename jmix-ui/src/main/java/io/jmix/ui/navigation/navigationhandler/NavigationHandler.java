@@ -16,10 +16,10 @@
 
 package io.jmix.ui.navigation.navigationhandler;
 
-import com.haulmont.cuba.gui.navigation.NavigationState;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.sys.navigation.ScreenNavigator;
-import com.haulmont.cuba.web.sys.navigation.UrlChangeHandler;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.navigation.NavigationState;
+import io.jmix.ui.navigation.ScreenNavigator;
+import io.jmix.ui.navigation.UrlChangeHandler;
 
 /**
  * Classes that implement this interface are intended for handling URL navigation.

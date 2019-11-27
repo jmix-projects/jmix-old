@@ -27,6 +27,7 @@ import io.jmix.ui.components.*;
 import io.jmix.ui.components.FrameContext;
 import io.jmix.ui.components.WindowContext;
 import io.jmix.ui.icons.Icons;
+import io.jmix.ui.navigation.NavigationState;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.sys.events.UiEventsMulticaster;
@@ -84,9 +85,8 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
 
     private EventHub eventHub;
 
-    // todo navigation
-//    protected int urlStateMark;
-//    protected NavigationState resolvedState;
+    protected int urlStateMark;
+    protected NavigationState resolvedState;
 
     protected boolean defaultScreenWindow = false;
 
@@ -928,8 +928,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
         return this.component.getExpandRatio(vComponent);
     }
 
-    // todo navigation
-/*    public int getUrlStateMark() {
+    public int getUrlStateMark() {
         return urlStateMark;
     }
 
@@ -943,7 +942,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
 
     public void setResolvedState(NavigationState resolvedState) {
         this.resolvedState = resolvedState;
-    }*/
+    }
 
     public boolean isDefaultScreenWindow() {
         return defaultScreenWindow;

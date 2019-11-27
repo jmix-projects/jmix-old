@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.screen;
+package io.jmix.ui;
 
-import io.jmix.ui.*;
-import io.jmix.ui.navigation.UrlRouting;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-public interface ScreenContext {
-    ScreenOptions getScreenOptions();
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-    WindowInfo getWindowInfo();
+/**
+ * Identifies injectable fields in screen controllers, value for field comes from screen parameters
+ */
+@Target(value = ElementType.FIELD)
+@Retention(RUNTIME)
+public @interface WindowParam {
+    String name() default "";
 
-    Screens getScreens();
-
-    Dialogs getDialogs();
-
-    Notifications getNotifications();
-
-    Fragments getFragments();
-
-    UrlRouting getUrlRouting();
+    boolean required() default false;
 }

@@ -16,25 +16,24 @@
 
 package io.jmix.ui.navigation.navigationhandler;
 
-import com.haulmont.bali.datastruct.Pair;
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.WindowParams;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.navigation.NavigationState;
-import com.haulmont.cuba.gui.navigation.UrlParamsChangedEvent;
-import com.haulmont.cuba.gui.screen.*;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
-import com.haulmont.cuba.security.entity.EntityOp;
-import com.haulmont.cuba.security.entity.PermissionType;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.app.ui.navigation.notfoundwindow.NotFoundScreen;
-import com.haulmont.cuba.web.gui.WebWindow;
-import com.haulmont.cuba.web.sys.navigation.EditorTypeExtractor;
-import com.haulmont.cuba.web.sys.navigation.UrlChangeHandler;
-import com.haulmont.cuba.web.sys.navigation.UrlIdSerializer;
+import io.jmix.core.*;
+import io.jmix.core.commons.datastruct.Pair;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.security.AccessDeniedException;
+import io.jmix.core.security.EntityOp;
+import io.jmix.core.security.PermissionType;
+import io.jmix.core.security.Security;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.WindowInfo;
+import io.jmix.ui.WindowParams;
+import io.jmix.ui.app.navigation.notfoundwindow.NotFoundScreen;
+import io.jmix.ui.components.compatibility.LegacyFrame;
+import io.jmix.ui.components.impl.WebWindow;
+import io.jmix.ui.navigation.*;
+import io.jmix.ui.screen.*;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -49,7 +48,7 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.haulmont.cuba.web.sys.WebUrlRouting.NEW_ENTITY_ID;
+import static io.jmix.ui.navigation.WebUrlRouting.NEW_ENTITY_ID;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)

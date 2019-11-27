@@ -16,33 +16,25 @@
 
 package io.jmix.ui.navigation;
 
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.Events;
-import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.core.global.PersistenceHelper;
-import com.haulmont.cuba.gui.Route;
-import com.haulmont.cuba.gui.Screens;
-import com.haulmont.cuba.gui.components.DialogWindow;
-import com.haulmont.cuba.gui.components.RootWindow;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.screen.EditorScreen;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiController;
-import com.haulmont.cuba.gui.sys.RouteDefinition;
-import com.haulmont.cuba.gui.sys.UiDescriptorUtils;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.WebConfig;
-import com.haulmont.cuba.web.app.ui.navigation.notfoundwindow.NotFoundScreen;
-import com.haulmont.cuba.web.controllers.ControllerUtils;
-import com.haulmont.cuba.web.gui.UrlHandlingMode;
-import com.haulmont.cuba.web.gui.WebWindow;
-import com.haulmont.cuba.web.gui.components.mainwindow.WebAppWorkArea;
-import com.haulmont.cuba.web.sys.navigation.UrlIdSerializer;
-import com.haulmont.cuba.web.sys.navigation.UrlTools;
-import com.haulmont.cuba.web.widgets.client.ui.CubaUIConstants;
 import com.vaadin.server.Page;
+import io.jmix.core.Events;
+import io.jmix.core.Metadata;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.*;
+import io.jmix.ui.app.navigation.notfoundwindow.NotFoundScreen;
+import io.jmix.ui.components.DialogWindow;
+import io.jmix.ui.components.RootWindow;
+import io.jmix.ui.components.impl.WebAppWorkArea;
+import io.jmix.ui.components.impl.WebWindow;
+import io.jmix.ui.screen.EditorScreen;
+import io.jmix.ui.screen.OpenMode;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.sys.ControllerUtils;
+import io.jmix.ui.sys.UiDescriptorUtils;
+import io.jmix.ui.sys.WebScreens;
+import io.jmix.ui.widgets.client.ui.CubaUIConstants;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -54,9 +46,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.nullToEmpty;
-import static com.haulmont.bali.util.Preconditions.checkNotEmptyString;
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
-import static com.haulmont.cuba.gui.screen.UiControllerUtils.getScreenContext;
+import static io.jmix.core.commons.util.Preconditions.checkNotEmptyString;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.screen.UiControllerUtils.getScreenContext;
 
 public class WebUrlRouting implements UrlRouting {
 

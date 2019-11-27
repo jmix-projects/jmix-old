@@ -16,12 +16,12 @@
 
 package io.jmix.ui.navigation;
 
-import com.haulmont.bali.util.URLEncodeUtils;
+import io.jmix.core.commons.util.URLEncodeUtils;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * This class is intended for serializing entity ids to be used as URL param.

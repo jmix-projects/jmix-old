@@ -16,9 +16,9 @@
 
 package io.jmix.ui.navigation.navigationhandler;
 
-import com.haulmont.cuba.gui.navigation.NavigationState;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.sys.navigation.UrlChangeHandler;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.navigation.NavigationState;
+import io.jmix.ui.navigation.UrlChangeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;

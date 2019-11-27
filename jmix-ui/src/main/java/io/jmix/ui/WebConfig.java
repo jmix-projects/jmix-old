@@ -26,6 +26,8 @@ import io.jmix.core.config.type.Factory;
 import io.jmix.core.config.type.StringListTypeFactory;
 import io.jmix.ui.components.MainTabSheetMode;
 import io.jmix.ui.logging.AppLog;
+import io.jmix.ui.navigation.UrlHandlingMode;
+import io.jmix.ui.navigation.UrlHandlingModeFactory;
 
 import java.util.List;
 
@@ -162,15 +164,24 @@ public interface WebConfig extends Config {
     @DefaultInt(25)
     int getMainTabCaptionLength();
 
-    /* todo navigation
+    /**
+     * @return Whether to handle back button click in browser on server-side.
+     * @deprecated use {@link WebConfig#getUrlHandlingMode()} instead
+     */
+    @Property("cuba.web.allowHandleBrowserHistoryBack")
+    @DefaultBoolean(false)
+    @Deprecated
+    boolean getAllowHandleBrowserHistoryBack();
+
+    /**
      * @return how URL changes should be handled
      *
      * @see UrlHandlingMode
      */
-    /*@Property("cuba.web.urlHandlingMode")
+    @Property("cuba.web.urlHandlingMode")
     @Default("URL_ROUTES")
     @Factory(factory = UrlHandlingModeFactory.class)
-    UrlHandlingMode getUrlHandlingMode();*/
+    UrlHandlingMode getUrlHandlingMode();
 
     /**
      * @return Theme

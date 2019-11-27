@@ -16,7 +16,7 @@
 
 package io.jmix.ui.navigation.accessfilter;
 
-import com.haulmont.cuba.gui.navigation.NavigationState;
+import io.jmix.ui.navigation.NavigationState;
 
 /**
  * Marker interface for beans that manage whether some route is allowed navigate to or not.

@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.screen;
+package io.jmix.ui.navigation;
 
-import io.jmix.ui.*;
-import io.jmix.ui.navigation.UrlRouting;
+import io.jmix.core.config.type.TypeFactory;
 
-public interface ScreenContext {
-    ScreenOptions getScreenOptions();
+public class UrlHandlingModeFactory extends TypeFactory {
 
-    WindowInfo getWindowInfo();
-
-    Screens getScreens();
-
-    Dialogs getDialogs();
-
-    Notifications getNotifications();
-
-    Fragments getFragments();
-
-    UrlRouting getUrlRouting();
+    @Override
+    public Object build(String string) {
+        for (UrlHandlingMode mode : UrlHandlingMode.values()) {
+            if (mode.name().equals(string)) {
+                return mode;
+            }
+        }
+        return null;
+    }
 }

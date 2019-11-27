@@ -16,9 +16,9 @@
 
 package io.jmix.ui.navigation.accessfilter;
 
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.navigation.NavigationState;
-import com.haulmont.cuba.web.app.ui.navigation.notfoundwindow.NotFoundScreen;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.app.navigation.notfoundwindow.NotFoundScreen;
+import io.jmix.ui.navigation.NavigationState;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 

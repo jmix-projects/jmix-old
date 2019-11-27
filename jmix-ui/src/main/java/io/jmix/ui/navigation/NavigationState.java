@@ -16,8 +16,7 @@
 
 package io.jmix.ui.navigation;
 
-import com.haulmont.bali.util.URLEncodeUtils;
-import com.haulmont.cuba.gui.UrlRouting;
+import io.jmix.core.commons.util.URLEncodeUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.navigation;
 
-import com.haulmont.bali.util.Preconditions;
+import io.jmix.core.commons.util.Preconditions;
 
 import java.math.BigInteger;
 import java.util.Arrays;

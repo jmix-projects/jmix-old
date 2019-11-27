@@ -16,10 +16,9 @@
 
 package io.jmix.ui.navigation;
 
-import com.haulmont.bali.util.Preconditions;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.WebConfig;
-import com.haulmont.cuba.web.gui.UrlHandlingMode;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.WebConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

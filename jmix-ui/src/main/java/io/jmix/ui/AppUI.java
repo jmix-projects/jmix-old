@@ -34,6 +34,7 @@ import io.jmix.ui.events.SessionHeartbeatEvent;
 import io.jmix.ui.events.UIRefreshEvent;
 import io.jmix.ui.exception.UiExceptionHandler;
 import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.navigation.*;
 import io.jmix.ui.sys.*;
 import io.jmix.ui.sys.events.UiEventsMulticaster;
 import io.jmix.ui.theme.ThemeConstantsRepository;
@@ -108,10 +109,10 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     protected Notifications notifications;
     protected WebBrowserTools webBrowserTools;
 
-//    todo navigation
-//    protected UrlChangeHandler urlChangeHandler;
-//    protected UrlRouting urlRouting;
-//    protected History history;
+
+    protected UrlChangeHandler urlChangeHandler;
+    protected UrlRouting urlRouting;
+    protected History history;
 
     protected UserSession userSession;
 
@@ -210,8 +211,8 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
         this.fragments = fragments;
     }
 
-    // todo navigation
-/*    public UrlRouting getUrlRouting() {
+
+    public UrlRouting getUrlRouting() {
         return urlRouting;
     }
 
@@ -233,14 +234,14 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
 
     public void setHistory(History history) {
         this.history = history;
-    }*/
+    }
 
     @Override
     protected void init(VaadinRequest request) {
         log.trace("Initializing UI {}", this);
 
-        // todo navigation
-        // NavigationState requestedState = getUrlRouting().getState();
+
+        NavigationState requestedState = getUrlRouting().getState();
 
         try {
             GlobalConfig globalConfig = configuration.getConfig(GlobalConfig.class);
@@ -291,8 +292,8 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
             return;
         }
 
-        // todo navigation
-        // processExternalLink(request, requestedState);
+
+        processExternalLink(request, requestedState);
     }
 
     @Inject
@@ -317,8 +318,8 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
         autowireContext(screens, applicationContext);
         setScreens(screens);
 
-        // todo navigation
-        /*UrlRouting urlRouting = new WebUrlRouting(this);
+
+        UrlRouting urlRouting = new WebUrlRouting(this);
         autowireContext(urlRouting, applicationContext);
         setUrlRouting(urlRouting);
 
@@ -475,8 +476,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     @Override
     public void handleRequest(VaadinRequest request) {
         // on refresh page call
-        // todo navigation
-        // processExternalLink(request, getUrlRouting().getState());
+         processExternalLink(request, getUrlRouting().getState());
     }
 
     /**
@@ -553,8 +553,8 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
         }
     }
 
-    // todo navigation
-    /*protected void processExternalLink(VaadinRequest request, NavigationState requestedState) {
+
+    protected void processExternalLink(VaadinRequest request, NavigationState requestedState) {
         if (isLinkHandlerRequest(request)) {
             processLinkHandlerRequest(request);
         } else {
@@ -601,7 +601,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
 
         urlChangeHandler.getScreenNavigator()
                 .handleScreenNavigation(navigationState);
-    }*/
+    }
 
     @Override
     public void detach() {

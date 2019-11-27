@@ -16,19 +16,19 @@
 
 package io.jmix.ui.navigation.navigationhandler;
 
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.navigation.NavigationState;
-import com.haulmont.cuba.gui.navigation.UrlParamsChangedEvent;
-import com.haulmont.cuba.gui.screen.MapScreenOptions;
-import com.haulmont.cuba.gui.screen.OpenMode;
-import com.haulmont.cuba.gui.screen.Screen;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.app.ui.navigation.notfoundwindow.NotFoundScreen;
-import com.haulmont.cuba.web.gui.WebWindow;
-import com.haulmont.cuba.web.sys.navigation.UrlChangeHandler;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.WindowInfo;
+import io.jmix.ui.app.navigation.notfoundwindow.NotFoundScreen;
+import io.jmix.ui.components.impl.WebWindow;
+import io.jmix.ui.navigation.NavigationState;
+import io.jmix.ui.navigation.UrlChangeHandler;
+import io.jmix.ui.navigation.UrlParamsChangedEvent;
+import io.jmix.ui.screen.MapScreenOptions;
+import io.jmix.ui.screen.OpenMode;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiControllerUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

@@ -16,10 +16,10 @@
 
 package io.jmix.ui.navigation.accessfilter;
 
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.navigation.NavigationState;
-import com.haulmont.cuba.web.AppUI;
-import com.haulmont.cuba.web.WebConfig;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.WebConfig;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.navigation.NavigationState;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 

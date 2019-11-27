@@ -16,9 +16,9 @@
 
 package io.jmix.ui.navigation;
 
-import com.haulmont.bali.util.URLEncodeUtils;
 import com.vaadin.server.Page;
 import com.vaadin.ui.UI;
+import io.jmix.core.commons.util.URLEncodeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.haulmont.bali.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * Helper for working with URL.
