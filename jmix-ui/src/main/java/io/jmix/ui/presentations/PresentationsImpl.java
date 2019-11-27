@@ -19,10 +19,20 @@ import com.haulmont.cuba.core.app.DataService;
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.sys.xmlparsing.Dom4jTools;
 import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.security.entity.Presentation;
+import io.jmix.core.AppBeans;
+import io.jmix.core.CommitContext;
+import io.jmix.core.DataManager;
+import io.jmix.core.LoadContext;
+import io.jmix.core.commons.xmlparsing.Dom4jTools;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.User;
+import io.jmix.core.security.UserSession;
+import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.Component;
+import io.jmix.core.entity.Presentation;
 import com.haulmont.cuba.security.entity.User;
 import com.haulmont.cuba.security.global.UserSession;
+import io.jmix.ui.components.ComponentsHelper;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
@@ -208,7 +218,7 @@ public class PresentationsImpl implements Presentations {
     @Override
     public void commit() {
         if (!needToUpdate.isEmpty() || !needToRemove.isEmpty()) {
-            DataService ds = AppBeans.get(DataService.NAME);
+            DataManager ds = AppBeans.get(DataManager.NAME);
 
             CommitContext ctx = new CommitContext(
                     Collections.unmodifiableSet(needToUpdate),
@@ -290,7 +300,7 @@ public class PresentationsImpl implements Presentations {
 
     private void checkLoad() {
         if (presentations == null) {
-            DataService ds = AppBeans.get(DataService.NAME);
+            DataManager ds = AppBeans.get(DataManager.NAME);
             LoadContext ctx = new LoadContext(Presentation.class);
             ctx.setView("app");
 

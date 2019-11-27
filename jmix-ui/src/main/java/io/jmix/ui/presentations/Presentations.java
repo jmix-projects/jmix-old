@@ -15,16 +15,16 @@
  */
 package io.jmix.ui.presentations;
 
-import com.haulmont.cuba.security.entity.Presentation;
+import io.jmix.core.entity.Presentation;
 import org.dom4j.Element;
 
 import java.util.Collection;
 
 /**
  * Provide the workflow with presentations (visual settings of a component).
- * <br><br> A component must implement {@link com.haulmont.cuba.gui.components.HasPresentations} interface
+ * <br><br> A component must implement {@link io.jmix.ui.components.HasPresentations} interface
  *
- * @see com.haulmont.cuba.security.entity.Presentation
+ * @see io.jmix.core.entity.Presentation
  */
 public interface Presentations {
 
