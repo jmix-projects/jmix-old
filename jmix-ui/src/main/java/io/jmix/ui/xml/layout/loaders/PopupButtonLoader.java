@@ -15,6 +15,8 @@
  */
 package io.jmix.ui.xml.layout.loaders;
 
+import io.jmix.ui.Actions;
+import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.PopupButton.PopupOpenDirection;
 import io.jmix.ui.xml.layout.ComponentLoader;

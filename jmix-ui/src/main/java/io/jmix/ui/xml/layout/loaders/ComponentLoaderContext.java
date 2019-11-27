@@ -18,6 +18,7 @@ package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.model.cuba.DsContext;
 import io.jmix.ui.screen.ScreenOptions;
 import io.jmix.ui.sys.UiControllerProperty;
 import io.jmix.ui.xml.layout.ComponentLoader;
@@ -25,9 +26,7 @@ import io.jmix.ui.xml.layout.ComponentLoader.InitTask;
 import io.jmix.ui.xml.layout.ComponentLoader.InjectTask;
 import io.jmix.ui.xml.layout.ComponentLoader.PostInitTask;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class ComponentLoaderContext implements ComponentLoader.ComponentContext {
 
@@ -47,6 +46,10 @@ public class ComponentLoaderContext implements ComponentLoader.ComponentContext 
     protected List<InjectTask> injectTasks = new ArrayList<>();
     protected List<InitTask> initTasks = new ArrayList<>();
 
+    protected DsContext dsContext;
+    protected Map<String, Object> parameters;
+    protected Map<String, String> aliasesMap = new HashMap<>();
+
     public ComponentLoaderContext(ScreenOptions options) {
         this.options = options;
     }
@@ -56,12 +59,26 @@ public class ComponentLoaderContext implements ComponentLoader.ComponentContext 
         return options;
     }
 
+    @Override
+    public Map<String, Object> getParams() {
+        return parameters;
+    }
+
     public ScreenData getScreenData() {
         return screenData;
     }
 
     public void setScreenData(ScreenData screenData) {
         this.screenData = screenData;
+    }
+
+    @Override
+    public DsContext getDsContext() {
+        return dsContext;
+    }
+
+    public void setDsContext(DsContext dsContext) {
+        this.dsContext = dsContext;
     }
 
     @Override
@@ -166,5 +183,9 @@ public class ComponentLoaderContext implements ComponentLoader.ComponentContext 
 
     public List<InitTask> getInitTasks() {
         return initTasks;
+    }
+
+    public Map<String, String> getAliasesMap() {
+        return aliasesMap;
     }
 }

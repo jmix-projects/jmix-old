@@ -31,6 +31,7 @@ import io.jmix.ui.actions.BaseAction;
 import io.jmix.ui.actions.legacy.ItemTrackingAction;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.Component.Alignment;
+import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.components.data.ContainerValueSource;
 import io.jmix.ui.components.data.HasValueSource;
 import io.jmix.ui.Actions;
@@ -188,6 +189,11 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
     protected ThemeConstants getTheme() {
         ThemeConstantsManager manager = beanLocator.get(ThemeConstantsManager.NAME);
         return manager.getConstants();
+    }
+
+    protected boolean isLegacyFrame() {
+        return context instanceof ComponentContext
+                && ((ComponentContext) context).getFrame().getFrameOwner() instanceof LegacyFrame;
     }
 
     protected LayoutLoader getLayoutLoader() {
