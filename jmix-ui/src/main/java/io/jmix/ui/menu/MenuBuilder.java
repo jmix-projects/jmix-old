@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.sys;
+package io.jmix.ui.menu;
 
-import com.haulmont.cuba.core.global.MessageTools;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.components.KeyCombination;
-import com.haulmont.cuba.gui.components.Window;
-import com.haulmont.cuba.gui.components.mainwindow.AppMenu;
-import com.haulmont.cuba.gui.config.MenuConfig;
-import com.haulmont.cuba.gui.config.MenuItem;
-import com.haulmont.cuba.gui.config.MenuItemCommand;
-import com.haulmont.cuba.gui.config.MenuItemCommands;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.security.global.UserSession;
-import com.haulmont.cuba.web.gui.MenuShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.AbstractComponent;
+import io.jmix.core.MessageTools;
+import io.jmix.core.security.UserSession;
+import io.jmix.ui.components.ComponentsHelper;
+import io.jmix.ui.components.KeyCombination;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.components.mainwindow.AppMenu;
+import io.jmix.ui.screen.FrameOwner;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
