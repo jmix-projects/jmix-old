@@ -16,10 +16,7 @@
 
 package io.jmix.ui.model.impl;
 
-import io.jmix.ui.model.DataContext;
-import io.jmix.ui.model.DataLoader;
-import io.jmix.ui.model.InstanceContainer;
-import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.model.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +29,8 @@ public class ScreenDataImpl implements ScreenData {
     protected Map<String, InstanceContainer> containers = new HashMap<>();
 
     protected Map<String, DataLoader> loaders = new HashMap<>();
+
+    protected LoadBeforeShowStrategy loadBeforeShowStrategy = new AnnotationBasedLoaderBeforeShow();
 
     @Override
     public DataContext getDataContext() {
@@ -78,6 +77,16 @@ public class ScreenDataImpl implements ScreenData {
         for (DataLoader loader : loaders.values()) {
             loader.load();
         }
+    }
+
+    @Override
+    public LoadBeforeShowStrategy getLoadBeforeShowStrategy() {
+        return loadBeforeShowStrategy;
+    }
+
+    @Override
+    public void setLoadBeforeShowStrategy(LoadBeforeShowStrategy strategy) {
+        loadBeforeShowStrategy = strategy;
     }
 
     @Override

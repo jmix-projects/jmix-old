@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.components;
+package io.jmix.ui.model;
 
-public enum MainTabSheetMode {
-    DEFAULT,
-    MANAGED
+import io.jmix.ui.screen.Screen;
+
+public interface LoadBeforeShowStrategy {
+
+    void loadData(Screen screen);
 }
