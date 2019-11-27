@@ -16,10 +16,9 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.bali.datastruct.Node;
-import com.haulmont.bali.datastruct.Tree;
+import io.jmix.core.commons.datastruct.Node;
+import io.jmix.core.commons.datastruct.Tree;
 import io.jmix.core.entity.Entity;
-import io.jmix.ui.data.HierarchicalDatasource;
 import io.jmix.ui.logging.UIPerformanceLogger;
 import io.jmix.ui.model.cuba.HierarchicalDatasource;
 import org.perf4j.StopWatch;

@@ -15,24 +15,19 @@
  */
 package io.jmix.ui.presentations;
 
-import com.haulmont.cuba.core.app.DataService;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.sys.xmlparsing.Dom4jTools;
-import com.haulmont.cuba.gui.ComponentsHelper;
 import io.jmix.core.AppBeans;
 import io.jmix.core.CommitContext;
 import io.jmix.core.DataManager;
 import io.jmix.core.LoadContext;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.Presentation;
 import io.jmix.core.entity.User;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.components.Component;
-import io.jmix.core.entity.Presentation;
-import com.haulmont.cuba.security.entity.User;
-import com.haulmont.cuba.security.global.UserSession;
 import io.jmix.ui.components.ComponentsHelper;
+import io.jmix.ui.sys.PersistenceHelper;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;

@@ -16,8 +16,8 @@
 package io.jmix.ui.model.cuba.impl;
 
 import io.jmix.core.entity.Entity;
-import io.jmix.ui.data.CollectionDatasource;
-import io.jmix.ui.data.GroupDatasource;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.GroupDatasource;
 
 import java.util.Collection;
 import java.util.Map;

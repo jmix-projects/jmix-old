@@ -20,7 +20,7 @@ import io.jmix.ui.components.data.ValueConversionException;
 import io.jmix.core.metamodel.model.Instance;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.core.app.dynamicattributes.DynamicAttributesUtils;
+import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
 import io.jmix.core.entity.Entity;
 import io.jmix.ui.components.GroupTable;
 import io.jmix.ui.components.Table;

@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.actions.legacy;
 
-import com.haulmont.cuba.gui.components.Window;
+import io.jmix.ui.components.Window;
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -122,7 +122,7 @@ public class LegacyAddAction extends ListAction
 
     /**
      * The simplest constructor. The action has default name and opens the lookup screen in THIS tab.
-     * Lookup handler can be set by subsequent call to {@link #setHandler(com.haulmont.cuba.gui.components.Window.Lookup.Handler)}.
+     * Lookup handler can be set by subsequent call to {@link #setHandler(io.jmix.ui.components.Window.Lookup.Handler)}.
      * If it is not set, an instance of {@link DefaultHandler} will be used.
      *
      * @param target    component containing this action

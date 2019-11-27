@@ -23,8 +23,8 @@ import javax.annotation.Nonnull;
  * Interface defining methods for working with screen settings.
  * <p>Screen settings are saved in the database for the current user.
  *
- * @see com.haulmont.cuba.gui.components.AbstractWindow#getSettings()
- * @see com.haulmont.cuba.gui.components.AbstractWindow#applySettings(Settings)
+ * @see io.jmix.ui.components.AbstractWindow#getSettings()
+ * @see io.jmix.ui.components.AbstractWindow#applySettings(Settings)
  */
 public interface Settings {
 

@@ -28,6 +28,7 @@ import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.datatypes.Datatypes;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.core.validation.groups.UiCrossFieldChecks;
@@ -38,12 +39,14 @@ import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.BaseAction;
 import io.jmix.ui.actions.DialogAction;
 import io.jmix.ui.components.*;
+import io.jmix.ui.dynamicattributes.DynamicAttributesGuiTools;
 import io.jmix.ui.model.cuba.*;
 import io.jmix.ui.model.cuba.impl.CollectionPropertyDatasourceImpl;
 import io.jmix.ui.model.cuba.impl.DatasourceImplementation;
 import io.jmix.ui.model.cuba.impl.DsContextImplementation;
 import io.jmix.ui.model.cuba.impl.EntityCopyUtils;
 import io.jmix.ui.screen.ReadOnlyAwareScreen;
+import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.ui.util.OperationResult;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
@@ -198,12 +201,10 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
 
         DatasourceImplementation parentDs = (DatasourceImplementation) ((DatasourceImplementation) ds).getParent();
 
-        // todo dynamic attributes
-
-//        DynamicAttributesGuiTools dynamicAttributesGuiTools = getBeanLocator().get(DynamicAttributesGuiTools.NAME);
-//        if (dynamicAttributesGuiTools.screenContainsDynamicAttributes(ds.getView(), getFrame().getId())) {
-//            ds.setLoadDynamicAttributes(true);
-//        }
+        DynamicAttributesGuiTools dynamicAttributesGuiTools = getBeanLocator().get(DynamicAttributesGuiTools.NAME);
+        if (dynamicAttributesGuiTools.screenContainsDynamicAttributes(ds.getView(), getFrame().getId())) {
+            ds.setLoadDynamicAttributes(true);
+        }
 
         Class<? extends Entity> entityClass = item.getClass();
         Object entityId = item.getId();
@@ -270,30 +271,31 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
             if (security.isEntityOpPermitted(ds.getMetaClass(), EntityOp.UPDATE)) {
                 readOnlyDueToLock = false;
 
-                LockService lockService = getBeanLocator().get(LockService.NAME);
-
-                LockInfo lockInfo = lockService.lock(getMetaClassForLocking(ds).getName(), item.getId().toString());
-                if (lockInfo == null) {
-                    justLocked = true;
-                    addAfterCloseListener(afterCloseEvent -> {
-                        releaseLock();
-                    });
-                } else if (!(lockInfo instanceof LockNotSupported)) {
-                    UserSessionSource userSessionSource = getBeanLocator().get(UserSessionSource.NAME);
-
-                    getFrame().getWindowManager().showNotification(
-                            messages.getMainMessage("entityLocked.msg"),
-                            String.format(messages.getMainMessage("entityLocked.desc"),
-                                    lockInfo.getUser().getLogin(),
-                                    Datatypes.getNN(Date.class).format(lockInfo.getSince(), userSessionSource.getLocale())
-                            ),
-                            Frame.NotificationType.HUMANIZED
-                    );
-
-                    readOnlyDueToLock = true;
-                    showEnableEditingBtn = false;
-                    setReadOnly(true);
-                }
+                // todo LockService
+//                LockService lockService = getBeanLocator().get(LockService.NAME);
+//
+//                LockInfo lockInfo = lockService.lock(getMetaClassForLocking(ds).getName(), item.getId().toString());
+//                if (lockInfo == null) {
+//                    justLocked = true;
+//                    addAfterCloseListener(afterCloseEvent -> {
+//                        releaseLock();
+//                    });
+//                } else if (!(lockInfo instanceof LockNotSupported)) {
+//                    UserSessionSource userSessionSource = getBeanLocator().get(UserSessionSource.NAME);
+//
+//                    getFrame().getWindowManager().showNotification(
+//                            messages.getMainMessage("entityLocked.msg"),
+//                            String.format(messages.getMainMessage("entityLocked.desc"),
+//                                    lockInfo.getUser().getLogin(),
+//                                    Datatypes.getNN(Date.class).format(lockInfo.getSince(), userSessionSource.getLocale())
+//                            ),
+//                            Frame.NotificationType.HUMANIZED
+//                    );
+//
+//                    readOnlyDueToLock = true;
+//                    showEnableEditingBtn = false;
+//                    setReadOnly(true);
+//                }
             } else {
                 showEnableEditingBtn = false;
                 setReadOnly(true);
@@ -302,13 +304,14 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
     }
 
     public void releaseLock() {
-        if (justLocked) {
-            Datasource ds = getDatasourceInternal();
-            Entity entity = ds.getItem();
-            if (entity != null) {
-                getBeanLocator().get(LockService.class).unlock(getMetaClassForLocking(ds).getName(), entity.getId().toString());
-            }
-        }
+        // todo LockService
+//        if (justLocked) {
+//            Datasource ds = getDatasourceInternal();
+//            Entity entity = ds.getItem();
+//            if (entity != null) {
+//                getBeanLocator().get(LockService.class).unlock(getMetaClassForLocking(ds).getName(), entity.getId().toString());
+//            }
+//        }
     }
 
     /**

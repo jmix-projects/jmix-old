@@ -16,20 +16,16 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import io.jmix.core.commons.util.ParamsMap;
-import com.haulmont.bali.util.ReflectionHelper;
-import io.jmix.core.entity.Entity;
+import groovy.text.GStringTemplateEngine;
 import io.jmix.core.DataManager;
 import io.jmix.core.LoadContext;
 import io.jmix.core.QueryUtils;
-import io.jmix.core.DataManager;
-import io.jmix.core.LoadContext;
+import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.entity.Entity;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.components.Field;
 import io.jmix.ui.components.SuggestionField;
-import groovy.text.GStringTemplateEngine;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

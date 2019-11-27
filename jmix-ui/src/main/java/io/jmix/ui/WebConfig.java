@@ -24,7 +24,7 @@ import io.jmix.core.config.defaults.*;
 import io.jmix.core.config.type.CommaSeparatedStringListTypeFactory;
 import io.jmix.core.config.type.Factory;
 import io.jmix.core.config.type.StringListTypeFactory;
-import io.jmix.ui.components.MainTabSheetMode;
+import io.jmix.ui.MainTabSheetMode;
 import io.jmix.ui.logging.AppLog;
 import io.jmix.ui.navigation.UrlHandlingMode;
 import io.jmix.ui.navigation.UrlHandlingModeFactory;

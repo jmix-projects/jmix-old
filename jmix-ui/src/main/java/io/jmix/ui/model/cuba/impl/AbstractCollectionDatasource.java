@@ -16,30 +16,26 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import io.jmix.core.AppBeans;
-import io.jmix.core.DevelopmentException;
-import io.jmix.core.LoadContext;
+import io.jmix.core.*;
+import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.Instance;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.metamodel.model.utils.InstanceUtils;
-import io.jmix.core.entity.Entity;
-import io.jmix.core.filter.ParameterInfo;
-import io.jmix.core.filter.ParametersHelper;
-import io.jmix.core.filter.QueryFilter;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.components.ComponentsHelper;
-import io.jmix.ui.FrameContext;
 import io.jmix.ui.components.Frame;
+import io.jmix.ui.components.FrameContext;
 import io.jmix.ui.components.HasValue;
-import io.jmix.ui.data.CollectionDatasource;
-import io.jmix.ui.data.DataSupplier;
+import io.jmix.ui.filter.ParameterInfo;
+import io.jmix.ui.filter.ParametersHelper;
+import io.jmix.ui.filter.QueryFilter;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.DataSupplier;
 import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.model.impl.EntityValuesComparator;
-import com.haulmont.cuba.security.global.UserSession;
-import io.jmix.ui.model.cuba.CollectionDatasource;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -360,7 +356,8 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
         }
         query = query.replace(":" + ParametersHelper.CASE_INSENSITIVE_MARKER, ":");
 
-        query = TemplateHelper.processTemplate(query, parameterValues);
+        // todo filter freemarker
+//        query = TemplateHelper.processTemplate(query, parameterValues);
 
         return query;
     }
@@ -409,8 +406,8 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
         }
 
         String sessionPrefix = ParameterInfo.Type.SESSION.getPrefix() + "$";
-        templateParams.put(sessionPrefix + "userId", userSession.getCurrentOrSubstitutedUser().getId());
-        templateParams.put(sessionPrefix + "userLogin", userSession.getCurrentOrSubstitutedUser().getLoginLowerCase());
+        templateParams.put(sessionPrefix + "userId", userSession.getUser().getId());
+        templateParams.put(sessionPrefix + "userLogin", userSession.getUser().getLoginLowerCase());
         for (String name : userSession.getAttributeNames()) {
             templateParams.put(sessionPrefix + name, userSession.getAttribute(name));
         }
@@ -552,7 +549,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
             if (!properties.isEmpty()) {
                 String orderBy = properties.stream()
                         .filter(m -> m != null
-                            && m.getAnnotatedElement().getAnnotation(com.haulmont.chile.core.annotations.MetaProperty.class) == null)
+                            && m.getAnnotatedElement().getAnnotation(io.jmix.core.metamodel.annotations.MetaProperty.class) == null)
                         .map(m -> "e." + m.getName())
                         .collect(Collectors.joining(", "));
 

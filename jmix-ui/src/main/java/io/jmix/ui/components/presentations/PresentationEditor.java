@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.components.presentations;
 
-import com.haulmont.cuba.core.global.PersistenceHelper;
+import io.jmix.ui.sys.PersistenceHelper;
 import com.vaadin.ui.*;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;

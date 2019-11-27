@@ -44,8 +44,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.haulmont.cuba.web.gui.components.WebLookupField.NULL_ITEM_ICON_GENERATOR;
-import static com.haulmont.cuba.web.gui.components.WebLookupField.NULL_STYLE_GENERATOR;
+import static io.jmix.ui.components.impl.WebLookupField.NULL_ITEM_ICON_GENERATOR;
+import static io.jmix.ui.components.impl.WebLookupField.NULL_STYLE_GENERATOR;
 
 public class WebLookupPickerField<V extends Entity> extends WebPickerField<V>
         implements LookupPickerField<V>, SecuredActionsHolder {

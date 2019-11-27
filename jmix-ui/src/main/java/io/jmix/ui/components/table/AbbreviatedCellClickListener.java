@@ -17,18 +17,18 @@
 package io.jmix.ui.components.table;
 
 import com.google.common.base.Strings;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesTools;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils;
-import com.haulmont.cuba.web.widgets.client.resizabletextarea.ResizeDirection;
+import io.jmix.ui.dynamicattributes.DynamicAttributesTools;
+import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
 import com.vaadin.ui.VerticalLayout;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.App;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.widgets.CubaEnhancedTable;
 import io.jmix.ui.widgets.CubaResizableTextAreaWrapper;
 import io.jmix.ui.widgets.CubaTextArea;
+import io.jmix.ui.widgets.client.resizabletextarea.ResizeDirection;
 import org.apache.commons.lang3.StringUtils;
 
 import static io.jmix.ui.components.impl.WebAbstractTable.MAX_TEXT_LENGTH_GAP;

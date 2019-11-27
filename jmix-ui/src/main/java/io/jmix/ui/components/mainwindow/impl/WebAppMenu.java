@@ -16,7 +16,6 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.cuba.web.sys.MenuBuilder;
 import com.vaadin.server.ClientConnector;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.MenuBar;
@@ -25,6 +24,7 @@ import io.jmix.ui.AppUI;
 import io.jmix.ui.components.impl.WebAbstractComponent;
 import io.jmix.ui.components.mainwindow.AppMenu;
 import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.menu.MenuBuilder;
 import io.jmix.ui.widgets.CubaMenuBar;
 import io.jmix.ui.widgets.CubaUI;
 import org.apache.commons.lang3.StringUtils;

@@ -331,7 +331,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
         autowireContext(urlChangeHandler, applicationContext);
         setUrlChangeHandler(urlChangeHandler);
 
-        getPage().addPopStateListener(urlChangeHandler::handleUrlChange);*/
+        getPage().addPopStateListener(urlChangeHandler::handleUrlChange);
     }
 
     protected void autowireContext(Object instance, ApplicationContext applicationContext) {

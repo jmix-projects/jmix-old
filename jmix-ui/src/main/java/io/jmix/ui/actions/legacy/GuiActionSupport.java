@@ -32,6 +32,7 @@ import io.jmix.ui.components.PickerField;
 import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.components.data.ValueSource;
 import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.dynamicattributes.DynamicAttributesGuiTools;
 import io.jmix.ui.model.cuba.Datasource;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -50,8 +51,8 @@ public class GuiActionSupport {
     protected ViewRepository viewRepository;
     @Inject
     protected EntityStates entityStates;
-//    @Inject
-//    protected DynamicAttributesGuiTools dynamicAttributesGuiTools;
+    @Inject
+    protected DynamicAttributesGuiTools dynamicAttributesGuiTools;
 
     @Inject
     protected MetadataTools metadataTools;
@@ -68,7 +69,8 @@ public class GuiActionSupport {
         boolean dynamicAttributesAreLoaded = true;
         if (entity instanceof BaseGenericIdEntity) {
             BaseGenericIdEntity e = (BaseGenericIdEntity) entity;
-            dynamicAttributesAreLoaded = e.getDynamicAttributes() != null;
+            // todo dynamic attributes
+//            dynamicAttributesAreLoaded = e.getDynamicAttributes() != null;
             needDynamicAttributes = targetDatasource.getLoadDynamicAttributes();
         }
 

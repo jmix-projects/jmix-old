@@ -17,9 +17,8 @@
 package io.jmix.ui.model.cuba.impl;
 
 import io.jmix.core.commons.events.EventRouter;
-import io.jmix.ui.data.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
 
 public class CollectionDsListenersWrapper implements
         Datasource.ItemChangeListener,

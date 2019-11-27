@@ -16,35 +16,30 @@
 
 package io.jmix.ui.components.table;
 
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.entity.SoftDelete;
-import com.haulmont.cuba.core.global.BeanLocator;
-import com.haulmont.cuba.core.global.DataManager;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.View;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.components.AbstractEditor;
-import com.haulmont.cuba.gui.components.Frame;
-import com.haulmont.cuba.gui.components.Table;
-import com.haulmont.cuba.gui.components.Window;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.data.DataSupplier;
-import com.haulmont.cuba.gui.data.impl.DatasourceImplementation;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
 import io.jmix.core.BeanLocator;
+import io.jmix.core.DataManager;
+import io.jmix.core.Messages;
+import io.jmix.core.View;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.SoftDelete;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.WindowConfig;
+import io.jmix.ui.components.ComponentsHelper;
+import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.components.Window;
+import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.components.compatibility.WindowManager.OpenType;
+import io.jmix.ui.model.cuba.DataSupplier;
+import io.jmix.ui.model.cuba.impl.DatasourceImplementation;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.legacy.AbstractEditor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import java.lang.reflect.Method;
 
-import static com.haulmont.cuba.gui.WindowManager.OpenType;
 
 public class LinkCellClickListener implements Table.CellClickListener {
 

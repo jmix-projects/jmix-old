@@ -16,16 +16,16 @@
 
 package io.jmix.ui.components.table;
 
-import com.haulmont.cuba.gui.components.Field;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.v7.ui.CustomField;
+import io.jmix.ui.components.Field;
 
 public class EditableColumnFieldWrapper extends CustomField {
 
     protected Component component;
 
-    public EditableColumnFieldWrapper(Component component, com.haulmont.cuba.gui.components.Component columnComponent) {
+    public EditableColumnFieldWrapper(Component component, io.jmix.ui.components.Component columnComponent) {
         this.component = component;
 
         if (component.getWidth() < 0) {
@@ -57,7 +57,7 @@ public class EditableColumnFieldWrapper extends CustomField {
 
         if (component != null) {
             if (width < 0) {
-                component.setWidth(com.haulmont.cuba.gui.components.Component.AUTO_SIZE);
+                component.setWidth(io.jmix.ui.components.Component.AUTO_SIZE);
             } else {
                 component.setWidth(100, Unit.PERCENTAGE);
             }
@@ -70,7 +70,7 @@ public class EditableColumnFieldWrapper extends CustomField {
 
         if (component != null) {
             if (height < 0) {
-                component.setHeight(com.haulmont.cuba.gui.components.Component.AUTO_SIZE);
+                component.setHeight(io.jmix.ui.components.Component.AUTO_SIZE);
             } else {
                 component.setHeight(100, Unit.PERCENTAGE);
             }

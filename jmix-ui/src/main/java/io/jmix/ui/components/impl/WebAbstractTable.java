@@ -16,39 +16,41 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
+import com.haulmont.cuba.client.sys.PersistenceManagerClient;
+import com.haulmont.cuba.web.gui.components.table.*;
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.server.Resource;
+import com.vaadin.server.VaadinSession;
+import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.converter.Converter;
+import com.vaadin.v7.data.util.converter.ConverterUtil;
+import com.vaadin.v7.ui.Table.ColumnHeaderMode;
 import io.jmix.core.*;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.Presentation;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
+import io.jmix.core.metamodel.model.*;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
 import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.ClientConfig;
+import io.jmix.ui.Notifications;
 import io.jmix.ui.WebConfig;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.BaseAction;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Window;
-import io.jmix.ui.components.data.ValueConversionException;
-import io.jmix.core.metamodel.model.*;
-import io.jmix.ui.ClientConfig;
-import com.haulmont.cuba.client.sys.PersistenceManagerClient;
-import io.jmix.core.app.dynamicattributes.DynamicAttributesTools;
-import io.jmix.core.app.dynamicattributes.DynamicAttributesUtils;
-import io.jmix.core.app.keyvalue.KeyValueMetaClass;
-import io.jmix.core.entity.CategoryAttribute;
-import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.LocaleHelper;
-import io.jmix.ui.Notifications;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.LookupComponent.LookupSelectionChangeNotifier;
-import io.jmix.ui.components.actions.BaseAction;
 import io.jmix.ui.components.columnmanager.ColumnManager;
-import io.jmix.ui.components.data.AggregatableTableItems;
-import io.jmix.ui.components.data.BindingState;
-import io.jmix.ui.components.data.HasValueSource;
-import io.jmix.ui.components.data.TableItems;
+import io.jmix.ui.components.data.*;
 import io.jmix.ui.components.data.aggregation.Aggregation;
 import io.jmix.ui.components.data.aggregation.Aggregations;
 import io.jmix.ui.components.data.meta.ContainerDataUnit;
@@ -56,16 +58,15 @@ import io.jmix.ui.components.data.meta.DatasourceDataUnit;
 import io.jmix.ui.components.data.meta.EmptyDataUnit;
 import io.jmix.ui.components.data.meta.EntityTableItems;
 import io.jmix.ui.components.data.table.DatasourceTableItems;
-import io.jmix.ui.components.sys.ShowInfoAction;
+import io.jmix.ui.components.presentations.TablePresentations;
 import io.jmix.ui.components.table.*;
-import io.jmix.ui.data.CollectionDatasource;
+import io.jmix.ui.dynamicattributes.CategoryAttribute;
+import io.jmix.ui.dynamicattributes.DynamicAttributesTools;
+import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
+import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.model.*;
 import io.jmix.ui.model.cuba.CollectionDatasource;
 import io.jmix.ui.model.cuba.Datasource;
-import io.jmix.ui.data.DsBuilder;
-import io.jmix.ui.data.aggregation.Aggregation;
-import io.jmix.ui.data.aggregation.Aggregations;
-import io.jmix.ui.data.impl.DatasourceImplementation;
-import io.jmix.ui.model.*;
 import io.jmix.ui.model.cuba.DsBuilder;
 import io.jmix.ui.model.cuba.impl.DatasourceImplementation;
 import io.jmix.ui.model.impl.KeyValueContainerImpl;
@@ -75,16 +76,10 @@ import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.InstallTargetHandler;
 import io.jmix.ui.screen.ScreenContext;
 import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.sys.PersistenceHelper;
+import io.jmix.ui.sys.ShowInfoAction;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
-import com.haulmont.cuba.security.entity.EntityOp;
-import com.haulmont.cuba.security.entity.Presentation;
-import io.jmix.ui.AppUI;
-import com.haulmont.cuba.web.WebConfig;
-import com.haulmont.cuba.web.gui.components.presentations.TablePresentations;
-import com.haulmont.cuba.web.gui.components.table.*;
-import com.haulmont.cuba.web.gui.components.util.ShortcutListenerDelegate;
-import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.widgets.CubaButton;
 import io.jmix.ui.widgets.CubaEnhancedTable;
 import io.jmix.ui.widgets.CubaEnhancedTable.AggregationInputValueChangeContext;
@@ -92,14 +87,6 @@ import io.jmix.ui.widgets.CubaUI;
 import io.jmix.ui.widgets.ShortcutListenerDelegate;
 import io.jmix.ui.widgets.compatibility.CubaValueChangeEvent;
 import io.jmix.ui.widgets.data.AggregationContainer;
-import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.server.Resource;
-import com.vaadin.server.VaadinSession;
-import com.vaadin.ui.*;
-import com.vaadin.v7.data.Property;
-import com.vaadin.v7.data.util.converter.Converter;
-import com.vaadin.v7.data.util.converter.ConverterUtil;
-import com.vaadin.v7.ui.Table.ColumnHeaderMode;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -1810,11 +1797,12 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
         if (DynamicAttributesUtils.isDynamicAttribute(metaProperty)) {
             CategoryAttribute categoryAttribute = DynamicAttributesUtils.getCategoryAttribute(metaProperty);
-            if (LocaleHelper.isLocalizedValueDefined(categoryAttribute.getLocaleNames())) {
-                return categoryAttribute.getLocaleName();
-            }
+            // todo dynamic attributes
+//            if (LocaleHelper.isLocalizedValueDefined(categoryAttribute.getLocaleNames())) {
+//                return categoryAttribute.getLocaleName();
+//            }
 
-            caption = StringUtils.capitalize(categoryAttribute.getName());
+//            caption = StringUtils.capitalize(categoryAttribute.getName());
         } else {
             caption = StringUtils.capitalize(getColumnCaption(columnId));
         }

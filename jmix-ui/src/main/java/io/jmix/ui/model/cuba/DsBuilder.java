@@ -15,11 +15,11 @@
  */
 package io.jmix.ui.model.cuba;
 
+import com.haulmont.cuba.client.sys.PersistenceManagerClient;
 import io.jmix.core.*;
+import io.jmix.core.app.PersistenceManagerService;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import com.haulmont.cuba.client.sys.PersistenceManagerClient;
-import io.jmix.core.app.PersistenceManagerService;
 import io.jmix.ui.data.impl.*;
 import io.jmix.ui.model.cuba.impl.*;
 import org.springframework.context.annotation.Scope;

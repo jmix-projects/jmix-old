@@ -17,37 +17,32 @@
 package io.jmix.ui.components.table;
 
 import com.google.common.base.Strings;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.global.MetadataTools;
-import com.haulmont.cuba.core.global.Security;
-import com.haulmont.cuba.gui.components.CheckBox;
-import com.haulmont.cuba.gui.components.Component.BelongToFrame;
-import com.haulmont.cuba.gui.components.Field;
-import com.haulmont.cuba.gui.components.Table;
-import com.haulmont.cuba.gui.components.data.HasValueSource;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.components.data.options.ContainerOptions;
-import com.haulmont.cuba.gui.components.data.options.DatasourceOptions;
-import com.haulmont.cuba.gui.components.data.value.ContainerValueSource;
-import com.haulmont.cuba.gui.components.factories.AbstractFieldFactory;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.DsContext;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.model.ScreenData;
-import com.haulmont.cuba.gui.screen.UiControllerUtils;
-import com.haulmont.cuba.web.gui.components.WebAbstractTable;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.v7.ui.TableFieldFactory;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.security.Security;
+import io.jmix.ui.components.CheckBox;
+import io.jmix.ui.components.Component.BelongToFrame;
+import io.jmix.ui.components.Field;
+import io.jmix.ui.components.Table;
+import io.jmix.ui.components.data.HasValueSource;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.options.ContainerOptions;
+import io.jmix.ui.components.data.options.DatasourceOptions;
+import io.jmix.ui.components.data.value.ContainerValueSource;
+import io.jmix.ui.components.factories.AbstractFieldFactory;
 import io.jmix.ui.components.impl.WebAbstractTable;
+import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
+import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.DsContext;
+import io.jmix.ui.screen.UiControllerUtils;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -76,7 +71,7 @@ public class WebTableFieldFactory<E extends Entity> extends AbstractFieldFactory
         Entity entity  = (Entity) tableDataContainer.getInternalItem(itemId);
         InstanceContainer instanceContainer = webTable.getInstanceContainer((E) entity);
 
-        com.haulmont.cuba.gui.components.Component columnComponent =
+        io.jmix.ui.components.Component columnComponent =
                 createField(new ContainerValueSource(instanceContainer, fieldPropertyId),
                         fieldPropertyId, columnConf.getXmlDescriptor());
 
@@ -113,7 +108,7 @@ public class WebTableFieldFactory<E extends Entity> extends AbstractFieldFactory
         return new EditableColumnFieldWrapper(componentImpl, columnComponent);
     }
 
-    protected Component getComponentImplementation(com.haulmont.cuba.gui.components.Component columnComponent) {
+    protected Component getComponentImplementation(io.jmix.ui.components.Component columnComponent) {
         com.vaadin.ui.Component composition = columnComponent.unwrapComposition(com.vaadin.ui.Component.class);
         Component componentImpl = composition;
         if (composition instanceof com.vaadin.v7.ui.Field
@@ -132,15 +127,15 @@ public class WebTableFieldFactory<E extends Entity> extends AbstractFieldFactory
         return componentImpl;
     }
 
-    protected void applyPermissions(com.haulmont.cuba.gui.components.Component columnComponent) {
+    protected void applyPermissions(io.jmix.ui.components.Component columnComponent) {
         if (columnComponent instanceof HasValueSource
-                && columnComponent instanceof com.haulmont.cuba.gui.components.Component.Editable) {
+                && columnComponent instanceof io.jmix.ui.components.Component.Editable) {
             HasValueSource component = (HasValueSource) columnComponent;
             MetaPropertyPath propertyPath = ((EntityValueSource) component.getValueSource()).getMetaPropertyPath();
 
             if (propertyPath != null) {
-                com.haulmont.cuba.gui.components.Component.Editable editable =
-                        (com.haulmont.cuba.gui.components.Component.Editable) component;
+                io.jmix.ui.components.Component.Editable editable =
+                        (io.jmix.ui.components.Component.Editable) component;
 
                 editable.setEditable(editable.isEditable()
                         && security.isEntityAttrUpdatePermitted(propertyPath));

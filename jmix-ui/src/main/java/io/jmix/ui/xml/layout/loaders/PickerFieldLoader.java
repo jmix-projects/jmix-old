@@ -16,10 +16,14 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.core.Metadata;
+import io.jmix.ui.Actions;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.legacy.GuiActionSupport;
 import io.jmix.ui.actions.picker.ClearAction;
 import io.jmix.ui.actions.picker.LookupAction;
-import io.jmix.ui.components.*;
-import io.jmix.ui.components.actions.GuiActionSupport;
+import io.jmix.ui.components.ActionsHolder;
+import io.jmix.ui.components.CaptionMode;
+import io.jmix.ui.components.PickerField;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

@@ -21,13 +21,12 @@ import io.jmix.core.EntityStates;
 import io.jmix.core.View;
 import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.entity.Entity;
-import io.jmix.ui.data.CollectionDatasource;
-import io.jmix.ui.data.DataSupplier;
+import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.model.cuba.CollectionDatasource;
 import io.jmix.ui.model.cuba.DataSupplier;
 import io.jmix.ui.model.cuba.DsContext;
+import io.jmix.ui.sys.PersistenceHelper;
 
 import javax.annotation.Nullable;
 import java.util.Collections;

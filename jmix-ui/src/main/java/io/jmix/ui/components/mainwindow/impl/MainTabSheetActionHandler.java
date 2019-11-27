@@ -16,11 +16,6 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.cuba.gui.Notifications;
-import com.haulmont.cuba.gui.Notifications.NotificationType;
-import com.haulmont.cuba.gui.app.core.dev.LayoutAnalyzer;
-import com.haulmont.cuba.gui.app.core.dev.LayoutTip;
-import com.haulmont.cuba.gui.components.sys.ShowInfoAction;
 import com.vaadin.event.Action;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
@@ -28,18 +23,14 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.Messages;
 import io.jmix.core.Metadata;
-import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.ClientConfig;
-import io.jmix.ui.WindowConfig;
-import io.jmix.ui.WindowInfo;
-import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.Window;
-import io.jmix.ui.components.compatibility.WindowManager;
 import io.jmix.ui.screen.legacy.AbstractEditor;
+import io.jmix.ui.sys.ShowInfoAction;
 import io.jmix.ui.widgets.HasTabSheetBehaviour;
 import io.jmix.ui.widgets.TabSheetBehaviour;
 import io.jmix.ui.widgets.WindowBreadCrumbs;
@@ -144,24 +135,27 @@ public class MainTabSheetActionHandler implements Action.Handler {
     }
 
     protected void analyzeLayout(Object target) {
-        Window window = findWindow((Layout) target);
-        if (window != null) {
-            LayoutAnalyzer analyzer = new LayoutAnalyzer();
-            List<LayoutTip> tipsList = analyzer.analyze(window);
 
-            if (tipsList.isEmpty()) {
-                Notifications notifications = ComponentsHelper.getScreenContext(window).getNotifications();
+    // todo layout analyzer
 
-                notifications.create(NotificationType.HUMANIZED)
-                        .withCaption("No layout problems found")
-                        .show();
-            } else {
-                WindowManager wm = (WindowManager) ComponentsHelper.getScreenContext(window).getScreens();
-                WindowInfo windowInfo = AppBeans.get(WindowConfig.class).getWindowInfo("layoutAnalyzer");
-
-                wm.openWindow(windowInfo, WindowManager.OpenType.DIALOG, ParamsMap.of("tipsList", tipsList));
-            }
-        }
+//        Window window = findWindow((Layout) target);
+//        if (window != null) {
+//            LayoutAnalyzer analyzer = new LayoutAnalyzer();
+//            List<LayoutTip> tipsList = analyzer.analyze(window);
+//
+//            if (tipsList.isEmpty()) {
+//                Notifications notifications = ComponentsHelper.getScreenContext(window).getNotifications();
+//
+//                notifications.create(Notifications.NotificationType.HUMANIZED)
+//                        .withCaption("No layout problems found")
+//                        .show();
+//            } else {
+//                WindowManager wm = (WindowManager) ComponentsHelper.getScreenContext(window).getScreens();
+//                WindowInfo windowInfo = AppBeans.get(WindowConfig.class).getWindowInfo("layoutAnalyzer");
+//
+//                wm.openWindow(windowInfo, WindowManager.OpenType.DIALOG, ParamsMap.of("tipsList", tipsList));
+//            }
+//        }
     }
 
     @Nullable

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.navigation;
 
-import com.haulmont.cuba.core.global.PersistenceHelper;
+import io.jmix.ui.sys.PersistenceHelper;
 import com.vaadin.server.Page;
 import io.jmix.core.Events;
 import io.jmix.core.Metadata;

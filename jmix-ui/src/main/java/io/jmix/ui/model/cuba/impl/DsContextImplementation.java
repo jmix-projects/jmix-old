@@ -17,7 +17,7 @@ package io.jmix.ui.model.cuba.impl;
 
 import io.jmix.core.entity.Entity;
 import io.jmix.core.CommitContext;
-import io.jmix.core.filter.ParameterInfo;
+import io.jmix.ui.filter.ParameterInfo;
 import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.model.cuba.DsContext;
 

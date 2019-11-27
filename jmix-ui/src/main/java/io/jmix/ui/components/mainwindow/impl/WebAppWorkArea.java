@@ -16,11 +16,6 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import io.jmix.core.ConfigInterfaces;
-import com.haulmont.cuba.gui.UrlRouting;
-import com.haulmont.cuba.gui.components.TabSheet.SelectedTabChangeEvent;
-import com.haulmont.cuba.gui.navigation.NavigationState;
-import com.haulmont.cuba.web.gui.ManagedMainTabSheetMode;
 import com.vaadin.event.Action;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.dd.DragAndDropEvent;
@@ -31,13 +26,16 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 import io.jmix.core.BeanLocator;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.Events;
-import io.jmix.ui.App.UserSettingsTools;
 import io.jmix.ui.*;
 import io.jmix.ui.components.*;
+import io.jmix.ui.components.TabSheet.SelectedTabChangeEvent;
 import io.jmix.ui.components.impl.WebAbstractComponent;
 import io.jmix.ui.components.impl.WebWindow;
 import io.jmix.ui.components.mainwindow.AppWorkArea;
+import io.jmix.ui.navigation.NavigationState;
+import io.jmix.ui.navigation.UrlRouting;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiControllerUtils;
@@ -104,8 +102,9 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
 
         this.tabbedContainer = createTabbedModeContainer();
 
-        UserSettingsTools userSettingsTools = beanLocator.get(UserSettingsTools.NAME);
-        setMode(userSettingsTools.loadAppWindowMode());
+        // todo settings
+//        UserSettingsTools userSettingsTools = beanLocator.get(UserSettingsTools.NAME);
+//        setMode(userSettingsTools.loadAppWindowMode());
     }
 
     @Override

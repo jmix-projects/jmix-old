@@ -16,9 +16,6 @@
 
 package io.jmix.ui.components.table;
 
-import com.haulmont.bali.events.Subscription;
-import com.haulmont.cuba.gui.components.data.BindingState;
-import com.haulmont.cuba.gui.components.data.TableItems;
 import com.haulmont.cuba.web.gui.data.StaticItemSetChangeEvent;
 import com.vaadin.ui.UI;
 import com.vaadin.v7.data.Container;

@@ -20,7 +20,6 @@ import io.jmix.core.CommitContext;
 import io.jmix.core.Metadata;
 import io.jmix.core.View;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.filter.ParameterInfo;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.impl.AbstractInstance;
@@ -28,10 +27,11 @@ import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.FrameContext;
 import io.jmix.ui.components.compatibility.LegacyFrame;
-import io.jmix.ui.data.*;
+import io.jmix.ui.filter.ParameterInfo;
 import io.jmix.ui.model.cuba.*;
 import io.jmix.ui.model.cuba.impl.compatibility.DsContextCommitListenerWrapper;
 import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.sys.PersistenceHelper;
 
 import java.util.*;
 
@@ -314,7 +314,7 @@ public class DsContextImpl implements DsContextImplementation {
     }
 
     protected void addToContext(Entity entity, Datasource<Entity> datasource,
-                              Collection<Entity> entities, Map<Object, View> views) {
+                                Collection<Entity> entities, Map<Object, View> views) {
         if (datasource instanceof NestedDatasource) {
             replaceMasterCopies(entity, ((NestedDatasource) datasource));
         }

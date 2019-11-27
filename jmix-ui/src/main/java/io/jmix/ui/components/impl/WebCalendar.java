@@ -16,22 +16,22 @@
 
 package io.jmix.ui.components.impl;
 
+import com.haulmont.cuba.web.gui.components.calendar.CalendarEventProviderWrapper;
+import com.haulmont.cuba.web.gui.components.calendar.CalendarEventWrapper;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents;
+import io.jmix.core.Messages;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.Messages;
 import io.jmix.core.security.UserSessionSource;
+import io.jmix.ui.components.Calendar;
 import io.jmix.ui.components.calendar.CalendarEvent;
 import io.jmix.ui.components.calendar.CalendarEventProvider;
 import io.jmix.ui.components.calendar.EntityCalendarEvent;
 import io.jmix.ui.components.calendar.ListCalendarEventProvider;
 import io.jmix.ui.components.data.calendar.EntityCalendarEventProvider;
-import io.jmix.ui.data.CollectionDatasource;
-import io.jmix.ui.data.impl.CollectionDsHelper;
-import com.haulmont.cuba.web.gui.components.calendar.CalendarEventProviderWrapper;
-import com.haulmont.cuba.web.gui.components.calendar.CalendarEventWrapper;
-import io.jmix.ui.widgets.CubaCalendar;
-import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents;
+import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.impl.CollectionDsHelper;
 import io.jmix.ui.widgets.CubaCalendar;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;

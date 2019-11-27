@@ -19,23 +19,20 @@ package io.jmix.ui.xml.layout.loaders;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
+import io.jmix.core.MessageTools;
+import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.core.app.dynamicattributes.DynamicAttributesUtils;
-import io.jmix.core.entity.CategoryAttribute;
-import io.jmix.core.MessageTools;
-import io.jmix.core.MetadataTools;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.data.HasValueSource;
-import io.jmix.ui.components.data.ValueSource;
 import io.jmix.ui.components.data.ValueSourceProvider;
 import io.jmix.ui.components.data.meta.EntityValueSource;
 import io.jmix.ui.components.data.options.ContainerOptions;
 import io.jmix.ui.components.data.value.ContainerValueSource;
 import io.jmix.ui.components.data.value.ContainerValueSourceProvider;
-import io.jmix.ui.dynamicattributes.DynamicAttributeComponentsGenerator;
+import io.jmix.ui.dynamicattributes.CategoryAttribute;
 import io.jmix.ui.dynamicattributes.DynamicAttributesGuiTools;
 import io.jmix.ui.model.*;
 import io.jmix.ui.screen.FrameOwner;
@@ -50,8 +47,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static io.jmix.core.app.dynamicattributes.DynamicAttributesUtils.getCategoryAttribute;
-import static io.jmix.core.app.dynamicattributes.DynamicAttributesUtils.isDynamicAttribute;
+import static io.jmix.ui.dynamicattributes.DynamicAttributesUtils.isDynamicAttribute;
 
 public class FormLoader extends AbstractComponentLoader<Form> {
 
@@ -187,13 +183,14 @@ public class FormLoader extends AbstractComponentLoader<Form> {
             String propertyName = metaPropertyPath != null ? metaPropertyPath.getMetaProperty().getName() : null;
             if (metaPropertyPath != null) {
                 if (isDynamicAttribute(metaPropertyPath.getMetaProperty())) {
-                    CategoryAttribute categoryAttribute = getCategoryAttribute(metaPropertyPath.getMetaProperty());
-                    ((Component.HasCaption) component).setCaption(categoryAttribute != null
-                            ? categoryAttribute.getLocaleName()
-                            : propertyName);
-                    ((Component.HasCaption) component).setDescription(categoryAttribute != null
-                            ? categoryAttribute.getLocaleDescription()
-                            : null);
+                    // todo dynamic attributes
+//                    CategoryAttribute categoryAttribute = getCategoryAttribute(metaPropertyPath.getMetaProperty());
+//                    ((Component.HasCaption) component).setCaption(categoryAttribute != null
+//                            ? categoryAttribute.getLocaleName()
+//                            : propertyName);
+//                    ((Component.HasCaption) component).setDescription(categoryAttribute != null
+//                            ? categoryAttribute.getLocaleDescription()
+//                            : null);
                 } else {
                     MetaClass propertyMetaClass = getMetadataTools().getPropertyEnclosingMetaClass(metaPropertyPath);
                     String propertyCaption = getMessageTools().getPropertyCaption(propertyMetaClass, propertyName);
@@ -286,47 +283,48 @@ public class FormLoader extends AbstractComponentLoader<Form> {
                 }
 
                 for (CategoryAttribute attribute : attributesToShow) {
-                    String code = DynamicAttributesUtils.encodeAttributeCode(attribute.getCode());
-
-                    ValueSource<?> valueSource = provider.getValueSource(code);
-
-                    Component dynamicAttrComponent;
-                    if (Boolean.TRUE.equals(attribute.getIsCollection())) {
-                        dynamicAttrComponent = getDynamicAttributesComponentsGenerator()
-                                .generateComponent(provider.getValueSource(code), attribute);
-                    } else {
-                        ComponentGenerationContext context = new ComponentGenerationContext(metaClass, code);
-                        context.setValueSource(valueSource);
-                        dynamicAttrComponent = getUiComponentsGenerator().generate(context);
-                    }
-
-                    if (dynamicAttrComponent instanceof Component.HasCaption) {
-                        ((Component.HasCaption) dynamicAttrComponent).setCaption(attribute.getLocaleName());
-                        ((Component.HasCaption) dynamicAttrComponent).setDescription(attribute.getLocaleDescription());
-                    }
-
-                    if (dynamicAttrComponent instanceof HasValueSource) {
-                        //noinspection unchecked
-                        ((HasValueSource) dynamicAttrComponent).setValueSource(valueSource);
-                    }
-
-                    if (dynamicAttrComponent instanceof Component.Editable
-                            && Boolean.TRUE.equals(attribute.getConfiguration().isReadOnly())) {
-                        ((Component.Editable) dynamicAttrComponent).setEditable(false);
-                    }
-
-                    if (dynamicAttrComponent instanceof Field) {
-                        ((Field) dynamicAttrComponent).setRequired(attribute.getRequired());
-                        ((Field) dynamicAttrComponent).setRequiredMessage(getMessages()
-                                .formatMainMessage("validation.required.defaultMsg", attribute.getLocaleName()));
-                    }
-
-                    String defaultWidth =
-                            Strings.isNullOrEmpty(attribute.getWidth())
-                                    ? columnWidth : attribute.getWidth();
-                    loadWidth(dynamicAttrComponent, defaultWidth);
-
-                    components.add(dynamicAttrComponent);
+                    // todo dynamic attributes
+//                    String code = DynamicAttributesUtils.encodeAttributeCode(attribute.getCode());
+//
+//                    ValueSource<?> valueSource = provider.getValueSource(code);
+//
+//                    Component dynamicAttrComponent;
+//                    if (Boolean.TRUE.equals(attribute.getIsCollection())) {
+//                        dynamicAttrComponent = getDynamicAttributesComponentsGenerator()
+//                                .generateComponent(provider.getValueSource(code), attribute);
+//                    } else {
+//                        ComponentGenerationContext context = new ComponentGenerationContext(metaClass, code);
+//                        context.setValueSource(valueSource);
+//                        dynamicAttrComponent = getUiComponentsGenerator().generate(context);
+//                    }
+//
+//                    if (dynamicAttrComponent instanceof Component.HasCaption) {
+//                        ((Component.HasCaption) dynamicAttrComponent).setCaption(attribute.getLocaleName());
+//                        ((Component.HasCaption) dynamicAttrComponent).setDescription(attribute.getLocaleDescription());
+//                    }
+//
+//                    if (dynamicAttrComponent instanceof HasValueSource) {
+//                        //noinspection unchecked
+//                        ((HasValueSource) dynamicAttrComponent).setValueSource(valueSource);
+//                    }
+//
+//                    if (dynamicAttrComponent instanceof Component.Editable
+//                            && Boolean.TRUE.equals(attribute.getConfiguration().isReadOnly())) {
+//                        ((Component.Editable) dynamicAttrComponent).setEditable(false);
+//                    }
+//
+//                    if (dynamicAttrComponent instanceof Field) {
+//                        ((Field) dynamicAttrComponent).setRequired(attribute.getRequired());
+//                        ((Field) dynamicAttrComponent).setRequiredMessage(getMessages()
+//                                .formatMainMessage("validation.required.defaultMsg", attribute.getLocaleName()));
+//                    }
+//
+//                    String defaultWidth =
+//                            Strings.isNullOrEmpty(attribute.getWidth())
+//                                    ? columnWidth : attribute.getWidth();
+//                    loadWidth(dynamicAttrComponent, defaultWidth);
+//
+//                    components.add(dynamicAttrComponent);
                 }
                 return components;
             }
@@ -355,9 +353,9 @@ public class FormLoader extends AbstractComponentLoader<Form> {
         return beanLocator.get(UiComponentsGenerator.NAME);
     }
 
-    protected DynamicAttributeComponentsGenerator getDynamicAttributesComponentsGenerator() {
-        return beanLocator.get(DynamicAttributeComponentsGenerator.NAME);
-    }
+//    protected DynamicAttributeComponentsGenerator getDynamicAttributesComponentsGenerator() {
+//        return beanLocator.get(DynamicAttributeComponentsGenerator.NAME);
+//    }
 
     protected void loadCaptionPosition(Form resultComponent, Element element) {
         String captionAlignment = element.attributeValue("captionPosition");

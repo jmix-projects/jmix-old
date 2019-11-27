@@ -16,13 +16,8 @@
 
 package io.jmix.ui.components.mainwindow;
 
-import com.haulmont.cuba.core.entity.AbstractSearchFolder;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.HasSettings;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.HasSettings;
-
-import java.util.function.Function;
 
 /**
  * A component displaying a panel with application and search folders.
@@ -41,15 +36,16 @@ public interface FoldersPane extends Component.BelongToFrame, HasSettings {
      */
     void refreshFolders();
 
-    /**
-     * Sets the icon provider for the folders.
-     *
-     * @param iconProvider provider which provides icons for the folders
-     */
-    void setFolderIconProvider(Function<AbstractSearchFolder, String> iconProvider);
-
-    /**
-     * @return icon provider of the folders
-     */
-    Function<AbstractSearchFolder, String> getFolderIconProvider();
+    // todo search folders
+//    /**
+//     * Sets the icon provider for the folders.
+//     *
+//     * @param iconProvider provider which provides icons for the folders
+//     */
+//    void setFolderIconProvider(Function<AbstractSearchFolder, String> iconProvider);
+//
+//    /**
+//     * @return icon provider of the folders
+//     */
+//    Function<AbstractSearchFolder, String> getFolderIconProvider();
 }

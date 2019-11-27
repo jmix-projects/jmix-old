@@ -16,17 +16,14 @@
 
 package io.jmix.ui.model.cuba.impl;
 
+import io.jmix.core.View;
+import io.jmix.core.entity.KeyValueEntity;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.app.keyvalue.KeyValueMetaClass;
-import io.jmix.core.entity.KeyValueEntity;
-import io.jmix.core.View;
-import io.jmix.ui.data.DataSupplier;
+import io.jmix.ui.logging.UIPerformanceLogger;
 import io.jmix.ui.model.cuba.DataSupplier;
 import io.jmix.ui.model.cuba.DsContext;
-import io.jmix.ui.data.HierarchicalDatasource;
-import io.jmix.ui.logging.UIPerformanceLogger;
 import io.jmix.ui.model.cuba.HierarchicalDatasource;
 import org.perf4j.StopWatch;
 import org.perf4j.slf4j.Slf4JStopWatch;

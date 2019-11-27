@@ -16,7 +16,7 @@
 package io.jmix.ui.model.cuba.impl;
 
 import io.jmix.core.DevelopmentException;
-import io.jmix.core.PersistenceHelper;
+import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.core.View;
 import io.jmix.core.ViewProperty;
 import io.jmix.core.commons.util.ParamsMap;

@@ -15,21 +15,19 @@
  */
 package io.jmix.ui.model.cuba.impl;
 
-import io.jmix.core.commons.events.EventRouter;
-import io.jmix.core.metamodel.model.Instance;
-import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.entity.Entity;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Metadata;
-import io.jmix.core.PersistenceHelper;
 import io.jmix.core.View;
-import io.jmix.ui.data.*;
-import io.jmix.ui.executors.BackgroundWorker;
+import io.jmix.core.commons.events.EventRouter;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.executors.BackgroundWorker;
 import io.jmix.ui.model.cuba.DataSupplier;
 import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.model.cuba.DsContext;
+import io.jmix.ui.model.cuba.NestedDatasource;
+import io.jmix.ui.sys.PersistenceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

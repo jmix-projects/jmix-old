@@ -16,10 +16,10 @@
 
 package io.jmix.ui.model.cuba.impl;
 
-import com.haulmont.bali.datastruct.Node;
-import com.haulmont.bali.datastruct.Tree;
+import io.jmix.core.commons.datastruct.Node;
+import io.jmix.core.commons.datastruct.Tree;
 import io.jmix.ui.model.cuba.Datasource;
-import io.jmix.ui.data.NestedDatasource;
+import io.jmix.ui.model.cuba.NestedDatasource;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

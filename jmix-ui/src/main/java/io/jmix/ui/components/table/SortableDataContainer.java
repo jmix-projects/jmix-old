@@ -16,8 +16,6 @@
 
 package io.jmix.ui.components.table;
 
-import com.haulmont.cuba.gui.components.data.TableItems;
-import com.haulmont.cuba.web.widgets.data.TableSortableContainer;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Item;
 import io.jmix.ui.components.data.TableItems;
