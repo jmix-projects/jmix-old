@@ -519,13 +519,14 @@ public class DsBuilder {
         return datasource;
     }
 
-    public RuntimePropsDatasource buildRuntimePropsDatasource(String mainDsId, @Nullable MetaClass categorizedEntityClass) {
-        init();
-        RuntimePropsDatasourceImpl datasource;
-        datasource = new RuntimePropsDatasourceImpl(dsContext, dataSupplier, id, mainDsId, categorizedEntityClass);
-        registerDatasource(datasource);
-        return datasource;
-    }
+    // todo dynamic attributes
+//    public RuntimePropsDatasource buildRuntimePropsDatasource(String mainDsId, @Nullable MetaClass categorizedEntityClass) {
+//        init();
+//        RuntimePropsDatasourceImpl datasource;
+//        datasource = new RuntimePropsDatasourceImpl(dsContext, dataSupplier, id, mainDsId, categorizedEntityClass);
+//        registerDatasource(datasource);
+//        return datasource;
+//    }
 
     /**
      * Build a {@link ValueCollectionDatasourceImpl} with the standard implementation.
