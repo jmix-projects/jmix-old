@@ -37,6 +37,8 @@ class DataSpec extends Specification {
 
     void cleanup() {
         def runner = new QueryRunner(persistence.getDataSource())
+        runner.update('delete from TEST_APP_ENTITY_ITEM')
+        runner.update('delete from TEST_SECOND_APP_ENTITY')
         runner.update('delete from TEST_APP_ENTITY')
         runner.update('delete from TEST_IDENTITY_ID_ENTITY')
         runner.update('delete from TEST_IDENTITY_UUID_ENTITY')

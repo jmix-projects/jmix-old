@@ -18,23 +18,20 @@ package com.sample.app.entity;
 
 import io.jmix.core.entity.StandardEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.util.List;
+import javax.persistence.*;
 
-@Entity(name = "test_TestAppEntity")
-@Table(name = "TEST_APP_ENTITY")
-public class TestAppEntity extends StandardEntity {
+@Entity(name = "test_TestSecondAppEntity")
+@Table(name = "TEST_SECOND_APP_ENTITY")
+public class TestSecondAppEntity extends StandardEntity {
 
     private static final long serialVersionUID = 8256929425690816623L;
 
     @Column(name = "NAME")
     private String name;
 
-    @OneToMany(mappedBy = "appEntity")
-    private List<TestAppEntityItem> items;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "APP_ENTITY_ID")
+    private TestAppEntity appEntity;
 
     public String getName() {
         return name;
@@ -44,11 +41,11 @@ public class TestAppEntity extends StandardEntity {
         this.name = name;
     }
 
-    public List<TestAppEntityItem> getItems() {
-        return items;
+    public TestAppEntity getAppEntity() {
+        return appEntity;
     }
 
-    public void setItems(List<TestAppEntityItem> items) {
-        this.items = items;
+    public void setAppEntity(TestAppEntity appEntity) {
+        this.appEntity = appEntity;
     }
 }

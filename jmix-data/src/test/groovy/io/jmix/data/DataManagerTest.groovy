@@ -60,6 +60,5 @@ class DataManagerTest extends DataSpec {
 
         !entityStates.isNew(entity2)
         entityStates.isDetached(entity2)
-
     }
 }
