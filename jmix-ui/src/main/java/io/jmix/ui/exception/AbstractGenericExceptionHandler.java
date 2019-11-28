@@ -16,8 +16,6 @@
 
 package io.jmix.ui.exception;
 
-import com.haulmont.cuba.core.global.RemoteException;
-import com.haulmont.cuba.gui.WindowManager;
 import io.jmix.ui.components.compatibility.WindowManager;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -53,16 +51,17 @@ public abstract class AbstractGenericExceptionHandler implements GenericExceptio
                 doHandle(throwable.getClass().getName(), throwable.getMessage(), throwable, windowManager);
                 return true;
             }
-            if (throwable instanceof RemoteException) {
-                RemoteException remoteException = (RemoteException) throwable;
-                for (RemoteException.Cause cause : remoteException.getCauses()) {
-                    if (classNames.contains(cause.getClassName())
-                            && canHandle(cause.getClassName(), cause.getMessage(), cause.getThrowable())) {
-                        doHandle(cause.getClassName(), cause.getMessage(), cause.getThrowable(), windowManager);
-                        return true;
-                    }
-                }
-            }
+            // todo RemoteException
+//            if (throwable instanceof RemoteException) {
+//                RemoteException remoteException = (RemoteException) throwable;
+//                for (RemoteException.Cause cause : remoteException.getCauses()) {
+//                    if (classNames.contains(cause.getClassName())
+//                            && canHandle(cause.getClassName(), cause.getMessage(), cause.getThrowable())) {
+//                        doHandle(cause.getClassName(), cause.getMessage(), cause.getThrowable(), windowManager);
+//                        return true;
+//                    }
+//                }
+//            }
         }
         return false;
     }

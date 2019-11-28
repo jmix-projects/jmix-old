@@ -16,9 +16,11 @@
 
 package io.jmix.ui.components.impl;
 
+import com.vaadin.server.ClientConnector;
+import com.vaadin.ui.Component;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.RemoteException;
 import io.jmix.core.security.NoUserSessionException;
+import io.jmix.ui.AppUI;
 import io.jmix.ui.components.Fragment;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.Timer;
@@ -26,11 +28,7 @@ import io.jmix.ui.components.Window;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.ScreenFragment;
 import io.jmix.ui.screen.UiControllerUtils;
-import com.haulmont.cuba.security.global.NoUserSessionException;
-import io.jmix.ui.AppUI;
 import io.jmix.ui.widgets.CubaTimer;
-import com.vaadin.server.ClientConnector;
-import com.vaadin.ui.Component;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -184,7 +182,8 @@ public class WebTimer extends WebAbstractFacet implements Timer {
             try {
                 listener.accept(new TimerActionEvent(WebTimer.this));
             } catch (RuntimeException e) {
-                int reIdx = ExceptionUtils.indexOfType(e, RemoteException.class);
+                // todo RemoteException
+                /*int reIdx = ExceptionUtils.indexOfType(e, RemoteException.class);
                 if (reIdx > -1) {
                     RemoteException re = (RemoteException) ExceptionUtils.getThrowableList(e).get(reIdx);
                     for (RemoteException.Cause cause : re.getCauses()) {
@@ -194,7 +193,7 @@ public class WebTimer extends WebAbstractFacet implements Timer {
                             return;
                         }
                     }
-                } else if (ExceptionUtils.indexOfThrowable(e, NoUserSessionException.class) > -1) {
+                } else */ if (ExceptionUtils.indexOfThrowable(e, NoUserSessionException.class) > -1) {
                     log.warn("NoUserSessionException in timer {}, timer will be stopped", id != null ? id : "<noid>");
                     stop();
                     return;

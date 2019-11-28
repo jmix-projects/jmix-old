@@ -17,7 +17,6 @@
 package io.jmix.ui.model.cuba.impl;
 
 import io.jmix.core.entity.KeyValueEntity;
-import io.jmix.ui.data.CollectionDatasource;
 import io.jmix.ui.model.cuba.CollectionDatasource;
 
 import java.util.Collection;

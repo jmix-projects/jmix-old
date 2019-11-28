@@ -16,7 +16,6 @@
 
 package io.jmix.ui.exception;
 
-import com.haulmont.cuba.core.global.RemoteException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import javax.annotation.Nullable;
@@ -48,16 +47,17 @@ public abstract class AbstractUiExceptionHandler implements UiExceptionHandler {
                 doHandle(throwable.getClass().getName(), throwable.getMessage(), throwable, context);
                 return true;
             }
-            if (throwable instanceof RemoteException) {
-                RemoteException remoteException = (RemoteException) throwable;
-                for (RemoteException.Cause cause : remoteException.getCauses()) {
-                    if (classNames.contains(cause.getClassName())
-                            && canHandle(cause.getClassName(), cause.getMessage(), cause.getThrowable())) {
-                        doHandle(cause.getClassName(), cause.getMessage(), cause.getThrowable(), context);
-                        return true;
-                    }
-                }
-            }
+            // todo RemoteException
+//            if (throwable instanceof RemoteException) {
+//                RemoteException remoteException = (RemoteException) throwable;
+//                for (RemoteException.Cause cause : remoteException.getCauses()) {
+//                    if (classNames.contains(cause.getClassName())
+//                            && canHandle(cause.getClassName(), cause.getMessage(), cause.getThrowable())) {
+//                        doHandle(cause.getClassName(), cause.getMessage(), cause.getThrowable(), context);
+//                        return true;
+//                    }
+//                }
+//            }
         }
         return false;
     }
