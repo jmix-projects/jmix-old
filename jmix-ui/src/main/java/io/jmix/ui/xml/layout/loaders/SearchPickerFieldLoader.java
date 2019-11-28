@@ -17,7 +17,7 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.core.Metadata;
-import io.jmix.ui.components.Action;
+import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.ActionsHolder;
 import io.jmix.ui.components.SearchPickerField;
 import org.apache.commons.lang3.StringUtils;

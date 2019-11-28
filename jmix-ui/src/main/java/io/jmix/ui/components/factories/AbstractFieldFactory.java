@@ -16,13 +16,13 @@
 
 package io.jmix.ui.components.factories;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.gui.components.*;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.meta.EntityValueSource;
-import com.haulmont.cuba.gui.components.data.value.DatasourceValueSource;
-import com.haulmont.cuba.gui.data.Datasource;
+import io.jmix.core.AppBeans;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.data.value.DatasourceValueSource;
+import io.jmix.ui.model.cuba.Datasource;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;

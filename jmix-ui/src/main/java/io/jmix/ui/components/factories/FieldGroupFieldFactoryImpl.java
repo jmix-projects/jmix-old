@@ -16,29 +16,28 @@
 
 package io.jmix.ui.components.factories;
 
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributes;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils;
-import com.haulmont.cuba.core.entity.CategoryAttribute;
-import com.haulmont.cuba.gui.components.data.value.DatasourceValueSource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.RuntimePropsDatasource;
-import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributeComponentsGenerator;
-import org.apache.commons.lang3.BooleanUtils;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.ui.components.ComponentGenerationContext;
+import io.jmix.ui.components.FieldGroup;
+import io.jmix.ui.components.FieldGroupFieldFactory;
+import io.jmix.ui.components.UiComponentsGenerator;
+import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
+import io.jmix.ui.model.cuba.Datasource;
 
 import javax.inject.Inject;
 
 @org.springframework.stereotype.Component(FieldGroupFieldFactory.NAME)
 public class FieldGroupFieldFactoryImpl implements FieldGroupFieldFactory {
 
-    @Inject
-    protected DynamicAttributes dynamicAttributes;
+//    @Inject
+//    protected DynamicAttributes dynamicAttributes;
 
     @Inject
     protected UiComponentsGenerator uiComponentsGenerator;
 
-    @Inject
-    protected DynamicAttributeComponentsGenerator dynamicAttributeComponentsGenerator;
+    // todo dynamic attributes
+//    @Inject
+//    protected DynamicAttributeComponentsGenerator dynamicAttributeComponentsGenerator;
 
     @Override
     public GeneratedField createField(FieldGroup.FieldConfig fc) {
@@ -49,13 +48,14 @@ public class FieldGroupFieldFactoryImpl implements FieldGroupFieldFactory {
         MetaClass metaClass = resolveMetaClass(fc.getTargetDatasource());
 
         if (DynamicAttributesUtils.isDynamicAttribute(fc.getProperty())) {
-            CategoryAttribute attribute = dynamicAttributes.getAttributeForMetaClass(metaClass, fc.getProperty());
-            if (attribute != null && BooleanUtils.isTrue(attribute.getIsCollection())) {
-                //noinspection unchecked
-                DatasourceValueSource valueSource = new DatasourceValueSource(fc.getTargetDatasource(), fc.getProperty());
-                Component fieldComponent = dynamicAttributeComponentsGenerator.generateComponent(valueSource, attribute);
-                return new GeneratedField(fieldComponent);
-            }
+            // todo dynamic attributes
+//            CategoryAttribute attribute = dynamicAttributes.getAttributeForMetaClass(metaClass, fc.getProperty());
+//            if (attribute != null && BooleanUtils.isTrue(attribute.getIsCollection())) {
+//                //noinspection unchecked
+//                DatasourceValueSource valueSource = new DatasourceValueSource(fc.getTargetDatasource(), fc.getProperty());
+//                Component fieldComponent = dynamicAttributeComponentsGenerator.generateComponent(valueSource, attribute);
+//                return new GeneratedField(fieldComponent);
+//            }
         }
 
         ComponentGenerationContext context = new ComponentGenerationContext(metaClass, fc.getProperty())
@@ -68,7 +68,8 @@ public class FieldGroupFieldFactoryImpl implements FieldGroupFieldFactory {
     }
 
     protected MetaClass resolveMetaClass(Datasource datasource) {
-        return datasource instanceof RuntimePropsDatasource ?
-                ((RuntimePropsDatasource) datasource).resolveCategorizedEntityClass() : datasource.getMetaClass();
+        // todo dynamic attributes
+        return /* datasource instanceof RuntimePropsDatasource ?
+                ((RuntimePropsDatasource) datasource).resolveCategorizedEntityClass() : */ datasource.getMetaClass();
     }
 }

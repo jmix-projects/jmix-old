@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.impl;
 
-import io.jmix.ui.components.data.ContainerValueSource;
+import io.jmix.ui.components.data.value.ContainerValueSource;
 import io.jmix.ui.components.data.ValueSource;
 import org.apache.commons.lang3.StringUtils;
 

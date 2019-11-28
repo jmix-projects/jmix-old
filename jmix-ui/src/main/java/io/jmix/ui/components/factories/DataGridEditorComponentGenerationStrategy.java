@@ -16,30 +16,24 @@
 
 package io.jmix.ui.components.factories;
 
-import com.haulmont.bali.util.ParamsMap;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesMetaProperty;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesTools;
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesUtils;
-import com.haulmont.cuba.core.entity.CategoryAttribute;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.core.entity.annotation.Lookup;
-import com.haulmont.cuba.core.entity.annotation.LookupType;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.View;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.UiComponents;
-import com.haulmont.cuba.gui.WindowManager;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.options.ContainerOptions;
-import com.haulmont.cuba.gui.components.data.options.DatasourceOptions;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributesGuiTools;
-import com.haulmont.cuba.gui.model.CollectionContainer;
-import com.haulmont.cuba.gui.model.CollectionLoader;
-import com.haulmont.cuba.gui.model.DataComponents;
+import io.jmix.core.Messages;
+import io.jmix.core.View;
+import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.annotation.Lookup;
+import io.jmix.core.entity.annotation.LookupType;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.UiComponents;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.options.ContainerOptions;
+import io.jmix.ui.dynamicattributes.DynamicAttributesTools;
+import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
+import io.jmix.ui.model.CollectionContainer;
+import io.jmix.ui.model.CollectionLoader;
+import io.jmix.ui.model.DataComponents;
 import org.springframework.core.Ordered;
 
 import javax.annotation.Nullable;
@@ -103,15 +97,16 @@ public class DataGridEditorComponentGenerationStrategy extends AbstractComponent
         }
 
         if (DynamicAttributesUtils.isDynamicAttribute(mpp.getMetaProperty())) {
-            DynamicAttributesMetaProperty metaProperty = (DynamicAttributesMetaProperty) mpp.getMetaProperty();
-            CategoryAttribute attribute = metaProperty.getAttribute();
-            if (Boolean.TRUE.equals(attribute.getLookup())) {
-                DynamicAttributesGuiTools dynamicAttributesGuiTools = AppBeans.get(DynamicAttributesGuiTools.class);
-                CollectionDatasource optionsDatasource = dynamicAttributesGuiTools
-                        .createOptionsDatasourceForLookup(metaProperty.getRange().asClass(),
-                                attribute.getJoinClause(), attribute.getWhereClause());
-                options = new DatasourceOptions(optionsDatasource);
-            }
+            // todo dynamic attributes
+//            DynamicAttributesMetaProperty metaProperty = (DynamicAttributesMetaProperty) mpp.getMetaProperty();
+//            CategoryAttribute attribute = metaProperty.getAttribute();
+//            if (Boolean.TRUE.equals(attribute.getLookup())) {
+//                DynamicAttributesGuiTools dynamicAttributesGuiTools = AppBeans.get(DynamicAttributesGuiTools.class);
+//                CollectionDatasource optionsDatasource = dynamicAttributesGuiTools
+//                        .createOptionsDatasourceForLookup(metaProperty.getRange().asClass(),
+//                                attribute.getJoinClause(), attribute.getWhereClause());
+//                options = new DatasourceOptions(optionsDatasource);
+//            }
         }
 
         PickerField pickerField;
@@ -120,11 +115,12 @@ public class DataGridEditorComponentGenerationStrategy extends AbstractComponent
             setValueSource(pickerField, context);
             pickerField.addLookupAction();
             if (DynamicAttributesUtils.isDynamicAttribute(mpp.getMetaProperty())) {
-                DynamicAttributesGuiTools dynamicAttributesGuiTools = AppBeans.get(DynamicAttributesGuiTools.class);
-                DynamicAttributesMetaProperty dynamicAttributesMetaProperty =
-                        (DynamicAttributesMetaProperty) mpp.getMetaProperty();
-                dynamicAttributesGuiTools.initEntityPickerField(pickerField,
-                        dynamicAttributesMetaProperty.getAttribute());
+                // todo dynamic attributes
+//                DynamicAttributesGuiTools dynamicAttributesGuiTools = AppBeans.get(DynamicAttributesGuiTools.class);
+//                DynamicAttributesMetaProperty dynamicAttributesMetaProperty =
+//                        (DynamicAttributesMetaProperty) mpp.getMetaProperty();
+//                dynamicAttributesGuiTools.initEntityPickerField(pickerField,
+//                        dynamicAttributesMetaProperty.getAttribute());
             }
             PickerField.LookupAction lookupAction =
                     (PickerField.LookupAction) pickerField.getActionNN(PickerField.LookupAction.NAME);

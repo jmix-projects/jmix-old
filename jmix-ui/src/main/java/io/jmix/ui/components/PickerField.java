@@ -16,18 +16,20 @@
 package io.jmix.ui.components;
 
 import com.google.common.reflect.TypeToken;
-import io.jmix.core.AppBeans;
-import io.jmix.core.ConfigInterfaces;
-import io.jmix.core.DevelopmentException;
+import io.jmix.core.*;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.ClientConfig;
 import io.jmix.ui.WindowConfig;
+import io.jmix.ui.WindowManagerProvider;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.BaseAction;
+import io.jmix.ui.components.compatibility.LegacyFrame;
+import io.jmix.ui.components.compatibility.PickerFieldFieldListenerWrapper;
 import io.jmix.ui.components.compatibility.WindowManager;
 import io.jmix.ui.components.compatibility.WindowManager.OpenType;
 import io.jmix.ui.components.data.Options;

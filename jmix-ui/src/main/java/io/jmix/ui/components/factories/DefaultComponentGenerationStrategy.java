@@ -16,11 +16,11 @@
 
 package io.jmix.ui.components.factories;
 
-import com.haulmont.cuba.core.app.dynamicattributes.DynamicAttributesTools;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.UiComponents;
-import com.haulmont.cuba.gui.components.Component;
-import com.haulmont.cuba.gui.components.ComponentGenerationContext;
+import io.jmix.core.Messages;
+import io.jmix.ui.UiComponents;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.ComponentGenerationContext;
+import io.jmix.ui.dynamicattributes.DynamicAttributesTools;
 import org.springframework.core.Ordered;
 
 import javax.annotation.Nullable;

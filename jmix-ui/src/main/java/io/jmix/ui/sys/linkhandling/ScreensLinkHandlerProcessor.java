@@ -33,6 +33,7 @@ import io.jmix.ui.App;
 import io.jmix.ui.NoSuchScreenException;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowInfo;
+import io.jmix.ui.components.compatibility.WindowManager.OpenType;
 import io.jmix.ui.exception.AccessDeniedHandler;
 import io.jmix.ui.exception.EntityAccessExceptionHandler;
 import io.jmix.ui.exception.NoSuchScreenHandler;

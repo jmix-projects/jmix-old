@@ -86,7 +86,7 @@ public final class DynamicAttributesUtils {
     }
 
     public static CategoryAttribute getCategoryAttribute(MetaProperty metaProperty) {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     /**

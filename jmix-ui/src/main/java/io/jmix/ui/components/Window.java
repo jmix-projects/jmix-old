@@ -15,6 +15,7 @@
  */
 package io.jmix.ui.components;
 
+import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.validation.groups.UiCrossFieldChecks;
@@ -128,6 +129,23 @@ public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
      */
     @Override
     WindowContext getContext();
+
+    /**
+     * Add a listener that will be notified when this screen is closed.
+     *
+     * @param listener listener instance
+     * @deprecated Use {@link Screen#addAfterCloseListener(Consumer)} instead.
+     */
+    @Deprecated
+    default void addCloseListener(CloseListener listener) {
+        getFrameOwner().addAfterCloseListener(new AfterCloseListenerAdapter(listener));
+    }
+
+    @Deprecated
+    default void removeCloseListener(CloseListener listener) {
+        EventHub eventHub = UiControllerUtils.getEventHub(getFrameOwner());
+        eventHub.unsubscribe(Screen.AfterCloseEvent.class, new AfterCloseListenerAdapter(listener));
+    }
 
     /**
      * This method is called by the framework after opening the screen to apply user settings to all components.

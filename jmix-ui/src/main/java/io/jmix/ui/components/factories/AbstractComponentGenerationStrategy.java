@@ -16,27 +16,28 @@
 
 package io.jmix.ui.components.factories;
 
-import com.haulmont.chile.core.datatypes.Datatype;
-import com.haulmont.chile.core.model.MetaClass;
-import com.haulmont.chile.core.model.MetaProperty;
-import com.haulmont.chile.core.model.MetaPropertyPath;
-import com.haulmont.chile.core.model.Range;
 import com.haulmont.cuba.core.app.dynamicattributes.*;
 import com.haulmont.cuba.core.entity.*;
-import com.haulmont.cuba.core.entity.annotation.CurrencyValue;
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.gui.ComponentsHelper;
-import com.haulmont.cuba.gui.UiComponents;
-import com.haulmont.cuba.gui.WindowManager.OpenType;
-import com.haulmont.cuba.gui.components.data.Options;
-import com.haulmont.cuba.gui.components.data.ValueSource;
-import com.haulmont.cuba.gui.components.data.options.ListOptions;
-import com.haulmont.cuba.gui.components.data.value.ContainerValueSource;
-import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributesGuiTools;
-import com.haulmont.cuba.gui.model.InstanceContainer;
-import com.haulmont.cuba.gui.screen.FrameOwner;
-import org.apache.commons.lang3.BooleanUtils;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Messages;
+import io.jmix.core.entity.FileDescriptor;
+import io.jmix.core.entity.annotation.CurrencyValue;
+import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.metamodel.model.Range;
+import io.jmix.ui.UiComponents;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.compatibility.WindowManager.OpenType;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.components.data.value.ContainerValueSource;
+import io.jmix.ui.dynamicattributes.CategoryAttribute;
+import io.jmix.ui.dynamicattributes.DynamicAttributesGuiTools;
+import io.jmix.ui.dynamicattributes.DynamicAttributesTools;
+import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
+import io.jmix.ui.screen.FrameOwner;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -46,12 +47,10 @@ import java.sql.Time;
 import java.time.*;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
-import static com.haulmont.cuba.gui.components.DateField.Resolution;
+import static io.jmix.ui.components.DateField.Resolution;
 
 public abstract class AbstractComponentGenerationStrategy implements ComponentGenerationStrategy {
 
@@ -119,13 +118,14 @@ public abstract class AbstractComponentGenerationStrategy implements ComponentGe
         if (DynamicAttributesUtils.isDynamicAttribute(metaProperty)) {
             CategoryAttribute categoryAttribute = DynamicAttributesUtils.getCategoryAttribute(metaProperty);
             if (categoryAttribute != null) {
-                CategoryAttributeConfiguration configuration = categoryAttribute.getConfiguration();
-                if (categoryAttribute.getDataType() == PropertyType.ENUMERATION && BooleanUtils.isNotTrue(categoryAttribute.getIsCollection())) {
-                    return createEnumField(context);
-                }
-                if (Boolean.TRUE.equals(categoryAttribute.getLookup()) && configuration.hasOptionsLoader()) {
-                    return createLookupField(context, categoryAttribute);
-                }
+                // todo dynamic attributes
+//                CategoryAttributeConfiguration configuration = categoryAttribute.getConfiguration();
+//                if (categoryAttribute.getDataType() == PropertyType.ENUMERATION && BooleanUtils.isNotTrue(categoryAttribute.getIsCollection())) {
+//                    return createEnumField(context);
+//                }
+//                if (Boolean.TRUE.equals(categoryAttribute.getLookup()) && configuration.hasOptionsLoader()) {
+//                    return createLookupField(context, categoryAttribute);
+//                }
             }
         }
 
@@ -222,12 +222,13 @@ public abstract class AbstractComponentGenerationStrategy implements ComponentGe
 
         if (DynamicAttributesUtils.isDynamicAttribute(context.getProperty()) && mpp != null) {
             CategoryAttribute categoryAttribute = DynamicAttributesUtils.getCategoryAttribute(mpp.getMetaProperty());
-            if (categoryAttribute != null && categoryAttribute.getDataType() == PropertyType.STRING
-                    && categoryAttribute.getRowsCount() != null && categoryAttribute.getRowsCount() > 1) {
-                TextArea textArea = uiComponents.create(TextArea.class);
-                textArea.setRows(categoryAttribute.getRowsCount());
-                textField = textArea;
-            }
+            // todo dynamic attributes
+//            if (categoryAttribute != null && categoryAttribute.getDataType() == PropertyType.STRING
+//                    && categoryAttribute.getRowsCount() != null && categoryAttribute.getRowsCount() > 1) {
+//                TextArea textArea = uiComponents.create(TextArea.class);
+//                textArea.setRows(categoryAttribute.getRowsCount());
+//                textField = textArea;
+//            }
         }
 
         if (textField == null) {
@@ -380,12 +381,13 @@ public abstract class AbstractComponentGenerationStrategy implements ComponentGe
             Options options = context.getOptions();
             boolean useOptionsLoader = false;
             if (DynamicAttributesUtils.isDynamicAttribute(mpp.getMetaProperty())) {
-                DynamicAttributesMetaProperty metaProperty = (DynamicAttributesMetaProperty) mpp.getMetaProperty();
-                CategoryAttribute attribute = metaProperty.getAttribute();
-                CategoryAttributeConfiguration configuration = attribute.getConfiguration();
-                if (Boolean.TRUE.equals(attribute.getLookup()) && configuration.hasOptionsLoader()) {
-                    useOptionsLoader = true;
-                }
+                // todo dynamic attributes
+//                DynamicAttributesMetaProperty metaProperty = (DynamicAttributesMetaProperty) mpp.getMetaProperty();
+//                CategoryAttribute attribute = metaProperty.getAttribute();
+//                CategoryAttributeConfiguration configuration = attribute.getConfiguration();
+//                if (Boolean.TRUE.equals(attribute.getLookup()) && configuration.hasOptionsLoader()) {
+//                    useOptionsLoader = true;
+//                }
             }
 
             PickerField pickerField;
@@ -396,10 +398,11 @@ public abstract class AbstractComponentGenerationStrategy implements ComponentGe
                 if (mpp.getMetaProperty().getType() == MetaProperty.Type.ASSOCIATION) {
                     pickerField.addLookupAction();
                     if (DynamicAttributesUtils.isDynamicAttribute(mpp.getMetaProperty())) {
-                        DynamicAttributesMetaProperty dynamicAttributesMetaProperty =
-                                (DynamicAttributesMetaProperty) mpp.getMetaProperty();
-                        getDynamicAttributesGuiTools().initEntityPickerField(pickerField,
-                                dynamicAttributesMetaProperty.getAttribute());
+                        // todo dynamic attributes
+//                        DynamicAttributesMetaProperty dynamicAttributesMetaProperty =
+//                                (DynamicAttributesMetaProperty) mpp.getMetaProperty();
+//                        getDynamicAttributesGuiTools().initEntityPickerField(pickerField,
+//                                dynamicAttributesMetaProperty.getAttribute());
                     }
                     boolean actionsByMetaAnnotations = ComponentsHelper.createActionsByMetaAnnotations(pickerField);
                     if (!actionsByMetaAnnotations) {
@@ -415,12 +418,13 @@ public abstract class AbstractComponentGenerationStrategy implements ComponentGe
                 setValueSource(lookupPickerField, context);
 
                 if (useOptionsLoader) {
-                    DynamicAttributesMetaProperty metaProperty = (DynamicAttributesMetaProperty) mpp.getMetaProperty();
-                    CategoryAttribute attribute = metaProperty.getAttribute();
-                    ValueSource valueSource = context.getValueSource();
-                    if (valueSource instanceof ContainerValueSource) {
-                        setOptionsLoader(attribute, lookupPickerField, (ContainerValueSource) valueSource);
-                    }
+                    // todo dynamic attributes
+//                    DynamicAttributesMetaProperty metaProperty = (DynamicAttributesMetaProperty) mpp.getMetaProperty();
+//                    CategoryAttribute attribute = metaProperty.getAttribute();
+//                    ValueSource valueSource = context.getValueSource();
+//                    if (valueSource instanceof ContainerValueSource) {
+//                        setOptionsLoader(attribute, lookupPickerField, (ContainerValueSource) valueSource);
+//                    }
                 } else {
                     lookupPickerField.setOptions(options);
                 }
@@ -488,17 +492,18 @@ public abstract class AbstractComponentGenerationStrategy implements ComponentGe
 
     protected void setValidators(Field field, ComponentGenerationContext context) {
         CategoryAttribute categoryAttribute = getCategoryAttribute(context);
+    // todo dynamic attributes
 
-        if (categoryAttribute != null && BooleanUtils.isNotTrue(categoryAttribute.getIsCollection())) {
-
-            Collection<Consumer<?>> validators = getDynamicAttributesGuiTools().createValidators(categoryAttribute);
-            if (validators != null && !validators.isEmpty()) {
-                for (Consumer<?> validator : validators) {
-                    //noinspection unchecked
-                    field.addValidator(validator);
-                }
-            }
-        }
+//        if (categoryAttribute != null && BooleanUtils.isNotTrue(categoryAttribute.getIsCollection())) {
+//
+//            Collection<Consumer<?>> validators = getDynamicAttributesGuiTools().createValidators(categoryAttribute);
+//            if (validators != null && !validators.isEmpty()) {
+//                for (Consumer<?> validator : validators) {
+//                    //noinspection unchecked
+//                    field.addValidator(validator);
+//                }
+//            }
+//        }
     }
 
     protected void setCustomDataType(TextField field, ComponentGenerationContext context) {
@@ -529,10 +534,11 @@ public abstract class AbstractComponentGenerationStrategy implements ComponentGe
     protected void setEditable(Component.Editable component, ComponentGenerationContext context) {
         CategoryAttribute attribute = getCategoryAttribute(context);
 
-        if (attribute != null
-                && Boolean.TRUE.equals(attribute.getConfiguration().isReadOnly())) {
-            component.setEditable(false);
-        }
+        // todo dynamic attributes
+//        if (attribute != null
+//                && Boolean.TRUE.equals(attribute.getConfiguration().isReadOnly())) {
+//            component.setEditable(false);
+//        }
     }
 
     protected CategoryAttribute getCategoryAttribute(ComponentGenerationContext context) {
@@ -552,38 +558,39 @@ public abstract class AbstractComponentGenerationStrategy implements ComponentGe
     }
 
     protected void setOptionsLoader(CategoryAttribute categoryAttribute, LookupField lookupField, ContainerValueSource valueSource) {
-        InstanceContainer<?> container = valueSource.getContainer();
-        Entity entity = container.getItemOrNull();
-        if (entity != null) {
-            List options = dynamicAttributesTools.loadOptions((BaseGenericIdEntity) entity, categoryAttribute);
-            //noinspection unchecked
-            lookupField.setOptions(new ListOptions(options));
-        }
-        container.addItemChangeListener(e -> {
-            List options = dynamicAttributesTools.loadOptions((BaseGenericIdEntity) e.getItem(), categoryAttribute);
-            //noinspection unchecked
-            lookupField.setOptions(new ListOptions(options));
-        });
-
-        List<CategoryAttribute> dependsOnAttributes = categoryAttribute.getConfiguration().getDependsOnAttributes();
-        if (dependsOnAttributes != null && !dependsOnAttributes.isEmpty()) {
-            List<String> dependsOnAttributesCodes = dependsOnAttributes.stream()
-                    .map(a -> DynamicAttributesUtils.encodeAttributeCode(a.getCode()))
-                    .collect(Collectors.toList());
-
-            container.addItemPropertyChangeListener(e -> {
-                if (dependsOnAttributesCodes.contains(e.getProperty())) {
-                    List options = dynamicAttributesTools.loadOptions((BaseGenericIdEntity) e.getItem(), categoryAttribute);
-                    //noinspection unchecked
-                    lookupField.setOptions(new ListOptions(options));
-
-                    if (!options.contains(lookupField.getValue())) {
-                        //noinspection unchecked
-                        lookupField.setValue(null);
-                    }
-                }
-            });
-        }
+        // todo dynamic attributes
+//        InstanceContainer<?> container = valueSource.getContainer();
+//        Entity entity = container.getItemOrNull();
+//        if (entity != null) {
+//            List options = dynamicAttributesTools.loadOptions((BaseGenericIdEntity) entity, categoryAttribute);
+//            //noinspection unchecked
+//            lookupField.setOptions(new ListOptions(options));
+//        }
+//        container.addItemChangeListener(e -> {
+//            List options = dynamicAttributesTools.loadOptions((BaseGenericIdEntity) e.getItem(), categoryAttribute);
+//            //noinspection unchecked
+//            lookupField.setOptions(new ListOptions(options));
+//        });
+//
+//        List<CategoryAttribute> dependsOnAttributes = categoryAttribute.getConfiguration().getDependsOnAttributes();
+//        if (dependsOnAttributes != null && !dependsOnAttributes.isEmpty()) {
+//            List<String> dependsOnAttributesCodes = dependsOnAttributes.stream()
+//                    .map(a -> DynamicAttributesUtils.encodeAttributeCode(a.getCode()))
+//                    .collect(Collectors.toList());
+//
+//            container.addItemPropertyChangeListener(e -> {
+//                if (dependsOnAttributesCodes.contains(e.getProperty())) {
+//                    List options = dynamicAttributesTools.loadOptions((BaseGenericIdEntity) e.getItem(), categoryAttribute);
+//                    //noinspection unchecked
+//                    lookupField.setOptions(new ListOptions(options));
+//
+//                    if (!options.contains(lookupField.getValue())) {
+//                        //noinspection unchecked
+//                        lookupField.setValue(null);
+//                    }
+//                }
+//            });
+//        }
     }
 
     protected static class InvokeEntityLinkClickHandler implements EntityLinkField.EntityLinkClickHandler {

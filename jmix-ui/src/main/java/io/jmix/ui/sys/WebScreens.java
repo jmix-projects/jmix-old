@@ -797,7 +797,7 @@ public class WebScreens implements Screens {
      * @throws IllegalStateException if there is no root screen or root screen does not have {@link AppWorkArea}
      */
     @Nonnull
-    protected WebAppWorkArea getConfiguredWorkArea() {
+    public WebAppWorkArea getConfiguredWorkArea() {
         RootWindow topLevelWindow = ui.getTopLevelWindow();
         if (topLevelWindow == null) {
             throw new IllegalStateException("There is no root screen opened");
@@ -816,7 +816,7 @@ public class WebScreens implements Screens {
     }
 
     @Nullable
-    protected WebAppWorkArea getConfiguredWorkAreaOrNull() {
+    public WebAppWorkArea getConfiguredWorkAreaOrNull() {
         RootWindow topLevelWindow = ui.getTopLevelWindow();
         if (topLevelWindow == null) {
             throw new IllegalStateException("There is no root screen opened");

@@ -53,9 +53,9 @@ public class WindowInfo {
         this.routeDefinition = routeDefinition;
     }
 
-    /*public WindowInfo(String id, WindowAttributesProvider windowAttributesProvider, Element descriptor) {
+    public WindowInfo(String id, WindowAttributesProvider windowAttributesProvider, Element descriptor) {
         this(id, windowAttributesProvider, descriptor, null);
-    }*/
+    }
 
     public WindowInfo(String id, WindowAttributesProvider windowAttributesProvider, Element descriptor,
                       RouteDefinition routeDefinition) {

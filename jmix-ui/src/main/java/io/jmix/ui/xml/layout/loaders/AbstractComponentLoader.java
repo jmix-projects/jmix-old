@@ -32,7 +32,7 @@ import io.jmix.ui.actions.legacy.ItemTrackingAction;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.Component.Alignment;
 import io.jmix.ui.components.compatibility.LegacyFrame;
-import io.jmix.ui.components.data.ContainerValueSource;
+import io.jmix.ui.components.data.value.ContainerValueSource;
 import io.jmix.ui.components.data.HasValueSource;
 import io.jmix.ui.Actions;
 import io.jmix.ui.GuiDevelopmentException;
