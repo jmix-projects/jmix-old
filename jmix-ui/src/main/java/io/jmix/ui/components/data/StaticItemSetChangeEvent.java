@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.ui.components.data;
 
-import java.util.UUID;
+import com.vaadin.v7.data.Container;
 
-// todo implementations
-public interface Presentation extends Entity<UUID> {
+public class StaticItemSetChangeEvent implements Container.ItemSetChangeEvent {
 
-    String getName();
+    protected final Container container;
 
-    String getXml();
+    public StaticItemSetChangeEvent(Container container) {
+        this.container = container;
+    }
 
-    User getUser();
-
-    Boolean getDefault();
-
-    void setDefault(Boolean aDefault);
-
-    Boolean getAutoSave();
-
-    void setComponentId(String componentId);
-
+    @Override
+    public Container getContainer() {
+        return container;
+    }
 }

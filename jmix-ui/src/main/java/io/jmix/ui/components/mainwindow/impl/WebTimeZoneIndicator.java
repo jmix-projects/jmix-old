@@ -16,7 +16,6 @@
 
 package io.jmix.ui.components.mainwindow.impl;
 
-import com.haulmont.cuba.core.global.TimeZones;
 import com.vaadin.ui.Label;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.security.UserSessionSource;
@@ -43,8 +42,9 @@ public class WebTimeZoneIndicator extends WebAbstractComponent<Label> implements
 
         UserSessionSource uss = beanLocator.get(UserSessionSource.NAME);
         TimeZone timeZone = uss.getUserSession().getTimeZone();
-        TimeZones timeZones = beanLocator.get(TimeZones.NAME);
-        component.setValue(timeZones.getDisplayNameShort(timeZone));
+        // todo TimeZones
+//        TimeZones timeZones = beanLocator.get(TimeZones.NAME);
+//        component.setValue(timeZones.getDisplayNameShort(timeZone));
         if (timeZone == null) {
             // hidden by default if timeZone is null
             setVisible(false);

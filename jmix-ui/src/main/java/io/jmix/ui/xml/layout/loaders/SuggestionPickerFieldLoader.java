@@ -17,10 +17,13 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.core.Metadata;
-import io.jmix.core.Metadata;
+import io.jmix.ui.Actions;
+import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.picker.LookupAction;
 import io.jmix.ui.actions.picker.OpenAction;
-import io.jmix.ui.components.*;
+import io.jmix.ui.components.ActionsHolder;
+import io.jmix.ui.components.CaptionMode;
+import io.jmix.ui.components.SuggestionPickerField;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 

@@ -15,13 +15,11 @@
  */
 package io.jmix.ui.model.cuba;
 
-import com.haulmont.cuba.client.sys.PersistenceManagerClient;
 import io.jmix.core.*;
-import io.jmix.core.app.PersistenceManagerService;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.ui.data.impl.*;
 import io.jmix.ui.model.cuba.impl.*;
+import io.jmix.ui.sys.PersistenceManagerClient;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -170,7 +168,7 @@ public class DsBuilder {
         return new ValueHierarchicalDatasourceImpl();
     }
 
-    protected PersistenceManagerService getPersistenceManager() {
+    protected PersistenceManagerClient getPersistenceManager() {
         return AppBeans.get(PersistenceManagerClient.NAME);
     }
 

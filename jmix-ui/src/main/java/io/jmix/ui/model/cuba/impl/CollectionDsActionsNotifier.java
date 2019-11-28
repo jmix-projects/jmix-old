@@ -17,10 +17,7 @@
 package io.jmix.ui.model.cuba.impl;
 
 import io.jmix.ui.actions.Action;
-import io.jmix.ui.components.Action;
 import io.jmix.ui.components.ActionsHolder;
-import io.jmix.ui.data.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.model.cuba.CollectionDatasource;
 import io.jmix.ui.model.cuba.Datasource;
 

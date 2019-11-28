@@ -16,7 +16,6 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.client.sys.PersistenceManagerClient;
 import com.haulmont.cuba.web.gui.components.table.*;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.Resource;
@@ -77,6 +76,7 @@ import io.jmix.ui.screen.InstallTargetHandler;
 import io.jmix.ui.screen.ScreenContext;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.sys.PersistenceHelper;
+import io.jmix.ui.sys.PersistenceManagerClient;
 import io.jmix.ui.sys.ShowInfoAction;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;

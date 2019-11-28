@@ -16,7 +16,6 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.web.gui.components.valueproviders.EntityNameValueProvider;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Resource;
@@ -37,6 +36,7 @@ import io.jmix.ui.components.PickerField;
 import io.jmix.ui.components.SecuredActionsHolder;
 import io.jmix.ui.components.data.ValueSource;
 import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.components.valueproviders.EntityNameValueProvider;
 import io.jmix.ui.sys.TestIdManager;
 import io.jmix.ui.theme.HaloTheme;
 import io.jmix.ui.widgets.CubaButton;

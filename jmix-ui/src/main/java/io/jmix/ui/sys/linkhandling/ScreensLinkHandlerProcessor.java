@@ -16,15 +16,6 @@
 
 package io.jmix.ui.sys.linkhandling;
 
-import com.haulmont.cuba.core.app.DataService;
-import com.haulmont.cuba.core.entity.Entity;
-import com.haulmont.cuba.gui.NoSuchScreenException;
-import com.haulmont.cuba.gui.config.WindowConfig;
-import com.haulmont.cuba.gui.config.WindowInfo;
-import com.haulmont.cuba.gui.exception.AccessDeniedHandler;
-import com.haulmont.cuba.gui.exception.EntityAccessExceptionHandler;
-import com.haulmont.cuba.gui.exception.NoSuchScreenHandler;
-import com.haulmont.cuba.web.App;
 import io.jmix.core.*;
 import io.jmix.core.compatibility.EntityLoadInfo;
 import io.jmix.core.entity.Entity;
@@ -46,8 +37,6 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.haulmont.cuba.gui.WindowManager.OpenType;
 
 @Component(ScreensLinkHandlerProcessor.NAME)
 public class ScreensLinkHandlerProcessor implements LinkHandlerProcessor, Ordered {

@@ -15,6 +15,7 @@
  */
 package io.jmix.ui.components.impl;
 
+import com.vaadin.shared.Registration;
 import io.jmix.core.*;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.KeyValueEntity;
@@ -22,21 +23,18 @@ import io.jmix.ui.components.*;
 import io.jmix.ui.components.data.DataUnit;
 import io.jmix.ui.components.data.meta.ContainerDataUnit;
 import io.jmix.ui.components.data.meta.DatasourceDataUnit;
-import io.jmix.ui.data.CollectionDatasource;
-import io.jmix.ui.data.CollectionDatasource.Operation;
-import io.jmix.ui.model.cuba.Datasource;
-import io.jmix.ui.data.impl.WeakCollectionChangeListener;
 import io.jmix.ui.executors.BackgroundTask;
 import io.jmix.ui.executors.BackgroundTaskHandler;
 import io.jmix.ui.executors.BackgroundWorker;
 import io.jmix.ui.executors.TaskLifeCycle;
+import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.model.*;
 import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.impl.WeakCollectionChangeListener;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiControllerUtils;
-import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.widgets.CubaRowsCount;
-import com.vaadin.shared.Registration;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -726,8 +724,8 @@ public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements
             this.datasource = datasource;
 
             datasourceCollectionChangeListener = e -> {
-                samePage = Operation.REFRESH != e.getOperation()
-                        && Operation.CLEAR != e.getOperation();
+                samePage = CollectionDatasource.Operation.REFRESH != e.getOperation()
+                        && CollectionDatasource.Operation.CLEAR != e.getOperation();
                 onCollectionChanged();
             };
 

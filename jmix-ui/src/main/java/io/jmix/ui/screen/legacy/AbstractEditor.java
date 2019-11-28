@@ -16,21 +16,17 @@
 package io.jmix.ui.screen.legacy;
 
 import com.google.common.collect.Iterables;
-import com.haulmont.cuba.core.app.LockService;
 import com.haulmont.cuba.core.entity.Categorized;
 import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.gui.data.*;
 import com.haulmont.cuba.gui.screen.ReadOnlyScreensSupport;
-import com.haulmont.cuba.security.entity.EntityOp;
 import io.jmix.core.*;
 import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.metamodel.datatypes.Datatypes;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
-import io.jmix.core.security.UserSessionSource;
 import io.jmix.core.validation.groups.UiCrossFieldChecks;
 import io.jmix.ui.ClientConfig;
 import io.jmix.ui.GuiDevelopmentException;
@@ -46,6 +42,7 @@ import io.jmix.ui.model.cuba.impl.DatasourceImplementation;
 import io.jmix.ui.model.cuba.impl.DsContextImplementation;
 import io.jmix.ui.model.cuba.impl.EntityCopyUtils;
 import io.jmix.ui.screen.ReadOnlyAwareScreen;
+import io.jmix.ui.screen.ReadOnlyScreensSupport;
 import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.ui.util.OperationResult;
 import org.apache.commons.lang3.StringUtils;
@@ -57,7 +54,6 @@ import javax.validation.ElementKind;
 import javax.validation.Path;
 import javax.validation.Validator;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Set;
 
 /**
@@ -157,7 +153,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
     /**
      * Called by the framework to set an edited entity after creation of all components and datasources, and after
      * {@link #init(java.util.Map)}.
-     * <p>Don't override this method in subclasses, use hooks {@link #initNewItem(com.haulmont.cuba.core.entity.Entity)}
+     * <p>Don't override this method in subclasses, use hooks {@link #initNewItem(Entity)}
      * and {@link #postInit()} instead.</p>
      * @param item  entity instance
      */
@@ -246,9 +242,11 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
             if (PersistenceHelper.isNew(item)) {
                 dynamicAttributesGuiTools.initDefaultAttributeValues((BaseGenericIdEntity) item, item.getMetaClass());
             }
-            if (item instanceof Categorized) {
-                dynamicAttributesGuiTools.listenCategoryChanges(ds);
-            }
+
+            // todo dynamic attributes
+//            if (item instanceof Categorized) {
+//                dynamicAttributesGuiTools.listenCategoryChanges(ds);
+//            }
         }
 
         ds.setItem(item);
@@ -527,7 +525,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
     }
 
     /**
-     * Hook to be implemented in subclasses. Called by {@link #setItem(com.haulmont.cuba.core.entity.Entity)} when
+     * Hook to be implemented in subclasses. Called by {@link #setItem(Entity)} when
      * the editor is opened for a new entity instance. Allows to additionally initialize the new entity instance
      * before setting it into the datasource.
      * @param item  entity instance
@@ -536,7 +534,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
     }
 
     /**
-     * Hook to be implemented in subclasses. Called by {@link #setItem(com.haulmont.cuba.core.entity.Entity)}.
+     * Hook to be implemented in subclasses. Called by {@link #setItem(Entity)}.
      * At the moment of calling the main datasource is initialized and {@link #getItem()} returns reloaded entity instance.
      * <br>
      * This method can be called second time by {@link #postCommit(boolean, boolean)} if the window is not closed after
@@ -581,7 +579,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
 
                 showNotification(
                         messages.formatMainMessage("info.EntitySave",
-                                messages.getTools().getEntityCaption(entity.getMetaClass()),
+                                messageTools.getEntityCaption(entity.getMetaClass()),
                                 metadataTools.getInstanceName(entity)),
                         NotificationType.TRAY);
             }

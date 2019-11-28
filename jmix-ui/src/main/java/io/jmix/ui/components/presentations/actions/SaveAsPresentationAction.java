@@ -16,16 +16,12 @@
 
 package io.jmix.ui.components.presentations.actions;
 
-import com.haulmont.cuba.core.global.AppBeans;
-import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.gui.ComponentsHelper;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Metadata;
 import io.jmix.core.entity.Presentation;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.Table;
-import com.haulmont.cuba.security.entity.Presentation;
 
 public class SaveAsPresentationAction extends AbstractEditPresentationAction {
 

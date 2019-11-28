@@ -104,7 +104,8 @@ public class EntityCopyUtils {
 
             BaseEntityInternalAccess.setDetached(destGenericEntity, BaseEntityInternalAccess.isDetached(sourceGenericEntity));
             BaseEntityInternalAccess.setNew(destGenericEntity, BaseEntityInternalAccess.isNew(sourceGenericEntity));
-            destGenericEntity.setDynamicAttributes(sourceGenericEntity.getDynamicAttributes());
+            // todo dynamic attributes
+//            destGenericEntity.setDynamicAttributes(sourceGenericEntity.getDynamicAttributes());
         }
     }
 

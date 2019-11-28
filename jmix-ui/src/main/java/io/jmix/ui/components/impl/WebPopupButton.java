@@ -15,22 +15,20 @@
  */
 package io.jmix.ui.components.impl;
 
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.ui.components.ComponentsHelper;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.components.*;
-import io.jmix.ui.components.security.ActionsPermissions;
-import io.jmix.ui.sys.TestIdManager;
-import io.jmix.ui.theme.ThemeConstants;
-import io.jmix.ui.theme.ThemeConstantsManager;
-import io.jmix.ui.AppUI;
-import io.jmix.ui.widgets.CubaButton;
-import io.jmix.ui.widgets.CubaPopupButton;
-import io.jmix.ui.widgets.CubaPopupButtonLayout;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Button;
+import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.actions.Action;
+import io.jmix.ui.components.*;
+import io.jmix.ui.sys.TestIdManager;
+import io.jmix.ui.theme.ThemeConstants;
+import io.jmix.ui.theme.ThemeConstantsManager;
+import io.jmix.ui.widgets.CubaButton;
+import io.jmix.ui.widgets.CubaPopupButton;
+import io.jmix.ui.widgets.CubaPopupButtonLayout;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;

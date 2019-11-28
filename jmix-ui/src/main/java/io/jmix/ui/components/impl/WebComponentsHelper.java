@@ -18,10 +18,14 @@ package io.jmix.ui.components.impl;
 
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.TabSheet;
+import io.jmix.ui.components.*;
 import io.jmix.ui.components.ComponentContainer;
-import io.jmix.ui.components.KeyCombination;
-import io.jmix.ui.components.ShortcutTriggeredEvent;
+import io.jmix.ui.widgets.CubaGroupBox;
 import io.jmix.ui.widgets.CubaHorizontalActionsLayout;
+import io.jmix.ui.widgets.CubaScrollBoxLayout;
 import io.jmix.ui.widgets.CubaVerticalActionsLayout;
 import org.apache.commons.lang3.StringUtils;
 
@@ -159,12 +163,11 @@ public class WebComponentsHelper {
             }
         }
 
-        // todo implement
-        /*if (child.getParent() instanceof CubaGroupBox) {
+
+        if (child.getParent() instanceof CubaGroupBox) {
             // ignore groupbox content container visibility
             return isComponentVisible(child.getParent());
         }
-*/
         return child.isVisible() && (child.getParent() == null || isComponentVisible(child.getParent()));
     }
 
@@ -221,10 +224,10 @@ public class WebComponentsHelper {
             return ((AbstractSingleComponentContainer) component).getContent();
         }
 
-//        todo implement
-//        if (component instanceof CubaScrollBoxLayout) {
-//            return ((CubaScrollBoxLayout) component).getComponent(0);
-//        }
+
+        if (component instanceof CubaScrollBoxLayout) {
+            return ((CubaScrollBoxLayout) component).getComponent(0);
+        }
 
         return component;
     }
@@ -264,8 +267,8 @@ public class WebComponentsHelper {
                     child = findChildComponent((ComponentContainer) component, target);
                 }
 
-                // todo
-                /*if (component instanceof HasButtonsPanel) {
+
+                if (component instanceof HasButtonsPanel) {
                     ButtonsPanel buttonsPanel = ((HasButtonsPanel) component).getButtonsPanel();
                     if (getVaadinSource(buttonsPanel) == target) {
                         return buttonsPanel;
@@ -277,7 +280,7 @@ public class WebComponentsHelper {
                 if (component instanceof FieldGroup) {
                     FieldGroup fieldGroup = (FieldGroup) component;
                     child = findChildComponent(fieldGroup, target);
-                }*/
+                }
 
                 return child != null ? child : component;
             }

@@ -39,6 +39,7 @@ import io.jmix.ui.sys.*;
 import io.jmix.ui.sys.events.UiEventsMulticaster;
 import io.jmix.ui.theme.ThemeConstantsRepository;
 import io.jmix.ui.widgets.AppUIUtils;
+import io.jmix.ui.widgets.CubaTimer;
 import io.jmix.ui.widgets.JmixFileDownloader;
 import io.jmix.ui.widgets.JmixTimer;
 import io.jmix.ui.widgets.client.ui.AppUIClientRpc;
@@ -637,16 +638,16 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
         return topLevelWindow.unwrapComposition(AbstractComponent.class);
     }
 
-    public List<JmixTimer> getTimers() {
+    public List<CubaTimer> getTimers() {
         AbstractComponent timersHolder = getTopLevelWindowComposition();
 
         return timersHolder.getExtensions().stream()
-                .filter(extension -> extension instanceof JmixTimer)
-                .map(extension -> (JmixTimer) extension)
+                .filter(extension -> extension instanceof CubaTimer)
+                .map(extension -> (CubaTimer) extension)
                 .collect(Collectors.toList());
     }
 
-    public void addTimer(JmixTimer timer) {
+    public void addTimer(CubaTimer timer) {
         AbstractComponent timersHolder = getTopLevelWindowComposition();
 
         if (!timersHolder.getExtensions().contains(timer)) {
@@ -654,7 +655,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
         }
     }
 
-    public void removeTimer(JmixTimer timer) {
+    public void removeTimer(CubaTimer timer) {
         AbstractComponent timersHolder = getTopLevelWindowComposition();
 
         timersHolder.removeExtension(timer);

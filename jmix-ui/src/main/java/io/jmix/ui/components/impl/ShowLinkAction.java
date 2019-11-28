@@ -23,10 +23,6 @@ import io.jmix.ui.App;
 import io.jmix.ui.components.compatibility.WindowManager;
 import io.jmix.ui.actions.BaseAction;
 import io.jmix.ui.components.Frame;
-import io.jmix.ui.components.actions.BaseAction;
-import io.jmix.ui.components.compatibility.WindowManager;
-import io.jmix.ui.data.CollectionDatasource;
-import io.jmix.ui.App;
 import io.jmix.ui.model.cuba.CollectionDatasource;
 
 public class ShowLinkAction extends BaseAction {

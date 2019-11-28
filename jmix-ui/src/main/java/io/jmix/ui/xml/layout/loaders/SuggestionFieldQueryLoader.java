@@ -16,11 +16,9 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import groovy.text.GStringTemplateEngine;
 import io.jmix.core.DataManager;
 import io.jmix.core.LoadContext;
 import io.jmix.core.QueryUtils;
-import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.entity.Entity;
 import io.jmix.ui.GuiDevelopmentException;
@@ -28,9 +26,6 @@ import io.jmix.ui.components.Field;
 import io.jmix.ui.components.SuggestionField;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
-
-import java.io.IOException;
-import java.io.StringWriter;
 
 public abstract class SuggestionFieldQueryLoader<T extends Field> extends AbstractFieldLoader<T> {
 
@@ -80,14 +75,15 @@ public abstract class SuggestionFieldQueryLoader<T extends Field> extends Abstra
 
     protected String applySearchFormat(String searchString, String format) {
         if (StringUtils.isNotEmpty(format)) {
-            GStringTemplateEngine engine = new GStringTemplateEngine();
-            StringWriter writer = new StringWriter();
-            try {
-                engine.createTemplate(format).make(ParamsMap.of("searchString", searchString)).writeTo(writer);
-                return writer.toString();
-            } catch (ClassNotFoundException | IOException e) {
-                throw new IllegalStateException(e);
-            }
+            // todo GStringTemplateEngine
+//            GStringTemplateEngine engine = new GStringTemplateEngine();
+//            StringWriter writer = new StringWriter();
+//            try {
+//                engine.createTemplate(format).make(ParamsMap.of("searchString", searchString)).writeTo(writer);
+//                return writer.toString();
+//            } catch (ClassNotFoundException | IOException e) {
+//                throw new IllegalStateException(e);
+//            }
         }
         return searchString;
     }

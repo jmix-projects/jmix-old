@@ -16,8 +16,6 @@
 
 package io.jmix.ui.components.factories;
 
-import com.haulmont.cuba.core.app.dynamicattributes.*;
-import com.haulmont.cuba.core.entity.*;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
 import io.jmix.core.entity.FileDescriptor;

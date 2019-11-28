@@ -16,11 +16,9 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.web.gui.components.tree.TreeSourceEventsDelegate;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.selection.MultiSelectionEvent;
@@ -48,6 +46,8 @@ import io.jmix.ui.components.data.BindingState;
 import io.jmix.ui.components.data.TreeItems;
 import io.jmix.ui.components.data.meta.EntityTreeItems;
 import io.jmix.ui.components.data.tree.DatasourceTreeItems;
+import io.jmix.ui.components.tree.TreeDataProvider;
+import io.jmix.ui.components.tree.TreeSourceEventsDelegate;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.sys.ShortcutsDelegate;
 import io.jmix.ui.sys.ShowInfoAction;

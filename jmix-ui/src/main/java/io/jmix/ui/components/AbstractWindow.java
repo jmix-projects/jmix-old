@@ -17,6 +17,7 @@ package io.jmix.ui.components;
 
 import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.Events;
+import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.ui.ClientConfig;
@@ -61,6 +62,8 @@ public class AbstractWindow extends Screen implements Window, LegacyFrame, Compo
 
     @Inject
     protected Messages messages;
+    @Inject
+    protected MessageTools messageTools;
     @Inject
     private MessageBundle messageBundle;
     @Inject

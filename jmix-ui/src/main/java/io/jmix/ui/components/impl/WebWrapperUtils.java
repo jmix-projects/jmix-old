@@ -16,18 +16,76 @@
 
 package io.jmix.ui.components.impl;
 
+
 import com.vaadin.event.MouseEvents;
 import com.vaadin.server.Sizeable;
+import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.shared.ui.Orientation;
+import com.vaadin.shared.ui.ValueChangeMode;
+import com.vaadin.shared.ui.datefield.DateResolution;
+import com.vaadin.shared.ui.grid.ColumnResizeMode;
+import com.vaadin.shared.ui.grid.GridStaticCellType;
+import com.vaadin.shared.ui.grid.ScrollDestination;
+import com.vaadin.shared.ui.slider.SliderOrientation;
+import com.vaadin.ui.Dependency;
+import com.vaadin.v7.shared.ui.combobox.FilteringMode;
+import com.vaadin.v7.ui.AbstractSelect;
 import io.jmix.ui.components.*;
+import io.jmix.ui.components.Component.Alignment;
+import io.jmix.ui.components.DataGrid.DataGridStaticCellType;
+import io.jmix.ui.components.LookupField.FilterMode;
+import io.jmix.ui.widgets.client.popupview.PopupPosition;
+import io.jmix.ui.widgets.client.resizabletextarea.ResizeDirection;
+import io.jmix.ui.widgets.client.timefield.TimeResolution;
+import io.jmix.ui.widgets.data.AggregationContainer;
 
+import javax.annotation.Nullable;
+
+import static com.vaadin.v7.ui.AbstractTextField.TextChangeEventMode;
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 /**
  * Convenient class for methods that converts values from Vaadin to CUBA instances and vice versa.
  */
 public final class WebWrapperUtils {
+
+    public static final String AUTO_SIZE = "AUTO";
+
     private WebWrapperUtils() {
+    }
+
+    public static CaptionMode toCaptionMode(AbstractSelect.ItemCaptionMode captionMode) {
+        if (captionMode == null) {
+            return null;
+        }
+
+        switch (captionMode) {
+            case ITEM:
+                return CaptionMode.ITEM;
+            case PROPERTY:
+                return CaptionMode.PROPERTY;
+            case EXPLICIT_DEFAULTS_ID:
+                return CaptionMode.MAP_ENTRY;
+            default:
+                throw new UnsupportedOperationException("Unsupported Vaadin AbstractSelect.ItemCaptionMode");
+        }
+    }
+
+    public static AbstractSelect.ItemCaptionMode toVaadinCaptionMode(CaptionMode captionMode) {
+        if (captionMode == null) {
+            return null;
+        }
+
+        switch (captionMode) {
+            case ITEM:
+                return AbstractSelect.ItemCaptionMode.ITEM;
+            case PROPERTY:
+                return AbstractSelect.ItemCaptionMode.PROPERTY;
+            case MAP_ENTRY:
+                return AbstractSelect.ItemCaptionMode.EXPLICIT_DEFAULTS_ID;
+            default:
+                throw new UnsupportedOperationException("Unsupported CaptionMode");
+        }
     }
 
     public static ContentMode toContentMode(com.vaadin.shared.ui.ContentMode contentMode) {
@@ -60,7 +118,41 @@ public final class WebWrapperUtils {
         }
     }
 
-    public static com.vaadin.ui.Alignment toVaadinAlignment(Component.Alignment alignment) {
+    public static FilteringMode toVaadinFilterMode(FilterMode filterMode) {
+        if (filterMode == null) {
+            return null;
+        }
+
+        switch (filterMode) {
+            case NO:
+                return FilteringMode.OFF;
+            case STARTS_WITH:
+                return FilteringMode.STARTSWITH;
+            case CONTAINS:
+                return FilteringMode.CONTAINS;
+            default:
+                throw new UnsupportedOperationException("Unsupported FilterMode");
+        }
+    }
+
+    public static FilterMode toFilterMode(FilteringMode filterMode) {
+        if (filterMode == null) {
+            return null;
+        }
+
+        switch (filterMode) {
+            case OFF:
+                return FilterMode.NO;
+            case CONTAINS:
+                return FilterMode.CONTAINS;
+            case STARTSWITH:
+                return FilterMode.STARTS_WITH;
+            default:
+                throw new UnsupportedOperationException("Unsupported Vaadin FilteringMode");
+        }
+    }
+
+    public static com.vaadin.ui.Alignment toVaadinAlignment(Alignment alignment) {
         if (alignment == null) {
             return null;
         }
@@ -87,6 +179,91 @@ public final class WebWrapperUtils {
             default:
                 throw new UnsupportedOperationException("Unsupported Alignment");
         }
+    }
+
+    public static TextInputField.TextChangeEventMode toTextChangeEventMode(ValueChangeMode mode) {
+        if (mode == null) {
+            return null;
+        }
+
+        switch (mode) {
+            case BLUR:
+                return TextInputField.TextChangeEventMode.BLUR;
+            case EAGER:
+                return TextInputField.TextChangeEventMode.EAGER;
+            case LAZY:
+                return TextInputField.TextChangeEventMode.LAZY;
+            case TIMEOUT:
+                return TextInputField.TextChangeEventMode.TIMEOUT;
+            default:
+                throw new UnsupportedOperationException("Unsupported Vaadin TextChangeEventMode");
+        }
+    }
+
+    public static TextInputField.TextChangeEventMode toTextChangeEventMode(TextChangeEventMode mode) {
+        if (mode == null) {
+            return null;
+        }
+
+        switch (mode) {
+            case EAGER:
+                return TextInputField.TextChangeEventMode.EAGER;
+            case LAZY:
+                return TextInputField.TextChangeEventMode.LAZY;
+            case TIMEOUT:
+                return TextInputField.TextChangeEventMode.TIMEOUT;
+            default:
+                throw new UnsupportedOperationException("Unsupported Vaadin TextChangeEventMode");
+        }
+    }
+
+    public static ValueChangeMode toVaadinValueChangeEventMode(TextInputField.TextChangeEventMode mode) {
+        if (mode == null) {
+            return null;
+        }
+
+        ValueChangeMode vMode;
+        switch (mode) {
+            case BLUR:
+                vMode = ValueChangeMode.BLUR;
+                break;
+            case EAGER:
+                vMode = ValueChangeMode.EAGER;
+                break;
+            case LAZY:
+                vMode = ValueChangeMode.LAZY;
+                break;
+            case TIMEOUT:
+                vMode = ValueChangeMode.TIMEOUT;
+                break;
+            default:
+                throw new UnsupportedOperationException("Unsupported TextChangeEventMode");
+        }
+
+        return vMode;
+    }
+
+    public static TextChangeEventMode toVaadinTextChangeEventMode(TextInputField.TextChangeEventMode mode) {
+        if (mode == null) {
+            return null;
+        }
+
+        TextChangeEventMode vMode;
+        switch (mode) {
+            case EAGER:
+                vMode = TextChangeEventMode.EAGER;
+                break;
+            case LAZY:
+                vMode = TextChangeEventMode.LAZY;
+                break;
+            case TIMEOUT:
+                vMode = TextChangeEventMode.TIMEOUT;
+                break;
+            default:
+                throw new UnsupportedOperationException("Unsupported TextChangeEventMode");
+        }
+
+        return vMode;
     }
 
     public static MouseEventDetails toMouseEventDetails(MouseEvents.ClickEvent event) {
@@ -142,6 +319,51 @@ public final class WebWrapperUtils {
         }
     }
 
+    public static DataGridStaticCellType toDataGridStaticCellType(GridStaticCellType cellType) {
+        checkNotNullArgument(cellType);
+
+        switch (cellType) {
+            case HTML:
+                return DataGridStaticCellType.HTML;
+            case TEXT:
+                return DataGridStaticCellType.TEXT;
+            case WIDGET:
+                return DataGridStaticCellType.COMPONENT;
+            default:
+                throw new UnsupportedOperationException("Unsupported GridStaticCellType");
+        }
+    }
+
+    public static ResizeDirection toVaadinResizeDirection(ResizableTextArea.ResizeDirection direction) {
+        switch (direction) {
+            case BOTH:
+                return ResizeDirection.BOTH;
+            case VERTICAL:
+                return ResizeDirection.VERTICAL;
+            case HORIZONTAL:
+                return ResizeDirection.HORIZONTAL;
+            case NONE:
+                return ResizeDirection.NONE;
+            default:
+                throw new IllegalArgumentException("Unknown direction: " + direction);
+        }
+    }
+
+    public static ResizableTextArea.ResizeDirection toResizeDirection(ResizeDirection direction) {
+        switch (direction) {
+            case BOTH:
+                return ResizableTextArea.ResizeDirection.BOTH;
+            case VERTICAL:
+                return ResizableTextArea.ResizeDirection.VERTICAL;
+            case HORIZONTAL:
+                return ResizableTextArea.ResizeDirection.HORIZONTAL;
+            case NONE:
+                return ResizableTextArea.ResizeDirection.NONE;
+            default:
+                throw new IllegalArgumentException("Unknown direction: " + direction);
+        }
+    }
+
     public static Sizeable.Unit toVaadinUnit(SizeUnit sizeUnit) {
         checkNotNullArgument(sizeUnit);
 
@@ -165,6 +387,193 @@ public final class WebWrapperUtils {
                 return SizeUnit.PERCENTAGE;
             default:
                 throw new UnsupportedOperationException("Unsupported Size Unit");
+        }
+    }
+
+    public static PopupButton.PopupOpenDirection toPopupOpenDirection(com.vaadin.ui.Alignment alignment) {
+        checkNotNullArgument(alignment);
+
+        if (alignment == com.vaadin.ui.Alignment.BOTTOM_LEFT)
+            return PopupButton.PopupOpenDirection.BOTTOM_LEFT;
+
+        if (alignment == com.vaadin.ui.Alignment.BOTTOM_RIGHT)
+            return PopupButton.PopupOpenDirection.BOTTOM_RIGHT;
+
+        if (alignment == com.vaadin.ui.Alignment.BOTTOM_CENTER)
+            return PopupButton.PopupOpenDirection.BOTTOM_CENTER;
+
+        throw new UnsupportedOperationException("Unsupported alignment");
+    }
+
+    public static com.vaadin.ui.Alignment toVaadinAlignment(PopupButton.PopupOpenDirection direction) {
+        checkNotNullArgument(direction);
+
+        switch (direction) {
+            case BOTTOM_CENTER:
+                return com.vaadin.ui.Alignment.BOTTOM_CENTER;
+            case BOTTOM_RIGHT:
+                return com.vaadin.ui.Alignment.BOTTOM_RIGHT;
+            case BOTTOM_LEFT:
+                return com.vaadin.ui.Alignment.BOTTOM_LEFT;
+            default:
+                throw new UnsupportedOperationException();
+        }
+    }
+
+    public static com.vaadin.v7.ui.Table.Align convertColumnAlignment(io.jmix.ui.components.Table.ColumnAlignment alignment) {
+        if (alignment == null) {
+            return null;
+        }
+
+        switch (alignment) {
+            case LEFT:
+                return com.vaadin.v7.ui.Table.Align.LEFT;
+            case CENTER:
+                return com.vaadin.v7.ui.Table.Align.CENTER;
+            case RIGHT:
+                return com.vaadin.v7.ui.Table.Align.RIGHT;
+            default:
+                throw new UnsupportedOperationException();
+        }
+    }
+
+    public static AggregationContainer.Type convertAggregationType(AggregationInfo.Type function) {
+        switch (function) {
+            case COUNT:
+                return AggregationContainer.Type.COUNT;
+            case AVG:
+                return AggregationContainer.Type.AVG;
+            case MAX:
+                return AggregationContainer.Type.MAX;
+            case MIN:
+                return AggregationContainer.Type.MIN;
+            case SUM:
+                return AggregationContainer.Type.SUM;
+            case CUSTOM:
+                return AggregationContainer.Type.CUSTOM;
+            default:
+                throw new IllegalArgumentException("Unknown function: " + function);
+        }
+    }
+
+    public static DateResolution convertDateResolution(DatePicker.Resolution resolution) {
+        switch (resolution) {
+            case YEAR:
+                return DateResolution.YEAR;
+            case MONTH:
+                return DateResolution.MONTH;
+            case DAY:
+            default:
+                return DateResolution.DAY;
+        }
+    }
+
+    public static DateResolution convertDateTimeResolution(DateField.Resolution resolution) {
+        switch (resolution) {
+            case YEAR:
+                return DateResolution.YEAR;
+            case MONTH:
+                return DateResolution.MONTH;
+            case DAY:
+            case HOUR:
+            case MIN:
+            case SEC:
+            default:
+                return DateResolution.DAY;
+        }
+    }
+
+    public static TimeResolution convertTimeResolution(TimeField.Resolution resolution) {
+        switch (resolution) {
+            case SEC:
+                return TimeResolution.SECOND;
+            case HOUR:
+                return TimeResolution.HOUR;
+            case MIN:
+            default:
+                return TimeResolution.MINUTE;
+        }
+    }
+
+    public static TimeResolution convertTimeResolution(DateField.Resolution resolution) {
+        switch (resolution) {
+            case HOUR:
+                return TimeResolution.HOUR;
+            case MIN:
+                return TimeResolution.MINUTE;
+            case SEC:
+                return TimeResolution.SECOND;
+            default:
+                throw new IllegalArgumentException("Can't be converted to TimeResolution: " + resolution);
+        }
+    }
+
+    public static DataGrid.ColumnResizeMode convertToDataGridColumnResizeMode(ColumnResizeMode mode) {
+        checkNotNullArgument(mode);
+
+        switch (mode) {
+            case ANIMATED:
+                return DataGrid.ColumnResizeMode.ANIMATED;
+            case SIMPLE:
+                return DataGrid.ColumnResizeMode.SIMPLE;
+            default:
+                throw new IllegalArgumentException("Can't be converted to ColumnResizeMode: " + mode);
+        }
+    }
+
+    public static ColumnResizeMode convertToGridColumnResizeMode(DataGrid.ColumnResizeMode mode) {
+        checkNotNullArgument(mode);
+
+        switch (mode) {
+            case ANIMATED:
+                return ColumnResizeMode.ANIMATED;
+            case SIMPLE:
+                return ColumnResizeMode.SIMPLE;
+            default:
+                throw new IllegalArgumentException("Can't be converted to ColumnResizeMode: " + mode);
+        }
+    }
+
+    public static SortDirection convertToGridSortDirection(DataGrid.SortDirection sortDirection) {
+        checkNotNullArgument(sortDirection);
+
+        switch (sortDirection) {
+            case ASCENDING:
+                return SortDirection.ASCENDING;
+            case DESCENDING:
+                return SortDirection.DESCENDING;
+            default:
+                throw new IllegalArgumentException("Can't be converted to SortDirection: " + sortDirection);
+        }
+    }
+
+    public static DataGrid.SortDirection convertToDataGridSortDirection(SortDirection sortDirection) {
+        checkNotNullArgument(sortDirection);
+
+        switch (sortDirection) {
+            case ASCENDING:
+                return DataGrid.SortDirection.ASCENDING;
+            case DESCENDING:
+                return DataGrid.SortDirection.DESCENDING;
+            default:
+                throw new IllegalArgumentException("Can't be converted to SortDirection: " + sortDirection);
+        }
+    }
+
+    public static ScrollDestination convertToGridScrollDestination(DataGrid.ScrollDestination destination) {
+        checkNotNullArgument(destination);
+
+        switch (destination) {
+            case ANY:
+                return ScrollDestination.ANY;
+            case START:
+                return ScrollDestination.START;
+            case MIDDLE:
+                return ScrollDestination.MIDDLE;
+            case END:
+                return ScrollDestination.END;
+            default:
+                throw new IllegalArgumentException("Can't be converted to ScrollDestination: " + destination);
         }
     }
 
@@ -192,5 +601,103 @@ public final class WebWrapperUtils {
             default:
                 throw new IllegalArgumentException("Can't be converted to Orientation: " + orientation);
         }
+    }
+
+    public static HasOrientation.Orientation fromVaadinSliderOrientation(SliderOrientation orientation) {
+        checkNotNullArgument(orientation);
+
+        switch (orientation) {
+            case VERTICAL:
+                return HasOrientation.Orientation.VERTICAL;
+            case HORIZONTAL:
+                return HasOrientation.Orientation.HORIZONTAL;
+            default:
+                throw new IllegalArgumentException("Can't be converted to HasOrientation.Orientation: " + orientation);
+        }
+    }
+
+    public static SliderOrientation toVaadinSliderOrientation(HasOrientation.Orientation orientation) {
+        checkNotNullArgument(orientation);
+
+        switch (orientation) {
+            case VERTICAL:
+                return SliderOrientation.VERTICAL;
+            case HORIZONTAL:
+                return SliderOrientation.HORIZONTAL;
+            default:
+                throw new IllegalArgumentException("Can't be converted to SliderOrientation: " + orientation);
+        }
+    }
+
+    @Nullable
+    public static JavaScriptComponent.DependencyType toDependencyType(Dependency.Type type) {
+        if (type == null) {
+            return null;
+        }
+
+        switch (type) {
+            case JAVASCRIPT:
+                return JavaScriptComponent.DependencyType.JAVASCRIPT;
+            case STYLESHEET:
+                return JavaScriptComponent.DependencyType.STYLESHEET;
+            default:
+                throw new IllegalArgumentException("Can't be converted to DependencyType: " + type);
+        }
+    }
+
+    @Nullable
+    public static Dependency.Type toVaadinDependencyType(JavaScriptComponent.DependencyType type) {
+        if (type == null) {
+            return null;
+        }
+
+        switch (type) {
+            case JAVASCRIPT:
+                return Dependency.Type.JAVASCRIPT;
+            case STYLESHEET:
+                return Dependency.Type.STYLESHEET;
+            default:
+                throw new IllegalArgumentException("Can't be converted to Dependency.Type: " + type);
+        }
+    }
+
+    public static String fromVaadinSize(String size) {
+        return Component.AUTO_SIZE.equalsIgnoreCase(size)
+                ? AUTO_SIZE
+                : size;
+    }
+
+    public static String toVaadinSize(String size) {
+        return AUTO_SIZE.equalsIgnoreCase(size)
+                ? Component.AUTO_SIZE
+                : size;
+    }
+
+    @Nullable
+    public static PopupPosition toVaadinPopupPosition(PopupView.PopupPosition popupPosition) {
+        if (popupPosition == null) {
+            return null;
+        }
+
+        for (PopupPosition position : PopupPosition.values()) {
+            if (position.name().equals(popupPosition.name())) {
+                return position;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public static PopupView.PopupPosition fromVaadinPopupPosition(PopupPosition popupPosition) {
+        if (popupPosition == null) {
+            return null;
+        }
+
+        for (PopupView.PopupPosition position : PopupView.PopupPosition.values()) {
+            if (position.name().equals(popupPosition.name())) {
+                return position;
+            }
+        }
+        return null;
     }
 }

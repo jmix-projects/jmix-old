@@ -15,7 +15,6 @@
  */
 package io.jmix.ui.actions.legacy;
 
-import com.haulmont.cuba.gui.data.*;
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;

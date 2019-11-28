@@ -16,7 +16,6 @@
 
 package io.jmix.ui.components.table;
 
-import com.haulmont.cuba.web.gui.data.StaticItemSetChangeEvent;
 import com.vaadin.ui.UI;
 import com.vaadin.v7.data.Container;
 import com.vaadin.v7.data.Container.ItemSetChangeNotifier;
@@ -25,6 +24,7 @@ import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.AbstractProperty;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.ui.components.data.BindingState;
+import io.jmix.ui.components.data.StaticItemSetChangeEvent;
 import io.jmix.ui.components.data.TableItems;
 
 import java.util.*;
