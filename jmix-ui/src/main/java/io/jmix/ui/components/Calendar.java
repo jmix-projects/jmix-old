@@ -16,10 +16,10 @@
 
 package io.jmix.ui.components;
 
-import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
-import com.vaadin.v7.ui.components.calendar.event.CalendarEventProvider;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.calendar.CalendarEvent;
+import io.jmix.ui.components.calendar.CalendarEventProvider;
 import io.jmix.ui.components.calendar.ContainerCalendarEventProvider;
 import io.jmix.ui.components.calendar.EntityCalendarEventProvider;
 import io.jmix.ui.model.cuba.CollectionDatasource;

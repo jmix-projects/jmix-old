@@ -16,8 +16,6 @@
 
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.web.gui.components.calendar.CalendarEventProviderWrapper;
-import com.haulmont.cuba.web.gui.components.calendar.CalendarEventWrapper;
 import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents;
 import io.jmix.core.Messages;
 import io.jmix.core.commons.events.Subscription;
@@ -25,10 +23,7 @@ import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.components.Calendar;
-import io.jmix.ui.components.calendar.CalendarEvent;
-import io.jmix.ui.components.calendar.CalendarEventProvider;
-import io.jmix.ui.components.calendar.EntityCalendarEvent;
-import io.jmix.ui.components.calendar.ListCalendarEventProvider;
+import io.jmix.ui.components.calendar.*;
 import io.jmix.ui.components.data.calendar.EntityCalendarEventProvider;
 import io.jmix.ui.model.cuba.CollectionDatasource;
 import io.jmix.ui.model.cuba.impl.CollectionDsHelper;
@@ -501,7 +496,7 @@ public class WebCalendar extends WebAbstractComponent<CubaCalendar>
     public Map<DayOfWeek, String> getDayNames() {
         List<String> days = Arrays.asList(component.getDayNamesShort().clone());
 
-        int shift = Math.abs(component.getFirstDayOfWeek() - Calendar.MONDAY) + 1;
+        int shift = Math.abs(component.getFirstDayOfWeek() - java.util.Calendar.MONDAY) + 1;
         Collections.rotate(days, -shift);
 
         return days.stream().collect(Collectors.toMap(
@@ -522,7 +517,7 @@ public class WebCalendar extends WebAbstractComponent<CubaCalendar>
                 .map(dayNames::get)
                 .collect(Collectors.toList());
 
-        int shift = Math.abs(component.getFirstDayOfWeek() - Calendar.MONDAY) + 1;
+        int shift = Math.abs(component.getFirstDayOfWeek() - java.util.Calendar.MONDAY) + 1;
         Collections.rotate(daysList, shift);
 
         String[] days = new String[7];
