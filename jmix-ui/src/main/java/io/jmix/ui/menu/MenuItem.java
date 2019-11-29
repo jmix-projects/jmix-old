@@ -17,7 +17,6 @@ package io.jmix.ui.menu;
 
 import io.jmix.core.security.PermissionType;
 import io.jmix.core.security.Security;
-import io.jmix.core.security.UserSession;
 import io.jmix.ui.components.KeyCombination;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
@@ -146,7 +145,8 @@ public class MenuItem {
                     for (Element element : permissionsElem.elements("permission")) {
                         PermissionType type = PermissionType.valueOf(element.attributeValue("type"));
                         String target = element.attributeValue("target");
-                        screenPermitted = security.isPermitted(type, target);
+                        // todo security
+                        // screenPermitted = security.isPermitted(type, target);
                         if (!screenPermitted)
                             break;
                     }

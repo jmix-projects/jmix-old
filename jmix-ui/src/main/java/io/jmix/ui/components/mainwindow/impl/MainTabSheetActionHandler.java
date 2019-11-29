@@ -25,8 +25,7 @@ import io.jmix.core.Messages;
 import io.jmix.core.Metadata;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.security.UserSession;
-import io.jmix.core.security.UserSessionSource;
+import io.jmix.core.security.Security;
 import io.jmix.ui.ClientConfig;
 import io.jmix.ui.components.Window;
 import io.jmix.ui.screen.legacy.AbstractEditor;
@@ -88,9 +87,8 @@ public class MainTabSheetActionHandler implements Action.Handler {
                 actions.add(restoreToDefaults);
             }
 
-            UserSessionSource sessionSource = AppBeans.get(UserSessionSource.NAME);
-            UserSession userSession = sessionSource.getUserSession();
-            if (userSession.isSpecificPermitted(ShowInfoAction.ACTION_PERMISSION) &&
+            Security security = AppBeans.get(Security.NAME);
+            if (security.isSpecificPermitted(ShowInfoAction.ACTION_PERMISSION) &&
                     findEditor((Layout) target) != null) {
                 actions.add(showInfo);
             }

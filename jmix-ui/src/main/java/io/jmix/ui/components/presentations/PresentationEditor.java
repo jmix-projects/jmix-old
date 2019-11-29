@@ -15,6 +15,7 @@
  */
 package io.jmix.ui.components.presentations;
 
+import io.jmix.core.security.Security;
 import io.jmix.ui.sys.PersistenceHelper;
 import com.vaadin.ui.*;
 import io.jmix.core.AppBeans;
@@ -55,6 +56,7 @@ public class PresentationEditor extends CubaWindow {
 
     protected Messages messages;
     protected UserSessionSource sessionSource;
+    protected Security security;
 
     public PresentationEditor(Presentation presentation, HasPresentations component) {
         this.presentation = presentation;
@@ -62,10 +64,10 @@ public class PresentationEditor extends CubaWindow {
 
         messages = AppBeans.get(Messages.NAME);
         sessionSource = AppBeans.get(UserSessionSource.NAME);
+        security = AppBeans.get(Security.NAME);
 
         isNew = PersistenceHelper.isNew(presentation);
-        allowGlobalPresentations = sessionSource.getUserSession()
-                .isSpecificPermitted("cuba.gui.presentations.global");
+        allowGlobalPresentations = security.isSpecificPermitted("cuba.gui.presentations.global");
 
         initLayout();
 

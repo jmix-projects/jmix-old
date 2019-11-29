@@ -18,7 +18,7 @@ package io.jmix.ui.components.presentations.actions;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.entity.Presentation;
-import io.jmix.core.security.UserSessionSource;
+import io.jmix.core.security.Security;
 import io.jmix.ui.actions.AbstractAction;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.presentations.Presentations;
@@ -39,7 +39,7 @@ public class PresentationActionsBuilder {
         RESET
     }
 
-    protected UserSessionSource userSessionSource;
+    protected Security security;
 
     protected Table table;
 
@@ -47,7 +47,7 @@ public class PresentationActionsBuilder {
 
     public PresentationActionsBuilder(Table component) {
         table = component;
-        userSessionSource = AppBeans.get(UserSessionSource.NAME);
+        security = AppBeans.get(Security.NAME);
     }
 
     public Collection<AbstractAction> build() {
@@ -127,6 +127,6 @@ public class PresentationActionsBuilder {
         Presentations presentations = table.getPresentations();
         Presentation presentation = presentations.getCurrent();
         return presentation != null && (!presentations.isGlobal(presentation) ||
-                userSessionSource.getUserSession().isSpecificPermitted("cuba.gui.presentations.global"));
+                security.isSpecificPermitted("cuba.gui.presentations.global"));
     }
 }
