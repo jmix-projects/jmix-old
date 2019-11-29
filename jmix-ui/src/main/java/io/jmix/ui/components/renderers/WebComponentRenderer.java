@@ -27,7 +27,7 @@ import io.jmix.ui.components.impl.WebAbstractDataGrid;
 /**
  * A renderer for UI components.
  */
-public class WebComponentRenderer<T extends Entity> extends WebAbstractDataGrid.AbstractRenderer<T, Component>
+public class WebComponentRenderer<T extends Entity> extends WebAbstractDataGrid.AbstractRenderer<T, com.vaadin.ui.Component>
         implements DataGrid.ComponentRenderer {
 
     @Override
