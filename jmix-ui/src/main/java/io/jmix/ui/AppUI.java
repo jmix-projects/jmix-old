@@ -67,6 +67,9 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
 
     protected App app;
 
+    public static final String LAST_REQUEST_ACTION_ATTR = "lastRequestAction";
+    public static final String LAST_REQUEST_PARAMS_ATTR = "lastRequestParams";
+
     @Inject
     protected Messages messages;
     @Inject
@@ -571,6 +574,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
 
         String action = (String) wrappedSession.getAttribute(LAST_REQUEST_ACTION_ATTR);
 
+        WebConfig webConfig = beanLocator.get(ConfigInterfaces.class).getConfig(WebConfig.class);
         return webConfig.getLinkHandlerActions().contains(action);
     }
 
@@ -595,6 +599,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     }
 
     protected void processRequest(NavigationState navigationState) {
+        WebConfig webConfig = beanLocator.get(ConfigInterfaces.class).getConfig(WebConfig.class);
         if (UrlHandlingMode.URL_ROUTES != webConfig.getUrlHandlingMode()
                 || navigationState == null) {
             return;

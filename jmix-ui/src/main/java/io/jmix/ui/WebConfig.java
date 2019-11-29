@@ -238,10 +238,10 @@ public interface WebConfig extends Config {
      * @return list of URL actions to call {@link com.haulmont.cuba.web.sys.LinkHandler}
      * <br> An action is represented by the last part of URL.
      */
-    /*@Property("cuba.web.linkHandlerActions")
+    @Property("cuba.web.linkHandlerActions")
     @Factory(factory = StringListTypeFactory.class)
     @Default("open|o")
-    List<String> getLinkHandlerActions();*/
+    List<String> getLinkHandlerActions();
 
     /**
      * Reinitialize session after login to protect from Session Fixation attacks.

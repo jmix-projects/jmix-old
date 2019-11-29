@@ -20,6 +20,8 @@ import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.validation.groups.UiCrossFieldChecks;
 import io.jmix.ui.ClientConfig;
+import io.jmix.ui.Notifications;
+import io.jmix.ui.Screens;
 import io.jmix.ui.components.compatibility.*;
 import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.screen.*;
@@ -203,6 +205,14 @@ public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
      * @return true if the validation was successful, false if there were any problems
      */
     boolean validateAll();
+
+    /**
+     * @deprecated Use {@link Screens} and {@link Notifications} instead.
+     *
+     * @return window manager instance
+     */
+    @Deprecated
+    WindowManager getWindowManager();
 
     /**
      * Defines how the managed main TabSheet switches a tab with the given window: hides or unloads its content.

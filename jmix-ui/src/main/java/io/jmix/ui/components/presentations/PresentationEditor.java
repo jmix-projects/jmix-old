@@ -175,7 +175,8 @@ public class PresentationEditor extends CubaWindow {
         presentation.setAutoSave(autoSaveField.getValue());
         presentation.setDefault(defaultField.getValue());
 
-        User user = sessionSource.getUserSession().getCurrentOrSubstitutedUser();
+        // todo user substitution
+        User user = sessionSource.getUserSession().getUser();
 
         boolean userOnly = !allowGlobalPresentations || !BooleanUtils.isTrue(globalField.getValue());
         presentation.setUser(userOnly ? user : null);

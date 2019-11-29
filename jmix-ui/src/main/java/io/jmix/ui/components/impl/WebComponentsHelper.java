@@ -200,6 +200,13 @@ public class WebComponentsHelper {
         return false;
     }
 
+    public static boolean convertFieldGroupCaptionAlignment(FieldGroup.FieldCaptionAlignment captionAlignment) {
+        if (captionAlignment == FieldGroup.FieldCaptionAlignment.LEFT)
+            return true;
+        else
+            return false;
+    }
+
     public static ShortcutTriggeredEvent getShortcutEvent(io.jmix.ui.components.Component source,
                                                           Component target) {
         Component vaadinSource = getVaadinSource(source);

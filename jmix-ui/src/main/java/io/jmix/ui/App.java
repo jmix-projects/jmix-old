@@ -39,6 +39,7 @@ import io.jmix.ui.screen.Screen;
 import io.jmix.ui.sys.AppCookies;
 import io.jmix.ui.sys.BackgroundTaskManager;
 import io.jmix.ui.sys.ControllerUtils;
+import io.jmix.ui.sys.LinkHandler;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsRepository;
 import io.jmix.ui.util.OperationResult;
@@ -105,7 +106,7 @@ public abstract class App {
 
     protected AppCookies cookies;
 
-    // protected LinkHandler linkHandler; todo links
+    protected LinkHandler linkHandler;
 
     protected BackgroundTaskManager backgroundTaskManager = new BackgroundTaskManager();
 

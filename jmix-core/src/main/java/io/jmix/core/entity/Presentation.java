@@ -23,15 +23,23 @@ public interface Presentation extends Entity<UUID> {
 
     String getName();
 
+    void setName(String name);
+
     String getXml();
 
+    void setXml(String xml);
+
     User getUser();
+
+    void setUser(User user);
 
     Boolean getDefault();
 
     void setDefault(Boolean aDefault);
 
     Boolean getAutoSave();
+
+    void setAutoSave(Boolean autoSave);
 
     void setComponentId(String componentId);
 

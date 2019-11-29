@@ -45,7 +45,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
-import static com.haulmont.cuba.web.gui.components.WebComponentsHelper.convertFieldGroupCaptionAlignment;
+import static io.jmix.ui.components.impl.WebComponentsHelper.convertFieldGroupCaptionAlignment;
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 public class WebFieldGroup extends WebAbstractComponent<CubaFieldGroupLayout> implements FieldGroup, UiPermissionAware {
