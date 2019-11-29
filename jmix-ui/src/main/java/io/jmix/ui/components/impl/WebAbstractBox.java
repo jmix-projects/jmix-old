@@ -234,6 +234,16 @@ public abstract class WebAbstractBox<T extends AbstractOrderedLayout>
     }
 
     @Override
+    public void removeLayoutClickListener(Consumer<LayoutClickEvent> listener) {
+        unsubscribe(LayoutClickEvent.class, listener);
+
+        if (!hasSubscriptions(LayoutClickEvent.class)) {
+            component.removeLayoutClickListener(layoutClickListener);
+            layoutClickListener = null;
+        }
+    }
+
+    @Override
     public void addShortcutAction(ShortcutAction action) {
         KeyCombination keyCombination = action.getShortcutCombination();
         ShortcutListener shortcut =

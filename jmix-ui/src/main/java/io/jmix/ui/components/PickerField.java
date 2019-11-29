@@ -65,7 +65,7 @@ import java.util.function.Supplier;
  * @see LookupPickerField
  */
 public interface PickerField<V extends Entity> extends Field<V>, ActionsHolder, Buffered,
-        LookupComponent, Component.Focusable, HasOptionCaptionProvider<V>, SupportsUserAction<V>,
+        LookupComponent, Component.Focusable, HasOptionCaptionProvider<V>, SupportsUserAction<V>, HasCaptionMode,
         HasOptionIconProvider<V> {
 
     String NAME = "pickerField";

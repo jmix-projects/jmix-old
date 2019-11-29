@@ -15,18 +15,17 @@
  */
 package io.jmix.ui.components.impl;
 
-import io.jmix.core.entity.Entity;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
 import io.jmix.core.QueryUtils;
+import io.jmix.core.entity.Entity;
+import io.jmix.ui.App;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.SearchField;
 import io.jmix.ui.components.data.Options;
 import io.jmix.ui.components.data.options.DatasourceOptions;
-import io.jmix.ui.data.CollectionDatasource;
 import io.jmix.ui.model.cuba.CollectionDatasource;
 import io.jmix.ui.model.cuba.Datasource;
-import io.jmix.ui.App;
 import io.jmix.ui.widgets.CubaComboBox;
 import io.jmix.ui.widgets.CubaSearchSelect;
 import org.apache.commons.lang3.StringUtils;

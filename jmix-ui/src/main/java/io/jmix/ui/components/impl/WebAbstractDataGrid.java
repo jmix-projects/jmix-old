@@ -33,6 +33,7 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.shared.Registration;
 import com.vaadin.shared.ui.grid.HeightMode;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.DescriptionGenerator;
 import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -40,6 +41,7 @@ import com.vaadin.ui.components.grid.*;
 import io.jmix.core.*;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -50,7 +52,6 @@ import io.jmix.ui.App;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.BaseAction;
-import io.jmix.ui.components.Component;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.data.BindingState;
 import io.jmix.ui.components.data.DataGridItems;
@@ -66,10 +67,7 @@ import io.jmix.ui.components.datagrid.DataGridItemsEventsDelegate;
 import io.jmix.ui.components.datagrid.SortableDataGridDataProvider;
 import io.jmix.ui.components.formatters.CollectionFormatter;
 import io.jmix.ui.components.renderers.*;
-import io.jmix.ui.components.valueproviders.EntityValueProvider;
-import io.jmix.ui.components.valueproviders.FormatterBasedValueProvider;
-import io.jmix.ui.components.valueproviders.StringPresentationValueProvider;
-import io.jmix.ui.components.valueproviders.YesNoIconPresentationValueProvider;
+import io.jmix.ui.components.valueproviders.*;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.model.*;
 import io.jmix.ui.model.cuba.CollectionDatasource;
@@ -1402,7 +1400,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         InstanceContainer<E> instanceContainer;
         if (metaClass instanceof KeyValueMetaClass) {
             //noinspection unchecked
-            instanceContainer = (InstanceContainer<E>) new KeyValueContainerImpl((KeyValueMetaClass) metaClass);
+            instanceContainer = (InstanceContainer<E>) new KeyValueContainerImpl(AppContext.getApplicationContext(), (KeyValueMetaClass) metaClass);
         } else {
             instanceContainer = factory.createInstanceContainer(metaClass.getJavaClass());
         }

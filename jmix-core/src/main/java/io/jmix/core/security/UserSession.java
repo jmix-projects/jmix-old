@@ -99,7 +99,7 @@ public class UserSession implements Authentication {
         attributes.put(name, value);
     }
 
-    public Collection<Object> getAttributeNames() {
+    public Collection<String> getAttributeNames() {
         return new ArrayList<>(attributes.keySet());
     }
 

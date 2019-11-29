@@ -69,17 +69,18 @@ public enum ListActionType {
         public Action createAction(ListComponent holder) {
             return LegacyExcludeAction.create(holder);
         }
-    },
-
-    EXCEL("excel") {
-        @Override
-        public Action createAction(ListComponent holder) {
-            if (holder instanceof Table || holder instanceof DataGrid)
-                return LegacyExcelAction.create(holder);
-            else
-                throw new IllegalArgumentException("Only Table and DataGrid can contain EXCEL action");
-        }
     };
+
+    // todo excel action
+//    EXCEL("excel") {
+//        @Override
+//        public Action createAction(ListComponent holder) {
+//            if (holder instanceof Table || holder instanceof DataGrid)
+//                return LegacyExcelAction.create(holder);
+//            else
+//                throw new IllegalArgumentException("Only Table and DataGrid can contain EXCEL action");
+//        }
+//    };
 
     private String id;
 

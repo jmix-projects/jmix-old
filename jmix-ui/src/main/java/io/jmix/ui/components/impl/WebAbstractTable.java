@@ -16,14 +16,11 @@
 package io.jmix.ui.components.impl;
 
 import com.google.common.base.Strings;
-import com.haulmont.cuba.web.gui.components.table.*;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.Resource;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.ui.AbstractComponent;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.*;
 import com.vaadin.v7.data.Property;
 import com.vaadin.v7.data.util.converter.Converter;
 import com.vaadin.v7.data.util.converter.ConverterUtil;
@@ -31,6 +28,7 @@ import com.vaadin.v7.ui.Table.ColumnHeaderMode;
 import io.jmix.core.*;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.Presentation;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
@@ -47,6 +45,7 @@ import io.jmix.ui.WebConfig;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.BaseAction;
 import io.jmix.ui.components.*;
+import io.jmix.ui.components.Window;
 import io.jmix.ui.components.LookupComponent.LookupSelectionChangeNotifier;
 import io.jmix.ui.components.columnmanager.ColumnManager;
 import io.jmix.ui.components.data.*;
@@ -592,7 +591,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         InstanceContainer<E> instanceContainer;
         MetaClass metaClass = containerTableItems.getEntityMetaClass();
         if (metaClass instanceof KeyValueMetaClass) {
-            instanceContainer = (InstanceContainer<E>) new KeyValueContainerImpl((KeyValueMetaClass) metaClass);
+            instanceContainer = (InstanceContainer<E>) new KeyValueContainerImpl(AppContext.getApplicationContext(), (KeyValueMetaClass) metaClass);
         } else {
             instanceContainer = dataComponents.createInstanceContainer(metaClass.getJavaClass());
         }

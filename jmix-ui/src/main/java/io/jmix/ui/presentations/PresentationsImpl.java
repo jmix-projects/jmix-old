@@ -301,7 +301,8 @@ public class PresentationsImpl implements Presentations {
 
             UserSessionSource sessionSource = AppBeans.get(UserSessionSource.NAME);
             UserSession session = sessionSource.getUserSession();
-            User user = session.getCurrentOrSubstitutedUser();
+            // todo user substitution
+            User user = session.getUser();
 
             ctx.setQueryString("select p from sec$Presentation p " +
                     "where p.componentId = :component and (p.user is null or p.user.id = :userId)")

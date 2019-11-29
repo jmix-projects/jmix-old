@@ -90,7 +90,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
 
             if (prevItem != item) {
                 if (item != null) {
-                    final MetaClass aClass = item.getMetaClass();
+                    final MetaClass aClass = metadata.getClass(item);
                     if (!aClass.equals(this.metaClass) && !this.metaClass.getDescendants().contains(aClass)) {
                         throw new DevelopmentException(String.format("Invalid item metaClass '%s'", aClass));
                     }

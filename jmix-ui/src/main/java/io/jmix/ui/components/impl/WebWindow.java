@@ -26,6 +26,7 @@ import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.FrameContext;
 import io.jmix.ui.components.WindowContext;
+import io.jmix.ui.components.compatibility.WindowManager;
 import io.jmix.ui.icons.Icons;
 import io.jmix.ui.navigation.NavigationState;
 import io.jmix.ui.screen.Screen;
@@ -596,6 +597,12 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Deprecated
+    @Override
+    public WindowManager getWindowManager() {
+        return (WindowManager) UiControllerUtils.getScreenContext(getFrameOwner()).getScreens();
+    }
 
     @Override
     public void add(Component childComponent) {
