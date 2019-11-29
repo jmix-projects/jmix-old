@@ -17,9 +17,9 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Splitter;
-import io.jmix.core.security.UserSession;
+import io.jmix.core.AppBeans;
+import io.jmix.core.security.Security;
 import io.jmix.core.security.UserSessionSource;
-import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.compatibility.LegacyFrame;
@@ -108,8 +108,8 @@ public class BulkEditorLoader extends AbstractComponentLoader<BulkEditor> {
 
         loadTabIndex(resultComponent, element);
 
-        UserSession userSession = getUserSessionSource().getUserSession();
-        if (!userSession.isSpecificPermitted(BulkEditor.PERMISSION)) {
+        Security security = AppBeans.get(Security.class);
+        if (!security.isSpecificPermitted(BulkEditor.PERMISSION)) {
             resultComponent.setVisible(false);
         }
 

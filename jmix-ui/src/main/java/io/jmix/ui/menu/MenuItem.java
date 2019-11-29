@@ -16,6 +16,7 @@
 package io.jmix.ui.menu;
 
 import io.jmix.core.security.PermissionType;
+import io.jmix.core.security.Security;
 import io.jmix.core.security.UserSession;
 import io.jmix.ui.components.KeyCombination;
 import org.apache.commons.lang3.StringUtils;
@@ -134,18 +135,18 @@ public class MenuItem {
         this.stylename = stylename;
     }
 
-    public boolean isPermitted(UserSession session) {
+    public boolean isPermitted(Security security) {
         if (StringUtils.isEmpty(id) || isSeparator()) {
              return true;
         } else {
-            boolean screenPermitted = session.isScreenPermitted(id);
+            boolean screenPermitted = security.isScreenPermitted(id);
             if (screenPermitted) {
                 Element permissionsElem = descriptor.element("permissions");
                 if (permissionsElem != null) {
                     for (Element element : permissionsElem.elements("permission")) {
                         PermissionType type = PermissionType.valueOf(element.attributeValue("type"));
                         String target = element.attributeValue("target");
-                        screenPermitted = session.isPermitted(type, target);
+                        screenPermitted = security.isPermitted(type, target);
                         if (!screenPermitted)
                             break;
                     }

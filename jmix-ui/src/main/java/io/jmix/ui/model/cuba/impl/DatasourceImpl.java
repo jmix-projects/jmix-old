@@ -200,7 +200,7 @@ public class DatasourceImpl<T extends Entity> extends AbstractDatasource<T> impl
         }
 
         if (item != null) {
-            final MetaClass aClass = item.getMetaClass();
+            final MetaClass aClass = metadata.getClass(item);
             if (!aClass.equals(metaClass) && !metaClass.getDescendants().contains(aClass)) {
                 throw new DevelopmentException(String.format("Invalid item metaClass '%s'", aClass),
                         ParamsMap.of("datasource", getId(), "metaClass", aClass));

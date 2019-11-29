@@ -19,7 +19,7 @@ package io.jmix.ui.menu;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.AbstractComponent;
 import io.jmix.core.MessageTools;
-import io.jmix.core.security.UserSession;
+import io.jmix.core.security.Security;
 import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.KeyCombination;
 import io.jmix.ui.components.Window;
@@ -45,7 +45,7 @@ public class MenuBuilder {
     public static final String NAME = "cuba_AppMenuBuilder";
 
     @Inject
-    protected UserSession session;
+    protected Security security;
 
     @Inject
     protected MenuConfig menuConfig;
@@ -74,7 +74,7 @@ public class MenuBuilder {
 
         for (MenuItem menuItem : rootItems) {
             // AppMenu does not load top-level separators
-            if (menuItem.isPermitted(session)
+            if (menuItem.isPermitted(security)
                     && !menuItem.isSeparator()) {
                 createMenuBarItem(window, menuItem);
             }
@@ -125,7 +125,7 @@ public class MenuBuilder {
     }
 
     protected void createMenuBarItem(Window webWindow, MenuItem item) {
-        if (item.isPermitted(session)) {
+        if (item.isPermitted(security)) {
             AppMenu.MenuItem menuItem = appMenu.createMenuItem(item.getId(), menuConfig.getItemCaption(item),
                     null, createMenuBarCommand(item));
 
@@ -134,7 +134,7 @@ public class MenuBuilder {
             assignIcon(menuItem, item);
             assignDescription(menuItem, item);
 
-            createSubMenu(webWindow, menuItem, item, session);
+            createSubMenu(webWindow, menuItem, item, security);
 
             if (!isMenuItemEmpty(menuItem)) {
                 appMenu.addMenuItem(menuItem);
@@ -142,11 +142,11 @@ public class MenuBuilder {
         }
     }
 
-    protected void createSubMenu(Window webWindow, AppMenu.MenuItem vItem, MenuItem item, UserSession session) {
-        if (item.isPermitted(session) && !item.getChildren().isEmpty()) {
+    protected void createSubMenu(Window webWindow, AppMenu.MenuItem vItem, MenuItem item, Security security) {
+        if (item.isPermitted(security) && !item.getChildren().isEmpty()) {
             for (MenuItem child : item.getChildren()) {
                 if (child.getChildren().isEmpty()) {
-                    if (child.isPermitted(session)) {
+                    if (child.isPermitted(security)) {
                         if (child.isSeparator()) {
                             vItem.addChildItem(appMenu.createSeparator());
                             continue;
@@ -163,7 +163,7 @@ public class MenuBuilder {
                         vItem.addChildItem(menuItem);
                     }
                 } else {
-                    if (child.isPermitted(session)) {
+                    if (child.isPermitted(security)) {
                         AppMenu.MenuItem menuItem = appMenu.createMenuItem(child.getId(),
                                 menuConfig.getItemCaption(child), null, null);
 
@@ -172,7 +172,7 @@ public class MenuBuilder {
                         assignIcon(menuItem, child);
                         assignStyleName(menuItem, child);
 
-                        createSubMenu(webWindow, menuItem, child, session);
+                        createSubMenu(webWindow, menuItem, child, security);
 
                         if (!isMenuItemEmpty(menuItem)) {
                             vItem.addChildItem(menuItem);

@@ -23,6 +23,7 @@ import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityOp;
+import io.jmix.core.security.Security;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.ClientConfig;
@@ -232,8 +233,8 @@ public class LegacyEditAction extends ItemTrackingAction
 
             internalOpenEditor(datasource, datasource.getItem(), parentDs, params);
         } else if (selected.size() > 1 && bulkEditorIntegration.isEnabled()) {
-            UserSession userSession = AppBeans.get(UserSessionSource.class).getUserSession();
-            boolean isBulkEditorPermitted = userSession.isSpecificPermitted(BulkEditor.PERMISSION);
+            Security security = AppBeans.get(Security.class);
+            boolean isBulkEditorPermitted = security.isSpecificPermitted(BulkEditor.PERMISSION);
             if (isBulkEditorPermitted) {
                 // if bulk editor integration enabled and permitted for user
 

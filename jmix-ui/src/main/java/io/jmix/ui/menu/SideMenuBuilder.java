@@ -20,6 +20,7 @@ import com.google.common.base.Strings;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.AbstractComponent;
 import io.jmix.core.MessageTools;
+import io.jmix.core.security.Security;
 import io.jmix.core.security.UserSession;
 import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.KeyCombination;
@@ -48,7 +49,7 @@ public class SideMenuBuilder {
     public static final String NAME = "cuba_SideMenuBuilder";
 
     @Inject
-    protected UserSession session;
+    protected Security security;
 
     @Inject
     protected MenuConfig menuConfig;
@@ -74,7 +75,7 @@ public class SideMenuBuilder {
 
         for (MenuItem menuItem : rootItems) {
             // AppMenu does not support separators
-            if (menuItem.isPermitted(session)
+            if (menuItem.isPermitted(security)
                     && !menuItem.isSeparator()) {
                 createMenuBarItem(window, menu, menuItem);
             }
@@ -111,11 +112,11 @@ public class SideMenuBuilder {
     }
 
     protected void createMenuBarItem(Window webWindow, SideMenu menu, MenuItem item) {
-        if (item.isPermitted(session)) {
+        if (item.isPermitted(security)) {
             SideMenu.MenuItem menuItem = menu.createMenuItem(item.getId(),
                     menuConfig.getItemCaption(item), null, createMenuBarCommand(item));
 
-            createSubMenu(webWindow, menu, menuItem, item, session);
+            createSubMenu(webWindow, menu, menuItem, item, security);
             assignStyleName(menuItem, item);
             assignIcon(menuItem, item);
             assignDescription(menuItem, item);
@@ -129,14 +130,14 @@ public class SideMenuBuilder {
     }
 
     protected void createSubMenu(Window webWindow, SideMenu menu, SideMenu.MenuItem vItem,
-                                 MenuItem parentItem, UserSession session) {
-        if (parentItem.isPermitted(session)) {
+                                 MenuItem parentItem, Security security) {
+        if (parentItem.isPermitted(security)) {
             for (MenuItem child : parentItem.getChildren()) {
                 if (child.isSeparator()) {
                     continue;
                 }
 
-                if (child.isPermitted(session)) {
+                if (child.isPermitted(security)) {
                     SideMenu.MenuItem menuItem = menu.createMenuItem(child.getId(),
                             menuConfig.getItemCaption(child));
 
@@ -151,7 +152,7 @@ public class SideMenuBuilder {
 
                         vItem.addChildItem(menuItem);
                     } else {
-                        createSubMenu(webWindow, menu, menuItem, child, session);
+                        createSubMenu(webWindow, menu, menuItem, child, security);
 
                         assignExpanded(menuItem, child);
 

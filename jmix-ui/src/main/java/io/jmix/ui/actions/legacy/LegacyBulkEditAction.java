@@ -20,8 +20,7 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
 import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.security.ConstraintOperationType;
-import io.jmix.core.security.UserSession;
-import io.jmix.core.security.UserSessionSource;
+import io.jmix.core.security.Security;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.Notifications.NotificationType;
 import io.jmix.ui.WindowConfig;
@@ -84,8 +83,8 @@ public class LegacyBulkEditAction extends ItemTrackingAction implements Action.H
         this.caption = messages.getMessage(getClass(), "actions.BulkEdit");
         this.constraintOperationType = ConstraintOperationType.UPDATE;
 
-        UserSession userSession = AppBeans.get(UserSessionSource.class).getUserSession();
-        if (!userSession.isSpecificPermitted(BulkEditor.PERMISSION)) {
+        Security security = AppBeans.get(Security.class);
+        if (!security.isSpecificPermitted(BulkEditor.PERMISSION)) {
             setVisible(false);
             setEnabled(false);
         }
@@ -162,8 +161,8 @@ public class LegacyBulkEditAction extends ItemTrackingAction implements Action.H
             return;
         }
 
-        UserSession userSession = AppBeans.get(UserSessionSource.class).getUserSession();
-        if (!userSession.isSpecificPermitted(BulkEditor.PERMISSION)) {
+        Security security = AppBeans.get(Security.class);
+        if (!security.isSpecificPermitted(BulkEditor.PERMISSION)) {
             Messages messages = AppBeans.get(Messages.NAME);
 
             Notifications notifications = getScreenContext(target.getFrame()).getNotifications();
