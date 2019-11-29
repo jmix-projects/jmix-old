@@ -17,7 +17,6 @@
 package io.jmix.ui.model.cuba.impl;
 
 import io.jmix.core.entity.KeyValueEntity;
-import io.jmix.ui.data.CollectionDatasource;
 import io.jmix.ui.model.cuba.CollectionDatasource;
 
 import java.util.Collection;
@@ -52,7 +51,7 @@ public abstract class CustomValueCollectionDatasource extends ValueCollectionDat
             for (KeyValueEntity entity : entities) {
                 data.put(entity.getId(), entity);
                 attachListener(entity);
-                entity.setMetaClass(metaClass);
+                entity.setInstanceMetaClass(metaClass);
             }
         }
     }

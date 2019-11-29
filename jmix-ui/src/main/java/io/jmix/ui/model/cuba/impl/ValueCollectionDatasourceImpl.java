@@ -16,18 +16,15 @@
 
 package io.jmix.ui.model.cuba.impl;
 
+import io.jmix.core.View;
+import io.jmix.core.entity.KeyValueEntity;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.app.keyvalue.KeyValueMetaClass;
-import io.jmix.core.entity.KeyValueEntity;
-import io.jmix.core.View;
-import io.jmix.ui.data.CollectionDatasource;
-import io.jmix.ui.data.DataSupplier;
+import io.jmix.ui.logging.UIPerformanceLogger;
 import io.jmix.ui.model.cuba.CollectionDatasource;
 import io.jmix.ui.model.cuba.DataSupplier;
 import io.jmix.ui.model.cuba.DsContext;
-import io.jmix.ui.logging.UIPerformanceLogger;
 import org.perf4j.StopWatch;
 import org.perf4j.slf4j.Slf4JStopWatch;
 import org.slf4j.LoggerFactory;
@@ -90,13 +87,13 @@ public class ValueCollectionDatasourceImpl
     @Override
     public void includeItem(KeyValueEntity item) {
         super.includeItem(item);
-        item.setMetaClass(metaClass);
+        item.setInstanceMetaClass(metaClass);
     }
 
     @Override
     public void addItem(KeyValueEntity item) {
         super.addItem(item);
-        item.setMetaClass(metaClass);
+        item.setInstanceMetaClass(metaClass);
     }
 
     public void setStoreName(String storeName) {
