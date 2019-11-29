@@ -36,7 +36,7 @@ import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
  * @param <V> type of value
  * @param <I> type of option items
  */
-public interface OptionsField<V, I> extends Field<V>, HasOptionCaptionProvider<I> {
+public interface OptionsField<V, I> extends Field<V>, HasOptionCaptionProvider<I>, HasCaptionMode {
 
     /**
      * Sets options for UI component.

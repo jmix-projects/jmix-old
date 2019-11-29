@@ -792,24 +792,10 @@ public class AbstractWindow extends Screen implements Window, LegacyFrame, Compo
     }
 
     @Override
-    public void addTimer(Timer timer) {
-        ((Window) frame).addTimer(timer);
-    }
-
-    @Override
-    public Timer getTimer(String id) {
-        return ((Window) frame).getTimer(id);
-    }
-
-    @Override
     public boolean validate(List<Validatable> fields) {
         return frame.validate(fields);
     }
 
-    @Override
-    public DialogOptions getDialogOptions() {
-        return ((Window) frame).getDialogOptions();
-    }
 
     /**
      * Whether automatic applying of attribute access rules enabled. If you don't want to apply attribute access

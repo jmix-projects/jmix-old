@@ -103,12 +103,6 @@ public abstract class WebAbstractField<T extends com.vaadin.v7.ui.AbstractField,
         return getEventHub().subscribe(ValueChangeEvent.class, (Consumer) listener);
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void removeValueChangeListener(Consumer<ValueChangeEvent<V>> listener) {
-        unsubscribe(ValueChangeEvent.class, (Consumer) listener);
-    }
-
     @Override
     public boolean isRequired() {
         return component.isRequired();

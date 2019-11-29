@@ -21,6 +21,7 @@ import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.Instance;
 import org.apache.commons.lang3.BooleanUtils;
+import io.jmix.ui.components.data.calendar.EntityCalendarEventProvider;
 
 import java.util.Date;
 import java.util.function.Consumer;

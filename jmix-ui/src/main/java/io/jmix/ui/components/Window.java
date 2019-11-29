@@ -24,9 +24,11 @@ import io.jmix.ui.Notifications;
 import io.jmix.ui.Screens;
 import io.jmix.ui.components.compatibility.*;
 import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.model.cuba.DsContext;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.screen.Screen.AfterCloseEvent;
 import io.jmix.ui.settings.Settings;
+import io.jmix.ui.util.OperationResult;
 import io.jmix.ui.xml.layout.ComponentsFactory;
 
 import javax.annotation.Nullable;
@@ -187,6 +189,23 @@ public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
      */
     default Settings getSettings() {
         return UiControllerUtils.getSettings(getFrameOwner());
+    }
+
+    /**
+     * Close the screen.
+     * <br> If the screen has uncommitted changes in its {@link DsContext},
+     * the confirmation dialog will be shown.
+     * <br> Don't override this method in subclasses, use hook {@link AbstractWindow#preClose(String)}
+     *
+     * @param actionId action ID that will be propagated to attached {@link CloseListener}s.
+     *                 Use {@link #COMMIT_ACTION_ID} if some changes have just been committed, or
+     *                 {@link #CLOSE_ACTION_ID} otherwise. These constants are recognized by various mechanisms of the
+     *                 framework.
+     */
+    @Deprecated
+    default boolean close(String actionId) {
+        OperationResult result = getFrameOwner().close(new StandardCloseAction(actionId));
+        return result.getStatus() == OperationResult.Status.SUCCESS;
     }
 
     /**

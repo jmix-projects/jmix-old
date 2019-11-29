@@ -203,4 +203,7 @@ public interface Messages {
      * @deprecated
      */
     String getMainMessage(String key);
+
+    // todo remove
+    default String getMainMessagePack() {return null; }
 }

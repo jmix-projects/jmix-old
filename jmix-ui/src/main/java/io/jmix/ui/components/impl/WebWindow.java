@@ -253,10 +253,40 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
         return (X) getComponent();
     }
 
+    @Nullable
+    @Override
+    public <X> X unwrapOrNull(Class<X> internalComponentClass) {
+        return internalComponentClass.isAssignableFrom(getComponent().getClass())
+                ? internalComponentClass.cast(getComponent())
+                : null;
+    }
+
+    @Override
+    public <X> void withUnwrapped(Class<X> internalComponentClass, Consumer<X> action) {
+        if (internalComponentClass.isAssignableFrom(getComponent().getClass())) {
+            action.accept(internalComponentClass.cast(getComponent()));
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public <X> X unwrapComposition(Class<X> internalCompositionClass) {
         return (X) getComposition();
+    }
+
+    @Nullable
+    @Override
+    public <X> X unwrapCompositionOrNull(Class<X> internalCompositionClass) {
+        return internalCompositionClass.isAssignableFrom(getComposition().getClass())
+                ? internalCompositionClass.cast(getComposition())
+                : null;
+    }
+
+    @Override
+    public <X> void withUnwrappedComposition(Class<X> internalCompositionClass, Consumer<X> action) {
+        if (internalCompositionClass.isAssignableFrom(getComposition().getClass())) {
+            action.accept(internalCompositionClass.cast(getComposition()));
+        }
     }
 
     @Override
@@ -582,6 +612,11 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
         return getEventHub().subscribe(BeforeCloseEvent.class, listener);
     }
 
+    @Override
+    public void removeBeforeWindowCloseListener(Consumer<BeforeCloseEvent> listener) {
+        unsubscribe(BeforeCloseEvent.class, listener);
+    }
+
     public void fireBeforeClose(BeforeCloseEvent event) {
         publish(BeforeCloseEvent.class, event);
     }
@@ -824,6 +859,12 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
 
     @Override
     public void setAlignment(Alignment alignment) {
+    }
+
+    @Override
+    public void expand(Component component, String height, String width) {
+        com.vaadin.ui.Component expandedComponent = component.unwrapComposition(com.vaadin.ui.Component.class);
+        WebComponentsHelper.expand((AbstractOrderedLayout) getContainer(), expandedComponent, height, width);
     }
 
     @Override

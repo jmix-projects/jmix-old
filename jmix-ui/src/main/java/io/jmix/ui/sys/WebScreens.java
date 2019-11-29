@@ -175,8 +175,8 @@ public class WebScreens implements Screens, WindowManager {
                         this,
                         ui.getDialogs(),
                         ui.getNotifications(),
-                        ui.getFragments()/*, todo navigation
-                        ui.getUrlRouting()*/)
+                        ui.getFragments(),
+                        ui.getUrlRouting())
         );
         setScreenData(controller, new ScreenDataImpl());
 

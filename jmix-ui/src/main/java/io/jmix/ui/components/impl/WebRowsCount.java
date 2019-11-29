@@ -441,7 +441,8 @@ public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements
                 throw new UnsupportedOperationException();
         }
 
-        component.getLabel().setValue(messages.formatMainMessage(msgKey, countValue));
+        // todo main message
+        component.getLabel().setValue(messages.formatMessage(msgKey, countValue));
 
         if (component.getCountButton().isVisible() && !refreshing || refreshSizeButton) {
             if (autoLoad) {

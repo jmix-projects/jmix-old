@@ -21,7 +21,7 @@ import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
-
+import io.jmix.ui.components.data.calendar.EntityCalendarEventProvider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 
 
 public class ContainerCalendarEventProvider<E extends Entity>
-        implements CalendarEventProvider, io.jmix.ui.components.data.calendar.EntityCalendarEventProvider {
+        implements CalendarEventProvider, EntityCalendarEventProvider {
 
     protected List<CalendarEvent> itemsCache;
 

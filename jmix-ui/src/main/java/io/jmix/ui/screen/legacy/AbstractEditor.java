@@ -16,7 +16,6 @@
 package io.jmix.ui.screen.legacy;
 
 import com.google.common.collect.Iterables;
-import com.haulmont.cuba.gui.data.*;
 import io.jmix.core.*;
 import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
@@ -579,7 +578,8 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
                 MetadataTools metadataTools = getBeanLocator().get(MetadataTools.class);
 
                 showNotification(
-                        messages.formatMainMessage("info.EntitySave",
+                        // todo main message
+                        messages.formatMessage("info.EntitySave",
                                 messageTools.getEntityCaption(metadata.getClass(entity)),
                                 metadataTools.getInstanceName(entity)),
                         NotificationType.TRAY);

@@ -169,6 +169,10 @@ public final class UiControllerUtils {
         return screen.addAfterDetachListener(listener);
     }
 
+    public static Subscription addDetachListener(ScreenFragment screen, Consumer<ScreenFragment.DetachEvent> listener) {
+        return screen.addDetachEventListener(listener);
+    }
+
     @Nonnull
     public static Screen getHostScreen(ScreenFragment fragment) {
         return fragment.getHostScreen();

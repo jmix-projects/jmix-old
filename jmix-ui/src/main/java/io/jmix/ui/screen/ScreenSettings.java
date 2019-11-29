@@ -16,6 +16,7 @@
 
 package io.jmix.ui.screen;
 
+import io.jmix.ui.components.HasDataLoadingSettings;
 import io.jmix.ui.components.HasPresentations;
 import io.jmix.ui.components.HasSettings;
 import io.jmix.ui.presentations.Presentations;
@@ -69,6 +70,31 @@ public class ScreenSettings {
                 }
         );
     }
+
+    /**
+     * Apply settings for data components.
+     *
+     * @param screen   screen
+     * @param settings settings
+     */
+    public void applyDataLoadingSettings(Screen screen, Settings settings) {
+        checkNotNullArgument(screen);
+        checkNotNullArgument(settings);
+
+        walkComponents(
+                screen.getWindow(),
+                (component, name) -> {
+                    if (component.getId() != null
+                            && component instanceof HasDataLoadingSettings) {
+                        log.trace("Applying settings for {} : {} ", name, component);
+
+                        Element e = settings.get(name);
+                        ((HasDataLoadingSettings) component).applyDataLoadingSettings(e);
+                    }
+                }
+        );
+    }
+
 
     /**
      * Save settings of screen.

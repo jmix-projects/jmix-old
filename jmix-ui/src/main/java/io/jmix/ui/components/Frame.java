@@ -40,6 +40,7 @@ public interface Frame
                 ActionsHolder,
                 Component.HasIcon,
                 Component.HasCaption,
+                HasWindowManager,
                 SupportsExpandRatio {
 
     /**

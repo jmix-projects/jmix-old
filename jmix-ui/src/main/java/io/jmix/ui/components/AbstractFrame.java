@@ -17,7 +17,6 @@ package io.jmix.ui.components;
 
 import io.jmix.core.*;
 import io.jmix.ui.ClientConfig;
-import io.jmix.ui.Notifications;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.components.compatibility.WindowManager;
@@ -408,7 +407,7 @@ public class AbstractFrame extends ScreenFragment implements Frame, Frame.Wrappe
         ConfigInterfaces configuration = AppBeans.get(ConfigInterfaces.NAME);
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
 
-        Notifications.NotificationType notificationType = Notifications.NotificationType.valueOf(clientConfig.getValidationNotificationType());
+        NotificationType notificationType = NotificationType.valueOf(clientConfig.getValidationNotificationType());
         showNotification(messages.getMainMessage("validationFail.caption"), buffer.toString(), notificationType);
     }
 
