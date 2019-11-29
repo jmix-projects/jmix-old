@@ -36,10 +36,7 @@ import io.jmix.ui.icons.Icons;
 import io.jmix.ui.logging.AppLog;
 import io.jmix.ui.screen.OpenMode;
 import io.jmix.ui.screen.Screen;
-import io.jmix.ui.sys.AppCookies;
-import io.jmix.ui.sys.BackgroundTaskManager;
-import io.jmix.ui.sys.ControllerUtils;
-import io.jmix.ui.sys.LinkHandler;
+import io.jmix.ui.sys.*;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsRepository;
 import io.jmix.ui.util.OperationResult;
@@ -373,6 +370,22 @@ public abstract class App {
      */
     public Connection getConnection() {
         return connection;
+    }
+
+    /**
+     * @return WindowManagerImpl instance or null if the current UI has no MainWindow
+     * @deprecated Get screens API from {@link AppUI} instead.
+     */
+    @Deprecated
+    public WebScreens getWindowManager() {
+        AppUI ui = AppUI.getCurrent();
+        if (ui == null) {
+            return null;
+        }
+
+        RootWindow topLevelWindow = ui.getTopLevelWindow();
+
+        return topLevelWindow != null ? (WebScreens) topLevelWindow.getWindowManager() : null;
     }
 
     public AppLog getAppLog() {

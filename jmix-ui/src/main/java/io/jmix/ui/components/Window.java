@@ -25,6 +25,7 @@ import io.jmix.ui.Screens;
 import io.jmix.ui.components.compatibility.*;
 import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.screen.*;
+import io.jmix.ui.screen.Screen.AfterCloseEvent;
 import io.jmix.ui.settings.Settings;
 import io.jmix.ui.xml.layout.ComponentsFactory;
 
@@ -41,19 +42,19 @@ import java.util.function.Predicate;
 public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
     /**
      * Constant that should be passed to {@link Screen#close(CloseAction)} methods when the screen is closed after
-     * commit of changes. Propagated to {@link Screen.AfterCloseEvent} listeners.
+     * commit of changes. Propagated to {@link AfterCloseEvent} listeners.
      */
     String COMMIT_ACTION_ID = "commit";
 
     /**
      * Constant that should be passed to {@link Screen#close(CloseAction)} methods when the screen is closed without
-     * commit. Propagated to {@link Screen.AfterCloseEvent} listeners.
+     * commit. Propagated to {@link AfterCloseEvent} listeners.
      */
     String CLOSE_ACTION_ID = "close";
 
     /**
      * Constant that passed to {@link Screen#close(CloseAction)} method when the lookup screen is closed with selected
-     * items. Propagated to {@link Screen.AfterCloseEvent} listeners.
+     * items. Propagated to {@link AfterCloseEvent} listeners.
      */
     String SELECT_ACTION_ID = "select";
 
@@ -139,6 +140,23 @@ public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
      * @deprecated Use {@link Screen#addAfterCloseListener(Consumer)} instead.
      */
     @Deprecated
+    default void addListener(CloseListener listener) {
+        getFrameOwner().addAfterCloseListener(new AfterCloseListenerAdapter(listener));
+    }
+
+    @Deprecated
+    default void removeListener(CloseListener listener) {
+        EventHub eventHub = UiControllerUtils.getEventHub(getFrameOwner());
+        eventHub.unsubscribe(AfterCloseEvent.class, new AfterCloseListenerAdapter(listener));
+    }
+
+    /**
+     * Add a listener that will be notified when this screen is closed.
+     *
+     * @param listener listener instance
+     * @deprecated Use {@link Screen#addAfterCloseListener(Consumer)} instead.
+     */
+    @Deprecated
     default void addCloseListener(CloseListener listener) {
         getFrameOwner().addAfterCloseListener(new AfterCloseListenerAdapter(listener));
     }
@@ -146,7 +164,7 @@ public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
     @Deprecated
     default void removeCloseListener(CloseListener listener) {
         EventHub eventHub = UiControllerUtils.getEventHub(getFrameOwner());
-        eventHub.unsubscribe(Screen.AfterCloseEvent.class, new AfterCloseListenerAdapter(listener));
+        eventHub.unsubscribe(AfterCloseEvent.class, new AfterCloseListenerAdapter(listener));
     }
 
     /**

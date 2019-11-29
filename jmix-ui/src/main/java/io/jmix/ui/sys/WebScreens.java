@@ -20,15 +20,19 @@ import com.vaadin.ui.Layout;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.Messages;
 import io.jmix.core.UuidSource;
+import io.jmix.core.entity.Entity;
 import io.jmix.core.security.AccessDeniedException;
 import io.jmix.core.security.PermissionType;
 import io.jmix.core.security.Security;
 import io.jmix.ui.*;
+import io.jmix.ui.Notifications.NotificationType;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.BaseAction;
 import io.jmix.ui.actions.DialogAction;
 import io.jmix.ui.components.*;
+import io.jmix.ui.components.DialogWindow.WindowMode;
 import io.jmix.ui.components.Window.HasWorkArea;
+import io.jmix.ui.components.compatibility.*;
 import io.jmix.ui.components.impl.WebAppWorkArea;
 import io.jmix.ui.components.impl.WebDialogWindow.GuiDialogWindow;
 import io.jmix.ui.components.impl.WebTabWindow;
@@ -39,9 +43,11 @@ import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.icons.Icons;
 import io.jmix.ui.logging.ScreenLifeCycle;
 import io.jmix.ui.logging.UserActionsLogger;
+import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.model.impl.ScreenDataImpl;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.screen.Screen.*;
+import io.jmix.ui.screen.legacy.AbstractEditor;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.util.OperationResult;
 import io.jmix.ui.util.UnknownOperationResult;
@@ -73,7 +79,7 @@ import static io.jmix.ui.screen.UiControllerUtils.*;
 import static org.apache.commons.lang3.reflect.ConstructorUtils.invokeConstructor;
 
 @ParametersAreNonnullByDefault
-public class WebScreens implements Screens {
+public class WebScreens implements Screens, WindowManager {
 
     private static final org.slf4j.Logger userActionsLog = LoggerFactory.getLogger(UserActionsLogger.class);
 
@@ -420,7 +426,7 @@ public class WebScreens implements Screens {
                 if (maxTabCount > 0
                         && workArea.getOpenedTabCount() + 1 > maxTabCount) {
                     ui.getNotifications()
-                            .create(Notifications.NotificationType.WARNING)
+                            .create(NotificationType.WARNING)
                             .withCaption(messages.formatMessage("tooManyOpenTabs.message", maxTabCount))
                             .show();
 
@@ -961,6 +967,393 @@ public class WebScreens implements Screens {
                 .anyMatch(com.vaadin.ui.Window::isModal);
     }
 
+    /*
+     * Legacy APIs and compatibility layer.
+     */
+    @Override
+    public Collection<Window> getOpenWindows() {
+        return getOpenedScreens().getAll().stream()
+                .map(Screen::getWindow)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void selectWindowTab(Window window) {
+        WebAppWorkArea workArea = getConfiguredWorkArea();
+
+        Collection<WindowStack> workAreaStacks = getWorkAreaStacks(workArea);
+
+        Screen screen = window.getFrameOwner();
+        workAreaStacks.stream()
+                .filter(ws -> ws.getBreadcrumbs().contains(screen))
+                .findFirst()
+                .ifPresent(WindowStack::select);
+    }
+
+    @SuppressWarnings({"IncorrectCreateGuiComponent", "deprecation"})
+    @Override
+    public Window openWindow(WindowInfo windowInfo, OpenType openType, Map<String, Object> params) {
+        params = createParametersMap(windowInfo, params);
+        MapScreenOptions options = new MapScreenOptions(params);
+
+        Screen screen = createScreen(windowInfo, openType.getOpenMode(), options);
+        applyOpenTypeParameters(screen.getWindow(), openType);
+
+        show(screen);
+        return screen instanceof Window ? (Window) screen : new ScreenWrapper(screen);
+    }
+
+    @SuppressWarnings({"IncorrectCreateGuiComponent", "deprecation"})
+    @Override
+    public Window openWindow(WindowInfo windowInfo, OpenType openType) {
+        Map<String, Object> params = createParametersMap(windowInfo, Collections.emptyMap());
+        MapScreenOptions options = new MapScreenOptions(params);
+
+        Screen screen = createScreen(windowInfo, openType.getOpenMode(), options);
+        applyOpenTypeParameters(screen.getWindow(), openType);
+
+        show(screen);
+        return screen instanceof Window ? (Window) screen : new ScreenWrapper(screen);
+    }
+
+    @SuppressWarnings({"deprecation", "IncorrectCreateGuiComponent", "unchecked"})
+    @Override
+    public Window.Editor openEditor(WindowInfo windowInfo, Entity item, OpenType openType, Datasource parentDs) {
+        Map<String, Object> params = createParametersMap(windowInfo,
+                Collections.singletonMap(WindowParams.ITEM.name(), item)
+        );
+        MapScreenOptions options = new MapScreenOptions(params);
+
+        Screen screen = createScreen(windowInfo, openType.getOpenMode(), options);
+        applyOpenTypeParameters(screen.getWindow(), openType);
+
+        EditorScreen editorScreen = (EditorScreen) screen;
+        if (editorScreen instanceof AbstractEditor) {
+            ((AbstractEditor) editorScreen).setParentDs(parentDs);
+        }
+        editorScreen.setEntityToEdit(item);
+        show(screen);
+        return screen instanceof Window.Editor ? (Window.Editor) screen : new ScreenEditorWrapper(screen);
+    }
+
+    @SuppressWarnings({"deprecation", "IncorrectCreateGuiComponent", "unchecked"})
+    @Override
+    public Window.Editor openEditor(WindowInfo windowInfo, Entity item, OpenType openType) {
+        Map<String, Object> params = createParametersMap(windowInfo,
+                Collections.singletonMap(WindowParams.ITEM.name(), item)
+        );
+
+        MapScreenOptions options = new MapScreenOptions(params);
+
+        Screen screen = createScreen(windowInfo, openType.getOpenMode(), options);
+        applyOpenTypeParameters(screen.getWindow(), openType);
+
+        EditorScreen editorScreen = (EditorScreen) screen;
+        editorScreen.setEntityToEdit(item);
+        show(screen);
+        return screen instanceof Window.Editor ? (Window.Editor) screen : new ScreenEditorWrapper(screen);
+    }
+
+    @SuppressWarnings({"deprecation", "IncorrectCreateGuiComponent"})
+    @Override
+    public Window.Editor openEditor(WindowInfo windowInfo, Entity item, OpenType openType, Map<String, Object> params) {
+        Screen editor = createEditor(windowInfo, item, openType, params);
+
+        editor.show();
+
+        return editor instanceof Window.Editor ? (Window.Editor) editor : new ScreenEditorWrapper(editor);
+    }
+
+    // used only for legacy screens
+    @Override
+    public Screen createEditor(WindowInfo windowInfo, Entity item, OpenType openType,
+                               @Nullable Map<String, Object> params) {
+        params = createParametersMap(windowInfo, params);
+        params.put(WindowParams.ITEM.name(), item);
+
+        MapScreenOptions options = new MapScreenOptions(params);
+
+        Screen screen = createScreen(windowInfo, openType.getOpenMode(), options);
+        applyOpenTypeParameters(screen.getWindow(), openType);
+
+        EditorScreen editorScreen = (EditorScreen) screen;
+
+        //noinspection unchecked
+        editorScreen.setEntityToEdit(item);
+
+        return screen;
+    }
+
+    @SuppressWarnings({"deprecation", "IncorrectCreateGuiComponent", "unchecked"})
+    @Override
+    public Window.Editor openEditor(WindowInfo windowInfo, Entity item, OpenType openType,
+                                    @Nullable Map<String, Object> params,
+                                    Datasource parentDs) {
+        params = createParametersMap(windowInfo, params);
+        params.put(WindowParams.ITEM.name(), item);
+
+        MapScreenOptions options = new MapScreenOptions(params);
+
+        Screen screen = createScreen(windowInfo, openType.getOpenMode(), options);
+        applyOpenTypeParameters(screen.getWindow(), openType);
+
+        EditorScreen editorScreen = (EditorScreen) screen;
+        if (editorScreen instanceof AbstractEditor) {
+            ((AbstractEditor) editorScreen).setParentDs(parentDs);
+        }
+        editorScreen.setEntityToEdit(item);
+        show(screen);
+        return screen instanceof Window.Editor ? (Window.Editor) screen : new ScreenEditorWrapper(screen);
+    }
+
+    @SuppressWarnings({"deprecation", "IncorrectCreateGuiComponent", "unchecked"})
+    @Override
+    public Window.Lookup openLookup(WindowInfo windowInfo, Window.Lookup.Handler handler, OpenType openType,
+                                    Map<String, Object> params) {
+        params = createParametersMap(windowInfo, params);
+
+        MapScreenOptions options = new MapScreenOptions(params);
+        Screen screen = createScreen(windowInfo, openType.getOpenMode(), options);
+        applyOpenTypeParameters(screen.getWindow(), openType);
+
+        ((LookupScreen) screen).setSelectHandler(new SelectHandlerAdapter(handler));
+
+        show(screen);
+
+        return screen instanceof Window.Lookup ? (Window.Lookup) screen : new ScreenLookupWrapper(screen);
+    }
+
+    @SuppressWarnings({"deprecation", "IncorrectCreateGuiComponent", "unchecked"})
+    @Override
+    public Window.Lookup openLookup(WindowInfo windowInfo, Window.Lookup.Handler handler, OpenType openType) {
+        Map<String, Object> params = createParametersMap(windowInfo, Collections.emptyMap());
+
+        MapScreenOptions options = new MapScreenOptions(params);
+        Screen screen = createScreen(windowInfo, openType.getOpenMode(), options);
+        applyOpenTypeParameters(screen.getWindow(), openType);
+
+        ((LookupScreen) screen).setSelectHandler(new SelectHandlerAdapter(handler));
+
+        show(screen);
+
+        return screen instanceof Window.Lookup ? (Window.Lookup) screen : new ScreenLookupWrapper(screen);
+    }
+
+    @Override
+    public Frame openFrame(Frame parentFrame, io.jmix.ui.components.Component parent, WindowInfo windowInfo) {
+        return openFrame(parentFrame, parent, windowInfo, Collections.emptyMap());
+    }
+
+    @Override
+    public Frame openFrame(Frame parentFrame, io.jmix.ui.components.Component parent, WindowInfo windowInfo,
+                           Map<String, Object> params) {
+        return openFrame(parentFrame, parent, null, windowInfo, params);
+    }
+
+    @SuppressWarnings({"deprecation", "IncorrectCreateGuiComponent"})
+    @Override
+    public Frame openFrame(Frame parentFrame, io.jmix.ui.components.Component parent, @Nullable String id,
+                           WindowInfo windowInfo, Map<String, Object> params) {
+        ScreenFragment screenFragment;
+
+        Fragments fragments = ui.getFragments();
+
+        if (params != null && !params.isEmpty()) {
+            screenFragment = fragments.create(parentFrame.getFrameOwner(), windowInfo.getId(), new MapScreenOptions(params));
+        } else {
+            screenFragment = fragments.create(parentFrame.getFrameOwner(), windowInfo.getId());
+        }
+
+        if (id != null) {
+            screenFragment.getFragment().setId(id);
+        }
+
+        fragments.init(screenFragment);
+
+        if (parent instanceof ComponentContainer) {
+            ComponentContainer container = (ComponentContainer) parent;
+            for (io.jmix.ui.components.Component c : container.getComponents()) {
+                if (c instanceof io.jmix.ui.components.Component.Disposable) {
+                    io.jmix.ui.components.Component.Disposable disposable =
+                            (io.jmix.ui.components.Component.Disposable) c;
+                    if (!disposable.isDisposed()) {
+                        disposable.dispose();
+                    }
+                }
+                container.remove(c);
+            }
+            container.add(screenFragment.getFragment());
+        }
+
+        if (screenFragment instanceof LegacyFragmentAdapter) {
+            return ((LegacyFragmentAdapter) screenFragment).getRealScreen();
+        }
+
+        return screenFragment instanceof Frame ? (Frame) screenFragment : new ScreenFragmentWrapper(screenFragment);
+    }
+
+    @Override
+    public void showNotification(String caption) {
+        ui.getNotifications().create()
+                .withCaption(caption)
+                .show();
+    }
+
+    @Override
+    public void showNotification(String caption, Frame.NotificationType type) {
+        ui.getNotifications().create()
+                .withCaption(caption)
+                .withContentMode(Frame.NotificationType.isHTML(type) ? ContentMode.HTML : ContentMode.TEXT)
+                .withType(convertNotificationType(type))
+                .show();
+    }
+
+    @Override
+    public void showNotification(String caption, String description, Frame.NotificationType type) {
+        ui.getNotifications().create()
+                .withCaption(caption)
+                .withDescription(description)
+                .withContentMode(Frame.NotificationType.isHTML(type) ? ContentMode.HTML : ContentMode.TEXT)
+                .withType(convertNotificationType(type))
+                .show();
+    }
+
+    protected NotificationType convertNotificationType(Frame.NotificationType type) {
+        switch (type) {
+            case TRAY:
+            case TRAY_HTML:
+                return NotificationType.TRAY;
+
+            case ERROR:
+            case ERROR_HTML:
+                return NotificationType.ERROR;
+
+            case HUMANIZED:
+            case HUMANIZED_HTML:
+                return NotificationType.HUMANIZED;
+
+            case WARNING:
+            case WARNING_HTML:
+                return NotificationType.WARNING;
+
+            default:
+                throw new UnsupportedOperationException("Unsupported notification type");
+        }
+    }
+
+    @Override
+    public void showMessageDialog(String title, String message, Frame.MessageType messageType) {
+        Dialogs.MessageDialogBuilder builder = ui.getDialogs().createMessageDialog()
+                .withCaption(title)
+                .withMessage(message)
+                .withType(convertMessageType(messageType.getMessageMode()))
+                .withContentMode(
+                        Frame.MessageMode.isHTML(messageType.getMessageMode()) ? ContentMode.HTML : ContentMode.TEXT
+                );
+
+        if (messageType.getWidth() != null) {
+            SizeUnit sizeUnit = messageType.getWidthUnit() != null ? messageType.getWidthUnit() : SizeUnit.PIXELS;
+            builder.withWidth(messageType.getWidth() + sizeUnit.getSymbol());
+        }
+        if (messageType.getModal() != null) {
+            builder.withModal(messageType.getModal());
+        }
+        if (messageType.getCloseOnClickOutside() != null) {
+            builder.withCloseOnClickOutside(messageType.getCloseOnClickOutside());
+        }
+        if (messageType.getMaximized() != null) {
+            builder.withMaximized(messageType.getMaximized());
+        }
+
+        builder.show();
+    }
+
+    protected Dialogs.MessageType convertMessageType(Frame.MessageMode messageMode) {
+        switch (messageMode) {
+            case CONFIRMATION:
+            case CONFIRMATION_HTML:
+                return Dialogs.MessageType.CONFIRMATION;
+
+            case WARNING:
+            case WARNING_HTML:
+                return Dialogs.MessageType.WARNING;
+
+            default:
+                throw new UnsupportedOperationException("Unsupported message type");
+        }
+    }
+
+    @Override
+    public void showOptionDialog(String title, String message, Frame.MessageType messageType, Action[] actions) {
+        Dialogs.OptionDialogBuilder builder = ui.getDialogs().createOptionDialog()
+                .withCaption(title)
+                .withMessage(message)
+                .withType(convertMessageType(messageType.getMessageMode()))
+                .withContentMode(
+                        Frame.MessageMode.isHTML(messageType.getMessageMode()) ? ContentMode.HTML : ContentMode.TEXT
+                )
+                .withActions(actions);
+
+        if (messageType.getWidth() != null) {
+            SizeUnit sizeUnit = messageType.getWidthUnit() != null ? messageType.getWidthUnit() : SizeUnit.PIXELS;
+            builder.withWidth(messageType.getWidth() + sizeUnit.getSymbol());
+        }
+        if (messageType.getMaximized() != null) {
+            builder.withMaximized(messageType.getMaximized());
+        }
+
+        builder.show();
+    }
+
+    @Override
+    public void showExceptionDialog(Throwable throwable) {
+        showExceptionDialog(throwable, null, null);
+    }
+
+    @Override
+    public void showExceptionDialog(Throwable throwable, @Nullable String caption, @Nullable String message) {
+        ui.getDialogs().createExceptionDialog()
+                .withCaption(caption)
+                .withMessage(message)
+                .withThrowable(throwable)
+                .show();
+    }
+
+    @Override
+    public void showWebPage(String url, @Nullable Map<String, Object> params) {
+        ui.getWebBrowserTools().showWebPage(url, params);
+    }
+
+    /**
+     * Check modifications and close all screens in all main windows.
+     *
+     * @param runIfOk a closure to run after all screens are closed
+     */
+    @Deprecated
+    public void checkModificationsAndCloseAll(@Nullable Runnable runIfOk) {
+        OperationResult result = checkModificationsAndCloseAll();
+        if (runIfOk != null) {
+            result.then(runIfOk);
+        }
+    }
+
+    /**
+     * Check modifications and close all screens in all main windows.
+     *
+     * @param runIfOk     a closure to run after all screens are closed
+     * @param runIfCancel a closure to run if there were modifications and a user canceled the operation
+     */
+    @Deprecated
+    public void checkModificationsAndCloseAll(@Nullable Runnable runIfOk, @Nullable Runnable runIfCancel) {
+        OperationResult result = checkModificationsAndCloseAll();
+        if (runIfOk != null) {
+            result.then(runIfOk);
+        }
+        if (runIfCancel != null) {
+            result.otherwise(runIfCancel);
+        }
+    }
+
     /**
      * Check modifications and close all screens in all main windows excluding root screens.
      *
@@ -1024,6 +1417,42 @@ public class WebScreens implements Screens {
 
         getDialogScreensStream().forEach(UiControllerUtils::saveSettings);*/
     }
+
+    // used only for legacy screens
+    @Deprecated
+    protected Map<String, Object> createParametersMap(WindowInfo windowInfo, @Nullable Map<String, Object> params) {
+        Map<String, Object> map;
+
+        if (params != null) {
+            map = new HashMap<>(params.size());
+        } else {
+            map = new HashMap<>();
+        }
+
+        Element element = windowInfo.getDescriptor();
+        if (element != null) {
+            Element paramsElement = element.element("params") != null ? element.element("params") : element;
+            if (paramsElement != null) {
+                List<Element> paramElements = paramsElement.elements("param");
+                for (Element paramElement : paramElements) {
+                    String name = paramElement.attributeValue("name");
+                    String value = paramElement.attributeValue("value");
+                    if ("true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value)) {
+                        Boolean booleanValue = Boolean.valueOf(value);
+                        map.put(name, booleanValue);
+                    } else {
+                        map.put(name, value);
+                    }
+                }
+            }
+        }
+        if (params != null) {
+            map.putAll(params);
+        }
+
+        return map;
+    }
+
 
     protected void showNewTabWindow(Screen screen) {
         WebAppWorkArea workArea = getConfiguredWorkArea();
@@ -1270,6 +1699,37 @@ public class WebScreens implements Screens {
             }
         }
     }
+
+    @Deprecated
+    protected void applyOpenTypeParameters(Window window, OpenType openType) {
+        if (window instanceof DialogWindow) {
+            DialogWindow dialogWindow = (DialogWindow) window;
+
+            if (openType.getCloseOnClickOutside() != null) {
+                dialogWindow.setCloseOnClickOutside(openType.getCloseOnClickOutside());
+            }
+            if (openType.getMaximized() != null) {
+                dialogWindow.setWindowMode(openType.getMaximized() ? WindowMode.MAXIMIZED : WindowMode.NORMAL);
+            }
+            if (openType.getModal() != null) {
+                dialogWindow.setModal(openType.getModal());
+            }
+            if (openType.getResizable() != null) {
+                dialogWindow.setResizable(openType.getResizable());
+            }
+            if (openType.getWidth() != null) {
+                dialogWindow.setDialogWidth(openType.getWidthString());
+            }
+            if (openType.getHeight() != null) {
+                dialogWindow.setDialogHeight(openType.getHeightString());
+            }
+        }
+
+        if (openType.getCloseable() != null) {
+            window.setCloseable(openType.getCloseable());
+        }
+    }
+
 
     /**
      * Content of each tab of AppWorkArea TabSheet.
