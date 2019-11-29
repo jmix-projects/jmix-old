@@ -16,10 +16,7 @@
 package io.jmix.ui.screen.legacy;
 
 import com.google.common.collect.Iterables;
-import com.haulmont.cuba.core.entity.Categorized;
-import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.gui.data.*;
-import com.haulmont.cuba.gui.screen.ReadOnlyScreensSupport;
 import io.jmix.core.*;
 import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
@@ -49,6 +46,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.ElementKind;
 import javax.validation.Path;
@@ -61,6 +59,9 @@ import java.util.Set;
  */
 public class AbstractEditor<T extends Entity> extends AbstractWindow
         implements Window.Editor<T>, ReadOnlyAwareScreen {
+
+    @Inject
+    protected Metadata metadata;
 
     protected boolean showSaveNotification = true;
 
@@ -231,7 +232,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
         }
 
         if (PersistenceHelper.isNew(item)
-                && !ds.getMetaClass().equals(item.getMetaClass())) {
+                && !ds.getMetaClass().equals(metadata.getClass(item))) {
             Entity newItem = ds.getDataSupplier().newInstance(ds.getMetaClass());
             MetadataTools metadataTools = getBeanLocator().get(MetadataTools.NAME);
             metadataTools.copy(item, newItem);
@@ -240,7 +241,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
 
         if (ds.getLoadDynamicAttributes() && item instanceof BaseGenericIdEntity) {
             if (PersistenceHelper.isNew(item)) {
-                dynamicAttributesGuiTools.initDefaultAttributeValues((BaseGenericIdEntity) item, item.getMetaClass());
+                dynamicAttributesGuiTools.initDefaultAttributeValues((BaseGenericIdEntity) item, metadata.getClass(item));
             }
 
             // todo dynamic attributes
@@ -579,7 +580,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
 
                 showNotification(
                         messages.formatMainMessage("info.EntitySave",
-                                messageTools.getEntityCaption(entity.getMetaClass()),
+                                messageTools.getEntityCaption(metadata.getClass(entity)),
                                 metadataTools.getInstanceName(entity)),
                         NotificationType.TRAY);
             }

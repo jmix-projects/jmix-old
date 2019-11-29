@@ -17,6 +17,7 @@ package io.jmix.ui.sys;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
+import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -47,7 +48,8 @@ public class ShowInfoAction extends BaseAction {
 
             Entity selectedItem = ((ListComponent) component).getSingleSelected();
             if (selectedItem != null) {
-                showInfo(selectedItem, selectedItem.getMetaClass(), (Component.BelongToFrame) component);
+                Metadata metadata = AppBeans.get(Metadata.class);
+                showInfo(selectedItem, metadata.getClass(selectedItem), (Component.BelongToFrame) component);
             }
         }
     }

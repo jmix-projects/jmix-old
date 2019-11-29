@@ -75,12 +75,18 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<CubaButtonField<V>
     protected Subscription closeListenerSubscription;
 
     /* Beans */
+    protected Metadata metadata;
     protected MetadataTools metadataTools;
     protected ScreenBuilders screenBuilders;
 
     public WebEntityLinkField() {
         component = createComponent();
         attachValueChangeListener(component);
+    }
+
+    @Inject
+    public void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
     }
 
     @Inject
@@ -313,11 +319,13 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<CubaButtonField<V>
 
         String windowAlias = screen;
         WindowConfig windowConfig = AppBeans.get(WindowConfig.NAME);
+
+        MetaClass metaClass = metadata.getClass(entity);
         if (windowAlias == null) {
-            windowAlias = windowConfig.getEditorScreenId(entity.getMetaClass());
+            windowAlias = windowConfig.getEditorScreenId(metaClass);
         }
 
-        Screen screenEditor = screenBuilders.editor(entity.getMetaClass().getJavaClass(), window.getFrameOwner())
+        Screen screenEditor = screenBuilders.editor(metaClass.getJavaClass(), window.getFrameOwner())
                 .withScreenId(windowAlias)
                 .editEntity(entity)
                 .withOpenMode(screenOpenMode)

@@ -16,6 +16,8 @@
 
 package io.jmix.ui.model.cuba.impl;
 
+import io.jmix.core.AppBeans;
+import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.impl.AbstractInstance;
@@ -58,9 +60,11 @@ public class EntityCopyUtils {
             ((BaseDbGeneratedIdEntity) dest).setId(((BaseDbGeneratedIdEntity) source).getId());
         }
 
-        for (MetaProperty srcProperty : source.getMetaClass().getProperties()) {
+        Metadata metadata = AppBeans.get(Metadata.class);
+
+        for (MetaProperty srcProperty : metadata.getClass(source).getProperties()) {
             String name = srcProperty.getName();
-            MetaProperty dstProperty = dest.getMetaClass().getProperty(name);
+            MetaProperty dstProperty = metadata.getClass(dest).getProperty(name);
             if (dstProperty != null && !dstProperty.isReadOnly()) {
                 try {
                     Object value = source.getValue(name);
@@ -113,9 +117,10 @@ public class EntityCopyUtils {
         Preconditions.checkNotNullArgument(source, "source is null");
         Preconditions.checkNotNullArgument(dest, "dest is null");
 
-        for (MetaProperty srcProperty : source.getMetaClass().getProperties()) {
+        Metadata metadata = AppBeans.get(Metadata.class);
+        for (MetaProperty srcProperty : metadata.getClass(source).getProperties()) {
             String name = srcProperty.getName();
-            MetaProperty dstProperty = dest.getMetaClass().getProperty(name);
+            MetaProperty dstProperty = metadata.getClass(dest).getProperty(name);
             if (dstProperty != null && !dstProperty.isReadOnly()) {
                 try {
                     Object value = source.getValue(name);

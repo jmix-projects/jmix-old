@@ -17,6 +17,7 @@
 package io.jmix.ui.components.table;
 
 import com.google.common.base.Strings;
+import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.dynamicattributes.DynamicAttributesTools;
 import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
 import com.vaadin.ui.VerticalLayout;
@@ -50,7 +51,9 @@ public class AbbreviatedCellClickListener implements Table.CellClickListener {
         MetaProperty metaProperty;
         String value;
         if (DynamicAttributesUtils.isDynamicAttribute(columnId)) {
-            metaProperty = dynamicAttributesTools.getMetaPropertyPath(item.getMetaClass(), columnId).getMetaProperty();
+            // todo dynamic attributes
+            MetaClass metaClass = null/* = item.getMetaClass()*/;
+            metaProperty = dynamicAttributesTools.getMetaPropertyPath(metaClass, columnId).getMetaProperty();
             value = dynamicAttributesTools.getDynamicAttributeValueAsString(metaProperty, item.getValueEx(columnId));
         } else {
             value = item.getValueEx(columnId);

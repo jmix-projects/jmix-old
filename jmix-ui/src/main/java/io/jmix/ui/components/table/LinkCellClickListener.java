@@ -16,10 +16,7 @@
 
 package io.jmix.ui.components.table;
 
-import io.jmix.core.BeanLocator;
-import io.jmix.core.DataManager;
-import io.jmix.core.Messages;
-import io.jmix.core.View;
+import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
@@ -45,10 +42,12 @@ public class LinkCellClickListener implements Table.CellClickListener {
 
     protected Table table;
     protected BeanLocator beanLocator;
+    protected Metadata metadata;
 
     public LinkCellClickListener(Table table, BeanLocator beanLocator) {
         this.table = table;
         this.beanLocator = beanLocator;
+        this.metadata = beanLocator.get(Metadata.class);
     }
 
     @Override
@@ -105,7 +104,7 @@ public class LinkCellClickListener implements Table.CellClickListener {
             windowAlias = column.getXmlDescriptor().attributeValue("linkScreen");
         }
         if (StringUtils.isEmpty(windowAlias)) {
-            windowAlias = windowConfig.getEditorScreenId(entity.getMetaClass());
+            windowAlias = windowConfig.getEditorScreenId(metadata.getClass(entity));
         }
 
         OpenType screenOpenType = OpenType.THIS_TAB;
@@ -134,10 +133,10 @@ public class LinkCellClickListener implements Table.CellClickListener {
     }
 
     protected void handleEditorCommit(Entity editorItem, Entity rowItem, String columnId) {
-        MetaPropertyPath mpp = rowItem.getMetaClass().getPropertyPath(columnId);
+        MetaPropertyPath mpp = metadata.getClass(rowItem).getPropertyPath(columnId);
         if (mpp == null) {
             throw new IllegalStateException(String.format("Unable to find metaproperty %s for class %s",
-                    columnId, rowItem.getMetaClass()));
+                    columnId, metadata.getClass(rowItem)));
         }
 
         if (mpp.getRange().isClass()) {

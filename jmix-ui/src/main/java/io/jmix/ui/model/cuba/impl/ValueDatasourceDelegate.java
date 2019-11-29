@@ -134,7 +134,7 @@ public class ValueDatasourceDelegate {
             for (KeyValueEntity entity : entities) {
                 ds.data.put(entity.getId(), entity);
                 ds.attachListener(entity);
-                entity.setMetaClass(ds.metaClass);
+                entity.setInstanceMetaClass(ds.metaClass);
             }
         } else {
             List<MetaProperty> enumProperties = getEnumProperties(ds.metaClass);
@@ -144,7 +144,7 @@ public class ValueDatasourceDelegate {
 
                 ds.data.put(entity.getId(), entity);
                 ds.attachListener(entity);
-                entity.setMetaClass(ds.metaClass);
+                entity.setInstanceMetaClass(ds.metaClass);
             }
         }
     }

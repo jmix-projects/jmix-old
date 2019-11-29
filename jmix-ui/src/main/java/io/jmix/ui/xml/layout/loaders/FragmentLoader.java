@@ -16,7 +16,6 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.core.DevelopmentException;
-import io.jmix.ui.AppConfig;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.components.AbstractFrame;
 import io.jmix.ui.components.Facet;
@@ -32,12 +31,10 @@ import io.jmix.ui.model.cuba.impl.GenericDataSupplier;
 import io.jmix.ui.model.impl.ScreenDataXmlLoader;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.UiControllerUtils;
-import io.jmix.ui.sys.CompanionDependencyInjector;
 import io.jmix.ui.sys.ScreenViewsLoader;
 import io.jmix.ui.xml.FacetLoader;
 import io.jmix.ui.xml.data.DsContextLoader;
 import io.jmix.ui.xml.layout.ComponentRootLoader;
-import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 import org.perf4j.StopWatch;
 
@@ -212,25 +209,27 @@ public class FragmentLoader extends ContainerLoader<Fragment> implements Compone
         }
 
         protected void initCompanion(Element companionsElem, AbstractFrame frame) {
-            String clientTypeId = AppConfig.getClientType().toString().toLowerCase();
-            Element element = companionsElem.element(clientTypeId);
-            if (element != null) {
-                String className = element.attributeValue("class");
-                if (!StringUtils.isBlank(className)) {
-                    Class aClass = getScripting().loadClassNN(className);
-                    Object companion;
-                    try {
-                        companion = aClass.newInstance();
-                        frame.setCompanion(companion);
-
-                        CompanionDependencyInjector cdi = new CompanionDependencyInjector(frame, companion);
-                        cdi.setBeanLocator(beanLocator);
-                        cdi.inject();
-                    } catch (Exception e) {
-                        throw new RuntimeException("Unable to init companion for frame", e);
-                    }
-                }
-            }
+            // todo companions
+            throw new UnsupportedOperationException();
+//            String clientTypeId = AppConfig.getClientType().toString().toLowerCase();
+//            Element element = companionsElem.element(clientTypeId);
+//            if (element != null) {
+//                String className = element.attributeValue("class");
+//                if (!StringUtils.isBlank(className)) {
+//                    Class aClass = getScripting().loadClassNN(className);
+//                    Object companion;
+//                    try {
+//                        companion = aClass.newInstance();
+//                        frame.setCompanion(companion);
+//
+//                        CompanionDependencyInjector cdi = new CompanionDependencyInjector(frame, companion);
+//                        cdi.setBeanLocator(beanLocator);
+//                        cdi.inject();
+//                    } catch (Exception e) {
+//                        throw new RuntimeException("Unable to init companion for frame", e);
+//                    }
+//                }
+//            }
         }
     }
 }

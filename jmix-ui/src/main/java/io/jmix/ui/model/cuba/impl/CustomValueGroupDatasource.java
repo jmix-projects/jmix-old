@@ -51,7 +51,7 @@ public abstract class CustomValueGroupDatasource extends ValueGroupDatasourceImp
             for (KeyValueEntity entity : entities) {
                 data.put(entity.getId(), entity);
                 attachListener(entity);
-                entity.setMetaClass(metaClass);
+                entity.setInstanceMetaClass(metaClass);
             }
         }
     }

@@ -718,7 +718,8 @@ public interface PickerField<V extends Entity> extends Field<V>, ActionsHolder, 
 
             String windowAlias = getEditScreen();
             if (windowAlias == null) {
-                windowAlias = windowConfig.getEditorScreenId(entity.getMetaClass());
+                Metadata metadata = AppBeans.get(Metadata.class);
+                windowAlias = windowConfig.getEditorScreenId(metadata.getClass(entity));
             }
 
             Window.Editor editor = wm.openEditor(

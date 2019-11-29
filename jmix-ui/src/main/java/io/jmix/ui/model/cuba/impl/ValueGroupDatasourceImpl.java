@@ -87,13 +87,13 @@ public class ValueGroupDatasourceImpl
     @Override
     public void includeItem(KeyValueEntity item) {
         super.includeItem(item);
-        item.setMetaClass(metaClass);
+        item.setInstanceMetaClass(metaClass);
     }
 
     @Override
     public void addItem(KeyValueEntity item) {
         super.addItem(item);
-        item.setMetaClass(metaClass);
+        item.setInstanceMetaClass(metaClass);
     }
 
     public void setStoreName(String storeName) {
