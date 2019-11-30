@@ -94,36 +94,4 @@ class InstanceLoaderTest extends DataContextSpec {
 
         persistenceTools.deleteRecord(foo)
     }
-
-    def "simplified queries"() {
-        InstanceLoader<Foo> loader = factory.createInstanceLoader()
-        InstanceContainer<Foo> container = factory.createInstanceContainer(Foo)
-        loader.setContainer(container)
-
-        Consumer<InstanceLoader.PreLoadEvent> preLoadListener = Mock()
-        loader.addPreLoadListener(preLoadListener)
-
-        when:
-
-        loader.setQuery('from test_Foo f where f.id = :id')
-        loader.setParameter('id', UUID.randomUUID())
-        loader.load()
-
-        then:
-
-        thrown(EntityAccessException)
-        1 * preLoadListener.accept({ it.loadContext.query.queryString == 'select f from test_Foo f where f.id = :id' })
-
-        when:
-
-        loader.setQuery('e.name = :name')
-        loader.setParameter('name', 'name')
-        loader.setParameter('id', UUID.randomUUID())
-        loader.load()
-
-        then:
-
-        thrown(EntityAccessException)
-        1 * preLoadListener.accept({ it.loadContext.query.queryString == 'select e from test_Foo e where e.name = :name' })
-    }
 }
