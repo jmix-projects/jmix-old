@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright (c) 2008-2016 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package io.jmix.core.impl.jpql.pointer;
@@ -24,7 +25,7 @@ public class SimpleAttributePointer implements Pointer {
     private JpqlEntityModel entity;
     private Attribute attribute;
 
-    SimpleAttributePointer(JpqlEntityModel entity, Attribute attribute) {
+    protected SimpleAttributePointer(JpqlEntityModel entity, Attribute attribute) {
         this.entity = entity;
         this.attribute = attribute;
     }
@@ -36,5 +37,9 @@ public class SimpleAttributePointer implements Pointer {
 
     public Attribute getAttribute() {
         return attribute;
+    }
+
+    public JpqlEntityModel getEntity() {
+        return entity;
     }
 }

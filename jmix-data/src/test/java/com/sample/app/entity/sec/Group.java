@@ -13,31 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.sample.app.entity;
+package com.sample.app.entity.sec;
 
 import io.jmix.core.entity.StandardEntity;
+import io.jmix.core.metamodel.annotations.NamePattern;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.util.List;
+import javax.persistence.*;
 
-@Entity(name = "test_TestAppEntity")
-@Table(name = "TEST_APP_ENTITY")
-public class TestAppEntity extends StandardEntity {
-
-    private static final long serialVersionUID = 8256929425690816623L;
+/**
+ * User access group.
+ */
+@Entity(name = "sec$Group")
+@Table(name = "SEC_GROUP")
+@NamePattern("%s|name")
+public class Group extends StandardEntity {
+    private static final long serialVersionUID = -4581386806900761785L;
 
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "NUMBER")
-    private String number;
-
-    @OneToMany(mappedBy = "appEntity")
-    private List<TestAppEntityItem> items;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PARENT_ID")
+    private Group parent;
 
     public String getName() {
         return name;
@@ -47,19 +44,11 @@ public class TestAppEntity extends StandardEntity {
         this.name = name;
     }
 
-    public String getNumber() {
-        return number;
+    public Group getParent() {
+        return parent;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public List<TestAppEntityItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<TestAppEntityItem> items) {
-        this.items = items;
+    public void setParent(Group parent) {
+        this.parent = parent;
     }
 }

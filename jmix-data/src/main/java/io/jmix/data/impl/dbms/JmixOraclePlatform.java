@@ -15,27 +15,20 @@
  *
  */
 
-package io.jmix.core.impl.jpql.pointer;
+package io.jmix.data.impl.dbms;
 
-import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.impl.jpql.DomainModel;
-import io.jmix.core.impl.jpql.model.JpqlEntityModel;
+import org.eclipse.persistence.exceptions.ConversionException;
+import org.eclipse.persistence.platform.database.Oracle10Platform;
 
-public class CollectionPointer implements HasEntityPointer {
-    private JpqlEntityModel entity;
+import java.util.UUID;
 
-    public CollectionPointer(JpqlEntityModel entity) {
-        Preconditions.checkNotNullArgument(entity);
-
-        this.entity = entity;
-    }
-
-    public JpqlEntityModel getEntity() {
-        return entity;
-    }
+public class JmixOraclePlatform extends Oracle10Platform {
 
     @Override
-    public Pointer next(DomainModel model, String field) {
-        return NoPointer.instance();
+    public Object convertObject(Object sourceObject, Class javaClass) throws ConversionException {
+        if (sourceObject instanceof UUID && javaClass == String.class) {
+            return sourceObject.toString().replace("-", "");
+        }
+        return super.convertObject(sourceObject, javaClass);
     }
 }

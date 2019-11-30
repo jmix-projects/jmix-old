@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright (c) 2008-2018 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package io.jmix.core.impl.jpql.transform;
+package com.sample.app.entity.sales;
 
-import io.jmix.core.impl.jpql.tree.IdentificationVariableNode;
-import io.jmix.core.impl.jpql.tree.PathNode;
-import org.antlr.runtime.tree.Tree;
+import io.jmix.core.metamodel.datatypes.impl.EnumClass;
 
-public interface EntityReference {
-    String replaceEntries(String queryPart, String replaceablePart);
+public enum Status implements EnumClass<String> {
 
-    void renameVariableIn(PathNode node);
+    OK("O"),
+    NOT_OK("N");
 
-    Tree createNode();
+    private String id;
 
-    boolean supportsJoinTo(IdentificationVariableNode node);
+    Status(String id) {
+        this.id = id;
+    }
 
-    PathEntityReference addFieldPath(String fieldPath);
+    @Override
+    public String getId() {
+        return id;
+    }
 }

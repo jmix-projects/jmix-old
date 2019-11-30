@@ -37,7 +37,6 @@ public class NodesFinder<T> implements TreeVisitorAction {
         return foundNodes;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Object pre(Object node) {
         if (nodeClassToFind.isAssignableFrom(node.getClass())) {

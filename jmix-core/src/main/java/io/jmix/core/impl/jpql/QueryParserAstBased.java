@@ -22,6 +22,7 @@ import io.jmix.core.impl.jpql.model.JpqlEntityModel;
 import io.jmix.core.impl.jpql.tree.IdentificationVariableNode;
 import io.jmix.core.impl.jpql.tree.PathNode;
 import io.jmix.core.impl.jpql.tree.SimpleConditionNode;
+import org.antlr.runtime.tree.TreeVisitor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -171,6 +173,18 @@ public class QueryParserAstBased implements QueryParser {
         return getAnalyzer().getConditions().stream()
                 .filter(condition -> getAnalyzer().isConditionForParameter(condition, parameterName))
                 .anyMatch(condition -> getAnalyzer().isConditionIN(condition));
+    }
+
+    @Override
+    public List<String> getSelectedExpressionsList() {
+        return getTree().getAstSelectedNodes()
+                .map(node -> {
+                    TreeToQuery toQuery = new TreeToQuery();
+                    node.setSkipSeparator(true);
+                    new TreeVisitor().visit(node, toQuery);
+                    return toQuery.getQueryString();
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -33,7 +33,7 @@ import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
 @Component(SortJpqlGenerator.NAME)
 public class SortJpqlGenerator {
-    public static final String NAME = "cuba_SortJpqlGenerator";
+    public static final String NAME = "jmix_SortJpqlGenerator";
 
     @Inject
     protected Metadata metadata;
@@ -44,9 +44,9 @@ public class SortJpqlGenerator {
     @Inject
     protected JpqlSortExpressionProvider jpqlSortExpressionProvider;
     @Inject
-    private DbmsSpecifics dbmsSpecifics;
+    protected DbmsSpecifics dbmsSpecifics;
 
-    public String processQuery(String entityName, String queryString, Sort sort) {
+    public String processQuery(String entityName, List<String> valueProperties, String queryString, Sort sort) {
         List<Sort.Order> orders = sort.getOrders();
         if (orders.isEmpty()) {
             return queryString;
@@ -61,15 +61,34 @@ public class SortJpqlGenerator {
 
         List<String> sortExpressions = new ArrayList<>();
 
-        for (Sort.Order order : sort.getOrders()) {
+        if (entityName != null) {
             MetaClass metaClass = metadata.getClassNN(entityName);
-            MetaPropertyPath metaPropertyPath = metadata.getClassNN(entityName).getPropertyPath(order.getProperty());
-            checkNotNullArgument(metaPropertyPath, "Could not resolve property path '%s' in '%s'", order.getProperty(), metaClass);
+            for (Sort.Order order : sort.getOrders()) {
+                MetaPropertyPath metaPropertyPath = metaClass.getPropertyPath(order.getProperty());
+                checkNotNullArgument(metaPropertyPath, "Could not resolve property path '%s' in '%s'", order.getProperty(), metaClass);
 
-            sortExpressions.addAll(getPropertySortExpressions(metaPropertyPath, asc));
+                sortExpressions.addAll(getPropertySortExpressions(metaPropertyPath, asc));
+            }
+            if (!sortExpressions.isEmpty()) {
+                sortExpressions.addAll(getUniqueSortExpression(sortExpressions, metaClass, asc));
+            }
+        } else if (valueProperties != null) {
+            List<String> selectedExpressions = queryTransformerFactory.parser(queryString).getSelectedExpressionsList();
+            for (Sort.Order order : sort.getOrders()) {
+                sortExpressions.addAll(getValuePropertySortExpression(order.getProperty(), valueProperties, selectedExpressions, asc));
+            }
         }
 
         return transformQuery(queryString, sortExpressions, asc);
+    }
+
+    protected List<String> getUniqueSortExpression(List<String> sortExpressions, MetaClass metaClass, boolean asc) {
+        MetaPropertyPath idProperty = metaClass.getPropertyPath(metadataTools.getPrimaryKeyName(metaClass));
+        List<String> uniqueSortExpressions = getPropertySortExpressions(Objects.requireNonNull(idProperty), asc);
+        if (uniqueSortExpressions.stream().noneMatch(sortExpressions::contains)) {
+            return uniqueSortExpressions;
+        }
+        return Collections.emptyList();
     }
 
     protected String transformQuery(String queryString, List<String> sortExpressions, boolean asc) {
@@ -151,6 +170,15 @@ public class SortJpqlGenerator {
         return Collections.emptyList();
     }
 
+    protected List<String> getValuePropertySortExpression(String property, List<String> valueProperties, List<String> selectedExpressions,
+                                                          boolean sortDirectionAsc) {
+        int index = valueProperties.indexOf(property);
+        if (index >= 0 && index < selectedExpressions.size()) {
+            return Collections.singletonList(selectedExpressions.get(index));
+        }
+
+        return Collections.emptyList();
+    }
 
     protected boolean supportsLobSorting(MetaPropertyPath metaPropertyPath) {
         MetaClass metaClass = metadataTools.getPropertyEnclosingMetaClass(metaPropertyPath);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright (c) 2008-2016 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package io.jmix.core.impl.jpql.transform;
@@ -20,6 +21,8 @@ import io.jmix.core.impl.jpql.*;
 import io.jmix.core.impl.jpql.antlr2.JPA2Lexer;
 import io.jmix.core.impl.jpql.model.Attribute;
 import io.jmix.core.impl.jpql.model.JpqlEntityModel;
+import io.jmix.core.impl.jpql.pointer.Pointer;
+import io.jmix.core.impl.jpql.pointer.SimpleAttributePointer;
 import io.jmix.core.impl.jpql.tree.*;
 import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
@@ -192,26 +195,29 @@ public class QueryTreeTransformer {
         Set<String> joinVariables = new HashSet<>();
         for (OrderByFieldNode orderByItem : orderByItems) {
 
-            NodesFinder<PathNode> finder = NodesFinder.of(PathNode.class);
-            new TreeVisitor().visit(orderByItem, finder);
+            if (mainEntityName != null) {
 
-            for (PathNode node : finder.getFoundNodes()) {
-                if (node.getChildCount() > 1) {
-                    int nodeIdx = node.getChildIndex();
-                    List<PathNode> transitPaths = extractTransitPaths(node, mainEntityName);
+                NodesFinder<PathNode> finder = NodesFinder.of(PathNode.class);
+                new TreeVisitor().visit(orderByItem, finder);
 
-                    //replace path expression in the order item to the last path expression from transit paths
-                    PathNode lastNode = transitPaths.remove(transitPaths.size() - 1);
-                    node.getParent().replaceChildren(nodeIdx, nodeIdx, lastNode);
+                for (PathNode node : finder.getFoundNodes()) {
+                    if (node.getChildCount() > 1) {
+                        int nodeIdx = node.getChildIndex();
+                        List<PathNode> transitPaths = extractTransitPaths(node, mainEntityName);
 
-                    //add left join for
-                    for (PathNode joinPathNode : transitPaths) {
-                        String joinVariable = joinPathNode.asPathString('_');
-                        if (!joinVariables.contains(joinVariable)) {
-                            JoinVariableNode join = createLeftJoinByPath(joinVariable, joinPathNode);
+                        //replace path expression in the order item to the last path expression from transit paths
+                        PathNode lastNode = transitPaths.remove(transitPaths.size() - 1);
+                        node.getParent().replaceChildren(nodeIdx, nodeIdx, lastNode);
 
-                            queryTree.getAstFromNode().getChild(0).addChild(join);
-                            joinVariables.add(joinVariable);
+                        //add left join for
+                        for (PathNode joinPathNode : transitPaths) {
+                            String joinVariable = joinPathNode.asPathString('_');
+                            if (!joinVariables.contains(joinVariable)) {
+                                JoinVariableNode join = createLeftJoinByPath(joinVariable, joinPathNode);
+
+                                queryTree.getAstFromNode().getChild(0).addChild(join);
+                                joinVariables.add(joinVariable);
+                            }
                         }
                     }
                 }
@@ -264,6 +270,14 @@ public class QueryTreeTransformer {
                 }
             }
             for (PathNode pathNode : pathNodes) {
+                //skip number attributes for lower case
+                Pointer pointer = pathNode.resolvePointer(queryTree.getModel(), queryTree.getQueryVariableContext());
+                if (pointer instanceof SimpleAttributePointer) {
+                    Attribute attribute = ((SimpleAttributePointer) pointer).getAttribute();
+                    if (attribute != null && Number.class.isAssignableFrom(attribute.getSimpleType())) {
+                        continue;
+                    }
+                }
                 for (int idx = 0; idx < condition.getChildCount(); idx++) {
                     Tree child = condition.getChild(idx);
                     if (child == pathNode) {
@@ -290,6 +304,16 @@ public class QueryTreeTransformer {
                 condition.addChild(createWord(notToken == null ? "1=0" : "1=1"));
                 condition.freshenParentAndChildIndexes();
             }
+        }
+    }
+
+    public void replaceIsNullStatements(List<SimpleConditionNode> conditions, boolean isNullValue) {
+        for (SimpleConditionNode condition : conditions) {
+            Tree notToken = condition.getFirstChildWithType(JPA2Lexer.NOT);
+            condition.getChildren().clear();
+            condition.addChild(createWord((isNullValue && notToken == null)
+                    || (!isNullValue && notToken != null) ? "1=1" : "1=0"));
+            condition.freshenParentAndChildIndexes();
         }
     }
 

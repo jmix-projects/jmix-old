@@ -164,10 +164,32 @@ public class FluentLoader<E extends Entity<K>, K> {
     }
 
     /**
+     * Sets array of entity identifiers.
+     */
+    @SafeVarargs
+    public final ByIds<E, K> ids(K... ids) {
+        return new ByIds<>(this, Arrays.asList(ids));
+    }
+
+    /**
+     * Sets collection of entity identifiers.
+     */
+    public ByIds<E, K> ids(Collection<K> ids) {
+        return new ByIds<>(this, ids);
+    }
+
+    /**
      * Sets the query text.
      */
     public ByQuery<E, K> query(String queryString) {
         return new ByQuery<>(this, queryString);
+    }
+
+    /**
+     * Sets the query with positional parameters (e.g. {@code "e.name = ?1 and e.status = ?2"}).
+     */
+    public ByQuery<E, K> query(String queryString, Object... parameters) {
+        return new ByQuery<>(this, queryString, parameters);
     }
 
     public static class ById<E extends Entity<K>, K> {
@@ -253,6 +275,102 @@ public class FluentLoader<E extends Entity<K>, K> {
         }
     }
 
+    public static class ByIds<E extends Entity<K>, K> {
+
+        private FluentLoader<E, K> loader;
+        private Collection<K> ids;
+
+        ByIds(FluentLoader<E, K> loader, Collection<K> ids) {
+            this.loader = loader;
+            this.ids = ids;
+        }
+
+        LoadContext<E> createLoadContext() {
+            LoadContext<E> loadContext = LoadContext.create(loader.entityClass).setIds(ids);
+            loader.initCommonLoadContextParameters(loadContext);
+            return loadContext;
+        }
+
+        /**
+         * Loads a list of entities.
+         */
+        public List<E> list() {
+            if (ids != null && !ids.isEmpty()) {
+                LoadContext<E> loadContext = createLoadContext();
+                return loader.dataManager.loadList(loadContext);
+            }
+            return Collections.emptyList();
+        }
+
+        /**
+         * Sets a view.
+         */
+        public ByIds<E, K> view(View view) {
+            loader.view = view;
+            return this;
+        }
+
+        /**
+         * Sets a view by name.
+         */
+        public ByIds<E, K> view(String viewName) {
+            loader.viewName = viewName;
+            return this;
+        }
+
+        /**
+         * Sets a view configured by the {@link ViewBuilder}. For example:
+         * <pre>
+         *     dataManager.load(Pet.class)
+         *         .ids(id1, id2)
+         *         .view(viewBuilder -&gt; viewBuilder.addAll(
+         *                 "name",
+         *                 "owner.name"))
+         *         .list();
+         * </pre>
+         */
+        public ByIds<E, K> view(Consumer<ViewBuilder> viewBuilderConfigurer) {
+            loader.createViewBuilder();
+            viewBuilderConfigurer.accept(loader.viewBuilder);
+            return this;
+        }
+
+        /**
+         * Sets a view containing the given properties. A property can be designated by a path in the entity graph.
+         * For example:
+         * <pre>
+         *     dataManager.load(Pet.class)
+         *         .ids(id1, id2)
+         *         .viewProperties(
+         *                 "name",
+         *                 "owner.name",
+         *                 "owner.address.city")
+         *         .list();
+         * </pre>
+         */
+        public ByIds<E, K> viewProperties(String... properties) {
+            loader.createViewBuilder();
+            loader.viewBuilder.addAll(properties);
+            return this;
+        }
+
+        /**
+         * Sets soft deletion. The soft deletion is true by default.
+         */
+        public ByIds<E, K> softDeletion(boolean softDeletion) {
+            loader.softDeletion = softDeletion;
+            return this;
+        }
+
+        /**
+         * Sets loading of dynamic attributes. It is false by default.
+         */
+        public ByIds<E, K> dynamicAttributes(boolean dynamicAttributes) {
+            loader.dynamicAttributes = dynamicAttributes;
+            return this;
+        }
+    }
+
     public static class ByQuery<E extends Entity<K>, K> {
 
         private FluentLoader<E, K> loader;
@@ -271,11 +389,30 @@ public class FluentLoader<E extends Entity<K>, K> {
             this.queryString = queryString;
         }
 
+        ByQuery(FluentLoader<E, K> loader, String queryString, Object[] positionalParams) {
+            this(loader, queryString);
+            processPositionalParams(positionalParams);
+        }
+
+        private void processPositionalParams(Object[] positionalParams) {
+            if (positionalParams == null) {
+                return;
+            }
+            for (int i = 1; i <= positionalParams.length; i++) {
+                String paramName = "_p" + i;
+                parameters.put(paramName, positionalParams[i - 1]);
+                queryString = queryString.replace("?" + i, ":" + paramName);
+            }
+        }
+
         LoadContext<E> createLoadContext() {
+            Preconditions.checkNotEmptyString(queryString, "query is empty");
+
             LoadContext<E> loadContext = LoadContext.create(loader.entityClass);
             loader.initCommonLoadContextParameters(loadContext);
 
-            LoadContext.Query query = LoadContext.createQuery(queryString);
+            String processedQuery = AppBeans.get(QueryStringProcessor.class).process(queryString, loader.entityClass);
+            LoadContext.Query query = LoadContext.createQuery(processedQuery);
             for (Map.Entry<String, Object> entry : parameters.entrySet()) {
                 if (noConversionParams.contains(entry.getKey()))
                     query.setParameter(entry.getKey(), entry.getValue(), false);

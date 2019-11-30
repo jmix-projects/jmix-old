@@ -308,7 +308,7 @@ between_expression
     | string_expression ('NOT')? 'BETWEEN' string_expression 'AND' string_expression
     | datetime_expression ('NOT')? 'BETWEEN' datetime_expression 'AND' datetime_expression;
 in_expression
-    : (path_expression | type_discriminator | identification_variable) (NOT)? IN
+    : (path_expression | type_discriminator | identification_variable | extract_function) (NOT)? IN
             ( '(' in_item (',' in_item)* ')'
             | subquery
             | collection_valued_input_parameter
@@ -457,14 +457,14 @@ case_expression
 general_case_expression
     : CASE when_clause (when_clause)* ELSE scalar_expression END;
 when_clause
-    : WHEN conditional_expression THEN scalar_expression;
+    : WHEN conditional_expression THEN (scalar_expression | 'NULL');
 simple_case_expression
-    : CASE case_operand simple_when_clause (simple_when_clause)* ELSE scalar_expression END;
+    : CASE case_operand simple_when_clause (simple_when_clause)* ELSE (scalar_expression | 'NULL') END;
 case_operand
     : path_expression
     | type_discriminator;
 simple_when_clause
-    : WHEN scalar_expression THEN scalar_expression;
+    : WHEN scalar_expression THEN (scalar_expression | 'NULL');
 coalesce_expression
     : 'COALESCE('scalar_expression (',' scalar_expression)+')';
 nullif_expression
@@ -506,7 +506,7 @@ boolean_literal
 //todo eude the following is just a workaround for entity fields equal to keywords. We need to get rid of it somehow.
 field
     : WORD | 'SELECT' | 'FROM' | 'GROUP' | 'ORDER' | 'MAX' | 'MIN' | 'SUM' | 'AVG' | 'COUNT' | 'AS' | 'MEMBER' | 'CASE'
-    | 'OBJECT' | 'SET' | date_part;
+    | 'OBJECT' | 'SET' | 'DESC' | 'ASC' | date_part;
 
 identification_variable
     : WORD | 'GROUP';

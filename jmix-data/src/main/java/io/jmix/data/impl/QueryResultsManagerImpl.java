@@ -98,16 +98,21 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
             transformer.removeOrderBy();
             String queryString = transformer.getResult();
 
-            OrmQueryBuilder queryBuilder = AppBeans.get(OrmQueryBuilder.NAME);
-            queryBuilder.init(queryString, contextQuery.getCondition(), contextQuery.getSort(),
-                    contextQuery.getParameters(), contextQuery.getNoConversionParams(),
-                    null, entityName);
+            JpqlQueryBuilder queryBuilder = AppBeans.get(JpqlQueryBuilder.NAME);
+            queryBuilder.setQueryString(queryString)
+                    .setEntityName(entityName)
+                    .setCondition(contextQuery.getCondition())
+                    .setSort(contextQuery.getSort())
+                    .setQueryParameters(contextQuery.getParameters())
+                    .setNoConversionParams(contextQuery.getNoConversionParams());
+
             if (prevQueries.size() > 1) {
-                queryBuilder.restrictByPreviousResults(userSessionSource.getUserSession().getId(), loadContext.getQueryKey());
+                queryBuilder.setPreviousResults(userSessionSource.getUserSession().getId(), loadContext.getQueryKey());
             }
+
             Query query = queryBuilder.getQuery(em);
 
-            String logMsg = "Load previous query results: " + OrmQueryBuilder.printQuery(query.getQueryString());
+            String logMsg = "Load previous query results: " + JpqlQueryBuilder.printQuery(query.getQueryString());
             log.debug(logMsg);
             long start = System.currentTimeMillis();
 

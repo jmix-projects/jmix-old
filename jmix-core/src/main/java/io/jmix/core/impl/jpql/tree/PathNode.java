@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright (c) 2008-2016 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,12 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
 package io.jmix.core.impl.jpql.tree;
 
 import io.jmix.core.impl.jpql.*;
-import io.jmix.core.impl.jpql.antlr2.JPA2Lexer;
 import io.jmix.core.impl.jpql.pointer.Pointer;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.Token;

@@ -16,6 +16,7 @@
 
 package io.jmix.data.impl;
 
+import com.google.common.collect.Lists;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.*;
@@ -26,6 +27,7 @@ import io.jmix.core.metamodel.model.impl.AbstractInstance;
 import io.jmix.core.security.*;
 import io.jmix.data.*;
 import io.jmix.data.event.EntityChangedEvent;
+import io.jmix.data.persistence.DbmsSpecifics;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +39,9 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * INTERNAL.
@@ -95,6 +99,9 @@ public class OrmDataStore implements DataStore {
     @Inject
     protected EntityChangedEventManager entityChangedEventManager;
 
+    @Inject
+    protected DbmsSpecifics dbmsSpecifics;
+
     protected String storeName;
 
     @Override
@@ -136,7 +143,7 @@ public class OrmDataStore implements DataStore {
                     && context.getId() != null;
 
             View view = createRestrictedView(context);
-            Query query = createQuery(em, context, singleResult);
+            Query query = createQuery(em, context, singleResult, false);
             query.setView(view);
 
             //noinspection unchecked
@@ -185,7 +192,7 @@ public class OrmDataStore implements DataStore {
         if (log.isDebugEnabled())
             log.debug("loadList: metaClass=" + context.getMetaClass() + ", view=" + context.getView()
                     + (context.getPrevQueries().isEmpty() ? "" : ", from selected")
-                    + ", query=" + (context.getQuery() == null ? null : OrmQueryBuilder.printQuery(context.getQuery().getQueryString()))
+                    + ", query=" + (context.getQuery() == null ? null : JpqlQueryBuilder.printQuery(context.getQuery().getQueryString()))
                     + (context.getQuery() == null || context.getQuery().getFirstResult() == 0 ? "" : ", first=" + context.getQuery().getFirstResult())
                     + (context.getQuery() == null || context.getQuery().getMaxResults() == 0 ? "" : ", max=" + context.getQuery().getMaxResults()));
 
@@ -215,10 +222,23 @@ public class OrmDataStore implements DataStore {
                 }
             }
             View view = createRestrictedView(context);
-            Query query = createQuery(em, context, false);
-            query.setView(view);
+            List<E> entities;
 
-            resultList = getResultList(context, query, ensureDistinct);
+            Integer maxIdsBatchSize = dbmsSpecifics.getDbmsFeatures(storeName).getMaxIdsBatchSize();
+            if (!context.getIds().isEmpty() && entityHasEmbeddedId(metaClass)) {
+                entities = loadListBySingleIds(context, em, view);
+            } else if (!context.getIds().isEmpty() && maxIdsBatchSize != null && context.getIds().size() > maxIdsBatchSize) {
+                entities = loadListByBatchesOfIds(context, em, view, maxIdsBatchSize);
+            } else {
+                Query query = createQuery(em, context, false, false);
+                query.setView(view);
+                entities = getResultList(context, query, ensureDistinct);
+            }
+            if (context.getIds().isEmpty()) {
+                resultList = entities;
+            } else {
+                resultList = checkAndReorderLoadedEntities(context.getIds(), entities, metaClass);
+            }
 
             // Fetch dynamic attributes
             // todo dynamic attributes
@@ -251,12 +271,63 @@ public class OrmDataStore implements DataStore {
         return resultList;
     }
 
+    protected boolean entityHasEmbeddedId(MetaClass metaClass) {
+        MetaProperty pkProperty = metadataTools.getPrimaryKeyProperty(metaClass);
+        return pkProperty == null || pkProperty.getRange().isClass();
+    }
+
+    protected  <E extends Entity> List<E> loadListBySingleIds(LoadContext<E> context, EntityManager em, View view) {
+        LoadContext<?> contextCopy = context.copy();
+        contextCopy.setIds(Collections.emptyList());
+
+        List<E> entities = new ArrayList<>(context.getIds().size());
+        for (Object id : context.getIds()) {
+            contextCopy.setId(id);
+            Query query = createQuery(em, contextCopy, true, false);
+            query.setView(view);
+            List<E> list = executeQuery(query, true);
+            entities.addAll(list);
+        }
+        return entities;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <E extends Entity> List<E> loadListByBatchesOfIds(LoadContext<E> context, EntityManager em, View view, int batchSize) {
+        List<List<Object>> partitions = Lists.partition((List<Object>) context.getIds(), batchSize);
+
+        List<E> entities = new ArrayList<>(context.getIds().size());
+        for (List partition : partitions) {
+            LoadContext<E> contextCopy = (LoadContext<E>) context.copy();
+            contextCopy.setIds(partition);
+
+            Query query = createQuery(em, contextCopy, false, false);
+            query.setView(view);
+            List<E> list = executeQuery(query, false);
+            entities.addAll(list);
+        }
+
+        return entities;
+    }
+
+    protected <E extends Entity> List<E> checkAndReorderLoadedEntities(List<?> ids, List<E> entities, MetaClass metaClass) {
+        List<E> result = new ArrayList<>(ids.size());
+        Map<Object, E> idToEntityMap = entities.stream().collect(Collectors.toMap(Entity::getId, Function.identity()));
+        for (Object id : ids) {
+            E entity = idToEntityMap.get(id);
+            if (entity == null) {
+                throw new EntityAccessException(metaClass, id);
+            }
+            result.add(entity);
+        }
+        return result;
+    }
+
     @Override
     public long getCount(LoadContext<? extends Entity> context) {
         if (log.isDebugEnabled())
             log.debug("getCount: metaClass=" + context.getMetaClass()
                     + (context.getPrevQueries().isEmpty() ? "" : ", from selected")
-                    + ", query=" + (context.getQuery() == null ? null : OrmQueryBuilder.printQuery(context.getQuery().getQueryString())));
+                    + ", query=" + (context.getQuery() == null ? null : JpqlQueryBuilder.printQuery(context.getQuery().getQueryString())));
 
         MetaClass metaClass = metadata.getClassNN(context.getMetaClass());
 
@@ -294,7 +365,7 @@ public class OrmDataStore implements DataStore {
                 context.getQuery().setFirstResult(0);
                 context.getQuery().setMaxResults(0);
 
-                Query query = createQuery(em, context, false);
+                Query query = createQuery(em, context, false, false);
                 query.setView(createRestrictedView(context));
 
                 resultList = getResultList(context, query, ensureDistinct);
@@ -313,7 +384,7 @@ public class OrmDataStore implements DataStore {
                 em.setSoftDeletion(context.isSoftDeletion());
                 persistence.getEntityManagerContext(storeName).setDbHints(context.getDbHints());
 
-                Query query = createQuery(em, context, false);
+                Query query = createQuery(em, context, false, true);
                 result = (Number) query.getSingleResult();
 
                 tx.commit();
@@ -527,7 +598,7 @@ public class OrmDataStore implements DataStore {
         ValueLoadContext.Query contextQuery = context.getQuery();
 
         if (log.isDebugEnabled())
-            log.debug("query: " + (OrmQueryBuilder.printQuery(contextQuery.getQueryString()))
+            log.debug("query: " + (JpqlQueryBuilder.printQuery(contextQuery.getQueryString()))
                     + (contextQuery.getFirstResult() == 0 ? "" : ", first=" + contextQuery.getFirstResult())
                     + (contextQuery.getMaxResults() == 0 ? "" : ", max=" + contextQuery.getMaxResults()));
 
@@ -544,10 +615,15 @@ public class OrmDataStore implements DataStore {
 
             List<String> keys = context.getProperties();
 
-            OrmQueryBuilder queryBuilder = AppBeans.get(OrmQueryBuilder.NAME);
-            queryBuilder.init(contextQuery.getQueryString(), contextQuery.getCondition(), contextQuery.getSort(),
-                    contextQuery.getParameters(), contextQuery.getNoConversionParams(),
-                    null, metadata.getClassNN(KeyValueEntity.class).getName());
+            JpqlQueryBuilder queryBuilder = AppBeans.get(JpqlQueryBuilder.NAME);
+
+            queryBuilder.setValueProperties(context.getProperties())
+                    .setQueryString(contextQuery.getQueryString())
+                    .setCondition(contextQuery.getCondition())
+                    .setSort(contextQuery.getSort())
+                    .setQueryParameters(contextQuery.getParameters())
+                    .setNoConversionParams(contextQuery.getNoConversionParams());
+
             Query query = queryBuilder.getQuery(em);
 
             if (contextQuery.getFirstResult() != 0)
@@ -625,24 +701,31 @@ public class OrmDataStore implements DataStore {
 //                && ((BaseGenericIdEntity) entity).getDynamicAttributes() != null;
 //    }
 
-    protected Query createQuery(EntityManager em, LoadContext context, boolean singleResult) {
+    protected Query createQuery(EntityManager em, LoadContext<?> context, boolean singleResult, boolean countQuery) {
         LoadContext.Query contextQuery = context.getQuery();
-        OrmQueryBuilder queryBuilder = AppBeans.get(OrmQueryBuilder.NAME);
-        queryBuilder.init(
-                contextQuery == null ? null : contextQuery.getQueryString(),
-                contextQuery == null ? null : contextQuery.getCondition(),
-                contextQuery == null ? null : contextQuery.getSort(),
-                contextQuery == null ? null : contextQuery.getParameters(),
-                contextQuery == null ? null : contextQuery.getNoConversionParams(),
-                context.getId(), context.getMetaClass()
-        );
 
-        queryBuilder.setSingleResult(singleResult);
+        JpqlQueryBuilder queryBuilder = AppBeans.get(JpqlQueryBuilder.NAME);
+
+        queryBuilder.setId(context.getId())
+                .setIds(context.getIds())
+                .setEntityName(context.getMetaClass())
+                .setSingleResult(singleResult);
+
+        if (contextQuery != null) {
+            queryBuilder.setQueryString(contextQuery.getQueryString())
+                    .setCondition(contextQuery.getCondition())
+                    .setQueryParameters(contextQuery.getParameters())
+                    .setNoConversionParams(contextQuery.getNoConversionParams());
+            if (!countQuery) {
+                queryBuilder.setSort(contextQuery.getSort());
+            }
+        }
 
         if (!context.getPrevQueries().isEmpty()) {
             log.debug("Restrict query by previous results");
-            queryBuilder.restrictByPreviousResults(userSessionSource.getUserSession().getId(), context.getQueryKey());
+            queryBuilder.setPreviousResults(userSessionSource.getUserSession().getId(), context.getQueryKey());
         }
+
         Query query = queryBuilder.getQuery(em);
 
         if (contextQuery != null) {

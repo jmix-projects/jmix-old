@@ -49,7 +49,7 @@ public class SelectionSourceNode extends BaseCustomNode {
     @Override
     public CommonTree treeToQueryPre(QueryBuilder sb, List<ErrorRec> invalidNodes) {
         CommonTree prevNode = getPrevNode();
-        if (prevNode != null && prevNode instanceof SelectionSourceNode) {
+        if (prevNode instanceof SelectionSourceNode) {
             sb.appendString(", ");
         } else {
             sb.appendSpace();

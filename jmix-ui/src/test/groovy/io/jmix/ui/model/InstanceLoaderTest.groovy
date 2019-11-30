@@ -17,6 +17,7 @@
 package io.jmix.ui.model
 
 import io.jmix.core.DataManager
+import io.jmix.core.EntityAccessException
 import io.jmix.data.PersistenceTools
 import io.jmix.ui.model.DataComponents
 import io.jmix.ui.model.InstanceContainer
@@ -92,5 +93,37 @@ class InstanceLoaderTest extends DataContextSpec {
         cleanup:
 
         persistenceTools.deleteRecord(foo)
+    }
+
+    def "simplified queries"() {
+        InstanceLoader<Foo> loader = factory.createInstanceLoader()
+        InstanceContainer<Foo> container = factory.createInstanceContainer(Foo)
+        loader.setContainer(container)
+
+        Consumer<InstanceLoader.PreLoadEvent> preLoadListener = Mock()
+        loader.addPreLoadListener(preLoadListener)
+
+        when:
+
+        loader.setQuery('from test_Foo f where f.id = :id')
+        loader.setParameter('id', UUID.randomUUID())
+        loader.load()
+
+        then:
+
+        thrown(EntityAccessException)
+        1 * preLoadListener.accept({ it.loadContext.query.queryString == 'select f from test_Foo f where f.id = :id' })
+
+        when:
+
+        loader.setQuery('e.name = :name')
+        loader.setParameter('name', 'name')
+        loader.setParameter('id', UUID.randomUUID())
+        loader.load()
+
+        then:
+
+        thrown(EntityAccessException)
+        1 * preLoadListener.accept({ it.loadContext.query.queryString == 'select e from test_Foo e where e.name = :name' })
     }
 }

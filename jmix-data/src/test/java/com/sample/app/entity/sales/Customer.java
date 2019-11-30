@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright (c) 2008-2018 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +14,29 @@
  * limitations under the License.
  */
 
-package com.sample.app.entity;
+package com.sample.app.entity.sales;
+
 
 import io.jmix.core.entity.StandardEntity;
+import io.jmix.core.metamodel.annotations.NamePattern;
+import io.jmix.core.metamodel.datatypes.impl.EnumUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.List;
+import javax.persistence.Transient;
 
-@Entity(name = "test_TestAppEntity")
-@Table(name = "TEST_APP_ENTITY")
-public class TestAppEntity extends StandardEntity {
-
-    private static final long serialVersionUID = 8256929425690816623L;
+@Entity(name = "sales$Customer")
+@Table(name = "SALES_CUSTOMER")
+@NamePattern("%s|name")
+public class Customer extends StandardEntity {
+    private static final long serialVersionUID = 760650452995192278L;
 
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "NUMBER")
-    private String number;
-
-    @OneToMany(mappedBy = "appEntity")
-    private List<TestAppEntityItem> items;
+    @Column(name = "STATUS")
+    private String status;
 
     public String getName() {
         return name;
@@ -47,19 +46,11 @@ public class TestAppEntity extends StandardEntity {
         this.name = name;
     }
 
-    public String getNumber() {
-        return number;
+    public Status getStatus() {
+        return EnumUtils.fromId(Status.class, status, null);
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public List<TestAppEntityItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<TestAppEntityItem> items) {
-        this.items = items;
+    public void setStatus(Status status) {
+        this.status = status.getId();
     }
 }

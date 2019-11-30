@@ -84,6 +84,8 @@ public interface QueryParser {
 
     boolean isParameterInCondition(String parameterName);
 
+    List<String> getSelectedExpressionsList();
+
     List<QueryPath> getQueryPaths();
 
     class QueryPath {

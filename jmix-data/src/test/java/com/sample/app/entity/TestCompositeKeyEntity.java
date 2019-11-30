@@ -16,28 +16,37 @@
 
 package com.sample.app.entity;
 
-import io.jmix.core.entity.StandardEntity;
+import io.jmix.core.entity.BaseGenericIdEntity;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.List;
 
-@Entity(name = "test_TestAppEntity")
-@Table(name = "TEST_APP_ENTITY")
-public class TestAppEntity extends StandardEntity {
+@Entity(name = "test_TestCompositeKeyEntity")
+@Table(name = "TEST_COMPOSITE_KEY_ENTITY")
+public class TestCompositeKeyEntity extends BaseGenericIdEntity<TestEntityKey> {
 
-    private static final long serialVersionUID = 8256929425690816623L;
+    private static final long serialVersionUID = -2538345720324624741L;
+
+    @EmbeddedId
+    private TestEntityKey id;
 
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "NUMBER")
-    private String number;
+    @Column(name = "EMAIL")
+    private String email;
 
-    @OneToMany(mappedBy = "appEntity")
-    private List<TestAppEntityItem> items;
+    @Override
+    public void setId(TestEntityKey id) {
+        this.id = id;
+    }
+
+    @Override
+    public TestEntityKey getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -47,19 +56,11 @@ public class TestAppEntity extends StandardEntity {
         this.name = name;
     }
 
-    public String getNumber() {
-        return number;
+    public String getEmail() {
+        return email;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public List<TestAppEntityItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<TestAppEntityItem> items) {
-        this.items = items;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

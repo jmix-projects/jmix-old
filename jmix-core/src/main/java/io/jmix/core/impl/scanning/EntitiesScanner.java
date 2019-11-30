@@ -29,6 +29,7 @@ import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import java.util.Collections;
 import java.util.List;
@@ -96,7 +97,8 @@ public class EntitiesScanner extends AbstractClasspathScanner {
 
     protected boolean isCandidateEntity(MetadataReader metadataReader) {
         return (metadataReader.getAnnotationMetadata().hasAnnotation(Entity.class.getName())
-                || metadataReader.getAnnotationMetadata().hasAnnotation(MetaClass.class.getName()));
+                || metadataReader.getAnnotationMetadata().hasAnnotation(MetaClass.class.getName()))
+                || metadataReader.getAnnotationMetadata().hasAnnotation(Embeddable.class.getName());
     }
 
     @Override

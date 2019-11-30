@@ -18,6 +18,7 @@ package io.jmix.core.impl.jpql;
 
 import io.jmix.core.impl.jpql.tree.PathNode;
 import io.jmix.core.impl.jpql.tree.SelectedItemNode;
+import org.antlr.runtime.tree.Tree;
 import org.antlr.runtime.tree.TreeVisitorAction;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class PathNodeFinder implements TreeVisitorAction {
     public Object pre(Object t) {
         if (t instanceof PathNode) {
             PathNode pathNode = (PathNode) t;
-            if (pathNode.getParent() instanceof SelectedItemNode) {
+            if (isSelectedPathNode(pathNode)) {
                 selectedPathNodes.add(pathNode);
             } else {
                 otherPathNodes.add(pathNode);
@@ -53,5 +54,16 @@ public class PathNodeFinder implements TreeVisitorAction {
 
     public List<PathNode> getOtherPathNodes() {
         return otherPathNodes;
+    }
+
+    protected boolean isSelectedPathNode(PathNode pathNode) {
+        Tree node = pathNode;
+        while (node.getParent() != null) {
+            if (node.getParent() instanceof SelectedItemNode) {
+                return true;
+            }
+            node = node.getParent();
+        }
+        return false;
     }
 }

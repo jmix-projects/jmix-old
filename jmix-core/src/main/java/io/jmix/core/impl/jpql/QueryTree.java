@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright (c) 2008-2018 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,6 +108,14 @@ public class QueryTree {
      */
     public SelectedItemsNode getAstSelectedItemsNode() {
         return (SelectedItemsNode) tree.getFirstChildWithType(JPA2Lexer.T_SELECTED_ITEMS);
+    }
+
+    public Stream<SelectedItemNode> getAstSelectedNodes() {
+        SelectedItemsNode selectedItems = getAstSelectedItemsNode();
+        if (selectedItems != null) {
+            return generateChildrenByClass(selectedItems, SelectedItemNode.class);
+        }
+        return Stream.empty();
     }
 
     public Stream<PathNode> getAstSelectedPathNodes() {

@@ -19,6 +19,7 @@ package io.jmix.gradle
 import groovy.xml.MarkupBuilder
 import javassist.ClassPool
 import javassist.CtClass
+import javassist.NotFoundException
 import javassist.bytecode.AnnotationsAttribute
 import org.gradle.api.Action
 import org.gradle.api.Project
@@ -53,16 +54,25 @@ class EnhancingAction implements Action<Task> {
                     String pathStr = srcDir.toPath().relativize(file.toPath()).join('.')
                     String className = pathStr.substring(0, pathStr.length() - '.java'.length())
 
-                    CtClass ctClass = classPool.get(className)
-                    AnnotationsAttribute attribute =
-                            ctClass.getClassFile().getAttribute(AnnotationsAttribute.visibleTag)
-                    if (attribute != null) {
-                        if (attribute.getAnnotation("javax.persistence.Entity") != null
-                                || attribute.getAnnotation("javax.persistence.MappedSuperclass") != null
-                                || attribute.getAnnotation("javax.persistence.Embeddable") != null) {
-                            classNames.add(className)
-                        } else if (attribute.getAnnotation("io.jmix.core.metamodel.annotations.MetaClass") != null) {
-                            nonMappedClassNames.add(className)
+                    CtClass ctClass = null
+                    try {
+                        ctClass = classPool.get(className)
+                    } catch (NotFoundException e) {
+                        project.logger.warn "Entity $className for enhancing is not found in $project"
+                    }
+
+                    if (ctClass != null) {
+                        AnnotationsAttribute attribute =
+                                ctClass.getClassFile().getAttribute(AnnotationsAttribute.visibleTag)
+                        if (attribute != null) {
+                            if (attribute.getAnnotation("javax.persistence.Entity") != null
+                                    || attribute.getAnnotation("javax.persistence.MappedSuperclass") != null
+                                    || attribute.getAnnotation("javax.persistence.Embeddable") != null) {
+                                project.logger.warn "Entity $className for enhancing in $project"
+                                classNames.add(className)
+                            } else if (attribute.getAnnotation("io.jmix.core.metamodel.annotations.MetaClass") != null) {
+                                nonMappedClassNames.add(className)
+                            }
                         }
                     }
                 }

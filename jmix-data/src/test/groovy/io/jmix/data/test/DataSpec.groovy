@@ -18,9 +18,9 @@ package io.jmix.data.test
 
 import com.sample.app.TestAppConfiguration
 import io.jmix.core.JmixCoreConfiguration
-import io.jmix.core.commons.db.QueryRunner
 import io.jmix.data.JmixDataConfiguration
 import io.jmix.data.Persistence
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
@@ -29,19 +29,29 @@ import javax.inject.Inject
 @ContextConfiguration(classes = [JmixCoreConfiguration, JmixDataConfiguration, JmixDataTestConfiguration, TestAppConfiguration])
 class DataSpec extends Specification {
 
-    @Inject Persistence persistence
+    @Inject
+    Persistence persistence
 
     void setup() {
         persistence.createTransaction().commit()
     }
 
     void cleanup() {
-        def runner = new QueryRunner(persistence.getDataSource())
-        runner.update('delete from TEST_APP_ENTITY_ITEM')
-        runner.update('delete from TEST_SECOND_APP_ENTITY')
-        runner.update('delete from TEST_APP_ENTITY')
-        runner.update('delete from TEST_IDENTITY_ID_ENTITY')
-        runner.update('delete from TEST_IDENTITY_UUID_ENTITY')
-    }
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(persistence.getDataSource())
 
+        jdbcTemplate.update('delete from SEC_USER_ROLE')
+        jdbcTemplate.update('delete from SEC_ROLE')
+        jdbcTemplate.update('delete from SEC_USER')
+        jdbcTemplate.update('delete from SEC_GROUP')
+
+        jdbcTemplate.update('delete from TEST_DATE_TIME_ENTITY')
+        jdbcTemplate.update('delete from TEST_APP_ENTITY_ITEM')
+        jdbcTemplate.update('delete from TEST_SECOND_APP_ENTITY')
+        jdbcTemplate.update('delete from TEST_APP_ENTITY')
+        jdbcTemplate.update('delete from TEST_IDENTITY_ID_ENTITY')
+        jdbcTemplate.update('delete from TEST_IDENTITY_UUID_ENTITY')
+        jdbcTemplate.update('delete from TEST_COMPOSITE_KEY_ENTITY')
+
+        jdbcTemplate.update('delete from SALES_PRODUCT')
+    }
 }
