@@ -16,21 +16,18 @@
 
 package io.jmix.core.security;
 
-import io.jmix.core.security.UserSession;
-
 import java.util.Locale;
 import java.util.UUID;
 
 /**
  * Central infrastructure interface to provide access to a current user session.
- *
  */
 public interface UserSessionSource {
 
     String NAME = "cuba_UserSessionSource";
 
     /**
-     * @return  true if the current user session is valid and calling {@link #getUserSession()} is safe
+     * @return true if the current user session is valid and calling {@link #getUserSession()} is safe
      */
     boolean checkCurrentUserSession();
 
