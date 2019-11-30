@@ -16,12 +16,13 @@
 
 package com.sample.app.entity;
 
+import com.sample.app.entity.sec.User;
 import io.jmix.core.entity.StandardEntity;
+import io.jmix.core.metamodel.annotations.MetaProperty;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity(name = "test_TestAppEntity")
@@ -36,8 +37,15 @@ public class TestAppEntity extends StandardEntity {
     @Column(name = "NUMBER")
     private String number;
 
+    @Column(name = "APP_DATE")
+    private Date appDate;
+
     @OneToMany(mappedBy = "appEntity")
     private List<TestAppEntityItem> items;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "AUTHOR_ID")
+    private User author;
 
     public String getName() {
         return name;
@@ -61,5 +69,23 @@ public class TestAppEntity extends StandardEntity {
 
     public void setItems(List<TestAppEntityItem> items) {
         this.items = items;
+    }
+
+    @MetaProperty(related = "appDate")
+    public Date getChangeDate() {
+        return this.appDate;
+    }
+
+    @MetaProperty(related = {"author,number"})
+    public String getLabel() {
+        return String.format("%s-%s", author != null ? author.getLogin() : "", number);
+    }
+
+    public Date getAppDate() {
+        return appDate;
+    }
+
+    public void setAppDate(Date appDate) {
+        this.appDate = appDate;
     }
 }

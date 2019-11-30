@@ -17,9 +17,11 @@
 package com.sample.app;
 
 
-import io.jmix.data.JmixDataConfiguration;
 import io.jmix.core.annotation.JmixModule;
+import io.jmix.data.JmixDataConfiguration;
+import io.jmix.data.persistence.JpqlSortExpressionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -37,5 +39,10 @@ public class TestAppConfiguration {
     @EventListener
     private void initDatabase(ContextRefreshedEvent event) {
 
+    }
+
+    @Bean(JpqlSortExpressionProvider.NAME)
+    protected JpqlSortExpressionProvider jpqlSortExpressionProvider() {
+        return new TestJpqlSortExpressionProvider();
     }
 }

@@ -24,7 +24,6 @@ import io.jmix.core.metamodel.datatypes.impl.EnumUtils;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity(name = "sales$Customer")
 @Table(name = "SALES_CUSTOMER")
