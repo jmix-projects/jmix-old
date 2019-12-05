@@ -29,8 +29,6 @@ import javax.persistence.Table;
 @Table(name = "SALES_CUSTOMER")
 @NamePattern("%s|name")
 public class Customer extends StandardEntity {
-    private static final long serialVersionUID = 760650452995192278L;
-
     @Column(name = "NAME")
     private String name;
 

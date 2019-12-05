@@ -49,8 +49,8 @@ dependencies {
         api 'org.apache.commons:commons-collections4:4.2'
         api 'org.apache.commons:commons-text:1.6'
         api 'org.dom4j:dom4j:2.1.1'
-        api 'org.eclipse.persistence:javax.persistence:2.1.1'
-        api 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.3-6-cuba'
+        api 'org.eclipse.persistence:jakarta.persistence:2.2.3'
+        api 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.5-2-cuba'
         api 'org.json:json:20180813'
         api 'org.perf4j:perf4j:0.9.16'
 
