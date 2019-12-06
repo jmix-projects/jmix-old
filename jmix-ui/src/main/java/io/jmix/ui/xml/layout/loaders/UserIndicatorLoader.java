@@ -16,7 +16,7 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import io.jmix.ui.components.UserIndicator;
+import io.jmix.ui.components.mainwindow.UserIndicator;
 
 public class UserIndicatorLoader extends AbstractComponentLoader<UserIndicator> {
     @Override
@@ -40,8 +40,9 @@ public class UserIndicatorLoader extends AbstractComponentLoader<UserIndicator> 
         loadEnable(resultComponent, element);
         loadVisible(resultComponent, element);
 
-        getComponentContext().addPostInitTask((context1, window) ->
-                resultComponent.refreshUserSubstitutions()
-        );
+        // todo user substitutions
+//        getComponentContext().addPostInitTask((context1, window) ->
+//                resultComponent.refreshUserSubstitutions()
+//        );
     }
 }

@@ -16,6 +16,7 @@
 
 package io.jmix.ui.widgets;
 
+import io.jmix.ui.AppUI;
 import io.jmix.ui.widgets.client.verticalmenu.CubaSideMenuClientRpc;
 import io.jmix.ui.widgets.client.verticalmenu.CubaSideMenuServerRpc;
 import io.jmix.ui.widgets.client.verticalmenu.CubaSideMenuState;
@@ -71,7 +72,7 @@ public class CubaSideMenu extends AbstractComponent implements Component.Focusab
         CubaSideMenuServerRpc menuRpc = new CubaSideMenuServerRpc() {
             @Override
             public void menuItemTriggered(String itemId) {
-                CubaUI ui = (CubaUI) CubaSideMenu.this.getUI();
+                AppUI ui = (AppUI) CubaSideMenu.this.getUI();
                 if (!ui.isAccessibleForUser(CubaSideMenu.this)) {
                     LoggerFactory.getLogger(CubaSideMenu.class)
                             .debug("Ignore click because SideMenu is inaccessible for user");

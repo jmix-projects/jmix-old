@@ -15,18 +15,17 @@
  */
 package io.jmix.ui.components.impl;
 
-import io.jmix.core.commons.util.Preconditions;
-import io.jmix.ui.components.ComponentsHelper;
-import io.jmix.ui.components.*;
-import io.jmix.ui.components.HtmlAttributes.CSS;
-import io.jmix.ui.widgets.CubaHorizontalActionsLayout;
-import io.jmix.ui.widgets.CubaScrollBoxLayout;
-import io.jmix.ui.widgets.CubaVerticalActionsLayout;
-import io.jmix.ui.widgets.HtmlAttributesExtension;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.Sizeable;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.AbstractOrderedLayout;
+import io.jmix.core.commons.util.Preconditions;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.HtmlAttributes.CSS;
+import io.jmix.ui.widgets.CubaHorizontalActionsLayout;
+import io.jmix.ui.widgets.CubaScrollBoxLayout;
+import io.jmix.ui.widgets.HtmlAttributesExtension;
+import io.jmix.ui.widgets.JmixVerticalActionsLayout;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
@@ -50,7 +49,7 @@ public class WebScrollBoxLayout extends WebAbstractComponent<CubaScrollBoxLayout
         component.setWidth(100, Sizeable.Unit.PERCENTAGE);
         component.setPrimaryStyleName(SCROLLBOX_STYLENAME);
 
-        CubaVerticalActionsLayout content = new CubaVerticalActionsLayout();
+        JmixVerticalActionsLayout content = new JmixVerticalActionsLayout();
         content.setWidth(100, Sizeable.Unit.PERCENTAGE);
         content.setStyleName(SCROLLBOX_CONTENT_STYLENAME);
         component.addComponent(content);
@@ -74,8 +73,8 @@ public class WebScrollBoxLayout extends WebAbstractComponent<CubaScrollBoxLayout
         }
 
         AbstractOrderedLayout newContent = null;
-        if (orientation == Orientation.VERTICAL && !(getContent() instanceof CubaVerticalActionsLayout)) {
-            newContent = new CubaVerticalActionsLayout();
+        if (orientation == Orientation.VERTICAL && !(getContent() instanceof JmixVerticalActionsLayout)) {
+            newContent = new JmixVerticalActionsLayout();
             newContent.setWidth(100, Sizeable.Unit.PERCENTAGE);
         } else if (orientation == Orientation.HORIZONTAL && !(getContent() instanceof CubaHorizontalActionsLayout)) {
             newContent = new CubaHorizontalActionsLayout();

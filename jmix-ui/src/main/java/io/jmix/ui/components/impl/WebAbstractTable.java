@@ -82,7 +82,7 @@ import io.jmix.ui.theme.ThemeConstantsManager;
 import io.jmix.ui.widgets.CubaButton;
 import io.jmix.ui.widgets.CubaEnhancedTable;
 import io.jmix.ui.widgets.CubaEnhancedTable.AggregationInputValueChangeContext;
-import io.jmix.ui.widgets.CubaUI;
+import io.jmix.ui.AppUI;
 import io.jmix.ui.widgets.ShortcutListenerDelegate;
 import io.jmix.ui.widgets.compatibility.CubaValueChangeEvent;
 import io.jmix.ui.widgets.data.AggregationContainer;
@@ -1000,7 +1000,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                         .withHandler((sender, target) -> {
                             T tableImpl = WebAbstractTable.this.component;
 
-                            CubaUI ui = (CubaUI) tableImpl.getUI();
+                            AppUI ui = (AppUI) tableImpl.getUI();
                             if (!ui.isAccessibleForUser(tableImpl)) {
                                 LoggerFactory.getLogger(WebAbstractTable.class)
                                         .debug("Ignore click attempt because Table is inaccessible for user");
@@ -1029,7 +1029,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
             if (event.isDoubleClick() && event.getItem() != null) {
                 T tableImpl = WebAbstractTable.this.component;
 
-                CubaUI ui = (CubaUI) tableImpl.getUI();
+                AppUI ui = (AppUI) tableImpl.getUI();
                 if (!ui.isAccessibleForUser(tableImpl)) {
                     LoggerFactory.getLogger(WebAbstractTable.class)
                             .debug("Ignore click attempt because Table is inaccessible for user");

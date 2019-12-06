@@ -19,6 +19,7 @@ package io.jmix.ui.widgets;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import io.jmix.ui.AppUI;
 import io.jmix.ui.widgets.client.button.CubaButtonClientRpc;
 import io.jmix.ui.widgets.client.button.CubaButtonState;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,7 @@ public class CubaButton extends com.vaadin.ui.Button {
     @Override
     protected void fireClick() {
         // check if it cannot be clicked at all due to modal dialogs
-        CubaUI ui = (CubaUI) getUI();
+        AppUI ui = (AppUI) getUI();
         if (ui.isAccessibleForUser(this)) {
             if (clickHandler != null) {
                 clickHandler.accept(null);
@@ -69,7 +70,7 @@ public class CubaButton extends com.vaadin.ui.Button {
     @Override
     protected void fireClick(MouseEventDetails details) {
         // check if it cannot be clicked at all due to modal dialogs
-        CubaUI ui = (CubaUI) getUI();
+        AppUI ui = (AppUI) getUI();
         if (ui.isAccessibleForUser(this)) {
             try {
                 if (clickHandler != null) {

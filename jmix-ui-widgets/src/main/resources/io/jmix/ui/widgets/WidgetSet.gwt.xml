@@ -21,7 +21,7 @@
         <when-type-is class="com.vaadin.client.VTooltip"/>
     </replace-with>
 
-    <replace-with class="io.jmix.ui.widgets.client.appui.CubaUIConnector">
+    <replace-with class="io.jmix.ui.widgets.client.appui.AppUIConnector">
         <when-type-is class="com.vaadin.client.ui.ui.UIConnector"/>
     </replace-with>
 

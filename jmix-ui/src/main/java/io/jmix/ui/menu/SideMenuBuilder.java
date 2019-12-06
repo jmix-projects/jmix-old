@@ -27,7 +27,7 @@ import io.jmix.ui.components.KeyCombination;
 import io.jmix.ui.components.Window;
 import io.jmix.ui.components.mainwindow.SideMenu;
 import io.jmix.ui.screen.FrameOwner;
-import io.jmix.ui.widgets.CubaUI;
+import io.jmix.ui.AppUI;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -230,7 +230,7 @@ public class SideMenuBuilder {
         @Override
         public void handleAction(Object sender, Object target) {
             com.vaadin.ui.Component menuImpl = menuItem.getMenu().unwrap(com.vaadin.ui.Component.class);
-            CubaUI ui = (CubaUI) menuImpl.getUI();
+            AppUI ui = (AppUI) menuImpl.getUI();
             if (ui.isAccessibleForUser(menuImpl)) {
                 Consumer<SideMenu.MenuItem> command = menuItem.getCommand();
                 if (command != null) {

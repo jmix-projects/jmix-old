@@ -469,8 +469,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
             }
         }
 
-        // todo navigation
-        // urlChangeHandler.restoreState();
+        urlChangeHandler.restoreState();
 
         if (sessionIsAlive) {
             events.publish(new UIRefreshEvent(this));

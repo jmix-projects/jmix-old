@@ -55,7 +55,7 @@ import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
 import io.jmix.ui.widgets.CubaCssActionsLayout;
 import io.jmix.ui.widgets.CubaTree;
-import io.jmix.ui.widgets.CubaUI;
+import io.jmix.ui.AppUI;
 import io.jmix.ui.widgets.ShortcutListenerDelegate;
 import io.jmix.ui.widgets.addons.contextmenu.TreeContextMenu;
 import io.jmix.ui.widgets.grid.CubaMultiSelectionModel;
@@ -199,7 +199,7 @@ public class WebTree<E extends Entity>
         return new ShortcutListenerDelegate("treeEnter", KeyCode.ENTER, null)
                 .withHandler((sender, target) -> {
                     if (sender == componentComposition) {
-                        CubaUI ui = (CubaUI) componentComposition.getUI();
+                        AppUI ui = (AppUI) componentComposition.getUI();
                         if (!ui.isAccessibleForUser(componentComposition)) {
                             LoggerFactory.getLogger(WebTree.class)
                                     .debug("Ignore click attempt because Tree is inaccessible for user");
@@ -372,7 +372,7 @@ public class WebTree<E extends Entity>
 
     protected void onItemClick(com.vaadin.ui.Tree.ItemClick<E> event) {
         if (event.getMouseEventDetails().isDoubleClick()) {
-            CubaUI ui = (CubaUI) component.getUI();
+            AppUI ui = (AppUI) component.getUI();
             if (!ui.isAccessibleForUser(component)) {
                 LoggerFactory.getLogger(WebTree.class)
                         .debug("Ignore click attempt because Tree is inaccessible for user");

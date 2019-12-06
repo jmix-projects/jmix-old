@@ -18,6 +18,7 @@ package io.jmix.ui.components;
 
 import io.jmix.ui.ScreenTools;
 import io.jmix.ui.Screens;
+import io.jmix.ui.components.mainwindow.UserIndicator;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;

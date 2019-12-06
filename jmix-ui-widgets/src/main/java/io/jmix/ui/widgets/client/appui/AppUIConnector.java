@@ -17,10 +17,6 @@
 
 package io.jmix.ui.widgets.client.appui;
 
-import io.jmix.ui.widgets.CubaUI;
-import io.jmix.ui.widgets.client.clientmanager.CubaUIClientRpc;
-import io.jmix.ui.widgets.client.tooltip.CubaTooltip;
-import io.jmix.ui.widgets.client.ui.CubaUIConstants;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -30,31 +26,35 @@ import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.ui.UIConstants;
 import elemental.client.Browser;
 import elemental.html.History;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.widgets.client.tooltip.CubaTooltip;
+import io.jmix.ui.widgets.client.ui.AppUIClientRpc;
+import io.jmix.ui.widgets.client.ui.AppUIConstants;
 
 import java.util.Map;
 
-@Connect(CubaUI.class)
-public class CubaUIConnector extends UIConnector {
+@Connect(AppUI.class)
+public class AppUIConnector extends UIConnector {
 
-    public CubaUIConnector() {
+    public AppUIConnector() {
         VNotification.setRelativeZIndex(true);
 
         //noinspection Convert2Lambda
-        registerRpc(CubaUIClientRpc.class, new CubaUIClientRpc() {
+        registerRpc(AppUIClientRpc.class, new AppUIClientRpc() {
             @Override
             public void updateSystemMessagesLocale(Map<String, String> localeMap) {
                 ApplicationConfiguration conf = getConnection().getConfiguration();
                 ApplicationConfiguration.ErrorMessage communicationError = conf.getCommunicationError();
-                communicationError.setCaption(localeMap.get(CubaUIClientRpc.COMMUNICATION_ERROR_CAPTION_KEY));
-                communicationError.setMessage(localeMap.get(CubaUIClientRpc.COMMUNICATION_ERROR_MESSAGE_KEY));
+                communicationError.setCaption(localeMap.get(AppUIClientRpc.COMMUNICATION_ERROR_CAPTION_KEY));
+                communicationError.setMessage(localeMap.get(AppUIClientRpc.COMMUNICATION_ERROR_MESSAGE_KEY));
 
                 ApplicationConfiguration.ErrorMessage authError = conf.getAuthorizationError();
-                authError.setCaption(localeMap.get(CubaUIClientRpc.AUTHORIZATION_ERROR_CAPTION_KEY));
-                authError.setMessage(localeMap.get(CubaUIClientRpc.AUTHORIZATION_ERROR_MESSAGE_KEY));
+                authError.setCaption(localeMap.get(AppUIClientRpc.AUTHORIZATION_ERROR_CAPTION_KEY));
+                authError.setMessage(localeMap.get(AppUIClientRpc.AUTHORIZATION_ERROR_MESSAGE_KEY));
 
                 ApplicationConfiguration.ErrorMessage sessionExpiredError = conf.getSessionExpiredError();
-                sessionExpiredError.setCaption(localeMap.get(CubaUIClientRpc.SESSION_EXPIRED_ERROR_CAPTION_KEY));
-                sessionExpiredError.setMessage(localeMap.get(CubaUIClientRpc.SESSION_EXPIRED_ERROR_MESSAGE_KEY));
+                sessionExpiredError.setCaption(localeMap.get(AppUIClientRpc.SESSION_EXPIRED_ERROR_CAPTION_KEY));
+                sessionExpiredError.setMessage(localeMap.get(AppUIClientRpc.SESSION_EXPIRED_ERROR_MESSAGE_KEY));
             }
         });
     }
@@ -72,7 +72,7 @@ public class CubaUIConnector extends UIConnector {
 
     @Override
     protected void updateBrowserHistory(UIDL uidl) {
-        String lastHistoryOp = uidl.getStringAttribute(CubaUIConstants.LAST_HISTORY_OP);
+        String lastHistoryOp = uidl.getStringAttribute(AppUIConstants.LAST_HISTORY_OP);
 
         History history = Browser.getWindow().getHistory();
         String pageTitle = getState().pageState.title;
@@ -80,7 +80,7 @@ public class CubaUIConnector extends UIConnector {
         String replace = uidl.getStringAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE);
         String push = uidl.getStringAttribute(UIConstants.ATTRIBUTE_PUSH_STATE);
 
-        if (CubaUIConstants.HISTORY_PUSH_OP.equals(lastHistoryOp)) {
+        if (AppUIConstants.HISTORY_PUSH_OP.equals(lastHistoryOp)) {
             if (uidl.hasAttribute(UIConstants.ATTRIBUTE_REPLACE_STATE)) {
                 history.replaceState(null, pageTitle, replace);
             }

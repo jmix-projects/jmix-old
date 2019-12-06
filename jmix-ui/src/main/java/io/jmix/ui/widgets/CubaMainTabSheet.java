@@ -17,6 +17,7 @@ package io.jmix.ui.widgets;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import io.jmix.ui.AppUI;
 import io.jmix.ui.widgets.addons.dragdroplayouts.DDTabSheet;
 import io.jmix.ui.widgets.client.tabsheet.ClientAction;
 import io.jmix.ui.widgets.client.tabsheet.CubaMainTabSheetClientRpc;
@@ -114,7 +115,7 @@ public class CubaMainTabSheet extends DDTabSheet implements Action.Container, Ha
         setShim(false);
 
         setCloseHandler((tabsheet, tabContent) -> {
-            CubaUI ui = (CubaUI) tabsheet.getUI();
+            AppUI ui = (AppUI) tabsheet.getUI();
             if (!ui.isAccessibleForUser(this)) {
                 LoggerFactory.getLogger(CubaMainTabSheet.class)
                         .debug("Ignore close tab attempt because tab is inaccessible for user");
@@ -393,7 +394,7 @@ public class CubaMainTabSheet extends DDTabSheet implements Action.Container, Ha
 
         @Override
         public void closeTab(Component target) {
-            CubaUI ui = (CubaUI) tabSheet.getUI();
+            AppUI ui = (AppUI) tabSheet.getUI();
             if (!ui.isAccessibleForUser(tabSheet)) {
                 LoggerFactory.getLogger(CubaMainTabSheet.class)
                         .debug("Ignore close tab attempt because TabSheet is inaccessible for user");
@@ -405,7 +406,7 @@ public class CubaMainTabSheet extends DDTabSheet implements Action.Container, Ha
 
         @Override
         public void closeOtherTabs(Component target) {
-            CubaUI ui = (CubaUI) tabSheet.getUI();
+            AppUI ui = (AppUI) tabSheet.getUI();
             if (!ui.isAccessibleForUser(tabSheet)) {
                 LoggerFactory.getLogger(CubaMainTabSheet.class)
                         .debug("Ignore close tab attempt because TabSheet is inaccessible for user");
@@ -417,7 +418,7 @@ public class CubaMainTabSheet extends DDTabSheet implements Action.Container, Ha
 
         @Override
         public void closeAllTabs() {
-            CubaUI ui = (CubaUI) tabSheet.getUI();
+            AppUI ui = (AppUI) tabSheet.getUI();
             if (!ui.isAccessibleForUser(tabSheet)) {
                 LoggerFactory.getLogger(CubaMainTabSheet.class)
                         .debug("Ignore close tab attempt because TabSheet is inaccessible for user");

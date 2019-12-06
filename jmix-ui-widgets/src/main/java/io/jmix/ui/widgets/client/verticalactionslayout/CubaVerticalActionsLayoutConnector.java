@@ -17,12 +17,12 @@
 
 package io.jmix.ui.widgets.client.verticalactionslayout;
 
-import io.jmix.ui.widgets.CubaVerticalActionsLayout;
-import io.jmix.ui.widgets.client.orderedactionslayout.CubaOrderedActionsLayoutConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.orderedlayout.VerticalLayoutState;
+import io.jmix.ui.widgets.JmixVerticalActionsLayout;
+import io.jmix.ui.widgets.client.orderedactionslayout.CubaOrderedActionsLayoutConnector;
 
-@Connect(value = CubaVerticalActionsLayout.class, loadStyle = Connect.LoadStyle.EAGER)
+@Connect(value = JmixVerticalActionsLayout.class, loadStyle = Connect.LoadStyle.EAGER)
 public class CubaVerticalActionsLayoutConnector extends CubaOrderedActionsLayoutConnector {
 
     @Override

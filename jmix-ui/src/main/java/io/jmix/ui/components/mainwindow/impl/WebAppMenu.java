@@ -26,7 +26,7 @@ import io.jmix.ui.components.mainwindow.AppMenu;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.menu.MenuBuilder;
 import io.jmix.ui.widgets.CubaMenuBar;
-import io.jmix.ui.widgets.CubaUI;
+import io.jmix.ui.AppUI;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
@@ -429,7 +429,7 @@ public class WebAppMenu extends WebAbstractComponent<CubaMenuBar> implements App
         }
 
         protected void menuSelected(@SuppressWarnings("unused") MenuBar.MenuItem event) {
-            CubaUI ui = (CubaUI) menu.getComponent().getUI();
+            AppUI ui = (AppUI) menu.getComponent().getUI();
             if (ui.isAccessibleForUser(menu.getComponent())) {
                 this.command.accept(this);
             } else {

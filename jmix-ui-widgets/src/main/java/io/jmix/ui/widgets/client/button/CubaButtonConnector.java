@@ -22,8 +22,9 @@ import io.jmix.ui.widgets.CubaButton;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.button.ButtonConnector;
 import com.vaadin.shared.ui.Connect;
+import io.jmix.ui.widgets.JmixButton;
 
-@Connect(value = CubaButton.class)
+@Connect(value = JmixButton.class)
 public class CubaButtonConnector extends ButtonConnector {
 
     public static final String ICON_STYLE = "icon";

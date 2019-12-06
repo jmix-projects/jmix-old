@@ -19,7 +19,7 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.Component;
 import io.jmix.ui.components.KeyCombination;
 import io.jmix.ui.components.mainwindow.AppMenu;
-import io.jmix.ui.widgets.CubaUI;
+import io.jmix.ui.AppUI;
 import org.slf4j.LoggerFactory;
 
 public class MenuShortcutAction extends ShortcutListener {
@@ -40,7 +40,7 @@ public class MenuShortcutAction extends ShortcutListener {
     @Override
     public void handleAction(Object sender, Object target) {
         Component menuImpl = menuItem.getMenu().unwrap(Component.class);
-        CubaUI ui = (CubaUI) menuImpl.getUI();
+        AppUI ui = (AppUI) menuImpl.getUI();
         if (ui.isAccessibleForUser(menuImpl)) {
             menuItem.getCommand().accept(menuItem);
         } else {

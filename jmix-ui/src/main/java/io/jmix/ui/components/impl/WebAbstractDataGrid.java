@@ -349,7 +349,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
     }
 
     protected void onItemClick(Grid.ItemClick<E> e) {
-        CubaUI ui = (CubaUI) component.getUI();
+        AppUI ui = (AppUI) component.getUI();
         if (!ui.isAccessibleForUser(component)) {
             LoggerFactory.getLogger(WebDataGrid.class)
                     .debug("Ignore click attempt because DataGrid is inaccessible for user");
@@ -475,7 +475,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
                             return;
                         }
 
-                        CubaUI ui = (CubaUI) componentComposition.getUI();
+                        AppUI ui = (AppUI) componentComposition.getUI();
                         if (!ui.isAccessibleForUser(componentComposition)) {
                             LoggerFactory.getLogger(WebDataGrid.class)
                                     .debug("Ignore click attempt because DataGrid is inaccessible for user");

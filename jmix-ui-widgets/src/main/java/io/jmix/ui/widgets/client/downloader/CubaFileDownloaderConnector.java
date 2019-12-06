@@ -23,12 +23,12 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
-import io.jmix.ui.widgets.CubaFileDownloader;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.ui.Connect;
+import io.jmix.ui.widgets.JmixFileDownloader;
 
-@Connect(CubaFileDownloader.class)
+@Connect(JmixFileDownloader.class)
 public class CubaFileDownloaderConnector extends AbstractExtensionConnector {
 
     public CubaFileDownloaderConnector() {

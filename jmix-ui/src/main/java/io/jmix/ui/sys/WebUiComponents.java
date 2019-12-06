@@ -20,9 +20,13 @@ import com.google.common.reflect.TypeToken;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.DevelopmentException;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
-import io.jmix.ui.components.*;
-import io.jmix.ui.components.impl.*;
 import io.jmix.ui.UiComponents;
+import io.jmix.ui.components.AppWorkArea;
+import io.jmix.ui.components.*;
+import io.jmix.ui.components.impl.WebAppWorkArea;
+import io.jmix.ui.components.impl.*;
+import io.jmix.ui.components.mainwindow.*;
+import io.jmix.ui.components.mainwindow.impl.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -54,26 +58,96 @@ public class WebUiComponents implements UiComponents {
 
     {
         classes.put(RootWindow.NAME, WebRootWindow.class);
+        classes.put(TabWindow.NAME, WebTabWindow.class);
+        classes.put(DialogWindow.NAME, WebDialogWindow.class);
         classes.put(Fragment.NAME, WebFragment.class);
-        classes.put(Label.NAME, WebLabel.class);
-        classes.put(Button.NAME, WebButton.class);
 
-        // todo components
+        classes.put(HBoxLayout.NAME, WebHBoxLayout.class);
         classes.put(VBoxLayout.NAME, WebVBoxLayout.class);
+        classes.put(GridLayout.NAME, WebGridLayout.class);
+        classes.put(ScrollBoxLayout.NAME, WebScrollBoxLayout.class);
+        classes.put(HtmlBoxLayout.NAME, WebHtmlBoxLayout.class);
+        classes.put(FlowBoxLayout.NAME, WebFlowBoxLayout.class);
+        classes.put(CssLayout.NAME, WebCssLayout.class);
+
+        classes.put(Button.NAME, WebButton.class);
+        classes.put(LinkButton.NAME, WebLinkButton.class);
+        classes.put(Label.NAME, WebLabel.class);
+        classes.put(Link.NAME, WebLink.class);
+        classes.put(CheckBox.NAME, WebCheckBox.class);
+        classes.put(GroupBoxLayout.NAME, WebGroupBox.class);
+        classes.put(SourceCodeEditor.NAME, WebSourceCodeEditor.class);
+        classes.put(TextField.NAME, WebTextField.class);
+        classes.put(PasswordField.NAME, WebPasswordField.class);
+        classes.put(Slider.NAME, WebSlider.class);
+
+        classes.put(ResizableTextArea.NAME, WebResizableTextArea.class);
+        classes.put(TextArea.NAME, WebTextArea.class);
+        classes.put(RichTextArea.NAME, WebRichTextArea.class);
+        classes.put(MaskedField.NAME, WebMaskedField.class);
+
+        classes.put(Table.NAME, WebTable.class);
+        classes.put(TreeTable.NAME, WebTreeTable.class);
+        classes.put(GroupTable.NAME, WebGroupTable.class);
+        classes.put(DataGrid.NAME, WebDataGrid.class);
+        classes.put(TreeDataGrid.NAME, WebTreeDataGrid.class);
+        classes.put(DateField.NAME, WebDateField.class);
+        classes.put(TimeField.NAME, WebTimeField.class);
         classes.put(LookupField.NAME, WebLookupField.class);
+        classes.put(SearchField.NAME, WebSearchField.class);
+        classes.put(PickerField.NAME, WebPickerField.class);
+        classes.put(SuggestionField.NAME, WebSuggestionField.class);
+        classes.put(SuggestionPickerField.NAME, WebSuggestionPickerField.class);
+        classes.put(ColorPicker.NAME, WebColorPicker.class);
+        classes.put(LookupPickerField.NAME, WebLookupPickerField.class);
+        classes.put(SearchPickerField.NAME, WebSearchPickerField.class);
+        classes.put(OptionsGroup.NAME, WebOptionsGroup.class);
+        classes.put(CheckBoxGroup.NAME, WebCheckBoxGroup.class);
+        classes.put(RadioButtonGroup.NAME, WebRadioButtonGroup.class);
+        classes.put(OptionsList.NAME, WebOptionsList.class);
+//        classes.put(FileUploadField.NAME, WebFileUploadField.class); // todo file upload
+//        classes.put(FileMultiUploadField.NAME, WebFileMultiUploadField.class);
+        classes.put(CurrencyField.NAME, WebCurrencyField.class);
+        classes.put(SplitPanel.NAME, WebSplitPanel.class);
+        classes.put(Tree.NAME, WebTree.class);
+        classes.put(TabSheet.NAME, WebTabSheet.class);
+        classes.put(Accordion.NAME, WebAccordion.class);
+        classes.put(Calendar.NAME, WebCalendar.class);
+        classes.put(Embedded.NAME, WebEmbedded.class);
+        classes.put(Image.NAME, WebImage.class);
+        classes.put(BrowserFrame.NAME, WebBrowserFrame.class);
+//        classes.put(Filter.NAME, WebFilter.class); // todo filter
+        classes.put(ButtonsPanel.NAME, WebButtonsPanel.class);
+        classes.put(PopupButton.NAME, WebPopupButton.class);
+        classes.put(PopupView.NAME, WebPopupView.class);
+
+        classes.put(FieldGroup.NAME, WebFieldGroup.class);
+        classes.put(TokenList.NAME, WebTokenList.class);
+        classes.put(TwinColumn.NAME, WebTwinColumn.class);
+        classes.put(ProgressBar.NAME, WebProgressBar.class);
+        classes.put(RowsCount.NAME, WebRowsCount.class);
+//        classes.put(RelatedEntities.NAME, WebRelatedEntities.class); // todo dynamic attributes
+        classes.put(BulkEditor.NAME, WebBulkEditor.class);
+        classes.put(DatePicker.NAME, WebDatePicker.class);
+//        classes.put(ListEditor.NAME, WebListEditor.class); // todo
+        classes.put(CapsLockIndicator.NAME, WebCapsLockIndicator.class);
+
+        classes.put(Form.NAME, WebForm.class);
+
+        classes.put(EntityLinkField.NAME, WebEntityLinkField.class);
 
         /* Main window components */
 
-//        classes.put(AppMenu.NAME, WebAppMenu.class);
+        classes.put(AppMenu.NAME, WebAppMenu.class);
         classes.put(AppWorkArea.NAME, WebAppWorkArea.class);
-//        classes.put(UserActionsButton.NAME, WebUserActionsButton.class);
-//        classes.put(LogoutButton.NAME, WebLogoutButton.class);
-//        classes.put(NewWindowButton.NAME, WebNewWindowButton.class);
-//        classes.put(UserIndicator.NAME, WebUserIndicator.class);
-//        classes.put(FoldersPane.NAME, WebFoldersPane.class);
-//        classes.put(FtsField.NAME, WebFtsField.class);
-//        classes.put(TimeZoneIndicator.NAME, WebTimeZoneIndicator.class);
-//        classes.put(SideMenu.NAME, WebSideMenu.class);
+        classes.put(UserActionsButton.NAME, WebUserActionsButton.class);
+        classes.put(LogoutButton.NAME, WebLogoutButton.class);
+        classes.put(NewWindowButton.NAME, WebNewWindowButton.class);
+        classes.put(UserIndicator.NAME, WebUserIndicator.class);
+//        classes.put(FoldersPane.NAME, WebFoldersPane.class); // todo folder pane
+//        classes.put(FtsField.NAME, WebFtsField.class); // todo fts
+        classes.put(TimeZoneIndicator.NAME, WebTimeZoneIndicator.class);
+        classes.put(SideMenu.NAME, WebSideMenu.class);
     }
 
     @SuppressWarnings("unchecked")

@@ -16,6 +16,7 @@
 
 package io.jmix.ui.widgets;
 
+import io.jmix.ui.AppUI;
 import io.jmix.ui.widgets.client.tabsheet.ClientAction;
 import io.jmix.ui.widgets.client.window.CubaWindowClientRpc;
 import io.jmix.ui.widgets.client.window.CubaWindowServerRpc;
@@ -189,7 +190,7 @@ public class CubaWindow extends Window {
 
     @Override
     public void close() {
-        CubaUI ui = (CubaUI) getUI();
+        AppUI ui = (AppUI) getUI();
         if (!ui.isAccessibleForUser(this)) {
             LoggerFactory.getLogger(CubaWindow.class)
                     .debug("Ignore close window attempt because Window is inaccessible for user");

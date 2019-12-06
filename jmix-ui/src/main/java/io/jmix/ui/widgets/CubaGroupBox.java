@@ -37,7 +37,7 @@ public class CubaGroupBox extends Panel implements ComponentContainer {
             }
         });
 
-        Layout content = new CubaVerticalActionsLayout();
+        Layout content = new JmixVerticalActionsLayout();
         setContent(content);
 
         setWidth(100, Unit.PERCENTAGE);

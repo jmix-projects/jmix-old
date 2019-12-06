@@ -230,8 +230,12 @@ public class UrlChangeHandler implements InitializingBean {
     }
 
     public NavigationState getResolvedState(@Nullable Screen screen) {
-        return screen != null
-                ? ((WebWindow) screen.getWindow()).getResolvedState()
+        if (screen == null) {
+            return NavigationState.EMPTY;
+        }
+        NavigationState resolvedState = ((WebWindow) screen.getWindow()).getResolvedState();
+        return resolvedState != null
+                ? resolvedState
                 : NavigationState.EMPTY;
     }
 

@@ -23,6 +23,7 @@ import io.jmix.ui.ClientConfig;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.Screens;
 import io.jmix.ui.components.compatibility.*;
+import io.jmix.ui.components.mainwindow.UserIndicator;
 import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.model.cuba.DsContext;
 import io.jmix.ui.screen.*;

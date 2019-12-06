@@ -15,17 +15,16 @@
  */
 package io.jmix.ui.components.impl;
 
+import com.vaadin.event.ShortcutListener;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.ui.AbstractOrderedLayout;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.*;
 import io.jmix.ui.widgets.CubaGroupBox;
 import io.jmix.ui.widgets.CubaHorizontalActionsLayout;
 import io.jmix.ui.widgets.CubaOrderedActionsLayout;
-import io.jmix.ui.widgets.CubaVerticalActionsLayout;
-import com.vaadin.event.ShortcutListener;
-import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.AbstractOrderedLayout;
+import io.jmix.ui.widgets.JmixVerticalActionsLayout;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
@@ -53,7 +52,7 @@ public class WebGroupBox extends WebAbstractComponent<CubaGroupBox> implements G
         component.addStyleName(GROUPBOX_PANEL_STYLENAME);
         component.setExpandChangeHandler(this::fireExpandStateChange);
 
-        CubaVerticalActionsLayout container = new CubaVerticalActionsLayout();
+        JmixVerticalActionsLayout container = new JmixVerticalActionsLayout();
         container.setStyleName("c-groupbox-inner");
         component.setContent(container);
     }
@@ -70,8 +69,8 @@ public class WebGroupBox extends WebAbstractComponent<CubaGroupBox> implements G
         }
 
         AbstractOrderedLayout newContent = null;
-        if (orientation == Orientation.VERTICAL && !(component.getContent() instanceof CubaVerticalActionsLayout)) {
-            newContent = new CubaVerticalActionsLayout();
+        if (orientation == Orientation.VERTICAL && !(component.getContent() instanceof JmixVerticalActionsLayout)) {
+            newContent = new JmixVerticalActionsLayout();
         } else if (orientation == Orientation.HORIZONTAL && !(component.getContent() instanceof CubaHorizontalActionsLayout)) {
             newContent = new CubaHorizontalActionsLayout();
         }

@@ -16,7 +16,6 @@
 
 package io.jmix.ui.navigation;
 
-import io.jmix.ui.sys.PersistenceHelper;
 import com.vaadin.server.Page;
 import io.jmix.core.Events;
 import io.jmix.core.Metadata;
@@ -32,9 +31,10 @@ import io.jmix.ui.screen.OpenMode;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.sys.ControllerUtils;
+import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.ui.sys.UiDescriptorUtils;
 import io.jmix.ui.sys.WebScreens;
-import io.jmix.ui.widgets.client.ui.CubaUIConstants;
+import io.jmix.ui.widgets.client.ui.AppUIConstants;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -70,7 +70,7 @@ public class WebUrlRouting implements UrlRouting {
 
     protected AppUI ui;
 
-    protected String lastHistoryOperation = CubaUIConstants.HISTORY_PUSH_OP;
+    protected String lastHistoryOperation = AppUIConstants.HISTORY_PUSH_OP;
 
     public WebUrlRouting(AppUI ui) {
         this.ui = ui;
@@ -124,11 +124,11 @@ public class WebUrlRouting implements UrlRouting {
                 || isNotFoundScreen(screen)) {
             urlTools.replaceState(newState.asRoute(), ui);
 
-            lastHistoryOperation = CubaUIConstants.HISTORY_REPLACE_OP;
+            lastHistoryOperation = AppUIConstants.HISTORY_REPLACE_OP;
         } else {
             urlTools.pushState(newState.asRoute(), ui);
 
-            lastHistoryOperation = CubaUIConstants.HISTORY_PUSH_OP;
+            lastHistoryOperation = AppUIConstants.HISTORY_PUSH_OP;
         }
 
         ((WebWindow) screen.getWindow()).setResolvedState(newState);

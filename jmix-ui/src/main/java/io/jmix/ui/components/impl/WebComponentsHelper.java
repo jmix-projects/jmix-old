@@ -17,16 +17,16 @@
 package io.jmix.ui.components.impl;
 
 import com.vaadin.server.Sizeable;
-import com.vaadin.ui.*;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet;
-import io.jmix.ui.components.*;
+import com.vaadin.ui.*;
 import io.jmix.ui.components.ComponentContainer;
+import io.jmix.ui.components.*;
 import io.jmix.ui.widgets.CubaGroupBox;
 import io.jmix.ui.widgets.CubaHorizontalActionsLayout;
 import io.jmix.ui.widgets.CubaScrollBoxLayout;
-import io.jmix.ui.widgets.CubaVerticalActionsLayout;
+import io.jmix.ui.widgets.JmixVerticalActionsLayout;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
@@ -108,7 +108,7 @@ public class WebComponentsHelper {
 
     public static boolean isVerticalLayout(AbstractOrderedLayout layout) {
         return (layout instanceof VerticalLayout)
-                || (layout instanceof CubaVerticalActionsLayout);
+                || (layout instanceof JmixVerticalActionsLayout);
     }
 
     public static boolean isHorizontalLayout(AbstractOrderedLayout layout) {

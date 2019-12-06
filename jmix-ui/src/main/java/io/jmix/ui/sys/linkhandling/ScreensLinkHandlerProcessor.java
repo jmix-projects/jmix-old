@@ -28,9 +28,11 @@ import io.jmix.ui.components.compatibility.WindowManager.OpenType;
 import io.jmix.ui.exception.AccessDeniedHandler;
 import io.jmix.ui.exception.EntityAccessExceptionHandler;
 import io.jmix.ui.exception.NoSuchScreenHandler;
+import io.jmix.ui.sys.ActionsConfiguration;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
@@ -44,8 +46,7 @@ import static java.lang.String.format;
 public class ScreensLinkHandlerProcessor implements LinkHandlerProcessor, Ordered {
     public static final String NAME = "cuba_ScreensLinkHandlerProcessor";
 
-    @Inject
-    private Logger log;
+    private static final Logger log = LoggerFactory.getLogger(ScreensLinkHandlerProcessor.class);
 
     @Inject
     protected Metadata metadata;

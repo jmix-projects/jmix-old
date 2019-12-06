@@ -598,7 +598,7 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
             return;
         }
 
-        CubaUI ui = (CubaUI) this.getComponent().getUI();
+        AppUI ui = (AppUI) this.getComponent().getUI();
         if (!ui.isAccessibleForUser(this.getComponent())) {
             LoggerFactory.getLogger(WebAppWorkArea.class)
                     .debug("Ignore close shortcut attempt because workArea is inaccessible for user");
