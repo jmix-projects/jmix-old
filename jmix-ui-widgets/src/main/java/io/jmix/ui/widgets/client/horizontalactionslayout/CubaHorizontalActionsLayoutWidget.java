@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.horizontalactionslayout;
 
-import com.haulmont.cuba.web.widgets.client.orderedactionslayout.CubaOrderedActionsLayoutWidget;
+import io.jmix.ui.widgets.client.orderedactionslayout.CubaOrderedActionsLayoutWidget;
 
 public class CubaHorizontalActionsLayoutWidget extends CubaOrderedActionsLayoutWidget {
 

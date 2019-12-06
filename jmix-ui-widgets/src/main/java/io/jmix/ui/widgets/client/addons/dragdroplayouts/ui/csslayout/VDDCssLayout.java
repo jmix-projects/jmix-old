@@ -17,13 +17,13 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.DDCssLayout;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.VDragFilter;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.VGrabFilter;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.*;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.VLayoutDragDropMouseHandler.DragStartListener;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.*;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.util.IframeCoverUtility;
+import io.jmix.ui.widgets.addons.dragdroplayouts.DDCssLayout;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.VDragFilter;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.VGrabFilter;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.*;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.*;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.util.IframeCoverUtility;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
@@ -387,7 +387,7 @@ public class VDDCssLayout extends VCssLayout implements VHasDragMode,
     /*
      * (non-Javadoc)
      * 
-     * @see com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.VHasDragFilter#
+     * @see io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.VHasDragFilter#
      * getDragFilter ()
      */
     public VDragFilter getDragFilter() {

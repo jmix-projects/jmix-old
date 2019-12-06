@@ -19,7 +19,7 @@ package io.jmix.ui.widgets.client.datefield;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.haulmont.cuba.web.widgets.client.textfield.CubaMaskedFieldWidget;
+import io.jmix.ui.widgets.client.textfield.CubaMaskedFieldWidget;
 import com.vaadin.client.DateTimeService;
 import com.vaadin.client.ui.ShortcutActionHandler;
 import com.vaadin.client.ui.VPopupCalendar;

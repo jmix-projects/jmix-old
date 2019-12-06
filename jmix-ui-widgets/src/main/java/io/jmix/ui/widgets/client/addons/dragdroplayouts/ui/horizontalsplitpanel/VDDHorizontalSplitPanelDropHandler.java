@@ -13,8 +13,8 @@
  */
 package io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.horizontalsplitpanel;
 
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.Constants;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.VDDAbstractDropHandler;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.Constants;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.VDDAbstractDropHandler;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ui.dd.VAcceptCallback;
 import com.vaadin.client.ui.dd.VDragEvent;

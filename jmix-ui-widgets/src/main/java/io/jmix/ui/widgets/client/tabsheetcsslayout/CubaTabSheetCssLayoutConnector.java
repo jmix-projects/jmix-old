@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.tabsheetcsslayout;
 
-import com.haulmont.cuba.web.widgets.CubaTabSheetCssLayout;
+import io.jmix.ui.widgets.CubaTabSheetCssLayout;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ConnectorHierarchyChangeEvent;
 import com.vaadin.client.VCaption;

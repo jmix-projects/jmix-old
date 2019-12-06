@@ -17,7 +17,7 @@
 package io.jmix.ui.widgets.client.verticalmenu;
 
 import com.google.gwt.dom.client.Element;
-import com.haulmont.cuba.web.widgets.CubaSideMenu;
+import io.jmix.ui.widgets.CubaSideMenu;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;

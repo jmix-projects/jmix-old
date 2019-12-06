@@ -50,7 +50,7 @@ public class CubaTextAreaWidget extends VTextArea {
         var temp = this;  // hack to hold on to 'this' reference
 
         var listener = $entry(function (e) {
-            temp.@com.haulmont.cuba.web.widgets.client.textarea.CubaTextAreaWidget::handleInput()();
+            temp.@io.jmix.ui.widgets.client.textarea.CubaTextAreaWidget::handleInput()();
         });
 
         if (elementID.addEventListener) {

@@ -22,8 +22,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.haulmont.cuba.web.widgets.client.addons.popupbutton.VPopupButton;
-import com.haulmont.cuba.web.widgets.client.jqueryfileupload.CubaFileUploadWidget;
+import io.jmix.ui.widgets.client.addons.popupbutton.VPopupButton;
+import io.jmix.ui.widgets.client.jqueryfileupload.CubaFileUploadWidget;
 import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VUpload;
 

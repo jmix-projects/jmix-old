@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.renderers.widgets.progressbar;
 
-import com.haulmont.cuba.web.widgets.client.grid.HasClickSettings;
+import io.jmix.ui.widgets.client.grid.HasClickSettings;
 import com.vaadin.client.ui.VProgressBar;
 
 public class CubaProgressBarWidget extends VProgressBar implements HasClickSettings {

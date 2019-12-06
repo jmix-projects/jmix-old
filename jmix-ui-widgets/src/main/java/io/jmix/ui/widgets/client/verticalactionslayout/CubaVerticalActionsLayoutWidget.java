@@ -19,7 +19,7 @@ package io.jmix.ui.widgets.client.verticalactionslayout;
 
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
-import com.haulmont.cuba.web.widgets.client.orderedactionslayout.CubaOrderedActionsLayoutWidget;
+import io.jmix.ui.widgets.client.orderedactionslayout.CubaOrderedActionsLayoutWidget;
 import com.vaadin.client.ComputedStyle;
 
 public class CubaVerticalActionsLayoutWidget extends CubaOrderedActionsLayoutWidget {

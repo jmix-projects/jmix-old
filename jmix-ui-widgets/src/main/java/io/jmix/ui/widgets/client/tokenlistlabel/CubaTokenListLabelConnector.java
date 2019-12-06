@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.tokenlistlabel;
 
-import com.haulmont.cuba.web.widgets.CubaTokenListLabel;
+import io.jmix.ui.widgets.CubaTokenListLabel;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.csslayout.CssLayoutConnector;
 import com.vaadin.shared.ui.Connect;

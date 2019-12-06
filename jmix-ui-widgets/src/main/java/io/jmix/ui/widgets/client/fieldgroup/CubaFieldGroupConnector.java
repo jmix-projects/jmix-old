@@ -17,8 +17,8 @@
 
 package io.jmix.ui.widgets.client.fieldgroup;
 
-import com.haulmont.cuba.web.widgets.CubaFieldGroup;
-import com.haulmont.cuba.web.widgets.client.groupbox.CubaGroupBoxConnector;
+import io.jmix.ui.widgets.CubaFieldGroup;
+import io.jmix.ui.widgets.client.groupbox.CubaGroupBoxConnector;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
 

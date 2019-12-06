@@ -1,8 +1,8 @@
 package io.jmix.ui.widgets.client.treegrid;
 
-import com.haulmont.cuba.web.widgets.CubaTreeGrid;
-import com.haulmont.cuba.web.widgets.client.grid.CubaGridServerRpc;
-import com.haulmont.cuba.web.widgets.client.grid.CubsGridClientRpc;
+import io.jmix.ui.widgets.CubaTreeGrid;
+import io.jmix.ui.widgets.client.grid.CubaGridServerRpc;
+import io.jmix.ui.widgets.client.grid.CubsGridClientRpc;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.treegrid.TreeGridConnector;
 import com.vaadin.client.widgets.Grid;

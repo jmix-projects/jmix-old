@@ -16,10 +16,10 @@
 
 package io.jmix.ui.widgets.client.scrollboxlayout;
 
-import com.haulmont.cuba.web.widgets.CubaScrollBoxLayout;
-import com.haulmont.cuba.web.widgets.client.cssactionslayout.CubaCssActionsLayoutConnector;
-import com.haulmont.cuba.web.widgets.client.cubascrollboxlayout.CubaScrollBoxLayoutServerRpc;
-import com.haulmont.cuba.web.widgets.client.cubascrollboxlayout.CubaScrollBoxLayoutState;
+import io.jmix.ui.widgets.CubaScrollBoxLayout;
+import io.jmix.ui.widgets.client.cssactionslayout.CubaCssActionsLayoutConnector;
+import io.jmix.ui.widgets.client.cubascrollboxlayout.CubaScrollBoxLayoutServerRpc;
+import io.jmix.ui.widgets.client.cubascrollboxlayout.CubaScrollBoxLayoutState;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.SimpleManagedLayout;
 import com.vaadin.shared.ui.Connect;

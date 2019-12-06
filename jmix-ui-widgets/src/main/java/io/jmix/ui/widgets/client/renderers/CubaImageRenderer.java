@@ -19,7 +19,7 @@ package io.jmix.ui.widgets.client.renderers;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Image;
-import com.haulmont.cuba.web.widgets.client.renderers.widgets.image.CubaImageWidget;
+import io.jmix.ui.widgets.client.renderers.widgets.image.CubaImageWidget;
 import com.vaadin.client.renderers.ImageRenderer;
 import com.vaadin.client.widget.grid.RendererCellReference;
 

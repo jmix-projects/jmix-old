@@ -13,7 +13,7 @@
  */
 package io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.panel;
 
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.VDDAbstractDropHandler;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.VDDAbstractDropHandler;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.VConsole;
 import com.vaadin.client.ui.dd.VAcceptCallback;

@@ -15,11 +15,11 @@ package io.jmix.ui.widgets.client.addons.aceeditor;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Window;
-import com.haulmont.cuba.web.widgets.addons.aceeditor.SuggestionExtension;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceEditorWidget.SelectionChangeListener;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.SuggestPopup.SuggestionSelectedListener;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceKeyboardEvent;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceKeyboardHandler;
+import io.jmix.ui.widgets.addons.aceeditor.SuggestionExtension;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceEditorWidget.SelectionChangeListener;
+import io.jmix.ui.widgets.client.addons.aceeditor.SuggestPopup.SuggestionSelectedListener;
+import io.jmix.ui.widgets.client.addons.aceeditor.gwt.GwtAceKeyboardEvent;
+import io.jmix.ui.widgets.client.addons.aceeditor.gwt.GwtAceKeyboardHandler;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;

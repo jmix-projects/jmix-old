@@ -14,12 +14,12 @@
 package io.jmix.ui.widgets.client.addons.aceeditor;
 
 import com.google.gwt.core.client.JsArray;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceAnnotation.MarkerAnnotation;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceAnnotation.RowAnnotation;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.GwtTextDiff.Diff;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.GwtTextDiff.Patch;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDoc.TransportMarkerAnnotation;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.TransportDoc.TransportRowAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceAnnotation.MarkerAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceAnnotation.RowAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.GwtTextDiff.Diff;
+import io.jmix.ui.widgets.client.addons.aceeditor.GwtTextDiff.Patch;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDoc.TransportMarkerAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.TransportDoc.TransportRowAnnotation;
 
 import java.util.Collections;
 import java.util.Map;

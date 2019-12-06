@@ -93,7 +93,7 @@ public class GwtAceEditor extends JavaScriptObject {
 
 	public final native void addChangeHandler(GwtAceChangeHandler handler) /*-{
 		var cb = function(event) {
-			handler.@com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceChangeHandler::onChange(Lcom/haulmont/cuba/web/widgets/client/addons/aceeditor/gwt/GwtAceChangeEvent;)(event);
+			handler.@io.jmix.ui.widgets.client.addons.aceeditor.gwt.GwtAceChangeHandler::onChange(Lio/jmix/ui/widgets/client/addons/aceeditor/gwt/GwtAceChangeEvent;)(event);
 		}
 		this.getSession().addEventListener("change", cb, true);
 	}-*/;
@@ -101,7 +101,7 @@ public class GwtAceEditor extends JavaScriptObject {
 	public final native void addChangeCursorHandler(
 			GwtAceChangeCursorHandler handler) /*-{
 		var cb = function(event) {
-			handler.@com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceChangeCursorHandler::onChangeCursor(Lcom/haulmont/cuba/web/widgets/client/addons/aceeditor/gwt/GwtAceEvent;)(event);
+			handler.@io.jmix.ui.widgets.client.addons.aceeditor.gwt.GwtAceChangeCursorHandler::onChangeCursor(Lio/jmix/ui/widgets/client/addons/aceeditor/gwt/GwtAceEvent;)(event);
 		}
 		this.getSession().getSelection().addEventListener("changeCursor" ,cb, true);
 	}-*/;
@@ -109,7 +109,7 @@ public class GwtAceEditor extends JavaScriptObject {
 	public final native void addChangeSelectionHandler(
 			GwtAceChangeSelectionHandler handler) /*-{
 		var cb = function(event) {
-			handler.@com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceChangeSelectionHandler::onChangeSelection(Lcom/haulmont/cuba/web/widgets/client/addons/aceeditor/gwt/GwtAceEvent;)(event);
+			handler.@io.jmix.ui.widgets.client.addons.aceeditor.gwt.GwtAceChangeSelectionHandler::onChangeSelection(Lio/jmix/ui/widgets/client/addons/aceeditor/gwt/GwtAceEvent;)(event);
 		}
 		this.getSession().getSelection().addEventListener("changeSelection" ,cb, true);
 	}-*/;
@@ -124,8 +124,8 @@ public class GwtAceEditor extends JavaScriptObject {
 			//		return;
 			//	}
 			
-			var command = handler.@com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceKeyboardHandler::handleKeyboard(Lcom/google/gwt/core/client/JavaScriptObject;ILjava/lang/String;ILcom/haulmont/cuba/web/widgets/client/addons/aceeditor/gwt/GwtAceKeyboardEvent;)(data, hashId, keyString, keyCode, e);
-			if (command===@com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceKeyboardHandler$Command::NULL) {
+			var command = handler.@io.jmix.ui.widgets.client.addons.aceeditor.gwt.GwtAceKeyboardHandler::handleKeyboard(Lcom/google/gwt/core/client/JavaScriptObject;ILjava/lang/String;ILio/jmix/ui/widgets/client/addons/aceeditor/gwt/GwtAceKeyboardEvent;)(data, hashId, keyString, keyCode, e);
+			if (command===@io.jmix.ui.widgets.client.addons.aceeditor.gwt.GwtAceKeyboardHandler$Command::NULL) {
 				return {command: "null"};
 			}
 		}};
@@ -134,10 +134,10 @@ public class GwtAceEditor extends JavaScriptObject {
 
 	public final native void addFocusListener(GwtAceFocusBlurHandler handler) /*-{
 		var focus = function(event) {
-			handler.@com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceFocusBlurHandler::onFocus(Lcom/haulmont/cuba/web/widgets/client/addons/aceeditor/gwt/GwtAceEvent;)(event);
+			handler.@io.jmix.ui.widgets.client.addons.aceeditor.gwt.GwtAceFocusBlurHandler::onFocus(Lio/jmix/ui/widgets/client/addons/aceeditor/gwt/GwtAceEvent;)(event);
 		}
 		var blur = function(event) {
-			handler.@com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceFocusBlurHandler::onBlur(Lcom/haulmont/cuba/web/widgets/client/addons/aceeditor/gwt/GwtAceEvent;)(event);
+			handler.@io.jmix.ui.widgets.client.addons.aceeditor.gwt.GwtAceFocusBlurHandler::onBlur(Lio/jmix/ui/widgets/client/addons/aceeditor/gwt/GwtAceEvent;)(event);
 		}
 		this.addEventListener("focus", focus, true);
 		this.addEventListener("blur", blur, true);

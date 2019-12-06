@@ -19,7 +19,7 @@ package io.jmix.ui.widgets.client.html;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.user.client.ui.Widget;
-import com.haulmont.cuba.web.widgets.HtmlAttributesExtension;
+import io.jmix.ui.widgets.HtmlAttributesExtension;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static com.haulmont.cuba.web.widgets.client.html.HtmlAttributesExtensionState.DEFAULT_SELECTOR;
+import static io.jmix.ui.widgets.client.html.HtmlAttributesExtensionState.DEFAULT_SELECTOR;
 
 @Connect(HtmlAttributesExtension.class)
 public class HtmlAttributesExtensionConnector extends AbstractExtensionConnector {

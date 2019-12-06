@@ -16,15 +16,15 @@ package io.jmix.ui.widgets.client.addons.dragdroplayouts.v7.ui.verticallayout;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.WidgetCollection;
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.v7.DDVerticalLayout;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.VDragFilter;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.Constants;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.VDragDropUtil;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.VLayoutDragDropMouseHandler;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.VLayoutDragDropMouseHandler.DragStartListener;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.*;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.util.IframeCoverUtility;
+import io.jmix.ui.widgets.addons.dragdroplayouts.v7.DDVerticalLayout;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.VDragFilter;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.Constants;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.VDragDropUtil;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.VLayoutDragDropMouseHandler;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.VLayoutDragDropMouseHandler.DragStartListener;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.*;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.util.IframeCoverUtility;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.MouseEventDetailsBuilder;
 import com.vaadin.client.Util;
@@ -276,7 +276,7 @@ public class VDDVerticalLayout extends VVerticalLayout implements VHasDragMode,
     /*
      * (non-Javadoc)
      * 
-     * @see com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.VHasDragFilter#
+     * @see io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.VHasDragFilter#
      * getDragFilter ()
      */
     public VDragFilter getDragFilter() {

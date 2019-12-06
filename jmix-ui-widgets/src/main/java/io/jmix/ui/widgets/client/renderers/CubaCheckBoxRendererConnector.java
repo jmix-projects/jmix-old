@@ -19,7 +19,7 @@ package io.jmix.ui.widgets.client.renderers;
 import com.vaadin.client.connectors.AbstractRendererConnector;
 import com.vaadin.shared.ui.Connect;
 
-@Connect(com.haulmont.cuba.web.widgets.renderers.CubaCheckBoxRenderer.class)
+@Connect(io.jmix.ui.widgets.renderers.CubaCheckBoxRenderer.class)
 public class CubaCheckBoxRendererConnector extends AbstractRendererConnector<Boolean> {
 
     @Override

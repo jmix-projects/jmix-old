@@ -18,7 +18,7 @@
 package io.jmix.ui.widgets.client.button;
 
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.haulmont.cuba.web.widgets.CubaButton;
+import io.jmix.ui.widgets.CubaButton;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.button.ButtonConnector;
 import com.vaadin.shared.ui.Connect;

@@ -22,9 +22,9 @@ import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.haulmont.cuba.web.widgets.CubaTable;
-import com.haulmont.cuba.web.widgets.client.tableshared.CubaTableShortcutActionHandler;
-import com.haulmont.cuba.web.widgets.client.tableshared.TableCellClickListener;
+import io.jmix.ui.widgets.CubaTable;
+import io.jmix.ui.widgets.client.tableshared.CubaTableShortcutActionHandler;
+import io.jmix.ui.widgets.client.tableshared.TableCellClickListener;
 import com.vaadin.client.*;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
@@ -33,7 +33,7 @@ import com.vaadin.v7.client.ui.table.TableConnector;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static com.haulmont.cuba.web.widgets.client.Tools.findCurrentOrParentTd;
+import static io.jmix.ui.widgets.client.Tools.findCurrentOrParentTd;
 
 @Connect(value = CubaTable.class, loadStyle = Connect.LoadStyle.EAGER)
 public class CubaScrollTableConnector extends TableConnector {

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.capslockindicator;
 
-import com.haulmont.cuba.web.widgets.CubaCapsLockIndicator;
+import io.jmix.ui.widgets.CubaCapsLockIndicator;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.label.LabelConnector;
 import com.vaadin.shared.ui.Connect;

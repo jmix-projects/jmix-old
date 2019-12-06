@@ -23,7 +23,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.haulmont.cuba.web.widgets.CubaCheckBox;
+import io.jmix.ui.widgets.CubaCheckBox;
 import com.vaadin.client.VTooltip;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.checkbox.CheckBoxConnector;

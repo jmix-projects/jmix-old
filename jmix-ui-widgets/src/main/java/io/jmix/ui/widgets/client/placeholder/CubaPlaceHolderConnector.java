@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.placeholder;
 
-import com.haulmont.cuba.web.widgets.CubaPlaceHolder;
+import io.jmix.ui.widgets.CubaPlaceHolder;
 import com.vaadin.client.ui.AbstractComponentConnector;
 import com.vaadin.shared.ui.Connect;
 

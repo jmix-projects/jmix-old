@@ -21,7 +21,7 @@ import com.google.gwt.aria.client.Roles;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.PreElement;
 import com.google.gwt.user.client.DOM;
-import com.haulmont.cuba.web.widgets.CubaLabel;
+import io.jmix.ui.widgets.CubaLabel;
 import com.vaadin.client.Profiler;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.StateChangeEvent;

@@ -17,8 +17,8 @@
 
 package io.jmix.ui.widgets.client.flowlayout;
 
-import com.haulmont.cuba.web.widgets.CubaFlowLayout;
-import com.haulmont.cuba.web.widgets.client.cssactionslayout.CubaCssActionsLayoutConnector;
+import io.jmix.ui.widgets.CubaFlowLayout;
+import io.jmix.ui.widgets.client.cssactionslayout.CubaCssActionsLayoutConnector;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(CubaFlowLayout.class)

@@ -22,7 +22,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.HasEnabled;
-import com.haulmont.cuba.web.widgets.client.Tools;
+import io.jmix.ui.widgets.client.Tools;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ui.VPanel;
 import com.vaadin.shared.ui.MarginInfo;

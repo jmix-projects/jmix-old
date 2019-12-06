@@ -19,7 +19,7 @@ package io.jmix.ui.widgets.client.renderers;
 import com.vaadin.client.connectors.grid.ProgressBarRendererConnector;
 import com.vaadin.shared.ui.Connect;
 
-@Connect(com.haulmont.cuba.web.widgets.renderers.CubaProgressBarRenderer.class)
+@Connect(io.jmix.ui.widgets.renderers.CubaProgressBarRenderer.class)
 public class CubaProgressBarRendererConnector extends ProgressBarRendererConnector {
 
     @Override

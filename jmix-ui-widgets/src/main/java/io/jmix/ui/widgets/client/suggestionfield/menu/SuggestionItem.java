@@ -21,7 +21,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
-import com.haulmont.cuba.web.widgets.client.suggestionfield.CubaSuggestionFieldWidget;
+import io.jmix.ui.widgets.client.suggestionfield.CubaSuggestionFieldWidget;
 
 public class SuggestionItem extends Widget implements HasText {
 

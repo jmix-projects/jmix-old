@@ -17,8 +17,8 @@
 package io.jmix.ui.widgets.client.grid.selection;
 
 import com.google.gwt.dom.client.NativeEvent;
-import com.haulmont.cuba.web.widgets.client.Tools;
-import com.haulmont.cuba.web.widgets.grid.CubaSingleSelectionModel;
+import io.jmix.ui.widgets.client.Tools;
+import io.jmix.ui.widgets.grid.CubaSingleSelectionModel;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.connectors.grid.SingleSelectionModelConnector;
 import com.vaadin.client.widget.grid.events.BodyClickHandler;

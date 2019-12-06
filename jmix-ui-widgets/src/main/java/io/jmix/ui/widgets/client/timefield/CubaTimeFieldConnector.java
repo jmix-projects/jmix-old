@@ -16,8 +16,8 @@
 
 package io.jmix.ui.widgets.client.timefield;
 
-import com.haulmont.cuba.web.widgets.CubaTimeField;
-import com.haulmont.cuba.web.widgets.client.textfield.CubaMaskedFieldConnector;
+import io.jmix.ui.widgets.CubaTimeField;
+import io.jmix.ui.widgets.client.textfield.CubaMaskedFieldConnector;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
 

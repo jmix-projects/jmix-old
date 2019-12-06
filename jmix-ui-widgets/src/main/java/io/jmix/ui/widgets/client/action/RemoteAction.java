@@ -17,6 +17,7 @@
 
 package io.jmix.ui.widgets.client.action;
 
+import io.jmix.ui.widgets.client.tabsheet.ClientAction;
 import com.vaadin.client.ui.Action;
 import com.vaadin.client.ui.ActionOwner;
 

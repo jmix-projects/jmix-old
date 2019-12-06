@@ -19,7 +19,7 @@ package io.jmix.ui.widgets.client.addons.contextmenu;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
-import com.haulmont.cuba.web.widgets.addons.contextmenu.ContextMenu;
+import io.jmix.ui.widgets.addons.contextmenu.ContextMenu;
 import com.vaadin.client.HasWidget;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.StateChangeEvent;

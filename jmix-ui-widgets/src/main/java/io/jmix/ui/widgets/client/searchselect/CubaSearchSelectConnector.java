@@ -17,8 +17,8 @@
 
 package io.jmix.ui.widgets.client.searchselect;
 
-import com.haulmont.cuba.web.widgets.CubaSearchSelect;
-import com.haulmont.cuba.web.widgets.client.combobox.CubaComboBoxConnector;
+import io.jmix.ui.widgets.CubaSearchSelect;
+import io.jmix.ui.widgets.client.combobox.CubaComboBoxConnector;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
 

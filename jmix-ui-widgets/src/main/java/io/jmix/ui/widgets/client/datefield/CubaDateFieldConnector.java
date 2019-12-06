@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.datefield;
 
-import com.haulmont.cuba.web.widgets.CubaDateField;
+import io.jmix.ui.widgets.CubaDateField;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.datefield.PopupDateFieldConnector;
 import com.vaadin.shared.ui.Connect;

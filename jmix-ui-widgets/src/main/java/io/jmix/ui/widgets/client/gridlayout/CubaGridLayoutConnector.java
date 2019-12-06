@@ -18,8 +18,8 @@
 package io.jmix.ui.widgets.client.gridlayout;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.haulmont.cuba.web.widgets.CubaGridLayout;
-import com.haulmont.cuba.web.widgets.client.caption.CubaCaptionWidget;
+import io.jmix.ui.widgets.CubaGridLayout;
+import io.jmix.ui.widgets.client.caption.CubaCaptionWidget;
 import com.vaadin.client.*;
 import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.client.ui.ShortcutActionHandler;

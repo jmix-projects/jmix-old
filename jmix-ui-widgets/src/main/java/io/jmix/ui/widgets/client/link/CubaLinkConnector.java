@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.link;
 
-import com.haulmont.cuba.web.widgets.CubaLink;
+import io.jmix.ui.widgets.CubaLink;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.link.LinkConnector;
 import com.vaadin.shared.ui.Connect;

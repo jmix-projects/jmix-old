@@ -20,8 +20,8 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
-import com.haulmont.cuba.web.widgets.client.cssactionslayout.CubaCssActionsLayoutWidget;
-import com.haulmont.cuba.web.widgets.client.cubascrollboxlayout.CubaScrollBoxLayoutState;
+import io.jmix.ui.widgets.client.cssactionslayout.CubaCssActionsLayoutWidget;
+import io.jmix.ui.widgets.client.cubascrollboxlayout.CubaScrollBoxLayoutState;
 
 import java.util.function.BiConsumer;
 

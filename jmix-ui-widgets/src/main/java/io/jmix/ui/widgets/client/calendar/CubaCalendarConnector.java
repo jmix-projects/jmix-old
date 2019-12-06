@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.calendar;
 
-import com.haulmont.cuba.web.widgets.CubaCalendar;
+import io.jmix.ui.widgets.CubaCalendar;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.v7.client.ui.calendar.CalendarConnector;
 

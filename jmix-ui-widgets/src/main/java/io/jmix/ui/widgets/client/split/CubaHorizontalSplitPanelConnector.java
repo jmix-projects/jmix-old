@@ -18,7 +18,7 @@
 package io.jmix.ui.widgets.client.split;
 
 import com.google.gwt.core.client.Scheduler;
-import com.haulmont.cuba.web.widgets.CubaHorizontalSplitPanel;
+import io.jmix.ui.widgets.CubaHorizontalSplitPanel;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.PostLayoutListener;
 import com.vaadin.client.ui.splitpanel.HorizontalSplitPanelConnector;

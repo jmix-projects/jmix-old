@@ -22,7 +22,7 @@ import com.vaadin.client.renderers.ClickableRenderer;
 import com.vaadin.shared.ui.Connect;
 import elemental.json.JsonObject;
 
-@Connect(com.haulmont.cuba.web.widgets.renderers.CubaClickableTextRenderer.class)
+@Connect(io.jmix.ui.widgets.renderers.CubaClickableTextRenderer.class)
 public class CubaClickableTextRendererConnector extends ClickableRendererConnector<String> {
 
     @Override

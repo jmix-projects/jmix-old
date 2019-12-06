@@ -13,7 +13,7 @@
  */
 package io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces;
 
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.VDragCaptionProvider;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.VDragCaptionProvider;
 
 public interface VHasDragCaptionProvider {
     void setDragCaptionProvider(VDragCaptionProvider dragCaption);

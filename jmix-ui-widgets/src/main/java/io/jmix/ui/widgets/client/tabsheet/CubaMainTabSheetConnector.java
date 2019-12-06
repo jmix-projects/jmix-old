@@ -17,12 +17,12 @@
 
 package io.jmix.ui.widgets.client.tabsheet;
 
-import com.haulmont.cuba.web.widgets.CubaMainTabSheet;
-import com.haulmont.cuba.web.widgets.client.action.RemoteAction;
-import com.haulmont.cuba.web.widgets.client.action.StaticActionOwner;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.VDragDropUtil;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.tabsheet.DDTabsheetConnector;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.tabsheet.VDDTabsheetDropHandler;
+import io.jmix.ui.widgets.CubaMainTabSheet;
+import io.jmix.ui.widgets.client.action.RemoteAction;
+import io.jmix.ui.widgets.client.action.StaticActionOwner;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.VDragDropUtil;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.tabsheet.DDTabsheetConnector;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.tabsheet.VDDTabsheetDropHandler;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.WidgetUtil;

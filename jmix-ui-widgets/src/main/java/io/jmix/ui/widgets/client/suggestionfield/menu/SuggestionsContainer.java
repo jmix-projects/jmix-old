@@ -29,7 +29,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.UIObject;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.impl.FocusImpl;
-import com.haulmont.cuba.web.widgets.client.suggestionfield.CubaSuggestionFieldWidget;
+import io.jmix.ui.widgets.client.suggestionfield.CubaSuggestionFieldWidget;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
 

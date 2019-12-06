@@ -1,6 +1,6 @@
 package io.jmix.ui.widgets.client.checkboxgroup;
 
-import com.haulmont.cuba.web.widgets.CubaCheckBoxGroup;
+import io.jmix.ui.widgets.CubaCheckBoxGroup;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.optiongroup.CheckBoxGroupConnector;
 import com.vaadin.shared.ui.Connect;

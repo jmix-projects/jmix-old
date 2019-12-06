@@ -19,7 +19,7 @@ package io.jmix.ui.widgets.client.renderers;
 import com.vaadin.client.connectors.ImageRendererConnector;
 import com.vaadin.shared.ui.Connect;
 
-@Connect(com.haulmont.cuba.web.widgets.renderers.CubaImageRenderer.class)
+@Connect(io.jmix.ui.widgets.renderers.CubaImageRenderer.class)
 public class CubaImageRendererConnector extends ImageRendererConnector {
     @Override
     public CubaImageRenderer getRenderer() {

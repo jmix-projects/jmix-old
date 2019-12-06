@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.customlayout;
 
-import com.haulmont.cuba.web.widgets.CubaCustomLayout;
+import io.jmix.ui.widgets.CubaCustomLayout;
 import com.vaadin.client.ui.HasRequiredIndicator;
 import com.vaadin.client.ui.customlayout.CustomLayoutConnector;
 import com.vaadin.shared.ui.Connect;

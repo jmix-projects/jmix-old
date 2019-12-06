@@ -22,12 +22,12 @@ import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.haulmont.cuba.web.widgets.CubaTreeTable;
-import com.haulmont.cuba.web.widgets.client.aggregation.TableAggregationRow;
-import com.haulmont.cuba.web.widgets.client.table.CubaTableClientRpc;
-import com.haulmont.cuba.web.widgets.client.table.CubaTableServerRpc;
-import com.haulmont.cuba.web.widgets.client.tableshared.CubaTableShortcutActionHandler;
-import com.haulmont.cuba.web.widgets.client.tableshared.TableCellClickListener;
+import io.jmix.ui.widgets.CubaTreeTable;
+import io.jmix.ui.widgets.client.aggregation.TableAggregationRow;
+import io.jmix.ui.widgets.client.table.CubaTableClientRpc;
+import io.jmix.ui.widgets.client.table.CubaTableServerRpc;
+import io.jmix.ui.widgets.client.tableshared.CubaTableShortcutActionHandler;
+import io.jmix.ui.widgets.client.tableshared.TableCellClickListener;
 import com.vaadin.client.*;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.FocusableScrollPanel;
@@ -37,7 +37,7 @@ import com.vaadin.v7.client.ui.treetable.TreeTableConnector;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import static com.haulmont.cuba.web.widgets.client.Tools.findCurrentOrParentTd;
+import static io.jmix.ui.widgets.client.Tools.findCurrentOrParentTd;
 
 @Connect(CubaTreeTable.class)
 public class CubaTreeTableConnector extends TreeTableConnector {

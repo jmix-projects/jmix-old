@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.optiongroup;
 
-import com.haulmont.cuba.web.widgets.CubaOptionGroup;
+import io.jmix.ui.widgets.CubaOptionGroup;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.v7.client.ui.optiongroup.OptionGroupConnector;

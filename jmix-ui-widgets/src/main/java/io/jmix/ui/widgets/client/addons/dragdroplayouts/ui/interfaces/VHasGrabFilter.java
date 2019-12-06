@@ -13,7 +13,7 @@
  */
 package io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces;
 
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.VGrabFilter;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.VGrabFilter;
 
 public interface VHasGrabFilter {
     VGrabFilter getGrabFilter();

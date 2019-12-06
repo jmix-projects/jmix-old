@@ -17,7 +17,7 @@
 package io.jmix.ui.widgets.client.timer;
 
 import com.google.gwt.user.client.Timer;
-import com.haulmont.cuba.web.widgets.CubaTimer;
+import io.jmix.ui.widgets.CubaTimer;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.ServerRpcQueue;

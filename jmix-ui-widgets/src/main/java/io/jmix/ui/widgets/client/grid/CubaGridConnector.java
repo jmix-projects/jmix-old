@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.grid;
 
-import com.haulmont.cuba.web.widgets.CubaGrid;
+import io.jmix.ui.widgets.CubaGrid;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.connectors.grid.GridConnector;
 import com.vaadin.client.widgets.Grid.Column;

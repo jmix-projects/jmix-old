@@ -17,10 +17,10 @@
 
 package io.jmix.ui.widgets.client.window;
 
-import com.haulmont.cuba.web.widgets.CubaWindow;
-import com.haulmont.cuba.web.widgets.client.action.RemoteAction;
-import com.haulmont.cuba.web.widgets.client.action.StaticActionOwner;
-import com.haulmont.cuba.web.widgets.client.tabsheet.ClientAction;
+import io.jmix.ui.widgets.CubaWindow;
+import io.jmix.ui.widgets.client.action.RemoteAction;
+import io.jmix.ui.widgets.client.action.StaticActionOwner;
+import io.jmix.ui.widgets.client.tabsheet.ClientAction;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;

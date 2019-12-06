@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.historycontrol;
 
-import com.haulmont.cuba.web.widgets.CubaHistoryControl;
+import io.jmix.ui.widgets.CubaHistoryControl;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.client.ui.AbstractComponentConnector;

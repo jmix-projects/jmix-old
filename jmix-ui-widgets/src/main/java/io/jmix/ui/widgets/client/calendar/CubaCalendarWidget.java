@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.calendar;
 
-import com.haulmont.cuba.web.widgets.client.calendar.schedule.CubaSimpleDayCell;
+import io.jmix.ui.widgets.client.calendar.schedule.CubaSimpleDayCell;
 import com.vaadin.v7.client.ui.VCalendar;
 import com.vaadin.v7.client.ui.calendar.schedule.SimpleDayCell;
 

@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.passwordfield;
 
-import com.haulmont.cuba.web.widgets.CubaPasswordField;
+import io.jmix.ui.widgets.CubaPasswordField;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.passwordfield.PasswordFieldConnector;

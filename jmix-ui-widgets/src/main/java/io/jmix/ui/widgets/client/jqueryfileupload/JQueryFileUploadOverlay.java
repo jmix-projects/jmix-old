@@ -41,7 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.haulmont.cuba.web.widgets.client.jqueryfileupload.CubaFileUploadWidget.CUBA_FILEUPLOAD_DROPZONE_CLASS;
+import static io.jmix.ui.widgets.client.jqueryfileupload.CubaFileUploadWidget.CUBA_FILEUPLOAD_DROPZONE_CLASS;
 
 public class JQueryFileUploadOverlay {
 
@@ -86,33 +86,33 @@ public class JQueryFileUploadOverlay {
         var self = this;
 
         upload.bind('fileuploadadd', $entry(function (e, data) {
-            data.url = self.@com.haulmont.cuba.web.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::uploadUrl;
+            data.url = self.@io.jmix.ui.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::uploadUrl;
 
-            self.@com.haulmont.cuba.web.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::addPendingUpload(*)(data);
+            self.@io.jmix.ui.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::addPendingUpload(*)(data);
         }));
 
         upload.bind('fileuploaddone', $entry(function (e, data) {
-            self.@com.haulmont.cuba.web.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::removePendingUpload(*)(data);
+            self.@io.jmix.ui.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::removePendingUpload(*)(data);
         }));
 
         upload.bind('fileuploadsend', $entry(function (e, data) {
-            self.@com.haulmont.cuba.web.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::fileUploadStart(*)(data.files[0].name);
+            self.@io.jmix.ui.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::fileUploadStart(*)(data.files[0].name);
         }));
 
         upload.bind('fileuploadprogress', $entry(function (e, data) {
-            self.@com.haulmont.cuba.web.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::uploadProgress(*)(data.loaded, data.total);
+            self.@io.jmix.ui.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::uploadProgress(*)(data.loaded, data.total);
         }));
 
         upload.bind('fileuploaddone', $entry(function (e, data) {
-            self.@com.haulmont.cuba.web.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::fileUploadSucceed(*)(data.files[0].name);
+            self.@io.jmix.ui.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::fileUploadSucceed(*)(data.files[0].name);
         }));
 
         upload.bind('fileuploadstop', $entry(function (e, data) {
-            self.@com.haulmont.cuba.web.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::fileUploadStop()();
+            self.@io.jmix.ui.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::fileUploadStop()();
         }));
 
         upload.bind('fileuploadfail', $entry(function (e, data) {
-            self.@com.haulmont.cuba.web.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::uploadFailed(*)(data.textStatus, data.errorThrown);
+            self.@io.jmix.ui.widgets.client.jqueryfileupload.JQueryFileUploadOverlay::uploadFailed(*)(data.textStatus, data.errorThrown);
         }));
     }-*/;
 

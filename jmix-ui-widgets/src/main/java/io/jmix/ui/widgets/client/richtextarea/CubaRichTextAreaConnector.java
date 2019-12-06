@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.richtextarea;
 
-import com.haulmont.cuba.web.widgets.CubaRichTextArea;
+import io.jmix.ui.widgets.CubaRichTextArea;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.richtextarea.RichTextAreaConnector;
 import com.vaadin.shared.ui.Connect;

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.colorpicker;
 
-import com.haulmont.cuba.web.widgets.CubaColorPicker;
+import io.jmix.ui.widgets.CubaColorPicker;
 import com.vaadin.client.ui.colorpicker.ColorPickerConnector;
 import com.vaadin.shared.ui.Connect;
 

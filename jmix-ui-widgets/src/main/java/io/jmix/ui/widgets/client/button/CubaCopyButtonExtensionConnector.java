@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.button;
 
-import com.haulmont.cuba.web.widgets.CubaCopyButtonExtension;
+import io.jmix.ui.widgets.CubaCopyButtonExtension;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;

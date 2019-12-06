@@ -18,8 +18,8 @@ package io.jmix.ui.widgets.client.grid.selection;
 
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.haulmont.cuba.web.widgets.client.Tools;
-import com.haulmont.cuba.web.widgets.grid.CubaMultiSelectionModel;
+import io.jmix.ui.widgets.client.Tools;
+import io.jmix.ui.widgets.grid.CubaMultiSelectionModel;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.connectors.grid.MultiSelectionModelConnector;
 import com.vaadin.client.renderers.Renderer;

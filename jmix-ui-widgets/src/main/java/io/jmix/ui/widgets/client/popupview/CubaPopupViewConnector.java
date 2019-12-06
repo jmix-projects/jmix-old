@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.popupview;
 
-import com.haulmont.cuba.web.widgets.CubaPopupView;
+import io.jmix.ui.widgets.CubaPopupView;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.popupview.PopupViewConnector;
 import com.vaadin.shared.ui.Connect;

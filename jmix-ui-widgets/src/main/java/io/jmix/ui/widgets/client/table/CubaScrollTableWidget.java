@@ -24,12 +24,12 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import com.haulmont.cuba.web.widgets.client.Tools;
-import com.haulmont.cuba.web.widgets.client.aggregation.TableAggregationRow;
-import com.haulmont.cuba.web.widgets.client.image.CubaImageWidget;
-import com.haulmont.cuba.web.widgets.client.tableshared.TableEmptyState;
-import com.haulmont.cuba.web.widgets.client.tableshared.TableWidget;
-import com.haulmont.cuba.web.widgets.client.tableshared.TableWidgetDelegate;
+import io.jmix.ui.widgets.client.Tools;
+import io.jmix.ui.widgets.client.aggregation.TableAggregationRow;
+import io.jmix.ui.widgets.client.image.CubaImageWidget;
+import io.jmix.ui.widgets.client.tableshared.TableEmptyState;
+import io.jmix.ui.widgets.client.tableshared.TableWidget;
+import io.jmix.ui.widgets.client.tableshared.TableWidgetDelegate;
 import com.vaadin.client.Focusable;
 import com.vaadin.client.*;
 import com.vaadin.client.ui.Action;
@@ -47,8 +47,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.haulmont.cuba.web.widgets.client.Tools.isAnyModifierKeyPressed;
-import static com.haulmont.cuba.web.widgets.client.tableshared.TableWidgetDelegate.*;
+import static io.jmix.ui.widgets.client.Tools.isAnyModifierKeyPressed;
+import static io.jmix.ui.widgets.client.tableshared.TableWidgetDelegate.*;
 
 public class CubaScrollTableWidget extends VScrollTable implements TableWidget {
 

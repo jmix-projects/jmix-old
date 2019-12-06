@@ -16,12 +16,12 @@
 
 package io.jmix.ui.widgets.client.browserframe;
 
-import com.haulmont.cuba.web.widgets.CubaBrowserFrame;
+import io.jmix.ui.widgets.CubaBrowserFrame;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.browserframe.BrowserFrameConnector;
 import com.vaadin.shared.ui.Connect;
 
-import static com.haulmont.cuba.web.widgets.client.browserframe.CubaBrowserFrameState.*;
+import static io.jmix.ui.widgets.client.browserframe.CubaBrowserFrameState.*;
 
 @Connect(CubaBrowserFrame.class)
 public class CubaBrowserFrameConnector extends BrowserFrameConnector {

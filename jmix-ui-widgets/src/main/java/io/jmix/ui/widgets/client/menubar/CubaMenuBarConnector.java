@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.menubar;
 
-import com.haulmont.cuba.web.widgets.CubaMenuBar;
+import io.jmix.ui.widgets.CubaMenuBar;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.ui.VMenuBar;
 import com.vaadin.client.ui.menubar.MenuBarConnector;

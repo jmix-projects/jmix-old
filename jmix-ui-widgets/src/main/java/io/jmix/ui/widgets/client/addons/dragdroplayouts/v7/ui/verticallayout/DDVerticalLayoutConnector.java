@@ -13,11 +13,11 @@
  */
 package io.jmix.ui.widgets.client.addons.dragdroplayouts.v7.ui.verticallayout;
 
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.v7.DDVerticalLayout;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.VDragFilter;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.VDragDropUtil;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.VHasDragFilter;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.util.HTML5Support;
+import io.jmix.ui.widgets.addons.dragdroplayouts.v7.DDVerticalLayout;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.VDragFilter;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.VDragDropUtil;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.VHasDragFilter;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.util.HTML5Support;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;

@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.combobox;
 
-import com.haulmont.cuba.web.widgets.CubaComboBox;
+import io.jmix.ui.widgets.CubaComboBox;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;

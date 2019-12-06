@@ -18,9 +18,9 @@
 package io.jmix.ui.widgets.client.grouptable;
 
 import com.google.gwt.dom.client.Element;
-import com.haulmont.cuba.web.widgets.CubaGroupTable;
-import com.haulmont.cuba.web.widgets.client.table.CubaScrollTableConnector;
-import com.haulmont.cuba.web.widgets.client.table.CubaTableServerRpc;
+import io.jmix.ui.widgets.CubaGroupTable;
+import io.jmix.ui.widgets.client.table.CubaScrollTableConnector;
+import io.jmix.ui.widgets.client.table.CubaTableServerRpc;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.TooltipInfo;
 import com.vaadin.client.UIDL;

@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.resizabletextarea;
 
-import com.haulmont.cuba.web.widgets.CubaResizableTextAreaWrapper;
+import io.jmix.ui.widgets.CubaResizableTextAreaWrapper;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.customfield.CustomFieldConnector;
 import com.vaadin.shared.ui.Connect;

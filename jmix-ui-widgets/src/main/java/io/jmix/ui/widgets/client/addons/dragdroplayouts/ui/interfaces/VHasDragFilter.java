@@ -13,7 +13,7 @@
  */
 package io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces;
 
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.VDragFilter;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.VDragFilter;
 
 /**
  * Layouts which supports drag filters should implement this

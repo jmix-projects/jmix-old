@@ -17,7 +17,7 @@
 package io.jmix.ui.widgets.client.sourcecodeeditor;
 
 import com.google.gwt.dom.client.Style;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.SuggestPopup;
+import io.jmix.ui.widgets.client.addons.aceeditor.SuggestPopup;
 
 public class CubaSuggestPopup extends SuggestPopup {
 

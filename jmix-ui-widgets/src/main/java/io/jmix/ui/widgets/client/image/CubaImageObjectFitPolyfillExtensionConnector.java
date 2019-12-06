@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.image;
 
-import com.haulmont.cuba.web.widgets.CubaImageObjectFitPolyfillExtension;
+import io.jmix.ui.widgets.CubaImageObjectFitPolyfillExtension;
 import com.vaadin.client.ServerConnector;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.ui.Connect;

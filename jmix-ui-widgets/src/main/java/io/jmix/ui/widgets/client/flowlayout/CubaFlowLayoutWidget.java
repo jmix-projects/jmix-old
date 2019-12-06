@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.flowlayout;
 
-import com.haulmont.cuba.web.widgets.client.cssactionslayout.CubaCssActionsLayoutWidget;
+import io.jmix.ui.widgets.client.cssactionslayout.CubaCssActionsLayoutWidget;
 
 public class CubaFlowLayoutWidget extends CubaCssActionsLayoutWidget {
 }

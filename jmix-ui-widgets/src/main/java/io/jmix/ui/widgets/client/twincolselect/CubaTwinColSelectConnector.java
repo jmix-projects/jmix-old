@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.twincolselect;
 
-import com.haulmont.cuba.web.widgets.CubaTwinColSelect;
+import io.jmix.ui.widgets.CubaTwinColSelect;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.twincolselect.TwinColSelectConnector;
 import com.vaadin.shared.ui.Connect;

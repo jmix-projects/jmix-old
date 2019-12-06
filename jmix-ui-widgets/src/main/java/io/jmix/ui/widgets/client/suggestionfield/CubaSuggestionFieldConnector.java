@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.suggestionfield;
 
-import com.haulmont.cuba.web.widgets.CubaSuggestionField;
+import io.jmix.ui.widgets.CubaSuggestionField;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractFieldConnector;

@@ -62,7 +62,7 @@ public class CubaTextFieldWidget extends VTextField implements ShortcutActionHan
         var temp = this;  // hack to hold on to 'this' reference
 
         var listener = $entry(function (e) {
-            temp.@com.haulmont.cuba.web.widgets.client.textfield.CubaTextFieldWidget::handleInput()();
+            temp.@io.jmix.ui.widgets.client.textfield.CubaTextFieldWidget::handleInput()();
         });
 
         if (elementID.addEventListener) {

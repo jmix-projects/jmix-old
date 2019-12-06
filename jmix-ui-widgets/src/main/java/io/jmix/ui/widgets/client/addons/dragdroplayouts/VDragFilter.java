@@ -14,7 +14,7 @@
 package io.jmix.ui.widgets.client.addons.dragdroplayouts;
 
 import com.google.gwt.user.client.ui.Widget;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.DDLayoutState;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.DDLayoutState;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Util;
 import com.vaadin.client.VCaption;

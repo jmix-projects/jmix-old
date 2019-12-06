@@ -17,7 +17,7 @@
 package io.jmix.ui.widgets.client.renderers.widgets.image;
 
 import com.google.gwt.user.client.ui.Image;
-import com.haulmont.cuba.web.widgets.client.grid.HasClickSettings;
+import io.jmix.ui.widgets.client.grid.HasClickSettings;
 
 public class CubaImageWidget extends Image implements HasClickSettings {
     protected boolean clickThroughEnabled = false;

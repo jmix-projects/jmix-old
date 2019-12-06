@@ -16,8 +16,8 @@
 
 package io.jmix.ui.widgets.client.cssactionslayout;
 
-import com.haulmont.cuba.web.widgets.CubaCssActionsLayout;
-import com.haulmont.cuba.web.widgets.client.caption.CubaCaptionWidget;
+import io.jmix.ui.widgets.CubaCssActionsLayout;
+import io.jmix.ui.widgets.client.caption.CubaCaptionWidget;
 import com.vaadin.client.*;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.HasRequiredIndicator;

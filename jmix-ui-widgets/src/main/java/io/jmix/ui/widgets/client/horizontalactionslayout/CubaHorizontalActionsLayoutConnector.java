@@ -17,8 +17,8 @@
 
 package io.jmix.ui.widgets.client.horizontalactionslayout;
 
-import com.haulmont.cuba.web.widgets.CubaHorizontalActionsLayout;
-import com.haulmont.cuba.web.widgets.client.orderedactionslayout.CubaOrderedActionsLayoutConnector;
+import io.jmix.ui.widgets.CubaHorizontalActionsLayout;
+import io.jmix.ui.widgets.client.orderedactionslayout.CubaOrderedActionsLayoutConnector;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.shared.ui.orderedlayout.HorizontalLayoutState;
 

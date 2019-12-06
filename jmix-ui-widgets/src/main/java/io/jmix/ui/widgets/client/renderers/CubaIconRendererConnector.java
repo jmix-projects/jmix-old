@@ -24,7 +24,7 @@ import com.vaadin.shared.communication.URLReference;
 import com.vaadin.shared.ui.Connect;
 import elemental.json.JsonValue;
 
-@Connect(com.haulmont.cuba.web.widgets.renderers.CubaIconRenderer.class)
+@Connect(io.jmix.ui.widgets.renderers.CubaIconRenderer.class)
 public class CubaIconRendererConnector extends AbstractGridRendererConnector<Icon> {
 
     @Override

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.grid;
 
-import com.haulmont.cuba.web.widgets.grid.CubaEditorField;
+import io.jmix.ui.widgets.grid.CubaEditorField;
 import com.vaadin.client.ui.customfield.CustomFieldConnector;
 import com.vaadin.shared.ui.Connect;
 

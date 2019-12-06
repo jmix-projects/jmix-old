@@ -26,7 +26,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.tabsheet.VDDTabSheet;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.tabsheet.VDDTabSheet;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.ui.VTabsheet;

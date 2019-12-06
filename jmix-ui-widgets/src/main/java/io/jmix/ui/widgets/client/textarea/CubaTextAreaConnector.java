@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.textarea;
 
-import com.haulmont.cuba.web.widgets.CubaTextArea;
+import io.jmix.ui.widgets.CubaTextArea;
 import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.textarea.TextAreaConnector;
 import com.vaadin.shared.ui.Connect;

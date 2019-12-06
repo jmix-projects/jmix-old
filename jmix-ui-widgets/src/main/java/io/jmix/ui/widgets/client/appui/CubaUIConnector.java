@@ -17,10 +17,10 @@
 
 package io.jmix.ui.widgets.client.appui;
 
-import com.haulmont.cuba.web.widgets.CubaUI;
-import com.haulmont.cuba.web.widgets.client.clientmanager.CubaUIClientRpc;
-import com.haulmont.cuba.web.widgets.client.tooltip.CubaTooltip;
-import com.haulmont.cuba.web.widgets.client.ui.CubaUIConstants;
+import io.jmix.ui.widgets.CubaUI;
+import io.jmix.ui.widgets.client.clientmanager.CubaUIClientRpc;
+import io.jmix.ui.widgets.client.tooltip.CubaTooltip;
+import io.jmix.ui.widgets.client.ui.CubaUIConstants;
 import com.vaadin.client.ApplicationConfiguration;
 import com.vaadin.client.UIDL;
 import com.vaadin.client.communication.StateChangeEvent;

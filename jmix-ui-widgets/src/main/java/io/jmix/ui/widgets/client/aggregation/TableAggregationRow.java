@@ -24,9 +24,9 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
-import com.haulmont.cuba.web.widgets.client.Tools;
-import com.haulmont.cuba.web.widgets.client.tableshared.TableWidget;
-import com.haulmont.cuba.web.widgets.client.tableshared.TotalAggregationInputListener;
+import io.jmix.ui.widgets.client.Tools;
+import io.jmix.ui.widgets.client.tableshared.TableWidget;
+import io.jmix.ui.widgets.client.tableshared.TotalAggregationInputListener;
 import com.vaadin.client.BrowserInfo;
 import com.vaadin.client.ComputedStyle;
 import com.vaadin.client.UIDL;
@@ -39,8 +39,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Special aggregation row for {@link com.haulmont.cuba.web.widgets.client.table.CubaScrollTableWidget} and
- * {@link com.haulmont.cuba.web.widgets.client.treetable.CubaTreeTableWidget}
+ * Special aggregation row for {@link io.jmix.ui.widgets.client.table.CubaScrollTableWidget} and
+ * {@link io.jmix.ui.widgets.client.treetable.CubaTreeTableWidget}
  */
 public class TableAggregationRow extends Panel {
 

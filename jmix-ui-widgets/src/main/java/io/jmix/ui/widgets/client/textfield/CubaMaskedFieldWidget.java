@@ -369,7 +369,7 @@ public class CubaMaskedFieldWidget extends VTextField implements ShortcutActionH
         var temp = this;  // hack to hold on to 'this' reference
 
         var listener = $entry(function (e) {
-            temp.@com.haulmont.cuba.web.widgets.client.textfield.CubaMaskedFieldWidget::handleInput(*)(e.inputType);
+            temp.@io.jmix.ui.widgets.client.textfield.CubaMaskedFieldWidget::handleInput(*)(e.inputType);
         });
 
         if (elementID.addEventListener) {

@@ -1,6 +1,6 @@
 package io.jmix.ui.widgets.client.radiobuttongroup;
 
-import com.haulmont.cuba.web.widgets.CubaRadioButtonGroup;
+import io.jmix.ui.widgets.CubaRadioButtonGroup;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.optiongroup.RadioButtonGroupConnector;
 import com.vaadin.shared.ui.Connect;

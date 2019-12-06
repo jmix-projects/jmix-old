@@ -17,15 +17,15 @@
 <module>
     <inherits name="com.vaadin.v7.Vaadin7WidgetSet"/>
 
-    <replace-with class="io.jmix.ui.widgets.client.tooltip.JmixTooltip">
+    <replace-with class="io.jmix.ui.widgets.client.tooltip.CubaTooltip">
         <when-type-is class="com.vaadin.client.VTooltip"/>
     </replace-with>
 
-    <replace-with class="io.jmix.ui.widgets.client.ui.AppUIConnector">
+    <replace-with class="io.jmix.ui.widgets.client.appui.CubaUIConnector">
         <when-type-is class="com.vaadin.client.ui.ui.UIConnector"/>
     </replace-with>
 
-    <replace-with class="io.jmix.ui.widgets.client.notification.JmixNotification">
+    <replace-with class="io.jmix.ui.widgets.client.notification.CubaNotification">
         <when-type-is class="com.vaadin.client.ui.VNotification"/>
     </replace-with>
 

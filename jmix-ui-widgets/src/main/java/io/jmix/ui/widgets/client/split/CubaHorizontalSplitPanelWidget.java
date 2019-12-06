@@ -22,7 +22,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.haulmont.cuba.web.widgets.client.placeholder.CubaPlaceHolderWidget;
+import io.jmix.ui.widgets.client.placeholder.CubaPlaceHolderWidget;
 import com.vaadin.client.ui.VSplitPanelHorizontal;
 
 import java.util.function.Consumer;

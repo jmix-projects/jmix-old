@@ -17,9 +17,9 @@
 package io.jmix.ui.widgets.client.sourcecodeeditor;
 
 import com.google.gwt.core.client.GWT;
-import com.haulmont.cuba.web.widgets.addons.aceeditor.SuggestionExtension;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.SuggestPopup;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.SuggesterConnector;
+import io.jmix.ui.widgets.addons.aceeditor.SuggestionExtension;
+import io.jmix.ui.widgets.client.addons.aceeditor.SuggestPopup;
+import io.jmix.ui.widgets.client.addons.aceeditor.SuggesterConnector;
 import com.vaadin.shared.ui.Connect;
 
 @SuppressWarnings("serial")

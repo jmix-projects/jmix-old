@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.listselect;
 
-import com.haulmont.cuba.web.widgets.CubaListSelect;
+import io.jmix.ui.widgets.CubaListSelect;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.v7.client.ui.listselect.ListSelectConnector;
 

@@ -17,19 +17,19 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FocusWidget;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceAnnotation.MarkerAnnotation;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceAnnotation.RowAnnotation;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceMarker.OnTextChange;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.ClientSideDocDiff.Adjuster;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.*;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceChangeEvent.Data.Action;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceAnnotation.MarkerAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceAnnotation.RowAnnotation;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceMarker.OnTextChange;
+import io.jmix.ui.widgets.client.addons.aceeditor.ClientSideDocDiff.Adjuster;
+import io.jmix.ui.widgets.client.addons.aceeditor.gwt.*;
+import io.jmix.ui.widgets.client.addons.aceeditor.gwt.GwtAceChangeEvent.Data.Action;
 
 import java.util.*;
 import java.util.Map.Entry;
 
 /**
  * A {@link com.google.gwt.user.client.ui.Widget} containing
- * {@link com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceEditor}
+ * {@link GwtAceEditor}
  */
 public class AceEditorWidget extends FocusWidget implements
 		GwtAceChangeHandler, GwtAceFocusBlurHandler,

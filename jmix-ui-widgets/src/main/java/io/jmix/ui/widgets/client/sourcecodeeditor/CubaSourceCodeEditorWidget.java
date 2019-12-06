@@ -22,10 +22,10 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.AceEditorWidget;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceEditor;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceEvent;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.gwt.GwtAceFocusBlurHandler;
+import io.jmix.ui.widgets.client.addons.aceeditor.AceEditorWidget;
+import io.jmix.ui.widgets.client.addons.aceeditor.gwt.GwtAceEditor;
+import io.jmix.ui.widgets.client.addons.aceeditor.gwt.GwtAceEvent;
+import io.jmix.ui.widgets.client.addons.aceeditor.gwt.GwtAceFocusBlurHandler;
 
 public class CubaSourceCodeEditorWidget extends AceEditorWidget {
 

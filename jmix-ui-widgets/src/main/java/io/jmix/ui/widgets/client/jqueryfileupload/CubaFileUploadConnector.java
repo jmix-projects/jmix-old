@@ -17,10 +17,10 @@
 
 package io.jmix.ui.widgets.client.jqueryfileupload;
 
-import com.haulmont.cuba.web.widgets.CubaFileUpload;
-import com.haulmont.cuba.web.widgets.client.fileupload.CubaFileUploadClientRpc;
-import com.haulmont.cuba.web.widgets.client.fileupload.CubaFileUploadServerRpc;
-import com.haulmont.cuba.web.widgets.client.fileupload.CubaFileUploadState;
+import io.jmix.ui.widgets.CubaFileUpload;
+import io.jmix.ui.widgets.client.fileupload.CubaFileUploadClientRpc;
+import io.jmix.ui.widgets.client.fileupload.CubaFileUploadServerRpc;
+import io.jmix.ui.widgets.client.fileupload.CubaFileUploadState;
 import com.vaadin.client.*;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.AbstractComponentConnector;

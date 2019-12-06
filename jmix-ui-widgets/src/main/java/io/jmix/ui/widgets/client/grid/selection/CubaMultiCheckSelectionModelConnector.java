@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.grid.selection;
 
-import com.haulmont.cuba.web.widgets.grid.CubaMultiCheckSelectionModel;
+import io.jmix.ui.widgets.grid.CubaMultiCheckSelectionModel;
 import com.vaadin.client.connectors.grid.MultiSelectionModelConnector;
 import com.vaadin.shared.ui.Connect;
 

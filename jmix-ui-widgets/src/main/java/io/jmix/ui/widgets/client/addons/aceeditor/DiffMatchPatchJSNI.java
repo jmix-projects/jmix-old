@@ -16,8 +16,8 @@ package io.jmix.ui.widgets.client.addons.aceeditor;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.GwtTextDiff.Diff;
-import com.haulmont.cuba.web.widgets.client.addons.aceeditor.GwtTextDiff.Patch;
+import io.jmix.ui.widgets.client.addons.aceeditor.GwtTextDiff.Diff;
+import io.jmix.ui.widgets.client.addons.aceeditor.GwtTextDiff.Patch;
 
 public class DiffMatchPatchJSNI extends JavaScriptObject {
 

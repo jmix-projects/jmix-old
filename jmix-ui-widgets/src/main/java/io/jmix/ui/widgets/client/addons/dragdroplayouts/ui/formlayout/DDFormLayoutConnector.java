@@ -13,15 +13,15 @@
  */
 package io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.formlayout;
 
-import com.haulmont.cuba.web.widgets.addons.dragdroplayouts.DDFormLayout;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.VDragFilter;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.VGrabFilter;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.VDragCaptionProvider;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.VDragDropUtil;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.VHasDragCaptionProvider;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.VHasDragFilter;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.interfaces.VHasGrabFilter;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.util.HTML5Support;
+import io.jmix.ui.widgets.addons.dragdroplayouts.DDFormLayout;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.VDragFilter;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.VGrabFilter;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.VDragCaptionProvider;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.VDragDropUtil;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.VHasDragCaptionProvider;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.VHasDragFilter;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.interfaces.VHasGrabFilter;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.util.HTML5Support;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;

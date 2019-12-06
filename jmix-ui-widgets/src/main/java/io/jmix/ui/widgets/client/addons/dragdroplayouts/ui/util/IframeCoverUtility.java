@@ -20,7 +20,7 @@ import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.haulmont.cuba.web.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
+import io.jmix.ui.widgets.client.addons.dragdroplayouts.ui.LayoutDragMode;
 
 import java.util.HashMap;
 import java.util.HashSet;

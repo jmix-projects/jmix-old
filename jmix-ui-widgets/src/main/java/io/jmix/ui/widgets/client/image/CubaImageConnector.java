@@ -16,7 +16,7 @@
 
 package io.jmix.ui.widgets.client.image;
 
-import com.haulmont.cuba.web.widgets.CubaImage;
+import io.jmix.ui.widgets.CubaImage;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.ui.image.ImageConnector;
 import com.vaadin.shared.ui.Connect;

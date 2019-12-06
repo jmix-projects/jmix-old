@@ -24,7 +24,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
-import com.haulmont.cuba.web.widgets.client.combobox.CubaComboBoxWidget;
+import io.jmix.ui.widgets.client.combobox.CubaComboBoxWidget;
 import com.vaadin.client.ui.VComboBox;
 
 public class CubaSearchSelectWidget extends CubaComboBoxWidget {

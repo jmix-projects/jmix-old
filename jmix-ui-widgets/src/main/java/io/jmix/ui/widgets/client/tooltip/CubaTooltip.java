@@ -26,12 +26,12 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.haulmont.cuba.web.widgets.client.checkbox.CubaCheckBoxWidget;
-import com.haulmont.cuba.web.widgets.client.resizabletextarea.CubaResizableTextAreaWrapperWidget;
+import io.jmix.ui.widgets.client.checkbox.CubaCheckBoxWidget;
+import io.jmix.ui.widgets.client.resizabletextarea.CubaResizableTextAreaWrapperWidget;
 import com.vaadin.client.*;
 import com.vaadin.client.ui.VLabel;
 
-import static com.haulmont.cuba.web.widgets.client.caption.CubaCaptionWidget.CONTEXT_HELP_CLASSNAME;
+import static io.jmix.ui.widgets.client.caption.CubaCaptionWidget.CONTEXT_HELP_CLASSNAME;
 
 public class CubaTooltip extends VTooltip {
 

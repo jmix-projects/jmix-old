@@ -18,7 +18,7 @@ package io.jmix.ui.widgets.client.timefield;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.i18n.shared.DateTimeFormat;
-import com.haulmont.cuba.web.widgets.client.textfield.CubaMaskedFieldWidget;
+import io.jmix.ui.widgets.client.textfield.CubaMaskedFieldWidget;
 
 import java.util.Locale;
 

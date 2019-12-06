@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.textfield;
 
-import com.haulmont.cuba.web.widgets.CubaTextField;
+import io.jmix.ui.widgets.CubaTextField;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.Paintable;
 import com.vaadin.client.UIDL;

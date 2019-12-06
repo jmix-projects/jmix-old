@@ -25,11 +25,11 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.haulmont.cuba.web.widgets.CubaPopupButton;
-import com.haulmont.cuba.web.widgets.client.Tools;
-import com.haulmont.cuba.web.widgets.client.addons.popupbutton.PopupButtonConnector;
-import com.haulmont.cuba.web.widgets.client.addons.popupbutton.PopupButtonServerRpc;
-import com.haulmont.cuba.web.widgets.client.jqueryfileupload.CubaFileUploadWidget;
+import io.jmix.ui.widgets.CubaPopupButton;
+import io.jmix.ui.widgets.client.Tools;
+import io.jmix.ui.widgets.client.addons.popupbutton.PopupButtonConnector;
+import io.jmix.ui.widgets.client.addons.popupbutton.PopupButtonServerRpc;
+import io.jmix.ui.widgets.client.jqueryfileupload.CubaFileUploadWidget;
 import com.vaadin.client.WidgetUtil;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
@@ -37,7 +37,7 @@ import com.vaadin.client.ui.VButton;
 import com.vaadin.client.ui.VUpload;
 import com.vaadin.shared.ui.Connect;
 
-import static com.haulmont.cuba.web.widgets.client.popupbutton.CubaPopupButtonWidget.SELECTED_ITEM_STYLE;
+import static io.jmix.ui.widgets.client.popupbutton.CubaPopupButtonWidget.SELECTED_ITEM_STYLE;
 
 @Connect(CubaPopupButton.class)
 public class CubaPopupButtonConnector extends PopupButtonConnector {

@@ -21,7 +21,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.ui.Widget;
-import com.haulmont.cuba.web.widgets.addons.popupbutton.PopupButton;
+import io.jmix.ui.widgets.addons.popupbutton.PopupButton;
 import com.vaadin.client.*;
 import com.vaadin.client.ConnectorHierarchyChangeEvent.ConnectorHierarchyChangeHandler;
 import com.vaadin.client.annotations.OnStateChange;

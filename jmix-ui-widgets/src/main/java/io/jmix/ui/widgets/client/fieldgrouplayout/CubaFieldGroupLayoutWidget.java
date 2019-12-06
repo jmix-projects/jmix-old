@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.fieldgrouplayout;
 
-import com.haulmont.cuba.web.widgets.client.gridlayout.CubaGridLayoutWidget;
+import io.jmix.ui.widgets.client.gridlayout.CubaGridLayoutWidget;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.ui.VGridLayout;
 import com.vaadin.client.ui.layout.ComponentConnectorLayoutSlot;

@@ -17,7 +17,7 @@
 
 package io.jmix.ui.widgets.client.orderedactionslayout;
 
-import com.haulmont.cuba.web.widgets.CubaOrderedActionsLayout;
+import io.jmix.ui.widgets.CubaOrderedActionsLayout;
 import com.vaadin.client.ApplicationConnection;
 import com.vaadin.client.ComponentConnector;
 import com.vaadin.client.Paintable;
