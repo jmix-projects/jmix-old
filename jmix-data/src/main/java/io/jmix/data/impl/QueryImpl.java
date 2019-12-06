@@ -77,6 +77,8 @@ public class QueryImpl<T> implements TypedQuery<T> {
     @Inject
     protected QueryTransformerFactory queryTransformerFactory;
     @Inject
+    protected QueryHintsProcessor hintsProcessor;
+    @Inject
     protected ServerConfig serverConfig;
 
     protected javax.persistence.EntityManager emDelegate;
@@ -87,6 +89,7 @@ public class QueryImpl<T> implements TypedQuery<T> {
     protected String transformedQueryString;
     protected Class resultClass;
     protected Set<Param> params = new HashSet<>();
+    protected Map<String, Object> hints;
     protected javax.persistence.LockModeType lockMode;
     protected List<View> views = new ArrayList<>();
     protected Integer maxResults;
@@ -172,6 +175,12 @@ public class QueryImpl<T> implements TypedQuery<T> {
 
             if (lockMode != null)
                 query.setLockMode(lockMode);
+
+            if (hints != null) {
+                for (Map.Entry<String, Object> hint : hints.entrySet()) {
+                    hintsProcessor.applyQueryHint(query, hint.getKey(), hint.getValue());
+                }
+            }
 
             for (int i = 0; i < views.size(); i++) {
                 if (i == 0)
@@ -665,6 +674,15 @@ public class QueryImpl<T> implements TypedQuery<T> {
     @Override
     public TypedQuery<T> setFlushMode(javax.persistence.FlushModeType flushMode) {
         this.flushMode = flushMode;
+        return this;
+    }
+
+    @Override
+    public TypedQuery<T> setHint(String hintName, Object value) {
+        if (hints == null) {
+            hints = new HashMap<>();
+        }
+        hints.put(hintName, value);
         return this;
     }
 

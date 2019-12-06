@@ -134,7 +134,6 @@ public class OrmDataStore implements DataStore {
 
             if (!context.isSoftDeletion())
                 em.setSoftDeletion(false);
-            persistence.getEntityManagerContext(storeName).setDbHints(context.getDbHints());
 
             // If maxResults=1 and the query is not by ID we should not use getSingleResult() for backward compatibility
             boolean singleResult = !(context.getQuery() != null
@@ -210,7 +209,6 @@ public class OrmDataStore implements DataStore {
         try (Transaction tx = getLoadTransaction(context.isJoinTransaction())) {
             EntityManager em = persistence.getEntityManager(storeName);
             em.setSoftDeletion(context.isSoftDeletion());
-            persistence.getEntityManagerContext(storeName).setDbHints(context.getDbHints());
 
             boolean ensureDistinct = false;
             if (serverConfig.getInMemoryDistinct() && context.getQuery() != null) {
@@ -351,7 +349,6 @@ public class OrmDataStore implements DataStore {
             try (Transaction tx = getLoadTransaction(context.isJoinTransaction())) {
                 EntityManager em = persistence.getEntityManager(storeName);
                 em.setSoftDeletion(context.isSoftDeletion());
-                persistence.getEntityManagerContext(storeName).setDbHints(context.getDbHints());
 
                 boolean ensureDistinct = false;
                 if (serverConfig.getInMemoryDistinct() && context.getQuery() != null) {
@@ -382,7 +379,6 @@ public class OrmDataStore implements DataStore {
             try (Transaction tx = getLoadTransaction(context.isJoinTransaction())) {
                 EntityManager em = persistence.getEntityManager(storeName);
                 em.setSoftDeletion(context.isSoftDeletion());
-                persistence.getEntityManagerContext(storeName).setDbHints(context.getDbHints());
 
                 Query query = createQuery(em, context, false, true);
                 result = (Number) query.getSingleResult();
@@ -415,8 +411,6 @@ public class OrmDataStore implements DataStore {
 
             if (!context.isSoftDeletion())
                 em.setSoftDeletion(false);
-
-            persistence.getEntityManagerContext(storeName).setDbHints(context.getDbHints());
 
             // todo dynamic attributes
 //            List<BaseGenericIdEntity> entitiesToStoreDynamicAttributes = new ArrayList<>();
@@ -738,10 +732,16 @@ public class OrmDataStore implements DataStore {
             }
         }
 
+        if (context.getHints() != null) {
+            for (Map.Entry<String, Object> hint : context.getHints().entrySet()) {
+                query.setHint(hint.getKey(), hint.getValue());
+            }
+        }
+
         return query;
     }
 
-    protected View createRestrictedView(LoadContext context) {
+    protected View createRestrictedView(LoadContext<?> context) {
         View view = context.getView() != null ? context.getView() :
                 viewRepository.getView(metadata.getClassNN(context.getMetaClass()), View.LOCAL);
 

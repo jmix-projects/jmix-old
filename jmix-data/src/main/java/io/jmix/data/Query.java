@@ -252,6 +252,16 @@ public interface Query {
     Query setFlushMode(FlushModeType flushMode);
 
     /**
+     * Set a query property or hint.
+     * @see QueryHints
+     *
+     * @param hintName  name of property or hint
+     * @param value  value of the property or hint
+     * @return the same query instance
+     */
+    Query setHint(String hintName, Object value);
+
+    /**
      * @return underlying implementation provided by ORM
      */
     javax.persistence.Query getDelegate();
