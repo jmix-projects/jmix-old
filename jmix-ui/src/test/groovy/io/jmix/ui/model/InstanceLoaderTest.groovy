@@ -17,6 +17,7 @@
 package io.jmix.ui.model
 
 import io.jmix.core.DataManager
+import io.jmix.core.EntityAccessException
 import io.jmix.data.PersistenceTools
 import io.jmix.ui.model.DataComponents
 import io.jmix.ui.model.InstanceContainer
