@@ -15,20 +15,22 @@
  *
  */
 
-package io.jmix.ui.widgets.client.action;
+package io.jmix.ui.widgets.client.flowlayout;
 
-import com.vaadin.client.ui.Action;
-import com.vaadin.client.ui.ActionOwner;
+import com.haulmont.cuba.web.widgets.CubaFlowLayout;
+import com.haulmont.cuba.web.widgets.client.cssactionslayout.CubaCssActionsLayoutConnector;
+import com.vaadin.shared.ui.Connect;
 
-public abstract class RemoteAction extends Action {
+@Connect(CubaFlowLayout.class)
+public class CubaFlowLayoutConnector extends CubaCssActionsLayoutConnector {
 
-    protected String actionId;
+    @Override
+    public CubaFlowLayoutState getState() {
+        return (CubaFlowLayoutState) super.getState();
+    }
 
-    protected RemoteAction(ClientAction clientAction, ActionOwner owner) {
-        super(owner);
-
-        // copy properties from client action
-        this.caption = clientAction.getCaption();
-        this.actionId = clientAction.getActionId();
+    @Override
+    public CubaFlowLayoutWidget getWidget() {
+        return (CubaFlowLayoutWidget) super.getWidget();
     }
 }

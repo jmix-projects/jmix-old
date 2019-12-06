@@ -12,23 +12,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package io.jmix.ui.widgets.client.action;
+package io.jmix.ui.widgets.client.sourcecodeeditor;
 
-import com.vaadin.client.ui.Action;
-import com.vaadin.client.ui.ActionOwner;
+import com.google.gwt.dom.client.Style;
+import com.haulmont.cuba.web.widgets.client.addons.aceeditor.SuggestPopup;
 
-public abstract class RemoteAction extends Action {
+public class CubaSuggestPopup extends SuggestPopup {
 
-    protected String actionId;
+    public CubaSuggestPopup() {
+        Style style = loadingImage.getElement().getStyle();
 
-    protected RemoteAction(ClientAction clientAction, ActionOwner owner) {
-        super(owner);
-
-        // copy properties from client action
-        this.caption = clientAction.getCaption();
-        this.actionId = clientAction.getActionId();
+        style.clearWidth();
+        style.clearHeight();
+        style.setDisplay(Style.Display.BLOCK);
     }
 }

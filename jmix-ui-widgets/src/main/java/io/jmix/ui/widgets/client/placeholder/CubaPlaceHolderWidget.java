@@ -15,20 +15,14 @@
  *
  */
 
-package io.jmix.ui.widgets.client.action;
+package io.jmix.ui.widgets.client.placeholder;
 
-import com.vaadin.client.ui.Action;
-import com.vaadin.client.ui.ActionOwner;
+import com.google.gwt.user.client.ui.SimplePanel;
 
-public abstract class RemoteAction extends Action {
+public class CubaPlaceHolderWidget extends SimplePanel {
+    public static final String CLASSNAME = "c-placeholder";
 
-    protected String actionId;
-
-    protected RemoteAction(ClientAction clientAction, ActionOwner owner) {
-        super(owner);
-
-        // copy properties from client action
-        this.caption = clientAction.getCaption();
-        this.actionId = clientAction.getActionId();
+    public CubaPlaceHolderWidget() {
+        setStyleName(CLASSNAME);
     }
 }

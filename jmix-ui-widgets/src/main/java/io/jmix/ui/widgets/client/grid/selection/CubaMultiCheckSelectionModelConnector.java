@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2016 Haulmont.
+ * Copyright (c) 2008-2017 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,23 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package io.jmix.ui.widgets.client.action;
+package io.jmix.ui.widgets.client.grid.selection;
 
-import com.vaadin.client.ui.Action;
-import com.vaadin.client.ui.ActionOwner;
+import com.haulmont.cuba.web.widgets.grid.CubaMultiCheckSelectionModel;
+import com.vaadin.client.connectors.grid.MultiSelectionModelConnector;
+import com.vaadin.shared.ui.Connect;
 
-public abstract class RemoteAction extends Action {
-
-    protected String actionId;
-
-    protected RemoteAction(ClientAction clientAction, ActionOwner owner) {
-        super(owner);
-
-        // copy properties from client action
-        this.caption = clientAction.getCaption();
-        this.actionId = clientAction.getActionId();
-    }
+@Connect(CubaMultiCheckSelectionModel.class)
+public class CubaMultiCheckSelectionModelConnector extends MultiSelectionModelConnector {
 }

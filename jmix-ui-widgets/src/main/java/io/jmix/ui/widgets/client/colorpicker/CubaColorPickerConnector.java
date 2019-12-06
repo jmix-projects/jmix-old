@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2016 Haulmont.
+ * Copyright (c) 2008-2017 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,23 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package io.jmix.ui.widgets.client.action;
+package io.jmix.ui.widgets.client.colorpicker;
 
-import com.vaadin.client.ui.Action;
-import com.vaadin.client.ui.ActionOwner;
+import com.haulmont.cuba.web.widgets.CubaColorPicker;
+import com.vaadin.client.ui.colorpicker.ColorPickerConnector;
+import com.vaadin.shared.ui.Connect;
 
-public abstract class RemoteAction extends Action {
+@Connect(value = CubaColorPicker.class, loadStyle = Connect.LoadStyle.LAZY)
+public class CubaColorPickerConnector extends ColorPickerConnector {
 
-    protected String actionId;
-
-    protected RemoteAction(ClientAction clientAction, ActionOwner owner) {
-        super(owner);
-
-        // copy properties from client action
-        this.caption = clientAction.getCaption();
-        this.actionId = clientAction.getActionId();
+    @Override
+    public CubaColorPickerState getState() {
+        return (CubaColorPickerState) super.getState();
     }
 }

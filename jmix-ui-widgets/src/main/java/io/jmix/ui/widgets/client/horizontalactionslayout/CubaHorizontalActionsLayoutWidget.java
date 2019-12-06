@@ -15,20 +15,15 @@
  *
  */
 
-package io.jmix.ui.widgets.client.action;
+package io.jmix.ui.widgets.client.horizontalactionslayout;
 
-import com.vaadin.client.ui.Action;
-import com.vaadin.client.ui.ActionOwner;
+import com.haulmont.cuba.web.widgets.client.orderedactionslayout.CubaOrderedActionsLayoutWidget;
 
-public abstract class RemoteAction extends Action {
+public class CubaHorizontalActionsLayoutWidget extends CubaOrderedActionsLayoutWidget {
 
-    protected String actionId;
+    public static final String CLASSNAME = "v-horizontallayout";
 
-    protected RemoteAction(ClientAction clientAction, ActionOwner owner) {
-        super(owner);
-
-        // copy properties from client action
-        this.caption = clientAction.getCaption();
-        this.actionId = clientAction.getActionId();
+    public CubaHorizontalActionsLayoutWidget(){
+        super(CLASSNAME, false);
     }
 }

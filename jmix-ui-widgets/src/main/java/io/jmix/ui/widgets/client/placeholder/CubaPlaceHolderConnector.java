@@ -15,20 +15,17 @@
  *
  */
 
-package io.jmix.ui.widgets.client.action;
+package io.jmix.ui.widgets.client.placeholder;
 
-import com.vaadin.client.ui.Action;
-import com.vaadin.client.ui.ActionOwner;
+import com.haulmont.cuba.web.widgets.CubaPlaceHolder;
+import com.vaadin.client.ui.AbstractComponentConnector;
+import com.vaadin.shared.ui.Connect;
 
-public abstract class RemoteAction extends Action {
+@Connect(CubaPlaceHolder.class)
+public class CubaPlaceHolderConnector extends AbstractComponentConnector {
 
-    protected String actionId;
-
-    protected RemoteAction(ClientAction clientAction, ActionOwner owner) {
-        super(owner);
-
-        // copy properties from client action
-        this.caption = clientAction.getCaption();
-        this.actionId = clientAction.getActionId();
+    @Override
+    public CubaPlaceHolderWidget getWidget() {
+        return (CubaPlaceHolderWidget) super.getWidget();
     }
 }

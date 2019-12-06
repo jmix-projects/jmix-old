@@ -15,20 +15,15 @@
  *
  */
 
-package io.jmix.ui.widgets.client.action;
+package io.jmix.ui.widgets.client.gridlayout;
 
-import com.vaadin.client.ui.Action;
-import com.vaadin.client.ui.ActionOwner;
+import com.vaadin.client.ComponentConnector;
+import com.vaadin.client.ui.ManagedLayout;
+import com.vaadin.client.ui.layout.ComponentConnectorLayoutSlot;
 
-public abstract class RemoteAction extends Action {
+public class CubaGridLayoutSlot extends ComponentConnectorLayoutSlot {
 
-    protected String actionId;
-
-    protected RemoteAction(ClientAction clientAction, ActionOwner owner) {
-        super(owner);
-
-        // copy properties from client action
-        this.caption = clientAction.getCaption();
-        this.actionId = clientAction.getActionId();
+    public CubaGridLayoutSlot(String baseClassName, ComponentConnector child, ManagedLayout layout) {
+        super(baseClassName, child, layout);
     }
 }

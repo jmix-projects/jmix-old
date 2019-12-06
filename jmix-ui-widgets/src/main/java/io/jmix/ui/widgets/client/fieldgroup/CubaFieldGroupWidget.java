@@ -15,20 +15,23 @@
  *
  */
 
-package io.jmix.ui.widgets.client.action;
+package io.jmix.ui.widgets.client.fieldgroup;
 
-import com.vaadin.client.ui.Action;
-import com.vaadin.client.ui.ActionOwner;
+import com.haulmont.cuba.web.widgets.client.groupbox.CubaGroupBoxWidget;
 
-public abstract class RemoteAction extends Action {
+public class CubaFieldGroupWidget extends CubaGroupBoxWidget {
 
-    protected String actionId;
+    protected static final String CLASSNAME = "c-fieldgroup";
 
-    protected RemoteAction(ClientAction clientAction, ActionOwner owner) {
-        super(owner);
+    public CubaFieldGroupWidget() {
+        super(CLASSNAME);
+    }
 
-        // copy properties from client action
-        this.caption = clientAction.getCaption();
-        this.actionId = clientAction.getActionId();
+    public void setBorderVisible(boolean borderVisible) {
+        if (borderVisible) {
+            addStyleDependentName("border");
+        } else {
+            removeStyleDependentName("border");
+        }
     }
 }

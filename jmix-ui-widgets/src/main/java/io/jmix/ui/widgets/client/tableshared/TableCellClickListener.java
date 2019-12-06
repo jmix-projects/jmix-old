@@ -12,23 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package io.jmix.ui.widgets.client.action;
+package io.jmix.ui.widgets.client.tableshared;
 
-import com.vaadin.client.ui.Action;
-import com.vaadin.client.ui.ActionOwner;
-
-public abstract class RemoteAction extends Action {
-
-    protected String actionId;
-
-    protected RemoteAction(ClientAction clientAction, ActionOwner owner) {
-        super(owner);
-
-        // copy properties from client action
-        this.caption = clientAction.getCaption();
-        this.actionId = clientAction.getActionId();
-    }
+public interface TableCellClickListener {
+    void onClick(String columnKey, int rowKey);
 }
