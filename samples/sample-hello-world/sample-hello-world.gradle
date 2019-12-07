@@ -9,7 +9,7 @@ sourceCompatibility = rootProject.sourceCompatibility
 dependencies {
     implementation project(':starters:starter-standard')
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.apache.commons:commons-dbcp2'
+    implementation 'com.zaxxer:HikariCP'
     runtimeOnly 'org.hsqldb:hsqldb'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

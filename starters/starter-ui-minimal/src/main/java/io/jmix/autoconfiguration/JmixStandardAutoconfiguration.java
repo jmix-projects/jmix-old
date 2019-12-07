@@ -20,7 +20,9 @@ import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.data.JmixDataConfiguration;
 import io.jmix.security.JmixSecurityConfiguration;
 import io.jmix.ui.JmixUiConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -29,9 +31,9 @@ import org.springframework.jndi.JndiObjectFactoryBean;
 import javax.sql.DataSource;
 
 @Configuration
+@AutoConfigureAfter({DataSourceAutoConfiguration.class})
 @Import({JmixCoreConfiguration.class, JmixDataConfiguration.class, JmixSecurityConfiguration.class, JmixUiConfiguration.class})
 public class JmixStandardAutoconfiguration {
-
     @Bean
     @ConditionalOnMissingBean(DataSource.class)
     protected DataSource dataSource() {
