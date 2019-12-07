@@ -262,7 +262,7 @@ public class OrmDataStore implements DataStore {
         if (needToApplyInMemoryReadConstraints) {
             persistenceSecurity.applyConstraints((Collection<Entity>) resultList);
         }
-        if (context.isAuthorizationRequired()) {
+        if (isAuthorizationRequired(context)) {
             attributeSecurity.afterLoad(resultList);
         }
 
