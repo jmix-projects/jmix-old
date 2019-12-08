@@ -21,10 +21,7 @@ import com.sample.app.entity.TestCompositeKeyEntity
 import com.sample.app.entity.TestEntityKey
 import com.sample.app.entity.sales.Product
 import com.sample.app.entity.sec.User
-import io.jmix.core.DataManager
-import io.jmix.core.EntityAccessException
-import io.jmix.core.EntityStates
-import io.jmix.core.LoadContext
+import io.jmix.core.*
 import io.jmix.data.test.DataSpec
 
 import javax.inject.Inject
@@ -162,5 +159,45 @@ class DataManagerTest extends DataSpec {
         then:
 
         users.isEmpty()
+    }
+
+    def "load key-value entity with sort by property"() {
+        setup:
+
+        def entity1 = new TestAppEntity(name: 'entityA')
+        def entity2 = new TestAppEntity(name: 'entityB')
+
+        dataManager.commit(entity1, entity2)
+
+        when: "sort by persistent property"
+
+        def context = ValueLoadContext.create()
+        context.setProperties(['id', 'name'])
+                .setQueryString('select e.id, e.name from test_TestAppEntity e where e.id = :id1 or e.id = :id2')
+                .setParameter('id1', entity1.id)
+                .setParameter('id2', entity2.id)
+                .setSort(Sort.by(Sort.Direction.DESC, 'name'))
+
+
+        def result = dataManager.loadValues(context)
+
+        then:
+        result.size() == 2
+        result[0].getValue('id') == entity2.id
+
+        when: "sort by aggregated persistent property"
+
+        context = ValueLoadContext.create()
+        context.setProperties(['id', 'min'])
+                .setQueryString('select e.id, min(e.name) from test_TestAppEntity e where e.id = :id1 or e.id = :id2 group by e.id')
+                .setParameter('id1', entity1.id)
+                .setParameter('id2', entity2.id)
+                .setSort(Sort.by(Sort.Direction.DESC, 'min'))
+
+        result = dataManager.loadValues(context)
+
+        then:
+        result.size() == 2
+        result[0].getValue('id') == entity2.id
     }
 }

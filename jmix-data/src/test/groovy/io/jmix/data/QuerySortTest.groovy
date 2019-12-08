@@ -192,4 +192,31 @@ class QuerySortTest extends DataSpec {
 
         queryBuilder.getResultQueryString() == 'select e from test_TestAppEntity e left join e.author e_author order by e_author.login desc, e_author.name desc, e.number desc, e.id desc'
     }
+
+    def "sort key-value entity"() {
+
+        JpqlQueryBuilder queryBuilder
+
+        when: "by single persistent property"
+
+        queryBuilder = AppBeans.get(JpqlQueryBuilder)
+        queryBuilder.setQueryString('select e.name from test_TestAppEntity e')
+                .setSort(Sort.by('name'))
+                .setValueProperties(['name'])
+
+        then:
+
+        queryBuilder.getResultQueryString() == 'select e.name from test_TestAppEntity e order by e.name'
+
+        when: "by aggregated single persistent property"
+
+        queryBuilder = AppBeans.get(JpqlQueryBuilder)
+        queryBuilder.setQueryString('select e.id, min(e.name) from test_TestAppEntity e group by e.id')
+                .setSort(Sort.by('min'))
+                .setValueProperties(['id', 'min'])
+
+        then:
+
+        queryBuilder.getResultQueryString() == 'select e.id, min(e.name) from test_TestAppEntity e group by e.id order by min(e.name)'
+    }
 }
