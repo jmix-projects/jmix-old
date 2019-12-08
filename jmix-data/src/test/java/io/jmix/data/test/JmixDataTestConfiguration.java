@@ -16,10 +16,11 @@
 
 package io.jmix.data.test;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import javax.sql.DataSource;
 
@@ -29,10 +30,9 @@ public class JmixDataTestConfiguration {
 
     @Bean
     protected DataSource dataSource() {
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setUrl("jdbc:hsqldb:mem:testdb");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("");
-        return dataSource;
+        return new EmbeddedDatabaseBuilder()
+                .generateUniqueName(true)
+                .setType(EmbeddedDatabaseType.HSQL)
+                .build();
     }
 }
