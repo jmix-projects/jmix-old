@@ -430,7 +430,7 @@ public class QueryParserAstBasedTest {
     }
 
     private DomainModel prepareDomainModel() {
-        EntityBuilder builder = new EntityBuilder();
+        EntityBuilder builder = EntityBuilder.create();
         builder.startNewEntity("sec_GroupHierarchy");
         builder.addReferenceAttribute("group", "sec_Group");
         builder.addReferenceAttribute("as", "sec_Group");
@@ -440,7 +440,7 @@ public class QueryParserAstBasedTest {
         builder.addCollectionReferenceAttribute("constraints", "sec_Constraint");
         JpqlEntityModel groupHierarchy = builder.produce();
 
-        builder = new EntityBuilder();
+        builder = EntityBuilder.create();
         builder.startNewEntity("sec_Constraint");
         builder.addReferenceAttribute("group", "sec_GroupHierarchy");
         JpqlEntityModel constraintEntity = builder.produce();
@@ -448,7 +448,7 @@ public class QueryParserAstBasedTest {
 
         JpqlEntityModel groupEntity = builder.produceImmediately("sec_Group", "name", "group");
 
-        builder = new EntityBuilder();
+        builder = EntityBuilder.create();
         builder.startNewEntity("sec_User");
         builder.addStringAttribute("login");
         builder.addSingleValueAttribute(Integer.class,"int1");
