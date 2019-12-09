@@ -21,15 +21,24 @@ import io.jmix.core.MessageTools;
 import io.jmix.core.metamodel.model.MetaClass;
 
 public class EntityBuilder {
-    private JpqlEntityModelImpl result;
+    private JpqlEntityModelImpl entityModel;
 
-    public JpqlEntityModelImpl produceImmediately(String entityName) {
+    private EntityBuilder() {
+    }
+
+    public static EntityBuilder create() {
+        return new EntityBuilder();
+    }
+
+    public JpqlEntityModel produceImmediately(String entityName) {
         return new JpqlEntityModelImpl(entityName);
     }
 
-    public void startNewEntity(MetaClass metaClass) {
-        result = new JpqlEntityModelImpl(metaClass.getName());
-        result.setUserFriendlyName(AppBeans.get(MessageTools.class).getEntityCaption(metaClass));
+    public EntityBuilder startNewEntity(MetaClass metaClass) {
+        entityModel = new JpqlEntityModelImpl(metaClass.getName());
+        entityModel.setUserFriendlyName(AppBeans.get(MessageTools.class).getEntityCaption(metaClass));
+
+        return this;
     }
 
     public JpqlEntityModel produceImmediately(String entityName, String... stringAttributeNames) {
@@ -40,41 +49,49 @@ public class EntityBuilder {
         return result;
     }
 
-    public void startNewEntity(String name) {
-        result = new JpqlEntityModelImpl(name);
+    public EntityBuilder startNewEntity(String name) {
+        entityModel = new JpqlEntityModelImpl(name);
+        return this;
     }
 
-    public void addStringAttribute(String name) {
+    public EntityBuilder addStringAttribute(String name) {
         addSingleValueAttribute(String.class, name);
+        return this;
     }
 
-    public void addSingleValueAttribute(Class clazz, String name) {
-        result.addSingleValueAttribute(clazz, name);
+    public EntityBuilder addSingleValueAttribute(Class clazz, String name) {
+        entityModel.addSingleValueAttribute(clazz, name);
+        return this;
     }
 
-    public void addSingleValueAttribute(Class clazz, String name, String userFriendlyName) {
-        result.addSingleValueAttribute(clazz, name, userFriendlyName);
+    public EntityBuilder addSingleValueAttribute(Class clazz, String name, String userFriendlyName) {
+        entityModel.addSingleValueAttribute(clazz, name, userFriendlyName);
+        return this;
     }
 
-    public void addReferenceAttribute(String name, String referencedEntityName) {
-        result.addReferenceAttribute(referencedEntityName, name);
+    public EntityBuilder addReferenceAttribute(String name, String referencedEntityName) {
+        entityModel.addReferenceAttribute(referencedEntityName, name);
+        return this;
     }
 
-    public void addReferenceAttribute(String name, String referencedEntityName, String userFriendlyName, boolean isEmbedded) {
-        result.addReferenceAttribute(referencedEntityName, name ,userFriendlyName, isEmbedded);
+    public EntityBuilder addReferenceAttribute(String name, String referencedEntityName, String userFriendlyName, boolean isEmbedded) {
+        entityModel.addReferenceAttribute(referencedEntityName, name, userFriendlyName, isEmbedded);
+        return this;
     }
 
-    public void addCollectionReferenceAttribute(String name, String referencedEntityName) {
-        result.addCollectionReferenceAttribute(referencedEntityName, name);
+    public EntityBuilder addCollectionReferenceAttribute(String name, String referencedEntityName) {
+        entityModel.addCollectionReferenceAttribute(referencedEntityName, name);
+        return this;
     }
 
-    public void addCollectionReferenceAttribute(String name, String referencedEntityName, String userFriendlyName) {
-        result.addCollectionReferenceAttribute(referencedEntityName, name, userFriendlyName);
+    public EntityBuilder addCollectionReferenceAttribute(String name, String referencedEntityName, String userFriendlyName) {
+        entityModel.addCollectionReferenceAttribute(referencedEntityName, name, userFriendlyName);
+        return this;
     }
 
     public JpqlEntityModel produce() {
-        JpqlEntityModelImpl returnedEntity = result;
-        result = null;
+        JpqlEntityModelImpl returnedEntity = entityModel;
+        entityModel = null;
         return returnedEntity;
     }
 }

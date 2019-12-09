@@ -57,7 +57,7 @@ public class DomainModelBuilder {
         Collection<MetaClass> classes = metadata.getSession().getClasses();
         DomainModel result = new DomainModel(extendedEntities, metadata);
 
-        EntityBuilder builder = new EntityBuilder();
+        EntityBuilder builder = EntityBuilder.create();
         for (MetaClass aClass : classes) {
             builder.startNewEntity(aClass.getName());
 
