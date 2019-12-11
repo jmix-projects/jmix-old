@@ -90,32 +90,4 @@ class CollectionLoaderTest extends DataContextSpec {
 
         persistenceTools.deleteRecord(foo)
     }
-
-    def "simplified queries"() {
-        CollectionLoader<Foo> loader = factory.createCollectionLoader()
-        CollectionContainer<Foo> container = factory.createCollectionContainer(Foo)
-        loader.setContainer(container)
-
-        Consumer<CollectionLoader.PreLoadEvent> preLoadListener = Mock()
-        loader.addPreLoadListener(preLoadListener)
-
-        when:
-
-        loader.setQuery('from test_Foo f')
-        loader.load()
-
-        then:
-
-        1 * preLoadListener.accept({ it.loadContext.query.queryString == 'select f from test_Foo f' })
-
-        when:
-
-        loader.setQuery('e.name = :name')
-        loader.setParameter('name', 'name')
-        loader.load()
-
-        then:
-
-        1 * preLoadListener.accept({ it.loadContext.query.queryString == 'select e from test_Foo e where e.name = :name' })
-    }
 }
