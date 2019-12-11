@@ -15,20 +15,32 @@
  */
 package io.jmix.ui.components;
 
+import io.jmix.core.AppBeans;
+import io.jmix.core.MetadataTools;
+import io.jmix.core.entity.BaseGenericIdEntity;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.annotation.Lookup;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.metamodel.model.MetadataObject;
 import io.jmix.ui.actions.Action;
+import io.jmix.ui.actions.legacy.*;
+import io.jmix.ui.components.data.value.ValueBinder;
 import io.jmix.ui.components.impl.FrameImplementation;
-import io.jmix.ui.screen.Screen;
-import io.jmix.ui.screen.ScreenContext;
-import io.jmix.ui.screen.ScreenFragment;
-import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.model.cuba.Datasource;
+import io.jmix.ui.screen.*;
 import io.jmix.ui.sys.ValuePathHelper;
 import org.apache.commons.collections4.iterators.ReverseListIterator;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import static io.jmix.core.entity.BaseEntityInternalAccess.getFilteredAttributes;
 
 /**
  * Utility class working with GenericUI components.
@@ -95,14 +107,14 @@ public abstract class ComponentsHelper {
 //                return window.getTimer(id);
         } else {
             Component innerComponent = frameImpl.getRegisteredComponent(elements[0]);
-            /*if (innerComponent instanceof FieldGroup) { todo FieldGroup
+            if (innerComponent instanceof FieldGroup) {
                 String subPath = ValuePathHelper.pathSuffix(elements);
 
                 FieldGroup fieldGroup = (FieldGroup) innerComponent;
                 FieldGroup.FieldConfig field = fieldGroup.getField(subPath);
 
                 return field != null ? field.getComponent() : null;
-            } else */if (innerComponent instanceof ComponentContainer) {
+            } else if (innerComponent instanceof ComponentContainer) {
 
                 String subPath = ValuePathHelper.pathSuffix(elements);
                 return ((ComponentContainer) innerComponent).getComponent(subPath);
@@ -128,14 +140,14 @@ public abstract class ComponentsHelper {
             return component;
         } else {
             Component innerComponent = frameImpl.getRegisteredComponent(elements[0]);
-            /*if (innerComponent instanceof FieldGroup) { todo FieldGroup
+            if (innerComponent instanceof FieldGroup) {
                 String subPath = ValuePathHelper.pathSuffix(elements);
 
                 FieldGroup fieldGroup = (FieldGroup) innerComponent;
                 FieldGroup.FieldConfig field = fieldGroup.getField(subPath);
 
                 return field != null ? field.getComponent() : null;
-            } else*/ if (innerComponent instanceof ComponentContainer) {
+            } else if (innerComponent instanceof ComponentContainer) {
 
                 String subPath = ValuePathHelper.pathSuffix(elements);
                 return ((ComponentContainer) innerComponent).getComponent(subPath);
@@ -167,14 +179,14 @@ public abstract class ComponentsHelper {
             if (innerComponent == null) {
                 return getComponentByIteration(container, id);
             } else {
-                /*if (innerComponent instanceof FieldGroup) { todo FieldGroup
+                if (innerComponent instanceof FieldGroup) {
                     String subPath = ValuePathHelper.pathSuffix(elements);
 
                     FieldGroup fieldGroup = (FieldGroup) innerComponent;
                     FieldGroup.FieldConfig field = fieldGroup.getField(subPath);
 
                     return field != null ? field.getComponent() : null;
-                } else*/ if (innerComponent instanceof ComponentContainer) {
+                } else if (innerComponent instanceof ComponentContainer) {
 
                     String subPath = ValuePathHelper.pathSuffix(elements);
                     return ((ComponentContainer) innerComponent).getComponent(subPath);
@@ -414,6 +426,35 @@ public abstract class ComponentsHelper {
         return null;
     }
 
+    /**
+     * Get the topmost window for the specified component.
+     *
+     * @param component component instance
+     * @return topmost client specific window in the hierarchy of frames for this component.
+     *
+     * <br>Can be null only if the component wasn't properly initialized.
+     */
+    @Nullable
+    public static Window getWindowImplementation(Component.BelongToFrame component) {
+        Frame frame = component.getFrame();
+        while (frame != null) {
+            if (frame instanceof Window && frame.getFrame() == frame) {
+                Window window = (Window) frame;
+                return window instanceof Window.Wrapper ? ((Window.Wrapper) window).getWrappedWindow() : window;
+            }
+            frame = frame.getFrame();
+        }
+        return null;
+    }
+
+    /**
+     * @deprecated Simply use {@link Frame#getFrameOwner()} call.
+     */
+    @Deprecated
+    public static FrameOwner getFrameController(Frame frame) {
+        return frame.getFrameOwner();
+    }
+
     public static String getFullFrameId(Frame frame) {
         if (frame instanceof Window) {
             return frame.getId();
@@ -498,6 +539,48 @@ public abstract class ComponentsHelper {
         return height + heightUnit.getSymbol();
     }
 
+    @Deprecated
+    public static boolean hasFullWidth(Component c) {
+        return (int) c.getWidth() == 100 && c.getWidthSizeUnit() == SizeUnit.PERCENTAGE;
+    }
+
+    @Deprecated
+    public static boolean hasFullHeight(Component c) {
+        return (int) c.getHeight() == 100 && c.getHeightSizeUnit() == SizeUnit.PERCENTAGE;
+    }
+
+    /**
+     * Creates standard Create, Edit and Remove actions for the component
+     *
+     * @param owner List, Table or Tree component
+     */
+    @Deprecated
+    public static void createActions(ListComponent owner) {
+        createActions(owner, EnumSet.of(ListActionType.CREATE, ListActionType.EDIT, ListActionType.REMOVE));
+    }
+
+    /**
+     * Creates standard actions for the component
+     *
+     * @param owner   List, Table or Tree component
+     * @param actions set of actions to create
+     */
+    @Deprecated
+    public static void createActions(ListComponent owner, EnumSet<ListActionType> actions) {
+        if (actions.contains(ListActionType.CREATE)) {
+            owner.addAction(LegacyCreateAction.create(owner));
+        }
+        if (actions.contains(ListActionType.EDIT)) {
+            owner.addAction(LegacyEditAction.create(owner));
+        }
+        if (actions.contains(ListActionType.REMOVE)) {
+            owner.addAction(LegacyRemoveAction.create(owner));
+        }
+        if (actions.contains(ListActionType.REFRESH)) {
+            owner.addAction(LegacyRefreshAction.create(owner));
+        }
+    }
+
     /**
      * Place component with error message to validation errors container.
      *
@@ -513,7 +596,7 @@ public abstract class ComponentsHelper {
             for (CompositeValidationException.ViolationCause cause : ((CompositeValidationException) e).getCauses()) {
                 errors.add((Component) component, cause.getMessage());
             }
-        } /*else if (e instanceof FieldGroup.FieldsValidationException) { todo FieldGroup
+        } else if (e instanceof FieldGroup.FieldsValidationException) {
             FieldGroup.FieldsValidationException fve = (FieldGroup.FieldsValidationException) e;
             Map<Validatable, ValidationException> fields = fve.getProblemFields();
             for (Map.Entry<Validatable, ValidationException> problem : fields.entrySet()) {
@@ -521,8 +604,48 @@ public abstract class ComponentsHelper {
 
                 fillErrorMessages(problem.getKey(), exception, errors);
             }
-        }*/ else {
+        } else {
             errors.add((Component) component, e.getMessage());
+        }
+    }
+
+    /**
+     * Set field's "required" flag to false if the value has been filtered by Row Level Security
+     * This is necessary to allow user to submit form with filtered attribute even if attribute is required.
+     *
+     * @deprecated Is not required anymore. Implemented in {@link ValueBinder}.
+     */
+    @Deprecated
+    public static void handleFilteredAttributes(Field component, Datasource datasource, MetaPropertyPath mpp) {
+        if (component.isRequired()
+                && datasource.getState() == Datasource.State.VALID
+                && datasource.getItem() != null
+                && mpp.getMetaProperty().getRange().isClass()) {
+
+            Entity targetItem = datasource.getItem();
+
+            MetaProperty[] propertiesChain = mpp.getMetaProperties();
+            if (propertiesChain.length > 1) {
+                String basePropertyItem = Arrays.stream(propertiesChain)
+                        .limit(propertiesChain.length - 1)
+                        .map(MetadataObject::getName)
+                        .collect(Collectors.joining("."));
+
+                targetItem = datasource.getItem().getValueEx(basePropertyItem);
+            }
+
+            if (targetItem instanceof BaseGenericIdEntity) {
+                String metaPropertyName = mpp.getMetaProperty().getName();
+                Object value = targetItem.getValue(metaPropertyName);
+
+                BaseGenericIdEntity baseGenericIdEntity = (BaseGenericIdEntity) targetItem;
+                String[] filteredAttributes = getFilteredAttributes(baseGenericIdEntity);
+
+                if (value == null && filteredAttributes != null
+                        && ArrayUtils.contains(filteredAttributes, metaPropertyName)) {
+                    component.setRequired(false);
+                }
+            }
         }
     }
 
@@ -536,6 +659,60 @@ public abstract class ComponentsHelper {
             }
         }
         return oldIndex;
+    }
+
+    /**
+     * INTERNAL.
+     * Adds actions specified in {@link Lookup} annotation on entity attribute to the given PickerField.
+     *
+     * @deprecated Use {@link GuiActionSupport#createActionsByMetaAnnotations(PickerField)} instead.
+     */
+    @Deprecated
+    public static boolean createActionsByMetaAnnotations(PickerField pickerField) {
+        MetaPropertyPath mpp = pickerField.getMetaPropertyPath();
+        if (mpp == null) {
+            return false;
+        }
+
+        String[] actions = (String[]) AppBeans.get(MetadataTools.class)
+                .getMetaAnnotationAttributes(mpp.getMetaProperty().getAnnotations(), Lookup.class)
+                .get("actions");
+        if (actions != null && actions.length > 0) {
+            for (String actionId : actions) {
+                for (PickerField.ActionType actionType : PickerField.ActionType.values()) {
+                    if (actionType.getId().equals(actionId.trim())) {
+                        pickerField.addAction(actionType.createAction(pickerField));
+                        break;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Deprecated
+    public static SizeUnit convertToSizeUnit(int unit) {
+        switch (unit) {
+            case Component.UNITS_PIXELS:
+                return SizeUnit.PIXELS;
+            case Component.UNITS_PERCENTAGE:
+                return SizeUnit.PERCENTAGE;
+            default:
+                throw new IllegalArgumentException("Unsupported unit: " + unit);
+        }
+    }
+
+    @Deprecated
+    public static int convertFromSizeUnit(SizeUnit unit) {
+        switch (unit) {
+            case PIXELS:
+                return Component.UNITS_PIXELS;
+            case PERCENTAGE:
+                return Component.UNITS_PERCENTAGE;
+            default:
+                throw new IllegalArgumentException("Unsupported unit: " + unit);
+        }
     }
 
     /**

@@ -17,6 +17,9 @@
 package io.jmix.ui.sys;
 
 import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
+import io.jmix.ui.navigation.Route;
+import io.jmix.ui.navigation.RouteDefinition;
+import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +29,9 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -100,14 +105,14 @@ public class UiControllersConfiguration extends AbstractScanConfiguration {
 
         String className = metadataReader.getClassMetadata().getClassName();
         String controllerId = UiDescriptorUtils.getInferredScreenId(idAttr, valueAttr, className);
-        // todo navigation
-//        RouteDefinition routeDefinition = extractRouteDefinition(metadataReader);
 
-        return new UiControllerDefinition(controllerId, className, metadataReader.getResource());
+        RouteDefinition routeDefinition = extractRouteDefinition(metadataReader);
+
+        return new UiControllerDefinition(controllerId, className, metadataReader.getResource(), routeDefinition);
     }
 
-    // todo navigation
-    /*protected RouteDefinition extractRouteDefinition(MetadataReader metadataReader) {
+
+    protected RouteDefinition extractRouteDefinition(MetadataReader metadataReader) {
         Map<String, Object> routeAnnotation =
                 metadataReader.getAnnotationMetadata().getAnnotationAttributes(Route.class.getName());
 
@@ -148,7 +153,7 @@ public class UiControllersConfiguration extends AbstractScanConfiguration {
         } catch (IOException e) {
             throw new RuntimeException("Unable to read class: %s" + superClazz);
         }
-    }*/
+    }
 
     protected boolean isCandidateUiController(MetadataReader metadataReader) {
         return metadataReader.getClassMetadata().isConcrete()

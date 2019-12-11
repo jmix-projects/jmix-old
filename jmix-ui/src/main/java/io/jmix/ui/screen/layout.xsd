@@ -381,13 +381,13 @@
             </xs:simpleType>
             <xs:simpleType>
                 <xs:restriction base="xs:string">
-                    <xs:enumeration value="com.haulmont.cuba.gui.components.validators.DateValidator"/>
-                    <xs:enumeration value="com.haulmont.cuba.gui.components.validators.DoubleValidator"/>
-                    <xs:enumeration value="com.haulmont.cuba.gui.components.validators.EmailValidator"/>
-                    <xs:enumeration value="com.haulmont.cuba.gui.components.validators.IntegerValidator"/>
-                    <xs:enumeration value="com.haulmont.cuba.gui.components.validators.LongValidator"/>
-                    <xs:enumeration value="com.haulmont.cuba.gui.components.validators.PatternValidator"/>
-                    <xs:enumeration value="com.haulmont.cuba.gui.components.validators.ScriptValidator"/>
+                    <xs:enumeration value="io.jmix.ui.components.validators.DateValidator"/>
+                    <xs:enumeration value="io.jmix.ui.components.validators.DoubleValidator"/>
+                    <xs:enumeration value="io.jmix.ui.components.validators.EmailValidator"/>
+                    <xs:enumeration value="io.jmix.ui.components.validators.IntegerValidator"/>
+                    <xs:enumeration value="io.jmix.ui.components.validators.LongValidator"/>
+                    <xs:enumeration value="io.jmix.ui.components.validators.PatternValidator"/>
+                    <xs:enumeration value="io.jmix.ui.components.validators.ScriptValidator"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:union>

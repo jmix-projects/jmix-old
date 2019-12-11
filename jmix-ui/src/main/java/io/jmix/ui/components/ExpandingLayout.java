@@ -22,6 +22,11 @@ public interface ExpandingLayout extends ComponentContainer {
 
     void expand(Component component);
 
+    /**
+     * @deprecated Use {@link SupportsExpandRatio#setExpandRatio(Component, float)} instead.
+     */
+    @Deprecated
+    void expand(Component component, String height, String width);
     void resetExpanded();
 
     boolean isExpanded(Component component);

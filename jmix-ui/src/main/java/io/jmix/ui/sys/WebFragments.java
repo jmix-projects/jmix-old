@@ -32,9 +32,9 @@ import io.jmix.ui.model.impl.ScreenDataImpl;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.sys.FragmentHelper.FragmentLoaderInitTask;
 import io.jmix.ui.sys.FragmentHelper.FragmentLoaderInjectTask;
-import io.jmix.ui.xml.ComponentLoader;
-import io.jmix.ui.xml.ComponentLoaderContext;
-import io.jmix.ui.xml.LayoutLoader;
+import io.jmix.ui.xml.layout.ComponentLoader;
+import io.jmix.ui.xml.layout.loaders.ComponentLoaderContext;
+import io.jmix.ui.xml.layout.loaders.LayoutLoader;
 import org.dom4j.Element;
 import org.perf4j.StopWatch;
 

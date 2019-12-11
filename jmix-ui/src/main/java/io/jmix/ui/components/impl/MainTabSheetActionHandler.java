@@ -196,7 +196,7 @@ public class MainTabSheetActionHandler implements Action.Handler {
         return null;
     }
 
-    protected com.haulmont.cuba.gui.components.Window findWindow(Layout layout) {
+    protected io.jmix.ui.components.Window findWindow(Layout layout) {
         for (Object component : layout) {
             if (component instanceof WindowBreadCrumbs) {
                 WindowBreadCrumbs breadCrumbs = (WindowBreadCrumbs) component;

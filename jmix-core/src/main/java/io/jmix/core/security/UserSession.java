@@ -20,6 +20,7 @@ import io.jmix.core.entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,6 +38,8 @@ public class UserSession implements Authentication {
     protected ClientDetails clientDetails = ClientDetails.UNKNOWN;
 
     protected Locale locale = Locale.getDefault(); // todo user locale
+
+    protected TimeZone timeZone; // todo user timezone
 
     protected List<String> roles = new ArrayList<>();
 
@@ -96,7 +99,7 @@ public class UserSession implements Authentication {
         attributes.put(name, value);
     }
 
-    public Collection<Object> getAttributeNames() {
+    public Collection<String> getAttributeNames() {
         return new ArrayList<>(attributes.keySet());
     }
 
@@ -144,5 +147,17 @@ public class UserSession implements Authentication {
 
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
+    }
+
+    @Nullable
+    public TimeZone getTimeZone() {
+        return timeZone;
+    }
+
+    /**
+     * INTERNAL
+     */
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
     }
 }

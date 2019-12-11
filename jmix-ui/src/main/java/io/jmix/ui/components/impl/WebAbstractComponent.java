@@ -32,6 +32,7 @@ import io.jmix.ui.sys.TestIdManager;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -509,8 +510,38 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
     }
 
     @Override
+    @Nullable
+    public <X> X unwrapOrNull(Class<X> internalComponentClass) {
+        return internalComponentClass.isAssignableFrom(getComponent().getClass())
+                ? internalComponentClass.cast(getComponent())
+                : null;
+    }
+
+    @Override
+    public <X> void withUnwrapped(Class<X> internalComponentClass, Consumer<X> action) {
+        if (internalComponentClass.isAssignableFrom(getComponent().getClass())) {
+            action.accept(internalComponentClass.cast(getComponent()));
+        }
+    }
+
+    @Override
     public <X> X unwrapComposition(Class<X> internalCompositionClass) {
         return internalCompositionClass.cast(getComposition());
+    }
+
+    @Nullable
+    @Override
+    public <X> X unwrapCompositionOrNull(Class<X> internalCompositionClass) {
+        return internalCompositionClass.isAssignableFrom(getComposition().getClass())
+                ? internalCompositionClass.cast(getComposition())
+                : null;
+    }
+
+    @Override
+    public <X> void withUnwrappedComposition(Class<X> internalCompositionClass, Consumer<X> action) {
+        if (internalCompositionClass.isAssignableFrom(getComposition().getClass())) {
+            action.accept(internalCompositionClass.cast(getComposition()));
+        }
     }
 
     protected boolean hasValidationError() {

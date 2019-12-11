@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import java.util.Locale;
 import java.util.UUID;
 
-@Component
+@Component(UserSessionSource.NAME)
 public class UserSessionSourceImpl implements UserSessionSource {
 
     @Inject

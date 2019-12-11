@@ -20,13 +20,15 @@ import io.jmix.ui.components.ActionOwner;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.KeyCombination;
 import io.jmix.ui.components.ListComponent;
+import io.jmix.ui.components.compatibility.WindowManager;
 import io.jmix.ui.icons.Icons;
 
-import javax.management.openmbean.OpenType;
 import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import java.util.EventObject;
 import java.util.function.Consumer;
+
+import static io.jmix.ui.components.compatibility.WindowManager.OpenType;
 
 /**
  * The {@code Action} interface abstracts away a function from a visual component.
@@ -203,6 +205,13 @@ public interface Action {
 
         String getConstraintCode();
         void setConstraintCode(String constraintCode);
+    }
+
+    /**
+     * Marker interface that indicates that the implementing action will
+     * change its 'enabled' state according to the screen read-only mode.
+     */
+    interface DisabledWhenScreenReadOnly {
     }
 
     /**

@@ -161,6 +161,12 @@ public abstract class WebAbstractBox<T extends AbstractOrderedLayout>
     }
 
     @Override
+    public void expand(Component childComponent, String height, String width) {
+        com.vaadin.ui.Component expandedComponent = WebComponentsHelper.getComposition(childComponent);
+        WebComponentsHelper.expand(component, expandedComponent, height, width);
+    }
+
+    @Override
     public void expand(Component childComponent) {
         component.setExpandRatio(childComponent.unwrapComposition(com.vaadin.ui.Component.class), 1);
 
@@ -231,6 +237,16 @@ public abstract class WebAbstractBox<T extends AbstractOrderedLayout>
             }
         }
         return null;
+    }
+
+    @Override
+    public void removeLayoutClickListener(Consumer<LayoutClickEvent> listener) {
+        unsubscribe(LayoutClickEvent.class, listener);
+
+        if (!hasSubscriptions(LayoutClickEvent.class)) {
+            component.removeLayoutClickListener(layoutClickListener);
+            layoutClickListener = null;
+        }
     }
 
     @Override

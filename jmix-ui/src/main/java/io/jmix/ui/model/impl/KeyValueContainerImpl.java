@@ -33,6 +33,10 @@ public class KeyValueContainerImpl extends InstanceContainerImpl<KeyValueEntity>
         super(applicationContext, new KeyValueMetaClass());
     }
 
+    public KeyValueContainerImpl(ApplicationContext applicationContext, KeyValueMetaClass entityMetaClass) {
+        super(applicationContext, entityMetaClass);
+    }
+
     @Override
     public KeyValueMetaClass getEntityMetaClass() {
         return (KeyValueMetaClass) super.getEntityMetaClass();

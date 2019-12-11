@@ -51,8 +51,7 @@ dependencies {
     // todo eclipselink
 //    api 'org.eclipse.persistence:javax.persistence'
     api 'org.eclipse.persistence:org.eclipse.persistence.jpa'
-
-    implementation 'org.antlr:antlr-runtime'
+    api 'org.antlr:antlr-runtime'
 
     testImplementation 'org.springframework:spring-test'
     testImplementation "org.spockframework:spock-core"

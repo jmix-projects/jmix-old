@@ -17,6 +17,7 @@
 package io.jmix.ui.screen;
 
 import io.jmix.ui.*;
+import io.jmix.ui.navigation.UrlRouting;
 
 public interface ScreenContext {
     ScreenOptions getScreenOptions();
@@ -31,6 +32,5 @@ public interface ScreenContext {
 
     Fragments getFragments();
 
-    // todo navigation
-    // UrlRouting getUrlRouting();
+    UrlRouting getUrlRouting();
 }

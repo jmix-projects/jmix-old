@@ -17,7 +17,7 @@
 package io.jmix.ui.sys;
 
 import io.jmix.ui.components.Frame;
-import io.jmix.ui.xml.ComponentLoaderContext;
+import io.jmix.ui.xml.layout.loaders.ComponentLoaderContext;
 
 public class FragmentContextImpl extends FrameContextImpl {
 

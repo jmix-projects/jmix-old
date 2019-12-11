@@ -43,6 +43,8 @@ include 'samples:sample-custom-theme'
 include 'samples:sample-widgets-addon'
 include 'samples:sample-custom-widgets'
 
+include 'samples:sample-ui' //TODO VM
+
 rootProject.children.each { p1 ->
 	p1.buildFileName = "${p1.name}.gradle"
 	p1.children.each { p2 ->

@@ -16,6 +16,7 @@
 
 package io.jmix.ui.sys;
 
+import io.jmix.ui.navigation.RouteDefinition;
 import org.springframework.core.io.Resource;
 
 public final class UiControllerDefinition {
@@ -23,13 +24,13 @@ public final class UiControllerDefinition {
     private final String id;
     private final String controllerClass;
     private final Resource resource;
-    // private final RouteDefinition routeDefinition;
+    private final RouteDefinition routeDefinition;
 
-    public UiControllerDefinition(String id, String controllerClass, Resource resource) {
+    public UiControllerDefinition(String id, String controllerClass, Resource resource, RouteDefinition routeDefinition) {
         this.id = id;
         this.controllerClass = controllerClass;
-        // this.routeDefinition = null;
         this.resource = resource;
+        this.routeDefinition = routeDefinition;
     }
 
     // todo
@@ -47,11 +48,10 @@ public final class UiControllerDefinition {
         return controllerClass;
     }
 
-    // todo navigation
-    /*public RouteDefinition getRouteDefinition() {
+    public RouteDefinition getRouteDefinition() {
         return routeDefinition;
     }
-*/
+
     public Resource getResource() {
         return resource;
     }
@@ -61,10 +61,10 @@ public final class UiControllerDefinition {
         return "UiControllerDefinition{" +
                 "id='" + id + '\'' +
                 ", controllerClass='" + controllerClass + '\'' +
-                // todo navigation
-                /*(routeDefinition == null
+
+                (routeDefinition == null
                         ? ""
-                        : ", " + routeDefinition.toString()) +*/
+                        : ", " + routeDefinition.toString()) +
                 '}';
     }
 }

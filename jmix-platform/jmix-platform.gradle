@@ -18,7 +18,7 @@ plugins {
     id 'java-platform'
 }
 
-def vaadinVersion = '8.6.4-13-cuba'
+def vaadinVersion = '8.8.5-5-cuba'
 
 javaPlatform {
     allowDependencies()

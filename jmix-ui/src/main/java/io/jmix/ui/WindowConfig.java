@@ -253,7 +253,7 @@ public class WindowConfig {
                 }
 
                 WindowInfo windowInfo = new WindowInfo(definition.getId(), windowAttributesProvider,
-                        definition.getControllerClass()/*, definition.getRouteDefinition()*/); // todo navigation
+                        definition.getControllerClass(), definition.getRouteDefinition());
                 registerScreen(definition.getId(), windowInfo);
             }
 
@@ -630,7 +630,7 @@ public class WindowConfig {
         public ResolvedWindowInfo(WindowInfo windowInfo, Type type, Class<? extends FrameOwner> controllerClass,
                                   String template) {
             super(windowInfo.getId(), null, windowInfo.getDescriptor(),
-                    windowInfo.getControllerClassName()/*, windowInfo.getRouteDefinition()*/); // todo navigation
+                    windowInfo.getControllerClassName(), windowInfo.getRouteDefinition());
 
             this.template = template;
 

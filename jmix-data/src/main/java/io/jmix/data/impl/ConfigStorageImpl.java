@@ -124,23 +124,25 @@ public class ConfigStorageImpl implements ConfigStorage {
             try {
                 if (cache == null) {
                     log.info("Loading DB-stored app properties cache");
-                    // Don't use transactions here because of loop possibility from EntityLog
-                    QueryRunner queryRunner = new QueryRunner(persistence.getDataSource());
-                    try {
-                        cache = queryRunner.query("select NAME, VALUE_ from SYS_CONFIG",
-                                new ResultSetHandler<Map<String, String>>() {
-                                    @Override
-                                    public Map<String, String> handle(ResultSet rs) throws SQLException {
-                                        HashMap<String, String> map = new HashMap<>();
-                                        while (rs.next()) {
-                                            map.put(rs.getString(1), rs.getString(2));
+                    persistence.runInTransaction(em -> {
+                        // Don't use transactions here because of loop possibility from EntityLog
+                        QueryRunner queryRunner = new QueryRunner();
+                        try {
+                            cache = queryRunner.query(em.getConnection(),"select NAME, VALUE_ from SYS_CONFIG",
+                                    new ResultSetHandler<Map<String, String>>() {
+                                        @Override
+                                        public Map<String, String> handle(ResultSet rs) throws SQLException {
+                                            HashMap<String, String> map = new HashMap<>();
+                                            while (rs.next()) {
+                                                map.put(rs.getString(1), rs.getString(2));
+                                            }
+                                            return map;
                                         }
-                                        return map;
-                                    }
-                                });
-                    } catch (SQLException e) {
-                        throw new RuntimeException("Error loading DB-stored app properties cache", e);
-                    }
+                                    });
+                        } catch (SQLException e) {
+                            throw new RuntimeException("Error loading DB-stored app properties cache", e);
+                        }
+                    });
                 }
             } finally {
                 lock.readLock().lock();

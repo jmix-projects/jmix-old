@@ -17,14 +17,17 @@
 package io.jmix.ui.screen;
 
 import io.jmix.core.BeanLocator;
+import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.events.TriggerOnce;
+import io.jmix.ui.ClientConfig;
 import io.jmix.ui.components.Window;
 import io.jmix.ui.components.impl.WindowImplementation;
 import io.jmix.ui.Screens;
 import io.jmix.ui.WindowInfo;
 import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.settings.Settings;
 import io.jmix.ui.util.OperationResult;
 import org.springframework.context.ApplicationListener;
 
@@ -52,7 +55,7 @@ public abstract class Screen implements FrameOwner {
 
     private Window window;
 
-    // private Settings settings; todo settings
+     private Settings settings;
 
     private EventHub eventHub = new EventHub();
 
@@ -358,15 +361,15 @@ public abstract class Screen implements FrameOwner {
         return true;
     }
 
-    /* todo settings
+    /**
      * @param action close action
      * @return true if UI settings should be saved
      */
-    /*protected boolean isSaveSettingsOnClose(@SuppressWarnings("unused") CloseAction action) {
-        Configuration configuration = beanLocator.get(Configuration.NAME);
+    protected boolean isSaveSettingsOnClose(@SuppressWarnings("unused") CloseAction action) {
+        ConfigInterfaces configuration = beanLocator.get(ConfigInterfaces.NAME);
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
         return !clientConfig.getManualScreenSettingsSaving();
-    }*/
+    }
 
     /**
      * @return true if screen can be opened multiple times from a navigation menu
@@ -401,41 +404,54 @@ public abstract class Screen implements FrameOwner {
                 && this.getId().equals(openedScreen.getId());
     }
 
-    /* todo settings
+    /**
      * @return screen settings
      */
-    /*protected Settings getSettings() {
+    protected Settings getSettings() {
         return settings;
-    }*/
+    }
 
-    /* todo settings
+    /**
      * Saves screen settings.
      */
-    /*protected void saveSettings() {
+    protected void saveSettings() {
         if (settings != null) {
             ScreenSettings screenSettings = getBeanLocator().get(ScreenSettings.NAME);
             screenSettings.saveSettings(this, settings);
         }
-    }*/
+    }
 
-    /* todo settings
+    /**
      * Applies screen settings to UI components.
      *
      * @param settings screen settings
      */
-    /*protected void applySettings(Settings settings) {
+    protected void applySettings(Settings settings) {
         this.settings = settings;
 
         ScreenSettings screenSettings = getBeanLocator().get(ScreenSettings.NAME);
         screenSettings.applySettings(this, settings);
-    }*/
+    }
 
-    /* todo settings
+    /**
+     * Applies screen settings to data components.
+     *
+     * @param settings screen settings
+     */
+    protected void applyDataLoadingSettings(Settings settings) {
+        this.settings = settings;
+
+        ScreenSettings screenSettings = getBeanLocator().get(ScreenSettings.NAME);
+        screenSettings.applyDataLoadingSettings(this, settings);
+    }
+
+
+    /**
      * Deletes screen settings associated with this screen.
      */
-    /*protected void deleteSettings() {
+    protected void deleteSettings() {
         settings.delete();
-    }*/
+    }
 
     /**
      * Event sent when the screen controller and all its declaratively defined components are created, and dependency

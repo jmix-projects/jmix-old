@@ -26,7 +26,9 @@ import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.FrameContext;
 import io.jmix.ui.components.WindowContext;
+import io.jmix.ui.components.compatibility.WindowManager;
 import io.jmix.ui.icons.Icons;
+import io.jmix.ui.navigation.NavigationState;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.sys.events.UiEventsMulticaster;
@@ -84,9 +86,8 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
 
     private EventHub eventHub;
 
-    // todo navigation
-//    protected int urlStateMark;
-//    protected NavigationState resolvedState;
+    protected int urlStateMark;
+    protected NavigationState resolvedState;
 
     protected boolean defaultScreenWindow = false;
 
@@ -252,10 +253,40 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
         return (X) getComponent();
     }
 
+    @Nullable
+    @Override
+    public <X> X unwrapOrNull(Class<X> internalComponentClass) {
+        return internalComponentClass.isAssignableFrom(getComponent().getClass())
+                ? internalComponentClass.cast(getComponent())
+                : null;
+    }
+
+    @Override
+    public <X> void withUnwrapped(Class<X> internalComponentClass, Consumer<X> action) {
+        if (internalComponentClass.isAssignableFrom(getComponent().getClass())) {
+            action.accept(internalComponentClass.cast(getComponent()));
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public <X> X unwrapComposition(Class<X> internalCompositionClass) {
         return (X) getComposition();
+    }
+
+    @Nullable
+    @Override
+    public <X> X unwrapCompositionOrNull(Class<X> internalCompositionClass) {
+        return internalCompositionClass.isAssignableFrom(getComposition().getClass())
+                ? internalCompositionClass.cast(getComposition())
+                : null;
+    }
+
+    @Override
+    public <X> void withUnwrappedComposition(Class<X> internalCompositionClass, Consumer<X> action) {
+        if (internalCompositionClass.isAssignableFrom(getComposition().getClass())) {
+            action.accept(internalCompositionClass.cast(getComposition()));
+        }
     }
 
     @Override
@@ -503,7 +534,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
             Component child = componentsIterator.next();
 
             // todo implement
-            /*if (child instanceof com.haulmont.cuba.gui.components.TabSheet
+            /*if (child instanceof io.jmix.ui.components.TabSheet
                     || child instanceof Accordion) {
                 // #PL-3176
                 // we don't know about selected tab after request
@@ -581,6 +612,11 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
         return getEventHub().subscribe(BeforeCloseEvent.class, listener);
     }
 
+    @Override
+    public void removeBeforeWindowCloseListener(Consumer<BeforeCloseEvent> listener) {
+        unsubscribe(BeforeCloseEvent.class, listener);
+    }
+
     public void fireBeforeClose(BeforeCloseEvent event) {
         publish(BeforeCloseEvent.class, event);
     }
@@ -596,6 +632,12 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Deprecated
+    @Override
+    public WindowManager getWindowManager() {
+        return (WindowManager) UiControllerUtils.getScreenContext(getFrameOwner()).getScreens();
+    }
 
     @Override
     public void add(Component childComponent) {
@@ -820,6 +862,12 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
     }
 
     @Override
+    public void expand(Component component, String height, String width) {
+        com.vaadin.ui.Component expandedComponent = component.unwrapComposition(com.vaadin.ui.Component.class);
+        WebComponentsHelper.expand((AbstractOrderedLayout) getContainer(), expandedComponent, height, width);
+    }
+
+    @Override
     public void expand(Component component) {
         setExpandRatio(component, 1);
     }
@@ -928,8 +976,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
         return this.component.getExpandRatio(vComponent);
     }
 
-    // todo navigation
-/*    public int getUrlStateMark() {
+    public int getUrlStateMark() {
         return urlStateMark;
     }
 
@@ -943,7 +990,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
 
     public void setResolvedState(NavigationState resolvedState) {
         this.resolvedState = resolvedState;
-    }*/
+    }
 
     public boolean isDefaultScreenWindow() {
         return defaultScreenWindow;

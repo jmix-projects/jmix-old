@@ -22,6 +22,7 @@ import io.jmix.ui.components.Fragment;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.Window;
 import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.settings.Settings;
 import org.springframework.context.ApplicationListener;
 
 import javax.annotation.Nonnull;
@@ -97,9 +98,12 @@ public final class UiControllerUtils {
         }
     }
 
-    // todo settings
-/*    public static void applySettings(Screen screen, Settings settings) {
+    public static void applySettings(Screen screen, Settings settings) {
         screen.applySettings(settings);
+    }
+
+    public static void applyDataLoadingSettings(Screen screen, Settings settings) {
+        screen.applyDataLoadingSettings(settings);
     }
 
     public static void saveSettings(Screen screen) {
@@ -112,7 +116,7 @@ public final class UiControllerUtils {
 
     public static Settings getSettings(Screen screen) {
         return screen.getSettings();
-    }*/
+    }
 
     public static Frame getFrame(FrameOwner frameOwner) {
         if (frameOwner instanceof Screen) {
@@ -163,6 +167,10 @@ public final class UiControllerUtils {
 
     public static Subscription addAfterDetachListener(Screen screen, Consumer<Screen.AfterDetachEvent> listener) {
         return screen.addAfterDetachListener(listener);
+    }
+
+    public static Subscription addDetachListener(ScreenFragment screen, Consumer<ScreenFragment.DetachEvent> listener) {
+        return screen.addDetachEventListener(listener);
     }
 
     @Nonnull

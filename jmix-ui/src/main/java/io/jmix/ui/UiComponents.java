@@ -33,7 +33,7 @@ public interface UiComponents {
      * Create a component instance by its name.
      *
      * @param name component name. It is usually defined in NAME constant inside the component interface,
-     *             e.g. {@link com.haulmont.cuba.gui.components.Label#NAME}.
+     *             e.g. {@link io.jmix.ui.components.Label#NAME}.
      *             It is also usually equal to component's XML name.
      * @return component instance for the current client type (web or desktop)
      */
@@ -52,8 +52,8 @@ public interface UiComponents {
      *
      * @param type component type token
      * @return component instance for the current client type (web or desktop)
-     * @see com.haulmont.cuba.gui.components.Label#TYPE_DEFAULT
-     * @see com.haulmont.cuba.gui.components.TextField#TYPE_DEFAULT
+     * @see io.jmix.ui.components.Label#TYPE_DEFAULT
+     * @see io.jmix.ui.components.TextField#TYPE_DEFAULT
      */
     <T extends Component> T create(TypeToken<T> type);
 }

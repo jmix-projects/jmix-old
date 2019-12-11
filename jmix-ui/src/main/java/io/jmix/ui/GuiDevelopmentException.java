@@ -17,8 +17,8 @@
 package io.jmix.ui;
 
 import io.jmix.core.DevelopmentException;
-import io.jmix.ui.xml.ComponentLoader.ComponentContext;
-import io.jmix.ui.xml.ComponentLoader.Context;
+import io.jmix.ui.xml.layout.ComponentLoader.ComponentContext;
+import io.jmix.ui.xml.layout.ComponentLoader.Context;
 
 import javax.annotation.Nullable;
 import java.util.Map;

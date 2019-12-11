@@ -18,6 +18,9 @@ package io.jmix.ui.components;
 import io.jmix.ui.icons.Icons;
 import org.dom4j.Element;
 
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
+
 /**
  * Root of the Generic UI components hierarchy.
  */
@@ -34,6 +37,17 @@ public interface Component {
         BOTTOM_LEFT,
         BOTTOM_CENTER
     }
+
+    /**
+     * @deprecated Use {@link SizeUnit} instead.
+     */
+    @Deprecated
+    int UNITS_PIXELS = 0;
+    /**
+     * @deprecated @deprecated Use {@link SizeUnit} instead.
+     */
+    @Deprecated
+    int UNITS_PERCENTAGE = 8;
 
     String AUTO_SIZE = "-1px";
     int AUTO_SIZE_PX = -1;
@@ -234,7 +248,40 @@ public interface Component {
     <X> X unwrap(Class<X> internalComponentClass);
 
     /**
-     * Get the outmost external container of client specific component instance. Can be used in client module to simplify invocation of underlying API.
+     * Get client specific component instance. Can be used in client module to simplify invocation of underlying API.
+     * <br>
+     * Returns {@code null} if underlying component cannot be casted to the given {@code internalComponentClass}.
+     * Example:
+     * <pre>
+     * com.vaadin.ui.TextField vTextField = textField.unwrapOrNull(com.vaadin.ui.TextField.class);
+     * </pre>
+     *
+     * @param internalComponentClass class of underlying component implementation based on Vaadin or Swing
+     * @param <X> type of internal class
+     * @return internal client specific component or null if it cannot be casted to given class
+     */
+    @Nullable
+    <X> X unwrapOrNull(Class<X> internalComponentClass);
+
+    /**
+     * Performs the given {@code action} with underlying component if it can be casted to the given
+     * {@code internalComponentClass}.
+     * Example:
+     * <pre>
+     * textField.withUnwrapped(com.vaadin.ui.TextField.class, vTextField -&gt; {
+     *     // do something
+     * });
+     * </pre>
+     *
+     * @param internalComponentClass class of underlying component implementation based on Vaadin or Swing
+     * @param <X> type of internal class
+     * @param action action to perform if underlying component can be casted to given class
+     */
+    <X> void withUnwrapped(Class<X> internalComponentClass, Consumer<X> action);
+
+    /**
+     * Get the outmost external container of client specific component instance.
+     * Can be used in client module to simplify invocation of underlying API.
      * <br>
      * Example:
      * <pre>
@@ -246,6 +293,41 @@ public interface Component {
      * @return internal client specific component
      */
     <X> X unwrapComposition(Class<X> internalCompositionClass);
+
+    /**
+     * Get the outmost external container of client specific component instance.
+     * Can be used in client module to simplify invocation of underlying API.
+     * <br>
+     * Returns null if composition cannot be casted to given {@code internalCompositionClass}.
+     * Example:
+     * <pre>
+     * com.vaadin.ui.Layout vLayout = table.unwrapCompositionOrNull(com.vaadin.ui.Layout.class);
+     * </pre>
+     *
+     * @param internalCompositionClass class of underlying composition implementation based on Vaadin or Swing
+     * @param <X> type of internal class
+     * @return internal client specific component or null if cannot be casted to given class
+     */
+    @Nullable
+    <X> X unwrapCompositionOrNull(Class<X> internalCompositionClass);
+
+    /**
+     * Get the outmost external container of client specific component instance and performs the given {@code action}.
+     * <br>
+     * Can be used in client module to simplify invocation of underlying API.
+     * <br>
+     * Example:
+     * <pre>
+     * table.withUnwrappedComposition(com.vaadin.ui.Layout.class, vLayout -&gt; {
+     *     // do something
+     * });
+     * </pre>
+     *
+     * @param internalCompositionClass class of underlying composition implementation based on Vaadin or Swing
+     * @param <X> type of internal class
+     * @param action to perform if underlying composition can be casted to given class
+     */
+    <X> void withUnwrappedComposition(Class<X> internalCompositionClass, Consumer<X> action);
 
     /**
      * Component delegating work to some "wrapped" client-specific implementation.

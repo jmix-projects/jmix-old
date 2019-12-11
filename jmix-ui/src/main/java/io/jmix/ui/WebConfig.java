@@ -24,7 +24,10 @@ import io.jmix.core.config.defaults.*;
 import io.jmix.core.config.type.CommaSeparatedStringListTypeFactory;
 import io.jmix.core.config.type.Factory;
 import io.jmix.core.config.type.StringListTypeFactory;
+import io.jmix.ui.MainTabSheetMode;
 import io.jmix.ui.logging.AppLog;
+import io.jmix.ui.navigation.UrlHandlingMode;
+import io.jmix.ui.navigation.UrlHandlingModeFactory;
 
 import java.util.List;
 
@@ -161,15 +164,24 @@ public interface WebConfig extends Config {
     @DefaultInt(25)
     int getMainTabCaptionLength();
 
-    /* todo navigation
+    /**
+     * @return Whether to handle back button click in browser on server-side.
+     * @deprecated use {@link WebConfig#getUrlHandlingMode()} instead
+     */
+    @Property("cuba.web.allowHandleBrowserHistoryBack")
+    @DefaultBoolean(false)
+    @Deprecated
+    boolean getAllowHandleBrowserHistoryBack();
+
+    /**
      * @return how URL changes should be handled
      *
      * @see UrlHandlingMode
      */
-    /*@Property("cuba.web.urlHandlingMode")
+    @Property("cuba.web.urlHandlingMode")
     @Default("URL_ROUTES")
     @Factory(factory = UrlHandlingModeFactory.class)
-    UrlHandlingMode getUrlHandlingMode();*/
+    UrlHandlingMode getUrlHandlingMode();
 
     /**
      * @return Theme
@@ -226,10 +238,10 @@ public interface WebConfig extends Config {
      * @return list of URL actions to call {@link com.haulmont.cuba.web.sys.LinkHandler}
      * <br> An action is represented by the last part of URL.
      */
-    /*@Property("cuba.web.linkHandlerActions")
+    @Property("cuba.web.linkHandlerActions")
     @Factory(factory = StringListTypeFactory.class)
     @Default("open|o")
-    List<String> getLinkHandlerActions();*/
+    List<String> getLinkHandlerActions();
 
     /**
      * Reinitialize session after login to protect from Session Fixation attacks.
@@ -361,26 +373,26 @@ public interface WebConfig extends Config {
     @DefaultString("0.8")
     String getPageInitialScale();
 
-    /* todo main tabsheet modes
-     * Sets whether default {@link com.haulmont.cuba.web.widgets.CubaMainTabSheet} or
-     * {@link com.haulmont.cuba.web.widgets.CubaManagedTabSheet} will be used in AppWorkArea.
+    /**
+     * Sets whether default {@link io.jmix.ui.widgets.CubaMainTabSheet} or
+     * {@link io.jmix.ui.widgets.CubaManagedTabSheet} will be used in AppWorkArea.
      *
      * @return one of {@link MainTabSheetMode} values
      */
-    /*@Property("cuba.web.mainTabSheetMode")
+    @Property("cuba.web.mainTabSheetMode")
     @Default("DEFAULT")
     @Factory(factory = MainTabSheetModeFactory.class)
-    MainTabSheetMode getMainTabSheetMode();*/
+    MainTabSheetMode getMainTabSheetMode();
 
-    /* todo main tabsheet modes
+    /**
      * Sets how the managed main TabSheet switches its tabs: hides or unloads them.
      *
      * @return one of {@link ManagedMainTabSheetMode} values
      */
-    /*@Property("cuba.web.managedMainTabSheetMode")
+    @Property("cuba.web.managedMainTabSheetMode")
     @Default("HIDE_TABS")
     @Factory(factory = ManagedMainTabSheetModeFactory.class)
-    ManagedMainTabSheetMode getManagedMainTabSheetMode();*/
+    ManagedMainTabSheetMode getManagedMainTabSheetMode();
 
     /**
      * @return Template path for Internal Server Error page (HTTP Status 500).

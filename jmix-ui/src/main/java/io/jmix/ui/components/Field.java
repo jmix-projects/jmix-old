@@ -17,13 +17,14 @@ package io.jmix.ui.components;
 
 import io.jmix.ui.components.data.HasValueSource;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
  * Base interface for "fields" - components intended to display and edit value of a certain entity attribute.
  */
-public interface Field<V> extends HasValueSource<V>, Component.HasCaption,
+public interface Field<V> extends DatasourceComponent<V>, HasValueSource<V>, Component.HasCaption,
         HasValue<V>, Component.Editable, Component.BelongToFrame, Validatable, Component.HasIcon,
         HasContextHelp, HasHtmlCaption, HasHtmlDescription {
 
@@ -56,4 +57,25 @@ public interface Field<V> extends HasValueSource<V>, Component.HasCaption,
      * @return unmodifiable collection with Field validators
      */
     Collection<Consumer<V>> getValidators();
+
+    /**
+     * Field validator.<br>
+     * Validators are invoked when {@link Validatable#validate()} is called.
+     * Editor screen calls {@code validate()} on commit.
+     *
+     * @deprecated Use typed {@link Consumer} instead.
+     */
+    @Deprecated
+    interface Validator<T> extends Consumer<T> {
+        /**
+         * @param value field value to validate
+         * @throws ValidationException this exception must be thrown by the validator if the value is not valid
+         */
+        void validate(@Nullable Object value) throws ValidationException;
+
+        @Override
+        default void accept(T t) {
+            validate(t);
+        }
+    }
 }

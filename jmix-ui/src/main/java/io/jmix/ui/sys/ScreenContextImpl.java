@@ -17,6 +17,7 @@
 package io.jmix.ui.sys;
 
 import io.jmix.ui.*;
+import io.jmix.ui.navigation.UrlRouting;
 import io.jmix.ui.screen.ScreenContext;
 import io.jmix.ui.screen.ScreenOptions;
 
@@ -30,8 +31,8 @@ public class ScreenContextImpl implements ScreenContext {
     protected final Notifications notifications;
     protected final Fragments fragments;
 
-    // todo navigation
-    // protected final UrlRouting urlRouting;
+
+    protected final UrlRouting urlRouting;
 
     public ScreenContextImpl(WindowInfo windowInfo, ScreenOptions options, ScreenContext hostScreenContext) {
         this.windowInfo = windowInfo;
@@ -40,8 +41,7 @@ public class ScreenContextImpl implements ScreenContext {
         this.dialogs = hostScreenContext.getDialogs();
         this.fragments = hostScreenContext.getFragments();
         this.notifications = hostScreenContext.getNotifications();
-        // todo navigation
-//        this.urlRouting = hostScreenContext.getUrlRouting();
+        this.urlRouting = hostScreenContext.getUrlRouting();
         this.screens = hostScreenContext.getScreens();
     }
 
@@ -49,8 +49,8 @@ public class ScreenContextImpl implements ScreenContext {
                              Screens screens,
                              Dialogs dialogs,
                              Notifications notifications,
-                             Fragments fragments/*,  // todo navigation
-                             UrlRouting urlRouting*/) {
+                             Fragments fragments,
+                             UrlRouting urlRouting) {
         this.windowInfo = windowInfo;
         this.options = options;
 
@@ -58,8 +58,7 @@ public class ScreenContextImpl implements ScreenContext {
         this.dialogs = dialogs;
         this.notifications = notifications;
         this.fragments = fragments;
-        // todo navigation
-//        this.urlRouting = urlRouting;
+        this.urlRouting = urlRouting;
     }
 
     @Override
@@ -92,9 +91,9 @@ public class ScreenContextImpl implements ScreenContext {
         return fragments;
     }
 
-    // todo navigation
-    /*@Override
+
+    @Override
     public UrlRouting getUrlRouting() {
         return urlRouting;
-    }*/
+    }
 }

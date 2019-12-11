@@ -19,7 +19,7 @@ import com.vaadin.shared.ui.ContentMode;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.components.Label;
-import io.jmix.ui.components.data.EntityValueSource;
+import io.jmix.ui.components.data.meta.EntityValueSource;
 import io.jmix.ui.widgets.JmixLabel;
 
 import javax.inject.Inject;

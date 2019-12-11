@@ -16,9 +16,21 @@
 
 package io.jmix.ui.screen;
 
+import io.jmix.ui.components.HasDataLoadingSettings;
+import io.jmix.ui.components.HasPresentations;
+import io.jmix.ui.components.HasSettings;
+import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.settings.Settings;
+import org.apache.commons.lang3.StringUtils;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
+
+import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.components.ComponentsHelper.walkComponents;
 
 @Component(ScreenSettings.NAME)
 public class ScreenSettings {
@@ -26,13 +38,13 @@ public class ScreenSettings {
 
     private static final Logger log = LoggerFactory.getLogger(ScreenSettings.class);
 
-    /* todo settings
+    /**
      * Apply settings for screen.
      *
      * @param screen   screen
      * @param settings settings
      */
-    /*public void applySettings(Screen screen, Settings settings) {
+    public void applySettings(Screen screen, Settings settings) {
         checkNotNullArgument(screen);
         checkNotNullArgument(settings);
 
@@ -57,15 +69,40 @@ public class ScreenSettings {
                     }
                 }
         );
-    }*/
+    }
 
-    /* todo settings
+    /**
+     * Apply settings for data components.
+     *
+     * @param screen   screen
+     * @param settings settings
+     */
+    public void applyDataLoadingSettings(Screen screen, Settings settings) {
+        checkNotNullArgument(screen);
+        checkNotNullArgument(settings);
+
+        walkComponents(
+                screen.getWindow(),
+                (component, name) -> {
+                    if (component.getId() != null
+                            && component instanceof HasDataLoadingSettings) {
+                        log.trace("Applying settings for {} : {} ", name, component);
+
+                        Element e = settings.get(name);
+                        ((HasDataLoadingSettings) component).applyDataLoadingSettings(e);
+                    }
+                }
+        );
+    }
+
+
+    /**
      * Save settings of screen.
      *
      * @param screen   screen
      * @param settings settings
      */
-    /*public void saveSettings(Screen screen, Settings settings) {
+    public void saveSettings(Screen screen, Settings settings) {
         checkNotNullArgument(screen);
         checkNotNullArgument(settings);
 
@@ -95,5 +132,5 @@ public class ScreenSettings {
                 }
         );
         settings.commit();
-    }*/
+    }
 }

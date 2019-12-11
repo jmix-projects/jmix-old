@@ -16,7 +16,11 @@
 
 package io.jmix.ui.components.impl;
 
-import io.jmix.ui.components.data.ContainerValueSource;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.ui.components.data.DataUnit;
+import io.jmix.ui.components.data.meta.ContainerDataUnit;
+import io.jmix.ui.components.data.meta.DatasourceDataUnit;
+import io.jmix.ui.components.data.value.ContainerValueSource;
 import io.jmix.ui.components.data.ValueSource;
 import org.apache.commons.lang3.StringUtils;
 
@@ -33,6 +37,25 @@ public final class UiTestIds {
             ContainerValueSource dcValueSource = (ContainerValueSource) valueSource;
 
             return StringUtils.join(dcValueSource.getMetaPropertyPath().getPropertyNames(), "_");
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static String getInferredTestId(DataUnit dataUnit, String suffix) {
+        if (dataUnit instanceof ContainerDataUnit) {
+            ContainerDataUnit dcDataUnit = (ContainerDataUnit) dataUnit;
+
+            MetaClass entityMetaClass = dcDataUnit.getEntityMetaClass();
+
+            return entityMetaClass.getName() + suffix;
+        } else if (dataUnit instanceof DatasourceDataUnit) {
+            DatasourceDataUnit dsDataUnit = (DatasourceDataUnit) dataUnit;
+
+            MetaClass entityMetaClass = dsDataUnit.getDatasource().getMetaClass();
+
+            return entityMetaClass.getName() + suffix;
         }
 
         return null;

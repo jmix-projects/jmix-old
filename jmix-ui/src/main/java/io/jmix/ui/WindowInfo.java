@@ -15,6 +15,8 @@
  */
 package io.jmix.ui;
 
+import io.jmix.ui.navigation.Route;
+import io.jmix.ui.navigation.RouteDefinition;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.ScreenFragment;
@@ -40,24 +42,23 @@ public class WindowInfo {
     private final Element descriptor;
     private final String screenClassName;
 
-    // todo navigation
-    // private final RouteDefinition routeDefinition;
+    private final RouteDefinition routeDefinition;
 
     protected WindowInfo(String id, WindowAttributesProvider windowAttributesProvider,
-                         Element descriptor, String screenClassName/*, RouteDefinition routeDefinition*/) { // todo navigation
+                         Element descriptor, String screenClassName, RouteDefinition routeDefinition) {
         this.id = id;
         this.windowAttributesProvider = windowAttributesProvider;
         this.descriptor = descriptor;
         this.screenClassName = screenClassName;
-//        this.routeDefinition = routeDefinition;
+        this.routeDefinition = routeDefinition;
     }
 
-    /*public WindowInfo(String id, WindowAttributesProvider windowAttributesProvider, Element descriptor) {
+    public WindowInfo(String id, WindowAttributesProvider windowAttributesProvider, Element descriptor) {
         this(id, windowAttributesProvider, descriptor, null);
-    }*/
+    }
 
-    public WindowInfo(String id, WindowAttributesProvider windowAttributesProvider, Element descriptor/*,
-                      RouteDefinition routeDefinition*/) { // todo navigation
+    public WindowInfo(String id, WindowAttributesProvider windowAttributesProvider, Element descriptor,
+                      RouteDefinition routeDefinition) {
         checkNotNullArgument(id);
         checkNotNullArgument(descriptor);
 
@@ -65,11 +66,11 @@ public class WindowInfo {
         this.windowAttributesProvider = windowAttributesProvider;
         this.descriptor = descriptor;
         this.screenClassName = null;
-//        this.routeDefinition = routeDefinition;
+        this.routeDefinition = routeDefinition;
     }
 
     public WindowInfo(String id, WindowAttributesProvider windowAttributesProvider,
-                      String screenClassName/*, RouteDefinition routeDefinition*/) { // todo navigation
+                      String screenClassName, RouteDefinition routeDefinition) {
         checkNotNullArgument(id);
         checkNotNullArgument(screenClassName);
 
@@ -77,7 +78,7 @@ public class WindowInfo {
         this.windowAttributesProvider = windowAttributesProvider;
         this.screenClassName = screenClassName;
         this.descriptor = null;
-//        this.routeDefinition = routeDefinition;
+        this.routeDefinition = routeDefinition;
     }
 
     /**
@@ -154,12 +155,12 @@ public class WindowInfo {
         return windowAttributesProvider.getTemplate(this);
     }
 
-    /* todo navigation
-     * @return route definition configured with {@link com.haulmont.cuba.gui.Route} annotation
+    /**
+     * @return route definition configured with {@link Route} annotation
      */
-    /*public RouteDefinition getRouteDefinition() {
+    public RouteDefinition getRouteDefinition() {
         return routeDefinition;
-    }*/
+    }
 
     @Override
     public String toString() {
