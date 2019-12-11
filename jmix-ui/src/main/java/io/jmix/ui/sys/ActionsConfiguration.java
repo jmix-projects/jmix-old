@@ -46,16 +46,9 @@ public class ActionsConfiguration extends AbstractScanConfiguration {
     protected List<String> basePackages = Collections.emptyList();
     protected List<ActionDefinition> explicitDefinitions = Collections.emptyList();
 
-    public ActionsConfiguration() {
-    }
-
     @Inject
-    protected void setApplicationContext(ApplicationContext applicationContext) {
+    public ActionsConfiguration(ApplicationContext applicationContext, AnnotationScanMetadataReaderFactory metadataReaderFactory) {
         this.applicationContext = applicationContext;
-    }
-
-    @Inject
-    public void setMetadataReaderFactory(AnnotationScanMetadataReaderFactory metadataReaderFactory) {
         this.metadataReaderFactory = metadataReaderFactory;
     }
 

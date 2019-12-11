@@ -25,7 +25,7 @@ import javax.inject.Inject;
 import javax.xml.ws.BindingType;
 import java.util.Observable;
 
-@UiController("sec$User.browse")
+@UiController("sec_User.browse")
 @UiDescriptor("user-browse.xml")
 @LookupComponent("usersTable")
 //@LoadDataBeforeShow

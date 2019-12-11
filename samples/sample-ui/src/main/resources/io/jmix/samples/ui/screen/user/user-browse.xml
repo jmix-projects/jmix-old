@@ -24,9 +24,9 @@
                         width="100%"
                         dataContainer="usersDc">
                 <actions>
-<!--                    <action id="create" type="create"/>-->
-<!--                    <action id="edit" type="edit"/>-->
-<!--                    <action id="remove" type="remove"/>-->
+                    <action id="create" type="create"/>
+                    <action id="edit" type="edit"/>
+                    <action id="remove" type="remove"/>
                 </actions>
                 <columns>
                     <column id="login"/>
@@ -46,9 +46,9 @@
                 <rowsCount/>
                 <buttonsPanel id="buttonsPanel"
                               alwaysVisible="true">
-<!--                    <button id="createBtn" action="usersTable.create"/>-->
-<!--                    <button id="editBtn" action="usersTable.edit"/>-->
-<!--                    <button id="removeBtn" action="usersTable.remove"/>-->
+                    <button id="createBtn" action="usersTable.create"/>
+                    <button id="editBtn" action="usersTable.edit"/>
+                    <button id="removeBtn" action="usersTable.remove"/>
                 </buttonsPanel>
             </groupTable>
         <vbox id="lookupActions" spacing="true" visible="false">

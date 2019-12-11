@@ -34,6 +34,7 @@ public enum CubaIcon implements Icons.Icon {
 
     CREATE_ACTION("font-icon:FILE_O"),
     EDIT_ACTION("font-icon:PENCIL"),
+    VIEW_ACTION("font-icon:EYE"),
     REMOVE_ACTION("font-icon:TIMES"),
     REFRESH_ACTION("font-icon:REFRESH"),
     ADD_ACTION("font-icon:FILE_O"),

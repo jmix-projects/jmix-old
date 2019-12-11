@@ -19,7 +19,7 @@ package io.jmix.samples.ui.screen.user;
 import io.jmix.security.entity.User;
 import io.jmix.ui.screen.*;
 
-@UiController("sec$User.edit")
+@UiController("sec_User.edit")
 @UiDescriptor("user-edit.xml")
 @EditedEntityContainer("userDc")
 @LoadDataBeforeShow
