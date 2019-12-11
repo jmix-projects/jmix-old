@@ -19,9 +19,8 @@ package io.jmix.samples.ui;
 import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
 import io.jmix.core.security.Security;
-import io.jmix.ui.ClientConfig;
-import io.jmix.ui.WebConfig;
 import io.jmix.ui.sys.UiControllersConfiguration;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -59,5 +58,14 @@ public class SampleUIApplication implements CommandLineRunner {
 				= new UiControllersConfiguration(applicationContext, metadataReaderFactory);
 		uiControllers.setBasePackages(Collections.singletonList("io.jmix.samples.ui"));
 		return uiControllers;
+	}
+
+	@Bean
+	public DataSource dataSource() {
+		BasicDataSource dataSource = new BasicDataSource();
+		dataSource.setUrl("jdbc:hsqldb:mem:testdb");
+		dataSource.setUsername("sa");
+		dataSource.setPassword("");
+		return dataSource;
 	}
 }

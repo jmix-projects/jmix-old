@@ -61,20 +61,13 @@ public class CustomMainScreen extends Screen implements Window.HasWorkArea {
             screenBuilders
                     .screen(this)
                     .withScreenClass(UserBrowse.class)
-                    .withLaunchMode(OpenMode.ROOT)
+                    .withLaunchMode(OpenMode.NEW_TAB)
                     .show();
         });
         getWindow().add(button);
 
         ClientConfig clientConfig = AppBeans.get(ConfigInterfaces.class).getConfig(ClientConfig.class);
         clientConfig.getCloseShortcut();
-    }
-
-    @Subscribe("hiBtn")
-    protected void hiBtnClick(Button.ClickEvent event) {
-        notifications.create(Notifications.NotificationType.SYSTEM)
-                .withCaption("Still works...")
-                .show();
     }
 
     @Nullable
