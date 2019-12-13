@@ -31,6 +31,7 @@ import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
@@ -41,6 +42,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -54,7 +56,7 @@ public class MetadataImpl implements Metadata {
 
     protected volatile Session session;
 
-    protected volatile List<String> rootPackages = Collections.emptyList();
+    protected volatile List<String> rootPackages;
 
     @Inject
     protected DatatypeRegistry datatypeRegistry;
@@ -73,6 +75,9 @@ public class MetadataImpl implements Metadata {
 
     @Inject
     protected NumberIdSource numberIdSource;
+
+    @Inject
+    protected BeanLocator beanLocator;
 
     @Inject
     protected GlobalConfig config;
@@ -224,7 +229,18 @@ public class MetadataImpl implements Metadata {
         List<Method> postConstructMethods = postConstructMethodsCache.getUnchecked(entity.getClass());
         // methods are store in the correct execution order
         for (Method method : postConstructMethods) {
-            method.invoke(entity);
+            List<Object> params = new ArrayList<>();
+            for (Parameter parameter : method.getParameters()) {
+                Class<?> parameterClass = parameter.getType();
+                try {
+                    params.add(beanLocator.get(parameterClass));
+                } catch (NoSuchBeanDefinitionException e) {
+                    String message = String.format("Unable to create %s entity. Argument of the %s type at the @PostConstruct method is not a bean",
+                            entity.getClass().getName(), parameter.getType().getName());
+                    throw new IllegalArgumentException(message, e);
+                }
+            }
+            method.invoke(entity, params.toArray());
         }
     }
 
