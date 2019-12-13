@@ -31,6 +31,7 @@ public class JmixMessageSource extends ReloadableResourceBundleMessageSource {
         this.resourceLoader = resourceLoader;
         setDefaultEncoding("UTF-8");
         setResourceLoader(resourceLoader);
+        setFallbackToSystemLocale(false);
 
         ListIterator<JmixModuleDescriptor> iterator = modules.getComponents().listIterator(modules.getComponents().size());
         while (iterator.hasPrevious()) {
