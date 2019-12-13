@@ -75,6 +75,12 @@ public class AttributeChanges {
      * If the attribute is not changed or does not exist at all, returns false.
      */
     public boolean isChanged(String attributeName) {
+        String[] paths = attributeName.split("\\.", 2);
+        if (paths.length > 1) {
+            if (embeddedChanges.containsKey(paths[0])) {
+                return embeddedChanges.get(paths[0]).isChanged(paths[1]);
+            }
+        }
         for (Change change : changes) {
             if (change.name.equals(attributeName))
                 return true;
