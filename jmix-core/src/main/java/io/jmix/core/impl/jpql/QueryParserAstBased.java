@@ -44,8 +44,7 @@ public class QueryParserAstBased implements QueryParser {
     protected QueryTree queryTree;
     protected QueryTreeAnalyzer queryAnalyzer;
 
-    protected class EntityNameAndPath {
-
+    protected static class EntityNameAndPath {
         String entityName;
         String entityPath;
         boolean collectionSelect;
@@ -176,15 +175,9 @@ public class QueryParserAstBased implements QueryParser {
     }
 
     @Override
-    public List<String> getSelectedExpressionsList() {
-        return getTree().getAstSelectedNodes()
-                .map(node -> {
-                    TreeToQuery toQuery = new TreeToQuery();
-                    node.setSkipSeparator(true);
-                    new TreeVisitor().visit(node, toQuery);
-                    return toQuery.getQueryString();
-                })
-                .collect(Collectors.toList());
+    public boolean isParameterUsedInAnyCondition(String parameterName) {
+        return getAnalyzer().getConditions().stream()
+                .anyMatch(condition -> getAnalyzer().isConditionForParameter(condition, parameterName));
     }
 
     @Override
@@ -209,6 +202,18 @@ public class QueryParserAstBased implements QueryParser {
             queryPaths.add(queryPath);
         }
         return queryPaths;
+    }
+
+    @Override
+    public List<String> getSelectedExpressionsList() {
+        return getTree().getAstSelectedNodes()
+                .map(node -> {
+                    TreeToQuery toQuery = new TreeToQuery();
+                    node.setSkipSeparator(true);
+                    new TreeVisitor().visit(node, toQuery);
+                    return toQuery.getQueryString();
+                })
+                .collect(Collectors.toList());
     }
 
     protected EntityNameAndPath getOriginEntityNameAndPath() {

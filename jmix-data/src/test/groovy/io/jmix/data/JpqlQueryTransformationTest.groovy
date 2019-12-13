@@ -16,7 +16,6 @@
 
 package io.jmix.data
 
-
 import io.jmix.core.impl.jpql.DomainModel
 import io.jmix.core.impl.jpql.model.EntityBuilder
 import io.jmix.core.impl.jpql.transform.QueryTransformerAstBased
@@ -33,7 +32,22 @@ class JpqlQueryTransformationTest extends Specification {
                 .addSingleValueAttribute(Long.class, "version")
                 .produce()
 
-        domainModel = new DomainModel(user)
+
+        def groupHierarchy = EntityBuilder.create()
+                .startNewEntity('sec$GroupHierarchy')
+                .addStringAttribute('group')
+                .addStringAttribute("createdBy")
+                .addReferenceAttribute("parent", 'sec$GroupHierarchy')
+                .addCollectionReferenceAttribute("constraints", 'sec$Constraint')
+                .produce()
+
+
+        def constraint = EntityBuilder.create()
+                .startNewEntity('sec$Constraint')
+                .addReferenceAttribute("group", 'sec$GroupHierarchy')
+                .produce()
+
+        domainModel = new DomainModel(user, groupHierarchy, constraint)
     }
 
 
@@ -60,5 +74,49 @@ class JpqlQueryTransformationTest extends Specification {
         then:
 
         result == "select u from sec_User u where concat( lower ( u.name), ' ', u.version) = :name"
+    }
+
+    def "replace is null and not null statements"() {
+
+        when: "is null statement and null parameter value"
+
+        def transformer = new QueryTransformerAstBased(domainModel, 'select c from sec$GroupHierarchy h join h.parent.constraints c where :par1 is null')
+
+        transformer.replaceIsNullStatements("par1", true)
+        def result = transformer.getResult()
+
+        then:
+        result == 'select c from sec$GroupHierarchy h join h.parent.constraints c where 1=1'
+
+        when: "is null statement and not null parameter value"
+
+        transformer = new QueryTransformerAstBased(domainModel, 'select c from sec$GroupHierarchy h join h.parent.constraints c where :par1 is null')
+
+        transformer.replaceIsNullStatements("par1", false)
+        result = transformer.getResult()
+
+        then:
+        result == 'select c from sec$GroupHierarchy h join h.parent.constraints c where 1=0'
+
+        when: "is not null statement and several parameters"
+
+        transformer = new QueryTransformerAstBased(domainModel, 'select c from sec$GroupHierarchy h join h.parent.constraints c where :par1 is not null and :par2 is not null')
+
+        transformer.replaceIsNullStatements("par1", false)
+        transformer.replaceIsNullStatements("par2", true)
+        result = transformer.getResult()
+
+        then:
+        result == 'select c from sec$GroupHierarchy h join h.parent.constraints c where 1=1 and 1=0'
+
+        when: "witout is not null and is null statements"
+
+        transformer = new QueryTransformerAstBased(domainModel, 'select c from sec$GroupHierarchy h join h.parent.constraints c where 2 = 2')
+
+        transformer.replaceIsNullStatements("par1", true)
+        result = transformer.getResult()
+
+        then:
+        result == 'select c from sec$GroupHierarchy h join h.parent.constraints c where 2 = 2'
     }
 }
