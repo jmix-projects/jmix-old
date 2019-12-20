@@ -142,7 +142,11 @@ public class WidgetsCompile extends WidgetsTask {
 
         deleteQuietly(new File(gwtWidgetSetTemp, "WEB-INF"));
 
-        gwtWidgetSetTemp.renameTo(widgetSetsDirectory);
+        try {
+            FileUtils.copyDirectory(gwtWidgetSetTemp, widgetSetsDirectory);
+        } catch (IOException e) {
+            throw new GradleException("Failed to copy compiled widgetset", e);
+        }
     }
 
     protected void generateWidgetSetXml(List<File> compilerClassPath, File gwtTemp, String widgetSetClass) {
