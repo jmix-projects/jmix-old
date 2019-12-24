@@ -40,6 +40,7 @@ import java.util.function.Function;
  * Within {@code DataContext}, an entity with the given identifier is represented by a single object instance, no matter
  * where and how many times it is used in object graphs.
  */
+@SuppressWarnings("rawtypes")
 @InstallSubject("commitDelegate")
 public interface DataContext {
 

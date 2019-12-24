@@ -49,6 +49,7 @@ import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 /**
  * Standard implementation of {@link DataContext} which commits data to {@link DataManager}.
  */
+@SuppressWarnings("rawtypes")
 public class DataContextImpl implements DataContext {
 
     private static final Logger log = LoggerFactory.getLogger(DataContextImpl.class);

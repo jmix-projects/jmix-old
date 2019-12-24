@@ -16,7 +16,10 @@
 
 package io.jmix.ui.model
 
+import io.jmix.core.CommitContext
+import io.jmix.core.DataManager
 import io.jmix.core.EntityStates
+import io.jmix.core.Id
 import io.jmix.core.entity.BaseEntityInternalAccess
 import io.jmix.core.entity.SecurityState
 import io.jmix.core.metamodel.model.Instance
@@ -24,10 +27,7 @@ import io.jmix.ui.test.DataContextSpec
 import io.jmix.ui.test.entity.TestIdentityIdEntity
 import io.jmix.ui.test.entity.TestJpaLifecycleCallbacksEntity
 import io.jmix.ui.test.entity.TestReadOnlyPropertyEntity
-import io.jmix.ui.test.entity.sales.Customer
-import io.jmix.ui.test.entity.sales.Order
-import io.jmix.ui.test.entity.sales.OrderLine
-import io.jmix.ui.test.entity.sales.Status
+import io.jmix.ui.test.entity.sales.*
 import io.jmix.ui.test.entity.sec.User
 import org.eclipse.persistence.internal.queries.EntityFetchGroup
 import org.eclipse.persistence.queries.FetchGroupTracker
@@ -38,6 +38,7 @@ class DataContextMergeTest extends DataContextSpec {
 
     @Inject DataComponents factory
     @Inject EntityStates entityStates
+    @Inject DataManager dataManager
 
     def "merge equal instances"() throws Exception {
         DataContext context = factory.createDataContext()
@@ -317,10 +318,8 @@ class DataContextMergeTest extends DataContextSpec {
         when: "(3) src.det -> dst.new : copy all loaded, make detached"
 
         cust1 = new Customer(name: 'c1', email: 'c1@aaa.aa', status: Status.NOT_OK)
-        cust2 = new Customer(name: 'c2', id: cust1.id)
+        cust2 = new Customer(name: 'c2', id: cust1.id, status: Status.NOT_OK)
         makeDetached(cust2)
-        ((FetchGroupTracker) cust2)._persistence_setFetchGroup(
-                new EntityFetchGroup('id', 'version', 'deleteTs', 'name', 'email'))
 
         context.merge(cust1)
         context.merge(cust2)
@@ -723,6 +722,72 @@ class DataContextMergeTest extends DataContextSpec {
         mergedEntity.getRoName() == 'roValue'
         mergedEntity.getRoList().size() == 1
     }
+
+    def "commit and merge partially loaded entity"() {
+        DataContext context = factory.createDataContext()
+
+        Customer customer1 = dataManager.commit(new Customer(name: 'c1', address: new Address()))
+        Order order1 = dataManager.commit(new Order(number: '111', customer: customer1))
+
+        def order11 = dataManager.load(Id.of(order1)).view { it.add('number') }.one()
+
+        when:
+        def order11t = context.merge(order11)
+        order11t.number = '222'
+        context.commit()
+//        for (Entity tracked : ((DataContextImpl) context).getAll()) {
+//            context.evict(tracked)
+//        }
+
+        and:
+        def order2 = dataManager.load(Id.of(order1)).view { it.add('number') }.one()
+        def order2t = context.merge(order2)
+        order2t.number = '333'
+        context.commit()
+
+        then:
+        def order3 = dataManager.load(Id.of(order1)).view { it.addAll('number', 'customer.name') }.one()
+        order3.customer != null
+
+        cleanup:
+        dataManager.commit(new CommitContext([], [order3, customer1]))
+    }
+
+    def "committed new entity has reference loaded"() {
+        DataContext context = factory.createDataContext()
+
+        Customer customer0 = context.merge(new Customer(name: 'c1', address: new Address()))
+        Order order0 = context.merge(new Order(number: '111', customer: customer0))
+
+        when:
+        context.commit()
+
+        then:
+        def order = context.find(order0)
+        order.customer == customer0
+    }
+
+//    def "fetch group"() {
+//        DataContext context = factory.createDataContext()
+//
+//        Customer customer1 = dataManager.commit(new Customer(name: 'c1', address: new Address()))
+//        Order order1 = dataManager.commit(new Order(number: '111', customer: customer1))
+//
+//        when:
+//        def order11 = dataManager.load(Id.of(order1)).view { it.add('number') }.one()
+//
+//        then:
+//        JmixEntityFetchGroup fg = order11._persistence_fetchGroup
+//        fg != null
+//
+//        when:
+//        def order11_local = dataManager.load(Id.of(order1)).view {it.addView(View.LOCAL).addSystem()}.one()
+//
+//        then:
+//        JmixEntityFetchGroup fg_local = order11_local._persistence_fetchGroup
+//        fg_local == null
+//
+//    }
 
     private UUID uuid(int val) {
         new UUID(val, 0)
