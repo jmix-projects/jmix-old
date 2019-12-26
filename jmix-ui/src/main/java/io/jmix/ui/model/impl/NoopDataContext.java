@@ -70,7 +70,11 @@ public class NoopDataContext implements DataContext {
     }
 
     @Override
-    public void evictAll() {
+    public void evictModified() {
+    }
+
+    @Override
+    public void clear() {
     }
 
     @Override

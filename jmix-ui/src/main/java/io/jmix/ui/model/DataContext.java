@@ -112,9 +112,16 @@ public interface DataContext {
     void evict(Entity entity);
 
     /**
-     * Cleans lists with information on created/modified/removed entities.
+     * Clears the lists of created/modified/deleted entities and evicts these entities.
      */
-    void evictAll();
+    void evictModified();
+
+    /**
+     * Evicts all tracked entities.
+     *
+     * @see #evict(Entity)
+     */
+    void clear();
 
     /**
      * Creates an entity instance and merge it into the context.
