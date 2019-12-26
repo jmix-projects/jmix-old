@@ -200,4 +200,15 @@ class DataManagerTest extends DataSpec {
         result.size() == 2
         result[0].getValue('id') == entity2.id
     }
+
+    def "remove"() {
+        def entity1 = new TestAppEntity(name: 'entityA')
+        dataManager.commit(entity1)
+
+        when:
+        dataManager.remove(Id.of(entity1))
+
+        then:
+        !dataManager.load(Id.of(entity1)).optional().isPresent()
+    }
 }

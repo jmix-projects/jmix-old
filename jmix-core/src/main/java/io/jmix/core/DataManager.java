@@ -16,6 +16,7 @@
 
 package io.jmix.core;
 
+import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.KeyValueEntity;
@@ -35,6 +36,7 @@ import java.util.List;
  * {@code cuba.dataManagerChecksSecurityOnMiddleware} application property to use it by default.
  *
  */
+@SuppressWarnings("rawtypes")
 public interface DataManager {
 
     String NAME = "cuba_DataManager";
@@ -148,6 +150,14 @@ public interface DataManager {
      * @param entity    entity instance
      */
     void remove(Entity entity);
+
+    /**
+     * Removes the entity instance from the data store by its id.
+     * @param entityId    entity id
+     */
+    default <T extends BaseGenericIdEntity<K>, K> void remove(Id<T, K> entityId) {
+        remove(getReference(entityId));
+    }
 
     /**
      * Loads list of key-value pairs.
@@ -269,4 +279,16 @@ public interface DataManager {
      * @param id            id of an existing object
      */
     <T extends BaseGenericIdEntity<K>, K> T getReference(Class<T> entityClass, K id);
+
+    /**
+     * Returns an entity instance which can be used as a reference to an object which exists in the database.
+     *
+     * @param entityId id of an existing object
+     *
+     * @see #getReference(Class, Object)
+     */
+    default <T extends BaseGenericIdEntity<K>, K> T getReference(Id<T, K> entityId) {
+        Preconditions.checkNotNullArgument(entityId, "entityId is null");
+        return getReference(entityId.getEntityClass(), entityId.getValue());
+    }
 }
