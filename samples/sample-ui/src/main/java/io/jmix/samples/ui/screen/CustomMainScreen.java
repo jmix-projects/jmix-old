@@ -20,13 +20,11 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.Metadata;
 import io.jmix.core.impl.MetadataImpl;
+import io.jmix.samples.ui.screen.component.ComponentSamples;
 import io.jmix.samples.ui.screen.user.UserBrowse;
 import io.jmix.ui.*;
 import io.jmix.ui.builders.ScreenBuilder;
-import io.jmix.ui.components.AppWorkArea;
-import io.jmix.ui.components.Button;
-import io.jmix.ui.components.Label;
-import io.jmix.ui.components.Window;
+import io.jmix.ui.components.*;
 import io.jmix.ui.screen.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -64,7 +62,19 @@ public class CustomMainScreen extends Screen implements Window.HasWorkArea {
                     .withLaunchMode(OpenMode.NEW_TAB)
                     .show();
         });
-        getWindow().add(button);
+
+        VBoxLayout sideMenuPanel = (VBoxLayout) getWindow().getComponentNN("sideMenuPanel");
+        sideMenuPanel.add(button);
+
+        Button componentSamplesBtn = uiComponents.create(Button.class);
+        componentSamplesBtn.setCaption("Component samples");
+        componentSamplesBtn.addClickListener(clickEvent -> {
+            screenBuilders.screen(this)
+                    .withScreenClass(ComponentSamples.class)
+                    .withLaunchMode(OpenMode.NEW_TAB)
+                    .show();
+        });
+        sideMenuPanel.add(componentSamplesBtn);
 
         ClientConfig clientConfig = AppBeans.get(ConfigInterfaces.class).getConfig(ClientConfig.class);
         clientConfig.getCloseShortcut();
