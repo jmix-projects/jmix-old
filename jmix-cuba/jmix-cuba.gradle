@@ -17,6 +17,7 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'java-library'
+apply plugin: 'io.jmix'
 
 version = rootProject.jmixVersion
 sourceCompatibility = rootProject.sourceCompatibility
@@ -38,10 +39,15 @@ dependencies {
     testImplementation 'org.apache.commons:commons-dbcp2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation 'org.springframework:spring-orm'
+    testImplementation 'ch.qos.logback:logback-classic'
 
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testRuntimeOnly 'org.slf4j:slf4j-simple'
     testRuntimeOnly 'org.hsqldb:hsqldb'
+}
+
+entitiesEnhancing {
+    enabled = true
 }
 
 task sourcesJar(type: Jar) {

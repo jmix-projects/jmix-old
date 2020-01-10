@@ -17,7 +17,9 @@
 package com.haulmont.cuba.core.testsupport;
 
 import com.haulmont.cuba.JmixCubaConfiguration;
+import com.haulmont.cuba.core.model.common.UserEntityListener;
 import io.jmix.core.JmixCoreConfiguration;
+import io.jmix.core.security.UserSessionSource;
 import io.jmix.data.JmixDataConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,5 +40,15 @@ public class CubaCoreTestConfiguration {
                 .generateUniqueName(true)
                 .setType(EmbeddedDatabaseType.HSQL)
                 .build();
+    }
+
+    @Bean(name = "test_UserEntityListener")
+    UserEntityListener userEntityListener() {
+        return new UserEntityListener();
+    }
+
+    @Bean(name = "cuba_UserSessionSource")
+    UserSessionSource userSessionSource() {
+        return new TestUserSessionSource();
     }
 }

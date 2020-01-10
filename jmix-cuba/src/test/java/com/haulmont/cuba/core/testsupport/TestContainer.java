@@ -27,7 +27,6 @@ import io.jmix.data.Persistence;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-
 public class TestContainer {
 
     public static class Common extends TestContainer {
