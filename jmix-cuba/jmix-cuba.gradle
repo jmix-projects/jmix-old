@@ -22,6 +22,10 @@ version = rootProject.jmixVersion
 sourceCompatibility = rootProject.sourceCompatibility
 targetCompatibility = rootProject.targetCompatibility
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     api platform(project(':jmix-platform'))
 
@@ -32,6 +36,10 @@ dependencies {
     testImplementation "org.spockframework:spock-core"
     testImplementation "org.spockframework:spock-spring"
     testImplementation 'org.apache.commons:commons-dbcp2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.springframework:spring-orm'
+
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testRuntimeOnly 'org.slf4j:slf4j-simple'
     testRuntimeOnly 'org.hsqldb:hsqldb'
 }
