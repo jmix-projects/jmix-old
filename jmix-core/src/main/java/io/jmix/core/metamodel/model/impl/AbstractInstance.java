@@ -16,16 +16,17 @@
 
 package io.jmix.core.metamodel.model.impl;
 
+import io.jmix.core.AppBeans;
+import io.jmix.core.Metadata;
 import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.utils.InstanceUtils;
 import io.jmix.core.metamodel.model.utils.MethodsCache;
+import io.jmix.core.metamodel.model.utils.RelatedPropertiesCache;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractInstance implements Instance {
@@ -36,8 +37,11 @@ public abstract class AbstractInstance implements Instance {
 
     private static transient Map<Class, MethodsCache> methodCacheMap = new ConcurrentHashMap<>();
 
+    private static transient Map<Class, RelatedPropertiesCache> relatedPropertiesCacheMap = new ConcurrentHashMap<>();
+
     protected void propertyChanged(String s, Object prev, Object curr) {
         if (__propertyChangeListeners != null) {
+
             for (Object referenceObject : __propertyChangeListeners.toArray()) {
                 @SuppressWarnings("unchecked")
                 WeakReference<PropertyChangeListener> reference = (WeakReference<PropertyChangeListener>) referenceObject;
@@ -47,6 +51,11 @@ public abstract class AbstractInstance implements Instance {
                     __propertyChangeListeners.remove(reference);
                 } else {
                     listener.propertyChanged(new PropertyChangeEvent(this, s, prev, curr));
+
+                    for (String property : getRelatedReadOnlyProperties(s)) {
+                        listener.propertyChanged(
+                                new PropertyChangeEvent(this, property, null, getValue(property)));
+                    }
                 }
             }
         }
@@ -95,6 +104,26 @@ public abstract class AbstractInstance implements Instance {
         return cache;
     }
 
+
+    protected Collection<String> getRelatedReadOnlyProperties(String propertyName) {
+        Collection<String> result = getRelatedPropertiesCache().getRelatedReadOnlyProperties(propertyName);
+        if (result == null) {
+            return Collections.emptyList();
+        }
+        return result;
+    }
+
+    protected RelatedPropertiesCache getRelatedPropertiesCache() {
+        Class cls = getClass();
+        RelatedPropertiesCache cache = relatedPropertiesCacheMap.get(cls);
+        if (cache == null) {
+            MetaClass metaClass = AppBeans.get(Metadata.class).getClassNN(cls);
+            cache = new RelatedPropertiesCache(metaClass);
+            relatedPropertiesCacheMap.put(cls, cache);
+        }
+        return cache;
+    }
+
     @Override
     public void setValue(String name, Object value) {
         setValue(name, value, true);
@@ -102,7 +131,7 @@ public abstract class AbstractInstance implements Instance {
 
     /**
      * Set value to property in instance
-     *
+     * <p>
      * For internal use only. Use {@link #setValue(String, Object)}
      *
      * @param name        property name
