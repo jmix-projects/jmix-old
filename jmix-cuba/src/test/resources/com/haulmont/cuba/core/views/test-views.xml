@@ -55,4 +55,9 @@
         <property name="product" view="_local"/>
     </view>
 
+    <view entity="test$Group" name="group.browse">
+        <property name="name"/>
+        <property name="parent"/>
+    </view>
+
 </views>
