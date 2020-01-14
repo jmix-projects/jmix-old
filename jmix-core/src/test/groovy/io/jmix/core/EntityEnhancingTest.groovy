@@ -21,9 +21,11 @@ import com.sample.addon1.entity.TestAddon1Entity
 import com.sample.app.TestAppConfiguration
 import com.sample.app.entity.Pet
 import io.jmix.core.metamodel.model.Instance
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @ContextConfiguration(classes = [TestAppConfiguration, TestAddon1Configuration, JmixCoreConfiguration])
 class EntityEnhancingTest extends Specification {
 
