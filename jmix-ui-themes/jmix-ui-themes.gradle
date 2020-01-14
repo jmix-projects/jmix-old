@@ -34,6 +34,7 @@ dependencies {
 
 task compileThemes(type: ThemeCompile) {
     scssDir = 'src/main/resources'
+    themes = ['halo', 'hover']
 }
 
 publishing {
