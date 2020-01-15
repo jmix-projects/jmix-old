@@ -25,16 +25,16 @@ import io.jmix.ui.executors.BackgroundTask;
 import io.jmix.ui.executors.BackgroundTaskHandler;
 import io.jmix.ui.executors.BackgroundWorker;
 import io.jmix.ui.executors.TaskLifeCycle;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.widgets.CubaPickerField;
 import io.jmix.ui.widgets.CubaSuggestionPickerField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -278,7 +278,20 @@ public class WebSuggestionPickerField<V extends Entity> extends WebPickerField<V
     }
 
     protected void showSuggestions(List<V> suggestions, boolean userOriginated) {
-        getComponent().showSuggestions(suggestions, userOriginated);
+        FrameOwner frameOwner = getFrame().getFrameOwner();
+        Collection<Screen> dialogScreens = UiControllerUtils.getScreenContext(frameOwner)
+                .getScreens()
+                .getOpenedScreens()
+                .getDialogScreens();
+
+        Screen lastDialog = null;
+        for (Screen dialogScreen : dialogScreens) {
+            lastDialog = dialogScreen;
+        }
+
+        if (lastDialog == null || Objects.equals(frameOwner, lastDialog)) {
+            getComponent().showSuggestions(suggestions, userOriginated);
+        }
     }
 
     @Override

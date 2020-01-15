@@ -24,16 +24,16 @@ import io.jmix.ui.executors.BackgroundTask;
 import io.jmix.ui.executors.BackgroundTaskHandler;
 import io.jmix.ui.executors.BackgroundWorker;
 import io.jmix.ui.executors.TaskLifeCycle;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.widgets.CubaSuggestionField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.inject.Inject;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 import static io.jmix.ui.components.impl.WebLookupField.NULL_STYLE_GENERATOR;
@@ -292,7 +292,20 @@ public class WebSuggestionField<V> extends WebV8AbstractField<CubaSuggestionFiel
     }
 
     protected void showSuggestions(List<V> suggestions, boolean userOriginated) {
-        component.showSuggestions(suggestions, userOriginated);
+        FrameOwner frameOwner = getFrame().getFrameOwner();
+        Collection<Screen> dialogScreens = UiControllerUtils.getScreenContext(frameOwner)
+                .getScreens()
+                .getOpenedScreens()
+                .getDialogScreens();
+
+        Screen lastDialog = null;
+        for (Screen dialogScreen : dialogScreens) {
+            lastDialog = dialogScreen;
+        }
+
+        if (lastDialog == null || Objects.equals(frameOwner, lastDialog)) {
+            component.showSuggestions(suggestions, userOriginated);
+        }
     }
 
     @Override
