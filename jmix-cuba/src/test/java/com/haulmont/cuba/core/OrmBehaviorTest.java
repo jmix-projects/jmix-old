@@ -19,7 +19,7 @@ package com.haulmont.cuba.core;
 
 import com.haulmont.cuba.core.model.common.Group;
 import com.haulmont.cuba.core.model.common.User;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.View;
 import io.jmix.data.Transaction;
@@ -33,7 +33,7 @@ import java.util.UUID;
 import static com.haulmont.cuba.core.testsupport.TestSupport.reserialize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@CubaCoreTest
+@CoreTest
 public class OrmBehaviorTest {
 
     public static TestContainer cont = TestContainer.Common.INSTANCE;

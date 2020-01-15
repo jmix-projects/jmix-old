@@ -19,7 +19,7 @@ package com.haulmont.cuba.core;
 import com.haulmont.cuba.core.model.common.Role;
 import com.haulmont.cuba.core.model.common.Server;
 import com.haulmont.cuba.core.model.common.User;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.MetadataTools;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ import javax.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@CubaCoreTest
+@CoreTest
 public class NamePatternTest {
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 

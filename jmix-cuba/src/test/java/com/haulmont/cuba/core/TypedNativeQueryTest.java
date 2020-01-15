@@ -19,7 +19,7 @@ package com.haulmont.cuba.core;
 
 import com.haulmont.cuba.core.model.common.Group;
 import com.haulmont.cuba.core.model.common.User;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.data.EntityManager;
 import io.jmix.data.Persistence;
@@ -33,7 +33,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@CubaCoreTest
+@CoreTest
 public class TypedNativeQueryTest {
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 

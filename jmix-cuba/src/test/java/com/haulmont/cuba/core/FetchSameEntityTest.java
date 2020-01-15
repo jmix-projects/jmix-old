@@ -20,7 +20,7 @@ package com.haulmont.cuba.core;
 import com.haulmont.cuba.core.model.FetchSameLinkAEntity;
 import com.haulmont.cuba.core.model.FetchSameLinkBEntity;
 import com.haulmont.cuba.core.model.FetchSameMainEntity;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.*;
 import io.jmix.data.EntityManager;
@@ -29,7 +29,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@CubaCoreTest
+@CoreTest
 public class FetchSameEntityTest {
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 

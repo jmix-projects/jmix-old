@@ -19,7 +19,7 @@ package com.haulmont.cuba.core;
 import com.haulmont.cuba.core.model.common.Permission;
 import com.haulmont.cuba.core.model.common.PermissionType;
 import com.haulmont.cuba.core.model.common.Role;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
@@ -40,7 +40,7 @@ import static com.haulmont.cuba.core.testsupport.TestSupport.reserialize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@CubaCoreTest
+@CoreTest
 public class UpdateDetachedTest {
 
     public static TestContainer cont = TestContainer.Common.INSTANCE;

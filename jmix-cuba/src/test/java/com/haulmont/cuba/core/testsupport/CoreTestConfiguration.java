@@ -21,6 +21,7 @@ import com.haulmont.cuba.core.model.common.UserEntityListener;
 import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.data.JmixDataConfiguration;
+import io.jmix.ui.JmixUiConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -31,9 +32,9 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import javax.sql.DataSource;
 
 @Configuration
-@Import({JmixCoreConfiguration.class, JmixCubaConfiguration.class, JmixDataConfiguration.class})
+@Import({JmixCoreConfiguration.class, JmixCubaConfiguration.class, JmixDataConfiguration.class, JmixUiConfiguration.class})
 @PropertySource("classpath:/com/haulmont/cuba/core/test-app.properties")
-public class CubaCoreTestConfiguration {
+public class CoreTestConfiguration {
     @Bean
     protected DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()

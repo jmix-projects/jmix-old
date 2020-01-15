@@ -18,7 +18,7 @@ package com.haulmont.cuba.core;
 
 import com.haulmont.cuba.core.model.SeveralFetchGroups_Tariff;
 import com.haulmont.cuba.core.model.SeveralFetchGroups_TariffVersion;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.AppBeans;
 import io.jmix.core.DataManager;
@@ -37,7 +37,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-@CubaCoreTest
+@CoreTest
 public class SeveralFetchGroupsTest {
 
     public static TestContainer cont = TestContainer.Common.INSTANCE;

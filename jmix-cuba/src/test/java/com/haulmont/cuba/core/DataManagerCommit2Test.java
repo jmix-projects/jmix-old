@@ -17,7 +17,7 @@
 package com.haulmont.cuba.core;
 
 import com.haulmont.cuba.core.model.common.*;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.*;
 import io.jmix.core.security.ConstraintOperationType;
@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * PL-9325 For new entity, DataManager.commit() does not fetch attributes of related entity by supplied view
  */
-@CubaCoreTest
+@CoreTest
 public class DataManagerCommit2Test {
 
     public static TestContainer cont = TestContainer.Common.INSTANCE;

@@ -18,7 +18,7 @@ package com.haulmont.cuba.core;
 
 import com.haulmont.cuba.core.model.sales.OrderLine;
 import com.haulmont.cuba.core.model.sales.Product;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.AppBeans;
 import io.jmix.core.DataManager;
@@ -42,7 +42,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@CubaCoreTest
+@CoreTest
 public class DataManagerTransactionalUsageTest {
 
     @Component("test_SaleProcessor")

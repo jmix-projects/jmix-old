@@ -27,6 +27,6 @@ import java.lang.annotation.*;
 @Documented
 @Inherited
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {CubaCoreTestConfiguration.class})
-public @interface CubaCoreTest {
+@ContextConfiguration(classes = {CoreTestConfiguration.class})
+public @interface CoreTest {
 }

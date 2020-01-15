@@ -17,7 +17,7 @@
 package com.haulmont.cuba.core;
 
 import com.haulmont.cuba.core.model.fetchjoin.*;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.*;
 import io.jmix.data.EntityManager;
@@ -31,7 +31,7 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@CubaCoreTest
+@CoreTest
 public class FetchJoinTest {
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 

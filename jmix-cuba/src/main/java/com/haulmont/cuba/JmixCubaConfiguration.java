@@ -21,6 +21,7 @@ import io.jmix.core.Messages;
 import io.jmix.core.annotation.JmixModule;
 import com.haulmont.cuba.core.global.impl.MessagesImpl;
 import io.jmix.data.JmixDataConfiguration;
+import io.jmix.ui.JmixUiConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -29,7 +30,7 @@ import org.springframework.core.env.Environment;
 
 @Configuration
 @ComponentScan
-@JmixModule(dependsOn = {JmixCoreConfiguration.class, JmixDataConfiguration.class})
+@JmixModule(dependsOn = {JmixCoreConfiguration.class, JmixDataConfiguration.class, JmixUiConfiguration.class})
 public class JmixCubaConfiguration {
 
     protected Environment environment;

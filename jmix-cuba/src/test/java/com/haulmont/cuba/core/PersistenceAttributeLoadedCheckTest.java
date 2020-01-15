@@ -21,7 +21,7 @@ import com.haulmont.cuba.core.model.common.Group;
 import com.haulmont.cuba.core.model.common.ScheduledTask;
 import com.haulmont.cuba.core.model.common.User;
 import com.haulmont.cuba.core.model.common.UserRole;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import com.haulmont.cuba.core.testsupport.TestSupport;
 import io.jmix.core.DataManager;
@@ -41,7 +41,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@CubaCoreTest
+@CoreTest
 public class PersistenceAttributeLoadedCheckTest {
 
     public static final TestContainer cont = TestContainer.Common.INSTANCE;

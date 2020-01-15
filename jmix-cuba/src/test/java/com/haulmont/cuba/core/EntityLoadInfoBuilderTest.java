@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.core;
 
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import io.jmix.core.AppBeans;
 import io.jmix.core.compatibility.EntityLoadInfo;
 import io.jmix.core.compatibility.EntityLoadInfoBuilder;
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@CubaCoreTest
+@CoreTest
 public class EntityLoadInfoBuilderTest {
 
     private EntityLoadInfoBuilder builder;

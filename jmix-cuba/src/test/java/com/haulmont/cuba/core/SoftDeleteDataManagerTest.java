@@ -18,7 +18,7 @@ package com.haulmont.cuba.core;
 
 import com.haulmont.cuba.core.model.common.Group;
 import com.haulmont.cuba.core.model.common.User;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.*;
 import io.jmix.core.commons.db.ArrayHandler;
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@CubaCoreTest
+@CoreTest
 public class SoftDeleteDataManagerTest {
 
     public static TestContainer cont = TestContainer.Common.INSTANCE;

@@ -18,7 +18,7 @@ package com.haulmont.cuba.core;
 
 import com.haulmont.cuba.core.model.common.Group;
 import com.haulmont.cuba.core.model.common.User;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.Metadata;
 import io.jmix.core.View;
@@ -27,7 +27,6 @@ import io.jmix.data.Persistence;
 import io.jmix.data.Transaction;
 import io.jmix.data.TypedQuery;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
@@ -35,7 +34,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@CubaCoreTest
+@CoreTest
 public class EntityListenerImplicitFlushTest {
 
     public static TestContainer cont = TestContainer.Common.INSTANCE;

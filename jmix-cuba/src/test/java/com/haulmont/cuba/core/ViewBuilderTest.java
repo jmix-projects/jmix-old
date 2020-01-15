@@ -18,7 +18,7 @@ package com.haulmont.cuba.core;
 
 import com.haulmont.cuba.core.model.Owner;
 import com.haulmont.cuba.core.model.Pet;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.View;
 import io.jmix.core.ViewBuilder;
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@CubaCoreTest
+@CoreTest
 public class ViewBuilderTest {
 
     public static TestContainer cont = TestContainer.Common.INSTANCE;

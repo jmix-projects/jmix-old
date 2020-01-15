@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -36,6 +37,7 @@ import javax.sql.DataSource;
 @Configuration
 @ComponentScan
 @JmixModule(dependsOn = JmixCoreConfiguration.class)
+@EnableTransactionManagement
 public class JmixDataConfiguration {
 
     protected Environment environment;

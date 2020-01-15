@@ -18,7 +18,7 @@ package com.haulmont.cuba.core;
 import com.haulmont.cuba.core.model.SoftDeleteOneToOneA;
 import com.haulmont.cuba.core.model.SoftDeleteOneToOneB;
 import com.haulmont.cuba.core.model.common.*;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.FetchMode;
 import io.jmix.core.View;
@@ -41,7 +41,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@CubaCoreTest
+@CoreTest
 public class SoftDeleteTest {
 
     public static TestContainer cont = TestContainer.Common.INSTANCE;

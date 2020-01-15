@@ -20,7 +20,7 @@ package com.haulmont.cuba.core;
 import com.haulmont.cuba.core.model.Many2Many_FetchSame1;
 import com.haulmont.cuba.core.model.Many2Many_FetchSame2;
 import com.haulmont.cuba.core.model.Many2Many_FetchSame3;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.AppBeans;
 import io.jmix.core.DataManager;
@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.List;
 
-@CubaCoreTest
+@CoreTest
 public class ManyToManyFetchSameEntityTest {
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 

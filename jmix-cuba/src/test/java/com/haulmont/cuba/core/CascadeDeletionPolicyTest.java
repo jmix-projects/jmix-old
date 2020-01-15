@@ -17,7 +17,7 @@
 package com.haulmont.cuba.core;
 
 import com.haulmont.cuba.core.model.CascadeDeletionPolicyEntity;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Metadata;
@@ -37,7 +37,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@CubaCoreTest
+@CoreTest
 public class CascadeDeletionPolicyTest {
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 

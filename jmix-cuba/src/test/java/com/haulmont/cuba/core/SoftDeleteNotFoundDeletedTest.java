@@ -19,7 +19,7 @@ import com.haulmont.cuba.core.model.SoftDelete_Project;
 import com.haulmont.cuba.core.model.SoftDelete_Service;
 import com.haulmont.cuba.core.model.SoftDelete_Task;
 import com.haulmont.cuba.core.model.SoftDelete_TaskValue;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.AppBeans;
 import io.jmix.core.DataManager;
@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-@CubaCoreTest
+@CoreTest
 public class SoftDeleteNotFoundDeletedTest {
     public static TestContainer cont = TestContainer.Common.INSTANCE;
 

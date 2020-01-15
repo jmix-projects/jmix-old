@@ -17,7 +17,7 @@
 package com.haulmont.cuba.core;
 
 import com.haulmont.cuba.core.model.EntityWithRelatedProperties;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@CubaCoreTest
+@CoreTest
 public class PropertyChangedTest {
 
     public static final TestContainer cont = TestContainer.Common.INSTANCE;

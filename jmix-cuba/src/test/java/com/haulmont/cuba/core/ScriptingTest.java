@@ -18,7 +18,7 @@
 package com.haulmont.cuba.core;
 
 import com.haulmont.cuba.core.model.common.User;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import groovy.lang.Binding;
 import io.jmix.core.Scripting;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ import javax.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@CubaCoreTest
+@CoreTest
 public class ScriptingTest {
 
     @Inject

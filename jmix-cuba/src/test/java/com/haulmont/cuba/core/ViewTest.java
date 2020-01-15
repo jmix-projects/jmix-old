@@ -24,7 +24,7 @@ import com.haulmont.cuba.core.model.common.*;
 import com.haulmont.cuba.core.model.selfinherited.ChildEntity;
 import com.haulmont.cuba.core.model.selfinherited.RootEntity;
 import com.haulmont.cuba.core.model.selfinherited.RootEntityDetail;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.*;
 import io.jmix.core.commons.db.QueryRunner;
@@ -44,7 +44,7 @@ import java.util.UUID;
 import static com.haulmont.cuba.core.testsupport.TestSupport.reserialize;
 import static org.junit.jupiter.api.Assertions.*;
 
-@CubaCoreTest
+@CoreTest
 public class ViewTest {
 
     public static TestContainer cont = TestContainer.Common.INSTANCE;

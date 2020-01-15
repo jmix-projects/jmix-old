@@ -21,7 +21,7 @@ import com.haulmont.cuba.core.config.TestConfig;
 import com.haulmont.cuba.core.model.common.Group;
 import com.haulmont.cuba.core.model.common.RoleType;
 import com.haulmont.cuba.core.model.common.User;
-import com.haulmont.cuba.core.testsupport.CubaCoreTest;
+import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestContainer;
 import io.jmix.core.AppBeans;
 import io.jmix.core.ConfigInterfaces;
@@ -46,7 +46,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@CubaCoreTest
+@CoreTest
 public class ConfigProviderTest {
 
     public static TestContainer cont = TestContainer.Common.INSTANCE;
