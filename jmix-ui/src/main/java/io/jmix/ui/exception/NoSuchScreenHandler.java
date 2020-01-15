@@ -41,7 +41,7 @@ public class NoSuchScreenHandler extends AbstractGenericExceptionHandler impleme
 
     @Override
     protected void doHandle(String className, String message, @Nullable Throwable throwable/*, WindowManager windowManager*/) {
-        String msg = messages.getMessage(getClass(), "noSuchScreen.message");
+        String msg = messages.getMessage("noSuchScreen.message");
         /*
         TODO: legacy-ui
         windowManager.showNotification(msg,

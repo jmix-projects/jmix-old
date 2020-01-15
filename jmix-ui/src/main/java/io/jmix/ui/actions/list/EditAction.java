@@ -204,7 +204,7 @@ public class EditAction<E extends Entity> extends SecuredListAction implements A
     @Inject
     protected void setMessages(Messages messages) {
         this.messages = messages;
-        this.caption = messages.getMainMessage("actions.Edit");
+        this.caption = messages.getMessage("actions.Edit");
     }
 
     @Inject
@@ -251,9 +251,9 @@ public class EditAction<E extends Entity> extends SecuredListAction implements A
             MetaClass metaClass = ((EntityDataUnit) target.getItems()).getEntityMetaClass();
             if (metaClass != null) {
                 if (security.isEntityOpPermitted(metaClass, EntityOp.UPDATE)) {
-                    setCaption(messages.getMainMessage("actions.Edit"));
+                    setCaption(messages.getMessage("actions.Edit"));
                 } else {
-                    setCaption(messages.getMainMessage("actions.View"));
+                    setCaption(messages.getMessage("actions.View"));
                 }
             }
         }

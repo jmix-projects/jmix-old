@@ -77,7 +77,7 @@ public class ClearAction extends BaseAction implements PickerField.PickerFieldAc
     @Override
     public void afterPropertiesSet() {
         setShortcut(configuration.getConfig(ClientConfig.class).getPickerClearShortcut());
-        setDescription(messages.getMainMessage("pickerField.action.clear.tooltip")
+        setDescription(messages.getMessage("pickerField.action.clear.tooltip")
                 + " (" + getShortcutCombination().format() + ")");
     }
 

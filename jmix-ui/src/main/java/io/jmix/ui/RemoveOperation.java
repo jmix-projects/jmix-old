@@ -281,10 +281,10 @@ public class RemoveOperation {
         Dialogs dialogs = screenContext.getDialogs();
 
         String title = builder.getConfirmationTitle() != null ?
-                builder.getConfirmationTitle() : messages.getMainMessage("dialogs.Confirmation");
+                builder.getConfirmationTitle() : messages.getMessage("dialogs.Confirmation");
 
         String message = builder.getConfirmationMessage() != null ?
-                builder.getConfirmationMessage() : messages.getMainMessage("dialogs.Confirmation.Remove");
+                builder.getConfirmationMessage() : messages.getMessage("dialogs.Confirmation.Remove");
 
         dialogs.createOptionDialog()
                 .withCaption(title)

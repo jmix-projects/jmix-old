@@ -267,7 +267,7 @@ public class LookupAction<E extends Entity> extends BaseAction implements Picker
     @Override
     public void afterPropertiesSet() throws Exception {
         setShortcut(configuration.getConfig(ClientConfig.class).getPickerLookupShortcut());
-        setDescription(messages.getMainMessage("pickerField.action.lookup.tooltip")
+        setDescription(messages.getMessage("pickerField.action.lookup.tooltip")
                 + " (" + getShortcutCombination().format() + ")");
     }
 

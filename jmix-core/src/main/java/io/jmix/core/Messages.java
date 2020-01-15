@@ -196,14 +196,4 @@ public interface Messages {
     String findMessage(String group, String key, @Nullable Locale locale);
 
     void clearCache();
-
-    /**
-     * todo remove
-     * This method has been added to simplify migration and should be removed
-     * @deprecated
-     */
-    String getMainMessage(String key);
-
-    // todo remove
-    default String getMainMessagePack() {return null; }
 }

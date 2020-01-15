@@ -121,7 +121,7 @@ public class AbstractWindow extends Screen implements Window, LegacyFrame, Compo
         Action enableEditingAction = getAction(enableEditingActionId);
         if (enableEditingAction == null) {
             enableEditingAction = new BaseAction(enableEditingActionId)
-                    .withCaption(messages.getMainMessage("actions.EnableEditing"))
+                    .withCaption(messages.getMessage("actions.EnableEditing"))
                     .withHandler(actionPerformedEvent -> {
                         // Because 'editWindowActions' and 'extendedEditWindowActions' frames
                         // can be misused in not-editor screens, we need to provide

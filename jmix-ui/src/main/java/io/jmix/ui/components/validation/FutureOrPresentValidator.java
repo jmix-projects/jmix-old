@@ -101,7 +101,7 @@ public class FutureOrPresentValidator<T> extends AbstractValidator<T> {
         if (!timeConstraint.isFutureOrPresent()) {
             String message = getMessage();
             if (message == null) {
-                message = messages.getMessage("validation.constraints.futureOrPresent"); //todo getMainMessage
+                message = messages.getMessage("validation.constraints.futureOrPresent");
             }
 
             throw new ValidationException(message);

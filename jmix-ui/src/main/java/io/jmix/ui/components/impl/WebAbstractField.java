@@ -280,7 +280,7 @@ public abstract class WebAbstractField<T extends com.vaadin.v7.ui.AbstractField,
             String requiredMessage = getRequiredMessage();
             if (requiredMessage == null) {
                 Messages messages = beanLocator.get(Messages.NAME);
-                requiredMessage = messages.getMainMessage("validationFail.defaultRequiredMessage");
+                requiredMessage = messages.getMessage("validationFail.defaultRequiredMessage");
             }
             throw new RequiredValueMissingException(requiredMessage, this);
         }

@@ -95,7 +95,7 @@ public class PositiveOrZeroValidator<T extends Number> extends AbstractValidator
         if (!constraint.isPositiveOrZero()) {
             String message = getMessage();
             if (message == null) {
-                message = messages.getMessage("validation.constraints.positiveOrZero"); //todo getMainMessage
+                message = messages.getMessage("validation.constraints.positiveOrZero");
             }
 
             String formattedValue = formatValue(value);

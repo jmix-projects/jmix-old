@@ -153,7 +153,7 @@ public class SizeValidator<T> extends AbstractValidator<T> {
         if (Collection.class.isAssignableFrom(clazz)) {
             int size = ((Collection) value).size();
             if (min > size || size > max) {
-                this.defaultMessage = messages.getMessage("validation.constraints.collectionSizeRange"); //todo getMainMessage
+                this.defaultMessage = messages.getMessage("validation.constraints.collectionSizeRange");
 
                 fireValidationException(
                         message == null ? defaultMessage : message,
@@ -162,7 +162,7 @@ public class SizeValidator<T> extends AbstractValidator<T> {
         } else if (clazz.equals(String.class)) {
             int length = ((String) value).length();
             if (min > length || length > max) {
-                this.defaultMessage = messages.getMessage("validation.constraints.sizeRange"); //todo getMainMessage
+                this.defaultMessage = messages.getMessage("validation.constraints.sizeRange");
 
                 fireValidationException(
                         message == null ? defaultMessage : message,

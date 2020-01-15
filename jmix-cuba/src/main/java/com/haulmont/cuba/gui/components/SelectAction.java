@@ -49,7 +49,7 @@ public class SelectAction extends AbstractAction {
         setShortcut(configuration.getConfig(ClientConfig.class).getCommitShortcut());
 
         Messages messages = AppBeans.get(Messages.NAME);
-        setCaption(messages.getMainMessage("actions.Select"));
+        setCaption(messages.getMessage("actions.Select"));
     }
 
     @Override

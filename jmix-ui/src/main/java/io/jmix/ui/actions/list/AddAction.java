@@ -220,7 +220,7 @@ public class AddAction<E extends Entity> extends ListAction implements Action.Di
 
     @Inject
     protected void setMessages(Messages messages) {
-        this.caption = messages.getMainMessage("actions.Add");
+        this.caption = messages.getMessage("actions.Add");
     }
 
     @Override

@@ -64,7 +64,7 @@ public class WebDatePicker<V> extends WebV8AbstractField<InlineDateField, LocalD
 
     @Inject
     public void setMessages(Messages messages) {
-        component.setDateOutOfRangeMessage(messages.getMainMessage("datePicker.dateOutOfRangeMessage"));
+        component.setDateOutOfRangeMessage(messages.getMessage("datePicker.dateOutOfRangeMessage"));
     }
 
     @Override

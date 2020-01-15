@@ -118,7 +118,7 @@ public class MaxValidator<T extends Number> extends AbstractValidator<T> {
         if (!constraint.isMax(max)) {
             String message = getMessage();
             if (message == null) {
-                message = messages.getMessage("validation.constraints.max"); //todo getMainMessage
+                message = messages.getMessage("validation.constraints.max");
             }
 
             String formattedValue = formatValue(value);

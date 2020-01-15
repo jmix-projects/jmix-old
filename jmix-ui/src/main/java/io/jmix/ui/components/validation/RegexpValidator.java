@@ -86,7 +86,7 @@ public class RegexpValidator extends AbstractValidator<String> {
         if (!pattern.matcher((value)).matches()) {
             String message = getMessage();
             if (message == null) {
-                message = messages.getMessage("validation.constraints.regexp"); //todo getMainMessage
+                message = messages.getMessage("validation.constraints.regexp");
             }
 
             throw new ValidationException(getTemplateErrorMessage(message, ParamsMap.of("value", value)));

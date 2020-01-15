@@ -248,10 +248,4 @@ public class MessagesImpl implements Messages {
     protected String fallbackMessageOrNull(@Nullable String group, String key, Locale locale) {
         return null;
     }
-
-
-    @Override
-    public String getMainMessage(String key) {
-        return getMessage(key);
-    }
 }

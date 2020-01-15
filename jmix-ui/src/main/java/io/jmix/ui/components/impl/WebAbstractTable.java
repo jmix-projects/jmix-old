@@ -521,7 +521,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                                 column.getAggregation().getType().toString()));
         }
 
-        component.setAggregationDescription(columnId, messages.getMainMessage(aggregationTypeLabel));
+        component.setAggregationDescription(columnId, messages.getMessage(aggregationTypeLabel));
     }
 
     @Override
@@ -969,12 +969,12 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         component.setIconProvider(this::getItemIcon);
         component.setBeforePaintListener(this::beforeComponentPaint);
 
-        component.setSortAscendingLabel(messages.getMainMessage("tableSort.ascending"));
-        component.setSortResetLabel(messages.getMainMessage("tableSort.reset"));
-        component.setSortDescendingLabel(messages.getMainMessage("tableSort.descending"));
+        component.setSortAscendingLabel(messages.getMessage("tableSort.ascending"));
+        component.setSortResetLabel(messages.getMessage("tableSort.reset"));
+        component.setSortDescendingLabel(messages.getMessage("tableSort.descending"));
 
-        component.setSelectAllLabel(messages.getMainMessage("tableColumnSelector.selectAll"));
-        component.setDeselectAllLabel(messages.getMainMessage("tableColumnSelector.deselectAll"));
+        component.setSelectAllLabel(messages.getMessage("tableColumnSelector.selectAll"));
+        component.setDeselectAllLabel(messages.getMessage("tableColumnSelector.deselectAll"));
 
         int defaultRowHeaderWidth = 16;
         ThemeConstantsManager themeConstantsManager =
@@ -3218,7 +3218,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                 showParseErrorNotification(e.getLocalizedMessage());
                 return false; // rollback to previous value
             } catch (ParseException e) {
-                showParseErrorNotification(messages.getMainMessage("validationFail"));
+                showParseErrorNotification(messages.getMessage("validationFail"));
                 return false; // rollback to previous value
             }
         }

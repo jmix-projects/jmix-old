@@ -81,7 +81,7 @@ public class LegacyBulkEditAction extends ItemTrackingAction implements Action.H
         this.icon = AppBeans.get(Icons.class).get(CubaIcon.BULK_EDIT_ACTION);
 
         Messages messages = AppBeans.get(Messages.NAME);
-        this.caption = messages.getMessage(getClass(), "actions.BulkEdit");
+        this.caption = messages.getMessage("actions.BulkEdit");
         this.constraintOperationType = ConstraintOperationType.UPDATE;
 
         Security security = AppBeans.get(Security.class);
@@ -168,7 +168,7 @@ public class LegacyBulkEditAction extends ItemTrackingAction implements Action.H
 
             Notifications notifications = getScreenContext(target.getFrame()).getNotifications();
             notifications.create(NotificationType.ERROR)
-                    .withCaption(messages.getMainMessage("accessDenied.message"))
+                    .withCaption(messages.getMessage("accessDenied.message"))
                     .show();
             return;
         }
@@ -178,7 +178,7 @@ public class LegacyBulkEditAction extends ItemTrackingAction implements Action.H
 
             Notifications notifications = getScreenContext(target.getFrame()).getNotifications();
             notifications.create(NotificationType.HUMANIZED)
-                    .withCaption(messages.getMainMessage("actions.BulkEdit.emptySelection"))
+                    .withCaption(messages.getMessage("actions.BulkEdit.emptySelection"))
                     .show();
 
             return;

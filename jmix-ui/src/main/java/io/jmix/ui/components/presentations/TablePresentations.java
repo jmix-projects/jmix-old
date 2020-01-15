@@ -150,7 +150,7 @@ public class TablePresentations extends VerticalLayout {
 
     protected void setDefaultItemStyle(MenuBar.MenuItem item) {
         addStyleForItem(item, DEFAULT_MENUITEM_STYLENAME);
-        item.setDescription(messages.getMainMessage("PresentationsPopup.defaultPresentation"));
+        item.setDescription(messages.getMessage("PresentationsPopup.defaultPresentation"));
     }
 
     protected void addStyleForItem(MenuBar.MenuItem item, String styleName) {
@@ -187,7 +187,7 @@ public class TablePresentations extends VerticalLayout {
     protected void initLayout() {
         setSpacing(true);
 
-        Label titleLabel = new Label(messages.getMainMessage("PresentationsPopup.title"));
+        Label titleLabel = new Label(messages.getMessage("PresentationsPopup.title"));
         titleLabel.setStyleName("c-table-prefs-title");
         titleLabel.setWidthUndefined();
         addComponent(titleLabel);
@@ -201,12 +201,12 @@ public class TablePresentations extends VerticalLayout {
         addComponent(menuBar);
 
         button = new CubaPopupButton();
-        button.setCaption(messages.getMainMessage("PresentationsPopup.actions"));
+        button.setCaption(messages.getMessage("PresentationsPopup.actions"));
         addComponent(button);
         setComponentAlignment(button, Alignment.MIDDLE_CENTER);
 
         textSelectionCheckBox = new CheckBox();
-        textSelectionCheckBox.setCaption(messages.getMainMessage("PresentationsPopup.textSelection"));
+        textSelectionCheckBox.setCaption(messages.getMessage("PresentationsPopup.textSelection"));
         addComponent(textSelectionCheckBox);
 
         textSelectionCheckBox.setValue(tableImpl.isTextSelectionEnabled());

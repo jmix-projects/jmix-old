@@ -41,7 +41,7 @@ public class ShowLinkAction extends BaseAction {
         this.handler = handler;
 
         Messages messages = AppBeans.get(Messages.NAME);
-        setCaption(messages.getMainMessage("table.showLinkAction"));
+        setCaption(messages.getMessage("table.showLinkAction"));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ShowLinkAction extends BaseAction {
         Messages messages = AppBeans.get(Messages.NAME);
         WindowManager wm = App.getInstance().getWindowManager();
         wm.showMessageDialog(
-                messages.getMainMessage("table.showLinkAction"),
+                messages.getMessage("table.showLinkAction"),
                 compileLink(ds),
                 Frame.MessageType.CONFIRMATION_HTML
         );*/
@@ -67,7 +67,7 @@ public class ShowLinkAction extends BaseAction {
         StringBuilder sb = new StringBuilder();
 
         Messages messages = AppBeans.get(Messages.NAME);
-        sb.append(messages.getMainMessage("table.showLinkAction.link")).append("<br/>");
+        sb.append(messages.getMessage("table.showLinkAction.link")).append("<br/>");
         sb.append("<textarea class=\"c-table-showlink-textarea\" autofocus=\"true\" readonly=\"true\">").
                 append(handler.makeLink(ds.getItem()).replace("&", "&amp")).append("</textarea>");
 

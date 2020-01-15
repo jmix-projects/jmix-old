@@ -496,8 +496,8 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
     }
 
     protected void initEditor(Grid<E> component) {
-        component.getEditor().setSaveCaption(messages.getMainMessage("actions.Ok"));
-        component.getEditor().setCancelCaption(messages.getMainMessage("actions.Cancel"));
+        component.getEditor().setSaveCaption(messages.getMessage("actions.Ok"));
+        component.getEditor().setCancelCaption(messages.getMessage("actions.Cancel"));
     }
 
     protected void initHeaderRows(Grid<E> component) {

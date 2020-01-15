@@ -77,7 +77,7 @@ public class AbstractMainWindow extends AbstractTopLevelWindow
 //    }
 
     protected void initLogoImage(Image logoImage) {
-        String logoImagePath = messages.getMainMessage(APP_LOGO_IMAGE);
+        String logoImagePath = messages.getMessage(APP_LOGO_IMAGE);
         if (logoImage != null
                 && StringUtils.isNotBlank(logoImagePath)
                 && !APP_LOGO_IMAGE.equals(logoImagePath)) {

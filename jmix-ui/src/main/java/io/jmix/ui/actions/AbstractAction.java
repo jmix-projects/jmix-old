@@ -105,7 +105,7 @@ public abstract class AbstractAction implements Action {
     protected String getDefaultCaption() {
         if (messages != null) {
             // legacy behaviour
-            return messages.getMessage(getClass(), id);
+            return messages.getMessage(id);
         } else {
             return null;
         }

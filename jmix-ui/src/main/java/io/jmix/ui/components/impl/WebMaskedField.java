@@ -200,7 +200,7 @@ public class WebMaskedField<V> extends WebV8AbstractField<CubaMaskedTextField, S
 
     protected String getConversionErrorMessage() {
         Messages messages = beanLocator.get(Messages.NAME);
-        return messages.getMainMessage("databinding.conversion.error");
+        return messages.getMessage("databinding.conversion.error");
     }
 
     protected CubaMaskedTextField createComponent() {

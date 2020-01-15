@@ -52,10 +52,10 @@ public class NotFoundScreen extends Screen {
         Label<String> msgLabel = uiComponents.create(Label.TYPE_STRING);
         msgLabel.setAlignment(Component.Alignment.TOP_CENTER);
         msgLabel.addStyleName(HaloTheme.LABEL_H1);
-        msgLabel.setValue(messages.formatMessage(NotFoundScreen.class, "notAssociatedRoute", requestedRoute));
+        msgLabel.setValue(messages.formatMessage("notAssociatedRoute", requestedRoute));
 
         window.add(msgLabel);
 
-        window.setCaption(messages.formatMessage(NotFoundScreen.class, "tabCaption", requestedRoute));
+        window.setCaption(messages.formatMessage("tabCaption", requestedRoute));
     }
 }

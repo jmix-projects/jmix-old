@@ -52,7 +52,7 @@ public class AbstractLookup extends AbstractWindow implements Window.Lookup {
 
         Messages messages = getBeanLocator().get(Messages.NAME);
         addAction(new BaseAction(LOOKUP_CANCEL_ACTION_ID)
-                .withCaption(messages.getMainMessage("actions.Cancel"))
+                .withCaption(messages.getMessage("actions.Cancel"))
                 .withHandler(e ->
                         close("cancel")
                 ));

@@ -65,7 +65,7 @@ public class NotNullValidator<T> extends AbstractValidator<T> {
         if (value == null) {
             String message = getMessage();
             if (message == null) {
-                message = messages.getMessage("validation.constraints.notNull"); //todo getMainMessage
+                message = messages.getMessage("validation.constraints.notNull");
             }
 
             throw new ValidationException(message);

@@ -135,7 +135,7 @@ public class LegacyRemoveAction extends ItemTrackingAction
         this.autocommit = autocommit;
 
         Messages messages = AppBeans.get(Messages.NAME);
-        this.caption = messages.getMessage("actions.Remove"); // todo getMainMessage
+        this.caption = messages.getMessage("actions.Remove");
 
         this.icon = AppBeans.get(Icons.class).get(CubaIcon.REMOVE_ACTION);
 
@@ -298,7 +298,7 @@ public class LegacyRemoveAction extends ItemTrackingAction
             return confirmationMessage;
         else {
             Messages messages = AppBeans.get(Messages.NAME);
-            return messages.getMainMessage("dialogs.Confirmation.Remove");
+            return messages.getMessage("dialogs.Confirmation.Remove");
         }
     }
 
@@ -318,7 +318,7 @@ public class LegacyRemoveAction extends ItemTrackingAction
             return confirmationTitle;
         else {
             Messages messages = AppBeans.get(Messages.NAME);
-            return messages.getMainMessage("dialogs.Confirmation");
+            return messages.getMessage("dialogs.Confirmation");
         }
     }
 

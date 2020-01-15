@@ -607,7 +607,7 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
                 showParseErrorNotification(e.getLocalizedMessage());
                 return false; // rollback to previous value
             } catch (ParseException e) {
-                showParseErrorNotification(messages.getMainMessage("validationFail"));
+                showParseErrorNotification(messages.getMessage("validationFail"));
                 return false; // rollback to previous value
             }
         }

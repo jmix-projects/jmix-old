@@ -154,7 +154,7 @@ public class LegacyEditAction extends ItemTrackingAction
         this.openType = openType;
 
         Messages messages = AppBeans.get(Messages.NAME);
-        this.caption = messages.getMainMessage("actions.Edit");
+        this.caption = messages.getMessage("actions.Edit");
 
         this.icon = AppBeans.get(Icons.class).get(CubaIcon.EDIT_ACTION);
 
@@ -182,9 +182,9 @@ public class LegacyEditAction extends ItemTrackingAction
             /*
             TODO: legacy-ui
             if (security.isEntityOpPermitted(target.getDatasource().getMetaClass(), EntityOp.UPDATE)) {
-                setCaption(messages.getMainMessage("actions.Edit"));
+                setCaption(messages.getMessage("actions.Edit"));
             } else {
-                setCaption(messages.getMainMessage("actions.View"));
+                setCaption(messages.getMessage("actions.View"));
             }*/
         }
     }

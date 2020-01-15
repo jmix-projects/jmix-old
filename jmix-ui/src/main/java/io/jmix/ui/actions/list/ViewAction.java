@@ -180,7 +180,7 @@ public class ViewAction extends SecuredListAction {
 
     @Inject
     protected void setMessages(Messages messages) {
-        this.caption = messages.getMainMessage("actions.View");
+        this.caption = messages.getMessage("actions.View");
     }
 
     @Inject

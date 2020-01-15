@@ -94,7 +94,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
 
             getFrame().addAction(
                     new BaseAction(WINDOW_COMMIT_AND_CLOSE)
-                            .withCaption(messages.getMainMessage("actions.OkClose"))
+                            .withCaption(messages.getMessage("actions.OkClose"))
                             .withPrimary(true)
                             .withShortcut(commitShortcut)
                             .withHandler(e -> commitAndClose()));
@@ -103,7 +103,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
         boolean finalCommitAndCloseButtonExists = commitAndCloseButtonExists;
 
         Action commitAction = new BaseAction(WINDOW_COMMIT)
-                .withCaption(messages.getMainMessage(commitAndCloseButtonExists ? "actions.Save" : "actions.Ok"))
+                .withCaption(messages.getMessage(commitAndCloseButtonExists ? "actions.Save" : "actions.Ok"))
                 .withPrimary(!commitAndCloseButtonExists)
                 .withShortcut(commitAndCloseButtonExists ? null : commitShortcut)
                 .withHandler(e -> {
@@ -118,7 +118,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
         getFrame().addAction(commitAction);
 
         Action closeAction = new BaseAction(WINDOW_CLOSE)
-                .withCaption(messages.getMainMessage("actions.Cancel"))
+                .withCaption(messages.getMessage("actions.Cancel"))
                 .withHandler(e ->
                         close(commitActionPerformed ? Window.COMMIT_ACTION_ID : getId())
                 );
@@ -126,10 +126,10 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
         getFrame().addAction(closeAction);
 
         Action enableEditingAction = new BaseAction(ENABLE_EDITING)
-                .withCaption(messages.getMainMessage("actions.EnableEditing"))
+                .withCaption(messages.getMessage("actions.EnableEditing"))
                 .withHandler(e ->
-                        showOptionDialog(messages.getMainMessage("dialogs.Confirmation"),
-                                messages.getMainMessage("dialogs.Confirmation.EnableEditing"),
+                        showOptionDialog(messages.getMessage("dialogs.Confirmation"),
+                                messages.getMessage("dialogs.Confirmation.EnableEditing"),
                                 MessageType.CONFIRMATION,
                                 new Action[]{
                                         new DialogAction(DialogAction.Type.YES, true)

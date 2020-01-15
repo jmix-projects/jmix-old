@@ -571,11 +571,11 @@ public abstract class App {
                 Dialogs dialogs = ui.getDialogs();
 
                 dialogs.createOptionDialog()
-                        .withCaption(messages.getMessage("app.closeUnsaved.caption"))
-                        .withMessage(messages.getMessage("app.discardChangesOnClose"))
+                        .withCaption(messages.getMessage("closeUnsaved.caption"))
+                        .withMessage(messages.getMessage("discardChangesOnClose"))
                         .withActions(
-                                new BaseAction("app.closeApplication")
-                                        .withCaption(messages.getMessage("app.closeApplication"))
+                                new BaseAction("closeApplication")
+                                        .withCaption(messages.getMessage("closeApplication"))
                                         .withIcon(icons.get(CubaIcon.DIALOG_OK))
                                         .withHandler(event -> {
                                             performStandardLogout(ui);

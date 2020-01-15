@@ -190,7 +190,7 @@ public class OpenAction extends BaseAction implements PickerField.PickerFieldAct
     @Override
     public void afterPropertiesSet() throws Exception {
         setShortcut(configuration.getConfig(ClientConfig.class).getPickerOpenShortcut());
-        setDescription(messages.getMainMessage("pickerField.action.open.tooltip")
+        setDescription(messages.getMessage("pickerField.action.open.tooltip")
                 + " (" + getShortcutCombination().format() + ")");
     }
 
@@ -260,7 +260,7 @@ public class OpenAction extends BaseAction implements PickerField.PickerFieldAct
             Notifications notifications = screenContext.getNotifications();
 
             notifications.create(Notifications.NotificationType.HUMANIZED)
-                    .withDescription(messages.getMainMessage("OpenAction.objectIsDeleted"))
+                    .withDescription(messages.getMessage("OpenAction.objectIsDeleted"))
                     .show();
 
             return;

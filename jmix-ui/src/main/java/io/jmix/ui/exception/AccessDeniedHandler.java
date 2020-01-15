@@ -37,7 +37,7 @@ public class AccessDeniedHandler extends AbstractGenericExceptionHandler impleme
 
     @Override
     protected void doHandle(String className, String message, @Nullable Throwable throwable/*, WindowManager windowManager*/) {
-        String msg = messages.getMessage(getClass(), "accessDenied.message");
+        String msg = messages.getMessage("accessDenied.message");
         // TODO: legacy-ui
         // windowManager.showNotification(msg, Frame.NotificationType.ERROR);
     }

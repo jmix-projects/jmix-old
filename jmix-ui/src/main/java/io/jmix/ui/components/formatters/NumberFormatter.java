@@ -57,7 +57,7 @@ public class NumberFormatter implements Function<Number, String> {
             return datatype.format(value, userSessionSource.getLocale());
         } else {
             if (pattern.startsWith("msg://")) {
-                pattern = messages.getMainMessage(pattern.substring(6, pattern.length()));
+                pattern = messages.getMessage(pattern.substring(6, pattern.length()));
             }
             FormatStrings formatStrings = Datatypes.getFormatStrings(userSessionSource.getLocale());
             if (formatStrings == null)

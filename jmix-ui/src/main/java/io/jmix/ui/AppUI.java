@@ -507,7 +507,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     @Nonnull
     public RootWindow getTopLevelWindowNN() {
         if (topLevelWindow == null) {
-            throw new IllegalStateException("UI yopLevelWindow is null");
+            throw new IllegalStateException("UI topLevelWindow is null");
         }
 
         return topLevelWindow;
@@ -617,21 +617,21 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     protected void updateClientSystemMessages(Locale locale) {
         SystemMessages msgs = new SystemMessages();
 
-        msgs.communicationErrorCaption = messages.getMessage("app.communicationErrorCaption", locale);
-        msgs.communicationErrorMessage = messages.getMessage("app.communicationErrorMessage", locale);
+        msgs.communicationErrorCaption = messages.getMessage("communicationErrorCaption", locale);
+        msgs.communicationErrorMessage = messages.getMessage("communicationErrorMessage", locale);
 
-        msgs.sessionExpiredErrorCaption = messages.getMessage("app.sessionExpiredErrorCaption", locale);
-        msgs.sessionExpiredErrorMessage = messages.getMessage("app.sessionExpiredErrorMessage", locale);
+        msgs.sessionExpiredErrorCaption = messages.getMessage("sessionExpiredErrorCaption", locale);
+        msgs.sessionExpiredErrorMessage = messages.getMessage("sessionExpiredErrorMessage", locale);
 
-        msgs.authorizationErrorCaption = messages.getMessage("app.authorizationErrorCaption", locale);
-        msgs.authorizationErrorMessage = messages.getMessage("app.authorizationErrorMessage", locale);
+        msgs.authorizationErrorCaption = messages.getMessage("authorizationErrorCaption", locale);
+        msgs.authorizationErrorMessage = messages.getMessage("authorizationErrorMessage", locale);
 
         updateSystemMessagesLocale(msgs);
 
         ReconnectDialogConfiguration reconnectDialogConfiguration = getReconnectDialogConfiguration();
 
-        reconnectDialogConfiguration.setDialogText(messages.getMessage("app.reconnectDialogText", locale));
-        reconnectDialogConfiguration.setDialogTextGaveUp(messages.getMessage("app.reconnectDialogTextGaveUp", locale));
+        reconnectDialogConfiguration.setDialogText(messages.getMessage("reconnectDialogText", locale));
+        reconnectDialogConfiguration.setDialogTextGaveUp(messages.getMessage("reconnectDialogTextGaveUp", locale));
     }
 
     protected AbstractComponent getTopLevelWindowComposition() {

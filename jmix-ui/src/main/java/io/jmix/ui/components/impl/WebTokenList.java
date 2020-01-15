@@ -134,10 +134,10 @@ public class WebTokenList<V extends Entity>
 
     protected void createComponents() {
         addButton = uiComponents.create(Button.class);
-        addButton.setCaption(messages.getMainMessage("actions.Add"));
+        addButton.setCaption(messages.getMessage("actions.Add"));
 
         clearButton = uiComponents.create(Button.class);
-        clearButton.setCaption(messages.getMainMessage("actions.Clear"));
+        clearButton.setCaption(messages.getMessage("actions.Clear"));
 
         //noinspection unchecked
         lookupPickerField = uiComponents.create(LookupPickerField.class);

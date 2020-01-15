@@ -208,7 +208,7 @@ public abstract class WebV8AbstractField<T extends com.vaadin.ui.Component & com
             String requiredMessage = getRequiredMessage();
             if (requiredMessage == null) {
                 Messages messages = beanLocator.get(Messages.NAME);
-                requiredMessage = messages.getMessage("validationFail.defaultRequiredMessage"); // TODO VM
+                requiredMessage = messages.getMessage("validationFail.defaultRequiredMessage");
             }
             throw new RequiredValueMissingException(requiredMessage, this);
         }
@@ -258,13 +258,11 @@ public abstract class WebV8AbstractField<T extends com.vaadin.ui.Component & com
         String msgKey = String.format("databinding.conversion.error.%s", datatypeId);
 
         String msg = beanLocator.get(Messages.class)
-//                .getMainMessage(msgKey);  todo vm
                 .getMessage(msgKey);
 
         if (msgKey.equals(msg)) {
             msg = beanLocator.get(Messages.class)
-//                    .getMainMessage("databinding.conversion.error.defaultMessage"); todo VM
-                    .getMessage(msgKey);
+                    .getMessage("databinding.conversion.error.defaultMessage");
         }
 
         return msg;

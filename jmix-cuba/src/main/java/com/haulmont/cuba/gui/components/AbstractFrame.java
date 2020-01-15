@@ -410,7 +410,7 @@ public class AbstractFrame extends ScreenFragment implements Frame, Frame.Wrappe
         ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
 
         NotificationType notificationType = NotificationType.valueOf(clientConfig.getValidationNotificationType());
-        showNotification(messages.getMainMessage("validationFail.caption"), buffer.toString(), notificationType);
+        showNotification(messages.getMessage("validationFail.caption"), buffer.toString(), notificationType);
     }
 
     @Override

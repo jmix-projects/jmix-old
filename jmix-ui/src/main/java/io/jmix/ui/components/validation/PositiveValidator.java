@@ -95,7 +95,7 @@ public class PositiveValidator<T extends Number> extends AbstractValidator<T> {
         if (!constraint.isPositive()) {
             String message = getMessage();
             if (message == null) {
-                message = messages.getMessage("validation.constraints.positive"); //todo getMainMessage
+                message = messages.getMessage("validation.constraints.positive");
             }
 
             String formattedValue = formatValue(value);

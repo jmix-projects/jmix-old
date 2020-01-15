@@ -60,22 +60,22 @@ public class WebColorPicker extends WebV8AbstractField<CubaColorPickerWrapper, C
     }
 
     protected void setCaptions(Messages messages) {
-        component.setPopupCaption(messages.getMainMessage("colorPicker.popupCaption"));
-        component.setSwatchesTabCaption(messages.getMainMessage("colorPicker.swatchesTabCaption"));
-        component.setConfirmButtonCaption(messages.getMainMessage("colorPicker.confirmButtonCaption"));
-        component.setCancelButtonCaption(messages.getMainMessage("colorPicker.cancelButtonCaption"));
+        component.setPopupCaption(messages.getMessage("colorPicker.popupCaption"));
+        component.setSwatchesTabCaption(messages.getMessage("colorPicker.swatchesTabCaption"));
+        component.setConfirmButtonCaption(messages.getMessage("colorPicker.confirmButtonCaption"));
+        component.setCancelButtonCaption(messages.getMessage("colorPicker.cancelButtonCaption"));
 
-        component.setLookupAllCaption(messages.getMainMessage("colorPicker.lookupAll"));
-        component.setLookupRedCaption(messages.getMainMessage("colorPicker.lookupRed"));
-        component.setLookupGreenCaption(messages.getMainMessage("colorPicker.lookupGreen"));
-        component.setLookupBlueCaption(messages.getMainMessage("colorPicker.lookupBlue"));
+        component.setLookupAllCaption(messages.getMessage("colorPicker.lookupAll"));
+        component.setLookupRedCaption(messages.getMessage("colorPicker.lookupRed"));
+        component.setLookupGreenCaption(messages.getMessage("colorPicker.lookupGreen"));
+        component.setLookupBlueCaption(messages.getMessage("colorPicker.lookupBlue"));
 
-        component.setRedSliderCaption(messages.getMainMessage("colorPicker.redSliderCaption"));
-        component.setGreenSliderCaption(messages.getMainMessage("colorPicker.greenSliderCaption"));
-        component.setBlueSliderCaption(messages.getMainMessage("colorPicker.blueSliderCaption"));
-        component.setHueSliderCaption(messages.getMainMessage("colorPicker.hueSliderCaption"));
-        component.setSaturationSliderCaption(messages.getMainMessage("colorPicker.saturationSliderCaption"));
-        component.setValueSliderCaption(messages.getMainMessage("colorPicker.valueSliderCaption"));
+        component.setRedSliderCaption(messages.getMessage("colorPicker.redSliderCaption"));
+        component.setGreenSliderCaption(messages.getMessage("colorPicker.greenSliderCaption"));
+        component.setBlueSliderCaption(messages.getMessage("colorPicker.blueSliderCaption"));
+        component.setHueSliderCaption(messages.getMessage("colorPicker.hueSliderCaption"));
+        component.setSaturationSliderCaption(messages.getMessage("colorPicker.saturationSliderCaption"));
+        component.setValueSliderCaption(messages.getMessage("colorPicker.valueSliderCaption"));
     }
 
     @Override

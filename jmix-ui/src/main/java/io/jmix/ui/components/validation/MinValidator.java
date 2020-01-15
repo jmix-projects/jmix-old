@@ -118,7 +118,7 @@ public class MinValidator<T extends Number> extends AbstractValidator<T> {
         if (!constraint.isMin(min)) {
             String message = getMessage();
             if (message == null) {
-                message = messages.getMessage("validation.constraints.min"); //todo getMainMessage
+                message = messages.getMessage("validation.constraints.min");
             }
 
             String formattedValue = formatValue(value);

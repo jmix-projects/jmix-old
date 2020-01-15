@@ -82,7 +82,7 @@ public class DateFormatter implements Function<Date, String> {
             return value.toString();
         } else {
             if (format.startsWith("msg://")) {
-                format = messages.getMainMessage(format.substring(6, format.length()));
+                format = messages.getMessage(format.substring(6, format.length()));
             }
             DateFormat df = new SimpleDateFormat(format);
 

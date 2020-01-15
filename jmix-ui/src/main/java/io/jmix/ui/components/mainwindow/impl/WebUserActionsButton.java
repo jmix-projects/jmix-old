@@ -102,23 +102,23 @@ public class WebUserActionsButton extends WebAbstractComponent<CubaMenuBar>
 
     protected void initLoginButton(boolean authenticated) {
         MenuBar.MenuItem loginButton = component.addItem("", item -> login());
-        loginButton.setDescription(messages.getMainMessage("loginBtnDescription"));
+        loginButton.setDescription(messages.getMessage("loginBtnDescription"));
         loginButton.setIcon(getIconResource(CubaIcon.SIGN_IN));
         loginButton.setVisible(!authenticated);
     }
 
     protected void initUserMenuButton(boolean authenticated) {
         MenuBar.MenuItem userMenuButton = component.addItem("");
-        userMenuButton.setDescription(messages.getMainMessage("userActionsBtnDescription"));
+        userMenuButton.setDescription(messages.getMessage("userActionsBtnDescription"));
         userMenuButton.setIcon(getIconResource(CubaIcon.USER));
         userMenuButton.setVisible(authenticated);
 
         if (security.isScreenPermitted("settings")) {
-            userMenuButton.addItem(messages.getMainMessage("settings"),
+            userMenuButton.addItem(messages.getMessage("settings"),
                     getIconResource(CubaIcon.GEAR), item -> openSettings());
         }
 
-        userMenuButton.addItem(messages.getMainMessage("logoutBtnDescription"),
+        userMenuButton.addItem(messages.getMessage("logoutBtnDescription"),
                 getIconResource(CubaIcon.SIGN_OUT), item -> logout());
     }
 

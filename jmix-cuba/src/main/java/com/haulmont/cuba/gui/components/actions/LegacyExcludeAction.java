@@ -114,7 +114,7 @@ public class LegacyExcludeAction extends LegacyRemoveAction implements Action.Di
         this.confirm = confirm;
 
         Messages messages = AppBeans.get(Messages.NAME);
-        this.caption = messages.getMainMessage("actions.Exclude");
+        this.caption = messages.getMessage("actions.Exclude");
         this.metadata = AppBeans.get(Metadata.NAME);
 
         this.icon = AppBeans.get(Icons.class).get(CubaIcon.EXCLUDE_ACTION);

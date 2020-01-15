@@ -163,7 +163,7 @@ public class LegacyCreateAction extends ListAction
         this.openType = openType;
 
         Messages messages = AppBeans.get(Messages.NAME);
-        this.caption = messages.getMainMessage("actions.Create");
+        this.caption = messages.getMessage("actions.Create");
 
         this.icon = AppBeans.get(Icons.class).get(CubaIcon.CREATE_ACTION);
 

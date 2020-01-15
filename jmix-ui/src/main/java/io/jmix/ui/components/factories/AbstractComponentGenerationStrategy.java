@@ -299,7 +299,7 @@ public abstract class AbstractComponentGenerationStrategy implements ComponentGe
 
         if (StringUtils.isNotEmpty(dateFormat)) {
             if (dateFormat.startsWith("msg://")) {
-                dateFormat = messages.getMainMessage(dateFormat.substring(6));
+                dateFormat = messages.getMessage(dateFormat.substring(6));
             }
             dateField.setDateFormat(dateFormat);
         }
@@ -352,11 +352,11 @@ public abstract class AbstractComponentGenerationStrategy implements ComponentGe
         fileUploadField.setMode(FileUploadField.FileStoragePutMode.IMMEDIATE);
 
         fileUploadField.setUploadButtonCaption(null);
-        fileUploadField.setUploadButtonDescription(messages.getMainMessage("upload.submit"));
+        fileUploadField.setUploadButtonDescription(messages.getMessage("upload.submit"));
         fileUploadField.setUploadButtonIcon("icons/upload.png");
 
         fileUploadField.setClearButtonCaption(null);
-        fileUploadField.setClearButtonDescription(messages.getMainMessage("upload.clear"));
+        fileUploadField.setClearButtonDescription(messages.getMessage("upload.clear"));
         fileUploadField.setClearButtonIcon("icons/remove.png");
 
         fileUploadField.setShowFileName(true);

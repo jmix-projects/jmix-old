@@ -53,7 +53,7 @@ public class LayoutAnalyzerContextMenuProvider {
         ClientConfig clientConfig = configInterfaces.getConfig(ClientConfig.class);
         if (clientConfig.getLayoutAnalyzerEnabled()) {
             ContextMenu contextMenu = new ContextMenu(contextMenuTarget.unwrap(AbstractComponent.class), true);
-            MenuBar.MenuItem menuItem = contextMenu.addItem(messages.getMainMessage("actions.analyzeLayout"), c -> {
+            MenuBar.MenuItem menuItem = contextMenu.addItem(messages.getMessage("actions.analyzeLayout"), c -> {
                 LayoutAnalyzer analyzer = new LayoutAnalyzer();
 
                 List<LayoutTip> tipsList = analyzer.analyze(screen);

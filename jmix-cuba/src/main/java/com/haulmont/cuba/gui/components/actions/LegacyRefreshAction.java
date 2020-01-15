@@ -91,7 +91,7 @@ public class LegacyRefreshAction extends BaseAction {
         this.owner = target;
 
         Messages messages = AppBeans.get(Messages.NAME);
-        this.caption = messages.getMessage("actions.Refresh"); // todo getMainMessage
+        this.caption = messages.getMessage("actions.Refresh");
 
         this.icon = AppBeans.get(Icons.class).get(CubaIcon.REFRESH_ACTION);
     }

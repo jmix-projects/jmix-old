@@ -90,7 +90,7 @@ public class MenuConfig {
     }
 
     public String getItemCaption(String id) {
-        return messages.getMainMessage("menu-config." + id);
+        return messages.getMessage("menu-config." + id);
     }
 
     public String getItemCaption(MenuItem menuItem) {
@@ -347,7 +347,7 @@ public class MenuConfig {
     }
 
     protected String loadResourceString(String caption) {
-        return messageTools.loadString(messages.getMainMessagePack(), caption);
+        return messageTools.loadString(caption);
     }
 
     protected String loadThemeString(String value) {

@@ -176,8 +176,8 @@ public class DoubleMinValidator<T> extends AbstractValidator<T> {
 
     protected String getDefaultMessage() {
         return inclusive ?
-                messages.getMessage("validation.constraints.decimalMinInclusive") //todo getMainMessage
-                : messages.getMessage("validation.constraints.decimalMin"); //todo getMainMessage
+                messages.getMessage("validation.constraints.decimalMinInclusive")
+                : messages.getMessage("validation.constraints.decimalMin");
     }
 
     protected void fireValidationException(T value) {

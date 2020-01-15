@@ -451,14 +451,13 @@ public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements
                 throw new UnsupportedOperationException();
         }
 
-        // todo main message
         component.getLabel().setValue(messages.formatMessage(msgKey, countValue));
 
         if (component.getCountButton().isVisible() && !refreshing || refreshSizeButton) {
             if (autoLoad) {
                 loadRowsCount();
             } else {
-                component.getCountButton().setCaption(messages.getMainMessage("table.rowsCount.msg3"));
+                component.getCountButton().setCaption(messages.getMessage("table.rowsCount.msg3"));
                 component.getCountButton().removeStyleName(PAGING_COUNT_NUMBER_STYLENAME);
                 component.getCountButton().setEnabled(true);
             }

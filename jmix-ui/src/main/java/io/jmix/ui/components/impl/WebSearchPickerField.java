@@ -109,7 +109,7 @@ public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
     @Override
     protected void initComponent(CubaPickerField<V> component) {
         Messages messages = beanLocator.get(Messages.NAME);
-        setInputPrompt(messages.getMainMessage("searchPickerField.inputPrompt"));
+        setInputPrompt(messages.getMessage("searchPickerField.inputPrompt"));
 
         getComponent().setItemCaptionGenerator(this::generateItemCaption);
         getComponent().setFilterHandler(this::executeSearch);
@@ -180,7 +180,7 @@ public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
             public void notFoundSuggestions(String filterString) {
                 Messages messages = beanLocator.get(Messages.NAME);
 
-                String message = messages.formatMessage("io.jmix.ui", "searchSelect.notFound", filterString);
+                String message = messages.formatMessage("searchSelect.notFound", filterString);
                 // TODO: legacy-ui
                 // App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
             }
@@ -189,8 +189,7 @@ public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
             public void needMinSearchStringLength(String filterString, int minSearchStringLength) {
                 Messages messages = beanLocator.get(Messages.NAME);
 
-                String message = messages.formatMessage(
-                        "io.jmix.ui", "searchSelect.minimumLengthOfFilter", minSearchStringLength);
+                String message = messages.formatMessage("searchSelect.minimumLengthOfFilter", minSearchStringLength);
                 // TODO: legacy-ui
                 // App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
             }

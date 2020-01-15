@@ -64,7 +64,7 @@ public class RefreshAction extends ListAction {
     @Inject
     protected void setMessages(Messages messages) {
         this.messages = messages;
-        this.caption = messages.getMainMessage("actions.Refresh");
+        this.caption = messages.getMessage("actions.Refresh");
     }
 
     @Override

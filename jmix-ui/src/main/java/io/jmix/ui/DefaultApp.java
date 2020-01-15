@@ -146,8 +146,8 @@ public class DefaultApp extends App {
     protected void notifyMismatchedSessionUi(AppUI ui) {
         Messages messages = beanLocator.get(Messages.class);
 
-        String sessionChangedCaption = messages.getMessage("app.sessionChangedCaption");
-        String sessionChanged = messages.getMessage("app.sessionChanged");
+        String sessionChangedCaption = messages.getMessage("sessionChangedCaption");
+        String sessionChanged = messages.getMessage("sessionChanged");
 
         ui.getNotifications()
                 .create(Notifications.NotificationType.SYSTEM)

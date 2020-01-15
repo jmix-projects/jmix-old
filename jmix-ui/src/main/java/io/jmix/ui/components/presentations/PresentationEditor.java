@@ -92,24 +92,24 @@ public class PresentationEditor extends CubaWindow {
 
         messages = AppBeans.get(Messages.class);
 
-        nameField = new TextField(messages.getMainMessage("PresentationsEditor.name"));
+        nameField = new TextField(messages.getMessage("PresentationsEditor.name"));
         nameField.setWidth(theme.get("cuba.web.PresentationEditor.name.width"));
         nameField.setValue(getPresentationCaption());
         root.addComponent(nameField);
 
         autoSaveField = new CheckBox();
-        autoSaveField.setCaption(messages.getMainMessage("PresentationsEditor.autoSave"));
+        autoSaveField.setCaption(messages.getMessage("PresentationsEditor.autoSave"));
         autoSaveField.setValue(BooleanUtils.isTrue(presentation.getAutoSave()));
         root.addComponent(autoSaveField);
 
         defaultField = new CheckBox();
-        defaultField.setCaption(messages.getMainMessage("PresentationsEditor.default"));
+        defaultField.setCaption(messages.getMessage("PresentationsEditor.default"));
         defaultField.setValue(presentation.getId().equals(component.getDefaultPresentationId()));
         root.addComponent(defaultField);
 
         if (allowGlobalPresentations) {
             globalField = new CheckBox();
-            globalField.setCaption(messages.getMainMessage("PresentationsEditor.global"));
+            globalField.setCaption(messages.getMessage("PresentationsEditor.global"));
             globalField.setValue(!isNew && presentation.getUser() == null);
             root.addComponent(globalField);
         }
@@ -121,7 +121,7 @@ public class PresentationEditor extends CubaWindow {
         root.addComponent(buttons);
         root.setComponentAlignment(buttons, Alignment.MIDDLE_LEFT);
 
-        Button commitButton = new CubaButton(messages.getMainMessage("PresentationsEditor.save"));
+        Button commitButton = new CubaButton(messages.getMessage("PresentationsEditor.save"));
         commitButton.addClickListener(event -> {
             if (validate()) {
                 commit();
@@ -130,7 +130,7 @@ public class PresentationEditor extends CubaWindow {
         });
         buttons.addComponent(commitButton);
 
-        Button closeButton = new CubaButton(messages.getMainMessage("PresentationsEditor.close"));
+        Button closeButton = new CubaButton(messages.getMessage("PresentationsEditor.close"));
         closeButton.addClickListener(event ->
                 forceClose()
         );
@@ -146,8 +146,8 @@ public class PresentationEditor extends CubaWindow {
         if (StringUtils.isEmpty(nameField.getValue())) {
             AppUI.getCurrent().getNotifications()
                     .create(Notifications.NotificationType.HUMANIZED)
-                    .withCaption(messages.getMainMessage("PresentationsEditor.error"))
-                    .withDescription(messages.getMainMessage("PresentationsEditor.error.nameRequired"))
+                    .withCaption(messages.getMessage("PresentationsEditor.error"))
+                    .withDescription(messages.getMessage("PresentationsEditor.error.nameRequired"))
                     .show();
             return false;
         }
@@ -157,8 +157,8 @@ public class PresentationEditor extends CubaWindow {
         if (pres != null && !pres.equals(presentation)) {
             AppUI.getCurrent().getNotifications()
                     .create(Notifications.NotificationType.HUMANIZED)
-                    .withCaption(messages.getMainMessage("PresentationsEditor.error"))
-                    .withDescription(messages.getMainMessage("PresentationsEditor.error.nameAlreadyExists"))
+                    .withCaption(messages.getMessage("PresentationsEditor.error"))
+                    .withDescription(messages.getMessage("PresentationsEditor.error.nameAlreadyExists"))
                     .show();
             return false;
         }
@@ -209,6 +209,6 @@ public class PresentationEditor extends CubaWindow {
     }
 
     protected String getMessage(String key) {
-        return messages.getMessage(getClass(), key);
+        return messages.getMessage(key);
     }
 }

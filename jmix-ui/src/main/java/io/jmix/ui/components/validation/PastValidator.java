@@ -101,7 +101,7 @@ public class PastValidator<T> extends AbstractValidator<T> {
         if (!timeConstraint.isPast()) {
             String message = getMessage();
             if (message == null) {
-                message = messages.getMessage("validation.constraints.past"); //todo getMainMessage
+                message = messages.getMessage("validation.constraints.past");
             }
 
             throw new ValidationException(message);

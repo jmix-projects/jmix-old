@@ -62,13 +62,13 @@ public class MainTabSheetActionHandler implements Action.Handler {
         if (!initialized) {
             Messages messages = AppBeans.get(Messages.NAME);
 
-            closeAllTabs = new com.vaadin.event.Action(messages.getMainMessage("actions.closeAllTabs"));
-            closeOtherTabs = new com.vaadin.event.Action(messages.getMainMessage("actions.closeOtherTabs"));
-            closeCurrentTab = new com.vaadin.event.Action(messages.getMainMessage("actions.closeCurrentTab"));
-            showInfo = new com.vaadin.event.Action(messages.getMainMessage("actions.showInfo"));
-            analyzeLayout = new com.vaadin.event.Action(messages.getMainMessage("actions.analyzeLayout"));
-            saveSettings = new com.vaadin.event.Action(messages.getMainMessage("actions.saveSettings"));
-            restoreToDefaults = new com.vaadin.event.Action(messages.getMainMessage("actions.restoreToDefaults"));
+            closeAllTabs = new com.vaadin.event.Action(messages.getMessage("actions.closeAllTabs"));
+            closeOtherTabs = new com.vaadin.event.Action(messages.getMessage("actions.closeOtherTabs"));
+            closeCurrentTab = new com.vaadin.event.Action(messages.getMessage("actions.closeCurrentTab"));
+            showInfo = new com.vaadin.event.Action(messages.getMessage("actions.showInfo"));
+            analyzeLayout = new com.vaadin.event.Action(messages.getMessage("actions.analyzeLayout"));
+            saveSettings = new com.vaadin.event.Action(messages.getMessage("actions.saveSettings"));
+            restoreToDefaults = new com.vaadin.event.Action(messages.getMessage("actions.restoreToDefaults"));
 
             initialized = true;
         }
