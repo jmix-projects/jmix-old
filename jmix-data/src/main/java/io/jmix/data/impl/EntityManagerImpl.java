@@ -57,6 +57,8 @@ public class EntityManagerImpl implements EntityManager {
     @Inject
     protected EntityListenerManager entityListenerMgr;
     @Inject
+    protected EntityPersistingEventManager entityPersistingEventMgr;
+    @Inject
     protected PersistenceSupport support;
     @Inject
     protected AuditInfoProvider auditInfoProvider;
@@ -96,8 +98,8 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public void persist(Entity entity) {
-        delegate.persist(entity);
-        support.registerInstance(entity, this);
+        entityPersistingEventMgr.publishEvent(entity);
+        internalPersist(entity);
     }
 
     @SuppressWarnings("unchecked")
@@ -115,6 +117,9 @@ public class EntityManagerImpl implements EntityManager {
             // if a new instance is passed to merge(), we suppose it is persistent but "not detached"
             Entity destEntity = findOrCreate(entity.getClass(), entity.getId());
             deepCopyIgnoringNulls(entity, destEntity, Sets.newIdentityHashSet());
+            if (entityStates.isNew(destEntity)) {
+                entityPersistingEventMgr.publishEvent(entity);
+            }
             return (T) destEntity;
         }
 
@@ -420,7 +425,7 @@ public class EntityManagerImpl implements EntityManager {
             if (reloadedRef instanceof BaseGenericIdEntity) {
                 ((BaseGenericIdEntity) reloadedRef).setId(id);
             }
-            persist(reloadedRef);
+            internalPersist(reloadedRef);
         }
         return (T) reloadedRef;
     }
@@ -466,6 +471,11 @@ public class EntityManagerImpl implements EntityManager {
             CubaUtil.setSoftDeletion(softDeletion);
             CubaUtil.setOriginalSoftDeletion(softDeletion);
         }
+    }
+
+    protected void internalPersist(Entity entity) {
+        delegate.persist(entity);
+        support.registerInstance(entity, this);
     }
 
     protected Object getRealId(Object id) {
