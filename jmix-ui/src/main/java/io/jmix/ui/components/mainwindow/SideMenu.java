@@ -72,6 +72,7 @@ public interface SideMenu extends Component.BelongToFrame, Component.Focusable {
     /**
      * @return currently selected item
      */
+    @Nullable
     MenuItem getSelectedItem();
     /**
      * Set selected item.
