@@ -34,8 +34,6 @@ import io.jmix.ui.components.data.aggregation.AggregationStrategy;
 import io.jmix.ui.components.data.table.ContainerTableItems;
 import io.jmix.ui.components.data.table.EmptyTableItems;
 import io.jmix.ui.model.*;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.xml.DeclarativeColumnGenerator;
@@ -137,7 +135,8 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
         MetaClass metaClass;
         CollectionContainer collectionContainer = null;
         DataLoader dataLoader = null;
-        Datasource datasource = null;
+        // TODO: legacy-ui
+        // Datasource datasource = null;
 
         String containerId = element.attributeValue("dataContainer");
         if (containerId != null) {
@@ -161,6 +160,8 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
                         context, "Table ID", element.attributeValue("id"));
             }
 
+            /*
+            TODO: legacy-ui
             datasource = getComponentContext().getDsContext().get(datasourceId);
             if (datasource == null) {
                 throw new GuiDevelopmentException("Can't find datasource by name: " + datasourceId, context);
@@ -170,7 +171,7 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
                 throw new GuiDevelopmentException("Not a CollectionDatasource: " + datasourceId, context);
             }
 
-            metaClass = datasource.getMetaClass();
+            metaClass = datasource.getMetaClass();*/
         } else {
             String metaClassStr = element.attributeValue("metaClass");
             if (Strings.isNullOrEmpty(metaClassStr)) {
@@ -184,19 +185,23 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
         List<Table.Column> availableColumns;
 
         if (columnsElement != null) {
+            /*
+            TODO: legacy-ui
             View view = collectionContainer != null ? collectionContainer.getView()
                     : datasource != null ? datasource.getView()
                     : getViewRepository().getView(metaClass.getJavaClass(), View.LOCAL);
-            availableColumns = loadColumns(resultComponent, columnsElement, metaClass, view);
+            availableColumns = loadColumns(resultComponent, columnsElement, metaClass, view);*/
         } else {
             availableColumns = new ArrayList<>();
         }
 
+        /*
+        TODO: legacy-ui
         for (Table.Column column : availableColumns) {
             resultComponent.addColumn(column);
             loadValidators(resultComponent, column);
             loadRequired(resultComponent, column);
-        }
+        }*/
 
         if (collectionContainer != null) {
             //todo dynamic attributes
@@ -207,7 +212,9 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
 //            }
             //noinspection unchecked
             resultComponent.setItems(createContainerTableSource(collectionContainer));
-        } else if (datasource != null) {
+        } /*
+        TODO: legacy-ui
+        else if (datasource != null) {
             //todo dynamic attributes
 //            addDynamicAttributes(resultComponent, metaClass, datasource, null, availableColumns);
             resultComponent.setDatasource((CollectionDatasource) datasource);
@@ -227,7 +234,7 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
                             beanLocator.getPrototype(DeclarativeColumnGenerator.NAME, resultComponent, generatorMethod));
                 }
             }
-        }
+        }*/
 
         String multiselect = element.attributeValue("multiselect");
         if (StringUtils.isNotEmpty(multiselect)) {

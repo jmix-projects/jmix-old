@@ -31,7 +31,8 @@ public class FileUploadFieldLoader extends AbstractFieldLoader<FileUploadField> 
 
         loadContainer(resultComponent, element);
         if (resultComponent.getValueSource() == null) {
-            loadDatasource(resultComponent, element);
+            // TODO: legacy-ui
+            // loadDatasource(resultComponent, element);
         }
 
         loadEnable(resultComponent, element);

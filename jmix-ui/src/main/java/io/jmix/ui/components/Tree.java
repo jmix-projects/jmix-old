@@ -20,8 +20,6 @@ import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.data.TreeItems;
-import io.jmix.ui.components.data.tree.DatasourceTreeItems;
-import io.jmix.ui.model.cuba.HierarchicalDatasource;
 
 import javax.annotation.Nullable;
 import java.util.EventObject;
@@ -75,14 +73,18 @@ public interface Tree<E extends Entity> extends ListComponent<E>, HasButtonsPane
 
     String getHierarchyProperty();
 
+    /*
+    TODO: legacy-ui
     @Deprecated
     default void setDatasource(HierarchicalDatasource datasource) {
         //noinspection unchecked
         setItems(datasource != null
                 ? new DatasourceTreeItems(datasource)
                 : null);
-    }
+    }*/
 
+    /*
+    TODO: legacy-ui
     @Deprecated
     @Override
     default HierarchicalDatasource getDatasource() {
@@ -90,7 +92,7 @@ public interface Tree<E extends Entity> extends ListComponent<E>, HasButtonsPane
         return treeItems != null
                 ? ((DatasourceTreeItems) treeItems).getDatasource()
                 : null;
-    }
+    }*/
 
     @Override
     TreeItems<E> getItems();

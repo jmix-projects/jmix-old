@@ -18,7 +18,6 @@ package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.model.ScreenData;
-import io.jmix.ui.model.cuba.DsContext;
 import io.jmix.ui.screen.ScreenOptions;
 import io.jmix.ui.sys.UiControllerProperty;
 import io.jmix.ui.xml.layout.ComponentLoader;
@@ -46,7 +45,7 @@ public class ComponentLoaderContext implements ComponentLoader.ComponentContext 
     protected List<InjectTask> injectTasks = new ArrayList<>();
     protected List<InitTask> initTasks = new ArrayList<>();
 
-    protected DsContext dsContext;
+    // protected DsContext dsContext; TODO: legacy-ui
     protected Map<String, Object> parameters;
     protected Map<String, String> aliasesMap = new HashMap<>();
 
@@ -72,6 +71,8 @@ public class ComponentLoaderContext implements ComponentLoader.ComponentContext 
         this.screenData = screenData;
     }
 
+    /*
+    TODO: legacy-ui
     @Override
     public DsContext getDsContext() {
         return dsContext;
@@ -79,7 +80,7 @@ public class ComponentLoaderContext implements ComponentLoader.ComponentContext 
 
     public void setDsContext(DsContext dsContext) {
         this.dsContext = dsContext;
-    }
+    }*/
 
     @Override
     public Frame getFrame() {

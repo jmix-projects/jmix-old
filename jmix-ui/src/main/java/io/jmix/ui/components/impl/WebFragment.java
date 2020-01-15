@@ -21,7 +21,6 @@ import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.*;
 import io.jmix.ui.Fragments;
 import io.jmix.ui.components.FrameContext;
-import io.jmix.ui.components.compatibility.WindowManager;
 import io.jmix.ui.screen.ScreenFragment;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.sys.FragmentContextImpl;
@@ -263,11 +262,13 @@ public class WebFragment extends WebVBoxLayout implements Fragment, FragmentImpl
         return false;
     }
 
+    /*
+    TODO: legacy-ui
     @Deprecated
     @Override
     public WindowManager getWindowManager() {
         return (WindowManager) UiControllerUtils.getScreenContext(getFrameOwner()).getScreens();
-    }
+    }*/
 
     @Override
     public void addAction(Action action) {

@@ -16,18 +16,13 @@
 
 package io.jmix.ui.components.compatibility;
 
-import io.jmix.ui.components.AbstractFrame;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Frame;
 import io.jmix.ui.screen.ScreenFragment;
-
-import javax.annotation.Nullable;
 
 /**
  * Wrapper object for compatibility with legacy code.
  */
 @Deprecated
-public class ScreenFragmentWrapper extends AbstractFrame {
+public class ScreenFragmentWrapper /*extends AbstractFrame */{
 
     private ScreenFragment screen;
 
@@ -35,6 +30,8 @@ public class ScreenFragmentWrapper extends AbstractFrame {
         this.screen = screen;
     }
 
+    /*
+    TODO: legacy-ui
     @Override
     public Frame getWrappedFrame() {
         return screen.getFragment();
@@ -44,5 +41,5 @@ public class ScreenFragmentWrapper extends AbstractFrame {
     @Override
     public Component getComponent(String id) {
         return screen.getFragment().getComponent(id);
-    }
+    }*/
 }

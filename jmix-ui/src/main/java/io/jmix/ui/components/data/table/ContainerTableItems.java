@@ -28,10 +28,10 @@ import io.jmix.ui.components.data.BindingState;
 import io.jmix.ui.components.data.TableItems;
 import io.jmix.ui.components.data.meta.ContainerDataUnit;
 import io.jmix.ui.components.data.meta.EntityTableItems;
+import io.jmix.ui.gui.data.impl.AggregatableDelegate;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.model.HasLoader;
-import io.jmix.ui.model.cuba.impl.AggregatableDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

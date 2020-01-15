@@ -24,11 +24,9 @@ import io.jmix.ui.App;
 import io.jmix.ui.NoSuchScreenException;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowInfo;
-import io.jmix.ui.components.compatibility.WindowManager.OpenType;
 import io.jmix.ui.exception.AccessDeniedHandler;
 import io.jmix.ui.exception.EntityAccessExceptionHandler;
 import io.jmix.ui.exception.NoSuchScreenHandler;
-import io.jmix.ui.sys.ActionsConfiguration;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -85,6 +83,8 @@ public class ScreensLinkHandlerProcessor implements LinkHandlerProcessor, Ordere
             return;
         }
 
+        /*
+        TODO: legacy-ui
         try {
             openWindow(windowInfo, linkContext);
         } catch (EntityAccessException e) {
@@ -93,7 +93,7 @@ public class ScreensLinkHandlerProcessor implements LinkHandlerProcessor, Ordere
             accessDeniedHandler.handle(e, app.getWindowManager());
         } catch (NoSuchScreenException e) {
             noSuchScreenHandler.handle(e, app.getWindowManager());
-        }
+        }*/
     }
 
     protected void openWindow(WindowInfo windowInfo, ExternalLinkContext linkContext) {
@@ -102,6 +102,8 @@ public class ScreensLinkHandlerProcessor implements LinkHandlerProcessor, Ordere
 
         String itemStr = requestParams.get("item");
         String openTypeParam = requestParams.get("openType");
+        /*
+        TODO: legacy-ui
         OpenType openType = OpenType.NEW_TAB;
 
         if (StringUtils.isNotEmpty(openTypeParam)) {
@@ -125,7 +127,7 @@ public class ScreensLinkHandlerProcessor implements LinkHandlerProcessor, Ordere
                 else
                     throw new EntityAccessException();
             }
-        }
+        }*/
     }
 
     protected Map<String, Object> getParamsMap(Map<String, String> requestParams) {

@@ -25,8 +25,6 @@ import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.components.Calendar;
 import io.jmix.ui.components.calendar.*;
 import io.jmix.ui.components.data.calendar.EntityCalendarEventProvider;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.impl.CollectionDsHelper;
 import io.jmix.ui.widgets.CubaCalendar;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -142,7 +140,9 @@ public class WebCalendar extends WebAbstractComponent<CubaCalendar>
         return component.getTimeZone();
     }
 
-    @Override
+    /*
+    TODO: legacy-ui
+    Override
     public void setDatasource(CollectionDatasource datasource) {
         if (datasource == null) {
             setEventProvider(null);
@@ -159,7 +159,7 @@ public class WebCalendar extends WebAbstractComponent<CubaCalendar>
                 ? ((io.jmix.ui.components.calendar.EntityCalendarEventProvider) calendarEventProvider)
                 .getDatasource()
                 : null;
-    }
+    }*/
 
     @Override
     public void setTimeFormat(TimeFormat format) {

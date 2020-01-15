@@ -58,7 +58,8 @@ public class DeclarativeColumnGenerator implements Table.ColumnGenerator {
         }
         FrameOwner controller = frame.getFrameOwner();
         if (controller instanceof LegacyFragmentAdapter) {
-            controller = ((LegacyFragmentAdapter) controller).getRealScreen();
+            // TODO: legacy-ui
+            // controller = ((LegacyFragmentAdapter) controller).getRealScreen();
         }
 
         if (method == null) {

@@ -21,7 +21,6 @@ import io.jmix.ui.WindowConfig;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.ListComponent;
 import io.jmix.ui.components.RelatedEntities;
-import io.jmix.ui.components.compatibility.WindowManager.OpenType;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -48,9 +47,11 @@ public class RelatedEntitiesLoader extends AbstractComponentLoader<RelatedEntiti
         loadCss(resultComponent, element);
 
         String openType = element.attributeValue("openType");
+        /*
+        TODO: legacy-ui
         if (StringUtils.isNotEmpty(openType)) {
             resultComponent.setOpenType(OpenType.valueOf(openType));
-        }
+        }*/
 
         String exclude = element.attributeValue("exclude");
         if (StringUtils.isNotBlank(exclude)) {

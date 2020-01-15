@@ -24,8 +24,6 @@ import io.jmix.ui.Notifications;
 import io.jmix.ui.Screens;
 import io.jmix.ui.components.compatibility.*;
 import io.jmix.ui.components.mainwindow.UserIndicator;
-import io.jmix.ui.model.cuba.Datasource;
-import io.jmix.ui.model.cuba.DsContext;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.screen.Screen.AfterCloseEvent;
 import io.jmix.ui.settings.Settings;
@@ -194,9 +192,11 @@ public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
 
     /**
      * Close the screen.
-     * <br> If the screen has uncommitted changes in its {@link DsContext},
+     * <br>
+     * If the screen has uncommitted changes in its {@code DsContext}, // TODO: legacy-ui
      * the confirmation dialog will be shown.
-     * <br> Don't override this method in subclasses, use hook {@link AbstractWindow#preClose(String)}
+     * <br>
+     * Don't override this method in subclasses, use hook {@code AbstractWindow#preClose(String)}
      *
      * @param actionId action ID that will be propagated to attached {@link CloseListener}s.
      *                 Use {@link #COMMIT_ACTION_ID} if some changes have just been committed, or
@@ -249,8 +249,10 @@ public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
      *
      * @return window manager instance
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
-    WindowManager getWindowManager();
+    WindowManager getWindowManager();*/
 
     /**
      * Defines how the managed main TabSheet switches a tab with the given window: hides or unloads its content.
@@ -292,7 +294,7 @@ public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
      * Only for compatibility with old screens.
      */
     @Deprecated
-    interface Editor<T extends Entity> extends Window, EditorScreen<T>, Window.Committable, LegacyFrame {
+    interface Editor<T extends Entity> extends Window, EditorScreen<T>, Window.Committable/*, LegacyFrame TODO: legacy-ui */ {
         /**
          * Name that is used to register a client type specific screen implementation in
          * {@link io.jmix.ui.xml.layout.ComponentsFactory}
@@ -332,13 +334,13 @@ public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
          * @return parent datasource if it is set
          */
         @Nullable
-        Datasource getParentDs();
+        // Datasource getParentDs(); TODO: legacy-ui
 
         /**
          * This method is called by the framework to set parent datasource to commit into this datasource instead
          * of directly to the database.
          */
-        void setParentDs(Datasource parentDs);
+        // void setParentDs(Datasource parentDs); // TODO: legacy-ui
 
         /**
          * @return true if Editor will perform additional validation on {@link Window#validateAll()}
@@ -352,7 +354,7 @@ public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
          * Cross field validation is triggered for item of main datasource with {@link UiCrossFieldChecks} group only
          * (without {@link javax.validation.groups.Default} group) when there are no other validation errors in UI components. <br>
          * <p>
-         * Cross field validation is triggered before {@link AbstractWindow#postValidate} hook.
+         * Cross field validation is triggered before {@code AbstractWindow#postValidate} hook. TODO: legacy-ui
          *
          * @param crossFieldValidate cross field validate flag
          * @see io.jmix.core.BeanValidation
@@ -364,7 +366,7 @@ public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
      * Represents a lookup screen.
      */
     @Deprecated
-    interface Lookup<T extends Entity> extends Window, LookupScreen<T>, LegacyFrame {
+    interface Lookup<T extends Entity> extends Window, LookupScreen<T>/*, LegacyFrame TODO: legacy-ui */ {
 
         String LOOKUP_ITEM_CLICK_ACTION_ID = "lookupItemClickAction";
         String LOOKUP_ENTER_PRESSED_ACTION_ID = "lookupEnterPressed";
@@ -445,8 +447,8 @@ public interface Window extends Frame, Component.HasCaption, Component.HasIcon {
         /**
          * Callback interface to receive selected entities.
          * <br> Implementations of this interface must be passed to
-         * {@link LegacyFrame#openLookup} methods or set directly in
-         * the screen instance via {@link #setLookupHandler}.
+         * {@code LegacyFrame#openLookup} TODO: legacy-ui
+         * methods or set directly in the screen instance via {@link #setLookupHandler}.
          */
         interface Handler {
             /**

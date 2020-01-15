@@ -17,9 +17,7 @@ package io.jmix.ui.components.impl;
 
 import io.jmix.ui.components.CheckBox;
 import io.jmix.ui.components.Component;
-import io.jmix.ui.components.FieldGroup;
 import io.jmix.ui.components.Form;
-import io.jmix.ui.widgets.CubaCheckBox;
 import io.jmix.ui.widgets.CubaCheckBox;
 
 public class WebCheckBox extends WebV8AbstractField<com.vaadin.ui.CheckBox, Boolean, Boolean> implements CheckBox {
@@ -67,10 +65,12 @@ public class WebCheckBox extends WebV8AbstractField<com.vaadin.ui.CheckBox, Bool
     public void setParent(Component parent) {
         super.setParent(parent);
 
+        /*
+        TODO: legacy-ui
         if (parent instanceof FieldGroup
                 || parent instanceof Form) {
             ((CubaCheckBox) component).setCaptionManagedByLayout(true);
-        }
+        }*/
     }
 
     @Override

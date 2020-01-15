@@ -21,7 +21,6 @@ import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.model.ScreenData;
-import io.jmix.ui.model.cuba.DsContext;
 import io.jmix.ui.screen.ScreenOptions;
 import org.dom4j.Element;
 
@@ -63,7 +62,7 @@ public interface ComponentLoader<T extends Component> {
         /* old API todo vm*/
 
         Map<String, Object> getParams();
-        DsContext getDsContext();
+        // DsContext getDsContext(); TODO: legacy-ui
         Map<String, String> getAliasesMap();
     }
 

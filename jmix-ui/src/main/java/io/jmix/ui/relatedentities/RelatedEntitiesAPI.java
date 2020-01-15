@@ -19,7 +19,7 @@ package io.jmix.ui.relatedentities;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.gui.OpenType;
 import io.jmix.ui.screen.FrameOwner;
 
 import java.util.Collection;
@@ -68,7 +68,7 @@ public interface RelatedEntitiesAPI {
      * @param selectedEntities set of entities which represents one side of relation
      * @param metaClass        metaClass of single entity from <code>selectedEntities</code>
      * @param metaProperty     chosen field to find related entities. Can be obtained from <code>metaClass</code>
-     * @param descriptor       descriptor contains screen id, {@link WindowManager.OpenType} and
+     * @param descriptor       descriptor contains screen id, {@code OpenType} and
      *                         generated filter caption
      * @deprecated Use {@link #builder(FrameOwner)} to create and set up screen for related entities.
      */
@@ -93,7 +93,7 @@ public interface RelatedEntitiesAPI {
      * @param selectedEntities set of entities which represents one side of relation
      * @param clazz            class of single entity from <code>selectedEntities</code>
      * @param property         chosen field to find related entities
-     * @param descriptor       descriptor contains screen id, {@link WindowManager.OpenType} and
+     * @param descriptor       descriptor contains screen id, {@code OpenType} and
      *                         generated filter caption
      * @deprecated Use {@link #builder(FrameOwner)} to create and set up screen for related entities.
      */
@@ -108,17 +108,13 @@ public interface RelatedEntitiesAPI {
     class RelatedScreenDescriptor {
 
         protected String screenId;
-        protected WindowManager.OpenType openType = WindowManager.OpenType.THIS_TAB;
+        protected OpenType openType = OpenType.THIS_TAB;
         protected String filterCaption;
         protected Map<String, Object> screenParams;
 
-        public RelatedScreenDescriptor(String screenId, WindowManager.OpenType openType) {
+        public RelatedScreenDescriptor(String screenId, OpenType openType) {
             this.screenId = screenId;
             this.openType = openType;
-        }
-
-        public RelatedScreenDescriptor(String screenId) {
-            this(screenId, WindowManager.OpenType.THIS_TAB);
         }
 
         public RelatedScreenDescriptor() {
@@ -128,7 +124,7 @@ public interface RelatedEntitiesAPI {
             return screenId;
         }
 
-        public WindowManager.OpenType getOpenType() {
+        public OpenType getOpenType() {
             return openType;
         }
 
@@ -144,7 +140,7 @@ public interface RelatedEntitiesAPI {
             this.screenId = screenId;
         }
 
-        public void setOpenType(WindowManager.OpenType openType) {
+        public void setOpenType(OpenType openType) {
             this.openType = openType;
         }
 

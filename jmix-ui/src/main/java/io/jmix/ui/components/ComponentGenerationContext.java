@@ -19,10 +19,6 @@ package io.jmix.ui.components;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.components.data.Options;
 import io.jmix.ui.components.data.ValueSource;
-import io.jmix.ui.components.data.options.DatasourceOptions;
-import io.jmix.ui.components.data.value.DatasourceValueSource;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;
@@ -35,10 +31,12 @@ import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 public class ComponentGenerationContext {
     protected MetaClass metaClass;
     protected String property;
+    /*
+    TODO: legacy-ui
     @Deprecated
     protected Datasource datasource;
     @Deprecated
-    protected CollectionDatasource optionsDatasource;
+    protected CollectionDatasource optionsDatasource;*/
     protected ValueSource valueSource;
     protected Options options;
     protected Element xmlDescriptor;
@@ -98,11 +96,13 @@ public class ComponentGenerationContext {
      * @return a datasource that can be used to create the component
      * @deprecated Use {@link #getValueSource()} instead
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
     @Nullable
     public Datasource getDatasource() {
         return datasource;
-    }
+    }*/
 
     /**
      * Sets a datasource, using fluent API method.
@@ -111,21 +111,25 @@ public class ComponentGenerationContext {
      * @return this object
      * @deprecated Use {@link #setValueSource(ValueSource)} instead
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
     public ComponentGenerationContext setDatasource(Datasource datasource) {
         this.datasource = datasource;
         return this;
-    }
+    }*/
 
     /**
      * @return a datasource that can be used to show options
      * @deprecated Use {@link #getOptions()} instead
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
     @Nullable
     public CollectionDatasource getOptionsDatasource() {
         return optionsDatasource;
-    }
+    }*/
 
     /**
      * Sets a datasource that can be used to show options, using fluent API method.
@@ -134,11 +138,13 @@ public class ComponentGenerationContext {
      * @return this object
      * @deprecated Use {@link #setOptions(Options)} instead
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
     public ComponentGenerationContext setOptionsDatasource(CollectionDatasource optionsDatasource) {
         this.optionsDatasource = optionsDatasource;
         return this;
-    }
+    }*/
 
     /**
      * @return a value source that can be used to create the component
@@ -146,9 +152,12 @@ public class ComponentGenerationContext {
     @SuppressWarnings("unchecked")
     @Nullable
     public ValueSource getValueSource() {
+        return null;
+        /*
+        TODO: legacy-ui
         return valueSource == null && datasource != null
                 ? new DatasourceValueSource(datasource, property)
-                : valueSource;
+                : valueSource;*/
     }
 
     /**
@@ -168,9 +177,12 @@ public class ComponentGenerationContext {
     @SuppressWarnings("unchecked")
     @Nullable
     public Options getOptions() {
+        return null;
+        /*
+        TODO: legacy-ui
         return options == null && optionsDatasource != null
                 ? new DatasourceOptions(optionsDatasource)
-                : options;
+                : options;*/
     }
 
     /**

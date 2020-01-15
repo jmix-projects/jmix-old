@@ -200,11 +200,14 @@ public class WebComponentsHelper {
         return false;
     }
 
-    public static boolean convertFieldGroupCaptionAlignment(FieldGroup.FieldCaptionAlignment captionAlignment) {
+    public static boolean convertFieldGroupCaptionAlignment(/*FieldGroup.FieldCaptionAlignment captionAlignment*/) {
+        return false;
+        /*
+        TODO: legacy-ui
         if (captionAlignment == FieldGroup.FieldCaptionAlignment.LEFT)
             return true;
         else
-            return false;
+            return false;*/
     }
 
     public static ShortcutTriggeredEvent getShortcutEvent(io.jmix.ui.components.Component source,
@@ -284,10 +287,12 @@ public class WebComponentsHelper {
                     }
                 }
 
+                /*
+                TODO: legacy-ui
                 if (component instanceof FieldGroup) {
                     FieldGroup fieldGroup = (FieldGroup) component;
                     child = findChildComponent(fieldGroup, target);
-                }
+                }*/
 
                 return child != null ? child : component;
             }

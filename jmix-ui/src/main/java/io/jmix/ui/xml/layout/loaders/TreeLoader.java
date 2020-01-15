@@ -24,7 +24,6 @@ import io.jmix.ui.components.data.tree.ContainerTreeItems;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.ScreenData;
-import io.jmix.ui.model.cuba.HierarchicalDatasource;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.xml.layout.ComponentLoader;
@@ -110,9 +109,11 @@ public class TreeLoader extends ActionsHolderLoader<Tree> {
         } else if (itemsElem != null) {
             String datasource = itemsElem.attributeValue("datasource");
             if (!StringUtils.isBlank(datasource)) {
+                /*
+                TODO: legacy-ui
                 HierarchicalDatasource ds =
                         (HierarchicalDatasource) getComponentContext().getDsContext().get(datasource);
-                resultComponent.setDatasource(ds);
+                resultComponent.setDatasource(ds);*/
             }
         }
         String captionProperty = element.attributeValue("captionProperty");

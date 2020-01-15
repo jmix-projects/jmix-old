@@ -105,7 +105,8 @@ public class LayoutLoaderConfig {
         loaders.put(ProgressBar.NAME, ProgressBarLoader.class);
         loaders.put(SearchField.NAME, SearchFieldLoader.class);
         loaders.put(RelatedEntities.NAME, RelatedEntitiesLoader.class);
-        loaders.put(BulkEditor.NAME, BulkEditorLoader.class);
+        // TODO: legacy-ui
+        // loaders.put(BulkEditor.NAME, BulkEditorLoader.class);
         loaders.put(CapsLockIndicator.NAME, CapsLockIndicatorLoader.class);
 
         loaders.put(Form.NAME, FormLoader.class);

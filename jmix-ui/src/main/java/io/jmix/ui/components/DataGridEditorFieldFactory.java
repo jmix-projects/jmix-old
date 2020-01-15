@@ -17,7 +17,6 @@
 package io.jmix.ui.components;
 
 import io.jmix.ui.components.data.meta.EntityValueSource;
-import io.jmix.ui.model.cuba.Datasource;
 
 /**
  * Factory that generates components for {@link DataGrid} editor.
@@ -34,8 +33,10 @@ public interface DataGridEditorFieldFactory {
      * @throws IllegalStateException if created component doesn't implement the {@link Field} interface
      * @deprecated Use {@link #createField(EntityValueSource, String)} instead
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
-    Field createField(Datasource datasource, String property);
+    Field createField(Datasource datasource, String property);*/
 
     /**
      * Generates component for {@link DataGrid} editor.

@@ -50,13 +50,14 @@ public final class UiTestIds {
             MetaClass entityMetaClass = dcDataUnit.getEntityMetaClass();
 
             return entityMetaClass.getName() + suffix;
-        } else if (dataUnit instanceof DatasourceDataUnit) {
+        } /* TODO: legacy-ui
+          else if (dataUnit instanceof DatasourceDataUnit) {
             DatasourceDataUnit dsDataUnit = (DatasourceDataUnit) dataUnit;
 
             MetaClass entityMetaClass = dsDataUnit.getDatasource().getMetaClass();
 
             return entityMetaClass.getName() + suffix;
-        }
+        }*/
 
         return null;
     }

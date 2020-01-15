@@ -28,7 +28,6 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.security.Security;
 import io.jmix.ui.ClientConfig;
 import io.jmix.ui.components.Window;
-import io.jmix.ui.screen.legacy.AbstractEditor;
 import io.jmix.ui.sys.ShowInfoAction;
 import io.jmix.ui.widgets.HasTabSheetBehaviour;
 import io.jmix.ui.widgets.TabSheetBehaviour;
@@ -123,13 +122,15 @@ public class MainTabSheetActionHandler implements Action.Handler {
     }
 
     protected void showInfo(Object target) {
+        /*
+        TODO: legacy-ui
         AbstractEditor editor = (AbstractEditor) findEditor((Layout) target);
         Entity entity = editor.getItem();
 
         Metadata metadata = AppBeans.get(Metadata.NAME);
         MetaClass metaClass = metadata.getSession().getClass(entity.getClass());
 
-        new ShowInfoAction().showInfo(entity, metaClass, editor);
+        new ShowInfoAction().showInfo(entity, metaClass, editor);*/
     }
 
     protected void analyzeLayout(Object target) {
@@ -151,7 +152,7 @@ public class MainTabSheetActionHandler implements Action.Handler {
 //                WindowManager wm = (WindowManager) ComponentsHelper.getScreenContext(window).getScreens();
 //                WindowInfo windowInfo = AppBeans.get(WindowConfig.class).getWindowInfo("layoutAnalyzer");
 //
-//                wm.openWindow(windowInfo, WindowManager.OpenType.DIALOG, ParamsMap.of("tipsList", tipsList));
+//                wm.openWindow(windowInfo, OpenType.DIALOG, ParamsMap.of("tipsList", tipsList));
 //            }
 //        }
     }

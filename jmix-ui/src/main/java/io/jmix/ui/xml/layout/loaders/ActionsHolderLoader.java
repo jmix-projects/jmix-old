@@ -18,12 +18,9 @@ package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.legacy.ListActionType;
 import io.jmix.ui.Actions;
 import io.jmix.ui.components.ActionsHolder;
 import io.jmix.ui.components.ListComponent;
-import io.jmix.ui.components.compatibility.LegacyFrame;
-import io.jmix.ui.components.compatibility.WindowManager;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -39,6 +36,8 @@ public abstract class ActionsHolderLoader<T extends ActionsHolder> extends Abstr
 
         if (StringUtils.isEmpty(element.attributeValue("invoke"))) {
             // only in legacy frames
+            /*
+            TODO: legacy-ui
             if (context instanceof ComponentContext
                     && ((ComponentContext) context).getFrame().getFrameOwner() instanceof LegacyFrame) {
                 // Try to create a standard list action
@@ -57,7 +56,7 @@ public abstract class ActionsHolderLoader<T extends ActionsHolder> extends Abstr
                         return instance;
                     }
                 }
-            } else {
+            } else {*/
                 String actionTypeId = element.attributeValue("type");
                 if (StringUtils.isNotEmpty(actionTypeId)) {
                     Actions actions = beanLocator.get(Actions.NAME);
@@ -73,7 +72,7 @@ public abstract class ActionsHolderLoader<T extends ActionsHolder> extends Abstr
 
                     return instance;
                 }
-            }
+            // } TODO: legacy-ui
         }
 
         return super.loadDeclarativeAction(actionsHolder, element);
@@ -125,12 +124,14 @@ public abstract class ActionsHolderLoader<T extends ActionsHolder> extends Abstr
     }
 
     protected void loadActionOpenType(Action action, Element element) {
+        /*
+        TODO: legacy-ui
         if (action instanceof Action.HasOpenType) {
             String openTypeString = element.attributeValue("openType");
             if (StringUtils.isNotEmpty(openTypeString)) {
-                WindowManager.OpenType openType;
+                OpenType openType;
                 try {
-                    openType = WindowManager.OpenType.valueOf(openTypeString);
+                    openType = OpenType.valueOf(openTypeString);
                 } catch (IllegalArgumentException e) {
                     throw new GuiDevelopmentException(
                             String.format("Unknown open type: '%s' for action: '%s'", openTypeString, action.getId()),
@@ -139,6 +140,6 @@ public abstract class ActionsHolderLoader<T extends ActionsHolder> extends Abstr
 
                 ((Action.HasOpenType) action).setOpenType(openType);
             }
-        }
+        }*/
     }
 }

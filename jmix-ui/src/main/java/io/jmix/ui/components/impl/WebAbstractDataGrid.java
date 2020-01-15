@@ -70,10 +70,6 @@ import io.jmix.ui.components.renderers.*;
 import io.jmix.ui.components.valueproviders.*;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.model.*;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
-import io.jmix.ui.model.cuba.DsBuilder;
-import io.jmix.ui.model.cuba.impl.DatasourceImplementation;
 import io.jmix.ui.model.impl.KeyValueContainerImpl;
 import io.jmix.ui.screen.ScreenValidation;
 import io.jmix.ui.sys.PersistenceManagerClient;
@@ -941,6 +937,8 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
                     metadataTools.getPropertyPaths(container.getEntityMetaClass());
         }
 
+        /*
+        TODO: legacy-ui
         if (entityDataGridSource instanceof DatasourceDataUnit) {
             CollectionDatasource datasource = ((DatasourceDataUnit) entityDataGridSource).getDatasource();
 
@@ -949,7 +947,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
                     metadataTools.getViewPropertyPaths(datasource.getView(), datasource.getMetaClass()) :
                     // otherwise use all properties from meta-class
                     metadataTools.getPropertyPaths(datasource.getMetaClass());
-        }
+        }*/
 
         if (entityDataGridSource instanceof EmptyDataUnit) {
             return metadataTools.getPropertyPaths(entityDataGridSource.getEntityMetaClass());
@@ -1355,6 +1353,8 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         }
     }
 
+    /*
+    TODO: legacy-ui
     protected Datasource createItemDatasource(E item) {
         if (itemDatasources == null) {
             itemDatasources = new WeakHashMap<>();
@@ -1379,7 +1379,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         datasource.setItem(item);
 
         return datasource;
-    }
+    }*/
 
     protected InstanceContainer<E> createInstanceContainer(E item) {
         if (itemDatasources == null) {
@@ -1443,10 +1443,12 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         if (container instanceof InstanceContainer) {
             InstanceContainer<E> instanceContainer = (InstanceContainer<E>) container;
             instanceContainer.setItem(null);
-        } else if (container instanceof Datasource) {
+        }/*
+         TODO: legacy-ui
+         else if (container instanceof Datasource) {
             Datasource<E> datasource = (Datasource<E>) container;
             datasource.setItem(null);
-        }
+        }*/
     }
 
     protected ValueSourceProvider createValueSourceProvider(E item) {
@@ -1480,8 +1482,11 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
             } else {
                 String fieldPropertyId = String.valueOf(column.getPropertyId());
                 if (column.getEditorFieldGenerator() != null) {
+                    throw new UnsupportedOperationException("TODO: legacy-ui");
+                    /*
+                    TODO: legacy-ui
                     Datasource fieldDatasource = dataGrid.createItemDatasource(bean);
-                    columnComponent = column.getEditorFieldGenerator().createField(fieldDatasource, fieldPropertyId);
+                    columnComponent = column.getEditorFieldGenerator().createField(fieldDatasource, fieldPropertyId);*/
                 } else {
                     InstanceContainer<E> container = dataGrid.createInstanceContainer(bean);
                     columnComponent = fieldFactory.createField(

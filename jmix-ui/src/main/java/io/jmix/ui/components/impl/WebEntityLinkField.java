@@ -33,17 +33,13 @@ import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.EntityLinkField;
 import io.jmix.ui.components.ListComponent;
 import io.jmix.ui.components.Window;
-import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.components.data.ValueSource;
 import io.jmix.ui.components.data.meta.ContainerDataUnit;
 import io.jmix.ui.components.data.meta.EntityValueSource;
 import io.jmix.ui.components.data.value.ContainerValueSource;
+import io.jmix.ui.gui.OpenType;
 import io.jmix.ui.model.CollectionContainer;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.DataSupplier;
-import io.jmix.ui.model.cuba.impl.DatasourceImplementation;
 import io.jmix.ui.screen.*;
-import io.jmix.ui.screen.legacy.AbstractEditor;
 import io.jmix.ui.widgets.CubaButtonField;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -53,8 +49,6 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-
-import static io.jmix.ui.components.compatibility.WindowManager.OpenType;
 
 public class WebEntityLinkField<V> extends WebV8AbstractField<CubaButtonField<V>, V, V>
         implements EntityLinkField<V>, InitializingBean {
@@ -265,11 +259,14 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<CubaButtonField<V>
 
         if (screenCloseListener != null) {
             closeListenerSubscription = addEditorCloseListener(event -> {
+                /*
+                TODO: legacy-ui
                 if (event.getEditorScreen() instanceof AbstractEditor) {
                     screenCloseListener.windowClosed((Window) event.getEditorScreen(), event.getActionId());
                 } else {
                     screenCloseListener.windowClosed(null, event.getActionId());
-                }
+                }*/
+                screenCloseListener.windowClosed(null, event.getActionId());
             });
         }
     }
@@ -307,15 +304,8 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<CubaButtonField<V>
             return;
         }
 
-        if (window.getFrameOwner() instanceof LegacyFrame) {
-            LegacyFrame frameOwner = (LegacyFrame) window.getFrameOwner();
-
-            DataSupplier dataSupplier = frameOwner.getDsContext().getDataSupplier();
-            entity = dataSupplier.reload(entity, View.MINIMAL);
-        } else {
-            DataManager dataManager = beanLocator.get(DataManager.NAME);
-            entity = dataManager.reload(entity, View.MINIMAL);
-        }
+        DataManager dataManager = beanLocator.get(DataManager.NAME);
+        entity = dataManager.reload(entity, View.MINIMAL);
 
         String windowAlias = screen;
         WindowConfig windowConfig = AppBeans.get(WindowConfig.NAME);
@@ -374,15 +364,18 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<CubaButtonField<V>
                 boolean ownerDsModified = false;
                 boolean nonModifiedInTable = false;
 
-                DatasourceImplementation ownerDs = null;
+                // DatasourceImplementation ownerDs = null; TODO: legacy-ui
                 CollectionContainer ownerCollectionCont = null;
 
+                /*
+                TODO: legacy-ui
                 if (getCollectionDatasourceFromOwner() != null) {
+
                     ownerDs = ((DatasourceImplementation) getCollectionDatasourceFromOwner());
                     nonModifiedInTable = !ownerDs.getItemsToUpdate().contains(
                             ((EntityValueSource) getValueSource()).getItem());
                     ownerDsModified = ownerDs.isModified();
-                } else if (getCollectionContainerFromOwner() != null) {
+                } else*/ if (getCollectionContainerFromOwner() != null) {
                     ownerCollectionCont = ((ContainerDataUnit) owner.getItems()).getContainer();
                     ownerCollectionCont.mute();
                 }
@@ -392,12 +385,14 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<CubaButtonField<V>
 
                 // restore modified for owner datasource
                 // remove from items to update if it was not modified before setValue
+                /*
+                TODO: legacy-ui
                 if (ownerDs != null) {
                     if (nonModifiedInTable) {
                         ownerDs.getItemsToUpdate().remove(getDatasource().getItem());
                     }
                     ownerDs.setModified(ownerDsModified);
-                } else if (ownerCollectionCont != null) {
+                } else*/ if (ownerCollectionCont != null) {
                     ownerCollectionCont.unmute();
                 }
             } else {
@@ -406,16 +401,19 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<CubaButtonField<V>
             }
             // if we edit property with non Entity type and set ListComponent owner
         } else if (owner != null) {
+            /*
+             TODO: legacy-ui
             if (getCollectionDatasourceFromOwner() != null) {
                 //noinspection unchecked
                 getCollectionDatasourceFromOwner().updateItem(item);
-            } else if (getCollectionContainerFromOwner() != null) {
+            } else*/ if (getCollectionContainerFromOwner() != null) {
                 //do not listen changes in collection
                 getCollectionContainerFromOwner().mute();
 
                 //noinspection unchecked
                 getCollectionContainerFromOwner().replaceItem(item);
-                setValueSilently(item.getValueEx(getMetaPropertyPath()));
+                // TODO: legacy-ui
+                // setValueSilently(item.getValueEx(getMetaPropertyPath()));
 
                 //listen changes
                 getCollectionContainerFromOwner().unmute();
@@ -441,12 +439,14 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<CubaButtonField<V>
         return null;
     }
 
+    /*
+    TODO: legacy-ui
     protected CollectionDatasource getCollectionDatasourceFromOwner() {
         if (owner != null && owner.getItems() != null) {
             return owner.getDatasource();
         }
         return null;
-    }
+    }*/
 
     protected MetaProperty getMetaPropertyForEditedValue() {
         ValueSource<V> valueSource = getValueSource();
@@ -465,19 +465,25 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<CubaButtonField<V>
      */
     protected void setValueSilently(V item) {
         boolean modified = false;
+        /*
+        TODO: legacy-ui
         if (getDatasource() != null) {
             modified = getDatasource().isModified();
         } else {
             ((ContainerValueSource) getValueSource()).getContainer().mute();
-        }
+        }*/
+        ((ContainerValueSource) getValueSource()).getContainer().mute();
 
         setValue(item);
 
+        /*
+        TODO: legacy-ui
         if (getDatasource() != null) {
             ((DatasourceImplementation) getDatasource()).setModified(modified);
         } else {
             ((ContainerValueSource) getValueSource()).getContainer().unmute();
-        }
+        }*/
+        ((ContainerValueSource) getValueSource()).getContainer().unmute();
     }
 
     @Override

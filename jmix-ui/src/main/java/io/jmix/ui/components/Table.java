@@ -29,11 +29,7 @@ import io.jmix.ui.components.columnmanager.GroupColumnManager;
 import io.jmix.ui.components.compatibility.TableCellClickListenerWrapper;
 import io.jmix.ui.components.compatibility.TableColumnCollapseListenerWrapper;
 import io.jmix.ui.components.data.TableItems;
-import io.jmix.ui.components.data.table.DatasourceTableItems;
-import io.jmix.ui.components.data.table.SortableDatasourceTableItems;
 import io.jmix.ui.model.InstanceContainer;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,6 +104,8 @@ public interface Table<E extends Entity>
      * @param datasource datasource
      * @deprecated Use {@link #setItems(TableItems)} instead
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
     default void setDatasource(CollectionDatasource datasource) {
         if (datasource == null) {
@@ -121,12 +119,14 @@ public interface Table<E extends Entity>
             }
             setItems(tableItems);
         }
-    }
+    }*/
 
     /**
      * @return datasource
      * @deprecated Use {@link #getItems()} instead
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
     @Override
     default CollectionDatasource getDatasource() {
@@ -134,7 +134,7 @@ public interface Table<E extends Entity>
         return tableItems instanceof DatasourceTableItems
                 ? ((DatasourceTableItems) tableItems).getDatasource()
                 : null;
-    }
+    }*/
 
     void setRequired(Column<E> column, boolean required, String message);
 
@@ -498,8 +498,10 @@ public interface Table<E extends Entity>
      * @return datasource containing the item
      * @deprecated Use {@link #getInstanceContainer(Entity)} instead.
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
-    Datasource getItemDatasource(Entity item);
+    Datasource getItemDatasource(Entity item);*/
 
     /**
      * This method returns the InstanceContainer which contains the provided item. It can be used in data-aware components,

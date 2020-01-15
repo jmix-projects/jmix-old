@@ -26,7 +26,6 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.components.*;
-import io.jmix.ui.components.compatibility.WindowManager;
 import io.jmix.ui.components.data.Options;
 import io.jmix.ui.components.data.options.ContainerOptions;
 import io.jmix.ui.dynamicattributes.DynamicAttributesTools;
@@ -125,7 +124,7 @@ public class DataGridEditorComponentGenerationStrategy extends AbstractComponent
             PickerField.LookupAction lookupAction =
                     (PickerField.LookupAction) pickerField.getActionNN(PickerField.LookupAction.NAME);
             // Opening lookup screen in another mode will close editor
-            lookupAction.setLookupScreenOpenType(WindowManager.OpenType.DIALOG);
+            // lookupAction.setLookupScreenOpenType(OpenType.DIALOG); TODO: legacy-ui
             // In case of adding special logic for lookup screen opened from DataGrid editor
             lookupAction.setLookupScreenParams(ParamsMap.of("dataGridEditor", true));
             boolean actionsByMetaAnnotations = ComponentsHelper.createActionsByMetaAnnotations(pickerField);

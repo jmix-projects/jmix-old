@@ -36,6 +36,7 @@ import io.jmix.ui.icons.Icons;
 import io.jmix.ui.logging.AppLog;
 import io.jmix.ui.screen.OpenMode;
 import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.sys.*;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsRepository;
@@ -384,8 +385,12 @@ public abstract class App {
         }
 
         RootWindow topLevelWindow = ui.getTopLevelWindow();
-
-        return topLevelWindow != null ? (WebScreens) topLevelWindow.getWindowManager() : null;
+        if (topLevelWindow == null) {
+            return null;
+        } else {
+            return (WebScreens) UiControllerUtils.getScreenContext(topLevelWindow.getFrameOwner())
+                    .getScreens();
+        }
     }
 
     public AppLog getAppLog() {

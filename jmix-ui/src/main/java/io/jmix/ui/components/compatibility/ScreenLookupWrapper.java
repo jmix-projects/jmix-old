@@ -20,20 +20,21 @@ import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.screen.LookupScreen;
 import io.jmix.ui.screen.Screen;
-import io.jmix.ui.screen.legacy.AbstractLookup;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 @Deprecated
-public class ScreenLookupWrapper extends AbstractLookup {
+public class ScreenLookupWrapper /*extends AbstractLookup */{
     private Screen screen;
 
     public ScreenLookupWrapper(Screen screen) {
         this.screen = screen;
     }
 
+    /*
+    TODO: legacy-ui
     @Override
     protected void initLookupActions(InitEvent event) {
         // do nothing
@@ -68,5 +69,5 @@ public class ScreenLookupWrapper extends AbstractLookup {
     @Override
     public Component getComponent(String id) {
         return screen.getWindow().getComponent(id);
-    }
+    }*/
 }

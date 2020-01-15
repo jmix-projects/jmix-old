@@ -148,7 +148,7 @@ public class MainTabSheetActionHandler implements Action.Handler {
                 WindowManager wm = (WindowManager) ComponentsHelper.getScreenContext(window).getScreens();
                 WindowInfo windowInfo = AppBeans.get(WindowConfig.class).getWindowInfo("layoutAnalyzer");
 
-                wm.openWindow(windowInfo, WindowManager.OpenType.DIALOG, ParamsMap.of("tipsList", tipsList));
+                wm.openWindow(windowInfo, OpenType.DIALOG, ParamsMap.of("tipsList", tipsList));
             }
         }*/
     }

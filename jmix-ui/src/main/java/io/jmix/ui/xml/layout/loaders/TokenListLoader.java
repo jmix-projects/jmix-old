@@ -19,14 +19,11 @@ import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.components.CaptionMode;
 import io.jmix.ui.components.LookupField;
 import io.jmix.ui.components.TokenList;
-import io.jmix.ui.components.compatibility.WindowManager.OpenType;
 import io.jmix.ui.components.data.options.ContainerOptions;
-import io.jmix.ui.components.data.value.LegacyCollectionDsValueSource;
+import io.jmix.ui.gui.OpenType;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.ScreenData;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.UiControllerUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -180,9 +177,11 @@ public class TokenListLoader extends AbstractFieldLoader<TokenList> {
         if (component.getOptions() == null) {
             String optionsDatasource = lookupElement.attributeValue("optionsDatasource");
             if (!StringUtils.isEmpty(optionsDatasource)) {
+                /*
+                TODO: legacy-ui
                 CollectionDatasource ds =
                         (CollectionDatasource) getComponentContext().getDsContext().get(optionsDatasource);
-                component.setOptionsDatasource(ds);
+                component.setOptionsDatasource(ds);*/
             }
         }
 
@@ -244,6 +243,8 @@ public class TokenListLoader extends AbstractFieldLoader<TokenList> {
 
     @SuppressWarnings("unchecked")
     protected void loadDatasource(TokenList tokenList, Element element) {
+        /*
+        TODO: legacy-ui
         final String datasourceId = element.attributeValue("datasource");
         if (StringUtils.isNotEmpty(datasourceId)) {
             Datasource datasource = getComponentContext().getDsContext().get(datasourceId);
@@ -259,7 +260,7 @@ public class TokenListLoader extends AbstractFieldLoader<TokenList> {
             }
 
             tokenList.setValueSource(new LegacyCollectionDsValueSource((CollectionDatasource) datasource));
-        }
+        }*/
     }
 
     protected void loadFilterMode(TokenList component, Element element) {

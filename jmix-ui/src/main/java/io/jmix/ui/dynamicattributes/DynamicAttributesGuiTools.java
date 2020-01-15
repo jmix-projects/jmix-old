@@ -22,8 +22,6 @@ import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.components.HasValue;
 import io.jmix.ui.components.PickerField;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -43,10 +41,12 @@ public class DynamicAttributesGuiTools {
     /**
      * Enforce the datasource to change modified status if dynamic attribute is changed
      */
+    /*
+    TODO: legacy-ui
     @SuppressWarnings("unchecked")
     public void listenDynamicAttributesChanges(final Datasource datasource) {
 
-    }
+    }*/
 
     /**
      * Get attributes which should be added automatically to the screen and component.
@@ -76,9 +76,11 @@ public class DynamicAttributesGuiTools {
     public void initDefaultAttributeValues(BaseGenericIdEntity item, MetaClass metaClass) {
     }
 
+    /*
+    TODO: legacy-ui
     @SuppressWarnings("unchecked")
     public void listenCategoryChanges(Datasource ds) {
-    }
+    }*/
 
     /**
      * Initializes the pickerField for selecting the dynamic attribute value. If the CategoryAttribute has "where" or
@@ -95,9 +97,11 @@ public class DynamicAttributesGuiTools {
      * CategoryAttribute has "where" or "join" clauses then only items that satisfy these clauses will be presented in
      * the options datasource
      */
+    /*
+    TODO: legacy-ui
     public CollectionDatasource createOptionsDatasourceForLookup(MetaClass metaClass, String joinClause, String whereClause) {
         throw new UnsupportedOperationException();
-    }
+    }*/
 
     /**
      * Creates the lookup action that will open the lookup screen with the dynamic filter applied. This filter contains

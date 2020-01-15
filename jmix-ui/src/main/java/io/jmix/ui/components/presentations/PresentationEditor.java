@@ -16,6 +16,8 @@
 package io.jmix.ui.components.presentations;
 
 import io.jmix.core.security.Security;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.Notifications;
 import io.jmix.ui.sys.PersistenceHelper;
 import com.vaadin.ui.*;
 import io.jmix.core.AppBeans;
@@ -25,7 +27,6 @@ import io.jmix.core.entity.Presentation;
 import io.jmix.core.entity.User;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.App;
-import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.HasPresentations;
 import io.jmix.ui.presentations.Presentations;
 import io.jmix.ui.theme.ThemeConstants;
@@ -143,20 +144,22 @@ public class PresentationEditor extends CubaWindow {
 
         //check that name is empty
         if (StringUtils.isEmpty(nameField.getValue())) {
-            App.getInstance().getWindowManager().showNotification(
-                    messages.getMainMessage("PresentationsEditor.error"),
-                    messages.getMainMessage("PresentationsEditor.error.nameRequired"),
-                    Frame.NotificationType.HUMANIZED);
+            AppUI.getCurrent().getNotifications()
+                    .create(Notifications.NotificationType.HUMANIZED)
+                    .withCaption(messages.getMainMessage("PresentationsEditor.error"))
+                    .withDescription(messages.getMainMessage("PresentationsEditor.error.nameRequired"))
+                    .show();
             return false;
         }
 
         //check that name is unique
         final Presentation pres = presentations.getPresentationByName(nameField.getValue());
         if (pres != null && !pres.equals(presentation)) {
-            App.getInstance().getWindowManager().showNotification(
-                    messages.getMainMessage("PresentationsEditor.error"),
-                    messages.getMainMessage("PresentationsEditor.error.nameAlreadyExists"),
-                    Frame.NotificationType.HUMANIZED);
+            AppUI.getCurrent().getNotifications()
+                    .create(Notifications.NotificationType.HUMANIZED)
+                    .withCaption(messages.getMainMessage("PresentationsEditor.error"))
+                    .withDescription(messages.getMainMessage("PresentationsEditor.error.nameAlreadyExists"))
+                    .show();
             return false;
         }
         return true;

@@ -19,7 +19,6 @@ package io.jmix.ui.xml.layout.loaders;
 import io.jmix.core.Metadata;
 import io.jmix.ui.Actions;
 import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.legacy.GuiActionSupport;
 import io.jmix.ui.actions.picker.ClearAction;
 import io.jmix.ui.actions.picker.LookupAction;
 import io.jmix.ui.components.ActionsHolder;
@@ -49,6 +48,8 @@ public class LookupPickerFieldLoader extends LookupFieldLoader {
         loadActions(lookupPickerField, element);
 
         if (lookupPickerField.getActions().isEmpty()) {
+            /*
+            TODO: legacy-ui
             GuiActionSupport guiActionSupport = getGuiActionSupport();
 
             boolean actionsByMetaAnnotations = guiActionSupport.createActionsByMetaAnnotations(lookupPickerField);
@@ -63,7 +64,7 @@ public class LookupPickerFieldLoader extends LookupFieldLoader {
                     lookupPickerField.addAction(actions.create(LookupAction.ID));
                     lookupPickerField.addAction(actions.create(ClearAction.ID));
                 }
-            }
+            }*/
         }
 
         String refreshOptionsOnLookupClose = element.attributeValue("refreshOptionsOnLookupClose");
@@ -72,9 +73,11 @@ public class LookupPickerFieldLoader extends LookupFieldLoader {
         }
     }
 
+    /*
+    TODO: legacy-ui
     protected GuiActionSupport getGuiActionSupport() {
         return beanLocator.get(GuiActionSupport.NAME);
-    }
+    }*/
 
     protected Actions getActions() {
         return beanLocator.get(Actions.NAME);

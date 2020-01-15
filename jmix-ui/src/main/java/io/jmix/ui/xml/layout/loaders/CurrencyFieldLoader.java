@@ -16,17 +16,10 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import io.jmix.core.entity.annotation.CurrencyLabelPosition;
-import io.jmix.core.entity.annotation.CurrencyValue;
-import io.jmix.core.entity.annotation.CurrencyLabelPosition;
-import io.jmix.core.entity.annotation.CurrencyValue;
 import io.jmix.ui.components.CurrencyField;
-import io.jmix.ui.components.DatasourceComponent;
 import io.jmix.ui.components.HasConversionErrorMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
-
-import java.util.Map;
 
 public class CurrencyFieldLoader extends AbstractFieldLoader<CurrencyField> {
 
@@ -69,6 +62,8 @@ public class CurrencyFieldLoader extends AbstractFieldLoader<CurrencyField> {
         }
     }
 
+    /*
+    TODO: legacy-ui
     @Override
     protected void loadDatasource(DatasourceComponent component, Element element) {
         super.loadDatasource(component, element);
@@ -91,7 +86,7 @@ public class CurrencyFieldLoader extends AbstractFieldLoader<CurrencyField> {
 
         String labelPosition = ((CurrencyLabelPosition) annotationProperties.get("labelPosition")).name();
         ((CurrencyField) component).setCurrencyLabelPosition(CurrencyField.CurrencyLabelPosition.valueOf(labelPosition));
-    }
+    }*/
 
     protected void loadConversionErrorMessage(HasConversionErrorMessage component, Element element) {
         String conversionErrorMessage = element.attributeValue("conversionErrorMessage");

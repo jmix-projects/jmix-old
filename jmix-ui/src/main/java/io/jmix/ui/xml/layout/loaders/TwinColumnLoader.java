@@ -17,14 +17,11 @@ package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.components.CaptionMode;
-import io.jmix.ui.components.DatasourceComponent;
 import io.jmix.ui.components.TwinColumn;
 import io.jmix.ui.components.data.options.ContainerOptions;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.ScreenData;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.UiControllerUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -55,6 +52,8 @@ public class TwinColumnLoader extends AbstractFieldLoader<TwinColumn> {
         loadTabIndex(resultComponent, element);
     }
 
+    /*
+    TODO: legacy-ui
     @Override
     protected void loadDatasource(DatasourceComponent component, Element element) {
         String datasource = element.attributeValue("optionsDatasource");
@@ -64,7 +63,7 @@ public class TwinColumnLoader extends AbstractFieldLoader<TwinColumn> {
         }
 
         super.loadDatasource(component, element);
-    }
+    }*/
 
     protected void loadOptionsContainer(TwinColumn component, Element element) {
         String containerId = element.attributeValue("optionsContainer");

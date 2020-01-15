@@ -23,9 +23,6 @@ import io.jmix.ui.App;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.SearchField;
 import io.jmix.ui.components.data.Options;
-import io.jmix.ui.components.data.options.DatasourceOptions;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.widgets.CubaComboBox;
 import io.jmix.ui.widgets.CubaSearchSelect;
 import org.apache.commons.lang3.StringUtils;
@@ -69,14 +66,16 @@ public class WebSearchField<V extends Entity> extends WebLookupField<V> implemen
             @Override
             public void notFoundSuggestions(String filterString) {
                 String message = messages.formatMessage("io.jmix.ui", "searchSelect.notFound", filterString);
-                App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
+                // TODO: legacy-ui
+                // App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
             }
 
             @Override
             public void needMinSearchStringLength(String filterString, int minSearchStringLength) {
                 String message = messages.formatMessage(
                         "io.jmix.ui", "searchSelect.minimumLengthOfFilter", minSearchStringLength);
-                App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
+                // TODO: legacy-ui
+                // App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
             }
         };
     }
@@ -97,6 +96,8 @@ public class WebSearchField<V extends Entity> extends WebLookupField<V> implemen
             filterForDs = QueryUtils.escapeForLike(filterForDs);
         }
 
+        /*
+        TODO: legacy-ui
         CollectionDatasource optionsDatasource = ((DatasourceOptions) optionsBinding.getSource()).getDatasource();
 
         if (!isRequired() && StringUtils.isEmpty(filterForDs)) {
@@ -127,7 +128,7 @@ public class WebSearchField<V extends Entity> extends WebLookupField<V> implemen
             if (searchNotifications != null && StringUtils.length(newFilter) > 0) {
                 searchNotifications.needMinSearchStringLength(newFilter, minSearchStringLength);
             }
-        }
+        }*/
     }
 
     protected CubaSearchSelect<V> getSearchComponent() {
@@ -218,9 +219,11 @@ public class WebSearchField<V extends Entity> extends WebLookupField<V> implemen
 
     @Override
     public void setOptions(Options<V> options) {
+        /*
+        TODO: legacy-ui
         if (options != null && !(options instanceof DatasourceOptions)) {
             throw new UnsupportedOperationException("SearchField supports only DatasourceOptions as options source");
-        }
+        }*/
         super.setOptions(options);
     }
 }

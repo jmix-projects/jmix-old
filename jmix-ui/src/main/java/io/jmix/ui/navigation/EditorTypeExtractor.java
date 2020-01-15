@@ -20,7 +20,6 @@ import io.jmix.core.entity.Entity;
 import io.jmix.ui.WindowInfo;
 import io.jmix.ui.screen.EditorScreen;
 import io.jmix.ui.screen.StandardEditor;
-import io.jmix.ui.screen.legacy.AbstractEditor;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.ParameterizedType;
@@ -118,7 +117,9 @@ public final class EditorTypeExtractor {
     }
 
     protected static boolean isAbstractEditor(Class controllerClass) {
-        return AbstractEditor.class == controllerClass;
+        return false;
+        // TODO: legacy-ui
+        // return AbstractEditor.class == controllerClass;
     }
 
     protected static boolean isStandardEditor(Class controllerClass) {

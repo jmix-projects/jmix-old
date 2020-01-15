@@ -21,13 +21,16 @@ import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.ui.Screens;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowInfo;
 import io.jmix.ui.actions.BaseAction;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.ListComponent;
-import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.screen.MapScreenOptions;
+import io.jmix.ui.screen.OpenMode;
+import io.jmix.ui.screen.Screen;
 
 public class ShowInfoAction extends BaseAction {
 
@@ -55,13 +58,16 @@ public class ShowInfoAction extends BaseAction {
     }
 
     public void showInfo(Entity entity, MetaClass metaClass, Component.BelongToFrame component) {
-        WindowManager wm = (WindowManager) ComponentsHelper.getScreenContext(component).getScreens();
+        Screens screens = ComponentsHelper.getScreenContext(component)
+                .getScreens();
 
         // todo sysInfoWindow
         WindowInfo windowInfo = AppBeans.get(WindowConfig.class).getWindowInfo("sysInfoWindow");
 
-        wm.openWindow(windowInfo, WindowManager.OpenType.DIALOG, ParamsMap.of(
+        Screen screen = screens.create(windowInfo.getId(), OpenMode.DIALOG, new MapScreenOptions(ParamsMap.of(
                 "metaClass", metaClass,
-                "item", entity));
+                "item", entity)));
+
+        screen.show();
     }
 }

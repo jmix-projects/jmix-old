@@ -21,7 +21,6 @@ import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.screen.EditorScreen;
 import io.jmix.ui.screen.Screen;
-import io.jmix.ui.screen.legacy.AbstractEditor;
 
 import javax.annotation.Nullable;
 
@@ -29,7 +28,7 @@ import javax.annotation.Nullable;
  * Wrapper object for compatibility with legacy code.
  */
 @Deprecated
-public class ScreenEditorWrapper extends AbstractEditor {
+public class ScreenEditorWrapper /*extends AbstractEditor */{
 
     private Screen screen;
 
@@ -37,6 +36,8 @@ public class ScreenEditorWrapper extends AbstractEditor {
         this.screen = screen;
     }
 
+    /*
+    TODO: legacy-ui
     @Override
     protected void initCommitActions(InitEvent event) {
         // do nothing
@@ -66,5 +67,5 @@ public class ScreenEditorWrapper extends AbstractEditor {
     @Override
     public Component getComponent(String id) {
         return screen.getWindow().getComponent(id);
-    }
+    }*/
 }

@@ -17,8 +17,7 @@
 package io.jmix.ui.components.data.meta;
 
 import io.jmix.ui.components.data.DataUnit;
-import io.jmix.ui.model.cuba.CollectionDatasource;
 
 public interface DatasourceDataUnit extends DataUnit {
-    CollectionDatasource getDatasource();
+    // CollectionDatasource getDatasource();
 }

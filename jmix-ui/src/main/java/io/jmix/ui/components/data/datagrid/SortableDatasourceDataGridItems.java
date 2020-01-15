@@ -20,21 +20,20 @@ import com.google.common.base.Preconditions;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.components.data.DataGridItems;
-import io.jmix.ui.model.cuba.CollectionDatasource;
 
 
 public class SortableDatasourceDataGridItems<E extends Entity<K>, K>
         extends DatasourceDataGridItems<E, K>
         implements DataGridItems.Sortable<E> {
 
-    public SortableDatasourceDataGridItems(CollectionDatasource.Sortable<E, K> datasource) {
+    /*public SortableDatasourceDataGridItems(CollectionDatasource.Sortable<E, K> datasource) {
         super(datasource);
     }
 
     @SuppressWarnings("unchecked")
     protected CollectionDatasource.Sortable<E, K> getSortableDatasource() {
         return (CollectionDatasource.Sortable<E, K>) datasource;
-    }
+    }*/
 
     @Override
     public void sort(Object[] propertyIds, boolean[] ascendingFlags) {
@@ -45,15 +44,15 @@ public class SortableDatasourceDataGridItems<E extends Entity<K>, K>
         MetaPropertyPath propertyPath = (MetaPropertyPath) propertyIds[0];
         boolean ascending = ascendingFlags[0];
 
-        CollectionDatasource.Sortable.SortInfo<MetaPropertyPath> info = new CollectionDatasource.Sortable.SortInfo<>();
+        /*CollectionDatasource.Sortable.SortInfo<MetaPropertyPath> info = new CollectionDatasource.Sortable.SortInfo<>();
         info.setPropertyPath(propertyPath);
         info.setOrder(ascending ? CollectionDatasource.Sortable.Order.ASC : CollectionDatasource.Sortable.Order.DESC);
 
-        getSortableDatasource().sort(new CollectionDatasource.Sortable.SortInfo[]{info});
+        getSortableDatasource().sort(new CollectionDatasource.Sortable.SortInfo[]{info});*/
     }
 
     @Override
     public void resetSortOrder() {
-        getSortableDatasource().resetSortOrder();
+        // getSortableDatasource().resetSortOrder();
     }
 }

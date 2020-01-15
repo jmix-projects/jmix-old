@@ -22,8 +22,6 @@ import io.jmix.core.entity.Entity;
 import io.jmix.ui.components.data.DataGridItems;
 import io.jmix.ui.components.data.TreeDataGridItems;
 import io.jmix.ui.components.data.datagrid.DatasourceTreeDataGridItems;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.HierarchicalDatasource;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -46,6 +44,8 @@ public interface TreeDataGrid<E extends Entity> extends DataGrid<E> {
         return new TypeToken<TreeDataGrid<T>>() {};
     }
 
+    /*
+    TODO: legacy-ui
     @Override
     default HierarchicalDatasource getDatasource() {
         DataGridItems<E> dataGridItems = getItems();
@@ -71,7 +71,7 @@ public interface TreeDataGrid<E extends Entity> extends DataGrid<E> {
 
             setItems(new DatasourceTreeDataGridItems((HierarchicalDatasource) datasource));
         }
-    }
+    }*/
 
     /**
      * Returns the hierarchy level of an item.

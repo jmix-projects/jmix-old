@@ -79,7 +79,8 @@ public class DeclarativeAction extends BaseAction {
 
         FrameOwner controller = frame.getFrameOwner();
         if (controller instanceof LegacyFragmentAdapter) {
-            controller = ((LegacyFragmentAdapter) controller).getRealScreen();
+            // TODO: legacy-ui
+            // controller = ((LegacyFragmentAdapter) controller).getRealScreen();
         }
 
         Method method;

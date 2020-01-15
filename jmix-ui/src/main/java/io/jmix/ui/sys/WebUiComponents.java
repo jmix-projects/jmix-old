@@ -121,13 +121,15 @@ public class WebUiComponents implements UiComponents {
         classes.put(PopupButton.NAME, WebPopupButton.class);
         classes.put(PopupView.NAME, WebPopupView.class);
 
-        classes.put(FieldGroup.NAME, WebFieldGroup.class);
+        // TODO: legacy-ui
+        // classes.put(FieldGroup.NAME, WebFieldGroup.class);
         classes.put(TokenList.NAME, WebTokenList.class);
         classes.put(TwinColumn.NAME, WebTwinColumn.class);
         classes.put(ProgressBar.NAME, WebProgressBar.class);
         classes.put(RowsCount.NAME, WebRowsCount.class);
 //        classes.put(RelatedEntities.NAME, WebRelatedEntities.class); // todo dynamic attributes
-        classes.put(BulkEditor.NAME, WebBulkEditor.class);
+        // TODO: legacy-ui
+        // classes.put(BulkEditor.NAME, WebBulkEditor.class);
         classes.put(DatePicker.NAME, WebDatePicker.class);
 //        classes.put(ListEditor.NAME, WebListEditor.class); // todo
         classes.put(CapsLockIndicator.NAME, WebCapsLockIndicator.class);

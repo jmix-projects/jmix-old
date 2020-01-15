@@ -28,10 +28,8 @@ import io.jmix.core.security.Security;
 import io.jmix.ui.ClientConfig;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.BaseAction;
-import io.jmix.ui.actions.legacy.ItemTrackingAction;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.Component.Alignment;
-import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.components.data.value.ContainerValueSource;
 import io.jmix.ui.components.data.HasValueSource;
 import io.jmix.ui.Actions;
@@ -192,8 +190,11 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
     }
 
     protected boolean isLegacyFrame() {
+        return false;
+        /*
+        TODO: legacy-ui
         return context instanceof ComponentContext
-                && ((ComponentContext) context).getFrame().getFrameOwner() instanceof LegacyFrame;
+                && ((ComponentContext) context).getFrame().getFrameOwner() instanceof LegacyFrame;*/
     }
 
     protected LayoutLoader getLayoutLoader() {
@@ -662,11 +663,14 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
     protected Action loadStubAction(Element element, String id, boolean shouldTrackSelection) {
         Action targetAction;
 
+        /*
+        TODO: legacy-ui
         if (shouldTrackSelection) {
             targetAction = new ItemTrackingAction(id);
         } else {
             targetAction = new BaseAction(id);
-        }
+        }*/
+        targetAction = new BaseAction(id);
 
         initAction(element, targetAction);
 

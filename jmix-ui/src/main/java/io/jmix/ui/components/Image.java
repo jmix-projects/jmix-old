@@ -22,8 +22,6 @@ import io.jmix.core.entity.FileDescriptor;
 import io.jmix.ui.components.data.HasValueSource;
 import io.jmix.ui.components.data.ValueSource;
 import io.jmix.ui.components.data.meta.EntityValueSource;
-import io.jmix.ui.components.data.value.DatasourceValueSource;
-import io.jmix.ui.model.cuba.Datasource;
 
 import javax.annotation.Nullable;
 import java.util.EventObject;
@@ -39,6 +37,8 @@ public interface Image extends ResourceView, HasValueSource<FileDescriptor> {
      * Sets datasource and its property.
      * @deprecated Use {@link #setValueSource(ValueSource)} instead.
      */
+    /*
+    TODO: legacy-ui
     @SuppressWarnings("unchecked")
     @Deprecated
     default void setDatasource(Datasource datasource, String property) {
@@ -47,18 +47,20 @@ public interface Image extends ResourceView, HasValueSource<FileDescriptor> {
         } else {
             this.setValueSource(null);
         }
-    }
+    }*/
 
     /**
      * @return datasource instance
      * @deprecated Use {@link #getValueSource()} instead.
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
     default Datasource getDatasource() {
         ValueSource<FileDescriptor> valueSource = getValueSource();
         return valueSource instanceof DatasourceValueSource ?
                 ((DatasourceValueSource) valueSource).getDatasource() : null;
-    }
+    }*/
 
     /**
      * @return return null if value source is not EntityValueSource or value source is not defined

@@ -376,7 +376,7 @@ public class WebDialogWindow extends WebWindow implements DialogWindow, Initiali
                     } else {
                         WindowConfig windowConfig = beanLocator.get(WindowConfig.NAME);
                         WindowInfo windowInfo = windowConfig.getWindowInfo("layoutAnalyzer");
-                        getWindowManager().openWindow(windowInfo, WindowManager.OpenType.DIALOG, ParamsMap.of("tipsList", tipsList));
+                        getWindowManager().openWindow(windowInfo, OpenType.DIALOG, ParamsMap.of("tipsList", tipsList));
                     }
                 }
             }*/

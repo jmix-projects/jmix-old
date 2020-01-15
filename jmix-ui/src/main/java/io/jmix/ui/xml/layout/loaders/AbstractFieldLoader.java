@@ -28,7 +28,7 @@ import org.dom4j.Element;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class AbstractFieldLoader<T extends Field> extends AbstractDatasourceComponentLoader<T> {
+public abstract class AbstractFieldLoader<T extends Field> extends AbstractComponentLoader<T> {
 
     @Override
     public void loadComponent() {

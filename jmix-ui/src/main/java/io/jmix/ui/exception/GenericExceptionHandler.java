@@ -16,8 +16,6 @@
 
 package io.jmix.ui.exception;
 
-import io.jmix.ui.components.compatibility.WindowManager;
-
 /**
  * Interface to be implemented by exception handlers defined on GUI level.
  *
@@ -41,14 +39,15 @@ public interface GenericExceptionHandler extends UiExceptionHandler {
      * to delegate execution to the next handler in the chain of responsibility.
      *
      * @param exception     exception instance
-     * @param windowManager WindowManagerImpl instance
      * @return true if the exception has been successfully handled, false if not
      */
     @Deprecated
-    boolean handle(Throwable exception, WindowManager windowManager);
+    boolean handle(Throwable exception/*, WindowManager windowManager*/);
 
     @Override
     default boolean handle(Throwable exception, UiContext context) {
-        return handle(exception, ((WindowManager) context.getScreens()));
+        return false;
+        // TODO: legacy-ui
+        // return handle(exception, (context.getScreens()));
     }
 }

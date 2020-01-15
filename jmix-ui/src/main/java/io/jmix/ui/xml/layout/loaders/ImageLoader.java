@@ -18,7 +18,6 @@ package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.components.Image;
-import io.jmix.ui.model.cuba.Datasource;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -54,6 +53,8 @@ public class ImageLoader extends AbstractResourceViewLoader<Image> {
     protected void loadDatasource(Image component, Element element) {
         final String datasource = element.attributeValue("datasource");
         if (!StringUtils.isEmpty(datasource)) {
+            /*
+            TODO: legacy-ui
             Datasource ds = getComponentContext().getDsContext().get(datasource);
             if (ds == null) {
                 throw new GuiDevelopmentException(String.format("Datasource '%s' is not defined", datasource),
@@ -66,7 +67,7 @@ public class ImageLoader extends AbstractResourceViewLoader<Image> {
                                 "attribute is not defined", datasource, component.getId()), context);
             }
 
-            component.setDatasource(ds, property);
+            component.setDatasource(ds, property);*/
         }
     }
 }

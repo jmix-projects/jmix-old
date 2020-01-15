@@ -75,7 +75,8 @@ public class DeclarativeTrackingAction extends ListAction implements Action.HasT
 
         FrameOwner controller = frame.getFrameOwner();
         if (controller instanceof LegacyFragmentAdapter) {
-            controller = ((LegacyFragmentAdapter) controller).getRealScreen();
+            // TODO: legacy-ui
+            // controller = ((LegacyFragmentAdapter) controller).getRealScreen();
         }
 
         Method method;

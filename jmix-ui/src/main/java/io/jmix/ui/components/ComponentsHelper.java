@@ -17,28 +17,20 @@ package io.jmix.ui.components;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.MetadataTools;
-import io.jmix.core.entity.BaseGenericIdEntity;
-import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.annotation.Lookup;
-import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.core.metamodel.model.MetadataObject;
 import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.legacy.*;
 import io.jmix.ui.components.data.value.ValueBinder;
 import io.jmix.ui.components.impl.FrameImplementation;
-import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.sys.ValuePathHelper;
 import org.apache.commons.collections4.iterators.ReverseListIterator;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import static io.jmix.core.entity.BaseEntityInternalAccess.getFilteredAttributes;
 
@@ -107,6 +99,8 @@ public abstract class ComponentsHelper {
 //                return window.getTimer(id);
         } else {
             Component innerComponent = frameImpl.getRegisteredComponent(elements[0]);
+            /*
+            TODO: legacy-ui
             if (innerComponent instanceof FieldGroup) {
                 String subPath = ValuePathHelper.pathSuffix(elements);
 
@@ -114,7 +108,7 @@ public abstract class ComponentsHelper {
                 FieldGroup.FieldConfig field = fieldGroup.getField(subPath);
 
                 return field != null ? field.getComponent() : null;
-            } else if (innerComponent instanceof ComponentContainer) {
+            } else */if (innerComponent instanceof ComponentContainer) {
 
                 String subPath = ValuePathHelper.pathSuffix(elements);
                 return ((ComponentContainer) innerComponent).getComponent(subPath);
@@ -140,6 +134,8 @@ public abstract class ComponentsHelper {
             return component;
         } else {
             Component innerComponent = frameImpl.getRegisteredComponent(elements[0]);
+            /*
+            TODO: legacy-ui
             if (innerComponent instanceof FieldGroup) {
                 String subPath = ValuePathHelper.pathSuffix(elements);
 
@@ -147,7 +143,7 @@ public abstract class ComponentsHelper {
                 FieldGroup.FieldConfig field = fieldGroup.getField(subPath);
 
                 return field != null ? field.getComponent() : null;
-            } else if (innerComponent instanceof ComponentContainer) {
+            } else */if (innerComponent instanceof ComponentContainer) {
 
                 String subPath = ValuePathHelper.pathSuffix(elements);
                 return ((ComponentContainer) innerComponent).getComponent(subPath);
@@ -179,6 +175,8 @@ public abstract class ComponentsHelper {
             if (innerComponent == null) {
                 return getComponentByIteration(container, id);
             } else {
+                /*
+                TODO: legacy-ui
                 if (innerComponent instanceof FieldGroup) {
                     String subPath = ValuePathHelper.pathSuffix(elements);
 
@@ -186,7 +184,7 @@ public abstract class ComponentsHelper {
                     FieldGroup.FieldConfig field = fieldGroup.getField(subPath);
 
                     return field != null ? field.getComponent() : null;
-                } else if (innerComponent instanceof ComponentContainer) {
+                } else */if (innerComponent instanceof ComponentContainer) {
 
                     String subPath = ValuePathHelper.pathSuffix(elements);
                     return ((ComponentContainer) innerComponent).getComponent(subPath);
@@ -554,10 +552,12 @@ public abstract class ComponentsHelper {
      *
      * @param owner List, Table or Tree component
      */
+    /*
+    TODO: lagacy-ui
     @Deprecated
     public static void createActions(ListComponent owner) {
         createActions(owner, EnumSet.of(ListActionType.CREATE, ListActionType.EDIT, ListActionType.REMOVE));
-    }
+    }*/
 
     /**
      * Creates standard actions for the component
@@ -565,6 +565,8 @@ public abstract class ComponentsHelper {
      * @param owner   List, Table or Tree component
      * @param actions set of actions to create
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
     public static void createActions(ListComponent owner, EnumSet<ListActionType> actions) {
         if (actions.contains(ListActionType.CREATE)) {
@@ -579,7 +581,7 @@ public abstract class ComponentsHelper {
         if (actions.contains(ListActionType.REFRESH)) {
             owner.addAction(LegacyRefreshAction.create(owner));
         }
-    }
+    }*/
 
     /**
      * Place component with error message to validation errors container.
@@ -596,7 +598,9 @@ public abstract class ComponentsHelper {
             for (CompositeValidationException.ViolationCause cause : ((CompositeValidationException) e).getCauses()) {
                 errors.add((Component) component, cause.getMessage());
             }
-        } else if (e instanceof FieldGroup.FieldsValidationException) {
+        } /*
+        TODO: legacy-ui
+        else if (e instanceof FieldGroup.FieldsValidationException) {
             FieldGroup.FieldsValidationException fve = (FieldGroup.FieldsValidationException) e;
             Map<Validatable, ValidationException> fields = fve.getProblemFields();
             for (Map.Entry<Validatable, ValidationException> problem : fields.entrySet()) {
@@ -604,7 +608,7 @@ public abstract class ComponentsHelper {
 
                 fillErrorMessages(problem.getKey(), exception, errors);
             }
-        } else {
+        } */else {
             errors.add((Component) component, e.getMessage());
         }
     }
@@ -615,6 +619,8 @@ public abstract class ComponentsHelper {
      *
      * @deprecated Is not required anymore. Implemented in {@link ValueBinder}.
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
     public static void handleFilteredAttributes(Field component, Datasource datasource, MetaPropertyPath mpp) {
         if (component.isRequired()
@@ -647,7 +653,7 @@ public abstract class ComponentsHelper {
                 }
             }
         }
-    }
+    }*/
 
     public static int findActionById(List<Action> actionList, String actionId) {
         int oldIndex = -1;
@@ -665,11 +671,11 @@ public abstract class ComponentsHelper {
      * INTERNAL.
      * Adds actions specified in {@link Lookup} annotation on entity attribute to the given PickerField.
      *
-     * @deprecated Use {@link GuiActionSupport#createActionsByMetaAnnotations(PickerField)} instead.
+     * @deprecated Use {@code GuiActionSupport#createActionsByMetaAnnotations(PickerField)} instead.
      */
     @Deprecated
     public static boolean createActionsByMetaAnnotations(PickerField pickerField) {
-        MetaPropertyPath mpp = pickerField.getMetaPropertyPath();
+        MetaPropertyPath mpp = null/*pickerField.getMetaPropertyPath() TODO: legacy-ui*/;
         if (mpp == null) {
             return false;
         }

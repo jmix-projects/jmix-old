@@ -18,7 +18,6 @@ package io.jmix.ui.xml.layout.loaders;
 import io.jmix.core.Metadata;
 import io.jmix.ui.Actions;
 import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.legacy.GuiActionSupport;
 import io.jmix.ui.actions.picker.ClearAction;
 import io.jmix.ui.actions.picker.LookupAction;
 import io.jmix.ui.components.ActionsHolder;
@@ -53,9 +52,10 @@ public class PickerFieldLoader extends AbstractFieldLoader<PickerField> {
 
         loadActions(resultComponent, element);
         if (resultComponent.getActions().isEmpty()) {
-            GuiActionSupport guiActionSupport = getGuiActionSupport();
+            // TODO: legacy-ui
+            // GuiActionSupport guiActionSupport = getGuiActionSupport();
 
-            boolean actionsByMetaAnnotations = guiActionSupport.createActionsByMetaAnnotations(resultComponent);
+            boolean actionsByMetaAnnotations = true /*guiActionSupport.createActionsByMetaAnnotations(resultComponent) TODO: legacy-ui*/;
             if (!actionsByMetaAnnotations) {
 
                 if (isLegacyFrame()) {
@@ -77,9 +77,11 @@ public class PickerFieldLoader extends AbstractFieldLoader<PickerField> {
         return beanLocator.get(Actions.NAME);
     }
 
+    /*
+    TODO: legacy-ui
     protected GuiActionSupport getGuiActionSupport() {
         return beanLocator.get(GuiActionSupport.NAME);
-    }
+    }*/
 
     protected Metadata getMetadata() {
         return beanLocator.get(Metadata.NAME);

@@ -23,11 +23,8 @@ import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.*;
-import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.icons.Icons;
-import io.jmix.ui.model.cuba.DsContext;
-import io.jmix.ui.model.cuba.impl.DsContextImplementation;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.security.UiPermissionDescriptor;
 import io.jmix.ui.security.UiPermissionValue;
@@ -553,12 +550,14 @@ public class WebTabSheet extends WebAbstractComponent<CubaTabSheet>
 
                 Window window = ComponentsHelper.getWindow(WebTabSheet.this);
                 if (window != null) {
+                    /*
+                    TODO: legacy-ui
                     if (window.getFrameOwner() instanceof LegacyFrame) {
                         DsContext dsContext = ((LegacyFrame) window.getFrameOwner()).getDsContext();
                         if (dsContext != null) {
                             ((DsContextImplementation) dsContext).resumeSuspended();
                         }
-                    }
+                    }*/
                 } else {
                     LoggerFactory.getLogger(WebTabSheet.class).warn("Please specify Frame for TabSheet");
                 }

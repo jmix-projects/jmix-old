@@ -19,11 +19,7 @@ import com.google.common.reflect.TypeToken;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.components.data.TableItems;
-import io.jmix.ui.components.data.table.DatasourceGroupTableItems;
-import io.jmix.ui.components.data.table.DatasourceTableItems;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.GroupDatasource;
-import io.jmix.ui.model.cuba.GroupInfo;
+import io.jmix.ui.gui.data.GroupInfo;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -43,6 +39,8 @@ public interface GroupTable<E extends Entity> extends Table<E> {
         return new TypeToken<GroupTable<T>>() {};
     }
 
+    /*
+    TODO: legacy-ui
     @Deprecated
     @Override
     default GroupDatasource getDatasource() {
@@ -57,8 +55,10 @@ public interface GroupTable<E extends Entity> extends Table<E> {
         }
 
         return null;
-    }
+    }*/
 
+    /*
+    TODO: legacy-ui
     @Deprecated
     @Override
     default void setDatasource(CollectionDatasource datasource) {
@@ -71,7 +71,7 @@ public interface GroupTable<E extends Entity> extends Table<E> {
 
             setItems(new DatasourceGroupTableItems((GroupDatasource) datasource));
         }
-    }
+    }*/
 
     /**
      * Performs grouping by the given {@code properties}.

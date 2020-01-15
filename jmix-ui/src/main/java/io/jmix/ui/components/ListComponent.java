@@ -17,7 +17,6 @@ package io.jmix.ui.components;
 
 import io.jmix.core.entity.Entity;
 import io.jmix.ui.components.data.DataUnit;
-import io.jmix.ui.model.cuba.CollectionDatasource;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -37,7 +36,9 @@ public interface ListComponent<E extends Entity> extends Component, Component.Be
     void setSelected(Collection<E> items);
 
     @Deprecated
-    CollectionDatasource getDatasource();
+    /*
+    TODO: legacy-ui
+    CollectionDatasource getDatasource();*/
 
     DataUnit getItems();
 

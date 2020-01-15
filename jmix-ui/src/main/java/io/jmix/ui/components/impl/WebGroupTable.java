@@ -31,7 +31,7 @@ import io.jmix.ui.components.table.GroupTableDataContainer;
 import io.jmix.ui.components.table.TableDataContainer;
 import io.jmix.ui.components.table.TableItemsEventsDelegate;
 import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
-import io.jmix.ui.model.cuba.GroupInfo;
+import io.jmix.ui.gui.data.GroupInfo;
 import io.jmix.ui.widgets.CubaEnhancedTable.AggregationInputValueChangeContext;
 import io.jmix.ui.widgets.CubaGroupTable;
 import io.jmix.ui.widgets.CubaGroupTable.GroupAggregationContext;

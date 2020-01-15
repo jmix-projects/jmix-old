@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 /**
  * Base interface for "fields" - components intended to display and edit value of a certain entity attribute.
  */
-public interface Field<V> extends DatasourceComponent<V>, HasValueSource<V>, Component.HasCaption,
+public interface Field<V> extends HasValueSource<V>, Component.HasCaption,
         HasValue<V>, Component.Editable, Component.BelongToFrame, Validatable, Component.HasIcon,
         HasContextHelp, HasHtmlCaption, HasHtmlDescription {
 

@@ -21,8 +21,6 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.data.Options;
 import io.jmix.ui.components.data.meta.EntityValueSource;
-import io.jmix.ui.components.data.value.DatasourceValueSource;
-import io.jmix.ui.model.cuba.Datasource;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;
@@ -31,11 +29,13 @@ public abstract class AbstractFieldFactory implements FieldFactory {
 
     protected UiComponentsGenerator componentsGenerator = AppBeans.get(UiComponentsGenerator.NAME);
 
+    /*
+    TODO: legacy-ui
     @SuppressWarnings("unchecked")
     @Override
     public Component createField(Datasource datasource, String property, Element xmlDescriptor) {
         return createField(new DatasourceValueSource(datasource, property), property, xmlDescriptor);
-    }
+    }*/
 
     @Override
     public Component createField(EntityValueSource valueSource, String property, Element xmlDescriptor) {

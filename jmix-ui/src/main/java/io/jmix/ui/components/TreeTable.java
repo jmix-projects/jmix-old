@@ -18,9 +18,6 @@ package io.jmix.ui.components;
 import com.google.common.reflect.TypeToken;
 import io.jmix.core.entity.Entity;
 import io.jmix.ui.components.data.TableItems;
-import io.jmix.ui.components.data.table.DatasourceTreeTableItems;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.HierarchicalDatasource;
 
 /**
  * TreeTable extends the {@link Table} component so that it can also visualize a hierarchy of its Items in a similar
@@ -54,6 +51,8 @@ public interface TreeTable<E extends Entity> extends Table<E> {
 
     boolean isExpanded(Object itemId);
 
+    /*
+    TODO: legacy-ui
     @Override
     @Deprecated
     default HierarchicalDatasource getDatasource() {
@@ -86,5 +85,5 @@ public interface TreeTable<E extends Entity> extends Table<E> {
     @Deprecated
     default void setDatasource(HierarchicalDatasource datasource) {
         setDatasource((CollectionDatasource) datasource);
-    }
+    }*/
 }

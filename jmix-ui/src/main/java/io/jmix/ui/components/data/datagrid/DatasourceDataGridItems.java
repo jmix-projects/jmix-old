@@ -25,22 +25,22 @@ import io.jmix.ui.components.data.BindingState;
 import io.jmix.ui.components.data.DataGridItems;
 import io.jmix.ui.components.data.meta.DatasourceDataUnit;
 import io.jmix.ui.components.data.meta.EntityDataGridItems;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
-import io.jmix.ui.model.cuba.impl.CollectionDsHelper;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+// TODO: legacy-ui
 public class DatasourceDataGridItems<E extends Entity<K>, K> implements EntityDataGridItems<E>, DatasourceDataUnit {
 
-    protected CollectionDatasource.Indexed<E, K> datasource;
+//    protected CollectionDatasource.Indexed<E, K> datasource;
+
     protected EventHub events = new EventHub();
 
-    protected BindingState state = BindingState.INACTIVE;
+    /*protected BindingState state = BindingState.INACTIVE;
 
     public DatasourceDataGridItems(CollectionDatasource<E, K> datasource) {
         if (!(datasource instanceof CollectionDatasource.Indexed)) {
@@ -75,37 +75,39 @@ public class DatasourceDataGridItems<E extends Entity<K>, K> implements EntityDa
     protected void datasourceItemPropertyChanged(Datasource.ItemPropertyChangeEvent<E> e) {
         events.publish(ValueChangeEvent.class, new ValueChangeEvent(this,
                 e.getItem(), e.getProperty(), e.getPrevValue(), e.getValue()));
-    }
+    }*/
 
-    protected void datasourceStateChanged(Datasource.StateChangeEvent<E> e) {
+    /*protected void datasourceStateChanged(Datasource.StateChangeEvent<E> e) {
         if (e.getState() == Datasource.State.VALID) {
             setState(BindingState.ACTIVE);
         } else {
             setState(BindingState.INACTIVE);
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public CollectionDatasource<E, K> getDatasource() {
         return datasource;
-    }
+    }*/
 
     @Override
     public MetaClass getEntityMetaClass() {
-        return datasource.getMetaClass();
+        return null;
+        // return datasource.getMetaClass();
     }
 
     @Override
     public BindingState getState() {
-        return state;
+        return null;
+//        return state;
     }
 
     public void setState(BindingState state) {
-        if (this.state != state) {
+        /*if (this.state != state) {
             this.state = state;
 
             events.publish(StateChangeEvent.class, new StateChangeEvent(this, state));
-        }
+        }*/
     }
 
     @Override
@@ -117,52 +119,60 @@ public class DatasourceDataGridItems<E extends Entity<K>, K> implements EntityDa
     @SuppressWarnings("unchecked")
     @Override
     public E getItem(@Nullable Object itemId) {
-        return datasource.getItem((K) itemId);
+        return null;
+        // return datasource.getItem((K) itemId);
     }
 
     @Override
     public int indexOfItem(E item) {
         Preconditions.checkNotNullArgument(item);
-        return datasource.indexOfId(item.getId());
+        return 0;
+        //return datasource.indexOfId(item.getId());
     }
 
     @Nullable
     @Override
     public E getItemByIndex(int index) {
-        K id = datasource.getIdByIndex(index);
-        return datasource.getItem(id);
+        return null;
+        /*K id = datasource.getIdByIndex(index);
+        return datasource.getItem(id);*/
     }
 
     @Override
     public Stream<E> getItems() {
-        return datasource.getItems().stream();
+        return Stream.of();
+//        return datasource.getItems().stream();
     }
 
     @Override
     public List<E> getItems(int startIndex, int numberOfItems) {
-        return datasource.getItemIds(startIndex, numberOfItems).stream()
+        return Collections.emptyList();
+        /*return datasource.getItemIds(startIndex, numberOfItems).stream()
                 .map(id -> datasource.getItem(id))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
     }
 
     @Override
     public boolean containsItem(E item) {
-        return datasource.containsItem(item.getId());
+        return false;
+//        return datasource.containsItem(item.getId());
     }
 
     @Override
     public int size() {
-        return datasource.size();
+        return 0;
+//        return datasource.size();
     }
 
     @Override
     public E getSelectedItem() {
-        return datasource.getItem();
+        return null;
+        // return datasource.getItem();
     }
 
     @Override
     public void setSelectedItem(@Nullable E item) {
-        datasource.setItem(item);
+        // datasource.setItem(item);
     }
 
     @Override

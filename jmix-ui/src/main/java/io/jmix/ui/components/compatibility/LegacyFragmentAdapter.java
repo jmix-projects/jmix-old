@@ -18,10 +18,7 @@ package io.jmix.ui.components.compatibility;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
-import io.jmix.ui.components.AbstractFrame;
-import io.jmix.ui.components.AbstractWindow;
 import io.jmix.ui.components.Component;
-import io.jmix.ui.model.cuba.DsContext;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,10 +27,13 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * Enables us to show screens based on {@link AbstractWindow} as a <b>frame</b>.
+ * Enables us to show screens based on {@code AbstractWindow} as a <b>frame</b>.
  */
 @Deprecated
-public class LegacyFragmentAdapter extends AbstractFrame {
+public class LegacyFragmentAdapter /*extends AbstractFrame */{
+
+    /*
+    TODO: legacy-ui
     private AbstractWindow screen;
 
     @SuppressWarnings("ReassignmentInjectVariable")
@@ -42,9 +42,9 @@ public class LegacyFragmentAdapter extends AbstractFrame {
         this.messages = AppBeans.get(Messages.NAME);
     }
 
-    /**
+    *//**
      * @return wrapper screen
-     */
+     *//*
     public AbstractWindow getRealScreen() {
         return screen;
     }
@@ -118,5 +118,5 @@ public class LegacyFragmentAdapter extends AbstractFrame {
     @Override
     public Component getComponentNN(String id) {
         return screen.getComponentNN(id);
-    }
+    }*/
 }

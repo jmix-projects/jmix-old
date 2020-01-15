@@ -19,11 +19,10 @@ package io.jmix.ui.components.calendar;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -31,7 +30,7 @@ public class EntityCalendarEventProvider implements CalendarEventProvider,
         io.jmix.ui.components.data.calendar.EntityCalendarEventProvider  {
 
     protected List<CalendarEvent> itemsCache;
-    protected CollectionDatasource datasource;
+    // protected CollectionDatasource datasource; TODO: legacy-ui
 
     protected String startDateProperty;
     protected String endDateProperty;
@@ -42,9 +41,13 @@ public class EntityCalendarEventProvider implements CalendarEventProvider,
 
     protected EventHub events = new EventHub();
 
+    /*
+    TODO: legacy-ui
     protected CollectionDatasource.CollectionChangeListener collectionChangeListener;
-    protected Datasource.ItemPropertyChangeListener itemPropertyChangeListener;
+    protected Datasource.ItemPropertyChangeListener itemPropertyChangeListener;*/
 
+    /*
+    TODO: legacy-ui
     @SuppressWarnings("unchecked")
     public EntityCalendarEventProvider (CollectionDatasource datasource) {
         this.datasource = datasource;
@@ -81,7 +84,7 @@ public class EntityCalendarEventProvider implements CalendarEventProvider,
 
     public CollectionDatasource getDatasource() {
         return datasource;
-    }
+    }*/
 
     @Override
     public void addEvent(CalendarEvent event) {
@@ -110,6 +113,9 @@ public class EntityCalendarEventProvider implements CalendarEventProvider,
 
     @Override
     public List<CalendarEvent> getEvents() {
+        return Collections.emptyList();
+        /*
+        TODO: legacy-ui
         if (startDateProperty == null || endDateProperty == null || captionProperty == null) {
             return new ArrayList<>();
         }
@@ -122,7 +128,7 @@ public class EntityCalendarEventProvider implements CalendarEventProvider,
             return itemsCache;
         } else {
             return itemsCache;
-        }
+        }*/
     }
 
     @Override
@@ -188,7 +194,9 @@ public class EntityCalendarEventProvider implements CalendarEventProvider,
     @SuppressWarnings("unchecked")
     @Override
     public void unbind() {
+        /*
+        TODO: legacy-ui
         datasource.removeCollectionChangeListener(collectionChangeListener);
-        datasource.removeItemPropertyChangeListener(itemPropertyChangeListener);
+        datasource.removeItemPropertyChangeListener(itemPropertyChangeListener);*/
     }
 }

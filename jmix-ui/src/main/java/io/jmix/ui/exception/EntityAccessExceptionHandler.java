@@ -19,7 +19,6 @@ package io.jmix.ui.exception;
 import io.jmix.core.EntityAccessException;
 import io.jmix.core.Messages;
 import io.jmix.ui.components.Frame;
-import io.jmix.ui.components.compatibility.WindowManager;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -40,8 +39,9 @@ public class EntityAccessExceptionHandler extends AbstractGenericExceptionHandle
     }
 
     @Override
-    protected void doHandle(String className, String message, @Nullable Throwable throwable, WindowManager windowManager) {
+    protected void doHandle(String className, String message, @Nullable Throwable throwable/*, WindowManager windowManager TODO: legacy-ui */) {
         String msg = messages.formatMessage(getClass(), "entityAccessException.message");
-        windowManager.showNotification(msg, Frame.NotificationType.WARNING);
+        // TODO: legacy-ui
+        // windowManager.showNotification(msg, Frame.NotificationType.WARNING);
     }
 }

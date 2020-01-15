@@ -19,8 +19,6 @@ package io.jmix.ui.components.factories;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.data.meta.EntityValueSource;
-import io.jmix.ui.components.data.value.DatasourceValueSource;
-import io.jmix.ui.model.cuba.Datasource;
 
 import javax.inject.Inject;
 
@@ -30,11 +28,13 @@ public class DataGridEditorFieldFactoryImpl implements DataGridEditorFieldFactor
     @Inject
     protected UiComponentsGenerator uiComponentsGenerator;
 
+    /*
+    TODO: legacy-ui
     @SuppressWarnings("unchecked")
     @Override
     public Field createField(Datasource datasource, String property) {
         return createField(new DatasourceValueSource(datasource, property), property);
-    }
+    }*/
 
     @Override
     public Field createField(EntityValueSource valueSource, String property) {

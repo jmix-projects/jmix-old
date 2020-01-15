@@ -19,7 +19,7 @@ package io.jmix.ui.components.data.table;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.components.data.GroupTableItems;
-import io.jmix.ui.model.cuba.GroupInfo;
+import io.jmix.ui.gui.data.GroupInfo;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

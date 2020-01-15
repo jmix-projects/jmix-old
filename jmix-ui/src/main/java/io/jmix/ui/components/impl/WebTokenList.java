@@ -22,7 +22,6 @@ import io.jmix.core.entity.Entity;
 import io.jmix.ui.ScreenBuilders;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.WindowConfig;
-import io.jmix.ui.WindowParams;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.BaseAction;
 import io.jmix.ui.components.*;
@@ -30,7 +29,7 @@ import io.jmix.ui.components.data.Options;
 import io.jmix.ui.components.data.ValueSource;
 import io.jmix.ui.components.data.meta.EntityOptions;
 import io.jmix.ui.components.data.meta.EntityValueSource;
-import io.jmix.ui.components.data.value.LegacyCollectionDsValueSource;
+import io.jmix.ui.gui.OpenType;
 import io.jmix.ui.icons.CubaIcon;
 import io.jmix.ui.icons.Icons;
 import io.jmix.ui.screen.*;
@@ -47,8 +46,6 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import static io.jmix.ui.components.compatibility.WindowManager.OpenType;
 
 public class WebTokenList<V extends Entity>
         extends WebV8AbstractField<CubaTokenList<V>, Collection<V>, Collection<V>>
@@ -348,9 +345,9 @@ public class WebTokenList<V extends Entity>
 
     protected Screen createLookupScreen(Runnable afterLookupSelect) {
         Class<V> entityClass = getLookupEntityClass();
-        OpenMode openMode = lookupOpenMode != null
+        OpenMode openMode = /*lookupOpenMode != null TODO: legacy-ui
                 ? lookupOpenMode.getOpenMode()
-                : OpenMode.DIALOG;
+                :*/ OpenMode.DIALOG;
 
         Screen lookupScreen = screenBuilders.lookup(entityClass, getFrame().getFrameOwner())
                 .withScreenId(getLookupScreenInternal())
@@ -364,9 +361,11 @@ public class WebTokenList<V extends Entity>
                 })
                 .build();
 
+        /*
+        TODO: legacy-ui
         if (lookupOpenMode != null) {
             applyOpenTypeParameters(lookupScreen.getWindow(), lookupOpenMode);
-        }
+        }*/
 
         if (lookupScreen instanceof MultiSelectLookupScreen) {
             ((MultiSelectLookupScreen) lookupScreen).setLookupComponentMultiSelect(isMultiSelect());
@@ -390,7 +389,10 @@ public class WebTokenList<V extends Entity>
                 //noinspection unchecked
                 entityClass = ((EntityValueSource) valueSource).getMetaPropertyPath().getRangeJavaClass();
             } else {
-                entityClass = ((LegacyCollectionDsValueSource<V>) valueSource).getDatasource().getMetaClass().getJavaClass();
+                throw new RuntimeException("TODO: legacy-ui");
+                /*
+                TODO: legacy-ui
+                entityClass = ((LegacyCollectionDsValueSource<V>) valueSource).getDatasource().getMetaClass().getJavaClass();*/
             }
         } else if (getOptions() instanceof EntityOptions) {
             entityClass = ((EntityOptions<V>) getOptions()).getEntityMetaClass().getJavaClass();
@@ -406,7 +408,8 @@ public class WebTokenList<V extends Entity>
         Map<String, Object> params = new HashMap<>();
         params.put("windowOpener", getFrame().getId());
         if (isMultiSelect()) {
-            WindowParams.MULTI_SELECT.set(params, true);
+            // TODO: legacy-ui
+            // WindowParams.MULTI_SELECT.set(params, true);
             // for backward compatibility
             params.put("multiSelect", "true");
         }
@@ -417,7 +420,9 @@ public class WebTokenList<V extends Entity>
     }
 
     @Deprecated
-    protected void applyOpenTypeParameters(Window window, OpenType openType) {
+    protected void applyOpenTypeParameters(Window window/*, OpenType openType*/) {
+        /*
+        TODO: legacy-ui
         if (window instanceof DialogWindow) {
             DialogWindow dialogWindow = (DialogWindow) window;
 
@@ -443,7 +448,7 @@ public class WebTokenList<V extends Entity>
 
         if (openType.getCloseable() != null) {
             window.setCloseable(openType.getCloseable());
-        }
+        }*/
     }
 
     protected void handleLookupSelection(Collection<V> selectedEntities) {

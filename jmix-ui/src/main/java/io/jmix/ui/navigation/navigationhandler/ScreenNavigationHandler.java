@@ -28,9 +28,7 @@ import io.jmix.core.security.Security;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowInfo;
-import io.jmix.ui.WindowParams;
 import io.jmix.ui.app.navigation.notfoundwindow.NotFoundScreen;
-import io.jmix.ui.components.compatibility.LegacyFrame;
 import io.jmix.ui.components.impl.WebWindow;
 import io.jmix.ui.navigation.*;
 import io.jmix.ui.screen.*;
@@ -288,7 +286,7 @@ public class ScreenNavigationHandler implements NavigationHandler {
         }
 
         if (MapUtils.isNotEmpty(options)) {
-            Entity entity = (Entity) options.get(WindowParams.ITEM.name());
+            Entity entity = (Entity) options.get("item");
             //noinspection unchecked
             ((EditorScreen<Entity>) editor).setEntityToEdit(entity);
         }
@@ -335,7 +333,7 @@ public class ScreenNavigationHandler implements NavigationHandler {
             if (!createPermitted) {
                 throw new AccessDeniedException(PermissionType.ENTITY_OP, EntityOp.CREATE, entityClass.getSimpleName());
             }
-            return ParamsMap.of(WindowParams.ITEM.name(), metadata.create(entityClass));
+            return ParamsMap.of("item", metadata.create(entityClass));
         }
 
         Class<?> idType = metaClass.getPropertyNN("id")
@@ -352,7 +350,7 @@ public class ScreenNavigationHandler implements NavigationHandler {
             throw new EntityAccessException(metaClass, id);
         }
 
-        return ParamsMap.of(WindowParams.ITEM.name(), entity);
+        return ParamsMap.of("item", entity);
     }
 
     protected boolean isEditor(WindowInfo windowInfo) {
@@ -360,6 +358,8 @@ public class ScreenNavigationHandler implements NavigationHandler {
     }
 
     protected boolean isLegacyScreen(Class<? extends FrameOwner> controllerClass) {
-        return LegacyFrame.class.isAssignableFrom(controllerClass);
+        return false;
+        // TODO: legacy-ui
+        // return LegacyFrame.class.isAssignableFrom(controllerClass);
     }
 }

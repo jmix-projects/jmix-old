@@ -20,11 +20,10 @@ import io.jmix.core.entity.Entity;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
 import io.jmix.ui.App;
-import io.jmix.ui.components.compatibility.WindowManager;
 import io.jmix.ui.actions.BaseAction;
 import io.jmix.ui.components.Frame;
-import io.jmix.ui.model.cuba.CollectionDatasource;
 
+// TODO: legacy-ui
 public class ShowLinkAction extends BaseAction {
     public static final String ACTION_ID = "showLink";
 
@@ -32,13 +31,13 @@ public class ShowLinkAction extends BaseAction {
         String makeLink(Entity entity);
     }
 
-    protected CollectionDatasource ds;
+    /*protected CollectionDatasource ds;*/
     protected Handler handler;
 
-    public ShowLinkAction(CollectionDatasource ds, Handler handler) {
+    public ShowLinkAction(/*CollectionDatasource ds, */Handler handler) {
         super(ACTION_ID);
 
-        this.ds = ds;
+        /*this.ds = ds;*/
         this.handler = handler;
 
         Messages messages = AppBeans.get(Messages.NAME);
@@ -47,6 +46,8 @@ public class ShowLinkAction extends BaseAction {
 
     @Override
     public void actionPerform(io.jmix.ui.components.Component component) {
+        /*
+        TODO: legacy-ui
         if (ds == null) {
             return;
         }
@@ -57,9 +58,11 @@ public class ShowLinkAction extends BaseAction {
                 messages.getMainMessage("table.showLinkAction"),
                 compileLink(ds),
                 Frame.MessageType.CONFIRMATION_HTML
-        );
+        );*/
     }
 
+    /*
+    TODO: legacy-ui
     protected String compileLink(CollectionDatasource ds) {
         StringBuilder sb = new StringBuilder();
 
@@ -69,5 +72,5 @@ public class ShowLinkAction extends BaseAction {
                 append(handler.makeLink(ds.getItem()).replace("&", "&amp")).append("</textarea>");
 
         return sb.toString();
-    }
+    }*/
 }

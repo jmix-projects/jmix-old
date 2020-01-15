@@ -25,13 +25,7 @@ import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.components.Window;
-import io.jmix.ui.components.compatibility.LegacyFrame;
-import io.jmix.ui.components.compatibility.WindowManager;
-import io.jmix.ui.components.compatibility.WindowManager.OpenType;
-import io.jmix.ui.model.cuba.DataSupplier;
-import io.jmix.ui.model.cuba.impl.DatasourceImplementation;
 import io.jmix.ui.screen.FrameOwner;
-import io.jmix.ui.screen.legacy.AbstractEditor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
@@ -71,6 +65,8 @@ public class LinkCellClickListener implements Table.CellClickListener {
             entity = rowItem;
         }
 
+        /*
+        TODO: legacy-ui
         WindowManager wm;
         Window window = ComponentsHelper.getWindow(table);
         if (window == null) {
@@ -129,7 +125,7 @@ public class LinkCellClickListener implements Table.CellClickListener {
 
                 handleEditorCommit(editorItem, rowItem, columnId);
             }
-        });
+        });*/
     }
 
     protected void handleEditorCommit(Entity editorItem, Entity rowItem, String columnId) {
@@ -142,6 +138,8 @@ public class LinkCellClickListener implements Table.CellClickListener {
         if (mpp.getRange().isClass()) {
             boolean modifiedInTable = false;
             boolean ownerDsModified = false;
+            /*
+            TODO: legacy-ui
             DatasourceImplementation ds = ((DatasourceImplementation) table.getDatasource());
             if (ds != null) {
                 modifiedInTable = ds.getItemsToUpdate().contains(rowItem);
@@ -158,7 +156,7 @@ public class LinkCellClickListener implements Table.CellClickListener {
                     ds.getItemsToUpdate().remove(rowItem);
                 }
                 ds.setModified(ownerDsModified);
-            }
+            }*/
         } else {
             table.getItems().updateItem(editorItem);
         }

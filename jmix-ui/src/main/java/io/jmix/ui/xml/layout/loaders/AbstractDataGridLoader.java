@@ -30,8 +30,6 @@ import io.jmix.ui.components.data.DataGridItems;
 import io.jmix.ui.components.data.datagrid.ContainerDataGridItems;
 import io.jmix.ui.components.data.datagrid.EmptyDataGridItems;
 import io.jmix.ui.model.*;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.xml.layout.ComponentLoader;
@@ -129,7 +127,7 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
         MetaClass metaClass;
         CollectionContainer collectionContainer = null;
         DataLoader dataLoader = null;
-        Datasource datasource = null;
+        // Datasource datasource = null; TODO: legacy-ui
 
         String containerId = element.attributeValue("dataContainer");
         String datasourceId = element.attributeValue("datasource");
@@ -147,14 +145,15 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
                 dataLoader = ((HasLoader) collectionContainer).getLoader();
             }
         } else if (!Strings.isNullOrEmpty(datasourceId)) {
-            datasource = getComponentContext().getDsContext().get(datasourceId);
-            if (datasource == null) {
+            /*
+            TODO: legacy-ui
+            datasource = getComponentContext().getDsContext().get(datasourceId);            if (datasource == null) {
                 throw new GuiDevelopmentException("Can't find datasource by name: " + datasourceId, context);
             }
             if (!(datasource instanceof CollectionDatasource)) {
                 throw new GuiDevelopmentException("Not a CollectionDatasource: " + datasource, context);
             }
-            metaClass = datasource.getMetaClass();
+            metaClass = datasource.getMetaClass();*/
         } else {
             String metaClassStr = element.attributeValue("metaClass");
             if (Strings.isNullOrEmpty(metaClassStr)) {
@@ -166,6 +165,8 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
         }
 
         List<Column> availableColumns;
+        /*
+        TODO: legacy-ui
         if (columnsElement != null) {
             View view = collectionContainer != null ? collectionContainer.getView()
                     : datasource != null ? datasource.getView()
@@ -173,7 +174,7 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
             availableColumns = loadColumns(resultComponent, columnsElement, metaClass, view);
         } else {
             availableColumns = new ArrayList<>();
-        }
+        }*/
 
         if (collectionContainer != null) {
             // todo dynamic attributes
@@ -182,15 +183,15 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
 //            }
             //noinspection unchecked
             resultComponent.setItems(createContainerDataGridSource(collectionContainer));
-        } else if (datasource != null) {
+        } /*else if (datasource != null) { TODO: legacy-ui
             // todo dynamic attributes
 //            addDynamicAttributes(resultComponent, metaClass, datasource, null, availableColumns);
-            resultComponent.setDatasource((CollectionDatasource) datasource);
-        } else {
+            // resultComponent.setDatasource((CollectionDatasource) datasource); TODO: legacy-ui
+        }*/ else {
             // todo dynamic attributes
 //            addDynamicAttributes(resultComponent, metaClass, null, null, availableColumns);
             //noinspection unchecked
-            resultComponent.setItems(createEmptyDataGridItems(metaClass));
+            // resultComponent.setItems(createEmptyDataGridItems(metaClass)); TODO: legacy-ui
         }
 
         loadSelectionMode(resultComponent, element);

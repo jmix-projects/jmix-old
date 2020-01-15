@@ -17,15 +17,12 @@
 package io.jmix.ui.components;
 
 import io.jmix.core.entity.Entity;
-import io.jmix.ui.components.compatibility.WindowManager.OpenType;
 import io.jmix.ui.components.data.HasValueSource;
 import io.jmix.ui.components.data.Options;
 import io.jmix.ui.components.data.ValueSource;
-import io.jmix.ui.components.data.options.DatasourceOptions;
 import io.jmix.ui.components.data.options.ListOptions;
 import io.jmix.ui.components.data.options.MapOptions;
-import io.jmix.ui.components.data.value.LegacyCollectionDsValueSource;
-import io.jmix.ui.model.cuba.CollectionDatasource;
+import io.jmix.ui.gui.OpenType;
 import io.jmix.ui.screen.LookupScreen;
 import io.jmix.ui.screen.Screen;
 
@@ -45,20 +42,24 @@ public interface TokenList<V extends Entity> extends Field<Collection<V>>,
     /**
      * Binds the given {@code datasource} with field.
      *
-     * @param datasource {@link CollectionDatasource} instance
+     * @param datasource {@code CollectionDatasource} instance
      *
      * @deprecated use {@link HasValueSource#setValueSource(ValueSource)} instead
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
     default void setDatasource(CollectionDatasource datasource) {
         setValueSource(datasource == null ? null : new LegacyCollectionDsValueSource<>(datasource));
-    }
+    }*/
 
     /**
-     * @return bound {@link CollectionDatasource} instance
+     * @return bound {@code CollectionDatasource} instance
      *
      * @deprecated use {@link HasValueSource#getValueSource()} instead
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
     @Override
     default CollectionDatasource getDatasource() {
@@ -66,7 +67,7 @@ public interface TokenList<V extends Entity> extends Field<Collection<V>>,
         return valueSource instanceof LegacyCollectionDsValueSource
                 ? ((LegacyCollectionDsValueSource) valueSource).getDatasource()
                 : null;
-    }
+    }*/
 
     /**
      * Sets field options.
@@ -87,17 +88,21 @@ public interface TokenList<V extends Entity> extends Field<Collection<V>>,
      *
      * @deprecated use {@link TokenList#setOptions(Options)} instead
      */
+    /*
+    TODO: legacy-ui
     @SuppressWarnings("unchecked")
     @Deprecated
     default void setOptionsDatasource(CollectionDatasource datasource) {
         setOptions(datasource == null ? null : new DatasourceOptions(datasource));
-    }
+    }*/
 
     /**
-     * @return {@link CollectionDatasource} instance that stores field options
+     * @return {@code CollectionDatasource} instance that stores field options
      *
      * @deprecated use {@link TokenList#getOptions()} instead
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
     default CollectionDatasource getOptionsDatasource() {
         Options<V> options = getOptions();
@@ -105,7 +110,7 @@ public interface TokenList<V extends Entity> extends Field<Collection<V>>,
             return ((DatasourceOptions) options).getDatasource();
         }
         return null;
-    }
+    }*/
 
     /**
      * @return options filter mode
@@ -284,6 +289,7 @@ public interface TokenList<V extends Entity> extends Field<Collection<V>>,
     /**
      * @return lookup screen open mode
      */
+
     @Deprecated
     OpenType getLookupOpenMode();
 
@@ -317,7 +323,7 @@ public interface TokenList<V extends Entity> extends Field<Collection<V>>,
     boolean isMultiSelect();
 
     /**
-     * Enables multiselect mode. It leads to the passing {@link io.jmix.ui.WindowParams#MULTI_SELECT} param
+     * Enables multiselect mode. It leads to the passing {@code MULTI_SELECT} param
      * to the lookup screen.
      *
      * @param multiselect multiselect

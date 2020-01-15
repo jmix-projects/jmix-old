@@ -29,9 +29,7 @@ import io.jmix.ui.executors.BackgroundWorker;
 import io.jmix.ui.executors.TaskLifeCycle;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.model.*;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
-import io.jmix.ui.model.cuba.impl.WeakCollectionChangeListener;
+import io.jmix.ui.model.impl.WeakCollectionChangeListener;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.widgets.CubaRowsCount;
@@ -112,6 +110,8 @@ public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements
         return StringUtils.normalizeSpace(super.getStyleName().replace(TABLE_ROWS_COUNT_STYLENAME, ""));
     }
 
+    /*
+    TODO: legacy-ui
     @Override
     public CollectionDatasource getDatasource() {
         return adapter instanceof AbstractDatasourceAdapter
@@ -129,7 +129,7 @@ public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements
         adapter = createDatasourceAdapter(datasource);
 
         initButtonListeners();
-    }
+    }*/
 
     protected void initButtonListeners() {
         unregisterListeners();
@@ -181,7 +181,8 @@ public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements
         if (target instanceof ListComponent) {
             DataUnit items = ((ListComponent) target).getItems();
             if (items instanceof DatasourceDataUnit) {
-                return createDatasourceAdapter(((DatasourceDataUnit) items).getDatasource());
+                // TODO: legacy-ui
+                // return createDatasourceAdapter(((DatasourceDataUnit) items).getDatasource());
             } else if (items instanceof ContainerDataUnit) {
                 return createLoaderAdapter(((ContainerDataUnit) items).getContainer());
             }
@@ -203,13 +204,15 @@ public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements
         return new LoaderAdapter(container, (BaseCollectionLoader) loader);
     }
 
+    /*
+    TODO: legacy-ui
     protected Adapter createDatasourceAdapter(CollectionDatasource datasource) {
         if (datasource instanceof CollectionDatasource.SupportsPaging) {
             return new DatasourceAdapter((CollectionDatasource.SupportsPaging) datasource);
         } else {
             return new NoPagingDatasourceAdapter(datasource);
         }
-    }
+    }*/
 
     @Override
     public void setRowsCountTarget(RowsCountTarget target) {
@@ -640,6 +643,8 @@ public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements
         }
     }
 
+    /*
+    TODO: legacy-ui
     protected class DatasourceAdapter extends AbstractDatasourceAdapter {
 
         public DatasourceAdapter(CollectionDatasource.SupportsPaging datasource) {
@@ -675,8 +680,10 @@ public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements
         public void refresh() {
             datasource.refresh();
         }
-    }
+    }*/
 
+    /*
+    TODO: legacy-ui
     protected class NoPagingDatasourceAdapter extends AbstractDatasourceAdapter {
 
         public NoPagingDatasourceAdapter(CollectionDatasource datasource) {
@@ -712,8 +719,10 @@ public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements
         public void refresh() {
             // do nothing
         }
-    }
+    }*/
 
+    /*
+    TODO: legacy-ui
     protected abstract class AbstractDatasourceAdapter implements Adapter {
 
         protected CollectionDatasource datasource;
@@ -754,5 +763,5 @@ public class WebRowsCount extends WebAbstractComponent<CubaRowsCount> implements
         public CollectionDatasource getDatasource() {
             return datasource;
         }
-    }
+    }*/
 }

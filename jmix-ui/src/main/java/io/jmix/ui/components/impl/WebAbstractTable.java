@@ -55,7 +55,6 @@ import io.jmix.ui.components.data.meta.ContainerDataUnit;
 import io.jmix.ui.components.data.meta.DatasourceDataUnit;
 import io.jmix.ui.components.data.meta.EmptyDataUnit;
 import io.jmix.ui.components.data.meta.EntityTableItems;
-import io.jmix.ui.components.data.table.DatasourceTableItems;
 import io.jmix.ui.components.presentations.TablePresentations;
 import io.jmix.ui.components.table.*;
 import io.jmix.ui.dynamicattributes.CategoryAttribute;
@@ -63,10 +62,6 @@ import io.jmix.ui.dynamicattributes.DynamicAttributesTools;
 import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.model.*;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
-import io.jmix.ui.model.cuba.DsBuilder;
-import io.jmix.ui.model.cuba.impl.DatasourceImplementation;
 import io.jmix.ui.model.impl.KeyValueContainerImpl;
 import io.jmix.ui.presentations.Presentations;
 import io.jmix.ui.presentations.PresentationsImpl;
@@ -82,7 +77,6 @@ import io.jmix.ui.theme.ThemeConstantsManager;
 import io.jmix.ui.widgets.CubaButton;
 import io.jmix.ui.widgets.CubaEnhancedTable;
 import io.jmix.ui.widgets.CubaEnhancedTable.AggregationInputValueChangeContext;
-import io.jmix.ui.AppUI;
 import io.jmix.ui.widgets.ShortcutListenerDelegate;
 import io.jmix.ui.widgets.compatibility.CubaValueChangeEvent;
 import io.jmix.ui.widgets.data.AggregationContainer;
@@ -543,6 +537,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         column.setOwner(null);
     }
 
+    /*
+    TODO: legacy-ui
     @SuppressWarnings("unchecked")
     @Override
     public Datasource getItemDatasource(Entity item) {
@@ -569,7 +565,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         fieldDatasources.put(item, datasource);
 
         return datasource;
-    }
+    }*/
 
     @SuppressWarnings("unchecked")
     @Override
@@ -1554,13 +1550,15 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         }
 
         if (entityTableSource instanceof DatasourceDataUnit) {
+            /*
+            TODO: legacy-ui
             CollectionDatasource datasource = ((DatasourceDataUnit) entityTableSource).getDatasource();
 
             return datasource.getView() != null ?
                     // if a view is specified - use view properties
                     metadataTools.getViewPropertyPaths(datasource.getView(), datasource.getMetaClass()) :
                     // otherwise use all properties from meta-class
-                    metadataTools.getPropertyPaths(datasource.getMetaClass());
+                    metadataTools.getPropertyPaths(datasource.getMetaClass());*/
         }
 
         if (entityTableSource instanceof EmptyDataUnit) {
@@ -1618,10 +1616,12 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
             if (entry.getValue() instanceof InstanceContainer) {
                 InstanceContainer container = (InstanceContainer) entry.getValue();
                 container.setItem(null);
-            } else if (entry.getValue() instanceof Datasource) {
+            }/*
+             TODO: legacy-ui
+             else if (entry.getValue() instanceof Datasource) {
                 Datasource datasource = (Datasource) entry.getValue();
                 datasource.setItem(null);
-            }
+            }*/
         }
 
         fieldDatasources.clear();
@@ -2665,9 +2665,11 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     @Override
     public void refresh() {
         TableItems<E> tableItems = getItems();
+        /*
+        TODO: legacy-ui
         if (tableItems instanceof DatasourceTableItems) {
             ((DatasourceTableItems) tableItems).getDatasource().refresh();
-        }
+        }*/
     }
 
     @Override

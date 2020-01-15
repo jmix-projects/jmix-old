@@ -17,11 +17,8 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.ui.components.CaptionMode;
-import io.jmix.ui.components.DatasourceComponent;
 import io.jmix.ui.components.OptionsField;
 import io.jmix.ui.components.data.options.ContainerOptions;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -47,6 +44,8 @@ public abstract class AbstractOptionsBaseLoader<T extends OptionsField> extends 
         }
     }
 
+    /*
+    TODO: legacy-ui
     @SuppressWarnings("unchecked")
     @Override
     protected void loadDatasource(DatasourceComponent component, Element element) {
@@ -57,7 +56,7 @@ public abstract class AbstractOptionsBaseLoader<T extends OptionsField> extends 
         }
 
         super.loadDatasource(component, element);
-    }
+    }*/
 
     @SuppressWarnings("unchecked")
     @Override

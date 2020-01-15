@@ -58,6 +58,8 @@ public abstract class AbstractTextFieldLoader<T extends TextInputField> extends 
             return;
         }
 
+        /*
+        TODO: legacy-ui
         if (resultComponent.getMetaPropertyPath() != null) {
             Map<String, Object> annotations = resultComponent.getMetaPropertyPath().getMetaProperty().getAnnotations();
 
@@ -68,7 +70,7 @@ public abstract class AbstractTextFieldLoader<T extends TextInputField> extends 
                 TextInputField.CaseConversion tfCaseConversion = TextInputField.CaseConversion.valueOf(conversionType.name());
                 component.setCaseConversion(tfCaseConversion);
             }
-        }
+        }*/
     }
 
     protected void loadTextChangeEventProperties(TextInputField.TextChangeNotifier component, Element element) {

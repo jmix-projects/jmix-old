@@ -32,11 +32,8 @@ import io.jmix.ui.components.data.Options;
 import io.jmix.ui.components.data.meta.EntityOptions;
 import io.jmix.ui.components.data.meta.EntityValueSource;
 import io.jmix.ui.components.data.meta.OptionsBinding;
-import io.jmix.ui.components.data.options.DatasourceOptions;
 import io.jmix.ui.components.data.options.OptionsBinder;
 import io.jmix.ui.icons.IconResolver;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.Datasource;
 import io.jmix.ui.widgets.CubaPickerField;
 import io.jmix.ui.widgets.CubaSearchSelectPickerField;
 import org.apache.commons.lang3.StringUtils;
@@ -142,6 +139,8 @@ public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
             filterForDs = QueryUtils.escapeForLike(filterForDs);
         }
 
+        /*
+        TODO: legacy-ui
         CollectionDatasource optionsDatasource = ((DatasourceOptions) optionsBinding.getSource()).getDatasource();
 
         if (!isRequired() && StringUtils.isEmpty(filterForDs)) {
@@ -172,7 +171,7 @@ public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
             if (searchNotifications != null && StringUtils.length(newFilter) > 0) {
                 searchNotifications.needMinSearchStringLength(newFilter, minSearchStringLength);
             }
-        }
+        }*/
     }
 
     protected SearchNotifications createSearchNotifications() {
@@ -182,7 +181,8 @@ public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
                 Messages messages = beanLocator.get(Messages.NAME);
 
                 String message = messages.formatMessage("io.jmix.ui", "searchSelect.notFound", filterString);
-                App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
+                // TODO: legacy-ui
+                // App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
             }
 
             @Override
@@ -191,7 +191,8 @@ public class WebSearchPickerField<V extends Entity> extends WebPickerField<V>
 
                 String message = messages.formatMessage(
                         "io.jmix.ui", "searchSelect.minimumLengthOfFilter", minSearchStringLength);
-                App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
+                // TODO: legacy-ui
+                // App.getInstance().getWindowManager().showNotification(message, defaultNotificationType);
             }
         };
     }

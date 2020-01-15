@@ -18,7 +18,7 @@ package io.jmix.ui.components.table;
 
 import io.jmix.ui.components.data.BindingState;
 import io.jmix.ui.components.data.GroupTableItems;
-import io.jmix.ui.model.cuba.GroupInfo;
+import io.jmix.ui.gui.data.GroupInfo;
 import io.jmix.ui.widgets.data.GroupTableContainer;
 
 import java.util.*;

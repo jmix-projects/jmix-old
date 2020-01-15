@@ -17,7 +17,6 @@
 package io.jmix.ui.components;
 
 import io.jmix.ui.components.data.meta.EntityValueSource;
-import io.jmix.ui.model.cuba.Datasource;
 import org.dom4j.Element;
 
 public interface FieldFactory {
@@ -31,8 +30,10 @@ public interface FieldFactory {
      * @return created component
      * @deprecated Use {@link #createField(EntityValueSource, String, Element)} instead
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
-    Component createField(Datasource datasource, String property, Element xmlDescriptor);
+    Component createField(Datasource datasource, String property, Element xmlDescriptor);*/
 
     /**
      * Creates a component for {@link Table}.

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components;
 
-import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.gui.OpenType;
 
 import javax.annotation.Nullable;
 
@@ -25,8 +25,8 @@ public interface RelatedEntities extends Component, Component.HasCaption, Compon
 
     String NAME = "relatedEntities";
 
-    WindowManager.OpenType getOpenType();
-    void setOpenType(WindowManager.OpenType openType);
+    OpenType getOpenType();
+    void setOpenType(OpenType openType);
 
     String getExcludePropertiesRegex();
     void setExcludePropertiesRegex(String excludeRegex);

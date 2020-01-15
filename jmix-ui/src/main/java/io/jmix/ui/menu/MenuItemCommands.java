@@ -26,12 +26,12 @@ import io.jmix.core.entity.IdProxy;
 import io.jmix.core.impl.BeanLocatorAware;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.ui.ScreenBuilders;
 import io.jmix.ui.Screens;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowInfo;
-import io.jmix.ui.WindowParams;
 import io.jmix.ui.components.Window;
-import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.gui.OpenType;
 import io.jmix.ui.logging.UIPerformanceLogger;
 import io.jmix.ui.logging.UserActionsLogger;
 import io.jmix.ui.screen.*;
@@ -73,6 +73,8 @@ public class MenuItemCommands {
     protected Scripting scripting;
     @Inject
     protected Metadata metadata;
+    @Inject
+    protected ScreenBuilders screenBuilders;
 
     @Inject
     protected BeanLocator beanLocator;
@@ -139,7 +141,7 @@ public class MenuItemCommands {
             if (windowInfo.getDescriptor() != null) {
                 String caption = menuConfig.getItemCaption(item);
 
-                builder.put(WindowParams.CAPTION.name(), caption);
+                builder.put("caption", caption);
             }
         }
 
@@ -282,10 +284,10 @@ public class MenuItemCommands {
 
             StopWatch sw = createStopWatch(item);
 
-            WindowManager.OpenType openType = WindowManager.OpenType.NEW_TAB;
+            OpenType openType = OpenType.NEW_TAB;
             String openTypeStr = descriptor.attributeValue("openType");
             if (StringUtils.isNotEmpty(openTypeStr)) {
-                openType = WindowManager.OpenType.valueOf(openTypeStr);
+                openType = OpenType.valueOf(openTypeStr);
             }
 
             if (openType.getOpenMode() == OpenMode.DIALOG) {
@@ -309,13 +311,16 @@ public class MenuItemCommands {
 
                 if (screenId.endsWith(Window.CREATE_WINDOW_SUFFIX)
                         || screenId.endsWith(Window.EDITOR_WINDOW_SUFFIX)) {
-                    screen = ((WindowManager) screens).createEditor(windowInfo, getEntityToEdit(screenId), openType, paramsMap);
+                    // TODO: legacy-ui
+                    // screen = ((WindowManager) screens).createEditor(windowInfo, getEntityToEdit(screenId), openType, paramsMap);
+                    screen = null;
                 } else {
                     screen = screens.create(screenId, openType.getOpenMode(), new MapScreenOptions(paramsMap));
                 }
             } else {
                 screen = screens.create(screenId, openType.getOpenMode(), new MapScreenOptions(params));
                 if (screen instanceof EditorScreen) {
+                    //noinspection unchecked
                     ((EditorScreen) screen).setEntityToEdit(getEntityToEdit(screenId));
                 }
             }

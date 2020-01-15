@@ -25,7 +25,7 @@ import io.jmix.ui.components.data.HasValueSource;
  * To indicate that a task of unknown length is executing, you can put a progress bar into indeterminate mode.
  */
 public interface ProgressBar extends Component, Component.BelongToFrame,
-        HasValue<Double>, HasValueSource<Double>, DatasourceComponent<Double>,
+        HasValue<Double>, HasValueSource<Double>,
         Component.HasIcon, Component.HasCaption, HasContextHelp, HasHtmlCaption, HasHtmlDescription {
 
     String NAME = "progressBar";

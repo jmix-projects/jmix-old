@@ -24,7 +24,6 @@ import io.jmix.ui.components.data.calendar.EntityCalendarEventProvider;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.ScreenData;
-import io.jmix.ui.model.cuba.CollectionDatasource;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.UiControllerUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -116,13 +115,15 @@ public class CalendarLoader extends AbstractComponentLoader<Calendar> {
 
     protected void loadDatasource(Calendar component, Element element) {
         String datasource = element.attributeValue("datasource");
+        /*
+        TODO: legacy-ui
         CollectionDatasource ds = (CollectionDatasource) getComponentContext().getDsContext().get(datasource);
         if (ds == null) {
             throw new GuiDevelopmentException(String.format("Datasource '%s' is not defined", datasource),
                     getContext(), "Component ID", component.getId());
         }
 
-        component.setDatasource(ds);
+        component.setDatasource(ds);*/
     }
 
     protected void loadEventProviderRelatedProperties(Calendar component, Element element) {

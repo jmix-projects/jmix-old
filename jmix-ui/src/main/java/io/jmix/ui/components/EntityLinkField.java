@@ -18,7 +18,7 @@ package io.jmix.ui.components;
 
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.ui.components.compatibility.WindowManager;
+import io.jmix.ui.gui.OpenType;
 import io.jmix.ui.screen.EditorScreen;
 import io.jmix.ui.screen.OpenMode;
 import io.jmix.ui.screen.Screen;
@@ -41,14 +41,14 @@ public interface EntityLinkField<V> extends Field<V>, Component.Focusable {
      * @deprecated Use {@link #getOpenMode()} instead.
      */
     @Deprecated
-    WindowManager.OpenType getScreenOpenType();
+    OpenType getScreenOpenType();
 
     /**
      * @param openType open type
      * @deprecated Use {@link #setOpenMode(OpenMode)} instead.
      */
     @Deprecated
-    void setScreenOpenType(WindowManager.OpenType openType);
+    void setScreenOpenType(OpenType openType);
 
     /**
      * @return open mode for editor screen

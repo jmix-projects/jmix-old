@@ -16,7 +16,6 @@
 package io.jmix.ui.components;
 
 import io.jmix.core.DataLoadContext;
-import io.jmix.ui.model.cuba.CollectionDatasource;
 
 import java.util.EventObject;
 import java.util.function.Consumer;
@@ -51,13 +50,17 @@ public interface RowsCount extends Component.BelongToFrame {
     /**
      * @deprecated assign {@link RowsCountTarget} instead.
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
-    CollectionDatasource getDatasource();
+    CollectionDatasource getDatasource();*/
     /**
      * @deprecated assign {@link RowsCountTarget} instead.
      */
+    /*
+    TODO: legacy-ui
     @Deprecated
-    void setDatasource(CollectionDatasource datasource);
+    void setDatasource(CollectionDatasource datasource);*/
 
     /**
      * @return a component that displays data from the same datasource, usually a {@link Table}. Can be null.

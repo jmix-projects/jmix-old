@@ -17,31 +17,19 @@ package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.core.DevelopmentException;
 import io.jmix.ui.GuiDevelopmentException;
-import io.jmix.ui.components.AbstractFrame;
 import io.jmix.ui.components.Facet;
 import io.jmix.ui.components.Fragment;
 import io.jmix.ui.components.Frame;
-import io.jmix.ui.components.compatibility.LegacyFrame;
-import io.jmix.ui.logging.ScreenLifeCycle;
 import io.jmix.ui.model.ScreenData;
-import io.jmix.ui.model.cuba.Datasource;
-import io.jmix.ui.model.cuba.DsContext;
-import io.jmix.ui.model.cuba.impl.DatasourceImplementation;
-import io.jmix.ui.model.cuba.impl.GenericDataSupplier;
 import io.jmix.ui.model.impl.ScreenDataXmlLoader;
-import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.sys.ScreenViewsLoader;
 import io.jmix.ui.xml.FacetLoader;
-import io.jmix.ui.xml.data.DsContextLoader;
 import io.jmix.ui.xml.layout.ComponentRootLoader;
 import org.dom4j.Element;
-import org.perf4j.StopWatch;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import static io.jmix.ui.logging.UIPerformanceLogger.createStopWatch;
 
 public class FragmentLoader extends ContainerLoader<Fragment> implements ComponentRootLoader<Fragment> {
 
@@ -64,9 +52,11 @@ public class FragmentLoader extends ContainerLoader<Fragment> implements Compone
 
     @Override
     public void loadComponent() {
+        /*
+        TODO: legacy-ui
         if (resultComponent.getFrameOwner() instanceof AbstractFrame) {
             getScreenViewsLoader().deployViews(element);
-        }
+        }*/
 
         ComponentContext componentContext = getComponentContext();
 
@@ -101,7 +91,9 @@ public class FragmentLoader extends ContainerLoader<Fragment> implements Compone
         Element dataEl = element.element("data");
         if (dataEl != null) {
             loadScreenData(dataEl);
-        } else if (resultComponent.getFrameOwner() instanceof LegacyFrame) {
+        }/*
+         TODO: legacy-ui
+         else if (resultComponent.getFrameOwner() instanceof LegacyFrame) {
             Element dsContextElement = element.element("dsContext");
             loadDsContext(dsContextElement);
         }
@@ -111,7 +103,7 @@ public class FragmentLoader extends ContainerLoader<Fragment> implements Compone
             if (companionsElem != null) {
                 componentContext.addInjectTask(new FragmentLoaderCompanionTask(resultComponent));
             }
-        }
+        }*/
 
         loadSubComponentsAndExpand(resultComponent, layoutElement);
         setComponentsRatio(resultComponent, layoutElement);
@@ -151,6 +143,8 @@ public class FragmentLoader extends ContainerLoader<Fragment> implements Compone
     }
 
     protected void loadDsContext(@Nullable Element dsContextElement) {
+        /*
+        TODO: legacy-ui
         DsContext dsContext = null;
         if (resultComponent.getFrameOwner() instanceof LegacyFrame) {
             DsContextLoader dsContextLoader;
@@ -179,7 +173,7 @@ public class FragmentLoader extends ContainerLoader<Fragment> implements Compone
 
                 dsContext.setFrameContext(resultComponent.getContext());
             }
-        }
+        }*/
     }
 
     protected class FragmentLoaderCompanionTask implements InjectTask {
@@ -191,6 +185,8 @@ public class FragmentLoader extends ContainerLoader<Fragment> implements Compone
 
         @Override
         public void execute(ComponentContext context, Frame frame) {
+            /*
+            TODO: legacy-ui
             String loggingId = context.getFullFrameId();
             try {
                 if (fragment.getFrameOwner() instanceof AbstractFrame) {
@@ -205,10 +201,10 @@ public class FragmentLoader extends ContainerLoader<Fragment> implements Compone
                 }
             } catch (Throwable e) {
                 throw new RuntimeException("Unable to init frame companion", e);
-            }
+            }*/
         }
 
-        protected void initCompanion(Element companionsElem, AbstractFrame frame) {
+        protected void initCompanion(Element companionsElem/*, AbstractFrame frame TODO: legacy-ui */) {
             // todo companions
             throw new UnsupportedOperationException();
 //            String clientTypeId = AppConfig.getClientType().toString().toLowerCase();

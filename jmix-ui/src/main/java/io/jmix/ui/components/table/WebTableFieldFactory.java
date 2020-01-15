@@ -33,15 +33,12 @@ import io.jmix.ui.components.data.HasValueSource;
 import io.jmix.ui.components.data.Options;
 import io.jmix.ui.components.data.meta.EntityValueSource;
 import io.jmix.ui.components.data.options.ContainerOptions;
-import io.jmix.ui.components.data.options.DatasourceOptions;
 import io.jmix.ui.components.data.value.ContainerValueSource;
 import io.jmix.ui.components.factories.AbstractFieldFactory;
 import io.jmix.ui.components.impl.WebAbstractTable;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.ScreenData;
-import io.jmix.ui.model.cuba.CollectionDatasource;
-import io.jmix.ui.model.cuba.DsContext;
 import io.jmix.ui.screen.UiControllerUtils;
 
 import javax.annotation.Nullable;
@@ -156,10 +153,12 @@ public class WebTableFieldFactory<E extends Entity> extends AbstractFieldFactory
             return new ContainerOptions(collectionContainer);
         }
 
+        /*
+        TODO: legacy-ui
         CollectionDatasource ds = findOptionsDatasource(columnConf, property);
         if (ds != null) {
             return new DatasourceOptions(ds);
-        }
+        }*/
 
         return null;
     }
@@ -184,6 +183,8 @@ public class WebTableFieldFactory<E extends Entity> extends AbstractFieldFactory
         }
     }
 
+    /*
+    TODO: legacy-ui
     @Nullable
     protected CollectionDatasource findOptionsDatasource(Table.Column columnConf, String propertyId) {
         String optDsName = columnConf.getXmlDescriptor() != null ?
@@ -205,5 +206,5 @@ public class WebTableFieldFactory<E extends Entity> extends AbstractFieldFactory
 
             return ds;
         }
-    }
+    }*/
 }

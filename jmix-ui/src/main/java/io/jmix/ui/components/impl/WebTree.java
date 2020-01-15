@@ -45,7 +45,6 @@ import io.jmix.ui.components.LookupComponent.LookupSelectionChangeNotifier;
 import io.jmix.ui.components.data.BindingState;
 import io.jmix.ui.components.data.TreeItems;
 import io.jmix.ui.components.data.meta.EntityTreeItems;
-import io.jmix.ui.components.data.tree.DatasourceTreeItems;
 import io.jmix.ui.components.tree.TreeDataProvider;
 import io.jmix.ui.components.tree.TreeSourceEventsDelegate;
 import io.jmix.ui.icons.IconResolver;
@@ -55,7 +54,6 @@ import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
 import io.jmix.ui.widgets.CubaCssActionsLayout;
 import io.jmix.ui.widgets.CubaTree;
-import io.jmix.ui.AppUI;
 import io.jmix.ui.widgets.ShortcutListenerDelegate;
 import io.jmix.ui.widgets.addons.contextmenu.TreeContextMenu;
 import io.jmix.ui.widgets.grid.CubaMultiSelectionModel;
@@ -769,9 +767,11 @@ public class WebTree<E extends Entity>
     @Override
     public void refresh() {
         TreeItems<E> treeItems = getItems();
+        /*
+        TODO: legacy-ui
         if (treeItems instanceof DatasourceTreeItems) {
             ((DatasourceTreeItems) treeItems).getDatasource().refresh();
-        }
+        }*/
     }
 
     @Override
