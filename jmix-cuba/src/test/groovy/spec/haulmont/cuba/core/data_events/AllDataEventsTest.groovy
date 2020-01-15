@@ -47,6 +47,7 @@ class AllDataEventsTest extends CoreTestSpecification {
     void setup() {
         listener = AppBeans.get(TestEntityChangedEventListener)
         listener.entityChangedEvents.clear()
+        listener.allEvents.clear()
 
         // warm up EntityLog, etc.
         toDiscard = metadata.create(Order)
