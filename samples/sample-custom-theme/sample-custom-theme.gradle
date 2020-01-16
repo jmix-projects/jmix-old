@@ -10,10 +10,10 @@ sourceCompatibility = rootProject.sourceCompatibility
 
 dependencies {
     implementation project(':starters:starter-ui-minimal')
-    implementation project(':jmix-ui-widgets-compiled')
+    implementation project(':modules:ui-widgets-compiled')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    themes project(':jmix-ui-themes')
+    themes project(':modules:ui-themes')
     themes project(':samples:sample-theme-addon')
 }

@@ -14,7 +14,7 @@ dependencies {
 
     implementation project(':samples:sample-widgets-addon')
 
-    widgets project(':jmix-ui-widgets')
+    widgets project(':modules:ui-widgets')
     widgets project(':samples:sample-widgets-addon')
 }
 

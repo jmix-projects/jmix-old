@@ -70,10 +70,10 @@ allprojects {
     }
 }
 
-configure([project(':jmix-platform'), project(':jmix-core'), project(':jmix-cuba'), project(':jmix-data'), 
-           project(':jmix-remoting'), project(':jmix-security'), project(':jmix-ui'), 
-           project(':jmix-ui-themes'), project(':jmix-ui-themes-compiled'),
-           project(':jmix-ui-widgets'), project(':jmix-ui-widgets-compiled'),
+configure([project(':jmix-platform'), project(':modules:core'), project(':modules:cuba'), project(':modules:data'),
+           project(':modules:remoting'), project(':modules:security'), project(':modules:ui'),
+           project(':modules:ui-themes'), project(':modules:ui-themes-compiled'),
+           project(':modules:ui-widgets'), project(':modules:ui-widgets-compiled'),
            project(':starters:starter-ui-minimal'), project(':starters:starter-standard')]) {
 
     apply plugin: 'maven-publish'
@@ -93,7 +93,7 @@ configure([project(':jmix-platform'), project(':jmix-core'), project(':jmix-cuba
     }
 }
 
-configure([project(':jmix-core'), project(':jmix-data'), project(':jmix-security'), project(':jmix-remoting')]) {
+configure([project(':modules:core'), project(':modules:data'), project(':modules:security'), project(':modules:remoting')]) {
     if (rootProject.hasProperty('spotbugsEnabled')) {
         apply plugin: 'com.github.spotbugs'
 

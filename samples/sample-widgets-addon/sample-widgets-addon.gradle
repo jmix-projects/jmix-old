@@ -2,9 +2,9 @@ apply plugin: 'java'
 apply plugin: 'java-library'
 
 dependencies {
-    api project(':jmix-ui')
+    api project(':modules:ui')
 
-    compileOnly project(':jmix-ui-widgets')
+    compileOnly project(':modules:ui-widgets')
 }
 
 jar {

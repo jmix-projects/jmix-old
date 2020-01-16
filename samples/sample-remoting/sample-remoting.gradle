@@ -25,8 +25,8 @@ version = rootProject.jmixVersion
 sourceCompatibility = rootProject.sourceCompatibility
 
 dependencies {
-    implementation project(':jmix-core')
-    implementation project(':jmix-remoting')
+    implementation project(':modules:core')
+    implementation project(':modules:remoting')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.apache.commons:commons-dbcp2'
     runtimeOnly 'org.hsqldb:hsqldb'

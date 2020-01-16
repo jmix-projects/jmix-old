@@ -6,9 +6,9 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 dependencies {
-    api project(':jmix-core')
-    api project(':jmix-security')
-    api project(':jmix-ui')
+    api project(':modules:core')
+    api project(':modules:security')
+    api project(':modules:ui')
 
     api 'org.springframework.boot:spring-boot-autoconfigure'
 }

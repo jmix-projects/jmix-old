@@ -8,8 +8,8 @@ sourceCompatibility = '1.8'
 dependencies {
     api project(':starters:starter-ui-minimal')
 
-    implementation project(':jmix-ui-widgets-compiled')
-    implementation project(':jmix-ui-themes-compiled')
+    implementation project(':modules:ui-widgets-compiled')
+    implementation project(':modules:ui-themes-compiled')
 }
 
 publishing {
