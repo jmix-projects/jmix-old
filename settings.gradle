@@ -31,6 +31,7 @@ include 'modules:ui-widgets'
 include 'modules:ui-widgets-compiled'
 
 include 'starters:starter-ui-minimal'
+include 'starters:starter-ui-legacy'
 include 'starters:starter-standard'
 
 include 'samples:sample-hello-world'
@@ -44,6 +45,7 @@ include 'samples:sample-widgets-addon'
 include 'samples:sample-custom-widgets'
 
 include 'samples:sample-ui' //TODO VM
+include 'samples:sample-legacy-ui'
 
 rootProject.children.each { p1 ->
 	p1.buildFileName = "${p1.name}.gradle"

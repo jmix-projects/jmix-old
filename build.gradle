@@ -74,7 +74,7 @@ configure([project(':jmix-platform'), project(':modules:core'), project(':module
            project(':modules:remoting'), project(':modules:security'), project(':modules:ui'),
            project(':modules:ui-themes'), project(':modules:ui-themes-compiled'),
            project(':modules:ui-widgets'), project(':modules:ui-widgets-compiled'),
-           project(':starters:starter-ui-minimal'), project(':starters:starter-standard')]) {
+           project(':starters:starter-ui-minimal'), project(':starters:starter-standard'), project(':starters:starter-ui-legacy')]) {
 
     apply plugin: 'maven-publish'
     
