@@ -24,7 +24,7 @@ import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestExecutionListeners
 import spock.lang.Specification
-import test_support.app.AppContextTestExecutionListener
+import test_support.AppContextTestExecutionListener
 import test_support.singlerun.AppContextLifecycleListener
 import test_support.singlerun.TestSingleRunConfiguration
 

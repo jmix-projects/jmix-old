@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test_support.app;
+package test_support;
 
 import io.jmix.core.compatibility.AppContext;
 import org.springframework.test.context.TestContext;

@@ -17,7 +17,7 @@
 package messages
 
 import test_support.addon1.TestAddon1Configuration
-import test_support.app.AppContextTestExecutionListener
+import test_support.AppContextTestExecutionListener
 import test_support.app.TestAppConfiguration
 import io.jmix.core.JmixCoreConfiguration
 import org.springframework.context.MessageSource

@@ -18,7 +18,7 @@ package datatypes
 
 import test_support.addon1.TestAddon1Configuration
 import test_support.addon1.TestStringDatatype
-import test_support.app.AppContextTestExecutionListener
+import test_support.AppContextTestExecutionListener
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry
 import io.jmix.core.metamodel.datatypes.impl.StringDatatype

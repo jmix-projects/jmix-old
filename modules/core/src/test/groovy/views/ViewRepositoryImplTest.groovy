@@ -18,7 +18,7 @@ package views
 
 import test_support.addon1.TestAddon1Configuration
 import test_support.addon1.entity.TestAddon1Entity
-import test_support.app.AppContextTestExecutionListener
+import test_support.AppContextTestExecutionListener
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.ViewRepository
 import org.springframework.test.context.ContextConfiguration

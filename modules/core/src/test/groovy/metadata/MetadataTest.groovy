@@ -27,7 +27,7 @@ import org.springframework.test.context.TestExecutionListeners
 import spock.lang.Specification
 import test_support.addon1.TestAddon1Configuration
 import test_support.addon1.entity.TestAddon1Entity
-import test_support.app.AppContextTestExecutionListener
+import test_support.AppContextTestExecutionListener
 import test_support.app.TestAppConfiguration
 import test_support.app.entity.Pet
 

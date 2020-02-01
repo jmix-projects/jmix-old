@@ -17,7 +17,7 @@
 package security
 
 import test_support.addon1.TestAddon1Configuration
-import test_support.app.AppContextTestExecutionListener
+import test_support.AppContextTestExecutionListener
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.security.Security
 import io.jmix.core.security.impl.CoreSecurityImpl

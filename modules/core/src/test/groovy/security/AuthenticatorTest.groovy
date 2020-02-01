@@ -16,7 +16,7 @@
 
 package security
 
-import test_support.app.AppContextTestExecutionListener
+import test_support.AppContextTestExecutionListener
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.security.CurrentUserSession
 import io.jmix.core.security.SystemAuthenticationToken

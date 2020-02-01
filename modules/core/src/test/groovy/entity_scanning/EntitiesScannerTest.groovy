@@ -16,7 +16,7 @@
 
 package entity_scanning
 
-import test_support.app.AppContextTestExecutionListener
+import test_support.AppContextTestExecutionListener
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.impl.scanning.EntitiesScanner
 import org.springframework.beans.factory.annotation.Autowired
