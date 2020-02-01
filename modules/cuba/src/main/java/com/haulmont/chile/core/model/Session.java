@@ -14,30 +14,26 @@
  * limitations under the License.
  */
 
-package io.jmix.core.metamodel.model;
+package com.haulmont.chile.core.model;
 
-import java.util.Collection;
+import io.jmix.core.metamodel.model.MetaClass;
+
+import javax.annotation.Nullable;
 
 /**
- * Container and entry point for metadata objects
- *
+ * Legacy meta-model entry point.
  */
-public interface MetaModel extends MetadataObject {
+public interface Session extends io.jmix.core.metamodel.model.Session {
 
-    /**
-     * Get MetaClass by its unique name
-     * @return MetaClass instance, null if not found
-     */
+    @Nullable
+    @Override
     MetaClass getClass(String name);
 
-    /**
-     * Get MetaClass by corresponding entity's Java class
-     * @return MetaClass instance, null if not found
-     */
-    MetaClass getClass(Class<?> clazz);
+    MetaClass getClassNN(String name);
 
-    /**
-     * All meta classes
-     */
-    Collection<MetaClass> getClasses();
+    @Nullable
+    @Override
+    MetaClass getClass(Class<?> javaClass);
+
+    MetaClass getClassNN(Class<?> javaClass);
 }
