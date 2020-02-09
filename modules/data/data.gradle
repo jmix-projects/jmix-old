@@ -30,7 +30,7 @@ dependencies {
     // todo eclipselink
 //    api 'org.eclipse.persistence:org.eclipse.persistence.jpa'
     implementation 'org.springframework:spring-orm'
-    implementation 'org.springframework:spring-tx'
+    api 'org.springframework:spring-tx'
     implementation 'org.eclipse.persistence:org.eclipse.persistence.extension'
 
     testImplementation 'org.springframework:spring-test'

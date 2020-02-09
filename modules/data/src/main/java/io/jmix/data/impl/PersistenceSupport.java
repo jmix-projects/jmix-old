@@ -118,10 +118,14 @@ public class PersistenceSupport implements ApplicationContextAware {
     }
 
     public void registerInstance(Entity entity, EntityManager entityManager) {
+        registerInstance(entity, entityManager.getDelegate());
+    }
+
+    public void registerInstance(Entity entity, javax.persistence.EntityManager entityManager) {
         if (!TransactionSynchronizationManager.isActualTransactionActive())
             throw new RuntimeException("No transaction");
 
-        UnitOfWork unitOfWork = entityManager.getDelegate().unwrap(UnitOfWork.class);
+        UnitOfWork unitOfWork = entityManager.unwrap(UnitOfWork.class);
         getInstanceContainerResourceHolder(getStorageName(unitOfWork)).registerInstanceForUnitOfWork(entity, unitOfWork);
 
         if (entity instanceof BaseGenericIdEntity) {
@@ -180,7 +184,11 @@ public class PersistenceSupport implements ApplicationContextAware {
     }
 
     public void processFlush(EntityManager entityManager, boolean warnAboutImplicitFlush) {
-        UnitOfWork unitOfWork = entityManager.getDelegate().unwrap(UnitOfWork.class);
+        processFlush(entityManager.getDelegate(), warnAboutImplicitFlush);
+    }
+
+    public void processFlush(javax.persistence.EntityManager entityManager, boolean warnAboutImplicitFlush) {
+        UnitOfWork unitOfWork = entityManager.unwrap(UnitOfWork.class);
         String storeName = getStorageName(unitOfWork);
         traverseEntities(getInstanceContainerResourceHolder(storeName), new OnSaveEntityVisitor(storeName), warnAboutImplicitFlush);
     }
