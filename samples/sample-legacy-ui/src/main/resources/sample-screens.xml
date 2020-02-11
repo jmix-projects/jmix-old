@@ -17,4 +17,6 @@
 <screen-config xmlns="http://schemas.haulmont.com/cuba/screens.xsd">
     <screen id="legacyScreen"
             template="/io/jmix/samples/ui/screen/legacy/legacy-screen.xml"/>
+    <screen id="userBrowser"
+            template="/io/jmix/samples/ui/screen/user/user-browse.xml"/>
 </screen-config>

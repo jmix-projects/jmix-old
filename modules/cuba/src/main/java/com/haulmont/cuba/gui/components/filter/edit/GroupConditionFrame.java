@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright (c) 2008-2016 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,12 +12,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
-package io.jmix.ui.components.data.meta;
+package com.haulmont.cuba.gui.components.filter.edit;
 
-import io.jmix.ui.components.data.DataUnit;
+import com.haulmont.cuba.gui.components.filter.condition.GroupCondition;
 
-public interface DatasourceDataUnit extends DataUnit {
-    // CollectionDatasource getDatasource();
+public class GroupConditionFrame extends ConditionFrame<GroupCondition> {
 }

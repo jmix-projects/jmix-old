@@ -58,6 +58,17 @@ public class CustomMainScreen extends Screen implements Window.HasWorkArea {
                         }));
 
         sideMenuPanel.add(showLegacyScreenBtn);
+
+        Button showUserBrowser = uiComponents.create(Button.class);
+        showUserBrowser.setCaption("Show User Browser");
+        showUserBrowser.setAction(
+                new BaseAction("showUserBrowser")
+                        .withHandler(e -> {
+                            screens.create("userBrowser", OpenMode.NEW_TAB)
+                                    .show();
+                        }));
+
+        sideMenuPanel.add(showUserBrowser);
     }
 
     @Nullable
