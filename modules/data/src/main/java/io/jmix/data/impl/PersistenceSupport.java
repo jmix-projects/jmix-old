@@ -18,10 +18,13 @@ package io.jmix.data.impl;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
+import io.jmix.core.Events;
 import io.jmix.core.Metadata;
+import io.jmix.data.EntityChangeType;
 import io.jmix.data.EntityManager;
 import io.jmix.data.Persistence;
 import io.jmix.data.event.EntityChangedEvent;
+import io.jmix.data.event.EntityChangingEvent;
 import io.jmix.data.impl.entitycache.QueryCacheManager;
 import io.jmix.data.listener.AfterCompleteTransactionListener;
 import io.jmix.data.listener.BeforeCommitTransactionListener;
@@ -83,6 +86,9 @@ public class PersistenceSupport implements ApplicationContextAware {
 
     @Inject
     protected EntityChangedEventManager entityChangedEventManager;
+
+    @Inject
+    private Events eventPublisher;
 
     protected List<BeforeCommitTransactionListener> beforeCommitTxListeners;
 
@@ -531,6 +537,8 @@ public class PersistenceSupport implements ApplicationContextAware {
                     && !getSavedInstances(storeName).contains(entity)) {
                 entityListenerManager.fireListener(entity, EntityListenerType.BEFORE_INSERT, storeName);
 
+                eventPublisher.publish(new EntityChangingEvent<>(this, entity, EntityChangeType.CREATE, null));
+
                 // todo entity log
 //                entityLog.registerCreate(entity, true);
 
@@ -548,6 +556,8 @@ public class PersistenceSupport implements ApplicationContextAware {
 
             if (isDeleted(entity, changeListener)) {
                 entityListenerManager.fireListener(entity, EntityListenerType.BEFORE_DELETE, storeName);
+
+                eventPublisher.publish(new EntityChangingEvent<>(this, entity, EntityChangeType.DELETE, null));
 
                 // todo entity log
 //                entityLog.registerDelete(entity, true);
@@ -573,6 +583,8 @@ public class PersistenceSupport implements ApplicationContextAware {
                 changes.addChanges(entity);
 
                 if (BaseEntityInternalAccess.isNew(entity)) {
+
+                    eventPublisher.publish(new EntityChangingEvent<>(this, entity, EntityChangeType.CREATE, null));
                     // todo entity log
 //                    // it can happen if flush was performed, so the entity is still New but was saved
 //                    entityLog.registerCreate(entity, true);
@@ -580,6 +592,8 @@ public class PersistenceSupport implements ApplicationContextAware {
                     // todo fts
 //                    enqueueForFts(entity, FtsChangeType.INSERT);
                 } else {
+
+                    eventPublisher.publish(new EntityChangingEvent<>(this, entity, EntityChangeType.UPDATE, changes));
                     // todo entity log
 //                    entityLog.registerModify(entity, true, changes);
 
