@@ -83,7 +83,7 @@ public class EntityChangingEvent<E extends Entity> extends ApplicationEvent impl
 
     @Override
     public String toString() {
-        return "EntityPersistingEvent{" +
+        return "EntityChangingEvent{" +
                 "entity=" + entity +
                 ", type=" + type +
                 ", changes=" + changes +
