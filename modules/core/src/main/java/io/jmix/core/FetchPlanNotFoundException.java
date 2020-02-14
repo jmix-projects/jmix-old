@@ -13,30 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package io.jmix.data;
-
-import io.jmix.core.FetchPlan;
-import io.jmix.core.entity.Entity;
-
-import java.util.Collection;
+package io.jmix.core;
 
 /**
- * Enforces entity attribute permissions on the data access layer.
+ * This exception is raised when you try to get nonexistent fetch plan by entity/name.
  */
-public interface PersistenceAttributeSecurity {
+public class FetchPlanNotFoundException extends RuntimeException {
+    private static final long serialVersionUID = -7372799415486288473L;
 
-    String NAME = "jmix_PersistenceAttributeSecurity";
-
-    FetchPlan createRestrictedFetchPlan(FetchPlan fetchPlan);
-
-    void afterLoad(Entity entity);
-
-    void afterLoad(Collection<? extends Entity> entities);
-
-    void beforePersist(Entity entity);
-
-    void beforeMerge(Entity entity);
-
-    void afterCommit(Entity entity);
+    public FetchPlanNotFoundException(String message) {
+        super(message);
+    }
 }

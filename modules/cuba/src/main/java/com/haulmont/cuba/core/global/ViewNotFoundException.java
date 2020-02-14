@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.core;
+package com.haulmont.cuba.core.global;
 
 /**
- * This exception is raised when you try to get nonexistent view by entity/name.
+ * This exception is raised when you try to get nonexistent fetch plan by entity/name.
  */
 public class ViewNotFoundException extends RuntimeException {
     private static final long serialVersionUID = -7372799415486288473L;
