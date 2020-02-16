@@ -37,6 +37,7 @@ import org.eclipse.persistence.descriptors.changetracking.ChangeTracker;
 import org.eclipse.persistence.internal.descriptors.changetracking.AttributeChangeListener;
 import org.eclipse.persistence.internal.sessions.AbstractSession;
 import org.eclipse.persistence.internal.sessions.ObjectChangeSet;
+import org.eclipse.persistence.jpa.JpaEntityManager;
 import org.eclipse.persistence.queries.FetchGroup;
 import org.eclipse.persistence.queries.FetchGroupTracker;
 import org.eclipse.persistence.sessions.Session;
@@ -49,10 +50,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.OrderComparator;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.support.ResourceHolderSupport;
-import org.springframework.transaction.support.ResourceHolderSynchronization;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.*;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -64,6 +62,8 @@ public class PersistenceSupport implements ApplicationContextAware {
     public static final String NAME = "cuba_PersistenceImplSupport";
 
     public static final String RESOURCE_HOLDER_KEY = ContainerResourceHolder.class.getName();
+
+    public static final String RUNNER_RESOURCE_HOLDER = RunnerResourceHolder.class.getName();
 
     public static final String PROP_NAME = "cuba.storeName";
 
@@ -117,8 +117,29 @@ public class PersistenceSupport implements ApplicationContextAware {
      */
     public void registerSynchronizations(String store) {
         log.trace("registerSynchronizations for store '{}'", store);
-        TransactionSynchronizationManager.registerSynchronization(((PersistenceImpl) persistence).createSynchronization(store));
         getInstanceContainerResourceHolder(store);
+        getRunnerResourceHolder();
+    }
+
+    /**
+     * INTERNAL
+     */
+    public void addBeforeCommitAction(Runnable action) {
+        RunnerResourceHolder runner = getRunnerResourceHolder();
+        runner.add(action);
+    }
+
+    private RunnerResourceHolder getRunnerResourceHolder() {
+        RunnerResourceHolder runner = (RunnerResourceHolder) TransactionSynchronizationManager.getResource(RUNNER_RESOURCE_HOLDER);
+        if (runner == null) {
+            runner = new RunnerResourceHolder();
+            TransactionSynchronizationManager.bindResource(RUNNER_RESOURCE_HOLDER, runner);
+        }
+        if (TransactionSynchronizationManager.isSynchronizationActive() && !runner.isSynchronizedWithTransaction()) {
+            runner.setSynchronizedWithTransaction(true);
+            TransactionSynchronizationManager.registerSynchronization(new RunnerSynchronization(runner));
+        }
+        return runner;
     }
 
     public void registerInstance(Entity entity, EntityManager entityManager) {
@@ -276,7 +297,11 @@ public class PersistenceSupport implements ApplicationContextAware {
     }
 
     public void detach(EntityManager entityManager, Entity entity) {
-        UnitOfWork unitOfWork = entityManager.getDelegate().unwrap(UnitOfWork.class);
+        detach(entityManager.getDelegate(), entity);
+    }
+
+    public void detach(javax.persistence.EntityManager entityManager, Entity entity) {
+        UnitOfWork unitOfWork = entityManager.unwrap(UnitOfWork.class);
         String storeName = getStorageName(unitOfWork);
 
         if (entity instanceof BaseGenericIdEntity) {
@@ -494,7 +519,8 @@ public class PersistenceSupport implements ApplicationContextAware {
                 }
             }
 
-            javax.persistence.EntityManager jpaEm = persistence.getEntityManager(container.getStoreName()).getDelegate();
+            javax.persistence.EntityManager jmixEm = persistence.getEntityManager(container.getStoreName()).getDelegate();
+            JpaEntityManager jpaEm = jmixEm.unwrap(JpaEntityManager.class);
             jpaEm.flush();
             jpaEm.clear();
 
@@ -637,6 +663,36 @@ public class PersistenceSupport implements ApplicationContextAware {
             DeletePolicyProcessor processor = AppBeans.get(DeletePolicyProcessor.NAME); // prototype
             processor.setEntity(entity);
             processor.process();
+        }
+    }
+
+    private static class RunnerResourceHolder extends ResourceHolderSupport {
+
+        private List<Runnable> list = new ArrayList<>();
+
+        private void add(Runnable action) {
+            list.add(action);
+        }
+
+        private void run() {
+            for (Runnable runnable : list) {
+                runnable.run();
+            }
+        }
+    }
+
+    private static class RunnerSynchronization extends ResourceHolderSynchronization<RunnerResourceHolder, String> {
+
+        private RunnerResourceHolder runner;
+
+        public RunnerSynchronization(RunnerResourceHolder runner) {
+            super(runner, RUNNER_RESOURCE_HOLDER);
+            this.runner = runner;
+        }
+
+        @Override
+        public void beforeCommit(boolean readOnly) {
+            runner.run();
         }
     }
 }

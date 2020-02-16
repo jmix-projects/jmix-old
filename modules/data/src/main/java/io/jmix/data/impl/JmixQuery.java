@@ -29,6 +29,7 @@ import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.datatypes.impl.EnumClass;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.data.EntityFetcher;
+import io.jmix.data.OrmProperties;
 import io.jmix.data.impl.entitycache.QueryCacheManager;
 import io.jmix.data.impl.entitycache.QueryKey;
 import io.jmix.data.persistence.DbmsFeatures;
@@ -64,7 +65,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
     protected Metadata metadata;
     protected MetadataTools metadataTools;
     protected ExtendedEntities extendedEntities;
-    protected ViewRepository viewRepository;
+    protected FetchPlanRepository viewRepository;
     protected PersistenceSupport support;
     protected FetchGroupManager fetchGroupMgr;
     protected EntityFetcher entityFetcher;
@@ -81,22 +82,25 @@ public class JmixQuery<E> implements TypedQuery<E> {
     protected Set<Param> params = new HashSet<>();
     protected Map<String, Object> hints;
     protected LockModeType lockMode;
-    protected List<View> views = new ArrayList<>();
+    protected List<FetchPlan> fetchPlans = new ArrayList<>();
     protected Integer maxResults;
     protected Integer firstResult;
     protected boolean singleResultExpected;
     protected boolean cacheable;
     protected FlushModeType flushMode;
 
-    public JmixQuery(EntityManager entityManager, BeanLocator beanLocator, String qlString) {
+    public JmixQuery(EntityManager entityManager, BeanLocator beanLocator, boolean isNative, String qlString,
+                     @Nullable Class<E> resultClass) {
         this.entityManager = entityManager;
         this.beanLocator = beanLocator;
+        this.isNative = isNative;
         this.queryString = qlString;
+        this.resultClass = resultClass;
 
         metadata = beanLocator.get(Metadata.NAME);
         metadataTools = beanLocator.get(MetadataTools.NAME);
         extendedEntities = beanLocator.get(ExtendedEntities.NAME);
-        viewRepository = beanLocator.get(ViewRepository.NAME);
+        viewRepository = beanLocator.get(FetchPlanRepository.NAME);
         support = beanLocator.get(PersistenceSupport.NAME);
         fetchGroupMgr = beanLocator.get(FetchGroupManager.NAME);
         entityFetcher = beanLocator.get(EntityFetcher.NAME);
@@ -105,11 +109,6 @@ public class JmixQuery<E> implements TypedQuery<E> {
         hintsProcessor = beanLocator.get(QueryHintsProcessor.NAME);
         dbmsSpecifics = beanLocator.get(DbmsSpecifics.NAME);
         macroHandlers = beanLocator.getAll(QueryMacroHandler.class).values();
-    }
-
-    public JmixQuery(EntityManager entityManager, BeanLocator beanLocator, String qlString, Class<E> resultClass) {
-        this(entityManager, beanLocator, qlString);
-        this.resultClass = resultClass;
     }
 
     @Override
@@ -125,8 +124,8 @@ public class JmixQuery<E> implements TypedQuery<E> {
         @SuppressWarnings("unchecked")
         List<E> resultList = (List<E>) getResultFromCache(query, false, obj -> {
             ((List) obj).stream().filter(item -> item instanceof Entity).forEach(item -> {
-                for (View view : views) {
-                    entityFetcher.fetch((Entity) item, view);
+                for (FetchPlan fetchPlan : fetchPlans) {
+                    entityFetcher.fetch((Entity) item, fetchPlan);
                 }
             });
         });
@@ -146,8 +145,8 @@ public class JmixQuery<E> implements TypedQuery<E> {
         @SuppressWarnings("unchecked")
         E result = (E) getResultFromCache(jpaQuery, true, obj -> {
             if (obj instanceof io.jmix.core.entity.Entity) {
-                for (View view : views) {
-                    entityFetcher.fetch((Entity) obj, view);
+                for (FetchPlan fetchPlan : fetchPlans) {
+                    entityFetcher.fetch((Entity) obj, fetchPlan);
                 }
             }
         });
@@ -172,6 +171,20 @@ public class JmixQuery<E> implements TypedQuery<E> {
 
     @Override
     public TypedQuery<E> setHint(String hintName, Object value) {
+        if (OrmProperties.FETCH_PLAN.equals(hintName)) {
+            if (isNative)
+                throw new UnsupportedOperationException("FetchPlan is not supported for native queries");
+            if (value == null) {
+                fetchPlans.clear();
+            } else if (value instanceof Collection) {
+                //noinspection unchecked
+                fetchPlans.addAll((Collection) value);
+            } else {
+                fetchPlans.add((FetchPlan) value);
+            }
+        } else if (OrmProperties.CACHEABLE.equals(hintName)) {
+            cacheable = (boolean) value;
+        }
         if (hints == null) {
             hints = new HashMap<>();
         }
@@ -256,7 +269,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
         boolean isDeleteQuery = databaseQuery.isDeleteObjectQuery() || databaseQuery.isDeleteAllQuery();
         boolean enableDeleteInSoftDeleteMode =
                 Boolean.parseBoolean(AppContext.getProperty("cuba.enableDeleteStatementInSoftDeleteMode"));
-        if (!enableDeleteInSoftDeleteMode && isSoftDeletion(entityManager) && isDeleteQuery) {
+        if (!enableDeleteInSoftDeleteMode && OrmProperties.isSoftDeletion(entityManager) && isDeleteQuery) {
             if (SoftDelete.class.isAssignableFrom(referenceClass)) {
                 throw new UnsupportedOperationException("Delete queries are not supported with enabled soft deletion. " +
                         "Use 'cuba.enableDeleteStatementInSoftDeleteMode' application property to roll back to legacy behavior.");
@@ -365,9 +378,60 @@ public class JmixQuery<E> implements TypedQuery<E> {
         return getQuery().unwrap(cls);
     }
 
+    @Nullable
+    public E getSingleResultOrNull() {
+        if (log.isDebugEnabled())
+            log.debug(queryString.replaceAll("[\\t\\n\\x0B\\f\\r]", " "));
+
+        Integer saveMaxResults = maxResults;
+        maxResults = 1;
+        try {
+            JpaQuery<E> query = getQuery();
+            preExecute(query);
+            @SuppressWarnings("unchecked")
+            List<E> resultList = (List<E>) getResultFromCache(query, false, obj -> {
+                List list = (List) obj;
+                if (!list.isEmpty()) {
+                    Object item = list.get(0);
+                    if (item instanceof Entity) {
+                        for (FetchPlan fetchPlan : fetchPlans) {
+                            entityFetcher.fetch((Entity) item, fetchPlan);
+                        }
+                    }
+                }
+            });
+            if (resultList.isEmpty()) {
+                return null;
+            } else {
+                return resultList.get(0);
+            }
+        } finally {
+            maxResults = saveMaxResults;
+        }
+    }
+
+    /**
+     * INTERNAL
+     */
+    public String getQueryString() {
+        return queryString;
+    }
+
+    /**
+     * INTERNAL
+     */
+    public void setQueryString(String queryString) {
+        checkState();
+        this.queryString = queryString;
+    }
+
+    void setSingleResultExpected(boolean singleResultExpected) {
+        this.singleResultExpected = singleResultExpected;
+    }
+
     private JpaQuery<E> getQuery() {
         if (query == null) {
-            View view = views.isEmpty() ? null : views.get(0);
+            FetchPlan fetchPlan = fetchPlans.isEmpty() ? null : fetchPlans.get(0);
 
             if (isNative) {
                 log.trace("Creating SQL query: {}", queryString);
@@ -388,8 +452,8 @@ public class JmixQuery<E> implements TypedQuery<E> {
 
                 Class effectiveClass = getEffectiveResultClass();
                 query = buildJPAQuery(transformedQueryString, effectiveClass);
-                if (view != null) {
-                    MetaClass metaClass = metadata.getClass(view.getEntityClass());
+                if (fetchPlan != null) {
+                    MetaClass metaClass = metadata.getClass(fetchPlan.getEntityClass());
                     if (!metadataTools.isCacheable(metaClass) || !singleResultExpected) {
                         query.setHint(QueryHints.REFRESH, HintValues.TRUE);
                         query.setHint(QueryHints.REFRESH_CASCADE, CascadePolicy.CascadeByMapping);
@@ -398,7 +462,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
             }
 
             if (flushMode == null) {
-                if (view != null && !view.loadPartialEntities()) {
+                if (fetchPlan != null && !fetchPlan.loadPartialEntities()) {
                     query.setFlushMode(FlushModeType.AUTO);
                 } else {
                     query.setFlushMode(FlushModeType.COMMIT);
@@ -436,18 +500,18 @@ public class JmixQuery<E> implements TypedQuery<E> {
                 }
             }
 
-            for (int i = 0; i < views.size(); i++) {
+            for (int i = 0; i < fetchPlans.size(); i++) {
                 if (i == 0)
-                    fetchGroupMgr.setView(query, queryString, views.get(i), singleResultExpected);
+                    fetchGroupMgr.setFetchPlan(query, queryString, fetchPlans.get(i), singleResultExpected);
                 else
-                    fetchGroupMgr.addView(query, queryString, views.get(i), singleResultExpected);
+                    fetchGroupMgr.addFetchPlan(query, queryString, fetchPlans.get(i), singleResultExpected);
             }
         }
         return query;
     }
 
     @Nullable
-    protected Class getEffectiveResultClass() {
+    private Class getEffectiveResultClass() {
         if (resultClass == null) {
             return null;
         }
@@ -457,12 +521,12 @@ public class JmixQuery<E> implements TypedQuery<E> {
         return resultClass;
     }
 
-    protected JpaQuery buildJPAQuery(String queryString, Class<E> resultClass) {
+    private JpaQuery buildJPAQuery(String queryString, Class<E> resultClass) {
         boolean useJPQLCache = true;
-        View view = views.isEmpty() ? null : views.get(0);
-        if (view != null) {
-            boolean useFetchGroup = view.loadPartialEntities();
-            for (View it : views) {
+        FetchPlan fetchPlan = fetchPlans.isEmpty() ? null : fetchPlans.get(0);
+        if (fetchPlan != null) {
+            boolean useFetchGroup = fetchPlan.loadPartialEntities();
+            for (FetchPlan it : fetchPlans) {
                 FetchGroupDescription description = fetchGroupMgr.calculateFetchGroup(queryString, it, singleResultExpected, useFetchGroup);
                 if (description.hasBatches()) {
                     useJPQLCache = false;
@@ -484,7 +548,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
         }
     }
 
-    protected String transformQueryString() {
+    private String transformQueryString() {
         String result = expandMacros(queryString);
 
         boolean rebuildParser = false;
@@ -536,7 +600,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
         return result;
     }
 
-    protected String expandMacros(String queryStr) {
+    private String expandMacros(String queryStr) {
         String result = queryStr;
         if (macroHandlers != null) {
             for (QueryMacroHandler handler : macroHandlers) {
@@ -546,7 +610,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
         return result;
     }
 
-    protected String replaceParams(String query, QueryParser parser) {
+    private String replaceParams(String query, QueryParser parser) {
         String result = query;
         Set<String> paramNames = Sets.newHashSet(parser.getParamNames());
         for (Iterator<Param> iterator = params.iterator(); iterator.hasNext(); ) {
@@ -582,19 +646,19 @@ public class JmixQuery<E> implements TypedQuery<E> {
         return result;
     }
 
-    protected String replaceCaseInsensitiveParam(String query, String paramName) {
+    private String replaceCaseInsensitiveParam(String query, String paramName) {
         QueryTransformer transformer = queryTransformerFactory.transformer(query);
         transformer.handleCaseInsensitiveParam(paramName);
         return transformer.getResult();
     }
 
-    protected String replaceInCollectionParam(String query, String paramName) {
+    private String replaceInCollectionParam(String query, String paramName) {
         QueryTransformer transformer = queryTransformerFactory.transformer(query);
         transformer.replaceInCondition(paramName);
         return transformer.getResult();
     }
 
-    protected String replaceIsNullAndIsNotNullStatements(String query) {
+    private String replaceIsNullAndIsNotNullStatements(String query) {
         Set<Param> replacedParams = new HashSet<>();
 
         QueryTransformer transformer = queryTransformerFactory.transformer(query);
@@ -619,7 +683,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
         return resultQuery;
     }
 
-    protected void addMacroParams(javax.persistence.TypedQuery jpaQuery) {
+    private void addMacroParams(javax.persistence.TypedQuery jpaQuery) {
         if (macroHandlers != null) {
             for (QueryMacroHandler handler : macroHandlers) {
 
@@ -656,7 +720,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
         }
     }
 
-    protected Object getResultFromCache(JpaQuery jpaQuery, boolean singleResult, Consumer<Object> fetcher) {
+    private Object getResultFromCache(JpaQuery jpaQuery, boolean singleResult, Consumer<Object> fetcher) {
         Preconditions.checkNotNull(fetcher);
         boolean useQueryCache = cacheable && !isNative && queryCacheMgr.isEnabled() && lockMode == null;
         Object result;
@@ -666,9 +730,9 @@ public class JmixQuery<E> implements TypedQuery<E> {
             useQueryCache = parser.isEntitySelect(entityName);
             QueryKey queryKey = null;
             if (useQueryCache) {
-                queryKey = QueryKey.create(transformedQueryString, isSoftDeletion(entityManager), singleResult, jpaQuery);
-                result = singleResult ? queryCacheMgr.getSingleResultFromCache(queryKey, views) :
-                        queryCacheMgr.getResultListFromCache(queryKey, views);
+                queryKey = QueryKey.create(transformedQueryString, OrmProperties.isSoftDeletion(entityManager), singleResult, jpaQuery);
+                result = singleResult ? queryCacheMgr.getSingleResultFromCache(queryKey, fetchPlans) :
+                        queryCacheMgr.getResultListFromCache(queryKey, fetchPlans);
                 if (result != null) {
                     return result;
                 }
@@ -694,16 +758,12 @@ public class JmixQuery<E> implements TypedQuery<E> {
         return result;
     }
 
-    private boolean isSoftDeletion(EntityManager entityManager) {
-        return false; // todo soft deletion
-    }
-
-    protected void checkState() {
+    private void checkState() {
         if (query != null)
             throw new IllegalStateException("Query delegate has already been created");
     }
 
-    protected TypedQuery<E> internalSetParameter(String name, Object value) {
+    private TypedQuery<E> internalSetParameter(String name, Object value) {
         checkState();
 
         if (value instanceof IdProxy) {
@@ -726,7 +786,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
         return this;
     }
 
-    protected TypedQuery<E> internalSetParameter(int position, Object value) {
+    private TypedQuery<E> internalSetParameter(int position, Object value) {
         checkState();
 
         DbmsFeatures dbmsFeatures = dbmsSpecifics.getDbmsFeatures();
@@ -753,21 +813,21 @@ public class JmixQuery<E> implements TypedQuery<E> {
         return this;
     }
 
-    protected boolean isCollectionOfEntitiesOrEnums(Object value) {
+    private boolean isCollectionOfEntitiesOrEnums(Object value) {
         return value instanceof Collection
                 && ((Collection<?>) value).stream().allMatch(it -> it instanceof Entity || it instanceof EnumClass);
     }
 
-    protected Object convertToCollectionOfIds(Object value) {
+    private Object convertToCollectionOfIds(Object value) {
         return ((Collection<?>) value).stream()
                 .map(it -> it instanceof Entity ? ((Entity) it).getId() : ((EnumClass) it).getId())
                 .collect(Collectors.toList());
     }
 
-    protected static class Param {
-        protected Object name;
-        protected Object value;
-        protected TemporalType temporalType;
+    private static class Param {
+        private Object name;
+        private Object value;
+        private TemporalType temporalType;
 
         private Class<?> actualParamType;
 
@@ -803,7 +863,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
             return name instanceof String;
         }
 
-        protected boolean isValidParamType(JpaQuery query) {
+        private boolean isValidParamType(JpaQuery query) {
             if (value == null || query.getDatabaseQuery() == null)
                 return true;
 
@@ -818,7 +878,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
             return actualParamType.isAssignableFrom(value.getClass());
         }
 
-        protected void convertValue() {
+        private void convertValue() {
             if (value == null || actualParamType == null || actualParamType.isAssignableFrom(value.getClass()))
                 return;
 

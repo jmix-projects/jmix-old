@@ -19,10 +19,15 @@ package entity_manager;
 import io.jmix.core.DataManager;
 import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.data.JmixDataConfiguration;
+import io.jmix.data.OrmProperties;
 import io.jmix.data.impl.JmixQuery;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +54,20 @@ public class QueryTest {
     DataManager dataManager;
 
     @Autowired
-    TransactionTemplate transactionTemplate;
+    JdbcTemplate jdbc;
+
+    @Autowired
+    TransactionTemplate tx;
+
+    @Before
+    @After
+    public void cleanup() throws Exception {
+        try {
+            jdbc.update("delete from SALES_CUSTOMER");
+        } catch (DataAccessException e) {
+            // ignore
+        }
+    }
 
     @Test
     @Transactional
@@ -72,7 +90,7 @@ public class QueryTest {
         dataManager.commit(customer);
 
         // when:
-        List<Customer> customerList = transactionTemplate.execute(status -> {
+        List<Customer> customerList = tx.execute(status -> {
             TypedQuery<Customer> query = entityManager.createQuery("select e from sales$Customer e where e.name = ?1", Customer.class);
             return query.setParameter(1, "c1").getResultList();
         });
@@ -80,4 +98,40 @@ public class QueryTest {
         // then:
         assertEquals(1, customerList.size());
     }
+
+    @Test
+    public void testSoftDelete() {
+        Customer customer = new Customer();
+        customer.setName("c1");
+
+        tx.executeWithoutResult(status -> {
+            entityManager.persist(customer);
+        });
+        tx.executeWithoutResult(status -> {
+            Customer customer1 = entityManager.find(Customer.class, customer.getId());
+            entityManager.remove(customer1);
+        });
+
+        // when:
+        List<Customer> list = tx.execute(status -> {
+            TypedQuery<Customer> query = entityManager.createQuery("select c from sales$Customer c where c.id = ?1", Customer.class);
+            query.setParameter(1, customer.getId());
+            return query.getResultList();
+        });
+
+        // then:
+        assertTrue(list.isEmpty());
+
+        // when:
+        list = tx.execute(status -> {
+            entityManager.setProperty(OrmProperties.SOFT_DELETION, false);
+            TypedQuery<Customer> query = entityManager.createQuery("select c from sales$Customer c where c.id = ?1", Customer.class);
+            query.setParameter(1, customer.getId());
+            return query.getResultList();
+        });
+
+        // then:
+        assertFalse(list.isEmpty());
+    }
+
 }

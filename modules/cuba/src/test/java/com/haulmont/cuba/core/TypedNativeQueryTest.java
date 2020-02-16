@@ -172,7 +172,7 @@ public class TypedNativeQueryTest {
             query.setParameter(1, UUID.randomUUID());
             query.getResultList();
             fail();
-        } catch (javax.persistence.PersistenceException e) {
+        } catch (Exception e) {
             // ok
         }
     }
