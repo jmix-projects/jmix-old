@@ -54,6 +54,9 @@ public class DeletePolicyProcessor {
     protected Persistence persistence;
 
     @Inject
+    protected PersistenceSupport persistenceSupport;
+
+    @Inject
     protected Metadata metadata;
 
     @Inject
@@ -202,7 +205,7 @@ public class DeletePolicyProcessor {
     }
 
     protected void hardDeleteNotLoadedReference(Entity entity, MetaProperty property, Entity reference) {
-        ((PersistenceImpl) persistence).addBeforeCommitAction(() -> {
+        persistenceSupport.addBeforeCommitAction(() -> {
             try {
                 JdbcTemplate jdbcTemplate = new JdbcTemplate(persistence.getDataSource());
                 String column = metadataTools.getDatabaseColumn(property);
@@ -237,7 +240,7 @@ public class DeletePolicyProcessor {
     }
 
     protected void hardSetReferenceNull(Entity entity, MetaProperty property) {
-        ((PersistenceImpl) persistence).addBeforeCommitAction(() -> {
+        persistenceSupport.addBeforeCommitAction(() -> {
             MetaClass entityMetaClass = metadata.getClass(entity.getClass());
             while (!entityMetaClass.equals(property.getDomain())) {
                 MetaClass ancestor = entityMetaClass.getAncestor();

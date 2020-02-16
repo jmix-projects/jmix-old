@@ -16,13 +16,12 @@
 
 package io.jmix.data;
 
-import io.jmix.data.impl.EntityManagerContext;
 import io.jmix.data.persistence.DbTypeConverter;
 
 import javax.sql.DataSource;
 
 /**
- * Central infrastructure interface to provide persistence through {@link io.jmix.core.app.RdbmsStore}.
+ * Central infrastructure interface to provide ORM persistence.
  */
 public interface Persistence {
 
@@ -192,21 +191,4 @@ public interface Persistence {
      * @return JDBC DataSource of the give data store
      */
     DataSource getDataSource(String storeName);
-
-    /**
-     * Returns context of the current EntityManager in the main data store.
-     *
-     * @see #getEntityManagerContext(String)
-     * @return context
-     */
-    EntityManagerContext getEntityManagerContext();
-
-    /**
-     * Returns context of the current EntityManager.<br>
-     * If not exists, a new instance of context created and returned.
-     *
-     * @param storeName data store name
-     * @return context
-     */
-    EntityManagerContext getEntityManagerContext(String storeName);
 }
