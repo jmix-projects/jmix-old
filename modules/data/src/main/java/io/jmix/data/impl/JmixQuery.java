@@ -423,7 +423,10 @@ public class JmixQuery<E> implements TypedQuery<E> {
         this.queryString = queryString;
     }
 
-    void setSingleResultExpected(boolean singleResultExpected) {
+    /**
+     * INTERNAL
+     */
+    public void setSingleResultExpected(boolean singleResultExpected) {
         this.singleResultExpected = singleResultExpected;
     }
 

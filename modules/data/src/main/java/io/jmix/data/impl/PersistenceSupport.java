@@ -27,8 +27,6 @@ import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.data.EntityChangeType;
-import io.jmix.data.EntityManager;
-import io.jmix.data.Persistence;
 import io.jmix.data.event.EntityChangedEvent;
 import io.jmix.data.impl.entitycache.QueryCacheManager;
 import io.jmix.data.listener.AfterCompleteTransactionListener;
@@ -49,10 +47,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.OrderComparator;
 import org.springframework.core.Ordered;
+import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.support.*;
+import org.springframework.transaction.support.ResourceHolderSupport;
+import org.springframework.transaction.support.ResourceHolderSynchronization;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManagerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,7 +71,7 @@ public class PersistenceSupport implements ApplicationContextAware {
     public static final String PROP_NAME = "cuba.storeName";
 
     @Inject
-    protected Persistence persistence;
+    protected EntityManagerFactory entityManagerFactory;
 
     @Inject
     protected Metadata metadata;
@@ -142,10 +145,6 @@ public class PersistenceSupport implements ApplicationContextAware {
         return runner;
     }
 
-    public void registerInstance(Entity entity, EntityManager entityManager) {
-        registerInstance(entity, entityManager.getDelegate());
-    }
-
     public void registerInstance(Entity entity, javax.persistence.EntityManager entityManager) {
         if (!TransactionSynchronizationManager.isActualTransactionActive())
             throw new RuntimeException("No transaction");
@@ -167,14 +166,6 @@ public class PersistenceSupport implements ApplicationContextAware {
             throw new RuntimeException("Session is not a UnitOfWork: " + session);
 
         getInstanceContainerResourceHolder(getStorageName(session)).registerInstanceForUnitOfWork(entity, (UnitOfWork) session);
-    }
-
-    public Collection<Entity> getInstances(EntityManager entityManager) {
-        if (!TransactionSynchronizationManager.isActualTransactionActive())
-            throw new RuntimeException("No transaction");
-
-        UnitOfWork unitOfWork = entityManager.getDelegate().unwrap(UnitOfWork.class);
-        return getInstanceContainerResourceHolder(getStorageName(unitOfWork)).getInstances(unitOfWork);
     }
 
     public Collection<Entity> getSavedInstances(String storeName) {
@@ -206,10 +197,6 @@ public class PersistenceSupport implements ApplicationContextAware {
                     new ContainerResourceSynchronization(holder, RESOURCE_HOLDER_KEY));
         }
         return holder;
-    }
-
-    public void processFlush(EntityManager entityManager, boolean warnAboutImplicitFlush) {
-        processFlush(entityManager.getDelegate(), warnAboutImplicitFlush);
     }
 
     public void processFlush(javax.persistence.EntityManager entityManager, boolean warnAboutImplicitFlush) {
@@ -294,10 +281,6 @@ public class PersistenceSupport implements ApplicationContextAware {
                 beforeStore(container, visitor, afterProcessing, processed, false);
             }
         }
-    }
-
-    public void detach(EntityManager entityManager, Entity entity) {
-        detach(entityManager.getDelegate(), entity);
     }
 
     public void detach(javax.persistence.EntityManager entityManager, Entity entity) {
@@ -469,7 +452,7 @@ public class PersistenceSupport implements ApplicationContextAware {
             if (!readOnly) {
                 Collection<Entity> allInstances = container.getAllInstances();
                 for (BeforeCommitTransactionListener transactionListener : beforeCommitTxListeners) {
-                    transactionListener.beforeCommit(persistence.getEntityManager(container.getStoreName()), allInstances);
+                    transactionListener.beforeCommit(container.getStoreName(), allInstances);
                 }
                 queryCacheManager.invalidate(typeNames, true);
                 List<EntityChangedEvent> collectedEvents = entityChangedEventManager.collect(container.getAllInstances());
@@ -519,7 +502,7 @@ public class PersistenceSupport implements ApplicationContextAware {
                 }
             }
 
-            javax.persistence.EntityManager jmixEm = persistence.getEntityManager(container.getStoreName()).getDelegate();
+            javax.persistence.EntityManager jmixEm = getEntityManager(container.getStoreName());
             JpaEntityManager jpaEm = jmixEm.unwrap(JpaEntityManager.class);
             jpaEm.flush();
             jpaEm.clear();
@@ -553,6 +536,11 @@ public class PersistenceSupport implements ApplicationContextAware {
         public int getOrder() {
             return 100;
         }
+    }
+
+    private javax.persistence.EntityManager getEntityManager(String storeName) {
+        // todo data stores
+        return EntityManagerFactoryUtils.doGetTransactionalEntityManager(entityManagerFactory, null, true);
     }
 
     protected class OnSaveEntityVisitor implements EntityVisitor {

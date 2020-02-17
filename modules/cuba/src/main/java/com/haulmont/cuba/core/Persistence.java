@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package io.jmix.data;
+package com.haulmont.cuba.core;
 
+import io.jmix.data.PersistenceTools;
 import io.jmix.data.persistence.DbTypeConverter;
 
 import javax.sql.DataSource;

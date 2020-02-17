@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.data.impl;
+package com.haulmont.cuba.core.sys;
 
 import io.jmix.core.BeanLocator;
 import io.jmix.core.FetchPlan;
@@ -22,10 +22,12 @@ import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.IdProxy;
-import io.jmix.data.EntityManager;
+import com.haulmont.cuba.core.EntityManager;
 import io.jmix.data.OrmProperties;
-import io.jmix.data.Query;
-import io.jmix.data.TypedQuery;
+import com.haulmont.cuba.core.Query;
+import com.haulmont.cuba.core.TypedQuery;
+import io.jmix.data.impl.JmixEntityManager;
+import io.jmix.data.impl.JmixQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;

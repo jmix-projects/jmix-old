@@ -20,7 +20,8 @@ import io.jmix.core.EntityStates;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlanBuilder;
 import io.jmix.core.JmixCoreConfiguration;
-import io.jmix.data.*;
+import io.jmix.data.JmixDataConfiguration;
+import io.jmix.data.OrmProperties;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -73,41 +74,6 @@ public class EntityManagerTest {
         } catch (DataAccessException e) {
             // ignore
         }
-    }
-
-    @Autowired
-    Persistence persistence;
-
-    @Test
-    public void testOldEm() {
-        Customer customer = new Customer();
-        customer.setName("c1");
-
-        // when:
-        tx.executeWithoutResult(transactionStatus -> {
-            persistence.getEntityManager().persist(customer);
-        });
-
-        // then:
-        assertEquals(1, TestEventListener.customerEvents.size());
-
-        // when:
-        List<Customer> list = tx.execute(status -> {
-            TypedQuery<Customer> query = persistence.getEntityManager().createQuery("select c from sales$Customer c", Customer.class);
-            return query.getResultList();
-        });
-
-        // then:
-        assertEquals(1, list.size());
-
-        // when:
-        list = tx.execute(status -> {
-            TypedQuery<Customer> query = persistence.getEntityManager().createNativeQuery("select * from SALES_CUSTOMER", Customer.class);
-            return query.getResultList();
-        });
-
-        // then:
-        assertEquals(1, list.size());
     }
 
     @Test

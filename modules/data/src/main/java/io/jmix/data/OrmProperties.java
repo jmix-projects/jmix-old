@@ -94,6 +94,13 @@ public class OrmProperties {
             return this;
         }
 
+        public Builder withFetchPlans(Collection<FetchPlan> fetchPlans) {
+            for (FetchPlan fetchPlan : fetchPlans) {
+                withFetchPlan(fetchPlan);
+            }
+            return this;
+        }
+
         public Map<String, Object> build() {
             return properties;
         }

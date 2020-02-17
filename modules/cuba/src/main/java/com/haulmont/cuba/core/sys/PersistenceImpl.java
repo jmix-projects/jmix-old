@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package io.jmix.data.impl;
+package com.haulmont.cuba.core.sys;
 
+import com.haulmont.cuba.core.*;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.Stores;
 import io.jmix.data.*;

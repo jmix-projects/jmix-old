@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.data;
+package com.haulmont.cuba.core;
 
 /**
  * Programmatic transaction control interface.
@@ -27,7 +27,6 @@ package io.jmix.data;
  * </pre>
  *
  * @see Transactions
- * @see Persistence
  */
 public interface Transaction extends AutoCloseable {
 

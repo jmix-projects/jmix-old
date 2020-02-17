@@ -24,8 +24,7 @@ import com.haulmont.cuba.core.model.sales.OrderLine
 import com.haulmont.cuba.core.model.sales.Product
 import groovy.sql.Sql
 import io.jmix.core.*
-import io.jmix.core.compatibility.AppContext
-import io.jmix.data.Persistence
+import com.haulmont.cuba.core.Persistence
 import spec.haulmont.cuba.core.CoreTestSpecification
 
 import javax.inject.Inject

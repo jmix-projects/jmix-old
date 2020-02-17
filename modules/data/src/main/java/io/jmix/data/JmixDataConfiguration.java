@@ -61,9 +61,8 @@ public class JmixDataConfiguration {
 
     @Bean
     protected JpaTransactionManager transactionManager(DataSource dataSource,
-                                                       EntityManagerFactory entityManagerFactory,
-                                                       PersistenceSupport persistenceSupport) {
-        JpaTransactionManager transactionManager = new EclipseLinkTransactionManager(persistenceSupport);
+                                                       EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager transactionManager = new JmixTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         transactionManager.setDataSource(dataSource);
         return transactionManager;
