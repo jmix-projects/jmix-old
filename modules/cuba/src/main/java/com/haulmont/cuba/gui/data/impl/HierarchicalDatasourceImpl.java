@@ -51,8 +51,8 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
             for (K id : ids) {
                 Entity<K> item = getItemNN(id);
                 Entity<K> parentItem = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-                if (parentItem != null && EntityAccessor.<K>getEntityId(parentItem).equals(itemId))
-                    res.add(EntityAccessor.getEntityId(item));
+                if (parentItem != null && parentItem.getId().equals(itemId))
+                    res.add(item.getId());
             }
 
             return res;
@@ -68,7 +68,7 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
                 return null;
             else {
                 Entity<K> parentItem = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-                return parentItem == null ? null : EntityAccessor.getEntityId(parentItem);
+                return parentItem == null ? null : parentItem.getId();
             }
         }
         return null;
@@ -83,8 +83,8 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
             for (K id : ids) {
                 Entity<K> item = getItemNN(id);
                 Entity<K> parentItem = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-                if (parentItem == null || !containsItem(EntityAccessor.getEntityId(parentItem)))
-                    result.add(EntityAccessor.getEntityId(item));
+                if (parentItem == null || !containsItem(parentItem.getId()))
+                    result.add(item.getId());
             }
             return result;
         } else {
@@ -99,7 +99,7 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
 
         if (hierarchyPropertyName != null) {
             Entity<K> parentItem = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-            return (parentItem == null || !containsItem(EntityAccessor.getEntityId(parentItem)));
+            return (parentItem == null || !containsItem(parentItem.getId()));
         } else {
             return true;
         }
@@ -116,7 +116,7 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
             for (K id : ids) {
                 Entity item = getItemNN(id);
                 Entity parentItem = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-                if (parentItem != null && EntityAccessor.getEntityId(parentItem).equals(itemId))
+                if (parentItem != null && parentItem.getId().equals(itemId))
                     return true;
             }
         }

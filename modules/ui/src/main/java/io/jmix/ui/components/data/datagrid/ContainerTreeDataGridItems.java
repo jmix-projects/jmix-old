@@ -48,7 +48,7 @@ public class ContainerTreeDataGridItems<E extends Entity>
             return container.getItems().stream()
                     .filter(it -> {
                         E parentItem = EntityAccessor.getEntityValue(it, hierarchyProperty);
-                        return parentItem == null || (container.getItemOrNull(EntityAccessor.getEntityId(parentItem)) == null);
+                        return parentItem == null || (container.getItemOrNull(parentItem.getId()) == null);
                     });
         } else {
             return container.getItems().stream()

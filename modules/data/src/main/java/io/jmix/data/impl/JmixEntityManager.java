@@ -525,7 +525,7 @@ public class JmixEntityManager implements EntityManager {
                 continue;
             }
 
-            Object value = source.getValue(name);
+            Object value = EntityAccessor.getEntityValue(source, name);
             if (value == null) {
                 continue;
             }
@@ -544,7 +544,7 @@ public class JmixEntityManager implements EntityManager {
                     }
                     @SuppressWarnings("unchecked")
                     Collection<Entity> srcCollection = (Collection) value;
-                    Collection<Entity> dstCollection = dest.getValue(name);
+                    Collection<Entity> dstCollection = EntityAccessor.getEntityValue(dest, name);
                     if (dstCollection == null)
                         throw new RuntimeException("Collection is null: " + srcProperty);
                     boolean equal = srcCollection.size() == dstCollection.size();
@@ -565,27 +565,27 @@ public class JmixEntityManager implements EntityManager {
                     }
                 } else {
                     Entity srcRef = (Entity) value;
-                    Entity destRef = dest.getValue(name);
+                    Entity destRef = EntityAccessor.getEntityValue(dest, name);
                     if (srcRef.equals(destRef)) {
                         deepCopyIgnoringNulls(srcRef, destRef, visited);
                     } else {
                         Entity reloadedRef = findOrCreate(srcRef.getClass(), srcRef.getId());
-                        dest.setValue(name, reloadedRef);
+                        EntityAccessor.setEntityValue(dest, name, reloadedRef);
                         deepCopyIgnoringNulls(srcRef, reloadedRef, visited);
                     }
                 }
             } else if (metadataTools.isEmbedded(srcProperty)) {
                 Entity srcRef = (Entity) value;
-                Entity destRef = dest.getValue(name);
+                Entity destRef = EntityAccessor.getEntityValue(dest, name);
                 if (destRef != null) {
                     deepCopyIgnoringNulls(srcRef, destRef, visited);
                 } else {
                     Entity newRef = metadata.create(srcProperty.getRange().asClass().getJavaClass());
-                    dest.setValue(name, newRef);
+                    EntityAccessor.setEntityValue(dest, name, newRef);
                     deepCopyIgnoringNulls(srcRef, newRef, visited);
                 }
             } else {
-                dest.setValue(name, value);
+                EntityAccessor.setEntityValue(dest, name, value);
             }
         }
     }

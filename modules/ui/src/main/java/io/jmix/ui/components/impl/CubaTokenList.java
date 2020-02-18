@@ -23,7 +23,6 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomField;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
 import io.jmix.ui.components.TokenList;
 import io.jmix.ui.components.data.ValueSource;
 import io.jmix.ui.widgets.CubaScrollBoxLayout;
@@ -287,7 +286,7 @@ public class CubaTokenList<T extends Entity> extends CustomField<Collection<T>> 
             label.setText(owner.getInstanceCaption(entity));
             label.setWidthUndefined();
 
-            setTokenStyle(label, EntityAccessor.getEntityId(entity));
+            setTokenStyle(label, entity.getId());
 
             tokenContainer.addComponent(label);
 

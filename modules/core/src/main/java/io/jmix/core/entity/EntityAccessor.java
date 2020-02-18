@@ -27,16 +27,6 @@ import static io.jmix.core.metamodel.model.utils.EntityPaths.parseValuePath;
 
 public class EntityAccessor {
 
-
-
-    public static <K> K getEntityId(Entity<?> entity) {
-        return null;
-    }
-
-    public static <K> void setEntityId(Entity<?> entity, K key) {
-
-    }
-
     /**
      * Set an attribute value.
      * <br>
@@ -53,23 +43,6 @@ public class EntityAccessor {
     }
 
     /**
-     * Set an attribute value.
-     * <br>
-     * An implementor should first read a current value of the attribute, and then call an appropriate setter
-     * method only if the new value differs. This ensures triggering of {@link EntityPropertyChangeListener}s only if the attribute
-     * was actually changed.
-     *
-     * @param name        attribute name according to JavaBeans notation
-     * @param value       attribute value
-     * @param checkEquals check equals for previous and new value.
-     *                    If flag is true and objects equals, then setter will not be invoked
-     */
-    public static void setEntityValue(Entity<?> entity, String name, Object value, boolean checkEquals) {
-
-
-    }
-
-    /**
      * Get an attribute value.
      *
      * @param name attribute name according to JavaBeans notation
@@ -77,11 +50,6 @@ public class EntityAccessor {
      */
     @Nullable
     public static <T> T getEntityValue(Entity<?> entity, String name) {
-        if (entity instanceof KeyValueEntity) {
-            return ((KeyValueEntity) entity).getValue(name);
-        } else if (entity instanceof ManagedEntity) {
-
-        }
         return null;
 
     }
