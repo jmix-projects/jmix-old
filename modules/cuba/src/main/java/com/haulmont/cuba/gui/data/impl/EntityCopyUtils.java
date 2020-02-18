@@ -19,12 +19,9 @@ package com.haulmont.cuba.gui.data.impl;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.impl.AbstractInstance;
-import io.jmix.core.entity.BaseDbGeneratedIdEntity;
-import io.jmix.core.entity.BaseEntityInternalAccess;
-import io.jmix.core.entity.BaseGenericIdEntity;
-import io.jmix.core.entity.Entity;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.ArrayList;
@@ -67,7 +64,7 @@ public class EntityCopyUtils {
             MetaProperty dstProperty = metadata.getClass(dest).findProperty(name);
             if (dstProperty != null && !dstProperty.isReadOnly()) {
                 try {
-                    Object value = source.getValue(name);
+                    Object value = EntityAccessor.getEntityValue(source, name);
 
                     if (value != null && srcProperty.getRange().getCardinality().isMany()
                             && srcProperty.getType() == MetaProperty.Type.COMPOSITION) {
@@ -87,10 +84,10 @@ public class EntityCopyUtils {
                             dstCollection = new ArrayList<>(tmpCollection);
                         else
                             dstCollection = tmpCollection;
-                        dest.setValue(name, dstCollection);
+                        EntityAccessor.setEntityValue(dest, name, dstCollection);
 
                     } else {
-                        dest.setValue(name, source.getValue(name));
+                        EntityAccessor.setEntityValue(dest, name, EntityAccessor.getEntityValue(source, name));
                     }
                 } catch (RuntimeException e) {
                     Throwable cause = ExceptionUtils.getRootCause(e);
@@ -123,13 +120,13 @@ public class EntityCopyUtils {
             MetaProperty dstProperty = metadata.getClass(dest).findProperty(name);
             if (dstProperty != null && !dstProperty.isReadOnly()) {
                 try {
-                    Object value = source.getValue(name);
+                    Object value = EntityAccessor.getEntityValue(source, name);
 
                     if (value != null && srcProperty.getRange().getCardinality().isMany()
                             && srcProperty.getType() == MetaProperty.Type.COMPOSITION) {
-                        ((AbstractInstance) dest).setValue(name, source.getValue(name), false);
+                        ((AbstractInstance) dest).setValue(name, EntityAccessor.getEntityValue(source, name), false);
                     } else {
-                        dest.setValue(name, source.getValue(name));
+                        EntityAccessor.setEntityValue(dest, name, EntityAccessor.getEntityValue(source, name));
                     }
                 } catch (RuntimeException e) {
                     Throwable cause = ExceptionUtils.getRootCause(e);

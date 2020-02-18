@@ -18,6 +18,7 @@ package io.jmix.ui;
 
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.actions.DialogAction;
@@ -250,7 +251,7 @@ public class RemoveOperation {
             if (inversePropClass.isAssignableFrom(dcClass)) {
                 // update reference for One-To-Many
                 for (Entity item : selectedItems) {
-                    item.setValue(inverseMetaProperty.getName(), null);
+                    EntityAccessor.setEntityValue(item, inverseMetaProperty.getName(), null);
                 }
             }
         }

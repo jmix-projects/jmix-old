@@ -19,6 +19,7 @@ package io.jmix.ui.components.data.table;
 import com.google.common.collect.ImmutableList;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.components.data.GroupTableItems;
 import io.jmix.ui.gui.data.GroupInfo;
@@ -140,7 +141,7 @@ public class ContainerGroupTableItems<E extends Entity<K>, K>
     protected Object getValueByProperty(E item, MetaPropertyPath property) {
         Preconditions.checkNotNullArgument(item);
 
-        return item.getValueEx(property.toString());
+        return EntityAccessor.getEntityValueEx(item, property.toString());
     }
 
     @Override

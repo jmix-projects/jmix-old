@@ -25,7 +25,6 @@ import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.*;
 import io.jmix.core.entity.annotation.EmbeddedParameters;
-import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Session;
@@ -193,7 +192,7 @@ public class MetadataImpl implements Metadata {
                 if (embeddedParameters != null && !embeddedParameters.nullAllowed()) {
                     MetaClass embeddableMetaClass = property.getRange().asClass();
                     Entity embeddableEntity = create(embeddableMetaClass);
-                    entity.setValue(property.getName(), embeddableEntity);
+                    EntityAccessor.setEntityValue(entity, property.getName(), embeddableEntity);
                 }
             }
         }

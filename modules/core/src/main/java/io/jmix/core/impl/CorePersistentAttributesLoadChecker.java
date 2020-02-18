@@ -19,11 +19,7 @@ package io.jmix.core.impl;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.PersistentAttributesLoadChecker;
-import io.jmix.core.entity.BaseEntityInternalAccess;
-import io.jmix.core.entity.BaseGenericIdEntity;
-import io.jmix.core.entity.EmbeddableEntity;
-import io.jmix.core.entity.KeyValueEntity;
-import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.springframework.stereotype.Component;
@@ -127,9 +123,9 @@ public class CorePersistentAttributesLoadChecker implements PersistentAttributes
     }
 
     protected boolean checkIsLoadedWithGetter(Object entity, String property) {
-        if (entity instanceof Instance) {
+        if (entity instanceof Entity) {
             try {
-                Object value = ((Instance) entity).getValue(property);
+                Object value = EntityAccessor.getEntityValue(((Entity) entity), property);
                 if (value instanceof Collection) { //check for IndirectCollection behaviour, should fail if property is not loaded
                     ((Collection) value).size();
                 }

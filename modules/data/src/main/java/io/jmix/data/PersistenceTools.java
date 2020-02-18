@@ -21,10 +21,7 @@ import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.BaseEntityInternalAccess;
-import io.jmix.core.entity.BaseGenericIdEntity;
-import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.SoftDelete;
+import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.datatypes.impl.EnumClass;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -175,7 +172,7 @@ public class PersistenceTools {
             return null;
 
         } else if (!isDirty(entity, attribute)) {
-            return entity.getValue(attribute);
+            return EntityAccessor.getEntityValue(entity, attribute);
 
         } else {
             ObjectChangeSet objectChanges =

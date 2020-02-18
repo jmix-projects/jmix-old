@@ -22,7 +22,6 @@ import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.Datatypes;
-import io.jmix.core.metamodel.model.Instance;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
@@ -115,8 +114,8 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<CubaButtonField<V>
                 return "";
             }
 
-            if (value instanceof Instance) {
-                return metadataTools.getInstanceName((Instance) value);
+            if (value instanceof Entity) {
+                return metadataTools.getInstanceName((Entity) value);
             }
 
             Datatype datatype = Datatypes.getNN(value.getClass());

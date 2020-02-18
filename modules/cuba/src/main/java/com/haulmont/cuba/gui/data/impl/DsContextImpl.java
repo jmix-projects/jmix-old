@@ -21,6 +21,7 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.CommitContext;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.impl.AbstractInstance;
@@ -289,7 +290,7 @@ public class DsContextImpl implements DsContextImplementation {
                     || !PersistenceHelper.isLoaded(entity, property.getName()))
                 continue;
 
-            Object value = entity.getValue(property.getName());
+            Object value = EntityAccessor.getEntityValue(entity, property.getName());
             if (value != null) {
                 if (property.getRange().getCardinality().isMany()) {
                     Collection collection = (Collection) value;
@@ -306,7 +307,7 @@ public class DsContextImpl implements DsContextImplementation {
                     }
                 } else {
                     if (contextEntity.equals(value) && contextEntity != value) {
-                        entity.setValue(property.getName(), contextEntity);
+                        EntityAccessor.setEntityValue(entity, property.getName(), contextEntity);
                     }
                 }
             }
@@ -334,11 +335,11 @@ public class DsContextImpl implements DsContextImplementation {
                 MetaClass metaClass = metadata.getExtendedEntities().getEffectiveMetaClass(inverseProp.getDomain());
                 if (metaClass.equals(datasource.getMetaClass())
                         && (PersistenceHelper.isLoaded(entity, inverseProp.getName())
-                        && entity.getValue(inverseProp.getName()) != null)) // replace master only if it's already set
+                        && EntityAccessor.getEntityValue(entity, inverseProp.getName()) != null)) // replace master only if it's already set
                 {
                     Object masterItem = null;
                     if (masterDs instanceof CollectionDatasource) {
-                        Entity value = entity.getValue(inverseProp.getName());
+                        Entity value = EntityAccessor.getEntityValue(entity, inverseProp.getName());
                         if (value != null) {
                             Object id = value.getId();
                             //noinspection unchecked

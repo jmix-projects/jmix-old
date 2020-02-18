@@ -27,6 +27,7 @@ import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.Messages;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityAttrAccess;
@@ -402,7 +403,7 @@ public class AddAction extends ListAction
                         if (!ds.containsItem(entity.getId())) {
                             // Initialize reference to master entity
                             if (initializeMasterReference) {
-                                entity.setValue(inverseProp.getName(), masterEntity);
+                                EntityAccessor.setEntityValue(entity, inverseProp.getName(), masterEntity);
                             }
                             ds.addItem(entity);
                         }

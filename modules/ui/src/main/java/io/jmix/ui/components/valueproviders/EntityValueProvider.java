@@ -18,6 +18,7 @@ package io.jmix.ui.components.valueproviders;
 
 import com.vaadin.data.ValueProvider;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 
 public class EntityValueProvider<E extends Entity, T> implements ValueProvider<E, T> {
@@ -35,7 +36,7 @@ public class EntityValueProvider<E extends Entity, T> implements ValueProvider<E
     @Override
     public T apply(E entity) {
         return propertyPath != null
-                ? entity.getValueEx(propertyPath)
+                ? EntityAccessor.getEntityValueEx(entity, propertyPath)
                 : null;
     }
 }

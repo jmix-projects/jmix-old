@@ -21,8 +21,9 @@ import io.jmix.core.DataManager
 import io.jmix.core.EntityStates
 import io.jmix.core.Id
 import io.jmix.core.entity.BaseEntityInternalAccess
+import io.jmix.core.entity.EntityPropertyChangeListener
 import io.jmix.core.entity.SecurityState
-import io.jmix.core.metamodel.model.Instance
+
 import io.jmix.ui.model.DataComponents
 import io.jmix.ui.model.DataContext
 import test_support.DataContextSpec
@@ -572,9 +573,9 @@ class DataContextMergeTest extends DataContextSpec {
         def mergedOrder = context.merge(order1)
 
         Map<String, Integer> events = [:]
-        Instance.PropertyChangeListener listener = new Instance.PropertyChangeListener() {
+        EntityPropertyChangeListener listener = new EntityPropertyChangeListener() {
             @Override
-            void propertyChanged(Instance.PropertyChangeEvent e) {
+            void propertyChanged(EntityPropertyChangeListener.PropertyChangeEvent e) {
                 events.compute(e.property, { k, v -> v == null ? 1 : v + 1 })
             }
         }
@@ -629,7 +630,7 @@ class DataContextMergeTest extends DataContextSpec {
         TestJpaLifecycleCallbacksEntity entity = new TestJpaLifecycleCallbacksEntity(name: 'test1')
         def mergedEntity = context.merge(entity)
 
-        Instance.PropertyChangeListener listener = Mock()
+        EntityPropertyChangeListener listener = Mock()
         mergedEntity.addPropertyChangeListener(listener)
 
         when:
@@ -666,7 +667,7 @@ class DataContextMergeTest extends DataContextSpec {
 
         def mergedEntity = context.merge(entity)
 
-        Instance.PropertyChangeListener listener = Mock()
+        EntityPropertyChangeListener listener = Mock()
         mergedEntity.addPropertyChangeListener(listener)
 
         then:

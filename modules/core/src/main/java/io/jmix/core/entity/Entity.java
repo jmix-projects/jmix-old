@@ -15,13 +15,11 @@
  */
 package io.jmix.core.entity;
 
-import io.jmix.core.metamodel.model.Instance;
-
 /**
  * Interface to be implemented by domain model objects with identifiers.
- * @param <T> identifier type
  *
+ * @param <T> identifier type
  */
-public interface Entity<T> extends Instance {
+public interface Entity<T> {
     T getId();
 }

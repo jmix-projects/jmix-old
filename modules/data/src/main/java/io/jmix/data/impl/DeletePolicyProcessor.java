@@ -17,6 +17,7 @@ package io.jmix.data.impl;
 
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.entity.annotation.OnDelete;
 import io.jmix.core.entity.annotation.OnDeleteInverse;
@@ -160,7 +161,7 @@ public class DeletePolicyProcessor {
                         if (value != null && checkIfEntityBelongsToMaster(property, value)) {
                             if (!(value instanceof SoftDelete)) {
                                 if (entityStates.isLoaded(entity, property.getName())) {
-                                    entity.setValue(property.getName(), null);
+                                    EntityAccessor.setEntityValue(entity, property.getName(), null);
                                     entityManager.remove(value);
                                 } else {
                                     hardDeleteNotLoadedReference(entity, property, value);
@@ -174,7 +175,7 @@ public class DeletePolicyProcessor {
                 case UNLINK:
                     if (property.getRange().getCardinality().isMany()) {
                         if (metadataTools.isOwningSide(property)) {
-                            Collection<Entity> value = entity.getValue(property.getName());
+                            Collection<Entity> value = EntityAccessor.getEntityValue(entity, property.getName());
                             if (value != null) {
                                 value.clear();
                             }
@@ -229,7 +230,7 @@ public class DeletePolicyProcessor {
         Range range = property.getRange();
         if (metadataTools.isOwningSide(property) && !range.getCardinality().isMany()) {
             if (entityStates.isLoaded(entity, property.getName())) {
-                entity.setValue(property.getName(), null);
+                EntityAccessor.setEntityValue(entity, property.getName(), null);
             } else {
                 hardSetReferenceNull(entity, property);
             }
@@ -265,7 +266,7 @@ public class DeletePolicyProcessor {
 
     protected Entity getReference(Entity entity, MetaProperty property) {
         if (entityStates.isLoaded(entity, property.getName()))
-            return entity.getValue(property.getName());
+            return EntityAccessor.getEntityValue(entity, property.getName());
         else {
             Query query = entityManager.createQuery(
                     "select e." + property.getName() + " from " + metadata.getClass(entity.getClass()).getName()
@@ -279,7 +280,7 @@ public class DeletePolicyProcessor {
     protected boolean checkIfEntityBelongsToMaster(MetaProperty property, Entity entityToRemove) {
         MetaProperty inverseProperty = property.getInverse();
         if (inverseProperty != null && !inverseProperty.getRange().getCardinality().isMany()) {
-            Entity master = entityToRemove.getValue(inverseProperty.getName());
+            Entity master = EntityAccessor.getEntityValue(entityToRemove, inverseProperty.getName());
             return entity.equals(master);
         } else {
             return true;
@@ -290,7 +291,7 @@ public class DeletePolicyProcessor {
         MetaProperty inverseProperty = property.getInverse();
         if (inverseProperty == null) {
             log.warn("Inverse property not found for property {}", property);
-            Collection<Entity> value = entity.getValue(property.getName());
+            Collection<Entity> value = EntityAccessor.getEntityValue(entity, property.getName());
             return value == null || value.isEmpty();
         }
 
@@ -313,7 +314,7 @@ public class DeletePolicyProcessor {
         MetaProperty inverseProperty = property.getInverse();
         if (inverseProperty == null) {
             log.warn("Inverse property not found for property {}", property);
-            Collection<Entity> value = entity.getValue(property.getName());
+            Collection<Entity> value = EntityAccessor.getEntityValue(entity, property.getName());
             return value == null ? Collections.emptyList() : value;
         }
 
@@ -334,7 +335,7 @@ public class DeletePolicyProcessor {
         // current transaction that did not affect the database yet
         List<Entity> result = new ArrayList<>(list.size());
         for (Entity item : list) {
-            Entity master = item.getValue(invPropName);
+            Entity master = EntityAccessor.getEntityValue(item, invPropName);
             if (entity.equals(master))
                 result.add(item);
         }
@@ -383,7 +384,7 @@ public class DeletePolicyProcessor {
             List<Entity> list = query.getResultList();
             for (Entity e : list) {
                 if (property.getRange().getCardinality().isMany()) {
-                    Collection<?> collection = e.getValue(property.getName());
+                    Collection<?> collection = EntityAccessor.getEntityValue(e, property.getName());
                     if (collection != null) {
                         collection.removeIf(o -> entity.equals(o));
                     }

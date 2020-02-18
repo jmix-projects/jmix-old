@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.entity.KeyValueEntity;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -1037,14 +1038,14 @@ public class OrmDataStore implements DataStore {
                 continue;
             if (entityStates.isLoaded(entity, property.getName())) {
                 if (property.getRange().getCardinality().isMany()) {
-                    Collection collection = entity.getValue(property.getName());
+                    Collection collection = EntityAccessor.getEntityValue(entity, property.getName());
                     if (collection != null) {
                         for (Object obj : collection) {
                             updateReferences((Entity) obj, refEntity, visited);
                         }
                     }
                 } else {
-                    Entity value = entity.getValue(property.getName());
+                    Entity value = EntityAccessor.getEntityValue(entity, property.getName());
                     if (value != null) {
                         if (value.getId().equals(refEntity.getId())) {
                             if (entity instanceof AbstractInstance) {
@@ -1135,7 +1136,7 @@ public class OrmDataStore implements DataStore {
         em.detach(rootEntity);
         metadataTools.traverseAttributesByView(view, rootEntity, (entity, property) -> {
             if (property.getRange().isClass() && !metadataTools.isEmbedded(property)) {
-                Object value = entity.getValue(property.getName());
+                Object value = EntityAccessor.getEntityValue(entity, property.getName());
                 if (value != null) {
                     if (property.getRange().getCardinality().isMany()) {
                         @SuppressWarnings("unchecked")

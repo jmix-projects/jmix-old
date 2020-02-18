@@ -22,6 +22,7 @@ import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.impl.BeanLocatorAware;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -104,7 +105,7 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
                     setState(BindingState.INACTIVE);
                 }
                 propertyCont.setItem(event.getItem() != null ?
-                        event.getItem().getValueEx(intermediatePath.getMetaProperty().getName()) : null);
+                        EntityAccessor.getEntityValueEx(event.getItem(), intermediatePath.getMetaProperty().getName()) : null);
             });
 
             parentCont.addItemPropertyChangeListener(event -> {
@@ -113,8 +114,8 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
                     Entity prevEntity = (Entity) event.getPrevValue();
                     propertyCont.setItem(entity);
 
-                    V prevValue = prevEntity != null ? prevEntity.getValueEx(pathToTarget) : null;
-                    V value = entity != null ? entity.getValueEx(pathToTarget) : null;
+                    V prevValue = prevEntity != null ? EntityAccessor.getEntityValueEx(prevEntity, pathToTarget) : null;
+                    V value = entity != null ? EntityAccessor.getEntityValueEx(entity, pathToTarget) : null;
                     events.publish(ValueChangeEvent.class,
                             new ValueChangeEvent<>(this, prevValue, value));
                 }
@@ -157,7 +158,7 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
     public V getValue() {
         E item = container.getItemOrNull();
         if (item != null) {
-            return item.getValueEx(metaPropertyPath);
+            return EntityAccessor.getEntityValueEx(item, metaPropertyPath);
         }
         return null;
     }
@@ -169,7 +170,7 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
             if (canUpdateMasterRefs()) {
                 updateMasterRefs(value);
             } else {
-                item.setValueEx(metaPropertyPath.toPathString(), value);
+                EntityAccessor.setEntityValueEx(item, metaPropertyPath.toPathString(), value);
             }
         }
     }
@@ -268,10 +269,10 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
         //noinspection unchecked
         Collection<V> newValue = (Collection<V>) value;
 
-        Collection<? extends V> itemValue = getItem().getValueEx(metaPropertyPath.toPathString());
+        Collection<? extends V> itemValue = EntityAccessor.getEntityValueEx(getItem(), metaPropertyPath.toPathString());
         Collection<? extends V> oldValue = copyPropertyCollection(itemValue);
 
-        getItem().setValueEx(metaPropertyPath.toPathString(), value);
+        EntityAccessor.setEntityValueEx(getItem(), metaPropertyPath.toPathString(), value);
 
         container.mute();
 
@@ -279,8 +280,7 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
             for (V v : newValue) {
                 if (CollectionUtils.isEmpty(oldValue) || !oldValue.contains(v)) {
                     Entity entity = (Entity) v;
-                    dataContext.merge(entity)
-                            .setValue(inverseProperty.getName(), getItem());
+                    EntityAccessor.setEntityValue(dataContext.merge(entity), inverseProperty.getName(), getItem());
                 }
             }
         }
@@ -289,8 +289,7 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
             for (V v : oldValue) {
                 if (CollectionUtils.isEmpty(newValue) || !newValue.contains(v)) {
                     Entity entity = (Entity) v;
-                    dataContext.merge(entity)
-                            .setValue(inverseProperty.getName(), null);
+                    EntityAccessor.setEntityValue(dataContext.merge(entity), inverseProperty.getName(), null);
                 }
             }
         }

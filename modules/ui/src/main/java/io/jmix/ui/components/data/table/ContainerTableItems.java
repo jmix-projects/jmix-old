@@ -20,6 +20,7 @@ import io.jmix.core.Sort;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.components.AggregationInfo;
@@ -132,7 +133,7 @@ public class ContainerTableItems<E extends Entity> implements EntityTableItems<E
     @Override
     public Object getItemValue(Object itemId, Object propertyId) {
         MetaPropertyPath propertyPath = (MetaPropertyPath) propertyId;
-        return container.getItem(itemId).getValueEx(propertyPath);
+        return EntityAccessor.getEntityValueEx(container.getItem(itemId), propertyPath);
     }
 
     @Override

@@ -20,6 +20,7 @@ import io.jmix.core.Sort;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.components.AggregationInfo;
@@ -242,7 +243,7 @@ public class ContainerDataGridItems<E extends Entity>
 
             @Override
             public Object getItemValue(MetaPropertyPath property, Object itemId) {
-                return container.getItem(itemId).getValueEx(property);
+                return EntityAccessor.getEntityValueEx(container.getItem(itemId), property);
             }
         };
     }

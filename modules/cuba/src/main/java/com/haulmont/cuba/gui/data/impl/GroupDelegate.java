@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.haulmont.cuba.gui.data.*;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.gui.data.GroupInfo;
 import org.apache.commons.collections4.CollectionUtils;
@@ -284,9 +285,9 @@ public abstract class GroupDelegate<T extends Entity<K>, K> {
         Preconditions.checkNotNullArgument(item);
 
         if (property.getMetaProperties().length == 1) {
-            return item.getValue(property.getMetaProperty().getName());
+            return EntityAccessor.getEntityValue(item, property.getMetaProperty().getName());
         } else {
-            return item.getValueEx(property);
+            return EntityAccessor.getEntityValueEx(item, property);
         }
     }
 

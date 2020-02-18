@@ -26,6 +26,7 @@ import com.haulmont.cuba.gui.data.impl.EntityCopyUtils;
 import io.jmix.core.*;
 import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityOp;
@@ -324,7 +325,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
                 for (Datasource datasource : parentDs.getDsContext().getAll()) {
                     if (datasource instanceof NestedDatasource
                             && ((NestedDatasource) datasource).getMaster().equals(parentDs)) {
-                        Object value = entity.getValue(property.getName());
+                        Object value = EntityAccessor.getEntityValue(entity, property.getName());
                         if (value instanceof Collection) {
                             Collection collection = (Collection) value;
                             //noinspection unchecked

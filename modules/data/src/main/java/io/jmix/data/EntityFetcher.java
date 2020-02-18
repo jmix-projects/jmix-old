@@ -19,7 +19,7 @@ package io.jmix.data;
 import io.jmix.core.*;
 import io.jmix.core.entity.EmbeddableEntity;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.slf4j.Logger;
@@ -103,7 +103,7 @@ public class EntityFetcher {
         fetch(instance, fetchPlan, new HashMap<>(), optimizeForDetached);
     }
 
-    protected void fetch(Entity entity, FetchPlan fetchPlan, Map<Instance, Set<FetchPlan>> visited, boolean optimizeForDetached) {
+    protected void fetch(Entity entity, FetchPlan fetchPlan, Map<Entity, Set<FetchPlan>> visited, boolean optimizeForDetached) {
         Set<FetchPlan> fetchPlans = visited.get(entity);
         if (fetchPlans == null) {
             fetchPlans = new HashSet<>();
@@ -123,7 +123,7 @@ public class EntityFetcher {
 
             if (log.isTraceEnabled()) log.trace("Fetching property " + property.getName());
 
-            Object value = entity.getValue(property.getName());
+            Object value = EntityAccessor.getEntityValue(entity, property.getName());
             FetchPlan propertyFetchPlan = property.getFetchPlan();
             if (value != null && propertyFetchPlan != null) {
                 if (value instanceof Collection) {
@@ -145,7 +145,7 @@ public class EntityFetcher {
                                     @SuppressWarnings("unchecked")
                                     Entity managed = em.find(e.getClass(), e.getId());
                                     if (managed != null) { // the instance here can be null if it has been deleted
-                                        entity.setValue(property.getName(), managed);
+                                        EntityAccessor.setEntityValue(entity, property.getName(), managed);
                                         fetch(managed, propertyFetchPlan, visited, optimizeForDetached);
                                     }
                                     tx.commit();

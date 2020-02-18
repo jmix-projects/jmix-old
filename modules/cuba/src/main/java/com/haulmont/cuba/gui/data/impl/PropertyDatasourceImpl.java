@@ -17,12 +17,12 @@ package com.haulmont.cuba.gui.data.impl;
 
 import com.haulmont.cuba.gui.data.*;
 import io.jmix.core.DevelopmentException;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlanProperty;
 import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.metamodel.model.Instance;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.impl.AbstractInstance;
@@ -82,7 +82,7 @@ public class PropertyDatasourceImpl<T extends Entity>
 
     @Override
     public T getItem() {
-        final Instance item = masterDs.getItem();
+        final Entity item = masterDs.getItem();
         return getItem(item);
     }
 
@@ -94,8 +94,8 @@ public class PropertyDatasourceImpl<T extends Entity>
         return getState() == State.VALID ? getItem() : null;
     }
 
-    protected T getItem(Instance item) {
-        return item == null ? null : (T) item.getValue(metaProperty.getName());
+    protected T getItem(Entity item) {
+        return item == null ? null : (T) EntityAccessor.getEntityValue(item, metaProperty.getName());
     }
 
     @Override
@@ -190,7 +190,7 @@ public class PropertyDatasourceImpl<T extends Entity>
                         // delete only if they have the same master item
                         if (inverseProp != null
                                 && PersistenceHelper.isLoaded(createdItem, inverseProp.getName())
-                                && Objects.equals(createdItem.getValue(inverseProp.getName()), masterDs.getItem())) {
+                                && Objects.equals(EntityAccessor.getEntityValue(createdItem, inverseProp.getName()), masterDs.getItem())) {
                             parentCollectionDs.removeItem(createdItem);
                         }
                     }
@@ -223,8 +223,8 @@ public class PropertyDatasourceImpl<T extends Entity>
             metadata.getTools().copy(item, getItem());
             itemsToUpdate.add(item);
         } else {
-            final Instance parentItem = masterDs.getItem();
-            parentItem.setValue(metaProperty.getName(), item);
+            final Entity parentItem = masterDs.getItem();
+            EntityAccessor.setEntityValue(parentItem, metaProperty.getName(), item);
         }
         setModified(true);
     }

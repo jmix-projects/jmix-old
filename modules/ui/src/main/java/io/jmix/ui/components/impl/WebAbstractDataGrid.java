@@ -46,6 +46,7 @@ import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -3354,7 +3355,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         // set changed values from editor to copied entity
         E copiedItem = metadataTools.deepCopy(item);
         for (Map.Entry<String, Object> property : properties.entrySet()) {
-            copiedItem.setValue(property.getKey(), property.getValue());
+            EntityAccessor.setEntityValue(copiedItem, property.getKey(), property.getValue());
         }
 
         // validate copy

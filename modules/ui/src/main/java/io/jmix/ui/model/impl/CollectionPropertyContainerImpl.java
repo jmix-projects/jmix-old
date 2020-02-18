@@ -16,7 +16,8 @@
 
 package io.jmix.ui.model.impl;
 
-import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityPropertyChangeListener;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.entity.Entity;
@@ -79,7 +80,7 @@ public class CollectionPropertyContainerImpl<E extends Entity>
         Entity masterItem = master.getItemOrNull();
         if (masterItem != null) {
             MetaProperty masterProperty = getMasterProperty();
-            Collection masterCollection = masterItem.getValue(masterProperty.getName());
+            Collection masterCollection = EntityAccessor.getEntityValue(masterItem, masterProperty.getName());
             if (masterCollection != entities) {
                 updateMasterCollection(masterProperty, masterCollection, entities);
             }
@@ -88,7 +89,7 @@ public class CollectionPropertyContainerImpl<E extends Entity>
 
     protected void updateMaster() {
         MetaProperty masterProperty = getMasterProperty();
-        Collection masterCollection = master.getItem().getValue(masterProperty.getName());
+        Collection masterCollection = EntityAccessor.getEntityValue(master.getItem(), masterProperty.getName());
         updateMasterCollection(masterProperty, masterCollection, this.collection);
     }
 
@@ -106,7 +107,7 @@ public class CollectionPropertyContainerImpl<E extends Entity>
                                         @Nullable Collection masterCollection,
                                         @Nullable Collection<E> newCollection) {
         if (newCollection == null) {
-            master.getItem().setValue(metaProperty.getName(), null);
+            EntityAccessor.setEntityValue(master.getItem(), metaProperty.getName(), null);
         } else {
             if (masterCollection == null) {
                 if (List.class.isAssignableFrom(metaProperty.getJavaType())) {
@@ -114,12 +115,12 @@ public class CollectionPropertyContainerImpl<E extends Entity>
                 } else {
                     masterCollection = new LinkedHashSet(newCollection);
                 }
-                master.getItem().setValue(metaProperty.getName(), masterCollection);
+                EntityAccessor.setEntityValue(master.getItem(), metaProperty.getName(), masterCollection);
             } else {
                 masterCollection.clear();
                 masterCollection.addAll(newCollection);
                 if (master instanceof ItemPropertyChangeNotifier) {
-                    Instance.PropertyChangeEvent event = new Instance.PropertyChangeEvent(
+                    EntityPropertyChangeListener.PropertyChangeEvent event = new EntityPropertyChangeListener.PropertyChangeEvent(
                             master.getItem(),
                             metaProperty.getName(),
                             masterCollection,

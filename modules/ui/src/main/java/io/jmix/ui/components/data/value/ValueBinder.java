@@ -24,12 +24,10 @@ import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.entity.KeyValueEntity;
 import io.jmix.core.impl.BeanLocatorAware;
-import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.core.metamodel.model.MetadataObject;
+import io.jmix.core.metamodel.model.*;
 import io.jmix.core.security.Security;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Field;
@@ -337,12 +335,12 @@ public class ValueBinder {
                             .map(MetadataObject::getName)
                             .collect(Collectors.joining("."));
 
-                    targetItem = rootItem.getValueEx(basePropertyItem);
+                    targetItem = EntityAccessor.getEntityValueEx(rootItem, basePropertyItem);
                 }
 
                 if (targetItem instanceof BaseGenericIdEntity) {
                     String metaPropertyName = metaPropertyPath.getMetaProperty().getName();
-                    Object value = targetItem.getValue(metaPropertyName);
+                    Object value = EntityAccessor.getEntityValue(targetItem, metaPropertyName);
 
                     BaseGenericIdEntity baseGenericIdEntity = (BaseGenericIdEntity) targetItem;
                     String[] filteredAttributes = getFilteredAttributes(baseGenericIdEntity);

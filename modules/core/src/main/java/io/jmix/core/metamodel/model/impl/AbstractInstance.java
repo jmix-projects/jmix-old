@@ -18,24 +18,25 @@ package io.jmix.core.metamodel.model.impl;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.Metadata;
-import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityPropertyChangeListener;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.utils.InstanceUtils;
 import io.jmix.core.metamodel.model.utils.MethodsCache;
 import io.jmix.core.metamodel.model.utils.RelatedPropertiesCache;
 
-import javax.annotation.Nullable;
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public abstract class AbstractInstance implements Instance {
+public abstract class AbstractInstance implements Serializable {
 
     protected static final int PROPERTY_CHANGE_LISTENERS_INITIAL_CAPACITY = 4;
 
-    protected transient Collection<WeakReference<PropertyChangeListener>> __propertyChangeListeners;
+    protected transient Collection<WeakReference<EntityPropertyChangeListener>> __propertyChangeListeners;
 
     private static transient Map<Class, MethodsCache> methodCacheMap = new ConcurrentHashMap<>();
 
@@ -46,36 +47,34 @@ public abstract class AbstractInstance implements Instance {
 
             for (Object referenceObject : __propertyChangeListeners.toArray()) {
                 @SuppressWarnings("unchecked")
-                WeakReference<PropertyChangeListener> reference = (WeakReference<PropertyChangeListener>) referenceObject;
+                WeakReference<EntityPropertyChangeListener> reference = (WeakReference<EntityPropertyChangeListener>) referenceObject;
 
-                PropertyChangeListener listener = reference.get();
+                EntityPropertyChangeListener listener = reference.get();
                 if (listener == null) {
                     __propertyChangeListeners.remove(reference);
                 } else {
-                    listener.propertyChanged(new PropertyChangeEvent(this, s, prev, curr));
+                    listener.propertyChanged(new EntityPropertyChangeListener.PropertyChangeEvent((Entity) this, s, prev, curr));
 
                     for (String property : getRelatedReadOnlyProperties(s)) {
                         listener.propertyChanged(
-                                new PropertyChangeEvent(this, property, null, getValue(property)));
+                                new EntityPropertyChangeListener.PropertyChangeEvent((Entity) this, property, null, getValue(property)));
                     }
                 }
             }
         }
     }
 
-    @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(EntityPropertyChangeListener listener) {
         if (__propertyChangeListeners == null) {
             __propertyChangeListeners = new ArrayList<>(PROPERTY_CHANGE_LISTENERS_INITIAL_CAPACITY);
         }
         __propertyChangeListeners.add(new WeakReference<>(listener));
     }
 
-    @Override
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(EntityPropertyChangeListener listener) {
         if (__propertyChangeListeners != null) {
-            for (Iterator<WeakReference<PropertyChangeListener>> it = __propertyChangeListeners.iterator(); it.hasNext(); ) {
-                PropertyChangeListener iteratorListener = it.next().get();
+            for (Iterator<WeakReference<EntityPropertyChangeListener>> it = __propertyChangeListeners.iterator(); it.hasNext(); ) {
+                EntityPropertyChangeListener iteratorListener = it.next().get();
                 if (iteratorListener == null || iteratorListener.equals(listener)) {
                     it.remove();
                 }
@@ -83,7 +82,6 @@ public abstract class AbstractInstance implements Instance {
         }
     }
 
-    @Override
     public void removeAllListeners() {
         if (__propertyChangeListeners != null) {
             __propertyChangeListeners.clear();
@@ -91,7 +89,6 @@ public abstract class AbstractInstance implements Instance {
     }
 
     @SuppressWarnings("unchecked")
-    @Override
     public <T> T getValue(String name) {
         Function getter = getMethodsCache().getGetterNN(name);
         return (T) getter.apply(this);
@@ -127,7 +124,6 @@ public abstract class AbstractInstance implements Instance {
         return cache;
     }
 
-    @Override
     public void setValue(String name, Object value) {
         setValue(name, value, true);
     }
@@ -148,26 +144,5 @@ public abstract class AbstractInstance implements Instance {
             BiConsumer setter = getMethodsCache().getSetterNN(name);
             setter.accept(this, value);
         }
-    }
-
-    @Override
-    public <T> T getValueEx(String name) {
-        return InstanceUtils.getValueEx(this, name);
-    }
-
-    @Nullable
-    @Override
-    public <T> T getValueEx(BeanPropertyPath propertyPath) {
-        return InstanceUtils.getValueEx(this, propertyPath);
-    }
-
-    @Override
-    public void setValueEx(String name, Object value) {
-        InstanceUtils.setValueEx(this, name, value);
-    }
-
-    @Override
-    public void setValueEx(BeanPropertyPath propertyPath, Object value) {
-        InstanceUtils.setValueEx(this, propertyPath, value);
     }
 }

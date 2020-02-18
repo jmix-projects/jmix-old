@@ -22,6 +22,7 @@ import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.events.TriggerOnce;
 import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.ClientConfig;
 import io.jmix.ui.actions.Action;
@@ -299,7 +300,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen
         for (MetaProperty property : metadata.getClass(entity).getProperties()) {
             if (property.getRange().isClass()) {
                 if (getEntityStates().isLoaded(entity, property.getName())) {
-                    Object value = entity.getValue(property.getName());
+                    Object value = EntityAccessor.getEntityValue(entity, property.getName());
                     if (value != null) {
                         if (value instanceof Collection) {
                             for (Object item : ((Collection) value)) {

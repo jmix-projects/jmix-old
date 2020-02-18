@@ -16,16 +16,16 @@
 
 package entity_enhancing
 
-import test_support.addon1.TestAddon1Configuration
-import test_support.addon1.entity.TestAddon1Entity
-import test_support.AppContextTestExecutionListener
-import test_support.app.TestAppConfiguration
-import test_support.app.entity.Pet
 import io.jmix.core.JmixCoreConfiguration
-import io.jmix.core.metamodel.model.Instance
+import io.jmix.core.entity.EntityPropertyChangeListener
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestExecutionListeners
 import spock.lang.Specification
+import test_support.AppContextTestExecutionListener
+import test_support.addon1.TestAddon1Configuration
+import test_support.addon1.entity.TestAddon1Entity
+import test_support.app.TestAppConfiguration
+import test_support.app.entity.Pet
 
 @ContextConfiguration(classes = [TestAppConfiguration, TestAddon1Configuration, JmixCoreConfiguration])
 @TestExecutionListeners(value = AppContextTestExecutionListener,
@@ -35,7 +35,7 @@ class EntityEnhancingTest extends Specification {
     def "JPA entity is enhanced"() {
 
         def pet = new Pet()
-        Instance.PropertyChangeListener listener = Mock()
+        EntityPropertyChangeListener listener = Mock()
         pet.addPropertyChangeListener(listener)
 
         when:
@@ -48,7 +48,7 @@ class EntityEnhancingTest extends Specification {
     def "non-JPA entity is enhanced"() {
 
         def entity = new TestAddon1Entity()
-        Instance.PropertyChangeListener listener = Mock()
+        EntityPropertyChangeListener listener = Mock()
         entity.addPropertyChangeListener(listener)
 
         when:

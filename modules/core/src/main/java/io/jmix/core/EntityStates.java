@@ -196,7 +196,7 @@ public class EntityStates {
                 FetchPlan propertyView = property.getFetchPlan();
 
                 if (propertyView != null && metadataTools.isPersistent(metaProperty)) {
-                    Object value = entity.getValue(metaProperty.getName());
+                    Object value = EntityAccessor.getEntityValue(entity, metaProperty.getName());
 
                     if (value != null) {
                         if (!metaProperty.getRange().getCardinality().isMany()) {
@@ -298,7 +298,7 @@ public class EntityStates {
                 FetchPlan propertyFetchPlan = property.getFetchPlan();
 
                 if (propertyFetchPlan != null && metadataTools.isPersistent(metaProperty)) {
-                    Object value = entity.getValue(metaProperty.getName());
+                    Object value = EntityAccessor.getEntityValue(entity, metaProperty.getName());
 
                     if (value != null) {
                         if (!metaProperty.getRange().getCardinality().isMany()) {

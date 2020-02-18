@@ -14,11 +14,24 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.model.impl;
+package io.jmix.core.metamodel.model;
 
-import io.jmix.core.entity.EntityPropertyChangeListener;
+/**
+ * Property path descriptor.
+ */
+public interface EntityPropertyPath {
+    /**
+     * @return names of properties
+     */
+    String[] getPropertyNames();
 
-public interface ItemPropertyChangeNotifier {
+    /**
+     * @return first property name
+     */
+    String getFirstPropertyName();
 
-    void itemPropertyChanged(EntityPropertyChangeListener.PropertyChangeEvent e);
+    /**
+     * @return true if property path represents single property name
+     */
+    boolean isDirectProperty();
 }

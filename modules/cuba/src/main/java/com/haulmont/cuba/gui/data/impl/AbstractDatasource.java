@@ -20,7 +20,8 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.commons.events.EventRouter;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityPropertyChangeListener;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.executors.BackgroundWorker;
 import com.haulmont.cuba.gui.data.DataSupplier;
@@ -54,7 +55,7 @@ public abstract class AbstractDatasource<T extends Entity> implements Datasource
     protected Collection<Entity> itemsToCreate = new HashSet<>();
     protected Collection<Entity> itemsToUpdate = new HashSet<>();
     protected Collection<Entity> itemsToDelete = new HashSet<>();
-    protected Instance.PropertyChangeListener listener = new ItemListener();
+    protected EntityPropertyChangeListener listener = new ItemListener();
 
     protected boolean listenersEnabled = true;
 
@@ -242,20 +243,20 @@ public abstract class AbstractDatasource<T extends Entity> implements Datasource
         this.loadDynamicAttributes = value;
     }
 
-    protected void attachListener(Instance item) {
+    protected void attachListener(Entity item) {
         if (item == null) {
             return;
         }
 
-        item.addPropertyChangeListener(listener);
+        EntityAccessor.addPropertyChangeListener(item, listener);
     }
 
-    protected void detachListener(Instance item) {
+    protected void detachListener(Entity item) {
         if (item == null) {
             return;
         }
 
-        item.removePropertyChangeListener(listener);
+        EntityAccessor.removePropertyChangeListener(item, listener);
     }
 
     protected void fireItemChanged(T prevItem) {
@@ -270,10 +271,10 @@ public abstract class AbstractDatasource<T extends Entity> implements Datasource
         getEventRouter().fireEvent(StateChangeListener.class, StateChangeListener::stateChanged, stateChangeEvent);
     }
 
-    protected class ItemListener implements Instance.PropertyChangeListener {
+    protected class ItemListener implements EntityPropertyChangeListener {
         @SuppressWarnings("unchecked")
         @Override
-        public void propertyChanged(Instance.PropertyChangeEvent e) {
+        public void propertyChanged(EntityPropertyChangeListener.PropertyChangeEvent e) {
             if (!listenersEnabled) {
                 return;
             }

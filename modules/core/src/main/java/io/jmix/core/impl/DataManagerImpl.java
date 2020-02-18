@@ -17,10 +17,7 @@
 package io.jmix.core.impl;
 
 import io.jmix.core.*;
-import io.jmix.core.entity.EmbeddableEntity;
-import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.IdProxy;
-import io.jmix.core.entity.KeyValueEntity;
+import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.validation.EntityValidationException;
@@ -228,9 +225,9 @@ public class DataManagerImpl extends DataManagerSupport implements DataManager {
                     }
                     String relatedPropertyName = relatedProperties.get(0);
                     if (entityStates.isLoaded(entity, relatedPropertyName)) {
-                        Entity refEntity = entity.getValue(property.getName());
+                        Entity refEntity = EntityAccessor.getEntityValue(entity, property.getName());
                         if (refEntity == null) {
-                            entity.setValue(relatedPropertyName, null);
+                            EntityAccessor.setEntityValue(entity, relatedPropertyName, null);
                         } else {
                             Object refEntityId = refEntity.getId();
                             if (refEntityId instanceof IdProxy) {
@@ -242,17 +239,17 @@ public class DataManagerImpl extends DataManagerSupport implements DataManager {
                                         log.warn("No entity with ID={} in the context, skip handling different data store", refEntityId);
                                     }
                                 } else {
-                                    entity.setValue(relatedPropertyName, realId);
+                                    EntityAccessor.setEntityValue(entity, relatedPropertyName, realId);
                                 }
                             } else if (refEntityId instanceof EmbeddableEntity) {
                                 MetaProperty relatedProperty = metaClass.getProperty(relatedPropertyName);
                                 if (!relatedProperty.getRange().isClass()) {
                                     log.warn("PK of entity referenced by {} is a EmbeddableEntity, but related property {} is not", property, relatedProperty);
                                 } else {
-                                    entity.setValue(relatedPropertyName, metadataTools.copy((Entity) refEntityId));
+                                    EntityAccessor.setEntityValue(entity, relatedPropertyName, metadataTools.copy((Entity) refEntityId));
                                 }
                             } else {
-                                entity.setValue(relatedPropertyName, refEntityId);
+                                EntityAccessor.setEntityValue(entity, relatedPropertyName, refEntityId);
                             }
                         }
                     }

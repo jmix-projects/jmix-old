@@ -21,6 +21,7 @@ import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.components.AggregationInfo;
@@ -117,7 +118,7 @@ public class DatasourceTableItems<E extends Entity<K>, K>
     @Override
     public Object getItemValue(Object itemId, Object propertyId) {
         MetaPropertyPath propertyPath = (MetaPropertyPath) propertyId;
-        return datasource.getItemNN(itemId).getValueEx(propertyPath);
+        return EntityAccessor.getEntityValueEx(datasource.getItemNN(itemId), propertyPath);
     }
 
     @Override

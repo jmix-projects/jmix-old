@@ -20,6 +20,7 @@ import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.BaseEntityInternalAccess;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.entity.SecurityState;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -135,7 +136,7 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
             if (!metadataTools.isSystem(metaProperty)
                     && !metaProperty.isReadOnly()
                     && !security.isEntityAttrUpdatePermitted(metaClass, metaProperty.getName())) {
-                entity.setValue(metaProperty.getName(), null);
+                EntityAccessor.setEntityValue(entity, metaProperty.getName(), null);
             }
         }
     }
@@ -155,7 +156,7 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
         for (MetaProperty metaProperty : metadata.getClass(entity).getProperties()) {
             String name = metaProperty.getName();
             if (metadataTools.isEmbedded(metaProperty) && entityStates.isLoaded(entity, name)) {
-                Entity embedded = entity.getValue(name);
+                Entity embedded = EntityAccessor.getEntityValue(entity, name);
                 applySecurityToFetchGroup(embedded);
             }
         }

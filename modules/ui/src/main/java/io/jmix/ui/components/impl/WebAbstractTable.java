@@ -32,6 +32,7 @@ import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.entity.Presentation;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
 import io.jmix.core.metamodel.datatypes.Datatype;
@@ -1168,7 +1169,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                     String captionProperty = column.getXmlDescriptor().attributeValue("captionProperty");
                     if (StringUtils.isNotEmpty(captionProperty)) {
                         E item = getItems().getItemNN(rowId);
-                        Object captionValue = item.getValueEx(captionProperty);
+                        Object captionValue = EntityAccessor.getEntityValueEx(item, captionProperty);
                         return captionValue != null ? String.valueOf(captionValue) : null;
                     }
                 }
@@ -3199,7 +3200,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                         && dataBinding != null) {
                     Entity item = dataBinding.getTableItems().getItem(itemId);
                     if (item != null) {
-                        Boolean value = item.getValueEx(propertyPath);
+                        Boolean value = EntityAccessor.getEntityValueEx(item, propertyPath);
                         if (BooleanUtils.isTrue(value)) {
                             style = BOOLEAN_CELL_STYLE_TRUE;
                         } else {
@@ -3220,10 +3221,10 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
         E item = entityTableSource.getItemNN(itemId);
 
-        Object value = item.getValueEx(propertyPath);
+        Object value = EntityAccessor.getEntityValueEx(item, propertyPath);
         String stringValue;
         if (value instanceof String) {
-            stringValue = item.getValueEx(propertyPath);
+            stringValue = EntityAccessor.getEntityValueEx(item, propertyPath);
         } else {
             MetaProperty metaProperty = propertyPath.getMetaProperty();
 
@@ -3341,9 +3342,9 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         }
     }
 
-    protected Object getValueExIgnoreUnfetched(Instance instance, String[] properties) {
+    protected Object getValueExIgnoreUnfetched(Entity instance, String[] properties) {
         Object currentValue = null;
-        Instance currentInstance = instance;
+        Entity currentInstance = instance;
         for (String property : properties) {
             if (currentInstance == null) {
                 break;
@@ -3356,12 +3357,12 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                 return null;
             }
 
-            currentValue = currentInstance.getValue(property);
+            currentValue = EntityAccessor.getEntityValue(currentInstance, property);
             if (currentValue == null) {
                 break;
             }
 
-            currentInstance = currentValue instanceof Instance ? (Instance) currentValue : null;
+            currentInstance = currentValue instanceof Entity ? (Entity) currentValue : null;
         }
         return currentValue;
     }

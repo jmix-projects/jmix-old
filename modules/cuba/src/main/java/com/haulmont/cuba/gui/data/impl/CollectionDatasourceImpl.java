@@ -22,7 +22,7 @@ import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.LoadContext;
 import io.jmix.core.commons.collections.ReadOnlyLinkedMapValuesView;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
@@ -517,7 +517,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
         if (data.containsKey(item.getId())) {
             if (PersistenceHelper.isNew(item)) {
                 Object existingItem = data.get(item.getId());
-                metadata.getTools().copy(item, (Instance) existingItem);
+                metadata.getTools().copy(item, (Entity) existingItem);
                 modified((T) existingItem);
             } else {
                 updateItem(item);
@@ -710,8 +710,8 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
 
     protected void detachListener(Collection instances) {
         for (Object obj : instances) {
-            if (obj instanceof Instance)
-                detachListener((Instance) obj);
+            if (obj instanceof Entity)
+                detachListener((Entity) obj);
         }
     }
 
@@ -727,8 +727,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
     }
 
     protected Object getItemValue(MetaPropertyPath property, K itemId) {
-        Instance instance = getItemNN(itemId);
-        return instance.getValueEx(property);
+        return EntityAccessor.getEntityValueEx(getItemNN(itemId), property);
     }
 
     @Override

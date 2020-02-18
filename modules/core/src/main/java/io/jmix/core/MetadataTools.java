@@ -67,7 +67,6 @@ public class MetadataTools {
     public static final String LENGTH_ANN_NAME = "jmix.length";
 
     public static final List<Class> SYSTEM_INTERFACES = ImmutableList.of(
-            Instance.class,
             Entity.class,
             BaseGenericIdEntity.class,
             Versioned.class,
@@ -150,8 +149,8 @@ public class MetadataTools {
             return datatype.format(value, userSessionSource.getLocale());
         } else if (range.isEnum()) {
             return messages.getMessage((Enum) value);
-        } else if (value instanceof Instance) {
-            return getInstanceName((Instance) value);
+        } else if (value instanceof Entity) {
+            return getInstanceName((Entity) value);
         } else if (value instanceof Collection) {
             @SuppressWarnings("unchecked")
             Collection<Object> collection = (Collection<Object>) value;
@@ -172,8 +171,8 @@ public class MetadataTools {
     public String format(@Nullable Object value) {
         if (value == null) {
             return "";
-        } else if (value instanceof Instance) {
-            return getInstanceName((Instance) value);
+        } else if (value instanceof Entity) {
+            return getInstanceName((Entity) value);
         } else if (value instanceof Enum) {
             return messages.getMessage((Enum) value, userSessionSource.getLocale());
         } else if (value instanceof Collection) {
@@ -197,7 +196,7 @@ public class MetadataTools {
      * @return Instance name as defined by {@link io.jmix.core.metamodel.annotations.NamePattern}
      * or <code>toString()</code>.
      */
-    public String getInstanceName(Instance instance) {
+    public String getInstanceName(Entity instance) {
         checkNotNullArgument(instance, "instance is null");
 
         MetaClass metaClass = metadata.getClass(instance.getClass());
@@ -222,7 +221,7 @@ public class MetadataTools {
             String fieldName = rec.fields[i];
             MetaProperty property = metaClass.getProperty(fieldName);
 
-            Object value = instance.getValue(fieldName);
+            Object value = EntityAccessor.getEntityValue(instance, fieldName);
             values[i] = format(value, property);
         }
 
@@ -991,7 +990,7 @@ public class MetadataTools {
      * @param source source instance
      * @return new instance of the same Java class as source
      */
-    public <T extends Instance> T copy(T source) {
+    public <T extends Entity> T copy(T source) {
         checkNotNullArgument(source, "source is null");
 
         @SuppressWarnings("unchecked")
@@ -1011,7 +1010,7 @@ public class MetadataTools {
      * @param source source instance
      * @param dest   destination instance
      */
-    public void copy(Instance source, Instance dest) {
+    public void copy(Entity source, Entity dest) {
         checkNotNullArgument(source, "source is null");
         checkNotNullArgument(dest, "dest is null");
 
@@ -1022,7 +1021,7 @@ public class MetadataTools {
             MetaProperty dstProperty = destMetaClass.findProperty(name);
             if (dstProperty != null && !dstProperty.isReadOnly() && persistentAttributesLoadChecker.isLoaded(source, name)) {
                 try {
-                    dest.setValue(name, source.getValue(name));
+                    EntityAccessor.setEntityValue(dest, name, EntityAccessor.getEntityValue(source, name));
                 } catch (RuntimeException e) {
                     Throwable cause = ExceptionUtils.getRootCause(e);
                     if (cause == null)
@@ -1129,7 +1128,7 @@ public class MetadataTools {
                 continue;
             }
 
-            Object value = source.getValue(name);
+            Object value = EntityAccessor.getEntityValue(source, name);
             if (value == null) {
                 continue;
             }
@@ -1153,7 +1152,7 @@ public class MetadataTools {
                         }
                         dstCollection.add(reloadedRef);
                     }
-                    destination.setValue(name, dstCollection);
+                    EntityAccessor.setEntityValue(destination, name, dstCollection);
                 } else {
                     Entity srcRef = (Entity) value;
                     Entity reloadedRef = entitiesHolder.find(srcRef.getClass(), srcRef.getId());
@@ -1161,10 +1160,10 @@ public class MetadataTools {
                         reloadedRef = entitiesHolder.create(srcRef.getClass(), srcRef.getId());
                         deepCopy(srcRef, reloadedRef, entitiesHolder);
                     }
-                    destination.setValue(name, reloadedRef);
+                    EntityAccessor.setEntityValue(destination, name, reloadedRef);
                 }
             } else {
-                destination.setValue(name, value);
+                EntityAccessor.setEntityValue(destination, name, value);
             }
         }
 
@@ -1186,7 +1185,7 @@ public class MetadataTools {
             visitor.visit(entity, property);
             if (property.getRange().isClass()) {
                 if (persistentAttributesLoadChecker.isLoaded(entity, property.getName())) {
-                    Object value = entity.getValue(property.getName());
+                    Object value = EntityAccessor.getEntityValue(entity, property.getName());
                     if (value != null) {
                         if (value instanceof Collection) {
                             for (Object item : ((Collection) value)) {
@@ -1226,15 +1225,15 @@ public class MetadataTools {
 
             visitor.visit(entity, metaProperty);
 
-            Object value = entity.getValue(property.getName());
+            Object value = EntityAccessor.getEntityValue(entity, property.getName());
 
             if (value != null && propertyView != null) {
                 if (value instanceof Collection) {
                     for (Object item : ((Collection) value)) {
-                        if (item instanceof Instance)
+                        if (item instanceof Entity)
                             internalTraverseAttributesByFetchPlan(propertyView, (Entity) item, visitor, visited, checkLoaded);
                     }
-                } else if (value instanceof Instance) {
+                } else if (value instanceof Entity) {
                     internalTraverseAttributesByFetchPlan(propertyView, (Entity) value, visitor, visited, checkLoaded);
                 }
             }
