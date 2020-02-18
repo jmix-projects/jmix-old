@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package io.jmix.data.impl;
+package com.haulmont.cuba.core.sys;
 
-import io.jmix.data.Transaction;
-import io.jmix.data.TransactionParams;
-import io.jmix.data.Transactions;
+import com.haulmont.cuba.core.Transaction;
+import com.haulmont.cuba.core.TransactionParams;
+import com.haulmont.cuba.core.Transactions;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.Stores;
+import io.jmix.data.impl.PersistenceSupport;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2018 Haulmont.
+ * Copyright 2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package io.jmix.data.impl;
+package com.haulmont.cuba.core.sys;
 
 import io.jmix.core.*;
 import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.KeyValueEntity;
-import io.jmix.data.TransactionalDataManager;
-import io.jmix.data.Transactions;
+import com.haulmont.cuba.core.TransactionalDataManager;
+import com.haulmont.cuba.core.Transactions;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
