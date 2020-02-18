@@ -35,7 +35,6 @@ public abstract class BaseDbGeneratedIdEntity<K extends Number> extends BaseGene
     @Transient
     protected IdProxy<K> idProxy;
 
-    @Override
     public IdProxy<K> getId() {
         if (idProxy == null) {
             idProxy = new IdProxy<>(this);

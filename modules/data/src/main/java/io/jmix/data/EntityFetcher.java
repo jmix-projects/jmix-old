@@ -143,7 +143,7 @@ public class EntityFetcher {
                                 try (Transaction tx = persistence.getTransaction(storeName)) {
                                     EntityManager em = persistence.getEntityManager(storeName);
                                     @SuppressWarnings("unchecked")
-                                    Entity managed = em.find(e.getClass(), e.getId());
+                                    Entity managed = em.find(e.getClass(), EntityAccessor.getEntityId(e));
                                     if (managed != null) { // the instance here can be null if it has been deleted
                                         EntityAccessor.setEntityValue(entity, property.getName(), managed);
                                         fetch(managed, propertyFetchPlan, visited, optimizeForDetached);

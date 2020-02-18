@@ -258,7 +258,7 @@ public class LookupBuilderProcessor {
                 getFetchPlanForCollectionContainer(collectionDc, initializeMasterReference, inverseMetaProperty) :
                 null;
         for (E item : selectedItems) {
-            if (!collectionDc.containsItem(item.getId())) {
+            if (!collectionDc.containsItem(EntityAccessor.getEntityId(item))) {
                 if (viewForCollectionContainer != null && !entityStates.isLoadedWithFetchPlan(item, viewForCollectionContainer)) {
                     item = dataManager.reload(item, viewForCollectionContainer);
                 }

@@ -19,6 +19,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import io.jmix.core.Id;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.data.EntityFetcher;
 import io.jmix.data.Query;
 import io.jmix.data.TypedQuery;
@@ -560,11 +561,11 @@ public class QueryImpl<T> implements TypedQuery<T> {
 
     protected Object handleImplicitConversions(Object value) {
         if (value instanceof Entity)
-            value = ((Entity) value).getId();
+            value = EntityAccessor.getEntityId(((Entity) value));
         else if (value instanceof Collection) {
             List<Object> list = new ArrayList<>(((Collection) value).size());
             for (Object obj : ((Collection) value)) {
-                list.add(obj instanceof Entity ? ((Entity) obj).getId() : obj);
+                list.add(obj instanceof Entity ? EntityAccessor.getEntityId(((Entity) obj)) : obj);
             }
             value = list;
         } else if (value instanceof EnumClass) {
@@ -782,7 +783,7 @@ public class QueryImpl<T> implements TypedQuery<T> {
 
     protected Object convertToCollectionOfIds(Object value) {
         return ((Collection<?>) value).stream()
-                .map(it -> it instanceof Entity ? ((Entity) it).getId() : ((EnumClass) it).getId())
+                .map(it -> it instanceof Entity ? EntityAccessor.getEntityId(((Entity) it)) : ((EnumClass) it).getId())
                 .collect(Collectors.toList());
     }
 

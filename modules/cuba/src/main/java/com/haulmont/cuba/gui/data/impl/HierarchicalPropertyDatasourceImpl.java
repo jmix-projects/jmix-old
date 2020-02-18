@@ -56,7 +56,7 @@ public class HierarchicalPropertyDatasourceImpl<T extends Entity<K>, K>
                 Entity<K> currentItem = getItemNN(id);
                 Object parentItem = EntityAccessor.getEntityValue(currentItem, hierarchyPropertyName);
                 if (parentItem != null && parentItem.equals(item))
-                    res.add(currentItem.getId());
+                    res.add(EntityAccessor.getEntityId(currentItem));
             }
 
             if (StringUtils.isNotBlank(sortPropertyName)) {
@@ -89,7 +89,7 @@ public class HierarchicalPropertyDatasourceImpl<T extends Entity<K>, K>
                 return null;
             else {
                 Entity<K> value = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-                return value == null ? null : value.getId();
+                return value == null ? null : EntityAccessor.getEntityId(value);
             }
         }
         return null;
@@ -105,7 +105,7 @@ public class HierarchicalPropertyDatasourceImpl<T extends Entity<K>, K>
             for (K id : ids) {
                 Entity<K> item = getItemNN(id);
                 Object value = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-                if (value == null || !containsItem(((T) value).getId())) result.add(item.getId());
+                if (value == null || !containsItem(EntityAccessor.getEntityId(((T) value)))) result.add(EntityAccessor.getEntityId(item));
             }
             return result;
         } else {
@@ -121,7 +121,7 @@ public class HierarchicalPropertyDatasourceImpl<T extends Entity<K>, K>
 
         if (hierarchyPropertyName != null) {
             Object value = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-            return (value == null || !containsItem(((T) value).getId()));
+            return (value == null || !containsItem(EntityAccessor.getEntityId(((T) value))));
         } else {
             return true;
         }

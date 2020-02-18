@@ -36,7 +36,6 @@ public abstract class BaseIntegerIdEntity extends BaseGenericIdEntity<Integer> {
     @Column(name = "ID")
     protected Integer id;
 
-    @Override
     public Integer getId() {
         return id;
     }

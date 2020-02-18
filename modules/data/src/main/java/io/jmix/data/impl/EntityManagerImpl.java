@@ -113,9 +113,9 @@ public class EntityManagerImpl implements EntityManager {
         String storeName = support.getStorageName(delegate.unwrap(UnitOfWork.class));
         entityListenerMgr.fireListener(entity, EntityListenerType.BEFORE_ATTACH, storeName);
 
-        if ((entityStates.isNew(entity) || !entityStates.isDetached(entity)) && entity.getId() != null) {
+        if ((entityStates.isNew(entity) || !entityStates.isDetached(entity)) && EntityAccessor.getEntityId(entity) != null) {
             // if a new instance is passed to merge(), we suppose it is persistent but "not detached"
-            Entity destEntity = findOrCreate(entity.getClass(), entity.getId());
+            Entity destEntity = findOrCreate(entity.getClass(), EntityAccessor.getEntityId(entity));
             deepCopyIgnoringNulls(entity, destEntity, Sets.newIdentityHashSet());
             if (entityStates.isNew(destEntity)) {
                 entityPersistingEventMgr.publishEvent(entity);
@@ -299,11 +299,11 @@ public class EntityManagerImpl implements EntityManager {
     public <T extends Entity> T reload(T entity, String... fetchPlanNames) {
         Preconditions.checkNotNullArgument(entity, "entity is null");
 
-        if (entity.getId() instanceof IdProxy && ((IdProxy) entity.getId()).get() == null) {
+        if (EntityAccessor.getEntityId(entity) instanceof IdProxy && ((IdProxy) EntityAccessor.getEntityId(entity)).get() == null) {
             return null;
         }
 
-        Entity resultEntity = find(entity.getClass(), entity.getId(), fetchPlanNames);
+        Entity resultEntity = find(entity.getClass(), EntityAccessor.getEntityId(entity), fetchPlanNames);
         return (T) resultEntity;
     }
 
@@ -385,7 +385,7 @@ public class EntityManagerImpl implements EntityManager {
                     if (!equal) {
                         dstCollection.clear();
                         for (Entity srcRef : srcCollection) {
-                            Entity reloadedRef = findOrCreate(srcRef.getClass(), srcRef.getId());
+                            Entity reloadedRef = findOrCreate(srcRef.getClass(), EntityAccessor.getEntityId(srcRef));
                             dstCollection.add(reloadedRef);
                             deepCopyIgnoringNulls(srcRef, reloadedRef, visited);
                         }
@@ -396,7 +396,7 @@ public class EntityManagerImpl implements EntityManager {
                     if (srcRef.equals(destRef)) {
                         deepCopyIgnoringNulls(srcRef, destRef, visited);
                     } else {
-                        Entity reloadedRef = findOrCreate(srcRef.getClass(), srcRef.getId());
+                        Entity reloadedRef = findOrCreate(srcRef.getClass(), EntityAccessor.getEntityId(srcRef));
                         EntityAccessor.setEntityValue(dest, name, reloadedRef);
                         deepCopyIgnoringNulls(srcRef, reloadedRef, visited);
                     }
@@ -436,16 +436,16 @@ public class EntityManagerImpl implements EntityManager {
             CubaUtil.setOriginalSoftDeletion(false);
 
             UUID uuid = null;
-            if (entity.getId() instanceof IdProxy) {
-                uuid = ((IdProxy) entity.getId()).getUuid();
+            if (EntityAccessor.getEntityId(entity) instanceof IdProxy) {
+                uuid = ((IdProxy) EntityAccessor.getEntityId(entity)).getUuid();
             }
 
             T merged = delegate.merge(entity);
 
-            if (entity.getId() instanceof IdProxy
+            if (EntityAccessor.getEntityId(entity) instanceof IdProxy
                     && uuid != null
-                    && !uuid.equals(((IdProxy) merged.getId()).getUuid())) {
-                ((IdProxy) merged.getId()).setUuid(uuid);
+                    && !uuid.equals(((IdProxy) EntityAccessor.getEntityId(merged)).getUuid())) {
+                ((IdProxy) EntityAccessor.getEntityId(merged)).setUuid(uuid);
             }
 
             // copy non-persistent attributes to the resulting merged instance

@@ -227,7 +227,7 @@ public class CreateAction extends ListAction
 
             Entity parentItem = datasource.getItem();
             // datasource.getItem() may contain deleted item
-            if (parentItem != null && !datasource.containsItem(parentItem.getId())) {
+            if (parentItem != null && !datasource.containsItem(EntityAccessor.getEntityId(parentItem))) {
                 parentItem = null;
             }
 

@@ -17,6 +17,7 @@
 package io.jmix.core;
 
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,11 +45,11 @@ public final class Ids<T extends Entity<K>, K> extends ArrayList<Id<T, K>> {
 
         for (T entity : entities) {
             checkNotNullArgument(entity);
-            checkNotNullArgument(entity.getId());
+            checkNotNullArgument(EntityAccessor.<K>getEntityId(entity));
 
             @SuppressWarnings("unchecked")
             Class<T> entityClass = (Class<T>) entity.getClass();
-            ids.add(Id.of(entity.getId(), entityClass));
+            ids.add(Id.of(EntityAccessor.getEntityId(entity), entityClass));
         }
 
         return ids;

@@ -18,6 +18,7 @@ package com.haulmont.cuba.gui.data.impl;
 
 import io.jmix.core.entity.Entity;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
+import io.jmix.core.entity.EntityAccessor;
 
 import java.util.Collection;
 import java.util.Map;
@@ -49,7 +50,7 @@ public abstract class CustomCollectionDatasource<T extends Entity<K>, K>
 
         if (entities != null) {
             for (T entity : entities) {
-                data.put(entity.getId(), entity);
+                data.put(EntityAccessor.<K>getEntityId(entity), entity);
                 attachListener(entity);
             }
         }

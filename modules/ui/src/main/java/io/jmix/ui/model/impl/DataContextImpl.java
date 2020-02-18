@@ -230,9 +230,9 @@ public class DataContextImpl implements DataContext {
     }
 
     protected Object makeKey(Entity entity) {
-        Object id = entity.getId();
+        Object id = EntityAccessor.getEntityId(entity);
         if (id != null) {
-            return entity.getId();
+            return EntityAccessor.getEntityId(entity);
         } else {
             return entity;
         }
@@ -349,7 +349,7 @@ public class DataContextImpl implements DataContext {
     @SuppressWarnings("unchecked")
     protected void copySystemState(Entity srcEntity, Entity dstEntity) {
         if (dstEntity instanceof BaseGenericIdEntity) {
-            ((BaseGenericIdEntity) dstEntity).setId(srcEntity.getId());
+            ((BaseGenericIdEntity) dstEntity).setId(EntityAccessor.getEntityId(srcEntity));
 
             getEntitySystemStateSupport().copySystemState((BaseGenericIdEntity) srcEntity, (BaseGenericIdEntity) dstEntity);
 
@@ -670,7 +670,7 @@ public class DataContextImpl implements DataContext {
         for (int i = 0; i < isolatedEntities.size(); i++) {
             Entity isolatedEntity = (Entity) isolatedEntities.get(i);
             Entity entity = entities.get(i);
-            if (entity.getId() == null) {
+            if (EntityAccessor.getEntityId(entity) == null) {
                 nullIdEntitiesMap.put(isolatedEntity, entity);
             }
         }

@@ -44,7 +44,6 @@ public abstract class BaseUuidEntity extends BaseGenericIdEntity<UUID> implement
         id = UuidProvider.createUuid();
     }
 
-    @Override
     public UUID getId() {
         return id;
     }

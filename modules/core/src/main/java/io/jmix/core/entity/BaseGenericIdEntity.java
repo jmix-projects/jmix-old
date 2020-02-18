@@ -152,15 +152,15 @@ public abstract class BaseGenericIdEntity<T> extends AbstractInstance implements
         if (other == null || getClass() != other.getClass())
             return false;
 
-        if (getId() == null && ((BaseGenericIdEntity) other).getId() == null)
+        if (EntityAccessor.<T>getEntityId(this) == null && EntityAccessor.getEntityId(((BaseGenericIdEntity) other)) == null)
             return false;
 
-        return Objects.equals(getId(), ((BaseGenericIdEntity) other).getId());
+        return Objects.equals(EntityAccessor.<T>getEntityId(this), EntityAccessor.getEntityId(((BaseGenericIdEntity) other)));
     }
 
     @Override
     public int hashCode() {
-        return getId() != null ? getId().hashCode() : super.hashCode();
+        return EntityAccessor.<T>getEntityId(this) != null ? EntityAccessor.<T>getEntityId(this).hashCode() : super.hashCode();
     }
 
     @Override
@@ -176,6 +176,6 @@ public abstract class BaseGenericIdEntity<T> extends AbstractInstance implements
             state += "removed,";
         if (state.length() > 0)
             state = state.substring(0, state.length() - 1);
-        return getClass().getName() + "-" + getId() + " [" + state + "]";
+        return getClass().getName() + "-" + EntityAccessor.<T>getEntityId(this) + " [" + state + "]";
     }
 }

@@ -40,6 +40,5 @@ public abstract class BaseStringIdEntity extends BaseGenericIdEntity<String> {
 
     private static final long serialVersionUID = -1887225952123433245L;
 
-    @Override
     public abstract String getId();
 }

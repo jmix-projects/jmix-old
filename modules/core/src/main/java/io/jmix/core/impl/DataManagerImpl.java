@@ -229,11 +229,11 @@ public class DataManagerImpl extends DataManagerSupport implements DataManager {
                         if (refEntity == null) {
                             EntityAccessor.setEntityValue(entity, relatedPropertyName, null);
                         } else {
-                            Object refEntityId = refEntity.getId();
+                            Object refEntityId = EntityAccessor.getEntityId(refEntity);
                             if (refEntityId instanceof IdProxy) {
                                 Object realId = ((IdProxy) refEntityId).get();
                                 if (realId == null) {
-                                    if (allEntities.stream().anyMatch(e -> e.getId().equals(refEntityId))) {
+                                    if (allEntities.stream().anyMatch(e -> EntityAccessor.getEntityId(e).equals(refEntityId))) {
                                         repeatRequired = true;
                                     } else {
                                         log.warn("No entity with ID={} in the context, skip handling different data store", refEntityId);

@@ -18,7 +18,6 @@ package spec.haulmont.cuba.web.datacontext
 
 import com.haulmont.cuba.core.model.sales.Order
 import com.haulmont.cuba.core.model.sales.OrderLine
-import com.haulmont.cuba.core.model.sales.OrderLineParam
 import io.jmix.core.EntityStates
 import io.jmix.core.entity.BaseEntityInternalAccess
 import io.jmix.security.entity.Role

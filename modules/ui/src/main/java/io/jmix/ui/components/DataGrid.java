@@ -20,12 +20,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.data.DataGridItems;
 import io.jmix.ui.components.data.ValueSourceProvider;
-import io.jmix.ui.components.data.datagrid.DatasourceDataGridItems;
-import io.jmix.ui.components.data.datagrid.SortableDatasourceDataGridItems;
 import io.jmix.ui.icons.CubaIcon;
 import io.jmix.ui.model.InstanceContainer;
 
@@ -657,7 +656,7 @@ public interface DataGrid<E extends Entity> extends ListComponent<E>, HasButtons
          */
         @Deprecated
         public Object getItemId() {
-            return item.getId();
+            return EntityAccessor.getEntityId(item);
         }
 
         /**
@@ -1427,7 +1426,7 @@ public interface DataGrid<E extends Entity> extends ListComponent<E>, HasButtons
          */
         @Deprecated
         public Object getItemId() {
-            return item.getId();
+            return EntityAccessor.getEntityId(item);
         }
 
         /**

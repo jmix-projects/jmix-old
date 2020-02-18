@@ -36,7 +36,6 @@ public abstract class BaseLongIdEntity extends BaseGenericIdEntity<Long> {
     @Column(name = "ID")
     protected Long id;
 
-    @Override
     public Long getId() {
         return id;
     }

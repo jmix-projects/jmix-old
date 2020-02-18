@@ -201,7 +201,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
         }
 
         Class<? extends Entity> entityClass = item.getClass();
-        Object entityId = item.getId();
+        Object entityId = EntityAccessor.getEntityId(item);
 
         EntityStates entityStates = getBeanLocator().get(EntityStates.class);
 
@@ -209,7 +209,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
             if (!PersistenceHelper.isNew(item)
                     && !parentDs.getItemsToCreate().contains(item) && !parentDs.getItemsToUpdate().contains(item)
                     && parentDs instanceof CollectionDatasource
-                    && ((CollectionDatasource) parentDs).containsItem(item.getId())
+                    && ((CollectionDatasource) parentDs).containsItem(EntityAccessor.getEntityId(item))
                     && !entityStates.isLoadedWithFetchPlan(item, ds.getView())) {
                 item = dataservice.reload(item, ds.getView(), ds.getMetaClass(), ds.getLoadDynamicAttributes());
                 if (parentDs instanceof CollectionPropertyDatasourceImpl) {

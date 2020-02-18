@@ -22,6 +22,8 @@ import java.util.UUID;
 
 public interface User extends UserDetails, Entity<UUID> {
 
+    UUID getId();
+
     String getLogin();
 
     String getLoginLowerCase();

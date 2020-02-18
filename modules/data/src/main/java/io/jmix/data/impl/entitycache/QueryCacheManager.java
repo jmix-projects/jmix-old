@@ -20,6 +20,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import io.jmix.core.cluster.ClusterListenerAdapter;
 import io.jmix.core.cluster.ClusterManager;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.data.EntityManager;
 import io.jmix.data.Persistence;
 import io.jmix.core.Metadata;
@@ -149,7 +150,7 @@ public class QueryCacheManager {
         if (resultList.size() > 0) {
             List idList = (List) resultList.stream()
                     .filter(item -> item instanceof BaseGenericIdEntity)
-                    .map(item -> ((BaseGenericIdEntity) item).getId())
+                    .map(item -> EntityAccessor.getEntityId(((BaseGenericIdEntity) item)))
                     .collect(Collectors.toList());
             queryResult = new QueryResult(idList, type, getDescendants(relatedTypes));
         } else {
@@ -171,7 +172,7 @@ public class QueryCacheManager {
     public <T> void putResultToCache(QueryKey queryKey, T result, String type, Set<String> relatedTypes, RuntimeException exception) {
         QueryResult queryResult;
         if (exception == null) {
-            queryResult = new QueryResult(Collections.singletonList(((BaseGenericIdEntity) result).getId()), type, relatedTypes);
+            queryResult = new QueryResult(Collections.singletonList(EntityAccessor.getEntityId(((BaseGenericIdEntity) result))), type, relatedTypes);
         } else {
             queryResult = new QueryResult(Collections.emptyList(), type, relatedTypes, exception);
         }

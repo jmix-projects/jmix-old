@@ -358,17 +358,17 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
             setSelectedIds(Collections.emptyList());
         } else if (items.size() == 1) {
             E item = items.iterator().next();
-            if (tableItems.getItem(item.getId()) == null) {
+            if (tableItems.getItem(EntityAccessor.getEntityId(item)) == null) {
                 throw new IllegalArgumentException("Datasource doesn't contain item to select: " + item);
             }
-            setSelectedIds(Collections.singletonList(item.getId()));
+            setSelectedIds(Collections.singletonList(EntityAccessor.getEntityId(item)));
         } else {
             Set<Object> itemIds = new LinkedHashSet<>();
             for (Entity item : items) {
-                if (tableItems.getItem(item.getId()) == null) {
+                if (tableItems.getItem(EntityAccessor.getEntityId(item)) == null) {
                     throw new IllegalArgumentException("Datasource doesn't contain item to select: " + item);
                 }
-                itemIds.add(item.getId());
+                itemIds.add(EntityAccessor.getEntityId(item));
             }
             setSelectedIds(itemIds);
         }
@@ -1618,7 +1618,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
             EntityTableItems entityTableSource = (EntityTableItems) tableItems;
 
             if (entityTableSource.getSelectedItem() != null) {
-                newSelection.add(entityTableSource.getSelectedItem().getId());
+                newSelection.add(EntityAccessor.getEntityId(entityTableSource.getSelectedItem()));
             }
         }
 
@@ -2989,7 +2989,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
             return null;
         }
         Presentation def = presentations.getDefault();
-        return def == null ? null : def.getId();
+        return def == null ? null : EntityAccessor.<UUID>getEntityId(def);
     }
 
     @Override
@@ -3291,17 +3291,17 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         Preconditions.checkNotNullArgument(item);
         Preconditions.checkNotNullArgument(columnId);
 
-        component.requestFocus(item.getId(), getColumn(columnId).getId());
+        component.requestFocus(EntityAccessor.getEntityId(item), getColumn(columnId).getId());
     }
 
     @Override
     public void scrollTo(E item) {
         Preconditions.checkNotNullArgument(item);
-        if (!component.getItemIds().contains(item.getId())) {
+        if (!component.getItemIds().contains(EntityAccessor.getEntityId(item))) {
             throw new IllegalArgumentException("Unable to find item in Table");
         }
 
-        component.setCurrentPageFirstItemId(item.getId());
+        component.setCurrentPageFirstItemId(EntityAccessor.getEntityId(item));
     }
 
     protected void handleColumnCollapsed(com.vaadin.v7.ui.Table.ColumnCollapseEvent event) {

@@ -18,6 +18,7 @@ package io.jmix.core;
 
 import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaClass;
 
 import javax.annotation.Nullable;
@@ -58,13 +59,13 @@ public abstract class DataManagerSupport implements DataManager {
             metaClass = metadata.getSession().findClass(entity.getClass());
         }
         LoadContext<E> context = new LoadContext<>(metaClass);
-        context.setId(entity.getId());
+        context.setId(EntityAccessor.getEntityId(entity));
         context.setView(fetchPlan);
         context.setLoadDynamicAttributes(loadDynamicAttributes);
 
         E reloaded = load(context);
         if (reloaded == null)
-            throw new EntityAccessException(metaClass, entity.getId());
+            throw new EntityAccessException(metaClass, EntityAccessor.getEntityId(entity));
 
         return reloaded;
     }

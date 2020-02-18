@@ -46,7 +46,7 @@ public abstract class AbstractTreeTableDatasource<T extends Entity<K>, K>
         data.clear();
         for (Node<T> node : tree.toList()) {
             T entity = node.getData();
-            K id = entity.getId();
+            K id = EntityAccessor.getEntityId(entity);
 
             data.put(id, entity);
         }

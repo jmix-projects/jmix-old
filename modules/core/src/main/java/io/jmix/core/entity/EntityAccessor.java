@@ -27,6 +27,10 @@ import static io.jmix.core.metamodel.model.utils.EntityPaths.parseValuePath;
 
 public class EntityAccessor {
 
+    public static <K> K getEntityId(Entity<?> entity) {
+        return null;
+    }
+
     /**
      * Set an attribute value.
      * <br>

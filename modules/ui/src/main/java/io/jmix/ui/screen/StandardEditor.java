@@ -207,7 +207,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen
             container.setItem(mergedEntity);
         } else {
             InstanceLoader loader = getEditedEntityLoader();
-            loader.setEntityId(entityToEdit.getId());
+            loader.setEntityId(EntityAccessor.getEntityId(entityToEdit));
         }
     }
 
