@@ -821,7 +821,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
 
     private Object convertToCollectionOfIds(Object value) {
         return ((Collection<?>) value).stream()
-                .map(it -> it instanceof Entity ? ((Entity) it).getId() : ((EnumClass) it).getId())
+                .map(it -> it instanceof Entity ? EntityAccessor.getEntityId(((Entity) it)) : ((EnumClass) it).getId())
                 .collect(Collectors.toList());
     }
 

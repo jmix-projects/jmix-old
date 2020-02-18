@@ -300,7 +300,7 @@ public class PersistenceTools {
                     return RefId.createNotLoaded(property);
                 else {
                     Entity refEntity = (Entity) entity.getValue(property);
-                    return RefId.create(property, refEntity == null ? null : refEntity.getId());
+                    return RefId.create(property, refEntity == null ? null : EntityAccessor.getEntityId(refEntity));
                 }
             }
         }
@@ -371,7 +371,7 @@ public class PersistenceTools {
             if (table == null || primaryKey == null)
                 throw new RuntimeException("Unable to determine table or primary key name for " + entity);
 
-            deleteRecord(table, primaryKey, entity.getId());
+            deleteRecord(table, primaryKey, EntityAccessor.<Object>getEntityId(entity));
         }
     }
 

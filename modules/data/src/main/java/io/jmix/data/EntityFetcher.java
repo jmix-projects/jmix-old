@@ -143,7 +143,7 @@ public class EntityFetcher {
                             if (storeName != null) {
                                 storeAwareLocator.getTransactionTemplate(storeName).executeWithoutResult(transactionStatus -> {
                                     EntityManager em = storeAwareLocator.getEntityManager(storeName);
-                                    Entity managed = em.find(e.getClass(), e.getId());
+                                    Entity managed = em.find(e.getClass(), EntityAccessor.getEntityId(e));
                                     if (managed != null) { // the instance here can be null if it has been deleted
                                         EntityAccessor.setEntityValue(entity, property.getName(), managed);
                                         fetch(managed, propertyFetchPlan, visited, optimizeForDetached);

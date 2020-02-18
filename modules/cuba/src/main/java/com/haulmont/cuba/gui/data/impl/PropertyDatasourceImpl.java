@@ -169,7 +169,7 @@ public class PropertyDatasourceImpl<T extends Entity>
             if (parentDs instanceof CollectionDatasource) {
                 CollectionDatasource parentCollectionDs = (CollectionDatasource) parentDs;
                 for (Entity item : itemsToCreate) {
-                    if (parentCollectionDs.containsItem(item.getId())) {
+                    if (parentCollectionDs.containsItem(EntityAccessor.getEntityId(item))) {
                         parentCollectionDs.modifyItem(item);
                     } else {
                         parentCollectionDs.addItem(item);

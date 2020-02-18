@@ -15,6 +15,9 @@
  */
 package io.jmix.data.impl;
 
+import io.jmix.core.entity.EntityAccessor;
+import io.jmix.data.Persistence;
+import io.jmix.data.listener.*;
 import io.jmix.core.AppBeans;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.annotation.Listeners;
@@ -277,7 +280,7 @@ public class EntityListenerManager {
         if (log.isDebugEnabled()) {
             StringBuilder sb = new StringBuilder();
             sb.append("Executing ").append(type).append(" entity listener for ")
-                    .append(entity.getClass().getName()).append(" id=").append(entity.getId());
+                    .append(entity.getClass().getName()).append(" id=").append((Object) EntityAccessor.getEntityId(entity));
             if (type != EntityListenerType.BEFORE_DETACH && type != EntityListenerType.BEFORE_ATTACH) {
                 Set<String> dirty = persistenceTools.getDirtyFields(entity);
                 if (!dirty.isEmpty()) {

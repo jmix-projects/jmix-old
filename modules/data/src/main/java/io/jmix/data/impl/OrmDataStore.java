@@ -334,7 +334,7 @@ public class OrmDataStore implements DataStore {
 
     protected <E extends Entity> List<E> checkAndReorderLoadedEntities(List<?> ids, List<E> entities, MetaClass metaClass) {
         List<E> result = new ArrayList<>(ids.size());
-        Map<Object, E> idToEntityMap = entities.stream().collect(Collectors.toMap(Entity::getId, Function.identity()));
+        Map<Object, E> idToEntityMap = entities.stream().collect(Collectors.toMap(e -> EntityAccessor.getEntityId(e), Function.identity()));
         for (Object id : ids) {
             E entity = idToEntityMap.get(id);
             if (entity == null) {
@@ -1083,7 +1083,7 @@ public class OrmDataStore implements DataStore {
                 } else {
                     Entity value = EntityAccessor.getEntityValue(entity, property.getName());
                     if (value != null) {
-                        if (value.getId().equals(refEntity.getId())) {
+                        if (EntityAccessor.getEntityId(value).equals(EntityAccessor.getEntityId(refEntity))) {
                             if (entity instanceof AbstractInstance) {
                                 if (property.isReadOnly() && metadataTools.isNotPersistent(property)) {
                                     continue;

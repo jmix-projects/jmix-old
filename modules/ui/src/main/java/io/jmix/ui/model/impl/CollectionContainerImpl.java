@@ -20,6 +20,7 @@ import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.EmbeddableEntity;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.entity.EntityPropertyChangeListener;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -62,7 +63,7 @@ public class CollectionContainerImpl<E extends Entity>
     @Override
     public void setItem(@Nullable E item) {
         if (item != null) {
-            int idx = getItemIndex(item.getId());
+            int idx = getItemIndex(EntityAccessor.getEntityId(item));
             if (idx == -1) {
                 throw new IllegalArgumentException("CollectionContainer does not contain " + item);
             }
@@ -147,7 +148,7 @@ public class CollectionContainerImpl<E extends Entity>
     public void replaceItem(E entity) {
         checkNotNullArgument(entity, "entity is null");
 
-        Object id = entity.getId();
+        Object id = EntityAccessor.getEntityId(entity);
         int idx = getItemIndex(id);
         CollectionChangeType changeType;
         if (idx > -1) {
@@ -242,7 +243,7 @@ public class CollectionContainerImpl<E extends Entity>
 
     protected void clearItemIfNotExists() {
         if (item != null) {
-            int idx = getItemIndex(item.getId());
+            int idx = getItemIndex(EntityAccessor.getEntityId(item));
             if (idx == -1) {
                 // item doesn't exist in the collection
                 E prevItem = item;

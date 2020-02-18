@@ -99,9 +99,9 @@ public class JmixEntityManager implements EntityManager {
         String storeName = support.getStorageName(delegate.unwrap(UnitOfWork.class));
         entityListenerMgr.fireListener(entity, EntityListenerType.BEFORE_ATTACH, storeName);
 
-        if ((entityStates.isNew(entity) || !entityStates.isDetached(entity)) && entity.getId() != null) {
+        if ((entityStates.isNew(entity) || !entityStates.isDetached(entity)) && EntityAccessor.getEntityId(entity) != null) {
             // if a new instance is passed to merge(), we suppose it is persistent but "not detached"
-            Entity destEntity = findOrCreate(entity.getClass(), entity.getId());
+            Entity destEntity = findOrCreate(entity.getClass(), EntityAccessor.getEntityId(entity));
             deepCopyIgnoringNulls(entity, destEntity, Sets.newIdentityHashSet());
             if (entityStates.isNew(destEntity)) {
                 entityPersistingEventMgr.publishEvent(entity);
@@ -558,7 +558,7 @@ public class JmixEntityManager implements EntityManager {
                     if (!equal) {
                         dstCollection.clear();
                         for (Entity srcRef : srcCollection) {
-                            Entity reloadedRef = findOrCreate(srcRef.getClass(), srcRef.getId());
+                            Entity reloadedRef = findOrCreate(srcRef.getClass(), EntityAccessor.getEntityId(srcRef));
                             dstCollection.add(reloadedRef);
                             deepCopyIgnoringNulls(srcRef, reloadedRef, visited);
                         }
@@ -569,7 +569,7 @@ public class JmixEntityManager implements EntityManager {
                     if (srcRef.equals(destRef)) {
                         deepCopyIgnoringNulls(srcRef, destRef, visited);
                     } else {
-                        Entity reloadedRef = findOrCreate(srcRef.getClass(), srcRef.getId());
+                        Entity reloadedRef = findOrCreate(srcRef.getClass(), EntityAccessor.getEntityId(srcRef));
                         EntityAccessor.setEntityValue(dest, name, reloadedRef);
                         deepCopyIgnoringNulls(srcRef, reloadedRef, visited);
                     }

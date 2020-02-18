@@ -21,5 +21,4 @@ package io.jmix.core.entity;
  * @param <T> identifier type
  */
 public interface Entity<T> {
-    T getId();
 }
