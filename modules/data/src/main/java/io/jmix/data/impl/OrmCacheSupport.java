@@ -39,8 +39,9 @@ public class OrmCacheSupport {
     @Inject
     protected Metadata metadata;
 
+    // todo data stores
     @Inject
-    protected Persistence persistence;
+    protected EntityManagerFactory entityManagerFactory;
 
     @Inject
     protected EntityStates entityStates;
@@ -81,8 +82,7 @@ public class OrmCacheSupport {
 
     private void evictEntity(Object entity) {
         if (entity != null && !entityStates.isNew(entity)) {
-            EntityManagerFactory emf = persistence.getEntityManager().getDelegate().getEntityManagerFactory();
-            JpaCache cache = (JpaCache) emf.getCache();
+            JpaCache cache = (JpaCache) entityManagerFactory.getCache();
             cache.evict(entity, true);
         }
     }

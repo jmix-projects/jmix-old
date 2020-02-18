@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.data.impl;
+package com.haulmont.cuba.core.sys;
 
-import io.jmix.data.Transaction;
-import io.jmix.data.TransactionParams;
+import com.haulmont.cuba.core.Transaction;
+import com.haulmont.cuba.core.TransactionParams;
 import io.jmix.core.Stores;
+import io.jmix.data.impl.PersistenceSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.PlatformTransactionManager;

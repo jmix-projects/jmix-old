@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.data;
+package com.haulmont.cuba.core;
 
 /**
  * Defines parameters of a new transaction.

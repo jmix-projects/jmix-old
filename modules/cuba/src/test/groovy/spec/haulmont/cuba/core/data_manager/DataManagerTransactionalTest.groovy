@@ -24,10 +24,10 @@ import com.haulmont.cuba.core.model.sales.OrderLine
 import com.haulmont.cuba.core.model.sales.TestCustomerListener
 import com.haulmont.cuba.core.testsupport.TestSupport
 import io.jmix.core.*
-
-import io.jmix.data.Persistence
-import io.jmix.data.Transaction
-import io.jmix.data.TransactionalDataManager
+import io.jmix.core.entity.BaseEntityInternalAccess
+import com.haulmont.cuba.core.Persistence
+import com.haulmont.cuba.core.Transaction
+import com.haulmont.cuba.core.TransactionalDataManager
 import io.jmix.data.impl.EntityListenerManager
 import org.springframework.transaction.support.TransactionSynchronizationManager
 import spec.haulmont.cuba.core.CoreTestSpecification

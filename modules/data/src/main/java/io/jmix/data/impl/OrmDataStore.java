@@ -37,10 +37,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -68,7 +75,7 @@ public class OrmDataStore implements DataStore {
     protected MetadataTools metadataTools;
 
     @Inject
-    protected FetchPlanRepository viewRepository;
+    protected FetchPlanRepository fetchPlanRepository;
 
     @Inject
     protected ServerConfig serverConfig;
@@ -79,9 +86,6 @@ public class OrmDataStore implements DataStore {
     protected PersistenceSecurity persistenceSecurity;
     @Inject
     protected PersistenceAttributeSecurity attributeSecurity;
-
-    @Inject
-    protected Persistence persistence;
 
     @Inject
     protected UserSessionSource userSessionSource;
@@ -107,6 +111,12 @@ public class OrmDataStore implements DataStore {
 
     @Inject
     protected DbmsSpecifics dbmsSpecifics;
+
+    @PersistenceContext
+    protected EntityManager entityManager;
+
+    @Inject
+    protected PlatformTransactionManager txManager;
 
     protected String storeName;
 
@@ -135,11 +145,13 @@ public class OrmDataStore implements DataStore {
 
         E result = null;
         boolean needToApplyInMemoryReadConstraints = needToApplyInMemoryReadConstraints(context);
-        try (Transaction tx = getLoadTransaction(context.isJoinTransaction())) {
-            final EntityManager em = persistence.getEntityManager(storeName);
+
+        TransactionStatus txStatus = beginLoadTransaction(context.isJoinTransaction());
+        try {
+            EntityManager em = getEntityManager();
 
             if (!context.isSoftDeletion())
-                em.setSoftDeletion(false);
+                em.setProperty(OrmProperties.SOFT_DELETION, false);
 
             // If maxResults=1 and the query is not by ID we should not use getSingleResult() for backward compatibility
             boolean singleResult = !(context.getQuery() != null
@@ -147,9 +159,9 @@ public class OrmDataStore implements DataStore {
                     && context.getQuery().getQueryString() != null)
                     && context.getId() != null;
 
-            FetchPlan view = createRestrictedView(context);
+            FetchPlan fetchPlan = createRestrictedFetchPlan(context);
             Query query = createQuery(em, context, singleResult, false);
-            query.setView(view);
+            query.setHint(OrmProperties.FETCH_PLAN, fetchPlan);
 
             //noinspection unchecked
             List<E> resultList = executeQuery(query, singleResult);
@@ -173,11 +185,14 @@ public class OrmDataStore implements DataStore {
 
             if (context.isJoinTransaction()) {
                 em.flush();
-                detachEntity(em, result, view);
+                detachEntity(em, result, fetchPlan);
             }
 
-            tx.commit();
+        } catch (RuntimeException e) {
+            rollbackTransaction(txStatus);
+            throw e;
         }
+        commitTransaction(txStatus);
 
         if (result != null) {
             if (needToApplyInMemoryReadConstraints) {
@@ -212,9 +227,10 @@ public class OrmDataStore implements DataStore {
 
         List<E> resultList;
         boolean needToApplyInMemoryReadConstraints = needToApplyInMemoryReadConstraints(context);
-        try (Transaction tx = getLoadTransaction(context.isJoinTransaction())) {
-            EntityManager em = persistence.getEntityManager(storeName);
-            em.setSoftDeletion(context.isSoftDeletion());
+        TransactionStatus txStatus = beginLoadTransaction(context.isJoinTransaction());
+        try {
+            EntityManager em = getEntityManager();
+            em.setProperty(OrmProperties.SOFT_DELETION, context.isSoftDeletion());
 
             boolean ensureDistinct = false;
             if (serverConfig.getInMemoryDistinct() && context.getQuery() != null) {
@@ -225,17 +241,17 @@ public class OrmDataStore implements DataStore {
                     context.getQuery().setQueryString(transformer.getResult());
                 }
             }
-            FetchPlan view = createRestrictedView(context);
+            FetchPlan fetchPlan = createRestrictedFetchPlan(context);
             List<E> entities;
 
             Integer maxIdsBatchSize = dbmsSpecifics.getDbmsFeatures(storeName).getMaxIdsBatchSize();
             if (!context.getIds().isEmpty() && entityHasEmbeddedId(metaClass)) {
-                entities = loadListBySingleIds(context, em, view);
+                entities = loadListBySingleIds(context, em, fetchPlan);
             } else if (!context.getIds().isEmpty() && maxIdsBatchSize != null && context.getIds().size() > maxIdsBatchSize) {
-                entities = loadListByBatchesOfIds(context, em, view, maxIdsBatchSize);
+                entities = loadListByBatchesOfIds(context, em, fetchPlan, maxIdsBatchSize);
             } else {
                 Query query = createQuery(em, context, false, false);
-                query.setView(view);
+                query.setHint(OrmProperties.FETCH_PLAN, fetchPlan);
                 entities = getResultList(context, query, ensureDistinct);
             }
             if (context.getIds().isEmpty()) {
@@ -258,12 +274,15 @@ public class OrmDataStore implements DataStore {
             if (context.isJoinTransaction()) {
                 em.flush();
                 for (E entity : resultList) {
-                    detachEntity(em, entity, view);
+                    detachEntity(em, entity, fetchPlan);
                 }
             }
 
-            tx.commit();
+        } catch (RuntimeException e) {
+            rollbackTransaction(txStatus);
+            throw e;
         }
+        commitTransaction(txStatus);
 
         if (needToApplyInMemoryReadConstraints) {
             persistenceSecurity.applyConstraints((Collection<Entity>) resultList);
@@ -280,7 +299,7 @@ public class OrmDataStore implements DataStore {
         return pkProperty == null || pkProperty.getRange().isClass();
     }
 
-    protected <E extends Entity> List<E> loadListBySingleIds(LoadContext<E> context, EntityManager em, FetchPlan view) {
+    protected <E extends Entity> List<E> loadListBySingleIds(LoadContext<E> context, EntityManager em, FetchPlan fetchPlan) {
         LoadContext<?> contextCopy = context.copy();
         contextCopy.setIds(Collections.emptyList());
 
@@ -288,7 +307,7 @@ public class OrmDataStore implements DataStore {
         for (Object id : context.getIds()) {
             contextCopy.setId(id);
             Query query = createQuery(em, contextCopy, true, false);
-            query.setView(view);
+            query.setHint(OrmProperties.FETCH_PLAN, fetchPlan);
             List<E> list = executeQuery(query, true);
             entities.addAll(list);
         }
@@ -305,7 +324,7 @@ public class OrmDataStore implements DataStore {
             contextCopy.setIds(partition);
 
             Query query = createQuery(em, contextCopy, false, false);
-            query.setView(view);
+            query.setHint(OrmProperties.FETCH_PLAN, view);
             List<E> list = executeQuery(query, false);
             entities.addAll(list);
         }
@@ -352,9 +371,10 @@ public class OrmDataStore implements DataStore {
 
         if (security.hasInMemoryConstraints(metaClass, ConstraintOperationType.READ, ConstraintOperationType.ALL)) {
             List resultList;
-            try (Transaction tx = getLoadTransaction(context.isJoinTransaction())) {
-                EntityManager em = persistence.getEntityManager(storeName);
-                em.setSoftDeletion(context.isSoftDeletion());
+            TransactionStatus txStatus = beginLoadTransaction(context.isJoinTransaction());
+            try {
+                EntityManager em = getEntityManager();
+                em.setProperty(OrmProperties.SOFT_DELETION, context.isSoftDeletion());
 
                 boolean ensureDistinct = false;
                 if (serverConfig.getInMemoryDistinct() && context.getQuery() != null) {
@@ -369,12 +389,15 @@ public class OrmDataStore implements DataStore {
                 context.getQuery().setMaxResults(0);
 
                 Query query = createQuery(em, context, false, false);
-                query.setView(createRestrictedView(context));
+                query.setHint(OrmProperties.FETCH_PLAN, createRestrictedFetchPlan(context));
 
                 resultList = getResultList(context, query, ensureDistinct);
 
-                tx.commit();
+            } catch (RuntimeException e) {
+                rollbackTransaction(txStatus);
+                throw e;
             }
+            commitTransaction(txStatus);
             return resultList.size();
         } else {
             QueryTransformer transformer = QueryTransformerFactory.createTransformer(context.getQuery().getQueryString());
@@ -382,22 +405,25 @@ public class OrmDataStore implements DataStore {
             context.getQuery().setQueryString(transformer.getResult());
 
             Number result;
-            try (Transaction tx = getLoadTransaction(context.isJoinTransaction())) {
-                EntityManager em = persistence.getEntityManager(storeName);
-                em.setSoftDeletion(context.isSoftDeletion());
+            TransactionStatus txStatus = beginLoadTransaction(context.isJoinTransaction());
+            try {
+                EntityManager em = getEntityManager();
+                em.setProperty(OrmProperties.SOFT_DELETION, context.isSoftDeletion());
 
                 Query query = createQuery(em, context, false, true);
                 result = (Number) query.getSingleResult();
 
-                tx.commit();
+            } catch (RuntimeException e) {
+                rollbackTransaction(txStatus);
+                throw e;
             }
+            commitTransaction(txStatus);
 
             return result.longValue();
         }
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Set<Entity> commit(CommitContext context) {
         if (log.isDebugEnabled())
             log.debug("commit: commitInstances=" + context.getCommitInstances()
@@ -413,13 +439,15 @@ public class OrmDataStore implements DataStore {
         SavedEntitiesHolder savedEntitiesHolder = null;
 
         try {
-            try (Transaction tx = getSaveTransaction(storeName, context.isJoinTransaction())) {
-                EntityManager em = persistence.getEntityManager(storeName);
+
+            TransactionStatus txStatus = beginSaveTransaction(context.isJoinTransaction());
+            try {
+                EntityManager em = getEntityManager();
 
                 checkPermissions(context);
 
                 if (!context.isSoftDeletion())
-                    em.setSoftDeletion(false);
+                    em.setProperty(OrmProperties.SOFT_DELETION, false);
 
                 // todo dynamic attributes
                 //            List<BaseGenericIdEntity> entitiesToStoreDynamicAttributes = new ArrayList<>();
@@ -552,8 +580,12 @@ public class OrmDataStore implements DataStore {
                     entityChangedEventManager.publish(events);
                 }
 
-                tx.commit();
+            } catch (RuntimeException e) {
+                rollbackTransaction(txStatus);
+                throw e;
             }
+            commitTransaction(txStatus);
+
         } catch (IllegalStateException e) {
             handleCascadePersistException(e);
         }
@@ -563,7 +595,7 @@ public class OrmDataStore implements DataStore {
         // todo dynamic attributes
 //        if (!attributeValuesToRemove.isEmpty()) {
 //            try (Transaction tx = getSaveTransaction(Stores.MAIN, context.isJoinTransaction())) {
-//                EntityManager em = persistence.getEntityManager();
+//                EntityManager em = getEntityManager();
 //                for (CategoryAttributeValue entity : attributeValuesToRemove) {
 //                    em.remove(entity);
 //                }
@@ -619,9 +651,10 @@ public class OrmDataStore implements DataStore {
 
         List<KeyValueEntity> entities = new ArrayList<>();
 
-        try (Transaction tx = getLoadTransaction(context.isJoinTransaction())) {
-            EntityManager em = persistence.getEntityManager(storeName);
-            em.setSoftDeletion(context.isSoftDeletion());
+        TransactionStatus txStatus = beginLoadTransaction(context.isJoinTransaction());
+        try {
+            EntityManager em = getEntityManager();
+            em.setProperty(OrmProperties.SOFT_DELETION, context.isSoftDeletion());
 
             List<String> keys = context.getProperties();
 
@@ -670,8 +703,11 @@ public class OrmDataStore implements DataStore {
                 }
             }
 
-            tx.commit();
+        } catch (RuntimeException e) {
+            rollbackTransaction(txStatus);
+            throw e;
         }
+        commitTransaction(txStatus);
 
         return entities;
     }
@@ -679,7 +715,7 @@ public class OrmDataStore implements DataStore {
     protected FetchPlan getViewFromContext(CommitContext context, Entity entity) {
         FetchPlan view = context.getFetchPlans().get(entity);
         if (view == null) {
-            view = viewRepository.getFetchPlan(entity.getClass(), FetchPlan.LOCAL);
+            view = fetchPlanRepository.getFetchPlan(entity.getClass(), FetchPlan.LOCAL);
         }
 
         return isAuthorizationRequired(context) ? attributeSecurity.createRestrictedFetchPlan(view) : view;
@@ -744,7 +780,7 @@ public class OrmDataStore implements DataStore {
             if (contextQuery.getMaxResults() != 0)
                 query.setMaxResults(contextQuery.getMaxResults());
             if (contextQuery.isCacheable()) {
-                query.setCacheable(contextQuery.isCacheable());
+                query.setHint(OrmProperties.CACHEABLE, contextQuery.isCacheable());
             }
         }
 
@@ -757,11 +793,11 @@ public class OrmDataStore implements DataStore {
         return query;
     }
 
-    protected FetchPlan createRestrictedView(LoadContext<?> context) {
-        FetchPlan view = context.getView() != null ? context.getView() :
-                viewRepository.getFetchPlan(metadata.getClass(context.getMetaClass()), FetchPlan.BASE);
+    protected FetchPlan createRestrictedFetchPlan(LoadContext<?> context) {
+        FetchPlan fetchPlan = context.getView() != null ? context.getView() :
+                fetchPlanRepository.getFetchPlan(metadata.getClass(context.getMetaClass()), FetchPlan.BASE);
 
-        FetchPlan copy = FetchPlan.copy(isAuthorizationRequired(context) ? attributeSecurity.createRestrictedFetchPlan(view) : view);
+        FetchPlan copy = FetchPlan.copy(isAuthorizationRequired(context) ? attributeSecurity.createRestrictedFetchPlan(fetchPlan) : fetchPlan);
         if (context.isLoadPartialEntities()
                 && !needToApplyInMemoryReadConstraints(context)
                 && !needToFilterByInMemoryReadConstraints(context)) {
@@ -1116,18 +1152,48 @@ public class OrmDataStore implements DataStore {
         return classes;
     }
 
-    protected Transaction getLoadTransaction(boolean useCurrentTransaction) {
-        TransactionParams txParams = new TransactionParams();
-        if (serverConfig.getUseReadOnlyTransactionForLoad()) {
-            txParams.setReadOnly(true);
-        }
-        return useCurrentTransaction ?
-                persistence.getTransaction(storeName) : persistence.createTransaction(storeName, txParams);
+    protected EntityManager getEntityManager() {
+        // todo data stores
+        return entityManager;
     }
 
-    protected Transaction getSaveTransaction(String storeName, boolean useCurrentTransaction) {
-        return useCurrentTransaction ?
-                persistence.getTransaction(storeName) : persistence.createTransaction(storeName);
+    protected TransactionStatus beginLoadTransaction(boolean joinTransaction) {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setName("OrmDataStore_Load");
+
+        if (serverConfig.getUseReadOnlyTransactionForLoad()) {
+            def.setReadOnly(true);
+        }
+        if (joinTransaction) {
+            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        } else {
+            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        }
+        // todo data stores
+        return txManager.getTransaction(def);
+    }
+
+    protected void commitTransaction(TransactionStatus txStatus) {
+        // todo data stores
+        txManager.commit(txStatus);
+    }
+
+    protected void rollbackTransaction(TransactionStatus txStatus) {
+        // todo data stores
+        txManager.rollback(txStatus);
+    }
+
+    protected TransactionStatus beginSaveTransaction(boolean joinTransaction) {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setName("OrmDataStore_Save");
+
+        if (joinTransaction) {
+            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        } else {
+            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        }
+        // todo data stores
+        return txManager.getTransaction(def);
     }
 
     protected <E extends Entity> void detachEntity(EntityManager em, @Nullable E rootEntity, FetchPlan view) {

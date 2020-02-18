@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.data;
+package com.haulmont.cuba.core;
 
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;

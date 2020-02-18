@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.data;
+package com.haulmont.cuba.core;
 
 import io.jmix.core.EntityStates;
 import io.jmix.core.FetchPlan;

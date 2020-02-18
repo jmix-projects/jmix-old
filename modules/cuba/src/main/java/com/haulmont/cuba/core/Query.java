@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.data;
+package com.haulmont.cuba.core;
 
 import io.jmix.core.entity.Entity;
 import io.jmix.core.FetchPlan;
+import io.jmix.data.QueryHints;
 
 import javax.annotation.Nullable;
 import javax.persistence.FlushModeType;

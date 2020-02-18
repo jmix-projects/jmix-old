@@ -19,16 +19,19 @@ package io.jmix.data;
 import io.jmix.core.*;
 import io.jmix.core.entity.EmbeddableEntity;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.metamodel.model.Instance;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.inject.Inject;
 import javax.persistence.Basic;
+import javax.persistence.EntityManager;
 import javax.persistence.FetchType;
+import javax.persistence.PersistenceContext;
 import java.lang.reflect.AnnotatedElement;
 import java.util.*;
 
@@ -49,13 +52,16 @@ public class EntityFetcher {
     protected FetchPlanRepository viewRepository;
 
     @Inject
-    protected Persistence persistence;
-
-    @Inject
     protected EntityStates entityStates;
 
     @Inject
     protected MetadataTools metadataTools;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Inject
+    private TransactionTemplate transactionTemplate;
 
     /**
      * Fetch instance by fetch plan.
@@ -103,7 +109,7 @@ public class EntityFetcher {
         fetch(instance, fetchPlan, new HashMap<>(), optimizeForDetached);
     }
 
-    protected void fetch(Entity entity, FetchPlan fetchPlan, Map<Entity, Set<FetchPlan>> visited, boolean optimizeForDetached) {
+    protected void fetch(Entity entity, FetchPlan fetchPlan, Map<Instance, Set<FetchPlan>> visited, boolean optimizeForDetached) {
         Set<FetchPlan> fetchPlans = visited.get(entity);
         if (fetchPlans == null) {
             fetchPlans = new HashSet<>();
@@ -123,7 +129,7 @@ public class EntityFetcher {
 
             if (log.isTraceEnabled()) log.trace("Fetching property " + property.getName());
 
-            Object value = EntityAccessor.getEntityValue(entity, property.getName());
+            Object value = entity.getValue(property.getName());
             FetchPlan propertyFetchPlan = property.getFetchPlan();
             if (value != null && propertyFetchPlan != null) {
                 if (value instanceof Collection) {
@@ -140,16 +146,14 @@ public class EntityFetcher {
                             }
                             String storeName = metadataTools.getStoreName(metadata.getClass(e));
                             if (storeName != null) {
-                                try (Transaction tx = persistence.getTransaction(storeName)) {
-                                    EntityManager em = persistence.getEntityManager(storeName);
-                                    @SuppressWarnings("unchecked")
-                                    Entity managed = em.find(e.getClass(), EntityAccessor.getEntityId(e));
+                                getTransaction(storeName).executeWithoutResult(transactionStatus -> {
+                                    EntityManager em = getEntityManager(storeName);
+                                    Entity managed = em.find(e.getClass(), e.getId());
                                     if (managed != null) { // the instance here can be null if it has been deleted
-                                        EntityAccessor.setEntityValue(entity, property.getName(), managed);
+                                        entity.setValue(property.getName(), managed);
                                         fetch(managed, propertyFetchPlan, visited, optimizeForDetached);
                                     }
-                                    tx.commit();
-                                }
+                                });
                             }
                         }
                     } else {
@@ -158,6 +162,16 @@ public class EntityFetcher {
                 }
             }
         }
+    }
+
+    private javax.persistence.EntityManager getEntityManager(String storeName) {
+        // todo data stores
+        return entityManager;
+    }
+
+    private TransactionTemplate getTransaction(String storeName) {
+        // todo data stores
+        return transactionTemplate;
     }
 
     protected boolean needReloading(Entity entity, FetchPlan fetchPlan) {
