@@ -16,7 +16,7 @@
 
 package authentication
 
-import com.haulmont.cuba.core.global.DataManager
+import io.jmix.core.DataManager
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.security.CurrentUserSession
 import io.jmix.core.security.UserSessionManager
@@ -48,7 +48,7 @@ class AuthenticationTest extends Specification {
     def "create and remove session"() {
 
         def user = new User(login: 'user1', password: '{noop}123')
-        dataManager.commit(user)
+        dataManager.save(user)
 
         when:
 

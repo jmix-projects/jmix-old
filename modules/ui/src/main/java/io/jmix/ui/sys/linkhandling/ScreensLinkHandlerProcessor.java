@@ -16,9 +16,9 @@
 
 package io.jmix.ui.sys.linkhandling;
 
-import com.haulmont.cuba.core.global.DataManager;
+import io.jmix.core.DataManager;
 import io.jmix.core.EntityAccessException;
-import com.haulmont.cuba.core.global.LoadContext;
+import io.jmix.core.LoadContext;
 import io.jmix.core.Metadata;
 import io.jmix.core.ReferenceToEntitySupport;
 import io.jmix.core.FetchPlan;
@@ -195,7 +195,7 @@ public class ScreensLinkHandlerProcessor implements LinkHandlerProcessor, Ordere
         if (info.getViewName() != null) {
             FetchPlan view = viewRepository.findFetchPlan(info.getMetaClass(), info.getViewName());
             if (view != null) {
-                ctx.setView(view);
+                ctx.setFetchPlan(view);
             } else {
                 log.warn("Unable to find view \"{}\" for entity \"{}\"", info.getViewName(), info.getMetaClass());
             }

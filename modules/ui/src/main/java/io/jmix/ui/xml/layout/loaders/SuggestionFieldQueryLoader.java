@@ -16,8 +16,9 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import com.haulmont.cuba.core.global.DataManager;
-import com.haulmont.cuba.core.global.LoadContext;
+import io.jmix.core.DataManager;
+import io.jmix.core.FetchPlanRepository;
+import io.jmix.core.LoadContext;
 import io.jmix.core.QueryUtils;
 import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.entity.Entity;
@@ -57,11 +58,11 @@ public abstract class SuggestionFieldQueryLoader<T extends Field> extends Abstra
                     }
                     searchString = applySearchFormat(searchString, searchFormat);
 
-                    LoadContext loadContext = LoadContext.create(entityClass);
+                    LoadContext loadContext = new LoadContext(entityClass);
                     if (StringUtils.isNotEmpty(view)) {
-                        loadContext.setFetchPlan(view);
+                        loadContext.setFetchPlan(beanLocator.get(FetchPlanRepository.class).getFetchPlan(entityClass, view));
                     }
-                    loadContext.setQuery(LoadContext.createQuery(stringQuery).setParameter("searchString", searchString));
+                    loadContext.setQuery(new LoadContext.Query(stringQuery).setParameter("searchString", searchString));
 
                     //noinspection unchecked
                     return dataManager.loadList(loadContext);

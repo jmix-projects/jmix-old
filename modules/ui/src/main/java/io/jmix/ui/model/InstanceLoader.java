@@ -18,7 +18,7 @@ package io.jmix.ui.model;
 
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
-import com.haulmont.cuba.core.global.LoadContext;
+import io.jmix.core.LoadContext;
 import io.jmix.core.FetchPlan;
 import io.jmix.ui.screen.InstallSubject;
 import io.jmix.ui.screen.Subscribe;
@@ -56,16 +56,16 @@ public interface InstanceLoader<E extends Entity> extends DataLoader {
     /**
      * Returns the view which is used when loading.
      */
-    FetchPlan getView();
+    FetchPlan getFetchPlan();
 
     /**
      * Sets the view which is used when loading.
      */
-    void setView(FetchPlan view);
+    void setFetchPlan(FetchPlan fetchPlan);
 
     /**
      * Sets the name of the view which is used when loading.
-     * @throws IllegalStateException if the view has already been set by {@link #setView(FetchPlan)}
+     * @throws IllegalStateException if the view has already been set by {@link #setFetchPlan(FetchPlan)}
      */
     void setView(String viewName);
 

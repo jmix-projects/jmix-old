@@ -16,7 +16,7 @@
 
 package io.jmix.samples.remoting;
 
-import com.haulmont.cuba.core.global.DataManager;
+import io.jmix.core.DataManager;
 import io.jmix.core.security.Authenticator;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionManager;
@@ -129,7 +129,7 @@ public class SampleController {
     private List<Foo> createAndLoadData() {
         Foo foo = dataManager.create(Foo.class);
         foo.setName("Foo-" + LocalDateTime.now().toString());
-        dataManager.commit(foo);
+        dataManager.save(foo);
 
         return dataManager.load(Foo.class).list();
     }

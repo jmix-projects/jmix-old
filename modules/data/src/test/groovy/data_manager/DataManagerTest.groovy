@@ -16,8 +16,6 @@
 
 package data_manager
 
-import io.jmix.core.DataManager
-import com.haulmont.cuba.core.global.LoadContext
 import test_support.entity.TestAppEntity
 import test_support.entity.TestCompositeKeyEntity
 import test_support.entity.TestEntityKey
@@ -74,7 +72,7 @@ class DataManagerTest extends DataSpec {
 
         when:
 
-        def loadContext = LoadContext.create(Product).setIds([product1.id, product2.id])
+        def loadContext = new LoadContext(Product).setIds([product1.id, product2.id])
         def list = dataManager.loadList(loadContext)
 
         then:
@@ -89,7 +87,7 @@ class DataManagerTest extends DataSpec {
 
         when:
 
-        def loadContext = LoadContext.create(Product).setIds([product1.id, UUID.randomUUID()])
+        def loadContext = new LoadContext(Product).setIds([product1.id, UUID.randomUUID()])
         dataManager.loadList(loadContext)
 
         then:
@@ -109,7 +107,7 @@ class DataManagerTest extends DataSpec {
 
         when:
 
-        def loadContext = LoadContext.create(TestCompositeKeyEntity).setIds([id1, id2])
+        def loadContext = new LoadContext(TestCompositeKeyEntity).setIds([id1, id2])
         def list = dataManager.loadList(loadContext)
 
         then:

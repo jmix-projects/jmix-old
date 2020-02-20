@@ -16,7 +16,7 @@
 
 package user_details_service
 
-import com.haulmont.cuba.core.global.DataManager
+import io.jmix.core.DataManager
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.data.JmixDataConfiguration
 import io.jmix.data.PersistenceTools
@@ -47,7 +47,7 @@ class StandardUserDetailsServiceTest extends Specification {
     def "load user"() {
 
         def user = new User(login: 'user1', password: '123')
-        dataManager.commit(user)
+        dataManager.save(user)
 
         when:
 

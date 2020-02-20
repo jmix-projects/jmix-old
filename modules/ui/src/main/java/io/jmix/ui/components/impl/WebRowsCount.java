@@ -15,8 +15,8 @@
  */
 package io.jmix.ui.components.impl;
 
-import com.haulmont.cuba.core.global.DataManager;
-import com.haulmont.cuba.core.global.LoadContext;
+import io.jmix.core.DataManager;
+import io.jmix.core.LoadContext;
 import com.vaadin.shared.Registration;
 import io.jmix.core.*;
 import io.jmix.core.commons.events.Subscription;

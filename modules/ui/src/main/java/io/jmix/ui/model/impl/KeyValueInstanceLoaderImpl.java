@@ -20,7 +20,7 @@ import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.entity.KeyValueEntity;
-import com.haulmont.cuba.core.global.DataManager;
+import io.jmix.core.DataManager;
 import io.jmix.core.Stores;
 import io.jmix.core.ValueLoadContext;
 import io.jmix.core.queryconditions.Condition;

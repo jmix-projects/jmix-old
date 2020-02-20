@@ -16,7 +16,7 @@
 
 package data_components
 
-import com.haulmont.cuba.core.global.DataManager
+import io.jmix.core.DataManager
 import io.jmix.data.PersistenceTools
 import io.jmix.ui.model.DataComponents
 import io.jmix.ui.model.InstanceContainer
@@ -44,7 +44,7 @@ class InstanceLoaderTest extends DataContextSpec {
         loader.addPostLoadListener(postLoadListener)
 
         Foo foo = new Foo()
-        dataManager.commit(foo)
+        dataManager.save(foo)
 
         when:
 
@@ -75,7 +75,7 @@ class InstanceLoaderTest extends DataContextSpec {
         loader.addPostLoadListener(postLoadListener)
 
         Foo foo = new Foo()
-        dataManager.commit(foo)
+        dataManager.save(foo)
 
         when:
 

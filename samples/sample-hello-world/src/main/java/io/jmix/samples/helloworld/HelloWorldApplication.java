@@ -1,6 +1,6 @@
 package io.jmix.samples.helloworld;
 
-import com.haulmont.cuba.core.global.DataManager;
+import io.jmix.core.DataManager;
 import io.jmix.security.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -25,7 +25,7 @@ public class HelloWorldApplication {
         User user = new User();
         user.setLogin("u1");
         user.setName("User 1");
-        dataManager.commit(user);
+        dataManager.save(user);
 
         List<User> users = dataManager.load(User.class).list();
         System.out.println(">>> users: " + users);
