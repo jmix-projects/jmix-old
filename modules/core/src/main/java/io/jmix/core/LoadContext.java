@@ -471,13 +471,15 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
         /**
          * Creates a copy of this Query instance.
          */
+        // todo refactor
         public Query copy() {
             Query query = new Query();
             copyState(query);
             return query;
         }
 
-        protected void copyState(Query query) {
+        // todo refactor
+        public void copyState(Query query) {
             query.queryString = this.queryString;
             query.parameters.putAll(this.parameters);
             query.firstResult = this.firstResult;

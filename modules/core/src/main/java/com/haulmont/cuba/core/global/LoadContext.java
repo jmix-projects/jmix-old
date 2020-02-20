@@ -155,7 +155,11 @@ public class LoadContext<E extends Entity> extends io.jmix.core.LoadContext<E> {
 
     @Override
     public LoadContext<E> setQuery(io.jmix.core.LoadContext.Query query) {
-        super.setQuery(query);
+        Query cubaQuery = new Query();
+        if (query != null) {
+            query.copyState(cubaQuery);
+        }
+        super.setQuery(cubaQuery);
         return this;
     }
 
