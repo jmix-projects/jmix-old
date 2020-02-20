@@ -16,6 +16,8 @@
 
 package spec.haulmont.cuba.core.data_manager
 
+import com.haulmont.cuba.core.global.DataManager
+import com.haulmont.cuba.core.global.LoadContext
 import com.haulmont.cuba.core.model.common.Group
 import com.haulmont.cuba.core.model.common.User
 import com.haulmont.cuba.core.model.primary_keys.CompositeKeyEntity

@@ -16,7 +16,7 @@
 
 package user_details_service
 
-import io.jmix.core.DataManager
+import com.haulmont.cuba.core.global.DataManager
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.data.JmixDataConfiguration
 import io.jmix.data.PersistenceTools

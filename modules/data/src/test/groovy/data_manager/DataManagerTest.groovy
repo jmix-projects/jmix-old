@@ -16,6 +16,8 @@
 
 package data_manager
 
+import io.jmix.core.DataManager
+import com.haulmont.cuba.core.global.LoadContext
 import test_support.entity.TestAppEntity
 import test_support.entity.TestCompositeKeyEntity
 import test_support.entity.TestEntityKey
@@ -46,7 +48,7 @@ class DataManagerTest extends DataSpec {
 
         when:
 
-        def entity1 = dataManager.commit(entity)
+        def entity1 = dataManager.save(entity)
 
         then:
 
@@ -68,7 +70,7 @@ class DataManagerTest extends DataSpec {
 
         def product1 = new Product(name: 'p1', quantity: 100)
         def product2 = new Product(name: 'p2', quantity: 200)
-        dataManager.commit(product1, product2)
+        dataManager.save(product1, product2)
 
         when:
 
@@ -83,7 +85,7 @@ class DataManagerTest extends DataSpec {
     def "load by collection of ids throws exception if some instance not found"() {
 
         def product1 = new Product(name: 'p1', quantity: 100)
-        dataManager.commit(product1)
+        dataManager.save(product1)
 
         when:
 
@@ -103,7 +105,7 @@ class DataManagerTest extends DataSpec {
         def entity1 = new TestCompositeKeyEntity(id: id1, name: 'e1')
         def entity2 = new TestCompositeKeyEntity(id: id2, name: 'e2')
 
-        dataManager.commit(entity1, entity2)
+        dataManager.save(entity1, entity2)
 
         when:
 
@@ -167,7 +169,7 @@ class DataManagerTest extends DataSpec {
         def entity1 = new TestAppEntity(name: 'entityA')
         def entity2 = new TestAppEntity(name: 'entityB')
 
-        dataManager.commit(entity1, entity2)
+        dataManager.save(entity1, entity2)
 
         when: "sort by persistent property"
 
@@ -203,7 +205,7 @@ class DataManagerTest extends DataSpec {
 
     def "remove"() {
         def entity1 = new TestAppEntity(name: 'entityA')
-        dataManager.commit(entity1)
+        dataManager.save(entity1)
 
         when:
         dataManager.remove(Id.of(entity1))

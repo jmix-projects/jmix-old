@@ -16,7 +16,7 @@
 
 package data_components
 
-import io.jmix.core.DataManager
+import com.haulmont.cuba.core.global.DataManager
 import io.jmix.data.PersistenceTools
 import io.jmix.ui.model.DataComponents
 import io.jmix.ui.model.InstanceContainer

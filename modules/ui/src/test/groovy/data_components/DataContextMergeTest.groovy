@@ -16,8 +16,8 @@
 
 package data_components
 
-import io.jmix.core.CommitContext
-import io.jmix.core.DataManager
+import com.haulmont.cuba.core.global.CommitContext
+import com.haulmont.cuba.core.global.DataManager
 import io.jmix.core.EntityStates
 import io.jmix.core.Id
 import io.jmix.core.entity.BaseEntityInternalAccess

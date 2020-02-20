@@ -16,9 +16,9 @@
 
 package io.jmix.ui.sys.linkhandling;
 
-import io.jmix.core.DataManager;
+import com.haulmont.cuba.core.global.DataManager;
 import io.jmix.core.EntityAccessException;
-import io.jmix.core.LoadContext;
+import com.haulmont.cuba.core.global.LoadContext;
 import io.jmix.core.Metadata;
 import io.jmix.core.ReferenceToEntitySupport;
 import io.jmix.core.FetchPlan;

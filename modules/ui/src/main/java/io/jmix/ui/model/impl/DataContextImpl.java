@@ -17,6 +17,8 @@
 package io.jmix.ui.model.impl;
 
 import com.google.common.collect.Sets;
+import com.haulmont.cuba.core.global.CommitContext;
+import com.haulmont.cuba.core.global.DataManager;
 import io.jmix.core.*;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;

@@ -16,7 +16,7 @@
 
 package data_components
 
-import io.jmix.core.CommitContext
+import com.haulmont.cuba.core.global.CommitContext
 import io.jmix.core.EntitySet
 import io.jmix.data.impl.JmixEntityFetchGroup
 import io.jmix.ui.model.DataComponents

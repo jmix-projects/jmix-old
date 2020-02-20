@@ -1,6 +1,6 @@
 package io.jmix.samples.helloworld;
 
-import io.jmix.core.DataManager;
+import com.haulmont.cuba.core.global.DataManager;
 import io.jmix.security.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;

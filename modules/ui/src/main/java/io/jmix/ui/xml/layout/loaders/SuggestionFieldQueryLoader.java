@@ -16,8 +16,8 @@
 
 package io.jmix.ui.xml.layout.loaders;
 
-import io.jmix.core.DataManager;
-import io.jmix.core.LoadContext;
+import com.haulmont.cuba.core.global.DataManager;
+import com.haulmont.cuba.core.global.LoadContext;
 import io.jmix.core.QueryUtils;
 import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.entity.Entity;

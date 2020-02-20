@@ -16,7 +16,7 @@
 
 package io.jmix.remoting;
 
-import io.jmix.core.DataManager;
+import com.haulmont.cuba.core.global.DataManager;
 import io.jmix.core.annotation.JmixModule;
 import io.jmix.core.impl.ConfigStorage;
 import io.jmix.core.security.Authenticator;

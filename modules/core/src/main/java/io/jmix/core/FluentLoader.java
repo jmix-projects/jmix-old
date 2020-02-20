@@ -38,24 +38,29 @@ public class FluentLoader<E extends Entity<K>, K> {
     private boolean softDeletion = true;
     private boolean dynamicAttributes;
 
+    private Metadata metadata;
+    private FetchPlanRepository fetchPlanRepository;
+
     public FluentLoader(Class<E> entityClass, DataManager dataManager) {
         this.entityClass = entityClass;
         this.dataManager = dataManager;
+
+        metadata = AppBeans.get(Metadata.class);
+        fetchPlanRepository = AppBeans.get(FetchPlanRepository.class);
     }
 
     public FluentLoader(Class<E> entityClass, DataManager dataManager, boolean transactional) {
-        this.entityClass = entityClass;
-        this.dataManager = dataManager;
+        this(entityClass, dataManager);
         this.transactional = transactional;
     }
 
     LoadContext<E> createLoadContext() {
-        LoadContext<E> loadContext = LoadContext.create(entityClass);
+        LoadContext<E> loadContext = new LoadContext(entityClass);
         initCommonLoadContextParameters(loadContext);
 
-        String entityName = AppBeans.get(Metadata.class).getClass(entityClass).getName();
+        String entityName = metadata.getClass(entityClass).getName();
         String queryString = String.format("select e from %s e", entityName);
-        loadContext.setQuery(LoadContext.createQuery(queryString));
+        loadContext.setQuery(new LoadContext.Query(queryString));
 
         return loadContext;
     }
@@ -64,16 +69,16 @@ public class FluentLoader<E extends Entity<K>, K> {
         loadContext.setJoinTransaction(transactional);
 
         if (fetchPlan != null)
-            loadContext.setView(fetchPlan);
+            loadContext.setFetchPlan(fetchPlan);
         else if (!Strings.isNullOrEmpty(fetchPlanName))
-            loadContext.setFetchPlan(fetchPlanName);
+            loadContext.setFetchPlan(fetchPlanRepository.getFetchPlan(metadata.getClass(entityClass), fetchPlanName));
 
         if (fetchPlanBuilder != null) {
             if (fetchPlan != null)
                 fetchPlanBuilder.addFetchPlan(fetchPlan);
             else if (!Strings.isNullOrEmpty(fetchPlanName))
                 fetchPlanBuilder.addFetchPlan(fetchPlanName);
-            loadContext.setView(fetchPlanBuilder.build());
+            loadContext.setFetchPlan(fetchPlanBuilder.build());
         }
 
         loadContext.setSoftDeletion(softDeletion);
@@ -245,7 +250,7 @@ public class FluentLoader<E extends Entity<K>, K> {
         }
 
         LoadContext<E> createLoadContext() {
-            LoadContext<E> loadContext = LoadContext.create(loader.entityClass).setId(id);
+            LoadContext<E> loadContext = new LoadContext(loader.entityClass).setId(id);
             loader.initCommonLoadContextParameters(loadContext);
             return loadContext;
         }
@@ -368,7 +373,7 @@ public class FluentLoader<E extends Entity<K>, K> {
         }
 
         LoadContext<E> createLoadContext() {
-            LoadContext<E> loadContext = LoadContext.create(loader.entityClass).setIds(ids);
+            LoadContext<E> loadContext = new LoadContext(loader.entityClass).setIds(ids);
             loader.initCommonLoadContextParameters(loadContext);
             return loadContext;
         }
@@ -515,7 +520,6 @@ public class FluentLoader<E extends Entity<K>, K> {
 
         private String queryString;
         private Map<String, Object> parameters = new HashMap<>();
-        private Set<String> noConversionParams = new HashSet<>();
         private int firstResult;
         private int maxResults;
         private boolean cacheable;
@@ -546,16 +550,13 @@ public class FluentLoader<E extends Entity<K>, K> {
         LoadContext<E> createLoadContext() {
             Preconditions.checkNotEmptyString(queryString, "query is empty");
 
-            LoadContext<E> loadContext = LoadContext.create(loader.entityClass);
+            LoadContext<E> loadContext = new LoadContext(loader.entityClass);
             loader.initCommonLoadContextParameters(loadContext);
 
             String processedQuery = AppBeans.get(QueryStringProcessor.class).process(queryString, loader.entityClass);
-            LoadContext.Query query = LoadContext.createQuery(processedQuery);
+            LoadContext.Query query = new LoadContext.Query(processedQuery);
             for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-                if (noConversionParams.contains(entry.getKey()))
-                    query.setParameter(entry.getKey(), entry.getValue(), false);
-                else
-                    query.setParameter(entry.getKey(), entry.getValue());
+                query.setParameter(entry.getKey(), entry.getValue());
             }
             loadContext.setQuery(query);
 
@@ -703,23 +704,6 @@ public class FluentLoader<E extends Entity<K>, K> {
          */
         public ByQuery<E, K> parameter(String name, Date value, TemporalType temporalType) {
             parameters.put(name, new TemporalValue(value, temporalType));
-            return this;
-        }
-
-        /**
-         * Sets value for a query parameter.
-         *
-         * @param name               parameter name
-         * @param value              parameter value
-         * @param implicitConversion whether to do parameter value conversions, e.g. convert an entity to its ID
-         * @deprecated implicit conversions are deprecated, do not use this feature
-         */
-        @Deprecated
-        public ByQuery<E, K> parameter(String name, Object value, boolean implicitConversion) {
-            parameters.put(name, value);
-            if (!implicitConversion) {
-                noConversionParams.add(name);
-            }
             return this;
         }
 

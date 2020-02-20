@@ -16,9 +16,9 @@
 package io.jmix.ui.presentations;
 
 import io.jmix.core.AppBeans;
-import io.jmix.core.CommitContext;
-import io.jmix.core.DataManager;
-import io.jmix.core.LoadContext;
+import com.haulmont.cuba.core.global.CommitContext;
+import com.haulmont.cuba.core.global.DataManager;
+import com.haulmont.cuba.core.global.LoadContext;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.Presentation;

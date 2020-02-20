@@ -16,7 +16,7 @@
 
 package authorization
 
-import io.jmix.core.DataManager
+import com.haulmont.cuba.core.global.DataManager
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.Metadata
 import io.jmix.core.security.ConstraintOperationType

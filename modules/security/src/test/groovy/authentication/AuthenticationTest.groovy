@@ -16,7 +16,7 @@
 
 package authentication
 
-import io.jmix.core.DataManager
+import com.haulmont.cuba.core.global.DataManager
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.security.CurrentUserSession
 import io.jmix.core.security.UserSessionManager

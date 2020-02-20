@@ -16,7 +16,7 @@
 
 package io.jmix.samples.remoting;
 
-import io.jmix.core.DataManager;
+import com.haulmont.cuba.core.global.DataManager;
 import io.jmix.core.security.Authenticator;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionManager;
