@@ -15,8 +15,8 @@
  */
 package io.jmix.remoting.gateway;
 
-import io.jmix.core.CommitContext;
 import io.jmix.core.LoadContext;
+import io.jmix.core.SaveContext;
 import io.jmix.core.ValueLoadContext;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.KeyValueEntity;
@@ -29,7 +29,7 @@ public interface ServerDataManager {
 
     String NAME = "jmix_DataManagerService";
 
-    Set<Entity> commit(CommitContext context);
+    Set<Entity> save(SaveContext context);
 
     @Nullable
     <E extends Entity> E load(LoadContext<E> context);

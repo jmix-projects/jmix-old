@@ -17,6 +17,7 @@
 package io.jmix.remoting.gateway;
 
 import io.jmix.core.*;
+import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.KeyValueEntity;
 
@@ -24,10 +25,16 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.List;
 
-public class ClientDataManager extends DataManagerSupport implements DataManager {
+public class ClientDataManager implements DataManager {
 
     @Inject
     protected ServerDataManager service;
+
+    @Inject
+    protected Metadata metadata;
+
+    @Inject
+    protected EntityStates entityStates;
 
     @Nullable
     @Override
@@ -46,8 +53,8 @@ public class ClientDataManager extends DataManagerSupport implements DataManager
     }
 
     @Override
-    public EntitySet commit(CommitContext context) {
-        return EntitySet.of(service.commit(context));
+    public EntitySet save(SaveContext context) {
+        return EntitySet.of(service.save(context));
     }
 
     @Override
@@ -56,7 +63,30 @@ public class ClientDataManager extends DataManagerSupport implements DataManager
     }
 
     @Override
-    public DataManager secure() {
-        return this;
+    public EntitySet save(Entity... entities) {
+        return save(new SaveContext().saving(entities));
+    }
+
+    @Override
+    public <E extends Entity> E save(E entity) {
+        return save(new SaveContext().saving(entity)).optional(entity).orElseThrow(IllegalStateException::new);
+    }
+
+    @Override
+    public void remove(Entity... entities) {
+        save(new SaveContext().removing(entities));
+    }
+
+    @Override
+    public <T extends Entity> T create(Class<T> entityClass) {
+        return metadata.create(entityClass);
+    }
+
+    @Override
+    public <T extends BaseGenericIdEntity<K>, K> T getReference(Class<T> entityClass, K id) {
+        T entity = metadata.create(entityClass);
+        entity.setId(id);
+        entityStates.makePatch(entity);
+        return entity;
     }
 }

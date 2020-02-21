@@ -25,7 +25,7 @@ public class HelloWorldApplication {
         User user = new User();
         user.setLogin("u1");
         user.setName("User 1");
-        dataManager.commit(user);
+        dataManager.save(user);
 
         List<User> users = dataManager.load(User.class).list();
         System.out.println(">>> users: " + users);

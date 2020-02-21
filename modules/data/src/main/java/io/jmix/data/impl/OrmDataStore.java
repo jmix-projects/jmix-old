@@ -49,6 +49,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -65,6 +66,9 @@ import static io.jmix.core.entity.EntityAccessor.getEntityValue;
 public class OrmDataStore implements DataStore {
 
     public static final String NAME = "jmix_OrmDataStore";
+
+    public static final String LOAD_TX_PREFIX = "OrmDataStore-load-";
+    public static final String SAVE_TX_PREFIX = "OrmDataStore-save-";
 
     private static final Logger log = LoggerFactory.getLogger(OrmDataStore.class);
 
@@ -120,6 +124,8 @@ public class OrmDataStore implements DataStore {
 
     protected String storeName;
 
+    protected static final AtomicLong txCount = new AtomicLong();
+
     @Override
     public String getName() {
         return storeName;
@@ -134,7 +140,7 @@ public class OrmDataStore implements DataStore {
     @Override
     public <E extends Entity> E load(LoadContext<E> context) {
         if (log.isDebugEnabled()) {
-            log.debug("load: metaClass={}, id={}, view={}", context.getMetaClass(), context.getId(), context.getView());
+            log.debug("load: metaClass={}, id={}, view={}", context.getMetaClass(), context.getId(), context.getFetchPlan());
         }
 
         final MetaClass metaClass = metadata.getSession().getClass(context.getMetaClass());
@@ -210,8 +216,8 @@ public class OrmDataStore implements DataStore {
     @SuppressWarnings("unchecked")
     public <E extends Entity> List<E> loadList(LoadContext<E> context) {
         if (log.isDebugEnabled())
-            log.debug("loadList: metaClass=" + context.getMetaClass() + ", view=" + context.getView()
-                    + (context.getPrevQueries().isEmpty() ? "" : ", from selected")
+            log.debug("loadList: metaClass=" + context.getMetaClass() + ", view=" + context.getFetchPlan()
+                    + (context.getPreviousQueries().isEmpty() ? "" : ", from selected")
                     + ", query=" + context.getQuery()
                     + (context.getQuery() == null || context.getQuery().getFirstResult() == 0 ? "" : ", first=" + context.getQuery().getFirstResult())
                     + (context.getQuery() == null || context.getQuery().getMaxResults() == 0 ? "" : ", max=" + context.getQuery().getMaxResults()));
@@ -264,7 +270,7 @@ public class OrmDataStore implements DataStore {
             // todo dynamic attributes
 //            if (!resultList.isEmpty() && resultList.get(0) instanceof BaseGenericIdEntity && context.isLoadDynamicAttributes()) {
 //                dynamicAttributesManagerAPI.fetchDynamicAttributes((List<BaseGenericIdEntity>) resultList,
-//                        collectEntityClassesWithDynamicAttributes(context.getView()));
+//                        collectEntityClassesWithDynamicAttributes(context.getFetchPlan()));
 //            }
 
             if (needToApplyInMemoryReadConstraints) {
@@ -349,7 +355,7 @@ public class OrmDataStore implements DataStore {
     public long getCount(LoadContext<? extends Entity> context) {
         if (log.isDebugEnabled())
             log.debug("getCount: metaClass=" + context.getMetaClass()
-                    + (context.getPrevQueries().isEmpty() ? "" : ", from selected")
+                    + (context.getPreviousQueries().isEmpty() ? "" : ", from selected")
                     + ", query=" + context.getQuery());
 
         MetaClass metaClass = metadata.getClass(context.getMetaClass());
@@ -363,7 +369,7 @@ public class OrmDataStore implements DataStore {
 
         context = context.copy();
         if (context.getQuery() == null) {
-            context.setQuery(LoadContext.createQuery(null));
+            context.setQuery(new LoadContext.Query(null));
         }
         if (StringUtils.isBlank(context.getQuery().getQueryString())) {
             context.getQuery().setQueryString("select e from " + metaClass.getName() + " e");
@@ -424,10 +430,10 @@ public class OrmDataStore implements DataStore {
     }
 
     @Override
-    public Set<Entity> commit(CommitContext context) {
+    public Set<Entity> save(SaveContext context) {
         if (log.isDebugEnabled())
-            log.debug("commit: commitInstances=" + context.getCommitInstances()
-                    + ", removeInstances=" + context.getRemoveInstances());
+            log.debug("save: entitiesToSave=" + context.getEntitiesToSave()
+                    + ", entitiesToRemove=" + context.getEntitiesToRemove());
 
         Set<Entity> saved = new HashSet<>();
         List<Entity> persisted = new ArrayList<>();
@@ -453,7 +459,7 @@ public class OrmDataStore implements DataStore {
                 //            List<BaseGenericIdEntity> entitiesToStoreDynamicAttributes = new ArrayList<>();
 
                 // persist new
-                for (Entity entity : context.getCommitInstances()) {
+                for (Entity entity : context.getEntitiesToSave()) {
                     if (entityStates.isNew(entity)) {
 
                         if (isAuthorizationRequired(context)) {
@@ -466,8 +472,8 @@ public class OrmDataStore implements DataStore {
                         if (isAuthorizationRequired(context))
                             checkOperationPermitted(entity, ConstraintOperationType.CREATE);
 
-                        if (!context.isDiscardCommitted()) {
-                            FetchPlan view = getViewFromContextOrNull(context, entity);
+                        if (!context.isDiscardSaved()) {
+                            FetchPlan view = getFetchPlanFromContextOrNull(context, entity);
                             entityFetcher.fetch(entity, view, true);
                         }
 
@@ -483,7 +489,7 @@ public class OrmDataStore implements DataStore {
                 }
 
                 // merge the rest - instances can be detached or not
-                for (Entity entity : context.getCommitInstances()) {
+                for (Entity entity : context.getEntitiesToSave()) {
                     if (!entityStates.isNew(entity)) {
 
                         if (isAuthorizationRequired(context)) {
@@ -497,7 +503,7 @@ public class OrmDataStore implements DataStore {
                         Entity merged = em.merge(entity);
                         saved.add(merged);
 
-                        entityFetcher.fetch(merged, getViewFromContext(context, entity));
+                        entityFetcher.fetch(merged, getFetchPlanFromContext(context, entity));
 
                         if (isAuthorizationRequired(context))
                             checkOperationPermitted(merged, ConstraintOperationType.UPDATE);
@@ -519,7 +525,7 @@ public class OrmDataStore implements DataStore {
                 //            }
 
                 // remove
-                for (Entity entity : context.getRemoveInstances()) {
+                for (Entity entity : context.getEntitiesToRemove()) {
 
                     if (isAuthorizationRequired(context)) {
                         persistenceSecurity.assertToken(entity);
@@ -531,7 +537,7 @@ public class OrmDataStore implements DataStore {
                         attributeSecurity.beforeMerge(entity);
 
                         e = em.merge(entity);
-                        entityFetcher.fetch(e, getViewFromContext(context, entity));
+                        entityFetcher.fetch(e, getFetchPlanFromContext(context, entity));
 
                     } else {
                         e = em.merge(entity);
@@ -565,7 +571,7 @@ public class OrmDataStore implements DataStore {
                     //                }
                 }
 
-                if (!context.isDiscardCommitted() && isAuthorizationRequired(context) && security.hasConstraints()) {
+                if (!context.isDiscardSaved() && isAuthorizationRequired(context) && security.hasConstraints()) {
                     persistenceSecurity.calculateFilteredData(saved);
                 }
 
@@ -613,11 +619,11 @@ public class OrmDataStore implements DataStore {
 //            }
 //        }
 
-        if (!context.isDiscardCommitted() && isAuthorizationRequired(context) && security.hasConstraints()) {
+        if (!context.isDiscardSaved() && isAuthorizationRequired(context) && security.hasConstraints()) {
             persistenceSecurity.applyConstraints(resultEntities);
         }
 
-        if (!context.isDiscardCommitted()) {
+        if (!context.isDiscardSaved()) {
 
             if (isAuthorizationRequired(context)) {
                 for (Entity entity : resultEntities) {
@@ -629,7 +635,7 @@ public class OrmDataStore implements DataStore {
             updateReferences(persisted, resultEntities);
         }
 
-        return context.isDiscardCommitted() ? Collections.emptySet() : resultEntities;
+        return context.isDiscardSaved() ? Collections.emptySet() : resultEntities;
     }
 
     @Override
@@ -664,8 +670,7 @@ public class OrmDataStore implements DataStore {
                     .setQueryString(contextQuery.getQueryString())
                     .setCondition(contextQuery.getCondition())
                     .setSort(contextQuery.getSort())
-                    .setQueryParameters(contextQuery.getParameters())
-                    .setNoConversionParams(contextQuery.getNoConversionParams());
+                    .setQueryParameters(contextQuery.getParameters());
 
             Query query = queryBuilder.getQuery(em);
 
@@ -712,7 +717,7 @@ public class OrmDataStore implements DataStore {
         return entities;
     }
 
-    protected FetchPlan getViewFromContext(CommitContext context, Entity entity) {
+    protected FetchPlan getFetchPlanFromContext(SaveContext context, Entity entity) {
         FetchPlan view = context.getFetchPlans().get(entity);
         if (view == null) {
             view = fetchPlanRepository.getFetchPlan(entity.getClass(), FetchPlan.LOCAL);
@@ -722,7 +727,7 @@ public class OrmDataStore implements DataStore {
     }
 
     @Nullable
-    protected FetchPlan getViewFromContextOrNull(CommitContext context, Entity entity) {
+    protected FetchPlan getFetchPlanFromContextOrNull(SaveContext context, Entity entity) {
         FetchPlan view = context.getFetchPlans().get(entity);
         if (view == null) {
             return null;
@@ -760,14 +765,13 @@ public class OrmDataStore implements DataStore {
         if (contextQuery != null) {
             queryBuilder.setQueryString(contextQuery.getQueryString())
                     .setCondition(contextQuery.getCondition())
-                    .setQueryParameters(contextQuery.getParameters())
-                    .setNoConversionParams(contextQuery.getNoConversionParams());
+                    .setQueryParameters(contextQuery.getParameters());
             if (!countQuery) {
                 queryBuilder.setSort(contextQuery.getSort());
             }
         }
 
-        if (!context.getPrevQueries().isEmpty()) {
+        if (!context.getPreviousQueries().isEmpty()) {
             log.debug("Restrict query by previous results");
             queryBuilder.setPreviousResults(userSessionSource.getUserSession().getId(), context.getQueryKey());
         }
@@ -794,7 +798,7 @@ public class OrmDataStore implements DataStore {
     }
 
     protected FetchPlan createRestrictedFetchPlan(LoadContext<?> context) {
-        FetchPlan fetchPlan = context.getView() != null ? context.getView() :
+        FetchPlan fetchPlan = context.getFetchPlan() != null ? context.getFetchPlan() :
                 fetchPlanRepository.getFetchPlan(metadata.getClass(context.getMetaClass()), FetchPlan.BASE);
 
         FetchPlan copy = FetchPlan.copy(isAuthorizationRequired(context) ? attributeSecurity.createRestrictedFetchPlan(fetchPlan) : fetchPlan);
@@ -918,7 +922,7 @@ public class OrmDataStore implements DataStore {
         return list;
     }
 
-    protected void checkPermissions(CommitContext context) {
+    protected void checkPermissions(SaveContext context) {
         if (!isAuthorizationRequired(context))
             return;
 
@@ -926,7 +930,7 @@ public class OrmDataStore implements DataStore {
         Set<MetaClass> checkedUpdateRights = new HashSet<>();
         Set<MetaClass> checkedDeleteRights = new HashSet<>();
 
-        for (Entity entity : context.getCommitInstances()) {
+        for (Entity entity : context.getEntitiesToSave()) {
             if (entity == null)
                 continue;
 
@@ -938,7 +942,7 @@ public class OrmDataStore implements DataStore {
             }
         }
 
-        for (Entity entity : context.getRemoveInstances()) {
+        for (Entity entity : context.getEntitiesToRemove()) {
             if (entity == null)
                 continue;
 
@@ -1027,7 +1031,7 @@ public class OrmDataStore implements DataStore {
         return context.isAuthorizationRequired() || serverConfig.getDataManagerChecksSecurityOnMiddleware();
     }
 
-    protected boolean isAuthorizationRequired(CommitContext context) {
+    protected boolean isAuthorizationRequired(SaveContext context) {
         return context.isAuthorizationRequired() || serverConfig.getDataManagerChecksSecurityOnMiddleware();
     }
 
@@ -1111,12 +1115,12 @@ public class OrmDataStore implements DataStore {
     }
 
     protected boolean needToApplyByPredicate(LoadContext context, Predicate<MetaClass> hasConstraints) {
-        if (context.getView() == null) {
+        if (context.getFetchPlan() == null) {
             MetaClass metaClass = metadata.getSession().getClass(context.getMetaClass());
             return hasConstraints.test(metaClass);
         }
 
-        for (Class aClass : collectEntityClasses(context.getView(), new HashSet<>())) {
+        for (Class aClass : collectEntityClasses(context.getFetchPlan(), new HashSet<>())) {
             if (hasConstraints.test(metadata.getClass(aClass))) {
                 return true;
             }
@@ -1159,7 +1163,7 @@ public class OrmDataStore implements DataStore {
 
     protected TransactionStatus beginLoadTransaction(boolean joinTransaction) {
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setName("OrmDataStore_Load");
+        def.setName(LOAD_TX_PREFIX + txCount.incrementAndGet());
 
         if (serverConfig.getUseReadOnlyTransactionForLoad()) {
             def.setReadOnly(true);
@@ -1185,7 +1189,7 @@ public class OrmDataStore implements DataStore {
 
     protected TransactionStatus beginSaveTransaction(boolean joinTransaction) {
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setName("OrmDataStore_Save");
+        def.setName(SAVE_TX_PREFIX + txCount.incrementAndGet());
 
         if (joinTransaction) {
             def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);

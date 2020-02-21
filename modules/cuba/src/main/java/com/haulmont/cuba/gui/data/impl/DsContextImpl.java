@@ -20,7 +20,7 @@ import com.haulmont.cuba.gui.data.*;
 import com.haulmont.cuba.gui.data.impl.compatibility.DsContextCommitListenerWrapper;
 import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
 import io.jmix.core.AppBeans;
-import io.jmix.core.CommitContext;
+import com.haulmont.cuba.core.global.CommitContext;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.EntityAccessor;

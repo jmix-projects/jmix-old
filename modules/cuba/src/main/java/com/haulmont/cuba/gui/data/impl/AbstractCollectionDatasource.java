@@ -16,16 +16,15 @@
 
 package com.haulmont.cuba.gui.data.impl;
 
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.DataSupplier;
-import com.haulmont.cuba.gui.data.Datasource;
+import com.haulmont.cuba.core.global.CommitContext;
+import com.haulmont.cuba.core.global.LoadContext;
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.metamodel.model.Instance;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.core.metamodel.model.utils.EntityPaths;
+import io.jmix.core.metamodel.model.utils.InstanceUtils;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.components.ComponentsHelper;
@@ -35,6 +34,9 @@ import io.jmix.ui.components.HasValue;
 import io.jmix.ui.filter.ParameterInfo;
 import io.jmix.ui.filter.ParametersHelper;
 import io.jmix.ui.filter.QueryFilter;
+import com.haulmont.cuba.gui.data.CollectionDatasource;
+import com.haulmont.cuba.gui.data.DataSupplier;
+import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.ui.model.impl.EntityValuesComparator;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -181,8 +183,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
                 if (strings.length > 1) {
                     final List<String> list = Arrays.asList(strings);
                     final List<String> valuePath = list.subList(1, list.size());
-                    String[] path1 = valuePath.toArray(new String[0]);
-                    property = EntityPaths.formatValuePath(path1);
+                    property = InstanceUtils.formatValuePath(valuePath.toArray(new String[0]));
                 } else {
                     property = null;
                 }
@@ -225,8 +226,8 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
                         final Entity item = datasource.getItem();
                         if (elements.length > 1) {
                             String[] valuePath = ArrayUtils.subarray(elements, 1, elements.length);
-                            String propertyName = EntityPaths.formatValuePath(valuePath);
-                            Object value = EntityAccessor.getEntityValueEx(item, propertyName);
+                            String propertyName = InstanceUtils.formatValuePath(valuePath);
+                            Object value = InstanceUtils.getValueEx(item, propertyName);
                             map.put(name, value);
                         } else {
                             map.put(name, item);
@@ -245,11 +246,11 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
                         Map<String, Object> windowParams = dsContext.getFrameContext().getParams();
                         value = windowParams.get(path);
                         if (value == null && elements.length > 1) {
-                            Entity entity = (Entity) windowParams.get(elements[0]);
-                            if (entity != null) {
+                            Instance instance = (Instance) windowParams.get(elements[0]);
+                            if (instance != null) {
                                 String[] valuePath = ArrayUtils.subarray(elements, 1, elements.length);
-                                String propertyName = EntityPaths.formatValuePath(valuePath);
-                                value = EntityAccessor.getEntityValueEx(entity, propertyName);
+                                String propertyName = InstanceUtils.formatValuePath(valuePath);
+                                value = InstanceUtils.getValueEx(instance, propertyName);
                             }
                         }
                     }
@@ -300,8 +301,8 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
                         String[] pathElements = info.getPath().split("\\.");
                         if (pathElements.length > 1) {
                             Object entity = params.get(pathElements[0]);
-                            if (entity instanceof Entity) {
-                                value = EntityAccessor.getEntityValueEx((Entity<?>) entity, Arrays.copyOfRange(pathElements, 1, pathElements.length));
+                            if (entity instanceof Instance) {
+                                value = InstanceUtils.getValueEx((Instance) entity, Arrays.copyOfRange(pathElements, 1, pathElements.length));
                             }
                         }
                     }
@@ -501,7 +502,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
         if (sortInfos[0].getPropertyPath() != null) {
             final MetaPropertyPath propertyPath = sortInfos[0].getPropertyPath();
             final boolean asc = Sortable.Order.ASC.equals(sortInfos[0].getOrder());
-            return Comparator.comparing(e -> EntityAccessor.getEntityValueEx(e, propertyPath), EntityValuesComparator.asc(asc));
+            return Comparator.comparing(e -> e.getValueEx(propertyPath), EntityValuesComparator.asc(asc));
         } else {
             // If we can not sort the datasource, just return the empty comparator.
             return (o1, o2) -> 0;
@@ -551,7 +552,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
             if (!properties.isEmpty()) {
                 String orderBy = properties.stream()
                         .filter(m -> m != null
-                                && m.getAnnotatedElement().getAnnotation(io.jmix.core.metamodel.annotations.MetaProperty.class) == null)
+                            && m.getAnnotatedElement().getAnnotation(io.jmix.core.metamodel.annotations.MetaProperty.class) == null)
                         .map(m -> "e." + m.getName())
                         .collect(Collectors.joining(", "));
 
