@@ -15,9 +15,9 @@
  */
 package io.jmix.remoting.gateway;
 
-import io.jmix.core.CommitContext;
 import io.jmix.core.DataManager;
 import io.jmix.core.LoadContext;
+import io.jmix.core.SaveContext;
 import io.jmix.core.ValueLoadContext;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.KeyValueEntity;
@@ -39,9 +39,9 @@ public class ServerDataManagerImpl implements ServerDataManager {
     protected DataManager dataManager;
 
     @Override
-    public Set<Entity> commit(CommitContext context) {
+    public Set<Entity> save(SaveContext context) {
         context.setAuthorizationRequired(true);
-        return dataManager.commit(context);
+        return dataManager.save(context);
     }
 
     @Override

@@ -129,7 +129,7 @@ public class SampleController {
     private List<Foo> createAndLoadData() {
         Foo foo = dataManager.create(Foo.class);
         foo.setName("Foo-" + LocalDateTime.now().toString());
-        dataManager.commit(foo);
+        dataManager.save(foo);
 
         return dataManager.load(Foo.class).list();
     }

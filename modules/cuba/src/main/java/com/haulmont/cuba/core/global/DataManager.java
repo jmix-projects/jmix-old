@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package io.jmix.core;
+package com.haulmont.cuba.core.global;
 
+import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.KeyValueEntity;
+import io.jmix.core.metamodel.model.MetaClass;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -29,10 +31,16 @@ import java.util.List;
  * <p>
  * In case of {@code RdbmsStore}, works with non-managed (new or detached) entities, always starts and commits new
  * transactions.
+ * <p>
+ * When used on the client tier - always applies security restrictions. When used on the middleware - does not apply
+ * security restrictions by default. If you want to apply security, get {@link #secure()} instance or set the
+ * {@code cuba.dataManagerChecksSecurityOnMiddleware} application property to use it by default.
+ *
  */
+@SuppressWarnings("rawtypes")
 public interface DataManager {
 
-    String NAME = "jmix_DataManager";
+    String NAME = "cuba_DataManager";
 
     /**
      * Loads a single entity instance.
@@ -61,31 +69,88 @@ public interface DataManager {
     long getCount(LoadContext<? extends Entity> context);
 
     /**
+     * Reloads the entity instance from data store with the fetch plan specified.
+     * @param entity        reloading instance
+     * @param fetchPlanName      fetch plan name
+     * @return              reloaded instance
+     * @throws EntityAccessException if the entity cannot be reloaded because it was deleted or access restrictions has been changed
+     */
+    <E extends Entity> E reload(E entity, String fetchPlanName);
+
+    /**
+     * Reloads the entity instance from data store with the fetch plan specified.
+     * @param entity        reloading instance
+     * @param fetchPlan          fetch plan object
+     * @return              reloaded instance
+     * @throws EntityAccessException if the entity cannot be reloaded because it was deleted or access restrictions has been changed
+     */
+    <E extends Entity> E reload(E entity, FetchPlan fetchPlan);
+
+    /**
+     * Reloads the entity instance from data store with the fetch plan specified. Loading instance class may differ from original
+     * instance if we want to load an ancestor or a descendant.
+     * @param entity        reloading instance
+     * @param fetchPlan          fetch plan object
+     * @param metaClass     desired MetaClass, if null - original entity's metaclass is used
+     * @return              reloaded instance
+     * @throws EntityAccessException if the entity cannot be reloaded because it was deleted or access restrictions has been changed
+     */
+    <E extends Entity> E reload(E entity, FetchPlan fetchPlan, @Nullable MetaClass metaClass);
+
+    /**
+     * Reloads the entity instance from data store with the fetch plan specified. Loading instance class may differ from original
+     * instance if we want to load an ancestor or a descendant.
+     * @param entity                    reloading instance
+     * @param fetchPlan                      fetch plan object
+     * @param metaClass                 desired MetaClass, if null - original entity's metaclass is used
+     * @param loadDynamicAttributes     whether to load dynamic attributes for the entity
+     * @return                          reloaded instance
+     * @throws EntityAccessException if the entity cannot be reloaded because it was deleted or access restrictions has been changed
+     */
+    <E extends Entity> E reload(E entity, FetchPlan fetchPlan, @Nullable MetaClass metaClass, boolean loadDynamicAttributes);
+
+    /**
      * Commits a collection of new or detached entity instances to the data store.
-     * @param context   {@link SaveContext} object, containing committing entities and other information
+     * @param context   {@link CommitContext} object, containing committing entities and other information
      * @return          set of committed instances
      */
-    EntitySet save(SaveContext context);
+    EntitySet commit(CommitContext context);
 
     /**
      * Commits new or detached entity instances to the data store.
      * @param entities  entities to commit
      * @return          set of committed instances
      */
-    EntitySet save(Entity... entities);
+    EntitySet commit(Entity... entities);
+
+    /**
+     * Commits the entity to the data store.
+     * @param entity    entity instance
+     * @param fetchPlan      fetch plan object, affects the returned committed instance
+     * @return          committed instance
+     */
+    <E extends Entity> E commit(E entity, @Nullable FetchPlan fetchPlan);
+
+    /**
+     * Commits the entity to the data store.
+     * @param entity    entity instance
+     * @param fetchPlanName  fetch plan name, affects the returned committed instance
+     * @return          committed instance
+     */
+    <E extends Entity> E commit(E entity, @Nullable String fetchPlanName);
 
     /**
      * Commits the entity to the data store.
      * @param entity    entity instance
      * @return          committed instance
      */
-    <E extends Entity> E save(E entity);
+    <E extends Entity> E commit(E entity);
 
     /**
-     * Removes the entities from the data store.
+     * Removes the entity instance from the data store.
      * @param entity    entity instance
      */
-    void remove(Entity... entity);
+    void remove(Entity entity);
 
     /**
      * Removes the entity instance from the data store by its id.
@@ -103,6 +168,23 @@ public interface DataManager {
     List<KeyValueEntity> loadValues(ValueLoadContext context);
 
     /**
+     * By default, DataManager does not apply security restrictions on entity operations and attributes, only row-level
+     * constraints take effect.
+     * <p>
+     * This method returns the {@code DataManager} implementation that applies security restrictions on entity operations.
+     * Attribute permissions will be enforced only if you additionally set the {@code cuba.entityAttributePermissionChecking}
+     * application property to true.
+     * <p>
+     * Usage example:
+     * <pre>
+     *     AppBeans.get(DataManager.class).secure().load(context);
+     * </pre>
+     */
+    DataManager secure();
+
+    io.jmix.core.DataManager getDelegate();
+
+    /**
      * Entry point to the fluent API for loading entities.
      * <p>
      * Usage examples:
@@ -118,7 +200,9 @@ public interface DataManager {
      * @param entityClass   class of entity that needs to be loaded
      */
     default <E extends Entity<K>, K> FluentLoader<E, K> load(Class<E> entityClass) {
-        return new FluentLoader<>(entityClass, this);
+        FluentLoader<E, K> loader = new FluentLoader<>(entityClass, getDelegate());
+        loader.joinTransaction(false);
+        return loader;
     }
 
     /**
@@ -131,7 +215,9 @@ public interface DataManager {
      * @param entityId   {@link Id} of entity that needs to be loaded
      */
     default <E extends Entity<K>, K> FluentLoader.ById<E, K> load(Id<E, K> entityId) {
-        return new FluentLoader<>(entityId.getEntityClass(), this).id(entityId.getValue());
+        FluentLoader<E, K> loader = new FluentLoader<>(entityId.getEntityClass(), getDelegate());
+        loader.joinTransaction(false);
+        return loader.id(entityId.getValue());
     }
 
     /**
@@ -153,7 +239,9 @@ public interface DataManager {
      * @param queryString   query string
      */
     default FluentValuesLoader loadValues(String queryString) {
-        return new FluentValuesLoader(queryString, this);
+        FluentValuesLoader loader = new FluentValuesLoader(queryString, getDelegate());
+        loader.joinTransaction(false);
+        return loader;
     }
 
     /**
@@ -173,7 +261,9 @@ public interface DataManager {
      * @param valueClass    type of the returning value
      */
     default <T> FluentValueLoader<T> loadValue(String queryString, Class<T> valueClass) {
-        return new FluentValueLoader<>(queryString, valueClass, this);
+        FluentValueLoader<T> loader = new FluentValueLoader<>(queryString, valueClass, getDelegate());
+        loader.joinTransaction(false);
+        return loader;
     }
 
     /**

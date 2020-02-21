@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.core;
+package com.haulmont.cuba.core.global;
 
+import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
 
 import javax.annotation.Nullable;
-import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * DTO that contains information about currently committed entities.
@@ -27,35 +28,31 @@ import java.util.*;
  * Used by {@link DataManager}.
  */
 @SuppressWarnings("unchecked")
-public class CommitContext implements Serializable {
+public class CommitContext extends SaveContext {
 
-    private static final long serialVersionUID = 2510011302544968537L;
+    private static final long serialVersionUID = -3092858740670863815L;
 
-    protected Collection<Entity> commitInstances = new LinkedHashSet<>();
-    protected Collection<Entity> removeInstances = new LinkedHashSet<>();
-
-    protected Map<Object, FetchPlan> fetchPlans = new HashMap<>();
-
-    protected boolean softDeletion = true;
-    protected boolean discardCommitted;
-    protected boolean authorizationRequired;
-    protected boolean joinTransaction;
-    protected Map<String, Object> dbHints = new HashMap<>();
     protected ValidationMode validationMode = ValidationMode.DEFAULT;
     protected List<Class> validationGroups;
+
+    protected CommitContext() {
+        joinTransaction = false;
+    }
 
     /**
      * @param commitInstances changed entities to be committed to the database
      */
     public CommitContext(Entity... commitInstances) {
-        this.commitInstances.addAll(Arrays.asList(commitInstances));
+        this();
+        saving(commitInstances);
     }
 
     /**
      * @param commitInstances collection of changed entities to be committed to the database
      */
     public CommitContext(Collection commitInstances) {
-        this.commitInstances.addAll(commitInstances);
+        this();
+        saving(commitInstances);
     }
 
     /**
@@ -63,8 +60,9 @@ public class CommitContext implements Serializable {
      * @param removeInstances collection of entities to be removed from the database
      */
     public CommitContext(Collection commitInstances, Collection removeInstances) {
-        this.commitInstances.addAll(commitInstances);
-        this.removeInstances.addAll(removeInstances);
+        this();
+        saving(commitInstances);
+        removing(removeInstances);
     }
 
     /**
@@ -74,7 +72,7 @@ public class CommitContext implements Serializable {
      * @return this instance for chaining
      */
     public CommitContext addInstanceToCommit(Entity entity) {
-        commitInstances.add(entity);
+        saving(entity);
         return this;
     }
 
@@ -86,9 +84,7 @@ public class CommitContext implements Serializable {
      * @return this instance for chaining
      */
     public CommitContext addInstanceToCommit(Entity entity, @Nullable FetchPlan fetchPlan) {
-        commitInstances.add(entity);
-        if (fetchPlan != null)
-            fetchPlans.put(entity, fetchPlan);
+        saving(entity, fetchPlan);
         return this;
     }
 
@@ -100,10 +96,7 @@ public class CommitContext implements Serializable {
      * @return this instance for chaining
      */
     public CommitContext addInstanceToCommit(Entity entity, @Nullable String fetchPlanName) {
-        commitInstances.add(entity);
-        if (fetchPlanName != null) {
-            fetchPlans.put(entity, getFetchPlanFromRepository(entity, fetchPlanName));
-        }
+        saving(entity, getFetchPlanFromRepository(entity, fetchPlanName));
         return this;
     }
 
@@ -114,7 +107,7 @@ public class CommitContext implements Serializable {
      * @return this instance for chaining
      */
     public CommitContext addInstanceToRemove(Entity entity) {
-        removeInstances.add(entity);
+        removing(entity);
         return this;
     }
 
@@ -123,14 +116,14 @@ public class CommitContext implements Serializable {
      * The collection is modifiable.
      */
     public Collection<Entity> getCommitInstances() {
-        return commitInstances;
+        return getEntitiesToSave();
     }
 
     /**
      * @param commitInstances collection of changed entities that will be committed to the database
      */
     public void setCommitInstances(Collection commitInstances) {
-        this.commitInstances = commitInstances;
+        this.entitiesToSave = commitInstances;
     }
 
     /**
@@ -138,59 +131,28 @@ public class CommitContext implements Serializable {
      * The collection is modifiable.
      */
     public Collection<Entity> getRemoveInstances() {
-        return removeInstances;
+        return getEntitiesToRemove();
     }
 
     /**
      * @param removeInstances collection of entities to be removed from the database
      */
     public void setRemoveInstances(Collection removeInstances) {
-        this.removeInstances = removeInstances;
-    }
-
-    /**
-     * Enables defining a view for each committed entity. These views are used in merge operation to ensure all
-     * required attributes are loaded in returned instances.
-     *
-     * @return editable map of entities to their views
-     */
-    public Map<Object, FetchPlan> getFetchPlans() {
-        return fetchPlans;
-    }
-
-    /**
-     * @return custom hints which can be used later during query construction
-     */
-    public Map<String, Object> getDbHints() {
-        return dbHints;
-    }
-
-    /**
-     * @return whether to use soft deletion for this commit
-     */
-    public boolean isSoftDeletion() {
-        return softDeletion;
-    }
-
-    /**
-     * @param softDeletion  whether to use soft deletion for this commit
-     */
-    public void setSoftDeletion(boolean softDeletion) {
-        this.softDeletion = softDeletion;
+        this.entitiesToRemove = removeInstances;
     }
 
     /**
      * @return true if calling code does not need committed instances, which allows for performance optimization
      */
     public boolean isDiscardCommitted() {
-        return discardCommitted;
+        return isDiscardSaved();
     }
 
     /**
      * Set to true if calling code does not need committed instances, which allows for performance optimization.
      */
     public void setDiscardCommitted(boolean discardCommitted) {
-        this.discardCommitted = discardCommitted;
+        setDiscardSaved(discardCommitted);
     }
 
     /**
@@ -212,25 +174,10 @@ public class CommitContext implements Serializable {
         this.validationMode = validationMode;
     }
 
-    public boolean isAuthorizationRequired() {
-        return authorizationRequired;
-    }
-
-    public CommitContext setAuthorizationRequired(boolean authorizationRequired) {
-        this.authorizationRequired = authorizationRequired;
-        return this;
-    }
-
-    public boolean isJoinTransaction() {
-        return joinTransaction;
-    }
-
-    public CommitContext setJoinTransaction(boolean joinTransaction) {
-        this.joinTransaction = joinTransaction;
-        return this;
-    }
-
-    private FetchPlan getFetchPlanFromRepository(Entity entity, String fetchPlanName) {
+    @Nullable
+    private FetchPlan getFetchPlanFromRepository(Entity entity, @Nullable String fetchPlanName) {
+        if (fetchPlanName == null)
+            return null;
         Metadata metadata = AppBeans.get(Metadata.NAME);
         FetchPlanRepository viewRepository = AppBeans.get(FetchPlanRepository.NAME);
         return viewRepository.getFetchPlan(metadata.findClass(entity.getClass()), fetchPlanName);
