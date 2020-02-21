@@ -200,7 +200,9 @@ public interface DataManager {
      * @param entityClass   class of entity that needs to be loaded
      */
     default <E extends Entity<K>, K> FluentLoader<E, K> load(Class<E> entityClass) {
-        return new FluentLoader<>(entityClass, getDelegate());
+        FluentLoader<E, K> loader = new FluentLoader<>(entityClass, getDelegate());
+        loader.joinTransaction(false);
+        return loader;
     }
 
     /**
@@ -213,7 +215,9 @@ public interface DataManager {
      * @param entityId   {@link Id} of entity that needs to be loaded
      */
     default <E extends Entity<K>, K> FluentLoader.ById<E, K> load(Id<E, K> entityId) {
-        return new FluentLoader<>(entityId.getEntityClass(), getDelegate()).id(entityId.getValue());
+        FluentLoader<E, K> loader = new FluentLoader<>(entityId.getEntityClass(), getDelegate());
+        loader.joinTransaction(false);
+        return loader.id(entityId.getValue());
     }
 
     /**
@@ -235,7 +239,9 @@ public interface DataManager {
      * @param queryString   query string
      */
     default FluentValuesLoader loadValues(String queryString) {
-        return new FluentValuesLoader(queryString, getDelegate());
+        FluentValuesLoader loader = new FluentValuesLoader(queryString, getDelegate());
+        loader.joinTransaction(false);
+        return loader;
     }
 
     /**
@@ -255,7 +261,9 @@ public interface DataManager {
      * @param valueClass    type of the returning value
      */
     default <T> FluentValueLoader<T> loadValue(String queryString, Class<T> valueClass) {
-        return new FluentValueLoader<>(queryString, valueClass, getDelegate());
+        FluentValueLoader<T> loader = new FluentValueLoader<>(queryString, valueClass, getDelegate());
+        loader.joinTransaction(false);
+        return loader;
     }
 
     /**

@@ -35,7 +35,7 @@ public class SaveContext implements Serializable {
     protected boolean softDeletion = true;
     protected boolean discardSaved;
     protected boolean authorizationRequired;
-    protected boolean joinTransaction;
+    protected boolean joinTransaction = true;
     protected Map<String, Object> dbHints = new HashMap<>();
 
     /**

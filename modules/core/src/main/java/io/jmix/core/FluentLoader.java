@@ -30,8 +30,8 @@ public class FluentLoader<E extends Entity<K>, K> {
     private Class<E> entityClass;
 
     private DataManager dataManager;
-    private boolean transactional;
 
+    private boolean joinTransaction = true;
     private FetchPlan fetchPlan;
     private String fetchPlanName;
     private FetchPlanBuilder fetchPlanBuilder;
@@ -49,13 +49,8 @@ public class FluentLoader<E extends Entity<K>, K> {
         fetchPlanRepository = AppBeans.get(FetchPlanRepository.class);
     }
 
-    public FluentLoader(Class<E> entityClass, DataManager dataManager, boolean transactional) {
-        this(entityClass, dataManager);
-        this.transactional = transactional;
-    }
-
     LoadContext<E> createLoadContext() {
-        LoadContext<E> loadContext = new LoadContext(entityClass);
+        LoadContext<E> loadContext = new LoadContext<>(entityClass);
         initCommonLoadContextParameters(loadContext);
 
         String entityName = metadata.getClass(entityClass).getName();
@@ -66,7 +61,7 @@ public class FluentLoader<E extends Entity<K>, K> {
     }
 
     private void initCommonLoadContextParameters(LoadContext<E> loadContext) {
-        loadContext.setJoinTransaction(transactional);
+        loadContext.setJoinTransaction(joinTransaction);
 
         if (fetchPlan != null)
             loadContext.setFetchPlan(fetchPlan);
@@ -121,6 +116,11 @@ public class FluentLoader<E extends Entity<K>, K> {
             return entity;
         else
             throw new IllegalStateException("No results");
+    }
+
+    public FluentLoader<E, K> joinTransaction(boolean join) {
+        this.joinTransaction = join;
+        return this;
     }
 
     /**

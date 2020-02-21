@@ -49,6 +49,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -62,6 +63,9 @@ import java.util.stream.Collectors;
 public class OrmDataStore implements DataStore {
 
     public static final String NAME = "jmix_OrmDataStore";
+
+    public static final String LOAD_TX_PREFIX = "OrmDataStore-load-";
+    public static final String SAVE_TX_PREFIX = "OrmDataStore-save-";
 
     private static final Logger log = LoggerFactory.getLogger(OrmDataStore.class);
 
@@ -116,6 +120,8 @@ public class OrmDataStore implements DataStore {
     protected PlatformTransactionManager txManager;
 
     protected String storeName;
+
+    protected static final AtomicLong txCount = new AtomicLong();
 
     @Override
     public String getName() {
@@ -1156,7 +1162,7 @@ public class OrmDataStore implements DataStore {
 
     protected TransactionStatus beginLoadTransaction(boolean joinTransaction) {
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setName("OrmDataStore_Load");
+        def.setName(LOAD_TX_PREFIX + txCount.incrementAndGet());
 
         if (serverConfig.getUseReadOnlyTransactionForLoad()) {
             def.setReadOnly(true);
@@ -1182,7 +1188,7 @@ public class OrmDataStore implements DataStore {
 
     protected TransactionStatus beginSaveTransaction(boolean joinTransaction) {
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setName("OrmDataStore_Save");
+        def.setName(SAVE_TX_PREFIX + txCount.incrementAndGet());
 
         if (joinTransaction) {
             def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);

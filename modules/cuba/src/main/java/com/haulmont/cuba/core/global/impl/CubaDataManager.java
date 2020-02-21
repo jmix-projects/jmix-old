@@ -34,10 +34,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Component(DataManager.NAME)
 public class CubaDataManager implements DataManager {
@@ -161,7 +158,10 @@ public class CubaDataManager implements DataManager {
 
     @Override
     public void remove(Entity entity) {
-        delegate.remove(entity);
+        CommitContext context = new CommitContext(
+                Collections.<Entity>emptyList(),
+                Collections.singleton(entity));
+        commit(context);
     }
 
     @Override
@@ -177,11 +177,6 @@ public class CubaDataManager implements DataManager {
     @Override
     public io.jmix.core.DataManager getDelegate() {
         return delegate;
-    }
-
-    @Override
-    public <E extends Entity<K>, K> FluentLoader<E, K> load(Class<E> entityClass) {
-        return new FluentLoader<>(entityClass, delegate);
     }
 
     @Override

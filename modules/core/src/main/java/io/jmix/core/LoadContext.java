@@ -57,7 +57,7 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
     protected boolean loadDynamicAttributes;
     protected boolean loadPartialEntities = true;
     protected boolean authorizationRequired;
-    protected boolean joinTransaction;
+    protected boolean joinTransaction = true;
 
     protected Map<String, Object> hints; // lazy initialized map
 
@@ -471,15 +471,13 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
         /**
          * Creates a copy of this Query instance.
          */
-        // todo refactor
         public Query copy() {
-            Query query = new Query();
-            copyState(query);
-            return query;
+            Query newQuery = new Query();
+            copyStateTo(newQuery);
+            return newQuery;
         }
 
-        // todo refactor
-        public void copyState(Query query) {
+        public void copyStateTo(Query query) {
             query.queryString = this.queryString;
             query.parameters.putAll(this.parameters);
             query.firstResult = this.firstResult;

@@ -35,10 +35,15 @@ public class CommitContext extends SaveContext {
     protected ValidationMode validationMode = ValidationMode.DEFAULT;
     protected List<Class> validationGroups;
 
+    protected CommitContext() {
+        joinTransaction = false;
+    }
+
     /**
      * @param commitInstances changed entities to be committed to the database
      */
     public CommitContext(Entity... commitInstances) {
+        this();
         saving(commitInstances);
     }
 
@@ -46,6 +51,7 @@ public class CommitContext extends SaveContext {
      * @param commitInstances collection of changed entities to be committed to the database
      */
     public CommitContext(Collection commitInstances) {
+        this();
         saving(commitInstances);
     }
 
@@ -54,6 +60,7 @@ public class CommitContext extends SaveContext {
      * @param removeInstances collection of entities to be removed from the database
      */
     public CommitContext(Collection commitInstances, Collection removeInstances) {
+        this();
         saving(commitInstances);
         removing(removeInstances);
     }

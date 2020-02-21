@@ -48,22 +48,22 @@ public class TransactionalDataManagerBean implements TransactionalDataManager {
 
     @Override
     public <E extends Entity<K>, K> FluentLoader<E, K> load(Class<E> entityClass) {
-        return new FluentLoader<>(entityClass, dataManager.getDelegate(), true);
+        return new FluentLoader<>(entityClass, dataManager.getDelegate());
     }
 
     @Override
     public <E extends Entity<K>, K> FluentLoader.ById<E, K> load(Id<E, K> entityId) {
-        return new FluentLoader<>(entityId.getEntityClass(), dataManager.getDelegate(), true).id(entityId.getValue());
+        return new FluentLoader<>(entityId.getEntityClass(), dataManager.getDelegate()).id(entityId.getValue());
     }
 
     @Override
     public FluentValuesLoader loadValues(String queryString) {
-        return new FluentValuesLoader(queryString, dataManager.getDelegate(), true);
+        return new FluentValuesLoader(queryString, dataManager.getDelegate());
     }
 
     @Override
     public <T> FluentValueLoader<T> loadValue(String queryString, Class<T> valueClass) {
-        return new FluentValueLoader<>(queryString, valueClass, dataManager.getDelegate(), true);
+        return new FluentValueLoader<>(queryString, valueClass, dataManager.getDelegate());
     }
 
     @Nullable

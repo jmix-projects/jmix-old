@@ -81,6 +81,7 @@ public class LoadContext<E extends Entity> extends io.jmix.core.LoadContext<E> {
     }
 
     protected LoadContext() {
+        joinTransaction = false;
     }
 
     /**
@@ -157,7 +158,7 @@ public class LoadContext<E extends Entity> extends io.jmix.core.LoadContext<E> {
     public LoadContext<E> setQuery(io.jmix.core.LoadContext.Query query) {
         Query cubaQuery = new Query();
         if (query != null) {
-            query.copyState(cubaQuery);
+            query.copyStateTo(cubaQuery);
         }
         super.setQuery(cubaQuery);
         return this;
@@ -274,9 +275,9 @@ public class LoadContext<E extends Entity> extends io.jmix.core.LoadContext<E> {
 
         @Override
         public Query copy() {
-            Query query = new Query();
-            copyState(query);
-            return query;
+            Query newQuery = new Query();
+            copyStateTo(newQuery);
+            return newQuery;
         }
 
         @Override

@@ -200,21 +200,6 @@ public class DataManagerImpl implements DataManager {
         return entity;
     }
 
-    @Override
-    public <E extends Entity<K>, K> FluentLoader<E, K> load(Class<E> entityClass) {
-        return new FluentLoader<>(entityClass, this);
-    }
-
-    @Override
-    public FluentValuesLoader loadValues(String queryString) {
-        return new FluentValuesLoader(queryString, this);
-    }
-
-    @Override
-    public <T> FluentValueLoader<T> loadValue(String queryString, Class<T> valueClass) {
-        return new FluentValueLoader<>(queryString, valueClass, this);
-    }
-
     protected boolean writeCrossDataStoreReferences(Entity entity, Collection<Entity> allEntities) {
         if (stores.getAdditional().isEmpty())
             return false;
