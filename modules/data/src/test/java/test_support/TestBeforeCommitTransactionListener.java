@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package io.jmix.core.impl;
+package test_support;
 
-import io.jmix.core.metamodel.model.StoreDescriptor;
+import io.jmix.core.entity.Entity;
+import io.jmix.data.listener.BeforeCommitTransactionListener;
 import org.springframework.stereotype.Component;
 
-@Component(UndefinedStoreDescriptor.NAME)
-public class UndefinedStoreDescriptor implements StoreDescriptor {
+import java.util.Collection;
+import java.util.function.Consumer;
 
-    public static final String NAME = "jmix_UndefinedStoreDescriptor";
+@Component
+public class TestBeforeCommitTransactionListener implements BeforeCommitTransactionListener {
 
-    @Override
-    public String getBeanName() {
-        return "<undefined>";
-    }
+    public Consumer<Collection<Entity>> before;
 
     @Override
-    public boolean isPersistent() {
-        return false;
+    public void beforeCommit(String storeName, Collection<Entity> managedEntities) {
+        if (before != null) {
+            before.accept(managedEntities);
+        }
     }
 }
