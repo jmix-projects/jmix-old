@@ -18,7 +18,6 @@ package io.jmix.core.metamodel.model.utils;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.EntityPropertyPath;
-import io.jmix.core.metamodel.model.impl.AbstractInstance;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -137,18 +136,18 @@ public final class InstanceUtils {
     }
 
     /**
-     * Used by {@link AbstractInstance} to check whether a property value has been changed.
+     * Used by {@link } to check whether a property value has been changed.
      *
      * @param a an object
      * @param b an object
-     * @return true if {@code a} equals to {@code b}, but in case of {@code a} is {@link AbstractInstance} or {@code Collection} returns
+     * @return true if {@code a} equals to {@code b}, but in case of {@code a} is {@link } or {@code Collection} returns
      * true only if {@code a} is the same instance as {@code b}
      */
     public static boolean propertyValueEquals(Object a, Object b) {
         if (a == b) {
             return true;
         }
-        if (a instanceof AbstractInstance || a instanceof Collection) {
+        if (a instanceof Entity || a instanceof Collection) {
             return false;
         }
         return a != null && a.equals(b);

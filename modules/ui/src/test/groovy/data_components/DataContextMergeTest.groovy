@@ -20,7 +20,7 @@ import io.jmix.core.CommitContext
 import io.jmix.core.DataManager
 import io.jmix.core.EntityStates
 import io.jmix.core.Id
-import io.jmix.core.entity.BaseEntityInternalAccess
+
 import io.jmix.core.entity.EntityPropertyChangeListener
 import io.jmix.core.entity.SecurityState
 

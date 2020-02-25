@@ -15,18 +15,15 @@
  */
 package io.jmix.core.entity;
 
-import io.jmix.core.metamodel.model.impl.AbstractInstance;
-
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
 /**
  * Base class for persistent embeddable entities.
- *
  */
 @MappedSuperclass
 @io.jmix.core.metamodel.annotations.MetaClass(name = "sys$EmbeddableEntity")
-public abstract class EmbeddableEntity extends AbstractInstance implements Entity<Object> {
+public abstract class EmbeddableEntity implements Entity<Object> {
 
     private static final long serialVersionUID = 266201862280559076L;
 

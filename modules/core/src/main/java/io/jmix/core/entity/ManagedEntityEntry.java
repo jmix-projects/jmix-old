@@ -14,21 +14,31 @@
  * limitations under the License.
  */
 
-package io.jmix.core;
+package io.jmix.core.entity;
 
-import io.jmix.core.entity.ManagedEntity;
-import org.springframework.stereotype.Component;
+import java.io.Serializable;
 
-@Component(EntitySystemStateSupport.NAME)
-public class EntitySystemStateSupport {
+public interface ManagedEntityEntry extends Serializable {
 
-    public static final String NAME = "jmix_EntitySystemStateSupport";
+    boolean isNew();
 
-    public void copySystemState(ManagedEntity<?> src, ManagedEntity<?> dst) {
-        dst.getEntityEntry().copy(src.getEntityEntry());
-    }
+    boolean isManaged();
 
-    public void mergeSystemState(ManagedEntity<?> src, ManagedEntity<?> dst) {
-        dst.getEntityEntry().copy(src.getEntityEntry());
-    }
+    boolean isDetached();
+
+    boolean isRemoved();
+
+    void setNew(boolean _new);
+
+    void setManaged(boolean managed);
+
+    void setDetached(boolean detached);
+
+    void setRemoved(boolean removed);
+
+    SecurityState getSecurityState();
+
+    void setSecurityState(SecurityState securityState);
+
+    void copy(ManagedEntityEntry entry);
 }

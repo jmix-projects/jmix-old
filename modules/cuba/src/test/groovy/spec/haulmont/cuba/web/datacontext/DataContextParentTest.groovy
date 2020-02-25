@@ -19,7 +19,7 @@ package spec.haulmont.cuba.web.datacontext
 import com.haulmont.cuba.core.model.sales.Order
 import com.haulmont.cuba.core.model.sales.OrderLine
 import io.jmix.core.EntityStates
-import io.jmix.core.entity.BaseEntityInternalAccess
+
 import io.jmix.security.entity.Role
 import io.jmix.security.entity.User
 import io.jmix.security.entity.UserRole

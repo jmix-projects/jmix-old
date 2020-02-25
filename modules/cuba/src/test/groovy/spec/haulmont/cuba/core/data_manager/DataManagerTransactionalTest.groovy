@@ -24,7 +24,7 @@ import com.haulmont.cuba.core.model.sales.OrderLine
 import com.haulmont.cuba.core.model.sales.TestCustomerListener
 import com.haulmont.cuba.core.testsupport.TestSupport
 import io.jmix.core.*
-import io.jmix.core.entity.BaseEntityInternalAccess
+
 import io.jmix.data.Persistence
 import io.jmix.data.Transaction
 import io.jmix.data.TransactionalDataManager

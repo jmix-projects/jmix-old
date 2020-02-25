@@ -21,7 +21,7 @@ import com.haulmont.cuba.core.model.sales.Customer
 import com.haulmont.cuba.core.model.sales.Order
 import com.haulmont.cuba.core.model.sales.OrderLine
 import io.jmix.core.EntityStates
-import io.jmix.core.entity.BaseEntityInternalAccess
+
 import io.jmix.core.entity.EntityPropertyChangeListener
 import io.jmix.core.entity.SecurityState
 

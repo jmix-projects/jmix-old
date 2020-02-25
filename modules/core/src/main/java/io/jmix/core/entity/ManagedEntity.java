@@ -14,21 +14,8 @@
  * limitations under the License.
  */
 
-package io.jmix.core;
+package io.jmix.core.entity;
 
-import io.jmix.core.entity.ManagedEntity;
-import org.springframework.stereotype.Component;
-
-@Component(EntitySystemStateSupport.NAME)
-public class EntitySystemStateSupport {
-
-    public static final String NAME = "jmix_EntitySystemStateSupport";
-
-    public void copySystemState(ManagedEntity<?> src, ManagedEntity<?> dst) {
-        dst.getEntityEntry().copy(src.getEntityEntry());
-    }
-
-    public void mergeSystemState(ManagedEntity<?> src, ManagedEntity<?> dst) {
-        dst.getEntityEntry().copy(src.getEntityEntry());
-    }
+public interface ManagedEntity<T> extends Entity<T> {
+    ManagedEntityEntry getEntityEntry();
 }

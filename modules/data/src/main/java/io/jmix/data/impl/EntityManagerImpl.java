@@ -16,15 +16,15 @@
 package io.jmix.data.impl;
 
 import com.google.common.collect.Sets;
-import io.jmix.data.AuditInfoProvider;
-import io.jmix.data.EntityManager;
-import io.jmix.data.Query;
-import io.jmix.data.TypedQuery;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.data.AuditInfoProvider;
+import io.jmix.data.EntityManager;
+import io.jmix.data.Query;
+import io.jmix.data.TypedQuery;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.eclipse.persistence.internal.helper.CubaUtil;
@@ -160,8 +160,8 @@ public class EntityManagerImpl implements EntityManager {
             ((SoftDelete) entity).setDeletedBy(auditInfoProvider.getCurrentUserLogin());
         } else {
             delegate.remove(entity);
-            if (entity instanceof BaseGenericIdEntity) {
-                BaseEntityInternalAccess.setRemoved((BaseGenericIdEntity) entity, true);
+            if (entity instanceof ManagedEntity) {
+                ((ManagedEntity<?>) entity).getEntityEntry().setRemoved(true);
             }
         }
     }
@@ -227,13 +227,13 @@ public class EntityManagerImpl implements EntityManager {
         Class<T> effectiveClass = extendedEntities.getEffectiveClass(clazz);
 
         T reference = delegate.getReference(effectiveClass, getRealId(id));
-        BaseEntityInternalAccess.setNew((BaseGenericIdEntity) reference, false);
+        ((ManagedEntity) reference).getEntityEntry().setNew(false);
         return reference;
     }
 
     @SuppressWarnings("unchecked")
     protected <T> TypedQuery<T> createQueryInstance(boolean isNative, Class<T> resultClass) {
-        return (TypedQuery<T>) beanLocator.getPrototype(Query.NAME,this, isNative, resultClass);
+        return (TypedQuery<T>) beanLocator.getPrototype(Query.NAME, this, isNative, resultClass);
     }
 
     @Override
@@ -422,9 +422,7 @@ public class EntityManagerImpl implements EntityManager {
         Entity reloadedRef = find(entityClass, id);
         if (reloadedRef == null) {
             reloadedRef = metadata.create(entityClass);
-            if (reloadedRef instanceof BaseGenericIdEntity) {
-                ((BaseGenericIdEntity) reloadedRef).setId(id);
-            }
+            EntityAccessor.setEntityId(reloadedRef, id);
             internalPersist(reloadedRef);
         }
         return (T) reloadedRef;

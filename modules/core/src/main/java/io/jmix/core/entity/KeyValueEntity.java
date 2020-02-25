@@ -19,7 +19,6 @@ package io.jmix.core.entity;
 import io.jmix.core.UuidProvider;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.impl.AbstractInstance;
 import io.jmix.core.metamodel.model.utils.InstanceUtils;
 
 import java.util.LinkedHashMap;
@@ -44,7 +43,6 @@ import java.util.UUID;
 @io.jmix.core.metamodel.annotations.MetaClass(name = "sys_KeyValueEntity")
 @SystemLevel
 public class KeyValueEntity
-        extends AbstractInstance
         implements Entity<Object>, HasInstanceMetaClass, JmixEnhancingDisabled {
 
     protected UUID uuid;
@@ -87,17 +85,20 @@ public class KeyValueEntity
     }
 
     @SuppressWarnings("unchecked")
-    @Override
     public <T> T getValue(String name) {
         return (T) properties.get(name);
     }
 
-    @Override
+    public void setValue(String name, Object value) {
+        setValue(name, value, true);
+    }
+
     public void setValue(String name, Object value, boolean checkEquals) {
         Object oldValue = getValue(name);
         if ((!checkEquals) || (!InstanceUtils.propertyValueEquals(oldValue, value))) {
             properties.put(name, value);
-            propertyChanged(name, oldValue, value);
+            //TODO: implement it
+            //propertyChanged(name, oldValue, value);
         }
     }
 

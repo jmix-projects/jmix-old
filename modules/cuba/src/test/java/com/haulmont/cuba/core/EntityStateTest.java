@@ -21,7 +21,7 @@ import com.haulmont.cuba.core.model.common.Group;
 import com.haulmont.cuba.core.model.common.User;
 import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestSupport;
-import io.jmix.core.entity.BaseEntityInternalAccess;
+import io.jmix.core.entity.ManagedEntityEntry;
 import io.jmix.data.EntityManager;
 import io.jmix.data.Persistence;
 import io.jmix.data.Query;
@@ -64,9 +64,10 @@ public class EntityStateTest {
             EntityManager em = persistence.getEntityManager();
 
             user = new User();
-            assertTrue(BaseEntityInternalAccess.isNew(user));
-            assertFalse(BaseEntityInternalAccess.isManaged(user));
-            assertFalse(BaseEntityInternalAccess.isDetached(user));
+            assertTrue(user.getEntityEntry().isNew());
+
+            assertFalse(user.getEntityEntry().isManaged());
+            assertFalse(user.getEntityEntry().isDetached());
 
             group = new Group();
             group.setName("group");
@@ -78,18 +79,20 @@ public class EntityStateTest {
             user.setGroup(group);
             em.persist(user);
 
-            assertTrue(BaseEntityInternalAccess.isNew(user));
-            assertTrue(BaseEntityInternalAccess.isManaged(user));
-            assertFalse(BaseEntityInternalAccess.isDetached(user));
+            assertTrue(user.getEntityEntry().isNew());
+
+            assertTrue(user.getEntityEntry().isManaged());
+            assertFalse(user.getEntityEntry().isDetached());
 
             tx.commit();
         } finally {
             tx.end();
         }
 
-        assertFalse(BaseEntityInternalAccess.isNew(user));
-        assertFalse(BaseEntityInternalAccess.isManaged(user));
-        assertTrue(BaseEntityInternalAccess.isDetached(user));
+        assertFalse(user.getEntityEntry().isNew());
+
+        assertFalse(user.getEntityEntry().isManaged());
+        assertTrue(user.getEntityEntry().isDetached());
 
         // load from DB
 
@@ -100,16 +103,18 @@ public class EntityStateTest {
             user = em.find(User.class, userId);
             assertNotNull(user);
 
-            assertFalse(BaseEntityInternalAccess.isNew(user));
-            assertTrue(BaseEntityInternalAccess.isManaged(user));
-            assertFalse(BaseEntityInternalAccess.isDetached(user));
+            assertFalse(user.getEntityEntry().isNew());
+
+            assertTrue(user.getEntityEntry().isManaged());
+            assertFalse(user.getEntityEntry().isDetached());
 
             localGroup = user.getGroup();
             assertNotNull(localGroup);
 
-            assertFalse(BaseEntityInternalAccess.isNew(user));
-            assertTrue(BaseEntityInternalAccess.isManaged(user));
-            assertFalse(BaseEntityInternalAccess.isDetached(user));
+            assertFalse(user.getEntityEntry().isNew());
+
+            assertTrue(user.getEntityEntry().isManaged());
+            assertFalse(user.getEntityEntry().isDetached());
 
             tx.commit();
         } finally {
@@ -124,29 +129,33 @@ public class EntityStateTest {
             user = (User) query.getFirstResult();
             assertNotNull(user);
 
-            assertFalse(BaseEntityInternalAccess.isNew(user));
-            assertTrue(BaseEntityInternalAccess.isManaged(user));
-            assertFalse(BaseEntityInternalAccess.isDetached(user));
+            assertFalse(user.getEntityEntry().isNew());
+
+            assertTrue(user.getEntityEntry().isManaged());
+            assertFalse(user.getEntityEntry().isDetached());
 
             localGroup = user.getGroup();
             assertNotNull(localGroup);
 
-            assertFalse(BaseEntityInternalAccess.isNew(localGroup));
-            assertTrue(BaseEntityInternalAccess.isManaged(localGroup));
-            assertFalse(BaseEntityInternalAccess.isDetached(localGroup));
+            assertFalse(localGroup.getEntityEntry().isNew());
+
+            assertTrue(localGroup.getEntityEntry().isManaged());
+            assertFalse(localGroup.getEntityEntry().isDetached());
 
             tx.commit();
         } finally {
             tx.end();
         }
 
-        assertFalse(BaseEntityInternalAccess.isNew(user));
-        assertFalse(BaseEntityInternalAccess.isManaged(user));
-        assertTrue(BaseEntityInternalAccess.isDetached(user));
+        assertFalse(user.getEntityEntry().isNew());
 
-        assertFalse(BaseEntityInternalAccess.isNew(localGroup));
-        assertFalse(BaseEntityInternalAccess.isManaged(user));
-        assertTrue(BaseEntityInternalAccess.isDetached(user));
+        assertFalse(user.getEntityEntry().isManaged());
+        assertTrue(user.getEntityEntry().isDetached());
+
+        assertFalse(localGroup.getEntityEntry().isNew());
+
+        assertFalse(user.getEntityEntry().isManaged());
+        assertTrue(user.getEntityEntry().isDetached());
 
         user.setName("changed name");
 
@@ -157,18 +166,20 @@ public class EntityStateTest {
             EntityManager em = persistence.getEntityManager();
             user = em.merge(user);
 
-            assertFalse(BaseEntityInternalAccess.isNew(user));
-            assertTrue(BaseEntityInternalAccess.isManaged(user));
-            assertFalse(BaseEntityInternalAccess.isDetached(user));
+            assertFalse(user.getEntityEntry().isNew());
+
+            assertTrue(user.getEntityEntry().isManaged());
+            assertFalse(user.getEntityEntry().isDetached());
 
             tx.commit();
         } finally {
             tx.end();
         }
 
-        assertFalse(BaseEntityInternalAccess.isNew(user));
-        assertFalse(BaseEntityInternalAccess.isManaged(user));
-        assertTrue(BaseEntityInternalAccess.isDetached(user));
+        assertFalse(user.getEntityEntry().isNew());
+
+        assertFalse(user.getEntityEntry().isManaged());
+        assertTrue(user.getEntityEntry().isDetached());
     }
 
     @Test
@@ -178,15 +189,17 @@ public class EntityStateTest {
 
         // serialize new
         user = new User();
-        assertTrue(BaseEntityInternalAccess.isNew(user));
-        assertFalse(BaseEntityInternalAccess.isManaged(user));
-        assertFalse(BaseEntityInternalAccess.isDetached(user));
+        assertTrue(user.getEntityEntry().isNew());
+
+        assertFalse(user.getEntityEntry().isManaged());
+        assertFalse(user.getEntityEntry().isDetached());
 
         user = reserialize(user);
 
-        assertTrue(BaseEntityInternalAccess.isNew(user));
-        assertFalse(BaseEntityInternalAccess.isManaged(user));
-        assertFalse(BaseEntityInternalAccess.isDetached(user));
+        assertTrue(user.getEntityEntry().isNew());
+
+        assertFalse(user.getEntityEntry().isManaged());
+        assertFalse(user.getEntityEntry().isDetached());
 
         // serialize managed
 
@@ -218,22 +231,25 @@ public class EntityStateTest {
             user = em.find(User.class, userId);
             assertNotNull(user);
 
-            assertFalse(BaseEntityInternalAccess.isNew(user));
-            assertTrue(BaseEntityInternalAccess.isManaged(user));
-            assertFalse(BaseEntityInternalAccess.isDetached(user));
+            assertFalse(user.getEntityEntry().isNew());
+
+            assertTrue(user.getEntityEntry().isManaged());
+            assertFalse(user.getEntityEntry().isDetached());
 
             localGroup = user.getGroup();
             assertNotNull(localGroup);
 
-            assertFalse(BaseEntityInternalAccess.isNew(localGroup));
-            assertTrue(BaseEntityInternalAccess.isManaged(localGroup));
-            assertFalse(BaseEntityInternalAccess.isDetached(localGroup));
+            assertFalse(localGroup.getEntityEntry().isNew());
+
+            assertTrue(localGroup.getEntityEntry().isManaged());
+            assertFalse(localGroup.getEntityEntry().isDetached());
 
             user = reserialize(user);
 
-            assertFalse(BaseEntityInternalAccess.isNew(user));
-            assertFalse(BaseEntityInternalAccess.isManaged(user));
-            assertTrue(BaseEntityInternalAccess.isDetached(user));
+            assertFalse(user.getEntityEntry().isNew());
+
+            assertFalse(user.getEntityEntry().isManaged());
+            assertTrue(user.getEntityEntry().isDetached());
 
             tx.commit();
         } finally {
@@ -249,24 +265,27 @@ public class EntityStateTest {
             EntityManager em = persistence.getEntityManager();
             user = em.merge(user);
 
-            assertFalse(BaseEntityInternalAccess.isNew(user));
-            assertTrue(BaseEntityInternalAccess.isManaged(user));
-            assertFalse(BaseEntityInternalAccess.isDetached(user));
+            assertFalse(user.getEntityEntry().isNew());
+
+            assertTrue(user.getEntityEntry().isManaged());
+            assertFalse(user.getEntityEntry().isDetached());
 
             tx.commit();
         } finally {
             tx.end();
         }
 
-        assertFalse(BaseEntityInternalAccess.isNew(user));
-        assertFalse(BaseEntityInternalAccess.isManaged(user));
-        assertTrue(BaseEntityInternalAccess.isDetached(user));
+        assertFalse(user.getEntityEntry().isNew());
+
+        assertFalse(user.getEntityEntry().isManaged());
+        assertTrue(user.getEntityEntry().isDetached());
 
         user = reserialize(user);
 
-        assertFalse(BaseEntityInternalAccess.isNew(user));
-        assertFalse(BaseEntityInternalAccess.isManaged(user));
-        assertTrue(BaseEntityInternalAccess.isDetached(user));
+        assertFalse(user.getEntityEntry().isNew());
+
+        assertFalse(user.getEntityEntry().isManaged());
+        assertTrue(user.getEntityEntry().isDetached());
     }
 
     @Test
@@ -278,17 +297,19 @@ public class EntityStateTest {
         Transaction tx = persistence.createTransaction();
         try {
             user = new User();
-            assertTrue(BaseEntityInternalAccess.isNew(user));
-            assertFalse(BaseEntityInternalAccess.isManaged(user));
-            assertFalse(BaseEntityInternalAccess.isDetached(user));
+            assertTrue(user.getEntityEntry().isNew());
+
+            assertFalse(user.getEntityEntry().isManaged());
+            assertFalse(user.getEntityEntry().isDetached());
 
             userId = user.getId();
 
             persistence.getEntityManager().persist(user);
 
-            assertTrue(BaseEntityInternalAccess.isNew(user));
-            assertTrue(BaseEntityInternalAccess.isManaged(user));
-            assertFalse(BaseEntityInternalAccess.isDetached(user));
+            assertTrue(user.getEntityEntry().isNew());
+
+            assertTrue(user.getEntityEntry().isManaged());
+            assertFalse(user.getEntityEntry().isDetached());
 
             tx.commit();
 
@@ -299,9 +320,10 @@ public class EntityStateTest {
             tx.end();
         }
 
-        assertTrue(BaseEntityInternalAccess.isNew(user));
-        assertFalse(BaseEntityInternalAccess.isManaged(user));
-        assertFalse(BaseEntityInternalAccess.isDetached(user));
+        assertTrue(user.getEntityEntry().isNew());
+
+        assertFalse(user.getEntityEntry().isManaged());
+        assertFalse(user.getEntityEntry().isDetached());
     }
 
     @Test
@@ -313,9 +335,10 @@ public class EntityStateTest {
             EntityManager em = persistence.getEntityManager();
 
             user = new User();
-            assertTrue(BaseEntityInternalAccess.isNew(user));
-            assertFalse(BaseEntityInternalAccess.isManaged(user));
-            assertFalse(BaseEntityInternalAccess.isDetached(user));
+            assertTrue(user.getEntityEntry().isNew());
+
+            assertFalse(user.getEntityEntry().isManaged());
+            assertFalse(user.getEntityEntry().isDetached());
 
             group = new Group();
             group.setName("group");
@@ -337,15 +360,17 @@ public class EntityStateTest {
         try {
             user = persistence.getEntityManager().find(User.class, userId);
 
-            assertFalse(BaseEntityInternalAccess.isNew(user));
-            assertTrue(BaseEntityInternalAccess.isManaged(user));
-            assertFalse(BaseEntityInternalAccess.isDetached(user));
+            assertFalse(user.getEntityEntry().isNew());
+
+            assertTrue(user.getEntityEntry().isManaged());
+            assertFalse(user.getEntityEntry().isDetached());
         } finally {
             tx.end();
         }
 
-        assertFalse(BaseEntityInternalAccess.isNew(user));
-        assertFalse(BaseEntityInternalAccess.isManaged(user));
-        assertTrue(BaseEntityInternalAccess.isDetached(user));
+        assertFalse(user.getEntityEntry().isNew());
+
+        assertFalse(user.getEntityEntry().isManaged());
+        assertTrue(user.getEntityEntry().isDetached());
     }
 }

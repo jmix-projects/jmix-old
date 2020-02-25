@@ -101,7 +101,7 @@ class DataContextSpec extends Specification {
         TimeSource timeSource = AppBeans.get(TimeSource)
 
         T e = reserialize(entity)
-        entityStates.makeDetached((BaseGenericIdEntity) e)
+        entityStates.makeDetached((Entity)e)
 
         if (e instanceof Versioned) {
             Versioned versioned = (Versioned) e

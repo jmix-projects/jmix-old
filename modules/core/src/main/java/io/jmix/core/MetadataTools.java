@@ -73,7 +73,8 @@ public class MetadataTools {
             Creatable.class,
             Updatable.class,
             SoftDelete.class,
-            HasUuid.class
+            HasUuid.class,
+            ManagedEntity.class
     );
 
     @Inject

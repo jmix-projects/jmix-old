@@ -15,10 +15,12 @@
  */
 package io.jmix.core.entity;
 
+import java.io.Serializable;
+
 /**
  * Interface to be implemented by domain model objects with identifiers.
  *
  * @param <T> identifier type
  */
-public interface Entity<T> {
+public interface Entity<T> extends Serializable {
 }

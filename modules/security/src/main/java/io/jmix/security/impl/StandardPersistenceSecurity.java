@@ -18,10 +18,7 @@ package io.jmix.security.impl;
 
 import com.google.common.collect.Multimap;
 import io.jmix.core.*;
-import io.jmix.core.entity.BaseEntityInternalAccess;
-import io.jmix.core.entity.BaseGenericIdEntity;
-import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.*;
 import io.jmix.core.impl.jpql.JpqlSyntaxException;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -198,7 +195,9 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
         String storeName = metadataTools.getStoreName(metaClass);
         EntityManager entityManager = persistence.getEntityManager(storeName);
 
-        Multimap<String, Object> filtered = BaseEntityInternalAccess.getFilteredData(entity);
+        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).getEntityEntry();
+
+        Multimap<String, Object> filtered = entityEntry.getSecurityState().getFilteredData();
         if (filtered == null) {
             return;
         }
@@ -235,7 +234,8 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
 
     @Override
     public void assertToken(Entity entity) {
-        if (BaseEntityInternalAccess.getSecurityToken(entity) == null) {
+        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).getEntityEntry();
+        if (entityEntry.getSecurityState().getSecurityToken() == null) {
             assertSecurityConstraints(entity, (e, metaProperty) -> entityStates.isDetached(entity)
                     && !entityStates.isLoaded(entity, metaProperty.getName()));
         }
@@ -243,7 +243,8 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
 
     @Override
     public void assertTokenForREST(Entity entity, FetchPlan view) {
-        if (BaseEntityInternalAccess.getSecurityToken(entity) == null) {
+        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).getEntityEntry();
+        if (entityEntry.getSecurityState().getSecurityToken() == null) {
             assertSecurityConstraints(entity,
                     (e, metaProperty) -> view != null && !view.containsProperty(metaProperty.getName()));
         }
@@ -301,9 +302,9 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
             return;
         }
         handled.add(entityId);
-        if (entity instanceof BaseGenericIdEntity) {
-            BaseGenericIdEntity baseGenericIdEntity = (BaseGenericIdEntity) entity;
-            Multimap<String, Object> filteredData = BaseEntityInternalAccess.getFilteredData(baseGenericIdEntity);
+        if (entity instanceof ManagedEntity) {
+            ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).getEntityEntry();
+            Multimap<String, Object> filteredData = entityEntry.getSecurityState().getFilteredData();
             for (MetaProperty property : metaClass.getProperties()) {
                 if (metadataTools.isPersistent(property) && entityStates.isLoaded(entity, property.getName())) {
                     Object value = EntityAccessor.getEntityValue(entity, property.getName());
@@ -345,31 +346,28 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
             return false;
         }
         handled.add(entityId);
-        if (entity instanceof BaseGenericIdEntity) {
-            BaseGenericIdEntity baseGenericIdEntity = (BaseGenericIdEntity) entity;
-            for (MetaProperty property : metaClass.getProperties()) {
-                if (metadataTools.isPersistent(property) && entityStates.isLoaded(entity, property.getName())) {
-                    Object value = EntityAccessor.getEntityValue(entity, property.getName());
-                    if (value instanceof Collection) {
-                        Set filtered = new LinkedHashSet();
-                        for (Entity item : (Collection<Entity>) value) {
-                            if (calculateFilteredData(item, handled, true)) {
-                                filtered.add(referenceToEntitySupport.getReferenceId(item));
-                            }
+        for (MetaProperty property : metaClass.getProperties()) {
+            if (metadataTools.isPersistent(property) && entityStates.isLoaded(entity, property.getName())) {
+                Object value = EntityAccessor.getEntityValue(entity, property.getName());
+                if (value instanceof Collection) {
+                    Set filtered = new LinkedHashSet();
+                    for (Entity item : (Collection<Entity>) value) {
+                        if (calculateFilteredData(item, handled, true)) {
+                            filtered.add(referenceToEntitySupport.getReferenceId(item));
                         }
-                        if (!filtered.isEmpty()) {
-                            securityTokenManager.addFiltered(baseGenericIdEntity, property.getName(), filtered);
-                        }
-                    } else if (value instanceof Entity) {
-                        Entity valueEntity = (Entity) value;
-                        if (calculateFilteredData(valueEntity, handled, true)) {
-                            securityTokenManager.addFiltered(baseGenericIdEntity, property.getName(),
-                                    referenceToEntitySupport.getReferenceId(valueEntity));
-                        }
+                    }
+                    if (!filtered.isEmpty()) {
+                        securityTokenManager.addFiltered(entity, property.getName(), filtered);
+                    }
+                } else if (value instanceof Entity) {
+                    Entity valueEntity = (Entity) value;
+                    if (calculateFilteredData(valueEntity, handled, true)) {
+                        securityTokenManager.addFiltered(entity, property.getName(),
+                                referenceToEntitySupport.getReferenceId(valueEntity));
                     }
                 }
             }
-            securityTokenManager.writeSecurityToken(baseGenericIdEntity);
+            securityTokenManager.writeSecurityToken(entity);
         }
         return false;
     }

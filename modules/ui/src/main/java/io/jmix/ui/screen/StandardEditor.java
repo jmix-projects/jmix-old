@@ -20,9 +20,9 @@ import com.google.common.base.Strings;
 import io.jmix.core.*;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.events.TriggerOnce;
-import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.ManagedEntity;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.ClientConfig;
 import io.jmix.ui.actions.Action;
@@ -196,7 +196,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen
             if (instanceLoader != null
                     && instanceLoader.isLoadDynamicAttributes()
                     && getEntityStates().isNew(entityToEdit)
-                    && mergedEntity instanceof BaseGenericIdEntity) {
+                    && mergedEntity instanceof ManagedEntity) {
                 // todo dynamic attributes
                 // tools.initDefaultAttributeValues((BaseGenericIdEntity) mergedEntity, mergedEntity.getMetaClass());
             }

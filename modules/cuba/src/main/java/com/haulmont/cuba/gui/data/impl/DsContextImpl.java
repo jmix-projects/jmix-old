@@ -17,6 +17,8 @@ package com.haulmont.cuba.gui.data.impl;
 
 import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.gui.data.*;
+import com.haulmont.cuba.gui.data.impl.compatibility.DsContextCommitListenerWrapper;
+import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
 import io.jmix.core.AppBeans;
 import io.jmix.core.CommitContext;
 import io.jmix.core.FetchPlan;
@@ -24,13 +26,10 @@ import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.metamodel.model.impl.AbstractInstance;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.FrameContext;
-import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
 import io.jmix.ui.filter.ParameterInfo;
-import com.haulmont.cuba.gui.data.impl.compatibility.DsContextCommitListenerWrapper;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.sys.PersistenceHelper;
 
@@ -350,7 +349,7 @@ public class DsContextImpl implements DsContextImplementation {
                     }
                     if (masterItem != null) {
                         // CAUTION need to rework this mechanism in case of two or more nested collection datasources
-                        ((AbstractInstance) entity).setValue(inverseProp.getName(), masterItem, false);
+                        EntityAccessor.setEntityValue(entity, inverseProp.getName(), masterItem, false);
                     }
                 }
             }

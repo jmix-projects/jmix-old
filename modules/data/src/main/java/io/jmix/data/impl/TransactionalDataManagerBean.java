@@ -17,8 +17,8 @@
 package io.jmix.data.impl;
 
 import io.jmix.core.*;
-import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.entity.KeyValueEntity;
 import io.jmix.data.TransactionalDataManager;
 import io.jmix.data.Transactions;
@@ -126,9 +126,9 @@ public class TransactionalDataManagerBean implements TransactionalDataManager {
     }
 
     @Override
-    public <T extends BaseGenericIdEntity<K>, K> T getReference(Class<T> entityClass, K id) {
+    public <T extends Entity<K>, K> T getReference(Class<T> entityClass, K id) {
         T entity = metadata.create(entityClass);
-        entity.setId(id);
+        EntityAccessor.setEntityId(entity, id);
         entityStates.makePatch(entity);
         return entity;
     }
