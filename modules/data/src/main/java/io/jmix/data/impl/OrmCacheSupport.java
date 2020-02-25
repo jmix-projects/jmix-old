@@ -19,11 +19,11 @@ package io.jmix.data.impl;
 import io.jmix.core.EntityStates;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
+import io.jmix.core.entity.BaseGenericIdEntity;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.data.Persistence;
+import io.jmix.data.StoreAwareLocator;
 import org.eclipse.persistence.jpa.JpaCache;
 import org.springframework.stereotype.Component;
 
@@ -39,9 +39,8 @@ public class OrmCacheSupport {
     @Inject
     protected Metadata metadata;
 
-    // todo data stores
     @Inject
-    protected EntityManagerFactory entityManagerFactory;
+    protected StoreAwareLocator storeAwareLocator;
 
     @Inject
     protected EntityStates entityStates;
@@ -52,10 +51,10 @@ public class OrmCacheSupport {
     /**
      * Evicts an entity from cache if it has the given entity as an element of collection.
      *
-     * @param entity  which is being updated and can potentially be an element of a collection
-     * @param changes changes in the entity. Null when creating and removing the entity.
+     * @param entity    which is being updated and can potentially be an element of a collection
+     * @param changes   changes in the entity. Null when creating and removing the entity.
      */
-    public void evictMasterEntity(Entity<?> entity, @Nullable EntityAttributeChanges changes) {
+    public void evictMasterEntity(BaseGenericIdEntity entity, @Nullable EntityAttributeChanges changes) {
         MetaClass metaClass = metadata.getClass(entity.getClass());
         for (MetaProperty property : metaClass.getProperties()) {
             if (!property.getRange().isClass() || property.getRange().getCardinality().isMany())
@@ -73,7 +72,7 @@ public class OrmCacheSupport {
                         }
                     }
                 } else {
-                    Object masterEntity = EntityAccessor.getEntityValue(entity, property.getName());
+                    Object masterEntity = entity.getValue(property.getName());
                     evictEntity(masterEntity);
                 }
             }
@@ -81,7 +80,9 @@ public class OrmCacheSupport {
     }
 
     private void evictEntity(Object entity) {
-        if (entity != null && !entityStates.isNew(entity)) {
+        if (entity instanceof Entity && !entityStates.isNew(entity)) {
+            String storeName = metadata.getClass((Entity) entity).getStore().getName();
+            EntityManagerFactory entityManagerFactory = storeAwareLocator.getEntityManagerFactory(storeName);
             JpaCache cache = (JpaCache) entityManagerFactory.getCache();
             cache.evict(entity, true);
         }

@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package io.jmix.core.impl;
+package test_support;
 
 import io.jmix.core.metamodel.model.StoreDescriptor;
 import org.springframework.stereotype.Component;
 
-@Component(UndefinedStoreDescriptor.NAME)
-public class UndefinedStoreDescriptor implements StoreDescriptor {
-
-    public static final String NAME = "jmix_UndefinedStoreDescriptor";
+@Component("test_InMemoryStoreDescriptor")
+public class TestInMemoryStoreDescriptor implements StoreDescriptor {
 
     @Override
     public String getBeanName() {
-        return "<undefined>";
+        return "test_InMemoryDataStore";
     }
 
     @Override
