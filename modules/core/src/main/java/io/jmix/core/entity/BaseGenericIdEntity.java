@@ -16,14 +16,11 @@
 package io.jmix.core.entity;
 
 import io.jmix.core.entity.annotation.UnavailableInSecurityConstraints;
-import io.jmix.core.metamodel.model.impl.AbstractInstance;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import java.io.IOException;
 import java.util.Objects;
-
-import static io.jmix.core.entity.BaseEntityInternalAccess.*;
 
 /**
  * Base class for entities.
@@ -40,12 +37,9 @@ import static io.jmix.core.entity.BaseEntityInternalAccess.*;
 @MappedSuperclass
 @io.jmix.core.metamodel.annotations.MetaClass(name = "sys$BaseGenericIdEntity")
 @UnavailableInSecurityConstraints
-public abstract class BaseGenericIdEntity<T> extends AbstractInstance implements Entity<T> {
+public abstract class BaseGenericIdEntity<T> implements ManagedEntity<T> {
 
     private static final long serialVersionUID = -8400641366148656528L;
-
-    @Transient
-    protected byte __state = BaseEntityInternalAccess.NEW;
 
     @Transient
     protected SecurityState __securityState;
@@ -56,10 +50,13 @@ public abstract class BaseGenericIdEntity<T> extends AbstractInstance implements
 
     public abstract void setId(T id);
 
+    public abstract T getId();
+
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-        if (isManaged(this)) {
-            setManaged(this, false);
-            setDetached(this, true);
+
+        if (getEntityEntry().isManaged()) {
+            getEntityEntry().setManaged(false);
+            getEntityEntry().setDetached(true);
         }
         out.defaultWriteObject();
     }
@@ -70,8 +67,9 @@ public abstract class BaseGenericIdEntity<T> extends AbstractInstance implements
      */
     @SuppressWarnings("unchecked")
     protected void copySystemState(BaseGenericIdEntity src) {
-        __state = src.__state;
-        __securityState = src.__securityState;
+
+        //__state = src.__state;
+        //__securityState = src.__securityState;
         // todo dynamic attributes
 //        dynamicAttributes = src.dynamicAttributes;
     }
@@ -152,30 +150,38 @@ public abstract class BaseGenericIdEntity<T> extends AbstractInstance implements
         if (other == null || getClass() != other.getClass())
             return false;
 
-        if (EntityAccessor.<T>getEntityId(this) == null && EntityAccessor.getEntityId(((BaseGenericIdEntity) other)) == null)
+        if (getId() == null && ((BaseGenericIdEntity) other).getId() == null)
             return false;
 
-        return Objects.equals(EntityAccessor.<T>getEntityId(this), EntityAccessor.getEntityId(((BaseGenericIdEntity) other)));
+        return Objects.equals(getId(), ((BaseGenericIdEntity) other).getId());
     }
 
     @Override
     public int hashCode() {
-        return EntityAccessor.<T>getEntityId(this) != null ? EntityAccessor.<T>getEntityId(this).hashCode() : super.hashCode();
+        return getId() != null ? getId().hashCode() : super.hashCode();
     }
 
     @Override
     public String toString() {
         String state = "";
-        if (isNew(this))
+
+        if (getEntityEntry().isNew())
             state += "new,";
-        if (isManaged(this))
+        if (getEntityEntry().isManaged())
             state += "managed,";
-        if (isDetached(this))
+        if (getEntityEntry().isDetached())
             state += "detached,";
-        if (isRemoved(this))
+        if (getEntityEntry().isRemoved())
             state += "removed,";
+
         if (state.length() > 0)
             state = state.substring(0, state.length() - 1);
-        return getClass().getName() + "-" + EntityAccessor.<T>getEntityId(this) + " [" + state + "]";
+
+        return getClass().getName() + "-" + getId() + " [" + state + "]";
+    }
+
+    @Override
+    public ManagedEntityEntry getEntityEntry() {
+        return null;
     }
 }

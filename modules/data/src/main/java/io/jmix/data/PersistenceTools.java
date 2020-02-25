@@ -52,6 +52,9 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static io.jmix.core.entity.EntityAccessor.getEntityId;
+import static io.jmix.core.entity.EntityAccessor.getEntityValue;
+
 /**
  * Utility class to provide common functionality related to persistence.
  * <br> Implemented as Spring bean to allow extension in application projects.
@@ -175,7 +178,7 @@ public class PersistenceTools {
             return null;
 
         } else if (!isDirty(entity, attribute)) {
-            return EntityAccessor.getEntityValue(entity, attribute);
+            return getEntityValue(entity, attribute);
 
         } else {
             ObjectChangeSet objectChanges =
@@ -275,7 +278,7 @@ public class PersistenceTools {
      * @throws IllegalStateException    if the entity is not in Managed state
      * @throws RuntimeException         if anything goes wrong when retrieving the ID
      */
-    public RefId getReferenceId(BaseGenericIdEntity entity, String property) {
+    public RefId getReferenceId(Entity entity, String property) {
         MetaClass metaClass = metadata.getClass(entity.getClass());
         MetaProperty metaProperty = metaClass.getProperty(property);
 
@@ -285,9 +288,9 @@ public class PersistenceTools {
         if (!entityStates.isManaged(entity))
             throw new IllegalStateException("Entity must be in managed state");
 
-        String[] inaccessibleAttributes = BaseEntityInternalAccess.getInaccessibleAttributes(entity);
-        if (inaccessibleAttributes != null) {
-            for (String inaccessibleAttr : inaccessibleAttributes) {
+        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).getEntityEntry();
+        if (entityEntry.getSecurityState().getInaccessibleAttributes() != null) {
+            for (String inaccessibleAttr : entityEntry.getSecurityState().getInaccessibleAttributes()) {
                 if (inaccessibleAttr.equals(property))
                     return RefId.createNotLoaded(property);
             }
@@ -299,8 +302,8 @@ public class PersistenceTools {
                 if (!fetchGroup.containsAttributeInternal(property))
                     return RefId.createNotLoaded(property);
                 else {
-                    Entity refEntity = (Entity) entity.getValue(property);
-                    return RefId.create(property, refEntity == null ? null : EntityAccessor.getEntityId(refEntity));
+                    Entity refEntity = getEntityValue(entity, property);
+                    return RefId.create(property, refEntity == null ? null : getEntityId(refEntity));
                 }
             }
         }
@@ -392,7 +395,7 @@ public class PersistenceTools {
     }
 
     /**
-     * A wrapper for the reference ID value returned by {@link #getReferenceId(BaseGenericIdEntity, String)} method.
+     * A wrapper for the reference ID value returned by {@link #getReferenceId(Entity, String)} method.
      *
      * @see #isLoaded()
      * @see #getValue()

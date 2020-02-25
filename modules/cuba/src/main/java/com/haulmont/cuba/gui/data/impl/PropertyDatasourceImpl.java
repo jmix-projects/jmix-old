@@ -17,15 +17,14 @@ package com.haulmont.cuba.gui.data.impl;
 
 import com.haulmont.cuba.gui.data.*;
 import io.jmix.core.DevelopmentException;
-import io.jmix.core.entity.EntityAccessor;
-import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlanProperty;
 import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.metamodel.model.impl.AbstractInstance;
+import io.jmix.ui.sys.PersistenceHelper;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -117,7 +116,7 @@ public class PropertyDatasourceImpl<T extends Entity>
                 if (masterView == null) {
                     throw new DevelopmentException("No view for datasource " + masterDs.getId(),
                             ParamsMap.of("masterDs", masterDs.getId(),
-                                         "propertyDs", getId()));
+                                    "propertyDs", getId()));
                 }
 
                 FetchPlanProperty property = masterView.getProperty(metaProperty.getName());
@@ -130,9 +129,9 @@ public class PropertyDatasourceImpl<T extends Entity>
                             String.format("Invalid view definition: %s. Property '%s' must have a view",
                                     masterView, property),
                             ParamsMap.of("masterDs", masterDs.getId(),
-                                         "propertyDs", getId(),
-                                         "masterView", masterView,
-                                         "property", property)
+                                    "propertyDs", getId(),
+                                    "masterView", masterView,
+                                    "property", property)
                     );
                 }
                 view = metadata.getViewRepository().getView(getMetaClass(), property.getFetchPlan().getName());
@@ -270,8 +269,8 @@ public class PropertyDatasourceImpl<T extends Entity>
 
             boolean isModified = masterDs.isModified();
 
-            AbstractInstance parentInstance = (AbstractInstance) parentItem;
-            parentInstance.setValue(metaProperty.getName(), newItem, false);
+            EntityAccessor.setEntityValue(parentItem, metaProperty.getName(), newItem, false);
+
             detachListener(prevItem);
             attachListener(newItem);
 

@@ -21,9 +21,9 @@ import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.metamodel.model.impl.AbstractInstance;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -31,19 +31,19 @@ import java.util.List;
 
 public class EntityCopyUtils {
 
-    public static Entity copyCompositions(Entity source) {
-        Preconditions.checkNotNullArgument(source, "source is null");
+    public static Entity copyCompositions(Entity src) {
+        Preconditions.checkNotNullArgument(src, "source is null");
 
         Entity dest;
         try {
-            dest = source.getClass().newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            dest = src.getClass().getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
-        copyCompositions(source, dest);
+        copyCompositions(src, dest);
 
-        if (BaseEntityInternalAccess.supportsSecurityState(source)) {
-            BaseEntityInternalAccess.setSecurityState(dest, BaseEntityInternalAccess.getSecurityState(source));
+        if (src instanceof ManagedEntity) {
+            ((ManagedEntity<?>) dest).getEntityEntry().setSecurityState(((ManagedEntity<?>) src).getEntityEntry().getSecurityState());
         }
 
         return dest;
@@ -99,12 +99,12 @@ public class EntityCopyUtils {
                 }
             }
         }
-        if (source instanceof BaseGenericIdEntity && dest instanceof BaseGenericIdEntity) {
-            BaseGenericIdEntity destGenericEntity = (BaseGenericIdEntity) dest;
-            BaseGenericIdEntity<?> sourceGenericEntity = (BaseGenericIdEntity<?>) source;
+        if (source instanceof ManagedEntity && dest instanceof ManagedEntity) {
+            ManagedEntity destManaged = (ManagedEntity) dest;
+            ManagedEntity sourceManaged = (ManagedEntity) source;
 
-            BaseEntityInternalAccess.setDetached(destGenericEntity, BaseEntityInternalAccess.isDetached(sourceGenericEntity));
-            BaseEntityInternalAccess.setNew(destGenericEntity, BaseEntityInternalAccess.isNew(sourceGenericEntity));
+            destManaged.getEntityEntry().setDetached(sourceManaged.getEntityEntry().isDetached());
+            destManaged.getEntityEntry().setNew(sourceManaged.getEntityEntry().isNew());
             // todo dynamic attributes
 //            destGenericEntity.setDynamicAttributes(sourceGenericEntity.getDynamicAttributes());
         }
@@ -124,7 +124,7 @@ public class EntityCopyUtils {
 
                     if (value != null && srcProperty.getRange().getCardinality().isMany()
                             && srcProperty.getType() == MetaProperty.Type.COMPOSITION) {
-                        ((AbstractInstance) dest).setValue(name, EntityAccessor.getEntityValue(source, name), false);
+                        EntityAccessor.setEntityValue(dest, name, EntityAccessor.getEntityValue(source, name), false);
                     } else {
                         EntityAccessor.setEntityValue(dest, name, EntityAccessor.getEntityValue(source, name));
                     }

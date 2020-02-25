@@ -27,7 +27,6 @@ import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.core.metamodel.model.impl.AbstractInstance;
 import io.jmix.core.security.*;
 import io.jmix.data.*;
 import io.jmix.data.event.EntityChangedEvent;
@@ -53,6 +52,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static io.jmix.core.entity.EntityAccessor.getEntityId;
+import static io.jmix.core.entity.EntityAccessor.getEntityValue;
 
 /**
  * INTERNAL.
@@ -334,7 +336,7 @@ public class OrmDataStore implements DataStore {
 
     protected <E extends Entity> List<E> checkAndReorderLoadedEntities(List<?> ids, List<E> entities, MetaClass metaClass) {
         List<E> result = new ArrayList<>(ids.size());
-        Map<Object, E> idToEntityMap = entities.stream().collect(Collectors.toMap(e -> EntityAccessor.getEntityId(e), Function.identity()));
+        Map<Object, E> idToEntityMap = entities.stream().collect(Collectors.toMap(e -> getEntityId(e), Function.identity()));
         for (Object id : ids) {
             E entity = idToEntityMap.get(id);
             if (entity == null) {
@@ -1074,22 +1076,20 @@ public class OrmDataStore implements DataStore {
                 continue;
             if (entityStates.isLoaded(entity, property.getName())) {
                 if (property.getRange().getCardinality().isMany()) {
-                    Collection collection = EntityAccessor.getEntityValue(entity, property.getName());
+                    Collection collection = getEntityValue(entity, property.getName());
                     if (collection != null) {
                         for (Object obj : collection) {
                             updateReferences((Entity) obj, refEntity, visited);
                         }
                     }
                 } else {
-                    Entity value = EntityAccessor.getEntityValue(entity, property.getName());
+                    Entity value = getEntityValue(entity, property.getName());
                     if (value != null) {
-                        if (EntityAccessor.getEntityId(value).equals(EntityAccessor.getEntityId(refEntity))) {
-                            if (entity instanceof AbstractInstance) {
-                                if (property.isReadOnly() && metadataTools.isNotPersistent(property)) {
-                                    continue;
-                                }
-                                ((AbstractInstance) entity).setValue(property.getName(), refEntity, false);
+                        if (Objects.equals(getEntityId(value), getEntityId(refEntity))) {
+                            if (property.isReadOnly() && metadataTools.isNotPersistent(property)) {
+                                continue;
                             }
+                            EntityAccessor.setEntityValue(value, property.getName(), refEntity, false);
                         } else {
                             updateReferences(value, refEntity, visited);
                         }
@@ -1197,7 +1197,7 @@ public class OrmDataStore implements DataStore {
         em.detach(rootEntity);
         metadataTools.traverseAttributesByView(view, rootEntity, (entity, property) -> {
             if (property.getRange().isClass() && !metadataTools.isEmbedded(property)) {
-                Object value = EntityAccessor.getEntityValue(entity, property.getName());
+                Object value = getEntityValue(entity, property.getName());
                 if (value != null) {
                     if (property.getRange().getCardinality().isMany()) {
                         @SuppressWarnings("unchecked")

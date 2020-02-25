@@ -26,7 +26,6 @@ import io.jmix.core.entity.*;
 import io.jmix.core.impl.StandardSerialization;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.metamodel.model.impl.AbstractInstance;
 import io.jmix.ui.model.DataContext;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -311,7 +310,7 @@ public class DataContextImpl implements DataContext {
                     Entity srcRef = (Entity) value;
                     if (!mergedMap.containsKey(srcRef)) {
                         Entity managedRef = internalMerge(srcRef, mergedMap, false);
-                        ((AbstractInstance) dstEntity).setValue(propertyName, managedRef, false);
+                        EntityAccessor.setEntityValue(dstEntity, propertyName, managedRef, false);
                         if (getMetadataTools().isEmbedded(property)) {
                             EmbeddedPropertyChangeListener listener = new EmbeddedPropertyChangeListener(dstEntity);
                             EntityAccessor.addPropertyChangeListener(managedRef, listener);
@@ -320,7 +319,7 @@ public class DataContextImpl implements DataContext {
                     } else {
                         Entity managedRef = mergedMap.get(srcRef);
                         if (managedRef != null) {
-                            ((AbstractInstance) dstEntity).setValue(propertyName, managedRef, false);
+                            EntityAccessor.setEntityValue(dstEntity, propertyName, managedRef, false);
                         } else {
                             // should never happen
                             log.debug("Instance was merged but managed instance is null: {}", srcRef);
@@ -350,11 +349,9 @@ public class DataContextImpl implements DataContext {
 
     @SuppressWarnings("unchecked")
     protected void copySystemState(Entity srcEntity, Entity dstEntity) {
-        if (dstEntity instanceof BaseGenericIdEntity) {
-            ((BaseGenericIdEntity) dstEntity).setId(EntityAccessor.getEntityId(srcEntity));
-
-            getEntitySystemStateSupport().copySystemState((BaseGenericIdEntity) srcEntity, (BaseGenericIdEntity) dstEntity);
-
+        if (dstEntity instanceof ManagedEntity) {
+            EntityAccessor.setEntityId(dstEntity, EntityAccessor.getEntityId(srcEntity));
+            getEntitySystemStateSupport().copySystemState((ManagedEntity) srcEntity, (ManagedEntity) dstEntity);
         }
 
         if (dstEntity instanceof Versioned) {
@@ -363,9 +360,9 @@ public class DataContextImpl implements DataContext {
     }
 
     protected void mergeSystemState(Entity srcEntity, Entity dstEntity, boolean isRoot) {
-        if (dstEntity instanceof BaseGenericIdEntity) {
+        if (dstEntity instanceof ManagedEntity) {
             if (isRoot) {
-                getEntitySystemStateSupport().mergeSystemState((BaseGenericIdEntity) srcEntity, (BaseGenericIdEntity) dstEntity);
+                getEntitySystemStateSupport().mergeSystemState((ManagedEntity) srcEntity, (ManagedEntity) dstEntity);
             }
         }
     }
