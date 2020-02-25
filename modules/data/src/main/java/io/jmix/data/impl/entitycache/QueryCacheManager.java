@@ -27,8 +27,6 @@ import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetadataObject;
-import io.jmix.data.EntityManager;
-import io.jmix.data.Persistence;
 import io.jmix.data.OrmProperties;
 import io.jmix.data.StoreAwareLocator;
 import org.slf4j.Logger;

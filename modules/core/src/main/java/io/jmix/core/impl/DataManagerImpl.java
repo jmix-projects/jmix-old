@@ -182,9 +182,9 @@ public class DataManagerImpl implements DataManager {
     }
 
     @Override
-    public <T extends BaseGenericIdEntity<K>, K> T getReference(Class<T> entityClass, K id) {
+    public <T extends Entity<K>, K> T getReference(Class<T> entityClass, K id) {
         T entity = metadata.create(entityClass);
-        entity.setId(id);
+        EntityAccessor.setEntityId(entity, id);
         entityStates.makePatch(entity);
         return entity;
     }

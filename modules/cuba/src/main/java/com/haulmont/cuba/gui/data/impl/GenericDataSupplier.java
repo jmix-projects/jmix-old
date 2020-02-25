@@ -82,7 +82,7 @@ public class GenericDataSupplier implements DataSupplier {
     }
 
     @Override
-    public <T extends BaseGenericIdEntity<K>, K> void remove(Id<T, K> entityId) {
+    public <T extends Entity<K>, K> void remove(Id<T, K> entityId) {
         getDataManager().remove(entityId);
     }
 
@@ -132,7 +132,7 @@ public class GenericDataSupplier implements DataSupplier {
     }
 
     @Override
-    public <T extends BaseGenericIdEntity<K>, K> T getReference(Id<T, K> entityId) {
+    public <T extends Entity<K>, K> T getReference(Id<T, K> entityId) {
         return null;
     }
 

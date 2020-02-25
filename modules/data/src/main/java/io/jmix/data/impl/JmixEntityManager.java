@@ -132,8 +132,8 @@ public class JmixEntityManager implements EntityManager {
             ((SoftDelete) entity).setDeletedBy(auditInfoProvider.getCurrentUserLogin());
         } else {
             delegate.remove(entity);
-            if (entity instanceof BaseGenericIdEntity) {
-                BaseEntityInternalAccess.setRemoved((BaseGenericIdEntity) entity, true);
+            if (entity instanceof ManagedEntity) {
+                ((ManagedEntity) entity).getEntityEntry().setRemoved(true);
             }
         }
     }
@@ -164,7 +164,7 @@ public class JmixEntityManager implements EntityManager {
         Class<T> effectiveClass = extendedEntities.getEffectiveClass(entityClass);
 
         T reference = delegate.getReference(effectiveClass, getRealId(primaryKey));
-        BaseEntityInternalAccess.setNew((BaseGenericIdEntity) reference, false);
+        ((ManagedEntity<?>)reference).getEntityEntry().setNew(false);
         return reference;
     }
 
@@ -455,16 +455,16 @@ public class JmixEntityManager implements EntityManager {
             CubaUtil.setOriginalSoftDeletion(false);
 
             UUID uuid = null;
-            if (entity.getId() instanceof IdProxy) {
-                uuid = ((IdProxy) entity.getId()).getUuid();
+            if (EntityAccessor.getEntityId(entity) instanceof IdProxy) {
+                uuid = ((IdProxy) EntityAccessor.getEntityId(entity)).getUuid();
             }
 
             T merged = delegate.merge(entity);
 
-            if (entity.getId() instanceof IdProxy
+            if (EntityAccessor.getEntityId(entity) instanceof IdProxy
                     && uuid != null
-                    && !uuid.equals(((IdProxy) merged.getId()).getUuid())) {
-                ((IdProxy) merged.getId()).setUuid(uuid);
+                    && !uuid.equals(((IdProxy) EntityAccessor.getEntityId(merged)).getUuid())) {
+                ((IdProxy) EntityAccessor.getEntityId(merged)).setUuid(uuid);
             }
 
             // copy non-persistent attributes to the resulting merged instance

@@ -18,6 +18,9 @@ package com.haulmont.cuba.gui.data.impl;
 
 import com.haulmont.cuba.core.global.CommitContext;
 import com.haulmont.cuba.core.global.LoadContext;
+import com.haulmont.cuba.gui.data.CollectionDatasource;
+import com.haulmont.cuba.gui.data.DataSupplier;
+import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.EntityAccessor;

@@ -15,11 +15,9 @@
  */
 package io.jmix.data.impl;
 
-import io.jmix.core.entity.EntityAccessor;
-import io.jmix.data.Persistence;
-import io.jmix.data.listener.*;
 import io.jmix.core.AppBeans;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.entity.annotation.Listeners;
 import io.jmix.data.PersistenceTools;
 import io.jmix.data.listener.*;
@@ -39,7 +37,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * <p>Usually entity listeners are registered declaratively with {@code @Listeners} annotation on entity class.
  * Methods {@link #addListener(Class, Class)} and {@link #addListener(Class, String)} allow to add listeners dynamically,
  * e.g. to an entity from a base project.
- *
  */
 @Component(EntityListenerManager.NAME)
 public class EntityListenerManager {
