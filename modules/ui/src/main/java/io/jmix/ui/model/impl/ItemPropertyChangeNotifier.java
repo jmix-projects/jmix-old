@@ -16,9 +16,9 @@
 
 package io.jmix.ui.model.impl;
 
-import io.jmix.core.entity.EntityPropertyChangeListener;
+import io.jmix.core.entity.EntityPropertyChangeEvent;
 
 public interface ItemPropertyChangeNotifier {
 
-    void itemPropertyChanged(EntityPropertyChangeListener.PropertyChangeEvent e);
+    void itemPropertyChanged(EntityPropertyChangeEvent e);
 }

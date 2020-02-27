@@ -19,9 +19,7 @@ import com.haulmont.cuba.core.global.Metadata;
 import io.jmix.core.AppBeans;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.commons.events.EventRouter;
-import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
-import io.jmix.core.entity.EntityPropertyChangeListener;
+import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.executors.BackgroundWorker;
 import com.haulmont.cuba.gui.data.DataSupplier;
@@ -248,7 +246,7 @@ public abstract class AbstractDatasource<T extends Entity> implements Datasource
             return;
         }
 
-        EntityAccessor.addPropertyChangeListener(item, listener);
+        ((ManagedEntity<?>) item).__getEntityEntry().addPropertyChangeListener(listener);
     }
 
     protected void detachListener(Entity item) {
@@ -256,7 +254,7 @@ public abstract class AbstractDatasource<T extends Entity> implements Datasource
             return;
         }
 
-        EntityAccessor.removePropertyChangeListener(item, listener);
+        ((ManagedEntity<?>) item).__getEntityEntry().removePropertyChangeListener(listener);
     }
 
     protected void fireItemChanged(T prevItem) {
@@ -274,7 +272,7 @@ public abstract class AbstractDatasource<T extends Entity> implements Datasource
     protected class ItemListener implements EntityPropertyChangeListener {
         @SuppressWarnings("unchecked")
         @Override
-        public void propertyChanged(EntityPropertyChangeListener.PropertyChangeEvent e) {
+        public void propertyChanged(EntityPropertyChangeEvent e) {
             if (!listenersEnabled) {
                 return;
             }

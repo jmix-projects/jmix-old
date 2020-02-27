@@ -20,21 +20,20 @@ import io.jmix.core.metamodel.model.EntityPropertyPath;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeListener;
+import java.util.Collection;
 
 import static io.jmix.core.metamodel.model.utils.EntityPaths.formatValuePath;
 import static io.jmix.core.metamodel.model.utils.EntityPaths.parseValuePath;
 
 public class EntityAccessor {
 
-
-
+    @SuppressWarnings("unchecked")
     public static <K> K getEntityId(Entity<?> entity) {
-        return null;
+        return (K)((ManagedEntity<?>) entity).__getEntityEntry().getEntityId();
     }
 
-    public static <K> void setEntityId(Entity<?> entity, K key) {
-
+    public static <K> void setEntityId(Entity<K> entity, K key) {
+        ((ManagedEntity<K>) entity).__getEntityEntry().setEntityId(key);
     }
 
     /**
@@ -48,8 +47,7 @@ public class EntityAccessor {
      * @param value attribute value
      */
     public static void setEntityValue(Entity<?> entity, String name, Object value) {
-
-
+        ((ManagedEntity<?>) entity).__getEntityEntry().setEntityValue(name, value, true);
     }
 
     /**
@@ -65,8 +63,7 @@ public class EntityAccessor {
      *                    If flag is true and objects equals, then setter will not be invoked
      */
     public static void setEntityValue(Entity<?> entity, String name, Object value, boolean checkEquals) {
-
-
+        ((ManagedEntity<?>) entity).__getEntityEntry().setEntityValue(name, value, checkEquals);
     }
 
     /**
@@ -77,13 +74,7 @@ public class EntityAccessor {
      */
     @Nullable
     public static <T> T getEntityValue(Entity<?> entity, String name) {
-        if (entity instanceof KeyValueEntity) {
-            return ((KeyValueEntity) entity).getValue(name);
-        } else if (entity instanceof ManagedEntity) {
-
-        }
-        return null;
-
+        return ((ManagedEntity<?>) entity).__getEntityEntry().getEntityValue(name);
     }
 
     /**
@@ -160,31 +151,6 @@ public class EntityAccessor {
     }
 
     /**
-     * Add listener to track attributes changes.
-     *
-     * @param listener listener
-     */
-    public static void addPropertyChangeListener(Entity<?> entity, EntityPropertyChangeListener listener) {
-
-    }
-
-    /**
-     * Remove listener.
-     *
-     * @param listener listener to remove
-     */
-    public static void removePropertyChangeListener(Entity<?> entity, EntityPropertyChangeListener listener) {
-
-    }
-
-    /**
-     * Remove all {@link PropertyChangeListener}s.
-     */
-    public static void removeAllListeners(Entity<?> entity) {
-
-    }
-
-    /**
      * Set value of an attribute according to the rules described in {@link EntityAccessor#setEntityValueEx(Entity, String, Object)}.
      *
      * @param entity     instance
@@ -241,5 +207,23 @@ public class EntityAccessor {
         }
 
         return (T) currentValue;
+    }
+
+    /**
+     * Used by {@link } to check whether a property value has been changed.
+     *
+     * @param a an object
+     * @param b an object
+     * @return true if {@code a} equals to {@code b}, but in case of {@code a} is {@link } or {@code Collection} returns
+     * true only if {@code a} is the same instance as {@code b}
+     */
+    public static boolean propertyValueEquals(Object a, Object b) {
+        if (a == b) {
+            return true;
+        }
+        if (a instanceof Entity || a instanceof Collection) {
+            return false;
+        }
+        return a != null && a.equals(b);
     }
 }

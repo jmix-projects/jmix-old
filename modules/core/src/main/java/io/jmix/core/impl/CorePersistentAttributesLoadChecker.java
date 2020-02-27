@@ -94,7 +94,7 @@ public class CorePersistentAttributesLoadChecker implements PersistentAttributes
 
     protected PropertyLoadedState isLoadedCommonCheck(Object entity, String property) {
         if (entity instanceof ManagedEntity) {
-            SecurityState securityState = ((ManagedEntity<?>) entity).getEntityEntry().getSecurityState();
+            SecurityState securityState = ((ManagedEntity<?>) entity).__getEntityEntry().getSecurityState();
 
             if (securityState.getInaccessibleAttributes() != null) {
                 for (String attributes : securityState.getInaccessibleAttributes()) {

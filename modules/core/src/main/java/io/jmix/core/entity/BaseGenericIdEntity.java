@@ -42,7 +42,23 @@ public abstract class BaseGenericIdEntity<T> implements ManagedEntity<T> {
     private static final long serialVersionUID = -8400641366148656528L;
 
     @Transient
-    protected SecurityState __securityState;
+    protected ManagedEntityEntry<T> __entityEntry;
+
+    protected static class BaseGenericIdEntityEntry<K> extends BaseManagedEntityEntry<K> {
+        public BaseGenericIdEntityEntry(BaseGenericIdEntity<K> entity) {
+            super(entity);
+        }
+
+        @Override
+        public void setEntityId(K id) {
+            ((BaseGenericIdEntity<K>) source).setId(id);
+        }
+
+        @Override
+        public K getEntityId() {
+            return ((BaseGenericIdEntity<K>) source).getId();
+        }
+    }
 
     // todo dynamic attributes
 //    @Transient
@@ -53,25 +69,11 @@ public abstract class BaseGenericIdEntity<T> implements ManagedEntity<T> {
     public abstract T getId();
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-
-        if (getEntityEntry().isManaged()) {
-            getEntityEntry().setManaged(false);
-            getEntityEntry().setDetached(true);
+        if (__getEntityEntry().isManaged()) {
+            __getEntityEntry().setManaged(false);
+            __getEntityEntry().setDetached(true);
         }
         out.defaultWriteObject();
-    }
-
-    /**
-     * Copies the state which is not related to attributes registered in metadata.
-     * Override this method in subclasses that have additional state which must be preserved when creating copies.
-     */
-    @SuppressWarnings("unchecked")
-    protected void copySystemState(BaseGenericIdEntity src) {
-
-        //__state = src.__state;
-        //__securityState = src.__securityState;
-        // todo dynamic attributes
-//        dynamicAttributes = src.dynamicAttributes;
     }
 
     // todo dynamic attributes
@@ -165,13 +167,13 @@ public abstract class BaseGenericIdEntity<T> implements ManagedEntity<T> {
     public String toString() {
         String state = "";
 
-        if (getEntityEntry().isNew())
+        if (__getEntityEntry().isNew())
             state += "new,";
-        if (getEntityEntry().isManaged())
+        if (__getEntityEntry().isManaged())
             state += "managed,";
-        if (getEntityEntry().isDetached())
+        if (__getEntityEntry().isDetached())
             state += "detached,";
-        if (getEntityEntry().isRemoved())
+        if (__getEntityEntry().isRemoved())
             state += "removed,";
 
         if (state.length() > 0)
@@ -181,7 +183,10 @@ public abstract class BaseGenericIdEntity<T> implements ManagedEntity<T> {
     }
 
     @Override
-    public ManagedEntityEntry getEntityEntry() {
-        return null;
+    public ManagedEntityEntry<T> __getEntityEntry() {
+        if (__entityEntry == null) {
+            __entityEntry = new BaseGenericIdEntityEntry<>(this);
+        }
+        return __entityEntry;
     }
 }

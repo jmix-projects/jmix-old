@@ -99,7 +99,7 @@ public class EntityChangedEventManager {
             if (info.publish) {
                 EntityChangedEvent.Type type = null;
                 AttributeChanges attributeChanges = null;
-                if (info.onCreated && ((ManagedEntity) entity).getEntityEntry().isNew()) {
+                if (info.onCreated && ((ManagedEntity) entity).__getEntityEntry().isNew()) {
                     type = EntityChangedEvent.Type.CREATED;
                     attributeChanges = getEntityAttributeChanges(entity, false);
                 } else {

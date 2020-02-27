@@ -63,7 +63,7 @@ public class UserSessionSourceImpl implements UserSessionSource {
     @Override
     public UUID currentOrSubstitutedUserId() {
         // todo user substitution
-        return EntityAccessor.getEntityId(getUserSession().getUser());
+        return getUserSession().getUser().getId();
     }
 
     @Override

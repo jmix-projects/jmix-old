@@ -337,7 +337,7 @@ public class ValueBinder {
                 }
 
                 if (targetItem instanceof ManagedEntity) {
-                    ManagedEntityEntry entityEntry = ((ManagedEntity<?>) targetItem).getEntityEntry();
+                    ManagedEntityEntry entityEntry = ((ManagedEntity<?>) targetItem).__getEntityEntry();
 
                     String metaPropertyName = metaPropertyPath.getMetaProperty().getName();
                     Object value = EntityAccessor.getEntityValue(targetItem, metaPropertyName);

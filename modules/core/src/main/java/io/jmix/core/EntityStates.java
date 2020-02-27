@@ -67,7 +67,7 @@ public class EntityStates {
     public boolean isNew(Object entity) {
         checkNotNullArgument(entity, "entity is null");
         if (entity instanceof ManagedEntity) {
-            return ((ManagedEntity<?>) entity).getEntityEntry().isNew();
+            return ((ManagedEntity<?>) entity).__getEntityEntry().isNew();
         } else {
             if (log.isTraceEnabled()) {
                 log.trace("EntityStates.isNew is called for unsupported type '{}'. Stacktrace:\n{}",
@@ -88,7 +88,7 @@ public class EntityStates {
     public boolean isManaged(Object entity) {
         checkNotNullArgument(entity, "entity is null");
         if (entity instanceof ManagedEntity) {
-            return ((ManagedEntity<?>) entity).getEntityEntry().isManaged();
+            return ((ManagedEntity<?>) entity).__getEntityEntry().isManaged();
         } else {
             if (log.isTraceEnabled()) {
                 log.trace("EntityStates.isManaged is called for unsupported type '{}'. Stacktrace:\n{}",
@@ -109,7 +109,7 @@ public class EntityStates {
      */
     public boolean isDetached(Object entity) {
         checkNotNullArgument(entity, "entity is null");
-        if (entity instanceof ManagedEntity && ((ManagedEntity<?>) entity).getEntityEntry().isDetached()) {
+        if (entity instanceof ManagedEntity && ((ManagedEntity<?>) entity).__getEntityEntry().isDetached()) {
             return true;
         } else {
             if (log.isTraceEnabled()) {
@@ -396,7 +396,7 @@ public class EntityStates {
         if (entity instanceof SoftDelete && ((SoftDelete) entity).isDeleted())
             return true;
 
-        if (entity instanceof ManagedEntity && ((ManagedEntity<?>) entity).getEntityEntry().isRemoved()) {
+        if (entity instanceof ManagedEntity && ((ManagedEntity<?>) entity).__getEntityEntry().isRemoved()) {
             return true;
         }
         return false;
@@ -417,11 +417,11 @@ public class EntityStates {
     public void makeDetached(Entity entity) {
         checkNotNullArgument(entity, "entity is null");
 
-        if (((ManagedEntity<?>) entity).getEntityEntry().isManaged())
+        if (((ManagedEntity<?>) entity).__getEntityEntry().isManaged())
             throw new IllegalStateException("entity is managed");
 
-        ((ManagedEntity) entity).getEntityEntry().setNew(false);
-        ((ManagedEntity) entity).getEntityEntry().setDetached(true);
+        ((ManagedEntity) entity).__getEntityEntry().setNew(false);
+        ((ManagedEntity) entity).__getEntityEntry().setDetached(true);
     }
 
     /**
@@ -441,10 +441,10 @@ public class EntityStates {
     public void makePatch(Entity entity) {
         checkNotNullArgument(entity, "entity is null");
 
-        if (((ManagedEntity<?>) entity).getEntityEntry().isManaged())
+        if (((ManagedEntity<?>) entity).__getEntityEntry().isManaged())
             throw new IllegalStateException("entity is managed");
 
-        ((ManagedEntity) entity).getEntityEntry().setNew(false);
-        ((ManagedEntity) entity).getEntityEntry().setDetached(false);
+        ((ManagedEntity) entity).__getEntityEntry().setNew(false);
+        ((ManagedEntity) entity).__getEntityEntry().setDetached(false);
     }
 }

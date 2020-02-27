@@ -36,7 +36,7 @@ class EntityEnhancingTest extends Specification {
 
         def pet = new Pet()
         EntityPropertyChangeListener listener = Mock()
-        pet.addPropertyChangeListener(listener)
+        pet.__getEntityEntry().addPropertyChangeListener(listener)
 
         when:
         pet.setName('Misty')
@@ -49,7 +49,7 @@ class EntityEnhancingTest extends Specification {
 
         def entity = new TestAddon1Entity()
         EntityPropertyChangeListener listener = Mock()
-        entity.addPropertyChangeListener(listener)
+        entity.__getEntityEntry().addPropertyChangeListener(listener)
 
         when:
         entity.setName('Misty')

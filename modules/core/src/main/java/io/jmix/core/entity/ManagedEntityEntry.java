@@ -18,7 +18,15 @@ package io.jmix.core.entity;
 
 import java.io.Serializable;
 
-public interface ManagedEntityEntry extends Serializable {
+public interface ManagedEntityEntry<K> extends Serializable {
+
+    K getEntityId();
+
+    void setEntityId(K id);
+
+    <T> T getEntityValue(String name);
+
+    void setEntityValue(String name, Object value, boolean checkEquals);
 
     boolean isNew();
 
@@ -40,5 +48,27 @@ public interface ManagedEntityEntry extends Serializable {
 
     void setSecurityState(SecurityState securityState);
 
-    void copy(ManagedEntityEntry entry);
+    /**
+     * Add listener to track attributes changes.
+     *
+     * @param listener listener
+     */
+    void addPropertyChangeListener(EntityPropertyChangeListener listener);
+
+    /**
+     * Remove listener.
+     *
+     * @param listener listener to remove
+     */
+    void removePropertyChangeListener(EntityPropertyChangeListener listener);
+
+    /**
+     * Remove all {@link EntityPropertyChangeListener}s.
+     */
+    void removeAllListeners();
+
+    /**
+     * Copies the state.
+     */
+    void copy(ManagedEntityEntry<?> entry);
 }

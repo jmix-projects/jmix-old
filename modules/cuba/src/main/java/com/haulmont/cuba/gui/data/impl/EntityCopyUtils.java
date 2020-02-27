@@ -43,7 +43,7 @@ public class EntityCopyUtils {
         copyCompositions(src, dest);
 
         if (src instanceof ManagedEntity) {
-            ((ManagedEntity<?>) dest).getEntityEntry().setSecurityState(((ManagedEntity<?>) src).getEntityEntry().getSecurityState());
+            ((ManagedEntity<?>) dest).__getEntityEntry().setSecurityState(((ManagedEntity<?>) src).__getEntityEntry().getSecurityState());
         }
 
         return dest;
@@ -103,8 +103,8 @@ public class EntityCopyUtils {
             ManagedEntity destManaged = (ManagedEntity) dest;
             ManagedEntity sourceManaged = (ManagedEntity) source;
 
-            destManaged.getEntityEntry().setDetached(sourceManaged.getEntityEntry().isDetached());
-            destManaged.getEntityEntry().setNew(sourceManaged.getEntityEntry().isNew());
+            destManaged.__getEntityEntry().setDetached(sourceManaged.__getEntityEntry().isDetached());
+            destManaged.__getEntityEntry().setNew(sourceManaged.__getEntityEntry().isNew());
             // todo dynamic attributes
 //            destGenericEntity.setDynamicAttributes(sourceGenericEntity.getDynamicAttributes());
         }

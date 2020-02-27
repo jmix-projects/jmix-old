@@ -133,7 +133,7 @@ public class JmixEntityManager implements EntityManager {
         } else {
             delegate.remove(entity);
             if (entity instanceof ManagedEntity) {
-                ((ManagedEntity) entity).getEntityEntry().setRemoved(true);
+                ((ManagedEntity) entity).__getEntityEntry().setRemoved(true);
             }
         }
     }
@@ -164,7 +164,7 @@ public class JmixEntityManager implements EntityManager {
         Class<T> effectiveClass = extendedEntities.getEffectiveClass(entityClass);
 
         T reference = delegate.getReference(effectiveClass, getRealId(primaryKey));
-        ((ManagedEntity<?>)reference).getEntityEntry().setNew(false);
+        ((ManagedEntity<?>)reference).__getEntityEntry().setNew(false);
         return reference;
     }
 

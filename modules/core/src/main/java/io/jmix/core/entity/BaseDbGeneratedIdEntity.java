@@ -54,12 +54,12 @@ public abstract class BaseDbGeneratedIdEntity<K extends Number> extends BaseGene
 
     protected abstract K getDbGeneratedId();
 
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void copySystemState(BaseGenericIdEntity src) {
-        super.copySystemState(src);
-        if (src instanceof BaseDbGeneratedIdEntity) {
-            setDbGeneratedId((K) ((BaseDbGeneratedIdEntity) src).getDbGeneratedId());
-        }
-    }
+//    @SuppressWarnings("unchecked")
+//    @Override
+//    protected void copySystemState(BaseGenericIdEntity src) {
+//        super.copySystemState(src);
+//        if (src instanceof BaseDbGeneratedIdEntity) {
+//            setDbGeneratedId((K) ((BaseDbGeneratedIdEntity) src).getDbGeneratedId());
+//        }
+//    }
 }

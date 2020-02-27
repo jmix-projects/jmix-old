@@ -152,7 +152,7 @@ public class PersistenceSupport implements ApplicationContextAware {
         getInstanceContainerResourceHolder(getStorageName(unitOfWork)).registerInstanceForUnitOfWork(entity, unitOfWork);
 
         if (entity instanceof ManagedEntity) {
-            ((ManagedEntity) entity).getEntityEntry().setDetached(false);
+            ((ManagedEntity) entity).__getEntityEntry().setDetached(false);
         }
     }
 
@@ -205,7 +205,7 @@ public class PersistenceSupport implements ApplicationContextAware {
     }
 
     protected void fireBeforeDetachEntityListener(ManagedEntity<?> entity, String storeName) {
-        if (!(entity.getEntityEntry().isDetached())) {
+        if (!(entity.__getEntityEntry().isDetached())) {
             JmixEntityFetchGroup.setAccessLocalUnfetched(false);
             try {
                 entityListenerManager.fireListener(entity, EntityListenerType.BEFORE_DETACH, storeName);
@@ -223,7 +223,7 @@ public class PersistenceSupport implements ApplicationContextAware {
                     && ((SoftDelete) entity).isDeleted();
 
         } else {
-            return entity.getEntityEntry().isRemoved();
+            return entity.__getEntityEntry().isRemoved();
         }
     }
 
@@ -290,7 +290,7 @@ public class PersistenceSupport implements ApplicationContextAware {
 
             ContainerResourceHolder container = getInstanceContainerResourceHolder(storeName);
             container.unregisterInstance(entity, unitOfWork);
-            if (((ManagedEntity) entity).getEntityEntry().isNew()) {
+            if (((ManagedEntity) entity).__getEntityEntry().isNew()) {
                 container.getNewDetachedInstances().add(entity);
             }
         }
@@ -300,9 +300,9 @@ public class PersistenceSupport implements ApplicationContextAware {
 
     protected void makeDetached(Object instance) {
         if (instance instanceof ManagedEntity) {
-            ((ManagedEntity) instance).getEntityEntry().setNew(false);
-            ((ManagedEntity) instance).getEntityEntry().setManaged(false);
-            ((ManagedEntity) instance).getEntityEntry().setDetached(true);
+            ((ManagedEntity) instance).__getEntityEntry().setNew(false);
+            ((ManagedEntity) instance).__getEntityEntry().setManaged(false);
+            ((ManagedEntity) instance).__getEntityEntry().setDetached(true);
         }
         if (instance instanceof FetchGroupTracker) {
             ((FetchGroupTracker) instance)._persistence_setSession(null);
@@ -340,7 +340,7 @@ public class PersistenceSupport implements ApplicationContextAware {
                         instance + ", UnitOfWork = " + unitOfWork);
 
             if (instance instanceof ManagedEntity) {
-                ((ManagedEntity) instance).getEntityEntry().setManaged(true);
+                ((ManagedEntity) instance).__getEntityEntry().setManaged(true);
             }
 
             Set<Entity> instances = unitOfWorkMap.get(unitOfWork);
@@ -439,7 +439,7 @@ public class PersistenceSupport implements ApplicationContextAware {
                     }
 
                     if (entity instanceof ManagedEntity) {
-                        if (((ManagedEntity) entity).getEntityEntry().isNew()) {
+                        if (((ManagedEntity) entity).__getEntityEntry().isNew()) {
                             typeNames.add(metadata.getClass(entity).getName());
                         }
                         fireBeforeDetachEntityListener((ManagedEntity) entity, container.getStoreName());
@@ -470,15 +470,15 @@ public class PersistenceSupport implements ApplicationContextAware {
                 for (Object instance : instances) {
                     if (instance instanceof ManagedEntity) {
                         if (status == TransactionSynchronization.STATUS_COMMITTED) {
-                            if (((ManagedEntity) instance).getEntityEntry().isNew()) {
+                            if (((ManagedEntity) instance).__getEntityEntry().isNew()) {
                                 // new instances become not new and detached only if the transaction was committed
-                                ((ManagedEntity) instance).getEntityEntry().setNew(false);
+                                ((ManagedEntity) instance).__getEntityEntry().setNew(false);
                             }
                         } else { // commit failed or the transaction was rolled back
                             makeDetached(instance);
                             for (Entity entity : container.getNewDetachedInstances()) {
-                                ((ManagedEntity) entity).getEntityEntry().setNew(true);
-                                ((ManagedEntity) entity).getEntityEntry().setDetached(false);
+                                ((ManagedEntity) entity).__getEntityEntry().setNew(true);
+                                ((ManagedEntity) entity).__getEntityEntry().setDetached(false);
                             }
                         }
                     }
@@ -495,7 +495,7 @@ public class PersistenceSupport implements ApplicationContextAware {
             Collection<Entity> instances = container.getAllInstances();
             for (Object instance : instances) {
                 if (instance instanceof ManagedEntity &&
-                        ((ManagedEntity) instance).getEntityEntry().isNew()) {
+                        ((ManagedEntity) instance).__getEntityEntry().isNew()) {
                     container.getNewDetachedInstances().add((Entity) instance);
                 }
             }
@@ -546,7 +546,7 @@ public class PersistenceSupport implements ApplicationContextAware {
 
         @Override
         public boolean visit(Entity entity) {
-            if (((ManagedEntity) entity).getEntityEntry().isNew()
+            if (((ManagedEntity) entity).__getEntityEntry().isNew()
                     && !getSavedInstances(storeName).contains(entity)) {
                 entityListenerManager.fireListener(entity, EntityListenerType.BEFORE_INSERT, storeName);
 
@@ -595,7 +595,7 @@ public class PersistenceSupport implements ApplicationContextAware {
                 // add changes after listener
                 changes.addChanges(entity);
 
-                if (((ManagedEntity) entity).getEntityEntry().isNew()) {
+                if (((ManagedEntity) entity).__getEntityEntry().isNew()) {
 
                     entityChangingEventManager.publishEvent(entity, EntityChangeType.CREATE, null);
                     // todo entity log

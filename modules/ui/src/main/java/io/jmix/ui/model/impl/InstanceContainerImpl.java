@@ -20,11 +20,8 @@ import io.jmix.core.Metadata;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.ParamsMap;
-import io.jmix.core.entity.EntityAccessor;
-import io.jmix.core.entity.EntityPropertyChangeListener;
-import io.jmix.core.entity.HasInstanceMetaClass;
+import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.entity.Entity;
 import io.jmix.core.DevelopmentException;
 import io.jmix.core.FetchPlan;
 import io.jmix.ui.model.DataLoader;
@@ -133,13 +130,13 @@ public class InstanceContainerImpl<E extends Entity> implements InstanceContaine
 
     protected void attachListener(Entity entity) {
         if (entity != null) {
-            EntityAccessor.addPropertyChangeListener(entity, listener);
+            ((ManagedEntity<?>) entity).__getEntityEntry().addPropertyChangeListener(listener);
         }
     }
 
     protected void detachListener(Entity entity) {
         if (entity != null) {
-            EntityAccessor.removePropertyChangeListener(entity, listener);
+            ((ManagedEntity<?>) entity).__getEntityEntry().removePropertyChangeListener(listener);
         }
     }
 
@@ -174,7 +171,7 @@ public class InstanceContainerImpl<E extends Entity> implements InstanceContaine
 
     @Override
     @SuppressWarnings("unchecked")
-    public void itemPropertyChanged(EntityPropertyChangeListener.PropertyChangeEvent e) {
+    public void itemPropertyChanged(EntityPropertyChangeEvent e) {
         if (!listenersEnabled) {
             return;
         }

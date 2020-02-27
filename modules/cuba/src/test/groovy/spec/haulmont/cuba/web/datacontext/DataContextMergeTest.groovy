@@ -21,7 +21,7 @@ import com.haulmont.cuba.core.model.sales.Customer
 import com.haulmont.cuba.core.model.sales.Order
 import com.haulmont.cuba.core.model.sales.OrderLine
 import io.jmix.core.EntityStates
-
+import io.jmix.core.entity.EntityPropertyChangeEvent
 import io.jmix.core.entity.EntityPropertyChangeListener
 import io.jmix.core.entity.SecurityState
 
@@ -575,7 +575,7 @@ class DataContextMergeTest extends UiScreenSpec {
         Map<String, Integer> events = [:]
         EntityPropertyChangeListener listener = new EntityPropertyChangeListener() {
             @Override
-            void propertyChanged(EntityPropertyChangeListener.PropertyChangeEvent e) {
+            void propertyChanged(EntityPropertyChangeEvent e) {
                 events.compute(e.property, { k, v -> v == null ? 1 : v + 1 })
             }
         }

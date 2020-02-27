@@ -79,6 +79,7 @@ public final class InstanceUtils {
      * @return attribute value
      * @deprecated replaced by {@link EntityAccessor#getEntityValueEx(Entity, EntityPropertyPath)}
      */
+    @Deprecated
     public static <T> T getValueEx(Entity<?> entity, EntityPropertyPath propertyPath) {
         return EntityAccessor.getEntityValueEx(entity, propertyPath);
     }
@@ -142,14 +143,10 @@ public final class InstanceUtils {
      * @param b an object
      * @return true if {@code a} equals to {@code b}, but in case of {@code a} is {@link } or {@code Collection} returns
      * true only if {@code a} is the same instance as {@code b}
+     * @deprecated replaced by {@link EntityAccessor#propertyValueEquals(Object, Object)}
      */
+    @Deprecated
     public static boolean propertyValueEquals(Object a, Object b) {
-        if (a == b) {
-            return true;
-        }
-        if (a instanceof Entity || a instanceof Collection) {
-            return false;
-        }
-        return a != null && a.equals(b);
+       return EntityAccessor.propertyValueEquals(a, b);
     }
 }

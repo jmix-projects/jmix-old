@@ -19,7 +19,6 @@ package io.jmix.core.entity;
 import io.jmix.core.UuidProvider;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.utils.InstanceUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -95,7 +94,7 @@ public class KeyValueEntity
 
     public void setValue(String name, Object value, boolean checkEquals) {
         Object oldValue = getValue(name);
-        if ((!checkEquals) || (!InstanceUtils.propertyValueEquals(oldValue, value))) {
+        if ((!checkEquals) || (!EntityAccessor.propertyValueEquals(oldValue, value))) {
             properties.put(name, value);
             //TODO: implement it
             //propertyChanged(name, oldValue, value);

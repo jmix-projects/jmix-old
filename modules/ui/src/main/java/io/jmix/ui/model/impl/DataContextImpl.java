@@ -215,7 +215,7 @@ public class DataContextImpl implements DataContext {
 
             mergeState(entity, managed, mergedMap, isRoot);
 
-            EntityAccessor.addPropertyChangeListener(managed, propertyChangeListener);
+            ((ManagedEntity<?>) managed).__getEntityEntry().addPropertyChangeListener(propertyChangeListener);
 
             if (getEntityStates().isNew(managed)) {
                 modifiedInstances.add(managed);
@@ -313,7 +313,7 @@ public class DataContextImpl implements DataContext {
                         EntityAccessor.setEntityValue(dstEntity, propertyName, managedRef, false);
                         if (getMetadataTools().isEmbedded(property)) {
                             EmbeddedPropertyChangeListener listener = new EmbeddedPropertyChangeListener(dstEntity);
-                            EntityAccessor.addPropertyChangeListener(managedRef, listener);
+                            ((ManagedEntity<?>) managedRef).__getEntityEntry().addPropertyChangeListener(listener);
                             embeddedPropertyListeners.computeIfAbsent(dstEntity, e -> new HashMap<>()).put(propertyName, listener);
                         }
                     } else {
@@ -535,14 +535,14 @@ public class DataContextImpl implements DataContext {
     }
 
     protected void removeListeners(Entity entity) {
-        EntityAccessor.removePropertyChangeListener(entity, propertyChangeListener);
+        ((ManagedEntity<?>) entity).__getEntityEntry().removePropertyChangeListener(propertyChangeListener);
         Map<String, EmbeddedPropertyChangeListener> listenerMap = embeddedPropertyListeners.get(entity);
         if (listenerMap != null) {
             for (Map.Entry<String, EmbeddedPropertyChangeListener> entry : listenerMap.entrySet()) {
                 Entity embedded = EntityAccessor.getEntityValue(entity, entry.getKey());
                 if (embedded != null) {
-                    EntityAccessor.removePropertyChangeListener(embedded, entry.getValue());
-                    EntityAccessor.removePropertyChangeListener(embedded, propertyChangeListener);
+                    ((ManagedEntity<?>) embedded).__getEntityEntry().removePropertyChangeListener(entry.getValue());
+                    ((ManagedEntity<?>) embedded).__getEntityEntry().removePropertyChangeListener(propertyChangeListener);
                 }
             }
             embeddedPropertyListeners.remove(entity);
@@ -784,7 +784,7 @@ public class DataContextImpl implements DataContext {
 
     protected class PropertyChangeListener implements EntityPropertyChangeListener {
         @Override
-        public void propertyChanged(EntityPropertyChangeListener.PropertyChangeEvent e) {
+        public void propertyChanged(EntityPropertyChangeEvent e) {
             // if id has been changed, put the entity to the content with the new id
             MetaProperty primaryKeyProperty = getMetadataTools().getPrimaryKeyProperty(e.getItem().getClass());
             if (primaryKeyProperty != null && e.getProperty().equals(primaryKeyProperty.getName())) {
@@ -811,7 +811,7 @@ public class DataContextImpl implements DataContext {
         }
 
         @Override
-        public void propertyChanged(EntityPropertyChangeListener.PropertyChangeEvent e) {
+        public void propertyChanged(EntityPropertyChangeEvent e) {
             if (!disableListeners) {
                 modifiedInstances.add(entity);
                 fireChangeListener(entity);

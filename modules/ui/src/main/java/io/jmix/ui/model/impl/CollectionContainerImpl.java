@@ -18,10 +18,7 @@ package io.jmix.ui.model.impl;
 
 import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.entity.EmbeddableEntity;
-import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
-import io.jmix.core.entity.EntityPropertyChangeListener;
+import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.model.CollectionChangeType;
@@ -195,7 +192,7 @@ public class CollectionContainerImpl<E extends Entity>
     }
 
     @Override
-    public void itemPropertyChanged(EntityPropertyChangeListener.PropertyChangeEvent e) {
+    public void itemPropertyChanged(EntityPropertyChangeEvent e) {
         if (!listenersEnabled) {
             return;
         }

@@ -68,7 +68,7 @@ public class SecurityTokenManager {
      * Encrypt filtered data and write the result to the security token
      */
     public void writeSecurityToken(Entity entity) {
-        SecurityState securityState = ((ManagedEntity<?>) entity).getEntityEntry().getSecurityState();
+        SecurityState securityState = ((ManagedEntity<?>) entity).__getEntityEntry().getSecurityState();
         if (securityState != null) {
             JSONObject jsonObject = new JSONObject();
             Multimap<String, Object> filtered = securityState.getFilteredData();
@@ -104,7 +104,7 @@ public class SecurityTokenManager {
      * Decrypt security token and read filtered data
      */
     public void readSecurityToken(Entity entity) {
-        SecurityState securityState = ((ManagedEntity<?>) entity).getEntityEntry().getSecurityState();
+        SecurityState securityState = ((ManagedEntity<?>) entity).__getEntityEntry().getSecurityState();
         if (securityState.getSecurityToken() == null) {
             return;
         }
@@ -213,7 +213,7 @@ public class SecurityTokenManager {
      * INTERNAL.
      */
     public void addFiltered(Entity<?> entity, String property, Object id) {
-        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).getEntityEntry();
+        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).__getEntityEntry();
         Multimap<String, Object> filteredData = entityEntry.getSecurityState().getFilteredData();
         if (filteredData == null) {
             filteredData = ArrayListMultimap.create();
@@ -226,7 +226,7 @@ public class SecurityTokenManager {
      * INTERNAL.
      */
     public void addFiltered(Entity<?> entity, String property, Collection ids) {
-        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).getEntityEntry();
+        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).__getEntityEntry();
         Multimap<String, Object> filteredData = entityEntry.getSecurityState().getFilteredData();
         if (filteredData == null) {
             filteredData = ArrayListMultimap.create();

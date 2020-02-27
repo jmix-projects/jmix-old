@@ -16,6 +16,6 @@
 
 package io.jmix.core.entity;
 
-public interface ManagedEntity<T> extends Entity<T> {
-    ManagedEntityEntry getEntityEntry();
+public interface ManagedEntity<K> extends Entity<K> {
+    ManagedEntityEntry<K> __getEntityEntry();
 }

@@ -200,7 +200,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
         String storeName = metadataTools.getStoreName(metaClass);
         EntityManager entityManager = storeAwareLocator.getEntityManager(storeName);
 
-        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).getEntityEntry();
+        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).__getEntityEntry();
 
         Multimap<String, Object> filtered = entityEntry.getSecurityState().getFilteredData();
         if (filtered == null) {
@@ -239,7 +239,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
 
     @Override
     public void assertToken(Entity entity) {
-        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).getEntityEntry();
+        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).__getEntityEntry();
         if (entityEntry.getSecurityState().getSecurityToken() == null) {
             assertSecurityConstraints(entity, (e, metaProperty) -> entityStates.isDetached(entity)
                     && !entityStates.isLoaded(entity, metaProperty.getName()));
@@ -248,7 +248,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
 
     @Override
     public void assertTokenForREST(Entity entity, FetchPlan view) {
-        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).getEntityEntry();
+        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).__getEntityEntry();
         if (entityEntry.getSecurityState().getSecurityToken() == null) {
             assertSecurityConstraints(entity,
                     (e, metaProperty) -> view != null && !view.containsProperty(metaProperty.getName()));
@@ -308,7 +308,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
         }
         handled.add(entityId);
         if (entity instanceof ManagedEntity) {
-            ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).getEntityEntry();
+            ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).__getEntityEntry();
             Multimap<String, Object> filteredData = entityEntry.getSecurityState().getFilteredData();
             for (MetaProperty property : metaClass.getProperties()) {
                 if (metadataTools.isPersistent(property) && entityStates.isLoaded(entity, property.getName())) {

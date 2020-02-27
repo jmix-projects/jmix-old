@@ -17,7 +17,7 @@
 package io.jmix.ui.model.impl;
 
 import io.jmix.core.entity.EntityAccessor;
-import io.jmix.core.entity.EntityPropertyChangeListener;
+import io.jmix.core.entity.EntityPropertyChangeEvent;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.entity.Entity;
@@ -120,7 +120,7 @@ public class CollectionPropertyContainerImpl<E extends Entity>
                 masterCollection.clear();
                 masterCollection.addAll(newCollection);
                 if (master instanceof ItemPropertyChangeNotifier) {
-                    EntityPropertyChangeListener.PropertyChangeEvent event = new EntityPropertyChangeListener.PropertyChangeEvent(
+                    EntityPropertyChangeEvent event = new EntityPropertyChangeEvent(
                             master.getItem(),
                             metaProperty.getName(),
                             masterCollection,

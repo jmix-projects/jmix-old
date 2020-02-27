@@ -25,10 +25,10 @@ public class EntitySystemStateSupport {
     public static final String NAME = "jmix_EntitySystemStateSupport";
 
     public void copySystemState(ManagedEntity<?> src, ManagedEntity<?> dst) {
-        dst.getEntityEntry().copy(src.getEntityEntry());
+        dst.__getEntityEntry().copy(src.__getEntityEntry());
     }
 
     public void mergeSystemState(ManagedEntity<?> src, ManagedEntity<?> dst) {
-        dst.getEntityEntry().copy(src.getEntityEntry());
+        dst.__getEntityEntry().copy(src.__getEntityEntry());
     }
 }

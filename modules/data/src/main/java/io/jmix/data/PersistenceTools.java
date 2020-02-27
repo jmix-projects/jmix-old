@@ -288,7 +288,7 @@ public class PersistenceTools {
         if (!entityStates.isManaged(entity))
             throw new IllegalStateException("Entity must be in managed state");
 
-        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).getEntityEntry();
+        ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).__getEntityEntry();
         if (entityEntry.getSecurityState().getInaccessibleAttributes() != null) {
             for (String inaccessibleAttr : entityEntry.getSecurityState().getInaccessibleAttributes()) {
                 if (inaccessibleAttr.equals(property))
