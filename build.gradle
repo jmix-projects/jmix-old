@@ -71,7 +71,7 @@ allprojects {
 }
 
 configure([project(':jmix-platform'), project(':modules:core'), project(':modules:cuba'), project(':modules:data'),
-           project(':modules:remoting'), project(':modules:security'), project(':modules:ui'),
+           project(':modules:remoting'), project(':modules:security'), project(':modules:ui'), project(':modules:audit'),
            project(':modules:ui-themes'), project(':modules:ui-themes-compiled'),
            project(':modules:ui-widgets'), project(':modules:ui-widgets-compiled'),
            project(':starters:starter-ui-minimal'), project(':starters:starter-standard'), project(':starters:starter-ui-legacy')]) {
@@ -93,7 +93,8 @@ configure([project(':jmix-platform'), project(':modules:core'), project(':module
     }
 }
 
-configure([project(':modules:core'), project(':modules:data'), project(':modules:security'), project(':modules:remoting')]) {
+configure([project(':modules:core'), project(':modules:data'), project(':modules:security'), project(':modules:remoting'),
+           project(':modules:audit')]) {
     if (rootProject.hasProperty('spotbugsEnabled')) {
         apply plugin: 'com.github.spotbugs'
 
