@@ -52,4 +52,9 @@ public abstract class EmbeddableEntity implements Entity<Object>, ManagedEntity<
         }
         return __entityEntry;
     }
+
+    @Override
+    public void __clearEntityEntry() {
+        this.__entityEntry = null;
+    }
 }

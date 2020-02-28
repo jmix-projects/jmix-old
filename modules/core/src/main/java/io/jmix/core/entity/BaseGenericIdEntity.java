@@ -189,4 +189,9 @@ public abstract class BaseGenericIdEntity<T> implements ManagedEntity<T> , Entit
         }
         return __entityEntry;
     }
+
+    @Override
+    public void __clearEntityEntry() {
+        this.__entityEntry = null;
+    }
 }

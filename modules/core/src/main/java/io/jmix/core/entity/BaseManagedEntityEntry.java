@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.BiConsumer;
 
-public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K> {
+public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>, Cloneable {
     protected byte state = NEW;
     protected SecurityState securityState = new SecurityState();
     protected transient Collection<WeakReference<EntityPropertyChangeListener>> propertyChangeListeners;
@@ -175,6 +175,12 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
 
         setSecurityState(entry.getSecurityState());
 
+    }
+
+    public Object clone()
+            throws CloneNotSupportedException {
+        Object clone = super.clone();
+        return clone;
     }
 
 }
