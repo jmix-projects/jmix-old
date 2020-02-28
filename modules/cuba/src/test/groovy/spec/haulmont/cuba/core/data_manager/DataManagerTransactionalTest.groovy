@@ -144,9 +144,9 @@ class DataManagerTransactionalTest extends CoreTestSpecification {
 
         then:
 
-        !BaseEntityInternalAccess.isManaged(customer)
-        BaseEntityInternalAccess.isDetached(customer)
-        !BaseEntityInternalAccess.isNew(customer)
+        !customer.__getEntityEntry().isManaged()
+        customer.__getEntityEntry().isDetached()
+        !customer.__getEntityEntry().isNew()
 
         cleanup:
 
@@ -169,9 +169,9 @@ class DataManagerTransactionalTest extends CoreTestSpecification {
         then:
 
         customer.name == 'Johns'
-        !BaseEntityInternalAccess.isManaged(customer)
-        BaseEntityInternalAccess.isDetached(customer)
-        !BaseEntityInternalAccess.isNew(customer)
+        !customer.__getEntityEntry().isManaged()
+        customer.__getEntityEntry().isDetached()
+        !customer.__getEntityEntry().isNew()
 
         cleanup:
 
@@ -264,20 +264,20 @@ class DataManagerTransactionalTest extends CoreTestSpecification {
     }
 
     private void checkObjectGraph(Order order) {
-        assert !BaseEntityInternalAccess.isManaged(order)
-        assert BaseEntityInternalAccess.isDetached(order)
-        assert !BaseEntityInternalAccess.isNew(order)
+        assert !order.__getEntityEntry().isManaged()
+        assert order.__getEntityEntry().isDetached()
+        assert !order.__getEntityEntry().isNew()
 
-        assert !BaseEntityInternalAccess.isManaged(order.customer)
-        assert BaseEntityInternalAccess.isDetached(order.customer)
-        assert !BaseEntityInternalAccess.isNew(order.customer)
+        assert !order.customer.__getEntityEntry().isManaged()
+        assert order.customer.__getEntityEntry().isDetached()
+        assert !order.customer.__getEntityEntry().isNew()
 
-        assert !BaseEntityInternalAccess.isManaged(order.orderLines[0])
-        assert BaseEntityInternalAccess.isDetached(order.orderLines[0])
-        assert !BaseEntityInternalAccess.isNew(order.orderLines[0])
+        assert !order.orderLines[0].__getEntityEntry().isManaged()
+        assert order.orderLines[0].__getEntityEntry().isDetached()
+        assert !order.orderLines[0].__getEntityEntry().isNew()
 
-        assert !BaseEntityInternalAccess.isManaged(order.orderLines[1])
-        assert BaseEntityInternalAccess.isDetached(order.orderLines[1])
-        assert !BaseEntityInternalAccess.isNew(order.orderLines[1])
+        assert !order.orderLines[1].__getEntityEntry().isManaged()
+        assert order.orderLines[1].__getEntityEntry().isDetached()
+        assert !order.orderLines[1].__getEntityEntry().isNew()
     }
 }

@@ -17,6 +17,7 @@
 package io.jmix.core.entity;
 
 import io.jmix.core.metamodel.model.utils.MethodsCache;
+import io.jmix.core.metamodel.model.utils.RelatedPropertiesCache;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
     protected byte state = NEW;
     protected SecurityState securityState = new SecurityState();
     protected transient Collection<WeakReference<EntityPropertyChangeListener>> propertyChangeListeners;
-    protected Entity<K> source;
+    protected ManagedEntity<K> source;
 
     public static final int NEW = 1;
     public static final int DETACHED = 2;
@@ -37,14 +38,19 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
 
     protected static final int PROPERTY_CHANGE_LISTENERS_INITIAL_CAPACITY = 4;
 
-    public BaseManagedEntityEntry(Entity<K> source) {
+    public BaseManagedEntityEntry(ManagedEntity<K> source) {
         this.source = source;
+    }
+
+    @Override
+    public ManagedEntity<K> getSource() {
+        return source;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getEntityValue(String name) {
-        return (T) MethodsCache.getOrCreate(getClass()).getGetterNN(name).apply(this);
+        return (T) MethodsCache.getOrCreate(getSource().getClass()).getGetterNN(name).apply(getSource());
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -52,8 +58,8 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
     public void setEntityValue(String name, Object value, boolean checkEquals) {
         Object oldValue = getEntityValue(name);
         if ((!checkEquals) || (!EntityAccessor.propertyValueEquals(oldValue, value))) {
-            BiConsumer setter = MethodsCache.getOrCreate(getClass()).getSetterNN(name);
-            setter.accept(this, value);
+            BiConsumer setter = MethodsCache.getOrCreate(getSource().getClass()).getSetterNN(name);
+            setter.accept(getSource(), value);
         }
     }
 
@@ -133,8 +139,9 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
         }
     }
 
-    public <T> void firePropertyChanged(Entity<T> entity, String propertyName, Object prev, Object curr) {
+    public void firePropertyChanged(String propertyName, Object prev, Object curr) {
         if (propertyChangeListeners != null) {
+
             for (Object referenceObject : propertyChangeListeners.toArray()) {
                 @SuppressWarnings("unchecked")
                 WeakReference<EntityPropertyChangeListener> reference = (WeakReference<EntityPropertyChangeListener>) referenceObject;
@@ -143,7 +150,16 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
                 if (listener == null) {
                     propertyChangeListeners.remove(reference);
                 } else {
-                    listener.propertyChanged(new EntityPropertyChangeEvent(entity, propertyName, prev, curr));
+                    listener.propertyChanged(new EntityPropertyChangeEvent(getSource(), propertyName, prev, curr));
+
+                    Collection<String> related = RelatedPropertiesCache.getOrCreate(getSource().getClass())
+                            .getRelatedReadOnlyProperties(propertyName);
+                    if (related != null) {
+                        for (String property : related) {
+                            listener.propertyChanged(
+                                    new EntityPropertyChangeEvent(getSource(), property, null, getEntityValue(property)));
+                        }
+                    }
                 }
             }
         }
@@ -160,4 +176,5 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
         setSecurityState(entry.getSecurityState());
 
     }
+
 }

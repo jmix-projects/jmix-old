@@ -37,9 +37,9 @@ class SetGetTest extends CoreTestSpecification {
 
     def "ID and UUID"() {
         when:
-        UUID uuid = setGetEntity.getValue("uuid")
-        setGetEntity.setValue("id", uuid)
-        UUID afterId = setGetEntity.getValue("id")
+        UUID uuid = setGetEntity.__getEntityEntry().getEntityValue("uuid")
+        setGetEntity.__getEntityEntry().setEntityValue("id", uuid)
+        UUID afterId = setGetEntity.__getEntityEntry().getEntityValue("id")
 
         then:
         uuid == afterId && uuid != null
@@ -49,8 +49,8 @@ class SetGetTest extends CoreTestSpecification {
         when:
         Map<String, Integer> map = new HashMap<>()
         map.put("key", 12)
-        setGetEntity.setValue("map", map)
-        Map<String, Integer> afterMap = setGetEntity.getValue("map")
+        setGetEntity.__getEntityEntry().setEntityValue("map", map)
+        Map<String, Integer> afterMap = setGetEntity.__getEntityEntry().getEntityValue("map")
         then:
         map.identity { afterMap }
     }
@@ -59,8 +59,8 @@ class SetGetTest extends CoreTestSpecification {
         when:
         int[] intArray = new int[1]
         intArray[0] = 12
-        setGetEntity.setValue("intArray", intArray)
-        int[] afterIntArray = setGetEntity.getValue("intArray")
+        setGetEntity.__getEntityEntry().setEntityValue("intArray", intArray)
+        int[] afterIntArray = setGetEntity.__getEntityEntry().getEntityValue("intArray")
 
         then:
         intArray == afterIntArray
@@ -70,8 +70,8 @@ class SetGetTest extends CoreTestSpecification {
         when:
         StandardEntity[] standardEntityArray = new StandardEntity[1]
         standardEntityArray[0] = new SetGetEntity()
-        setGetEntity.setValue("standardEntityArray", standardEntityArray)
-        StandardEntity[] afterStandardEntityArray = setGetEntity.getValue("standardEntityArray")
+        setGetEntity.__getEntityEntry().setEntityValue("standardEntityArray", standardEntityArray)
+        StandardEntity[] afterStandardEntityArray = setGetEntity.__getEntityEntry().getEntityValue("standardEntityArray")
 
         then:
         standardEntityArray == afterStandardEntityArray
@@ -80,8 +80,8 @@ class SetGetTest extends CoreTestSpecification {
     def "Generic field"() {
         when:
         String genericField = "12"
-        setGetEntity.setValue("genericField", genericField)
-        String afterGenericValue = setGetEntity.getValue("genericField")
+        setGetEntity.__getEntityEntry().setEntityValue("genericField", genericField)
+        String afterGenericValue = setGetEntity.__getEntityEntry().getEntityValue("genericField")
 
         then:
         genericField == afterGenericValue
@@ -91,8 +91,8 @@ class SetGetTest extends CoreTestSpecification {
         when:
         Map<String, Integer> genericMap = new HashMap<>()
         genericMap.put("key", 12)
-        setGetEntity.setValue("genericMap", genericMap)
-        Map<String, Integer> afterGenericMap = setGetEntity.getValue("genericMap")
+        setGetEntity.__getEntityEntry().setEntityValue("genericMap", genericMap)
+        Map<String, Integer> afterGenericMap = setGetEntity.__getEntityEntry().getEntityValue("genericMap")
 
         then:
         genericMap.identity { afterGenericMap }
@@ -102,8 +102,8 @@ class SetGetTest extends CoreTestSpecification {
         when:
         String[] genericArray = new String[1]
         genericArray[0] = "12"
-        setGetEntity.setValue("genericArray", genericArray)
-        String[] afterGenericArray = setGetEntity.getValue("genericArray")
+        setGetEntity.__getEntityEntry().setEntityValue("genericArray", genericArray)
+        String[] afterGenericArray = setGetEntity.__getEntityEntry().getEntityValue("genericArray")
 
         then:
         genericArray == afterGenericArray
@@ -114,8 +114,8 @@ class SetGetTest extends CoreTestSpecification {
         Set<Many2ManyB> collectionOfB = new HashSet<>()
         collectionOfB.add(metadata.create(Many2ManyB.class))
         Many2ManyA many2ManyA = metadata.create(Many2ManyA.class)
-        many2ManyA.setValue("collectionOfB", collectionOfB)
-        Set<Many2ManyB> afterCollectionOfB = many2ManyA.getValue("collectionOfB")
+        many2ManyA.__getEntityEntry().setEntityValue("collectionOfB", collectionOfB)
+        Set<Many2ManyB> afterCollectionOfB = many2ManyA.__getEntityEntry().getEntityValue("collectionOfB")
 
         then:
         collectionOfB == afterCollectionOfB
@@ -124,8 +124,8 @@ class SetGetTest extends CoreTestSpecification {
     def "byte field"() {
         when:
         byte byteValue = 1
-        setGetEntity.setValue("byteField", byteValue)
-        byte afterByteValue = setGetEntity.getValue("byteField")
+        setGetEntity.__getEntityEntry().setEntityValue("byteField", byteValue)
+        byte afterByteValue = setGetEntity.__getEntityEntry().getEntityValue("byteField")
 
         then:
         byteValue == afterByteValue
@@ -134,8 +134,8 @@ class SetGetTest extends CoreTestSpecification {
     def "char field"() {
         when:
         char charValue = 'a'
-        setGetEntity.setValue("charField", charValue)
-        char afterCharValue = setGetEntity.getValue("charField")
+        setGetEntity.__getEntityEntry().setEntityValue("charField", charValue)
+        char afterCharValue = setGetEntity.__getEntityEntry().getEntityValue("charField")
 
         then:
         charValue == afterCharValue
@@ -144,8 +144,8 @@ class SetGetTest extends CoreTestSpecification {
     def "short field"() {
         when:
         short shortValue = 12
-        setGetEntity.setValue("shortField", shortValue)
-        short afterShortValue = setGetEntity.getValue("shortField")
+        setGetEntity.__getEntityEntry().setEntityValue("shortField", shortValue)
+        short afterShortValue = setGetEntity.__getEntityEntry().getEntityValue("shortField")
 
         then:
         shortValue == afterShortValue
@@ -154,8 +154,8 @@ class SetGetTest extends CoreTestSpecification {
     def "int field"() {
         when:
         int intValue = 12
-        setGetEntity.setValue("intField", intValue)
-        int afterIntValue = setGetEntity.getValue("intField")
+        setGetEntity.__getEntityEntry().setEntityValue("intField", intValue)
+        int afterIntValue = setGetEntity.__getEntityEntry().getEntityValue("intField")
 
         then:
         intValue == afterIntValue
@@ -164,8 +164,8 @@ class SetGetTest extends CoreTestSpecification {
     def "long field"() {
         when:
         long longValue = 12L
-        setGetEntity.setValue("longField", longValue)
-        long afterLongValue = setGetEntity.getValue("longField")
+        setGetEntity.__getEntityEntry().setEntityValue("longField", longValue)
+        long afterLongValue = setGetEntity.__getEntityEntry().getEntityValue("longField")
 
         then:
         longValue == afterLongValue
@@ -174,8 +174,8 @@ class SetGetTest extends CoreTestSpecification {
     def "float field"() {
         when:
         float floatValue = 12F
-        setGetEntity.setValue("floatField", floatValue)
-        float afterFloatValue = setGetEntity.getValue("floatField")
+        setGetEntity.__getEntityEntry().setEntityValue("floatField", floatValue)
+        float afterFloatValue = setGetEntity.__getEntityEntry().getEntityValue("floatField")
 
         then:
         floatValue == afterFloatValue
@@ -184,8 +184,8 @@ class SetGetTest extends CoreTestSpecification {
     def "double field"() {
         when:
         double doubleValue = 12D
-        setGetEntity.setValue("doubleField", doubleValue)
-        double afterDoubleValue = setGetEntity.getValue("doubleField")
+        setGetEntity.__getEntityEntry().setEntityValue("doubleField", doubleValue)
+        double afterDoubleValue = setGetEntity.__getEntityEntry().getEntityValue("doubleField")
 
         then:
         doubleValue == afterDoubleValue
@@ -194,8 +194,8 @@ class SetGetTest extends CoreTestSpecification {
     def "boolean field"() {
         when:
         boolean booleanValue = true
-        setGetEntity.setValue("booleanField", booleanValue)
-        boolean afterBooleanValue = setGetEntity.getValue("booleanField")
+        setGetEntity.__getEntityEntry().setEntityValue("booleanField", booleanValue)
+        boolean afterBooleanValue = setGetEntity.__getEntityEntry().getEntityValue("booleanField")
 
         then:
         booleanValue == afterBooleanValue

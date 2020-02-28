@@ -16,6 +16,8 @@
 
 package io.jmix.core.metamodel.model.utils;
 
+import io.jmix.core.AppBeans;
+import io.jmix.core.Metadata;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 
@@ -26,17 +28,17 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RelatedPropertiesCache {
     private final Map<String, Set<String>> propertiesMap = new HashMap<>();
 
-    private static final Map<String, RelatedPropertiesCache> propertiesCacheMap = new ConcurrentHashMap<>();
+    private static final Map<Class, RelatedPropertiesCache> propertiesCacheMap = new ConcurrentHashMap<>();
 
-    public static RelatedPropertiesCache getOrCreate(MetaClass metaClass) {
-        return propertiesCacheMap.computeIfAbsent(metaClass.getName(), key -> new RelatedPropertiesCache(metaClass));
+    public static RelatedPropertiesCache getOrCreate(Class clazz) {
+        return propertiesCacheMap.computeIfAbsent(clazz, RelatedPropertiesCache::new);
     }
 
-    protected RelatedPropertiesCache(MetaClass metaClass) {
-        Objects.requireNonNull(metaClass, "metaClass is null");
+    protected RelatedPropertiesCache(Class clazz) {
+        Objects.requireNonNull(clazz, "class is null");
 
+        MetaClass metaClass = AppBeans.get(Metadata.class).getClass(clazz);
         for (MetaProperty metaProperty : metaClass.getProperties()) {
-
             if (metaProperty.isReadOnly() && isNotPersistent(metaProperty)) {
 
                 for (String property : getRelatedProperties(metaProperty)) {

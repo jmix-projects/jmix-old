@@ -29,6 +29,7 @@ import org.gradle.api.logging.Logger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Enhances entity classes: setters fire propertyChange events, messages in BeanValidation annotations.
@@ -39,7 +40,7 @@ public class JmixEnhancer {
     protected static final String ENHANCED_DISABLED_TYPE = "io.jmix.core.entity.JmixEnhancingDisabled";
 
     protected static final String METAPROPERTY_ANNOTATION = "io.jmix.core.metamodel.annotations.MetaProperty";
-    protected static final String ABSTRACT_INSTANCE_TYPE = "io.jmix.core.metamodel.model.impl.AbstractInstance";
+    protected static final String ENTITY_TYPE = "io.jmix.core.entity.Entity";
 
     protected Logger log;
 
@@ -59,12 +60,8 @@ public class JmixEnhancer {
         try {
             CtClass cc = pool.get(className);
 
-            CtClass superclass = cc.getSuperclass();
-            while (superclass != null && !superclass.getName().equals(ABSTRACT_INSTANCE_TYPE)) {
-                superclass = superclass.getSuperclass();
-            }
-            if (superclass == null) {
-                log.info("[JmixEnhancer] " + className + " is not an AbstractInstance and should not be enhanced");
+            if (!isEntityClass(cc)) {
+                log.info("[JmixEnhancer] " + className + " is not an Entity and should not be enhanced");
                 return;
             }
 
@@ -147,9 +144,9 @@ public class JmixEnhancer {
 
             ctMethod.insertAfter(
                     "__new = this.get" + StringUtils.capitalize(fieldName) + "();" +
-                    "if (!io.jmix.core.metamodel.model.utils.InstanceUtils.propertyValueEquals(__prev, __new)) {" +
-                    "  this.propertyChanged(\"" + fieldName + "\", __prev, __new);" +
-                    "}"
+                            "if (!io.jmix.core.metamodel.model.utils.InstanceUtils.propertyValueEquals(__prev, __new)) {" +
+                            "  this.__getEntityEntry().firePropertyChanged(\"" + fieldName + "\", __prev, __new);" +
+                            "}"
             );
         }
     }
@@ -208,5 +205,23 @@ public class JmixEnhancer {
                 log.debug("Set protected modifier for " + method.getLongName());
             }
         }
+    }
+
+    protected boolean isEntityClass(CtClass ctClass) throws NotFoundException {
+        for (CtClass ctInterface : ctClass.getInterfaces()) {
+            if (Objects.equals(ctInterface.getName(), ENTITY_TYPE)) {
+                return true;
+            }
+        }
+        CtClass ctSuperclass = ctClass.getSuperclass();
+        while (ctSuperclass != null) {
+            for (CtClass ctInterface : ctSuperclass.getInterfaces()) {
+                if (Objects.equals(ctInterface.getName(), ENTITY_TYPE)) {
+                    return true;
+                }
+            }
+            ctSuperclass = ctSuperclass.getSuperclass();
+        }
+        return false;
     }
 }

@@ -196,7 +196,7 @@ public class EntityAccessor {
                 break;
             }
 
-            currentValue = getEntityValue(entity, property);
+            currentValue = getEntityValue(currentEntity, property);
 
             if (currentValue == null) {
                 break;

@@ -1089,7 +1089,7 @@ public class OrmDataStore implements DataStore {
                             if (property.isReadOnly() && metadataTools.isNotPersistent(property)) {
                                 continue;
                             }
-                            EntityAccessor.setEntityValue(value, property.getName(), refEntity, false);
+                            EntityAccessor.setEntityValue(entity, property.getName(), refEntity, false);
                         } else {
                             updateReferences(value, refEntity, visited);
                         }
@@ -1206,7 +1206,7 @@ public class OrmDataStore implements DataStore {
                             em.detach(element);
                         }
                     } else {
-                        em.detach((Entity) value);
+                        em.detach(value);
                     }
                 }
             }

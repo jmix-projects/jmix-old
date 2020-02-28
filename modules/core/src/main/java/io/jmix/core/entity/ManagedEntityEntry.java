@@ -20,11 +20,17 @@ import java.io.Serializable;
 
 public interface ManagedEntityEntry<K> extends Serializable {
 
+    ManagedEntity<K> getSource();
+
     K getEntityId();
 
     void setEntityId(K id);
 
     <T> T getEntityValue(String name);
+
+    default void setEntityValue(String name, Object value) {
+        setEntityValue(name, value, true);
+    }
 
     void setEntityValue(String name, Object value, boolean checkEquals);
 
@@ -66,6 +72,8 @@ public interface ManagedEntityEntry<K> extends Serializable {
      * Remove all {@link EntityPropertyChangeListener}s.
      */
     void removeAllListeners();
+
+    void firePropertyChanged(String propertyName, Object prev, Object curr);
 
     /**
      * Copies the state.

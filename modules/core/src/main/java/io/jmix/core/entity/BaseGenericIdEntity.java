@@ -37,7 +37,7 @@ import java.util.Objects;
 @MappedSuperclass
 @io.jmix.core.metamodel.annotations.MetaClass(name = "sys$BaseGenericIdEntity")
 @UnavailableInSecurityConstraints
-public abstract class BaseGenericIdEntity<T> implements ManagedEntity<T> {
+public abstract class BaseGenericIdEntity<T> implements ManagedEntity<T> , Entity<T> {
 
     private static final long serialVersionUID = -8400641366148656528L;
 
