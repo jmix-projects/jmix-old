@@ -49,6 +49,8 @@ class JmixPlugin implements Plugin<Project> {
 
         setupThemeCompile(project)
         setupWidgetsCompile(project)
+
+        project.task([type: ZipProject], 'zipProject')
     }
 
     protected void setupThemeCompile(Project project) {
