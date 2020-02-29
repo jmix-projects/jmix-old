@@ -50,7 +50,7 @@ publishing {
     publications {
         javaMaven(MavenPublication) {
             groupId = 'io.jmix.remoting'
-            artifactId = jar.archiveBaseName
+            artifactId = 'jmix-remoting'
 
             from components.java
             artifact sourcesJar
