@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2016 Haulmont.
+ * Copyright 2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,17 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
-package com.haulmont.cuba.core.model.common;
 
-import com.haulmont.cuba.core.global.Messages;
-import com.haulmont.cuba.core.global.Metadata;
+package io.jmix.audit.entity;
+
 import io.jmix.core.AppBeans;
+import io.jmix.core.ExtendedEntities;
+import io.jmix.core.MessageTools;
+import io.jmix.core.Metadata;
 import io.jmix.core.entity.BaseDbGeneratedIdEntity;
 import io.jmix.core.entity.BaseUuidEntity;
 import io.jmix.core.entity.Creatable;
 import io.jmix.core.entity.annotation.EmbeddedParameters;
+import io.jmix.core.entity.annotation.Listeners;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.annotations.MetaProperty;
 import io.jmix.core.metamodel.datatypes.impl.EnumClass;
@@ -38,8 +40,9 @@ import java.util.Set;
  * Record containing information about entity lifecycle event.
  * Created by <code>EntityLog</code> bean.
  */
-@Entity(name = "test$EntityLog")
-@Table(name = "TEST_ENTITY_LOG")
+@Entity(name = "sec$EntityLog")
+@Table(name = "SEC_ENTITY_LOG")
+@Listeners("cuba_EntityLogItemDetachListener")
 @SystemLevel
 public class EntityLogItem extends BaseUuidEntity implements Creatable {
 
@@ -82,15 +85,11 @@ public class EntityLogItem extends BaseUuidEntity implements Creatable {
     @Column(name = "CREATED_BY", length = 50)
     private String createdBy;
 
-    @Column(name = "SYS_TENANT_ID")
-    protected String sysTenantId;
-
     @Column(name = "EVENT_TS")
     private Date eventTs;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    private User user;
+    @Column(name = "USER_LOGIN")
+    private String userLogin;
 
     @Column(name = "CHANGE_TYPE", length = 1)
     private String type;
@@ -141,14 +140,6 @@ public class EntityLogItem extends BaseUuidEntity implements Creatable {
         this.createdBy = createdBy;
     }
 
-    public String getSysTenantId() {
-        return sysTenantId;
-    }
-
-    public void setSysTenantId(String sysTenantId) {
-        this.sysTenantId = sysTenantId;
-    }
-
     public String getEntity() {
         return entity;
     }
@@ -160,11 +151,12 @@ public class EntityLogItem extends BaseUuidEntity implements Creatable {
     @MetaProperty
     public String getDisplayedEntityName() {
         Metadata metadata = AppBeans.get(Metadata.NAME);
-        Messages messages = AppBeans.get(Messages.NAME);
-        MetaClass metaClass = metadata.getSession().findClass(entity);
+        ExtendedEntities extendedEntities = AppBeans.get(ExtendedEntities.NAME);
+        MessageTools messageTools = AppBeans.get(MessageTools.NAME);
+        MetaClass metaClass = metadata.getSession().getClass(entity);
         if (metaClass != null) {
-            metaClass = metadata.getExtendedEntities().getEffectiveMetaClass(metaClass);
-            return messages.getTools().getEntityCaption(metaClass);
+            metaClass = extendedEntities.getEffectiveMetaClass(metaClass);
+            return messageTools.getEntityCaption(metaClass);
         }
         return entity;
     }
@@ -185,12 +177,12 @@ public class EntityLogItem extends BaseUuidEntity implements Creatable {
         this.type = type.getId();
     }
 
-    public User getUser() {
-        return user;
+    public String getUserLogin() {
+        return userLogin;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
     }
 
     public Set<EntityLogAttr> getAttributes() {

@@ -35,6 +35,7 @@ dependencies {
         api "io.jmix.core:jmix-core:$jmixVersion"
         api "io.jmix.cuba:jmix-cuba:$jmixVersion"
         api "io.jmix.data:jmix-data:$jmixVersion"
+        api "io.jmix.audit:jmix-audit:$jmixVersion"
         api "io.jmix.remoting:jmix-remoting:$jmixVersion"
         api "io.jmix.security:jmix-security:$jmixVersion"
         api "io.jmix.ui:jmx-ui:$jmixVersion"
