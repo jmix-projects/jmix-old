@@ -29,5 +29,9 @@ public class HelloWorldApplication {
 
         List<User> users = dataManager.load(User.class).list();
         System.out.println(">>> users: " + users);
+
+        Greeting greeting = new Greeting();
+        greeting.setText("Hello");
+        dataManager.save(greeting);
     }
 }

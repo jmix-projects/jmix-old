@@ -1,6 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
-apply plugin: 'war'
+apply plugin: 'io.jmix'
 
 group = 'io.jmix.sample.helloworld'
 version = rootProject.jmixVersion
@@ -13,4 +13,8 @@ dependencies {
     runtimeOnly 'org.hsqldb:hsqldb'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+entitiesEnhancing {
+    enabled = true
 }
