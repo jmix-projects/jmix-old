@@ -177,10 +177,9 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
 
     }
 
-    public Object clone()
-            throws CloneNotSupportedException {
-        Object clone = super.clone();
-        return clone;
+    @Override
+    public void clear() {
+        state = 0;
+        securityState = new SecurityState();
     }
-
 }

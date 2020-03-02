@@ -79,4 +79,6 @@ public interface ManagedEntityEntry<K> extends Serializable {
      * Copies the state.
      */
     void copy(ManagedEntityEntry<?> entry);
+
+    void clear();
 }
