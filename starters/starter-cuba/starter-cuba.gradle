@@ -1,12 +1,13 @@
 apply plugin: 'java'
 apply plugin: 'java-library'
 
-group = 'io.jmix.starter.ui-legacy'
+group = 'io.jmix.starter.cuba'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 dependencies {
     api project(':modules:core')
+    api project(':modules:data')
     api project(':modules:security')
     api project(':modules:ui')
     api project(':modules:cuba')
@@ -24,8 +25,8 @@ task sourcesJar(type: Jar) {
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            groupId = 'io.jmix.starter.ui-legacy'
-            artifactId = 'jmix-starter-ui-legacy'
+            groupId = 'io.jmix.starter.cuba'
+            artifactId = 'jmix-starter-cuba'
 
             from components.java
             artifact sourcesJar

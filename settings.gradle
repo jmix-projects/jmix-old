@@ -30,8 +30,9 @@ include 'modules:ui-themes-compiled'
 include 'modules:ui-widgets'
 include 'modules:ui-widgets-compiled'
 
+include 'starters:starter-data'
 include 'starters:starter-ui-minimal'
-include 'starters:starter-ui-legacy'
+include 'starters:starter-cuba'
 include 'starters:starter-standard'
 
 include 'samples:sample-hello-world'

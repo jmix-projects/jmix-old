@@ -6,7 +6,8 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 dependencies {
-    api project(':modules:core')
+    api project(':starters:starter-data')
+
     api project(':modules:security')
     api project(':modules:ui')
 

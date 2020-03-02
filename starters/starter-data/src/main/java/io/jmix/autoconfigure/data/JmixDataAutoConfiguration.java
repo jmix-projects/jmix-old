@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package test_support;
+package io.jmix.autoconfigure.data;
 
+import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.core.Stores;
+import io.jmix.data.JmixDataConfiguration;
 import io.jmix.data.impl.JmixEntityManagerFactoryBean;
 import io.jmix.data.impl.JmixTransactionManager;
 import io.jmix.data.impl.PersistenceConfigProcessor;
-import org.apache.commons.dbcp2.BasicDataSource;
-import org.springframework.context.annotation.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -30,29 +35,23 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
-@ComponentScan
-@PropertySource("classpath:/test_support/test-app.properties")
-public class JmixRemotingTestConfiguration {
-
-    @Bean
-    DataSource dataSource() {
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setUrl("jdbc:hsqldb:mem:testdb");
-        dataSource.setUsername("sa");
-        dataSource.setPassword("");
-        return dataSource;
-    }
+@Import({JmixCoreConfiguration.class, JmixDataConfiguration.class})
+public class JmixDataAutoConfiguration {
 
     @Bean
     @Primary
-    LocalContainerEntityManagerFactoryBean entityManagerFactory(
-            DataSource dataSource, PersistenceConfigProcessor processor, JpaVendorAdapter jpaVendorAdapter) {
+    @ConditionalOnMissingBean(name = "entityManagerFactory")
+    protected LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource,
+                                                                          PersistenceConfigProcessor processor,
+                                                                          JpaVendorAdapter jpaVendorAdapter) {
         return new JmixEntityManagerFactoryBean(Stores.MAIN, dataSource, processor, jpaVendorAdapter);
     }
 
     @Bean
     @Primary
-    PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+    @ConditionalOnMissingBean(name = "transactionManager")
+    protected PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         return new JmixTransactionManager(Stores.MAIN, entityManagerFactory);
     }
 }
+

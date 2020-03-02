@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.jmix.autoconfiguration.JmixLegacyAutoconfiguration
+  io.jmix.autoconfigure.data.JmixDataAutoConfiguration

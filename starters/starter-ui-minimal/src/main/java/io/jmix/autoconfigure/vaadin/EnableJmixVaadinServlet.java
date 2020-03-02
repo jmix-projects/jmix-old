@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.autoconfiguration.vaadin;
+package io.jmix.autoconfigure.vaadin;
 
 import org.springframework.context.annotation.Import;
 

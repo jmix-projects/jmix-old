@@ -23,8 +23,7 @@ version = rootProject.jmixVersion
 sourceCompatibility = rootProject.sourceCompatibility
 
 dependencies {
-    implementation project(':starters:starter-standard')
-    implementation project(':starters:starter-ui-legacy')
+    implementation project(':starters:starter-cuba')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.apache.commons:commons-dbcp2'
