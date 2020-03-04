@@ -16,12 +16,11 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
-import com.haulmont.cuba.web.gui.components.WebTextField;
-import io.jmix.ui.components.TextField;
+import com.haulmont.cuba.web.components.TextField;
 import io.jmix.ui.components.TextInputField;
 import org.dom4j.Element;
 
-public class CubaTextFieldLoader extends AbstractTextFieldLoader<WebTextField> {
+public class CubaTextFieldLoader extends AbstractTextFieldLoader<TextField> {
 
     @Override
     public void loadComponent() {

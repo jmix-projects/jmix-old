@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.gui.components;
+package com.haulmont.cuba.web.components;
 
 @Deprecated
-public interface TextInputField<V> extends Field<V>, io.jmix.ui.components.TextInputField<V> {
+public interface ResizableTextArea<V> extends TextArea<V>, io.jmix.ui.components.ResizableTextArea<V> {
+
+    String NAME = io.jmix.ui.components.ResizableTextArea.NAME;
 }

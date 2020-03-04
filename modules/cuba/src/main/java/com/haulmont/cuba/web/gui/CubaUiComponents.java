@@ -24,12 +24,7 @@ import com.haulmont.cuba.web.components.DatePicker;
 import com.haulmont.cuba.web.components.Label;
 import com.haulmont.cuba.web.components.OptionsList;
 import com.haulmont.cuba.web.gui.components.*;
-import io.jmix.ui.components.LookupField;
-import io.jmix.ui.components.LookupPickerField;
-import io.jmix.ui.components.OptionsGroup;
-import io.jmix.ui.components.PickerField;
-import io.jmix.ui.components.SearchField;
-import io.jmix.ui.components.TextField;
+import io.jmix.ui.components.*;
 import io.jmix.ui.sys.WebUiComponents;
 
 public class CubaUiComponents extends WebUiComponents {
@@ -37,6 +32,12 @@ public class CubaUiComponents extends WebUiComponents {
     public static final String NAME = "cuba_UiComponents";
 
     {
+        classes.put(RichTextArea.NAME, WebRichTextArea.class);
+        classes.put(SourceCodeEditor.NAME, WebSourceCodeEditor.class);
+        classes.put(PasswordField.NAME, WebPasswordField.class);
+        classes.put(MaskedField.NAME, WebMaskedField.class);
+        classes.put(ResizableTextArea.NAME, WebResizableTextArea.class);
+        classes.put(TextArea.NAME, WebTextArea.class);
         classes.put(TextField.NAME, WebTextField.class);
         classes.put(CheckBox.NAME, WebCheckBox.class);
         classes.put(DateField.NAME, WebDateField.class);

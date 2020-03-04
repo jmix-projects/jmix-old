@@ -19,19 +19,13 @@ package com.haulmont.cuba.gui.xml.layout;
 import com.haulmont.cuba.gui.components.BulkEditor;
 import com.haulmont.cuba.gui.components.FieldGroup;
 import com.haulmont.cuba.gui.components.Filter;
-import com.haulmont.cuba.gui.xml.layout.loaders.BulkEditorLoader;
-import com.haulmont.cuba.gui.xml.layout.loaders.FieldGroupLoader;
-import com.haulmont.cuba.gui.xml.layout.loaders.CubaTextFieldLoader;
-import com.haulmont.cuba.gui.xml.layout.loaders.FilterLoader;
-import io.jmix.ui.components.TextField;
+import com.haulmont.cuba.gui.xml.layout.loaders.*;
+import io.jmix.ui.components.*;
 import io.jmix.ui.xml.layout.BaseLoaderConfig;
 import io.jmix.ui.xml.layout.ComponentLoader;
 import io.jmix.ui.xml.layout.LoaderConfig;
 import org.dom4j.Element;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("rawtypes")
 @Component(CubaLoaderConfig.NAME)
@@ -54,6 +48,13 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
     protected void initStandardLoaders() {
         super.initStandardLoaders();
 
+        loaders.put(PickerField.NAME, CubaPickerFieldLoader.class);
+        loaders.put(PasswordField.NAME, CubaPasswordFieldLoader.class);
+        loaders.put(RichTextArea.NAME, CubaRichTextAreaLoader.class);
+        loaders.put(SourceCodeEditor.NAME, CubaSourceCodeEditorLoader.class);
+        loaders.put(MaskedField.NAME, CubaMaskedFieldLoader.class);
+        loaders.put(ResizableTextArea.NAME, CubaResizableTextAreaLoader.class);
+        loaders.put(TextArea.NAME, CubaResizableTextAreaLoader.class);
         loaders.put(TextField.NAME, CubaTextFieldLoader.class);
         loaders.put(FieldGroup.NAME, FieldGroupLoader.class);
         loaders.put(BulkEditor.NAME, BulkEditorLoader.class);

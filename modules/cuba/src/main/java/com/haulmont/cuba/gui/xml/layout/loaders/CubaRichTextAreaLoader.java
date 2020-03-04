@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.gui.components;
+package com.haulmont.cuba.gui.xml.layout.loaders;
 
-@Deprecated
-public interface TextInputField<V> extends Field<V>, io.jmix.ui.components.TextInputField<V> {
+import com.haulmont.cuba.web.components.RichTextArea;
+
+public class CubaRichTextAreaLoader extends AbstractTextFieldLoader<RichTextArea> {
+    @Override
+    public void createComponent() {
+        resultComponent = factory.create(RichTextArea.NAME);
+        loadId(resultComponent, element);
+    }
 }

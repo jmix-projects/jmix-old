@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.xml.layout.loaders;
 
+package com.haulmont.cuba.gui.xml.layout.loaders;
+
+import com.haulmont.cuba.web.components.PickerField;
 import io.jmix.core.Metadata;
 import io.jmix.ui.Actions;
 import io.jmix.ui.actions.Action;
@@ -22,12 +24,12 @@ import io.jmix.ui.actions.picker.ClearAction;
 import io.jmix.ui.actions.picker.LookupAction;
 import io.jmix.ui.components.ActionsHolder;
 import io.jmix.ui.components.CaptionMode;
-import io.jmix.ui.components.PickerField;
 import io.jmix.ui.components.actions.GuiActionSupport;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
-public class PickerFieldLoader extends AbstractFieldLoader<PickerField> {
+public class CubaPickerFieldLoader extends AbstractFieldLoader<PickerField> {
+
     @Override
     public void createComponent() {
         resultComponent = factory.create(PickerField.NAME);

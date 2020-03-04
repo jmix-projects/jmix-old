@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.gui.components;
+package com.haulmont.cuba.web.gui.components;
+
+import com.haulmont.cuba.web.components.RichTextArea;
 
 @Deprecated
-public interface TextInputField<V> extends Field<V>, io.jmix.ui.components.TextInputField<V> {
+public class WebRichTextArea extends io.jmix.ui.components.impl.WebRichTextArea implements RichTextArea {
 }

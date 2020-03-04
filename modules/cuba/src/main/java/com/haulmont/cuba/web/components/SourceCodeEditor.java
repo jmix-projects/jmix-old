@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.gui.components;
+package com.haulmont.cuba.web.components;
+
+import com.haulmont.cuba.gui.components.Field;
 
 @Deprecated
-public interface TextInputField<V> extends Field<V>, io.jmix.ui.components.TextInputField<V> {
+public interface SourceCodeEditor extends Field<String>, io.jmix.ui.components.SourceCodeEditor {
 }
