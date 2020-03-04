@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
+package com.haulmont.cuba.gui.components;
 
-import com.haulmont.cuba.gui.components.TextInputField;
+import io.jmix.ui.components.Buffered;
+import io.jmix.ui.components.Component;
 
 @Deprecated
-public interface TextField<V> extends TextInputField<V>, io.jmix.ui.components.TextField<V> {
+public interface TextInputField<V> extends Field<V>, Buffered, Component.Focusable {
 }

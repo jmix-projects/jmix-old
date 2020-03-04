@@ -18,12 +18,39 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.web.gui.components.WebTextField;
 import io.jmix.ui.components.TextField;
+import io.jmix.ui.components.TextInputField;
+import org.dom4j.Element;
 
-public class CubaTextFieldLoader extends AbstractFieldLoader<WebTextField> {
+public class CubaTextFieldLoader extends AbstractTextFieldLoader<WebTextField> {
+
+    @Override
+    public void loadComponent() {
+        super.loadComponent();
+
+        loadMaxLength(resultComponent, element);
+        loadTrimming(resultComponent, element);
+
+        loadDatatype(resultComponent, element);
+
+        resultComponent.setFormatter(loadFormatter(element));
+
+        loadInputPrompt(resultComponent, element);
+        loadCaseConversion(resultComponent, element);
+        loadTextChangeEventProperties(resultComponent, element);
+        loadHtmlName(resultComponent, element);
+        loadConversionErrorMessage(resultComponent, element);
+    }
 
     @Override
     public void createComponent() {
         resultComponent = factory.create(TextField.NAME);
         loadId(resultComponent, element);
+    }
+
+    protected void loadHtmlName(TextInputField.HtmlNameSupported component, Element element) {
+        String htmlName = element.attributeValue("htmlName");
+        if (htmlName != null && !htmlName.isEmpty()) {
+            component.setHtmlName(htmlName);
+        }
     }
 }
