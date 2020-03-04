@@ -37,28 +37,28 @@ import java.util.Objects;
 @MappedSuperclass
 @io.jmix.core.metamodel.annotations.MetaClass(name = "sys$BaseGenericIdEntity")
 @UnavailableInSecurityConstraints
-public abstract class BaseGenericIdEntity<T> implements ManagedEntity<T> , Entity<T> {
+public abstract class BaseGenericIdEntity<T>  implements Entity<T> {
 
     private static final long serialVersionUID = -8400641366148656528L;
 
     @Transient
     protected ManagedEntityEntry<T> __entityEntry;
 
-    protected static class BaseGenericIdEntityEntry<K> extends BaseManagedEntityEntry<K> {
-        public BaseGenericIdEntityEntry(BaseGenericIdEntity<K> entity) {
-            super(entity);
-        }
-
-        @Override
-        public void setEntityId(K id) {
-            ((BaseGenericIdEntity<K>) source).setId(id);
-        }
-
-        @Override
-        public K getEntityId() {
-            return ((BaseGenericIdEntity<K>) source).getId();
-        }
-    }
+//    protected static class BaseGenericIdEntityEntry<K> extends BaseManagedEntityEntry<K> {
+//        public BaseGenericIdEntityEntry(BaseGenericIdEntity<K> entity) {
+//            super(entity);
+//        }
+//
+//        @Override
+//        public void setEntityId(K id) {
+//            ((BaseGenericIdEntity<K>) source).setId(id);
+//        }
+//
+//        @Override
+//        public K getEntityId() {
+//            return ((BaseGenericIdEntity<K>) source).getId();
+//        }
+//    }
 
     // todo dynamic attributes
 //    @Transient
@@ -69,10 +69,10 @@ public abstract class BaseGenericIdEntity<T> implements ManagedEntity<T> , Entit
     public abstract T getId();
 
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-        if (__getEntityEntry().isManaged()) {
-            __getEntityEntry().setManaged(false);
-            __getEntityEntry().setDetached(true);
-        }
+//        if (__getEntityEntry().isManaged()) {
+//            __getEntityEntry().setManaged(false);
+//            __getEntityEntry().setDetached(true);
+//        }
         out.defaultWriteObject();
     }
 
@@ -163,30 +163,22 @@ public abstract class BaseGenericIdEntity<T> implements ManagedEntity<T> , Entit
         return getId() != null ? getId().hashCode() : super.hashCode();
     }
 
-    @Override
-    public String toString() {
-        String state = "";
-
-        if (__getEntityEntry().isNew())
-            state += "new,";
-        if (__getEntityEntry().isManaged())
-            state += "managed,";
-        if (__getEntityEntry().isDetached())
-            state += "detached,";
-        if (__getEntityEntry().isRemoved())
-            state += "removed,";
-
-        if (state.length() > 0)
-            state = state.substring(0, state.length() - 1);
-
-        return getClass().getName() + "-" + getId() + " [" + state + "]";
-    }
-
-    @Override
-    public ManagedEntityEntry<T> __getEntityEntry() {
-        if (__entityEntry == null) {
-            __entityEntry = new BaseGenericIdEntityEntry<>(this);
-        }
-        return __entityEntry;
-    }
+//    @Override
+//    public String toString() {
+//        String state = "";
+//
+//        if (__getEntityEntry().isNew())
+//            state += "new,";
+//        if (__getEntityEntry().isManaged())
+//            state += "managed,";
+//        if (__getEntityEntry().isDetached())
+//            state += "detached,";
+//        if (__getEntityEntry().isRemoved())
+//            state += "removed,";
+//
+//        if (state.length() > 0)
+//            state = state.substring(0, state.length() - 1);
+//
+//        return getClass().getName() + "-" + getId() + " [" + state + "]";
+//    }
 }

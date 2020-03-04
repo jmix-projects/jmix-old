@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.gradle;
 
-/**
- * Marker interface to be implemented by entities that should not be enhanced.
- *
- */
-public interface JmixEnhanced {
+import javassist.ClassPool;
+import org.gradle.api.logging.Logger;
+
+public interface EnhancingStep {
+
+    void execute(String className);
+
+    void setClassPool(ClassPool classPool);
+
+    void setOutputDir(String outputDir);
+
+    void setLogger(Logger logger);
 }

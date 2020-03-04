@@ -16,20 +16,12 @@
 
 package io.jmix.gradle;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+public class EnhancingException extends RuntimeException {
+    public EnhancingException(String message) {
+        super(message);
+    }
 
-public class BeanValidationMessageTransformer {
-
-    public static final Pattern messagePattern = Pattern.compile("(\\{msg://)([\\p{L}\\w.]*})");
-
-    public String transformAnnotationMessage(String messageValue, String packageName) {
-        if (messagePattern.matcher(messageValue).matches()) {
-            Matcher matcher = messagePattern.matcher(messageValue);
-            if (matcher.find()) {
-                return matcher.group(1) + packageName + "/" + matcher.group(2);
-            }
-        }
-        return messageValue;
+    public EnhancingException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

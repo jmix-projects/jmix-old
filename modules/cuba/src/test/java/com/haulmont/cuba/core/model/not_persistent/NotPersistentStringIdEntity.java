@@ -49,4 +49,12 @@ public class NotPersistentStringIdEntity extends BaseStringIdEntity {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 }

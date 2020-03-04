@@ -21,6 +21,7 @@ import com.haulmont.cuba.core.model.common.Group;
 import com.haulmont.cuba.core.model.common.User;
 import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestSupport;
+import io.jmix.core.entity.ManagedEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -59,7 +60,7 @@ public class EntityStateTest {
             EntityManager em = persistence.getEntityManager();
 
             user = new User();
-            assertTrue(user.__getEntityEntry().isNew());
+            assertTrue(((ManagedEntity)user).__getEntityEntry().isNew());
 
             assertFalse(user.__getEntityEntry().isManaged());
             assertFalse(user.__getEntityEntry().isDetached());
