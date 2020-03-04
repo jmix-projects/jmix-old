@@ -20,7 +20,6 @@ import com.google.common.base.Joiner;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.Stores;
 import io.jmix.core.commons.util.ReflectionHelper;
-import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.entity.annotation.MetaAnnotation;
 import io.jmix.core.metamodel.annotations.Composition;
 import io.jmix.core.metamodel.annotations.NumberFormat;

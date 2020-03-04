@@ -20,7 +20,7 @@ import io.jmix.core.Sort;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.components.AggregationInfo;
@@ -97,7 +97,7 @@ public class ContainerDataGridItems<E extends Entity>
 
     @Override
     public Object getItemId(E item) {
-        return EntityAccessor.getEntityId(item);
+        return EntityValues.getEntityId(item);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class ContainerDataGridItems<E extends Entity>
 
     @Override
     public int indexOfItem(E item) {
-        return container.getItemIndex(EntityAccessor.getEntityId(item));
+        return container.getItemIndex(EntityValues.getEntityId(item));
     }
 
     @Nullable
@@ -128,7 +128,7 @@ public class ContainerDataGridItems<E extends Entity>
 
     @Override
     public boolean containsItem(E item) {
-        return container.getItemOrNull(EntityAccessor.getEntityId(item)) != null;
+        return container.getItemOrNull(EntityValues.getEntityId(item)) != null;
     }
 
     @Override
@@ -243,7 +243,7 @@ public class ContainerDataGridItems<E extends Entity>
 
             @Override
             public Object getItemValue(MetaPropertyPath property, Object itemId) {
-                return EntityAccessor.getEntityValueEx(container.getItem(itemId), property);
+                return EntityValues.getAttributeValueEx(container.getItem(itemId), property);
             }
         };
     }

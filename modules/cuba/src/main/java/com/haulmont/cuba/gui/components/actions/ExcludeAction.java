@@ -25,7 +25,7 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.Messages;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityAttrAccess;
@@ -181,7 +181,7 @@ public class ExcludeAction extends RemoveAction
                     Class dsClass = extendedEntities.getEffectiveClass(ds.getMetaClass());
                     if (inversePropClass.isAssignableFrom(dsClass)) {
                         for (Entity item : selected) {
-                            EntityAccessor.setEntityValue(item, inverseProp.getName(), null);
+                            EntityValues.setAttributeValue(item, inverseProp.getName(), null);
                         }
                     }
                 }

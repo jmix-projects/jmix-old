@@ -22,7 +22,7 @@ import com.haulmont.cuba.core.global.LoadContext;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.KeyValueEntity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.validation.EntityValidationException;
@@ -106,13 +106,13 @@ public class CubaDataManager implements DataManager {
             metaClass = metadata.getSession().getClass(entity.getClass());
         }
         LoadContext<E> context = new LoadContext<>(metaClass);
-        context.setId(EntityAccessor.getEntityId(entity));
+        context.setId(EntityValues.getEntityId(entity));
         context.setFetchPlan(fetchPlan);
         context.setLoadDynamicAttributes(loadDynamicAttributes);
 
         E reloaded = load(context);
         if (reloaded == null)
-            throw new EntityAccessException(metaClass, EntityAccessor.getEntityId(entity));
+            throw new EntityAccessException(metaClass, EntityValues.getEntityId(entity));
 
         return reloaded;
     }

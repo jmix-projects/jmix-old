@@ -26,13 +26,13 @@ public interface ManagedEntityEntry<K> extends Serializable {
 
     void setEntityId(K id);
 
-    <T> T getEntityValue(String name);
+    <T> T getAttributeValue(String name);
 
-    default void setEntityValue(String name, Object value) {
-        setEntityValue(name, value, true);
+    default void setAttributeValue(String name, Object value) {
+        setAttributeValue(name, value, true);
     }
 
-    void setEntityValue(String name, Object value, boolean checkEquals);
+    void setAttributeValue(String name, Object value, boolean checkEquals);
 
     boolean isNew();
 

@@ -19,7 +19,7 @@ package io.jmix.core;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.commons.util.StringHelper;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.queryconditions.Condition;
 
@@ -150,7 +150,7 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
      * @return this instance for chaining
      */
     public LoadContext<E> setId(Object id) {
-        this.id = id instanceof Entity ? EntityAccessor.getEntityId(((Entity) id)) : id; // for compatibility with legacy code relying on implicit conversions
+        this.id = id instanceof Entity ? EntityValues.getEntityId(((Entity) id)) : id; // for compatibility with legacy code relying on implicit conversions
         return this;
     }
 

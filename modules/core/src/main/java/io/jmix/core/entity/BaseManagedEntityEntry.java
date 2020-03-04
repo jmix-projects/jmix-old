@@ -49,15 +49,15 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getEntityValue(String name) {
+    public <T> T getAttributeValue(String name) {
         return (T) MethodsCache.getOrCreate(getSource().getClass()).getGetterNN(name).apply(getSource());
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public void setEntityValue(String name, Object value, boolean checkEquals) {
-        Object oldValue = getEntityValue(name);
-        if ((!checkEquals) || (!EntityAccessor.propertyValueEquals(oldValue, value))) {
+    public void setAttributeValue(String name, Object value, boolean checkEquals) {
+        Object oldValue = getAttributeValue(name);
+        if ((!checkEquals) || (!EntityValues.propertyValueEquals(oldValue, value))) {
             BiConsumer setter = MethodsCache.getOrCreate(getSource().getClass()).getSetterNN(name);
             setter.accept(getSource(), value);
         }
@@ -157,7 +157,7 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
                     if (related != null) {
                         for (String property : related) {
                             listener.propertyChanged(
-                                    new EntityPropertyChangeEvent(getSource(), property, null, getEntityValue(property)));
+                                    new EntityPropertyChangeEvent(getSource(), property, null, getAttributeValue(property)));
                         }
                     }
                 }

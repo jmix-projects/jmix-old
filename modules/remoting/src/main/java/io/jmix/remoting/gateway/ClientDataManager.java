@@ -18,7 +18,7 @@ package io.jmix.remoting.gateway;
 
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.KeyValueEntity;
 
 import javax.annotation.Nullable;
@@ -85,7 +85,7 @@ public class ClientDataManager implements DataManager {
     @Override
     public <T extends Entity<K>, K> T getReference(Class<T> entityClass, K id) {
         T entity = metadata.create(entityClass);
-        EntityAccessor.setEntityId(entity, id);
+        EntityValues.setEntityId(entity, id);
         entityStates.makePatch(entity);
         return entity;
     }

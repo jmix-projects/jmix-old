@@ -16,7 +16,7 @@
 
 package io.jmix.ui.model.impl;
 
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.entity.Entity;
@@ -69,6 +69,6 @@ public abstract class BaseContainerSorter implements Sorter {
             throw new IllegalArgumentException("Property " + sort.getOrders().get(0).getProperty() + " is invalid");
         }
         boolean asc = sort.getOrders().get(0).getDirection() == Sort.Direction.ASC;
-        return Comparator.comparing(e -> EntityAccessor.getEntityValueEx(e, propertyPath), EntityValuesComparator.asc(asc));
+        return Comparator.comparing(e -> EntityValues.getAttributeValueEx(e, propertyPath), EntityValuesComparator.asc(asc));
     }
 }

@@ -20,8 +20,7 @@ import io.jmix.core.EntityStates;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.data.StoreAwareLocator;
@@ -73,7 +72,7 @@ public class OrmCacheSupport {
                         }
                     }
                 } else {
-                    Object masterEntity = EntityAccessor.getEntityValue(entity, property.getName());
+                    Object masterEntity = EntityValues.getAttributeValue(entity, property.getName());
                     evictEntity(masterEntity);
                 }
             }

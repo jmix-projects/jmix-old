@@ -16,7 +16,6 @@
 
 package io.jmix.core.security.impl;
 
-import io.jmix.core.entity.EntityAccessor;
 import io.jmix.core.security.*;
 import org.springframework.stereotype.Component;
 

@@ -16,11 +16,10 @@
 package io.jmix.core.metamodel.model.utils;
 
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.EntityPropertyPath;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 
 /**
  * Utility class to work with {@link Entity}s.
@@ -59,81 +58,81 @@ public final class InstanceUtils {
     }
 
     /**
-     * Get value of an attribute according to the rules described in {@link EntityAccessor#getEntityValueEx(Entity, String)}.
+     * Get value of an attribute according to the rules described in {@link EntityValues#getAttributeValueEx(Entity, String)}.
      *
      * @param entity     instance
      * @param propertyPath attribute path
      * @return attribute value
-     * @deprecated replaced by {@link EntityAccessor#getEntityValueEx(Entity, String)}
+     * @deprecated replaced by {@link EntityValues#getAttributeValueEx(Entity, String)}
      */
     @Deprecated
     public static <T> T getValueEx(Entity<?> entity, String propertyPath) {
-        return EntityAccessor.getEntityValueEx(entity, propertyPath);
+        return EntityValues.getAttributeValueEx(entity, propertyPath);
     }
 
     /**
-     * Get value of an attribute according to the rules described in {@link EntityAccessor#getEntityValueEx(Entity, EntityPropertyPath)}.
+     * Get value of an attribute according to the rules described in {@link EntityValues#getAttributeValueEx(Entity, EntityPropertyPath)}.
      *
      * @param entity     entity
      * @param propertyPath attribute path
      * @return attribute value
-     * @deprecated replaced by {@link EntityAccessor#getEntityValueEx(Entity, EntityPropertyPath)}
+     * @deprecated replaced by {@link EntityValues#getAttributeValueEx(Entity, EntityPropertyPath)}
      */
     @Deprecated
     public static <T> T getValueEx(Entity<?> entity, EntityPropertyPath propertyPath) {
-        return EntityAccessor.getEntityValueEx(entity, propertyPath);
+        return EntityValues.getAttributeValueEx(entity, propertyPath);
     }
 
     /**
-     * Get value of an attribute according to the rules described in {@link EntityAccessor#getEntityValueEx(Entity, String[])}.
+     * Get value of an attribute according to the rules described in {@link EntityValues#getAttributeValueEx(Entity, String[])}.
      *
      * @param entity   entity
      * @param properties path to the attribute
      * @return attribute value
-     * @deprecated replaced by {@link EntityAccessor#getEntityValueEx(Entity, String[])}
+     * @deprecated replaced by {@link EntityValues#getAttributeValueEx(Entity, String[])}
      */
     @Deprecated
     public static <T> T getValueEx(Entity<?> entity, String[] properties) {
-        return EntityAccessor.getEntityValueEx(entity, properties);
+        return EntityValues.getAttributeValueEx(entity, properties);
     }
 
     /**
-     * Set value of an attribute according to the rules described in {@link EntityAccessor#setEntityValueEx(Entity, String, Object)}.
+     * Set value of an attribute according to the rules described in {@link EntityValues#setAttributeValueEx(Entity, String, Object)}.
      *
      * @param entity     entity
      * @param propertyPath path to the attribute
      * @param value        attribute value
-     * @deprecated replaced by {@link EntityAccessor#setEntityValueEx(Entity, String, Object)}
+     * @deprecated replaced by {@link EntityValues#setAttributeValueEx(Entity, String, Object)}
      */
     @Deprecated
     public static void setValueEx(Entity<?> entity, String propertyPath, Object value) {
-        EntityAccessor.setEntityValueEx(entity, propertyPath, value);
+        EntityValues.setAttributeValueEx(entity, propertyPath, value);
     }
 
     /**
-     * Set value of an attribute according to the rules described in {@link EntityAccessor#setEntityValueEx(Entity, EntityPropertyPath, Object)}.
+     * Set value of an attribute according to the rules described in {@link EntityValues#setAttributeValueEx(Entity, EntityPropertyPath, Object)}.
      *
      * @param entity     entity
      * @param propertyPath path to the attribute
      * @param value        attribute value
-     * @deprecated replaced by {@link EntityAccessor#setEntityValueEx(Entity, EntityPropertyPath, Object)}
+     * @deprecated replaced by {@link EntityValues#setAttributeValueEx(Entity, EntityPropertyPath, Object)}
      */
     @Deprecated
     public static void setValueEx(Entity entity, EntityPropertyPath propertyPath, Object value) {
-        EntityAccessor.setEntityValueEx(entity, propertyPath, value);
+        EntityValues.setAttributeValueEx(entity, propertyPath, value);
     }
 
     /**
-     * Set value of an attribute according to the rules described in {@link EntityAccessor#setEntityValueEx(Entity, String[], Object)}.
+     * Set value of an attribute according to the rules described in {@link EntityValues#setAttributeValueEx(Entity, String[], Object)}.
      *
      * @param entity     entity
      * @param properties path to the attribute
      * @param value      attribute value
-     * @deprecated replaces by {@link EntityAccessor#setEntityValueEx(Entity, String[], Object)}
+     * @deprecated replaces by {@link EntityValues#setAttributeValueEx(Entity, String[], Object)}
      */
     @Deprecated
     public static void setValueEx(Entity<?> entity, String[] properties, Object value) {
-        EntityAccessor.setEntityValueEx(entity, properties, value);
+        EntityValues.setAttributeValueEx(entity, properties, value);
     }
 
     /**
@@ -143,10 +142,10 @@ public final class InstanceUtils {
      * @param b an object
      * @return true if {@code a} equals to {@code b}, but in case of {@code a} is {@link } or {@code Collection} returns
      * true only if {@code a} is the same instance as {@code b}
-     * @deprecated replaced by {@link EntityAccessor#propertyValueEquals(Object, Object)}
+     * @deprecated replaced by {@link EntityValues#propertyValueEquals(Object, Object)}
      */
     @Deprecated
     public static boolean propertyValueEquals(Object a, Object b) {
-       return EntityAccessor.propertyValueEquals(a, b);
+       return EntityValues.propertyValueEquals(a, b);
     }
 }

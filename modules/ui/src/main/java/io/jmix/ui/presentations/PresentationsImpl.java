@@ -18,7 +18,7 @@ package io.jmix.ui.presentations;
 import io.jmix.core.*;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.Presentation;
 import io.jmix.core.entity.User;
 import io.jmix.core.security.UserSession;
@@ -54,7 +54,7 @@ public class PresentationsImpl implements Presentations {
     @Override
     public void add(Presentation p) {
         checkLoad();
-        presentations.put(EntityAccessor.<UUID>getEntityId(p), p);
+        presentations.put(EntityValues.<UUID>getEntityId(p), p);
         if (PersistenceHelper.isNew(p)) {
             needToUpdate.add(p);
 
@@ -78,18 +78,18 @@ public class PresentationsImpl implements Presentations {
             Object old = current;
             current = null;
             fireCurrentPresentationChanged(old);
-        } else if (presentations.containsKey(EntityAccessor.<UUID>getEntityId(p))) {
+        } else if (presentations.containsKey(EntityValues.<UUID>getEntityId(p))) {
             Object old = current;
             current = p;
             fireCurrentPresentationChanged(old);
         } else {
-            throw new IllegalStateException(String.format("Invalid presentation: %s", EntityAccessor.<UUID>getEntityId(p)));
+            throw new IllegalStateException(String.format("Invalid presentation: %s", EntityValues.<UUID>getEntityId(p)));
         }
     }
 
     @Override
     public Element getSettings(Presentation p) {
-        p = getPresentation(EntityAccessor.<UUID>getEntityId(p));
+        p = getPresentation(EntityValues.<UUID>getEntityId(p));
         if (p != null) {
             Document doc;
             if (!StringUtils.isEmpty(p.getXml())) {
@@ -106,7 +106,7 @@ public class PresentationsImpl implements Presentations {
 
     @Override
     public void setSettings(Presentation p, Element e) {
-        p = getPresentation(EntityAccessor.<UUID>getEntityId(p));
+        p = getPresentation(EntityValues.<UUID>getEntityId(p));
         if (p != null) {
             p.setXml(AppBeans.get(Dom4jTools.class).writeDocument(e.getDocument(), false));
             modify(p);
@@ -141,7 +141,7 @@ public class PresentationsImpl implements Presentations {
             Object old = def;
             def = null;
             fireDefaultPresentationChanged(old);
-        } else if (presentations.containsKey(EntityAccessor.<UUID>getEntityId(p))) {
+        } else if (presentations.containsKey(EntityValues.<UUID>getEntityId(p))) {
             Object old = def;
             if (def != null) {
                 def.setDefault(false);
@@ -150,7 +150,7 @@ public class PresentationsImpl implements Presentations {
             def = p;
             fireDefaultPresentationChanged(old);
         } else {
-            throw new IllegalStateException(String.format("Invalid presentation: %s", EntityAccessor.<UUID>getEntityId(p)));
+            throw new IllegalStateException(String.format("Invalid presentation: %s", EntityValues.<UUID>getEntityId(p)));
         }
     }
 
@@ -162,7 +162,7 @@ public class PresentationsImpl implements Presentations {
     @Override
     public void remove(Presentation p) {
         checkLoad();
-        if (presentations.remove(EntityAccessor.<UUID>getEntityId(p)) != null) {
+        if (presentations.remove(EntityValues.<UUID>getEntityId(p)) != null) {
             if (PersistenceHelper.isNew(p)) {
                 needToUpdate.remove(p);
             } else {
@@ -185,27 +185,27 @@ public class PresentationsImpl implements Presentations {
     @Override
     public void modify(Presentation p) {
         checkLoad();
-        if (presentations.containsKey(EntityAccessor.<UUID>getEntityId(p))) {
+        if (presentations.containsKey(EntityValues.<UUID>getEntityId(p))) {
             needToUpdate.add(p);
             if (BooleanUtils.isTrue(p.getDefault())) {
                 setDefault(p);
-            } else if (def != null && EntityAccessor.<UUID>getEntityId(def).equals(EntityAccessor.<UUID>getEntityId(p))) {
+            } else if (def != null && EntityValues.<UUID>getEntityId(def).equals(EntityValues.<UUID>getEntityId(p))) {
                 setDefault(null);
             }
         } else {
-            throw new IllegalStateException(String.format("Invalid presentation: %s", EntityAccessor.<UUID>getEntityId(p)));
+            throw new IllegalStateException(String.format("Invalid presentation: %s", EntityValues.<UUID>getEntityId(p)));
         }
     }
 
     @Override
     public boolean isAutoSave(Presentation p) {
-        p = getPresentation(EntityAccessor.<UUID>getEntityId(p));
+        p = getPresentation(EntityValues.<UUID>getEntityId(p));
         return p != null && BooleanUtils.isTrue(p.getAutoSave());
     }
 
     @Override
     public boolean isGlobal(Presentation p) {
-        p = getPresentation(EntityAccessor.<UUID>getEntityId(p));
+        p = getPresentation(EntityValues.<UUID>getEntityId(p));
         return p != null && !PersistenceHelper.isNew(p) && p.getUser() == null;
     }
 
@@ -231,8 +231,8 @@ public class PresentationsImpl implements Presentations {
             else if (entity.equals(current))
                 current = (Presentation) entity;
 
-            if (presentations.containsKey(EntityAccessor.getEntityId(entity))) {
-                presentations.put(EntityAccessor.getEntityId(entity), (Presentation) entity);
+            if (presentations.containsKey(EntityValues.getEntityId(entity))) {
+                presentations.put(EntityValues.getEntityId(entity), (Presentation) entity);
             }
         }
     }
@@ -303,13 +303,13 @@ public class PresentationsImpl implements Presentations {
             ctx.setQueryString("select p from sec$Presentation p " +
                     "where p.componentId = :component and (p.user is null or p.user.id = :userId)")
                     .setParameter("component", name)
-                    .setParameter("userId", EntityAccessor.<UUID>getEntityId(user));
+                    .setParameter("userId", EntityValues.<UUID>getEntityId(user));
 
             final List<Presentation> list = ds.loadList(ctx);
 
             presentations = new LinkedHashMap<>(list.size());
             for (final Presentation p : list) {
-                presentations.put(EntityAccessor.<UUID>getEntityId(p), p);
+                presentations.put(EntityValues.<UUID>getEntityId(p), p);
             }
         }
     }

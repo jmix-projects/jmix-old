@@ -17,7 +17,7 @@
 package io.jmix.core;
 
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.HasUuid;
 import io.jmix.core.entity.IdProxy;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -48,11 +48,11 @@ public class ReferenceToEntitySupport {
         if (entity instanceof HasUuid) {
             return ((HasUuid) entity).getUuid();
         }
-        Object entityId = EntityAccessor.getEntityId(entity);
+        Object entityId = EntityValues.getEntityId(entity);
         if (entityId instanceof IdProxy) {
             return ((IdProxy) entityId).get();
         }
-        return EntityAccessor.getEntityId(entity);
+        return EntityValues.getEntityId(entity);
     }
 
     /**
@@ -60,7 +60,7 @@ public class ReferenceToEntitySupport {
      * @return entity id for links
      */
     public Object getReferenceIdForLink(Entity entity) {
-        Object entityId = EntityAccessor.getEntityId(entity);
+        Object entityId = EntityValues.getEntityId(entity);
         if (entityId instanceof IdProxy) {
             entityId = ((IdProxy) entityId).get();
         }

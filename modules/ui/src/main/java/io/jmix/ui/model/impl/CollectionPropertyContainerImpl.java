@@ -16,7 +16,7 @@
 
 package io.jmix.ui.model.impl;
 
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.EntityPropertyChangeEvent;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -80,7 +80,7 @@ public class CollectionPropertyContainerImpl<E extends Entity>
         Entity masterItem = master.getItemOrNull();
         if (masterItem != null) {
             MetaProperty masterProperty = getMasterProperty();
-            Collection masterCollection = EntityAccessor.getEntityValue(masterItem, masterProperty.getName());
+            Collection masterCollection = EntityValues.getAttributeValue(masterItem, masterProperty.getName());
             if (masterCollection != entities) {
                 updateMasterCollection(masterProperty, masterCollection, entities);
             }
@@ -89,7 +89,7 @@ public class CollectionPropertyContainerImpl<E extends Entity>
 
     protected void updateMaster() {
         MetaProperty masterProperty = getMasterProperty();
-        Collection masterCollection = EntityAccessor.getEntityValue(master.getItem(), masterProperty.getName());
+        Collection masterCollection = EntityValues.getAttributeValue(master.getItem(), masterProperty.getName());
         updateMasterCollection(masterProperty, masterCollection, this.collection);
     }
 
@@ -107,7 +107,7 @@ public class CollectionPropertyContainerImpl<E extends Entity>
                                         @Nullable Collection masterCollection,
                                         @Nullable Collection<E> newCollection) {
         if (newCollection == null) {
-            EntityAccessor.setEntityValue(master.getItem(), metaProperty.getName(), null);
+            EntityValues.setAttributeValue(master.getItem(), metaProperty.getName(), null);
         } else {
             if (masterCollection == null) {
                 if (List.class.isAssignableFrom(metaProperty.getJavaType())) {
@@ -115,7 +115,7 @@ public class CollectionPropertyContainerImpl<E extends Entity>
                 } else {
                     masterCollection = new LinkedHashSet(newCollection);
                 }
-                EntityAccessor.setEntityValue(master.getItem(), metaProperty.getName(), masterCollection);
+                EntityValues.setAttributeValue(master.getItem(), metaProperty.getName(), masterCollection);
             } else {
                 masterCollection.clear();
                 masterCollection.addAll(newCollection);

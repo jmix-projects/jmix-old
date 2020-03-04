@@ -25,7 +25,7 @@ import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.Messages;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityAttrAccess;
@@ -227,11 +227,11 @@ public class CreateAction extends ListAction
 
             Entity parentItem = datasource.getItem();
             // datasource.getItem() may contain deleted item
-            if (parentItem != null && !datasource.containsItem(EntityAccessor.getEntityId(parentItem))) {
+            if (parentItem != null && !datasource.containsItem(EntityValues.getEntityId(parentItem))) {
                 parentItem = null;
             }
 
-            EntityAccessor.setEntityValue(item, hierarchyProperty, parentItem);
+            EntityValues.setAttributeValue(item, hierarchyProperty, parentItem);
         }
 
         if (datasource instanceof NestedDatasource) {
@@ -246,7 +246,7 @@ public class CreateAction extends ListAction
                     Class inversePropClass = extendedEntities.getEffectiveClass(inverseProp.getDomain());
                     Class dsClass = extendedEntities.getEffectiveClass(datasource.getMetaClass());
                     if (inversePropClass.isAssignableFrom(dsClass)) {
-                        EntityAccessor.setEntityValue(item, inverseProp.getName(), masterDs.getItem());
+                        EntityValues.setAttributeValue(item, inverseProp.getName(), masterDs.getItem());
                     }
                 }
             }
@@ -293,7 +293,7 @@ public class CreateAction extends ListAction
         Map<String, Object> values = getInitialValues();
         if (values != null) {
             for (Map.Entry<String, Object> entry : values.entrySet()) {
-                EntityAccessor.setEntityValue(item, entry.getKey(), entry.getValue());
+                EntityValues.setAttributeValue(item, entry.getKey(), entry.getValue());
             }
         }
 
@@ -301,7 +301,7 @@ public class CreateAction extends ListAction
             Map<String, Object> supplierValues = initialValuesSupplier.get();
             if (supplierValues != null) {
                 for (Map.Entry<String, Object> entry : supplierValues.entrySet()) {
-                    EntityAccessor.setEntityValue(item, entry.getKey(), entry.getValue());
+                    EntityValues.setAttributeValue(item, entry.getKey(), entry.getValue());
                 }
             }
         }

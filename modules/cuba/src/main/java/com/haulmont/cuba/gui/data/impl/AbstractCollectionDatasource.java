@@ -23,7 +23,7 @@ import com.haulmont.cuba.gui.data.DataSupplier;
 import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
@@ -228,7 +228,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
                         if (elements.length > 1) {
                             String[] valuePath = ArrayUtils.subarray(elements, 1, elements.length);
                             String propertyName = EntityPaths.formatValuePath(valuePath);
-                            Object value = EntityAccessor.getEntityValueEx(item, propertyName);
+                            Object value = EntityValues.getAttributeValueEx(item, propertyName);
                             map.put(name, value);
                         } else {
                             map.put(name, item);
@@ -251,7 +251,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
                             if (entity != null) {
                                 String[] valuePath = ArrayUtils.subarray(elements, 1, elements.length);
                                 String propertyName = EntityPaths.formatValuePath(valuePath);
-                                value = EntityAccessor.getEntityValueEx(entity, propertyName);
+                                value = EntityValues.getAttributeValueEx(entity, propertyName);
                             }
                         }
                     }
@@ -303,7 +303,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
                         if (pathElements.length > 1) {
                             Object entity = params.get(pathElements[0]);
                             if (entity instanceof Entity) {
-                                value = EntityAccessor.getEntityValueEx((Entity<?>) entity, Arrays.copyOfRange(pathElements, 1, pathElements.length));
+                                value = EntityValues.getAttributeValueEx((Entity<?>) entity, Arrays.copyOfRange(pathElements, 1, pathElements.length));
                             }
                         }
                     }
@@ -503,7 +503,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
         if (sortInfos[0].getPropertyPath() != null) {
             final MetaPropertyPath propertyPath = sortInfos[0].getPropertyPath();
             final boolean asc = Sortable.Order.ASC.equals(sortInfos[0].getOrder());
-            return Comparator.comparing(e -> EntityAccessor.getEntityValueEx(e, propertyPath), EntityValuesComparator.asc(asc));
+            return Comparator.comparing(e -> EntityValues.getAttributeValueEx(e, propertyPath), EntityValuesComparator.asc(asc));
         } else {
             // If we can not sort the datasource, just return the empty comparator.
             return (o1, o2) -> 0;

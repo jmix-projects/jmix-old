@@ -18,7 +18,7 @@ package io.jmix.ui.components.data.datagrid;
 
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.ui.components.data.TreeDataGridItems;
 import io.jmix.ui.model.CollectionContainer;
 
@@ -47,13 +47,13 @@ public class ContainerTreeDataGridItems<E extends Entity>
             // root items
             return container.getItems().stream()
                     .filter(it -> {
-                        E parentItem = EntityAccessor.getEntityValue(it, hierarchyProperty);
-                        return parentItem == null || (container.getItemOrNull(EntityAccessor.getEntityId(parentItem)) == null);
+                        E parentItem = EntityValues.getAttributeValue(it, hierarchyProperty);
+                        return parentItem == null || (container.getItemOrNull(EntityValues.getEntityId(parentItem)) == null);
                     });
         } else {
             return container.getItems().stream()
                     .filter(it -> {
-                        E parentItem = EntityAccessor.getEntityValue(it, hierarchyProperty);
+                        E parentItem = EntityValues.getAttributeValue(it, hierarchyProperty);
                         return parentItem != null && parentItem.equals(item);
                     });
         }
@@ -62,7 +62,7 @@ public class ContainerTreeDataGridItems<E extends Entity>
     @Override
     public boolean hasChildren(E item) {
         return container.getItems().stream().anyMatch(it -> {
-            E parentItem = EntityAccessor.getEntityValue(it, hierarchyProperty);
+            E parentItem = EntityValues.getAttributeValue(it, hierarchyProperty);
             return parentItem != null && parentItem.equals(item);
         });
     }
@@ -71,6 +71,6 @@ public class ContainerTreeDataGridItems<E extends Entity>
     @Override
     public E getParent(E item) {
         Preconditions.checkNotNullArgument(item);
-        return EntityAccessor.getEntityValue(item, hierarchyProperty);
+        return EntityValues.getAttributeValue(item, hierarchyProperty);
     }
 }

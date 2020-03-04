@@ -16,7 +16,7 @@
 package com.haulmont.cuba.gui.data.impl;
 
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 import org.apache.commons.lang3.StringUtils;
 
@@ -54,9 +54,9 @@ public class HierarchicalPropertyDatasourceImpl<T extends Entity<K>, K>
             Collection<K> ids = getItemIds();
             for (K id : ids) {
                 Entity<K> currentItem = getItemNN(id);
-                Object parentItem = EntityAccessor.getEntityValue(currentItem, hierarchyPropertyName);
+                Object parentItem = EntityValues.getAttributeValue(currentItem, hierarchyPropertyName);
                 if (parentItem != null && parentItem.equals(item))
-                    res.add(EntityAccessor.getEntityId(currentItem));
+                    res.add(EntityValues.getEntityId(currentItem));
             }
 
             if (StringUtils.isNotBlank(sortPropertyName)) {
@@ -64,8 +64,8 @@ public class HierarchicalPropertyDatasourceImpl<T extends Entity<K>, K>
                     Entity item1 = getItemNN(o1);
                     Entity item2 = getItemNN(o2);
 
-                    Object value1 = EntityAccessor.getEntityValue(item1, sortPropertyName);
-                    Object value2 = EntityAccessor.getEntityValue(item2, sortPropertyName);
+                    Object value1 = EntityValues.getAttributeValue(item1, sortPropertyName);
+                    Object value2 = EntityValues.getAttributeValue(item2, sortPropertyName);
 
                     if ((value1 instanceof Comparable)
                             && (value2 instanceof Comparable)) {
@@ -88,8 +88,8 @@ public class HierarchicalPropertyDatasourceImpl<T extends Entity<K>, K>
             if (item == null)
                 return null;
             else {
-                Entity<K> value = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-                return value == null ? null : EntityAccessor.getEntityId(value);
+                Entity<K> value = EntityValues.getAttributeValue(item, hierarchyPropertyName);
+                return value == null ? null : EntityValues.getEntityId(value);
             }
         }
         return null;
@@ -104,8 +104,8 @@ public class HierarchicalPropertyDatasourceImpl<T extends Entity<K>, K>
             Set<K> result = new LinkedHashSet<>();
             for (K id : ids) {
                 Entity<K> item = getItemNN(id);
-                Object value = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-                if (value == null || !containsItem(EntityAccessor.getEntityId(((T) value)))) result.add(EntityAccessor.getEntityId(item));
+                Object value = EntityValues.getAttributeValue(item, hierarchyPropertyName);
+                if (value == null || !containsItem(EntityValues.getEntityId(((T) value)))) result.add(EntityValues.getEntityId(item));
             }
             return result;
         } else {
@@ -120,8 +120,8 @@ public class HierarchicalPropertyDatasourceImpl<T extends Entity<K>, K>
         if (item == null) return false;
 
         if (hierarchyPropertyName != null) {
-            Object value = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-            return (value == null || !containsItem(EntityAccessor.getEntityId(((T) value))));
+            Object value = EntityValues.getAttributeValue(item, hierarchyPropertyName);
+            return (value == null || !containsItem(EntityValues.getEntityId(((T) value))));
         } else {
             return true;
         }
@@ -134,7 +134,7 @@ public class HierarchicalPropertyDatasourceImpl<T extends Entity<K>, K>
 
         if (hierarchyPropertyName != null) {
             for (T currentItem : getItems()) {
-                Object parentItem = EntityAccessor.getEntityValue(currentItem, hierarchyPropertyName);
+                Object parentItem = EntityValues.getAttributeValue(currentItem, hierarchyPropertyName);
                 if (parentItem != null && parentItem.equals(item))
                     return true;
             }

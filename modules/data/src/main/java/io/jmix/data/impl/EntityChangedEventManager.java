@@ -248,7 +248,7 @@ public class EntityChangedEventManager {
         Map<String, AttributeChanges> embeddedChanges = new HashMap<>();
 
         for (MetaProperty property : metadata.getClass(entity.getClass()).getProperties()) {
-            Object value = EntityAccessor.getEntityValue(entity, property.getName());
+            Object value = EntityValues.getAttributeValue(entity, property.getName());
             if (deleted) {
                 if (value instanceof EmbeddableEntity) {
                     EmbeddableEntity embedded = (EmbeddableEntity) value;

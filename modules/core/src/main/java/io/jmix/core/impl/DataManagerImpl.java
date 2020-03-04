@@ -184,7 +184,7 @@ public class DataManagerImpl implements DataManager {
     @Override
     public <T extends Entity<K>, K> T getReference(Class<T> entityClass, K id) {
         T entity = metadata.create(entityClass);
-        EntityAccessor.setEntityId(entity, id);
+        EntityValues.setEntityId(entity, id);
         entityStates.makePatch(entity);
         return entity;
     }
@@ -209,31 +209,31 @@ public class DataManagerImpl implements DataManager {
                     }
                     String relatedPropertyName = relatedProperties.get(0);
                     if (entityStates.isLoaded(entity, relatedPropertyName)) {
-                        Entity refEntity = EntityAccessor.getEntityValue(entity, property.getName());
+                        Entity refEntity = EntityValues.getAttributeValue(entity, property.getName());
                         if (refEntity == null) {
-                            EntityAccessor.setEntityValue(entity, relatedPropertyName, null);
+                            EntityValues.setAttributeValue(entity, relatedPropertyName, null);
                         } else {
-                            Object refEntityId = EntityAccessor.getEntityId(refEntity);
+                            Object refEntityId = EntityValues.getEntityId(refEntity);
                             if (refEntityId instanceof IdProxy) {
                                 Object realId = ((IdProxy) refEntityId).get();
                                 if (realId == null) {
-                                    if (allEntities.stream().anyMatch(e -> EntityAccessor.getEntityId(e).equals(refEntityId))) {
+                                    if (allEntities.stream().anyMatch(e -> EntityValues.getEntityId(e).equals(refEntityId))) {
                                         repeatRequired = true;
                                     } else {
                                         log.warn("No entity with ID={} in the context, skip handling different data store", refEntityId);
                                     }
                                 } else {
-                                    EntityAccessor.setEntityValue(entity, relatedPropertyName, realId);
+                                    EntityValues.setAttributeValue(entity, relatedPropertyName, realId);
                                 }
                             } else if (refEntityId instanceof EmbeddableEntity) {
                                 MetaProperty relatedProperty = metaClass.getProperty(relatedPropertyName);
                                 if (!relatedProperty.getRange().isClass()) {
                                     log.warn("PK of entity referenced by {} is a EmbeddableEntity, but related property {} is not", property, relatedProperty);
                                 } else {
-                                    EntityAccessor.setEntityValue(entity, relatedPropertyName, metadataTools.copy((Entity) refEntityId));
+                                    EntityValues.setAttributeValue(entity, relatedPropertyName, metadataTools.copy((Entity) refEntityId));
                                 }
                             } else {
-                                EntityAccessor.setEntityValue(entity, relatedPropertyName, refEntityId);
+                                EntityValues.setAttributeValue(entity, relatedPropertyName, refEntityId);
                             }
                         }
                     }

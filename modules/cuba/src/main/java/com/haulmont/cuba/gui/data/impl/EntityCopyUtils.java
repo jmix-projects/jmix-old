@@ -64,7 +64,7 @@ public class EntityCopyUtils {
             MetaProperty dstProperty = metadata.getClass(dest).findProperty(name);
             if (dstProperty != null && !dstProperty.isReadOnly()) {
                 try {
-                    Object value = EntityAccessor.getEntityValue(source, name);
+                    Object value = EntityValues.getAttributeValue(source, name);
 
                     if (value != null && srcProperty.getRange().getCardinality().isMany()
                             && srcProperty.getType() == MetaProperty.Type.COMPOSITION) {
@@ -84,10 +84,10 @@ public class EntityCopyUtils {
                             dstCollection = new ArrayList<>(tmpCollection);
                         else
                             dstCollection = tmpCollection;
-                        EntityAccessor.setEntityValue(dest, name, dstCollection);
+                        EntityValues.setAttributeValue(dest, name, dstCollection);
 
                     } else {
-                        EntityAccessor.setEntityValue(dest, name, EntityAccessor.getEntityValue(source, name));
+                        EntityValues.setAttributeValue(dest, name, EntityValues.getAttributeValue(source, name));
                     }
                 } catch (RuntimeException e) {
                     Throwable cause = ExceptionUtils.getRootCause(e);
@@ -120,13 +120,13 @@ public class EntityCopyUtils {
             MetaProperty dstProperty = metadata.getClass(dest).findProperty(name);
             if (dstProperty != null && !dstProperty.isReadOnly()) {
                 try {
-                    Object value = EntityAccessor.getEntityValue(source, name);
+                    Object value = EntityValues.getAttributeValue(source, name);
 
                     if (value != null && srcProperty.getRange().getCardinality().isMany()
                             && srcProperty.getType() == MetaProperty.Type.COMPOSITION) {
-                        EntityAccessor.setEntityValue(dest, name, EntityAccessor.getEntityValue(source, name), false);
+                        EntityValues.setAttributeValue(dest, name, EntityValues.getAttributeValue(source, name), false);
                     } else {
-                        EntityAccessor.setEntityValue(dest, name, EntityAccessor.getEntityValue(source, name));
+                        EntityValues.setAttributeValue(dest, name, EntityValues.getAttributeValue(source, name));
                     }
                 } catch (RuntimeException e) {
                     Throwable cause = ExceptionUtils.getRootCause(e);

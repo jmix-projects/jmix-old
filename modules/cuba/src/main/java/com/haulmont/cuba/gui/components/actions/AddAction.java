@@ -27,7 +27,7 @@ import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.Messages;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityAttrAccess;
@@ -400,10 +400,10 @@ public class AddAction extends ListAction
                 for (Object item : items) {
                     if (item instanceof Entity) {
                         Entity<?> entity = (Entity<?>) item;
-                        if (!ds.containsItem(EntityAccessor.getEntityId(entity))) {
+                        if (!ds.containsItem(EntityValues.getEntityId(entity))) {
                             // Initialize reference to master entity
                             if (initializeMasterReference) {
-                                EntityAccessor.setEntityValue(entity, inverseProp.getName(), masterEntity);
+                                EntityValues.setAttributeValue(entity, inverseProp.getName(), masterEntity);
                             }
                             ds.addItem(entity);
                         }

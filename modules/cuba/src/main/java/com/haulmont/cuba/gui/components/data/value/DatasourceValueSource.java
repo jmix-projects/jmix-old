@@ -23,7 +23,7 @@ import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.impl.BeanLocatorAware;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
@@ -122,7 +122,7 @@ public class DatasourceValueSource<E extends Entity, V> implements EntityValueSo
     public V getValue() {
         E item = datasource.getItem();
         if (item != null) {
-            return EntityAccessor.getEntityValueEx(item, metaPropertyPath);
+            return EntityValues.getAttributeValueEx(item, metaPropertyPath);
         }
         return null;
     }
@@ -131,7 +131,7 @@ public class DatasourceValueSource<E extends Entity, V> implements EntityValueSo
     public void setValue(Object value) {
         E item = datasource.getItem();
         if (item != null) {
-            EntityAccessor.setEntityValueEx(item, metaPropertyPath, value);
+            EntityValues.setAttributeValueEx(item, metaPropertyPath, value);
         }
     }
 

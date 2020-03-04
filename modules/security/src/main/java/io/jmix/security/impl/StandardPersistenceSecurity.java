@@ -215,7 +215,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
                 Class entityClass = property.getRange().asClass().getJavaClass();
                 Class propertyClass = property.getJavaType();
                 if (Collection.class.isAssignableFrom(propertyClass)) {
-                    Collection currentCollection = EntityAccessor.getEntityValue(entity, property.getName());
+                    Collection currentCollection = EntityValues.getAttributeValue(entity, property.getName());
                     if (currentCollection == null) {
                         throw new RowLevelSecurityException(
                                 format("Could not restore an object to currentValue because it is null [%s]. Entity [%s].",
@@ -231,7 +231,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
                     Object entityId = filteredIds.iterator().next();
                     Entity reference = entityManager.getReference((Class<Entity>) entityClass, entityId);
                     //we ignore the situation when the field is read-only
-                    EntityAccessor.setEntityValue(entity, property.getName(), reference);
+                    EntityValues.setAttributeValue(entity, property.getName(), reference);
                 }
             }
         }
@@ -312,7 +312,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
             Multimap<String, Object> filteredData = entityEntry.getSecurityState().getFilteredData();
             for (MetaProperty property : metaClass.getProperties()) {
                 if (metadataTools.isPersistent(property) && entityStates.isLoaded(entity, property.getName())) {
-                    Object value = EntityAccessor.getEntityValue(entity, property.getName());
+                    Object value = EntityValues.getAttributeValue(entity, property.getName());
                     if (value instanceof Collection) {
                         Collection entities = (Collection) value;
                         for (Iterator<Entity> iterator = entities.iterator(); iterator.hasNext(); ) {
@@ -327,7 +327,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
                     } else if (value instanceof Entity) {
                         if (filteredData != null && filteredData.containsEntry(property.getName(),
                                 referenceToEntitySupport.getReferenceId((Entity) value))) {
-                            EntityAccessor.setEntityValue((Entity) value, property.getName(), null);
+                            EntityValues.setAttributeValue((Entity) value, property.getName(), null);
                         } else {
                             applyConstraints((Entity) value, handled);
                         }
@@ -353,7 +353,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
         handled.add(entityId);
         for (MetaProperty property : metaClass.getProperties()) {
             if (metadataTools.isPersistent(property) && entityStates.isLoaded(entity, property.getName())) {
-                Object value = EntityAccessor.getEntityValue(entity, property.getName());
+                Object value = EntityValues.getAttributeValue(entity, property.getName());
                 if (value instanceof Collection) {
                     Set filtered = new LinkedHashSet();
                     for (Entity item : (Collection<Entity>) value) {

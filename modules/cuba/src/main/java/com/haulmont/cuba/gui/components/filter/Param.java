@@ -33,7 +33,7 @@ import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.annotation.IgnoreUserTimeZone;
 import io.jmix.core.entity.annotation.Lookup;
 import io.jmix.core.entity.annotation.LookupType;
@@ -520,7 +520,7 @@ public class Param {
                 if (v instanceof UUID) {
                     return v.toString();
                 } else if (v instanceof Entity) {
-                    return EntityAccessor.getEntityId(((Entity) v)).toString();
+                    return EntityValues.getEntityId(((Entity) v)).toString();
                 }
 
             case ENUM:

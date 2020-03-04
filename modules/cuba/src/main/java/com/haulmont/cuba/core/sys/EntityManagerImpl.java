@@ -21,7 +21,7 @@ import io.jmix.core.FetchPlanRepository;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.IdProxy;
 import com.haulmont.cuba.core.EntityManager;
 import io.jmix.data.OrmProperties;
@@ -206,11 +206,11 @@ public class EntityManagerImpl implements EntityManager {
     public <T extends Entity> T reload(T entity, String... fetchPlanNames) {
         Preconditions.checkNotNullArgument(entity, "entity is null");
 
-        if (EntityAccessor.getEntityId(entity) instanceof IdProxy && ((IdProxy) EntityAccessor.getEntityId(entity)).get() == null) {
+        if (EntityValues.getEntityId(entity) instanceof IdProxy && ((IdProxy) EntityValues.getEntityId(entity)).get() == null) {
             return null;
         }
 
-        Entity resultEntity = find(entity.getClass(), EntityAccessor.getEntityId(entity), fetchPlanNames);
+        Entity resultEntity = find(entity.getClass(), EntityValues.getEntityId(entity), fetchPlanNames);
         return (T) resultEntity;
     }
 

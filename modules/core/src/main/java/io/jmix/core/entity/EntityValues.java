@@ -25,7 +25,7 @@ import java.util.Collection;
 import static io.jmix.core.metamodel.model.utils.EntityPaths.formatValuePath;
 import static io.jmix.core.metamodel.model.utils.EntityPaths.parseValuePath;
 
-public class EntityAccessor {
+public class EntityValues {
 
     @SuppressWarnings("unchecked")
     public static <K> K getEntityId(Entity<?> entity) {
@@ -46,8 +46,8 @@ public class EntityAccessor {
      * @param name  attribute name according to JavaBeans notation
      * @param value attribute value
      */
-    public static void setEntityValue(Entity<?> entity, String name, Object value) {
-        ((ManagedEntity<?>) entity).__getEntityEntry().setEntityValue(name, value, true);
+    public static void setAttributeValue(Entity<?> entity, String name, Object value) {
+        ((ManagedEntity<?>) entity).__getEntityEntry().setAttributeValue(name, value, true);
     }
 
     /**
@@ -62,8 +62,8 @@ public class EntityAccessor {
      * @param checkEquals check equals for previous and new value.
      *                    If flag is true and objects equals, then setter will not be invoked
      */
-    public static void setEntityValue(Entity<?> entity, String name, Object value, boolean checkEquals) {
-        ((ManagedEntity<?>) entity).__getEntityEntry().setEntityValue(name, value, checkEquals);
+    public static void setAttributeValue(Entity<?> entity, String name, Object value, boolean checkEquals) {
+        ((ManagedEntity<?>) entity).__getEntityEntry().setAttributeValue(name, value, checkEquals);
     }
 
     /**
@@ -73,8 +73,8 @@ public class EntityAccessor {
      * @return attribute value
      */
     @Nullable
-    public static <T> T getEntityValue(Entity<?> entity, String name) {
-        return ((ManagedEntity<?>) entity).__getEntityEntry().getEntityValue(name);
+    public static <T> T getAttributeValue(Entity<?> entity, String name) {
+        return ((ManagedEntity<?>) entity).__getEntityEntry().getAttributeValue(name);
     }
 
     /**
@@ -88,8 +88,8 @@ public class EntityAccessor {
      * stops here and returns this value.
      */
     @Nullable
-    public static <T> T getEntityValueEx(Entity<?> entity, String propertyPath) {
-        return getEntityValueEx(entity, parseValuePath(propertyPath));
+    public static <T> T getAttributeValueEx(Entity<?> entity, String propertyPath) {
+        return getAttributeValueEx(entity, parseValuePath(propertyPath));
     }
 
     /**
@@ -103,11 +103,11 @@ public class EntityAccessor {
      * stops here and returns this value.
      */
     @Nullable
-    public static <T> T getEntityValueEx(Entity<?> entity, EntityPropertyPath propertyPath) {
+    public static <T> T getAttributeValueEx(Entity<?> entity, EntityPropertyPath propertyPath) {
         if (propertyPath.isDirectProperty()) {
-            return getEntityValue(entity, propertyPath.getFirstPropertyName());
+            return getAttributeValue(entity, propertyPath.getFirstPropertyName());
         } else {
-            return getEntityValueEx(entity, propertyPath.getPropertyNames());
+            return getAttributeValueEx(entity, propertyPath.getPropertyNames());
         }
     }
 
@@ -124,8 +124,8 @@ public class EntityAccessor {
      * @param propertyPath path to an attribute
      * @param value        attribute value
      */
-    public static void setEntityValueEx(Entity<?> entity, String propertyPath, Object value) {
-        setEntityValueEx(entity, parseValuePath(propertyPath), value);
+    public static void setAttributeValueEx(Entity<?> entity, String propertyPath, Object value) {
+        setAttributeValueEx(entity, parseValuePath(propertyPath), value);
     }
 
     /**
@@ -141,50 +141,50 @@ public class EntityAccessor {
      * @param propertyPath path to an attribute
      * @param value        attribute value
      */
-    public static void setEntityValueEx(Entity<?> entity, EntityPropertyPath propertyPath, Object value) {
+    public static void setAttributeValueEx(Entity<?> entity, EntityPropertyPath propertyPath, Object value) {
         if (propertyPath.isDirectProperty()) {
-            setEntityValue(entity, propertyPath.getFirstPropertyName(), value);
+            setAttributeValue(entity, propertyPath.getFirstPropertyName(), value);
         } else {
             String[] properties = propertyPath.getPropertyNames();
-            setEntityValueEx(entity, properties, value);
+            setAttributeValueEx(entity, properties, value);
         }
     }
 
     /**
-     * Set value of an attribute according to the rules described in {@link EntityAccessor#setEntityValueEx(Entity, String, Object)}.
+     * Set value of an attribute according to the rules described in {@link EntityValues#setAttributeValueEx(Entity, String, Object)}.
      *
      * @param entity     instance
      * @param properties path to the attribute
      * @param value      attribute value
      */
-    public static void setEntityValueEx(Entity<?> entity, String[] properties, Object value) {
+    public static void setAttributeValueEx(Entity<?> entity, String[] properties, Object value) {
         if (properties.length > 1) {
 
             if (properties.length == 2) {
-                entity = getEntityValue(entity, properties[0]);
+                entity = getAttributeValue(entity, properties[0]);
             } else {
                 String[] subarray = ArrayUtils.subarray(properties, 0, properties.length - 1);
                 String path = formatValuePath(subarray);
-                entity = getEntityValueEx(entity, path);
+                entity = getAttributeValueEx(entity, path);
             }
 
             if (entity != null) {
-                setEntityValue(entity, properties[properties.length - 1], value);
+                setAttributeValue(entity, properties[properties.length - 1], value);
             }
         } else {
-            setEntityValue(entity, properties[0], value);
+            setAttributeValue(entity, properties[0], value);
         }
     }
 
     /**
-     * Get value of an attribute according to the rules described in {@link EntityAccessor#getEntityValueEx(Entity, String)}.
+     * Get value of an attribute according to the rules described in {@link EntityValues#getAttributeValueEx(Entity, String)}.
      *
      * @param entity     entity
      * @param properties path to the attribute
      * @return attribute value
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getEntityValueEx(Entity<?> entity, String[] properties) {
+    public static <T> T getAttributeValueEx(Entity<?> entity, String[] properties) {
         if (properties == null) {
             return null;
         }
@@ -196,7 +196,7 @@ public class EntityAccessor {
                 break;
             }
 
-            currentValue = getEntityValue(currentEntity, property);
+            currentValue = getAttributeValue(currentEntity, property);
 
             if (currentValue == null) {
                 break;

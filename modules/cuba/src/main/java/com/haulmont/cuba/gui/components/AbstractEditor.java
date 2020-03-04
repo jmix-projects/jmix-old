@@ -25,7 +25,7 @@ import com.haulmont.cuba.gui.data.impl.DsContextImplementation;
 import com.haulmont.cuba.gui.data.impl.EntityCopyUtils;
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.ManagedEntity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -201,7 +201,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
         }
 
         Class<? extends Entity> entityClass = item.getClass();
-        Object entityId = EntityAccessor.getEntityId(item);
+        Object entityId = EntityValues.getEntityId(item);
 
         EntityStates entityStates = getBeanLocator().get(EntityStates.class);
 
@@ -209,7 +209,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
             if (!PersistenceHelper.isNew(item)
                     && !parentDs.getItemsToCreate().contains(item) && !parentDs.getItemsToUpdate().contains(item)
                     && parentDs instanceof CollectionDatasource
-                    && ((CollectionDatasource) parentDs).containsItem(EntityAccessor.getEntityId(item))
+                    && ((CollectionDatasource) parentDs).containsItem(EntityValues.getEntityId(item))
                     && !entityStates.isLoadedWithFetchPlan(item, ds.getView())) {
                 item = dataservice.reload(item, ds.getView(), ds.getMetaClass(), ds.getLoadDynamicAttributes());
                 if (parentDs instanceof CollectionPropertyDatasourceImpl) {
@@ -325,7 +325,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
                 for (Datasource datasource : parentDs.getDsContext().getAll()) {
                     if (datasource instanceof NestedDatasource
                             && ((NestedDatasource) datasource).getMaster().equals(parentDs)) {
-                        Object value = EntityAccessor.getEntityValue(entity, property.getName());
+                        Object value = EntityValues.getAttributeValue(entity, property.getName());
                         if (value instanceof Collection) {
                             Collection collection = (Collection) value;
                             //noinspection unchecked

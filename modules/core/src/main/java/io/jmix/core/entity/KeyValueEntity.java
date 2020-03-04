@@ -96,7 +96,7 @@ public class KeyValueEntity
 
     public void setValue(String name, Object value, boolean checkEquals) {
         Object oldValue = getValue(name);
-        if ((!checkEquals) || (!EntityAccessor.propertyValueEquals(oldValue, value))) {
+        if ((!checkEquals) || (!EntityValues.propertyValueEquals(oldValue, value))) {
             properties.put(name, value);
             //TODO: implement it
             //propertyChanged(name, oldValue, value);

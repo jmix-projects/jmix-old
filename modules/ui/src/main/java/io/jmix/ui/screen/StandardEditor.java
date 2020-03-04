@@ -21,7 +21,7 @@ import io.jmix.core.*;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.events.TriggerOnce;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.ManagedEntity;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.ClientConfig;
@@ -207,7 +207,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen
             container.setItem(mergedEntity);
         } else {
             InstanceLoader loader = getEditedEntityLoader();
-            loader.setEntityId(EntityAccessor.getEntityId(entityToEdit));
+            loader.setEntityId(EntityValues.getEntityId(entityToEdit));
         }
     }
 
@@ -300,7 +300,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen
         for (MetaProperty property : metadata.getClass(entity).getProperties()) {
             if (property.getRange().isClass()) {
                 if (getEntityStates().isLoaded(entity, property.getName())) {
-                    Object value = EntityAccessor.getEntityValue(entity, property.getName());
+                    Object value = EntityValues.getAttributeValue(entity, property.getName());
                     if (value != null) {
                         if (value instanceof Collection) {
                             for (Object item : ((Collection) value)) {

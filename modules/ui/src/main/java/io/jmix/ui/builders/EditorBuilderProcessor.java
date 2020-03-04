@@ -20,7 +20,7 @@ import io.jmix.core.DevelopmentException;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.Metadata;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
@@ -224,7 +224,7 @@ public class EditorBuilderProcessor {
                 Entity ownerEntity = entityValueSource.getItem();
                 MetaProperty inverseProp = entityValueSource.getMetaPropertyPath().getMetaProperty().getInverse();
                 if (inverseProp != null) {
-                    EntityAccessor.setEntityValue(entity, inverseProp.getName(), ownerEntity);
+                    EntityValues.setAttributeValue(entity, inverseProp.getName(), ownerEntity);
                 }
             }
             if (builder.getInitializer() != null) {
@@ -305,7 +305,7 @@ public class EditorBuilderProcessor {
             Class<?> inversePropClass = extendedEntities.getEffectiveClass(inverseProp.getDomain());
             Class<?> containerEntityClass = extendedEntities.getEffectiveClass(((CollectionContainer) container).getEntityMetaClass());
             if (inversePropClass.isAssignableFrom(containerEntityClass)) {
-                EntityAccessor.setEntityValue(entity, inverseProp.getName(), masterContainer.getItem());
+                EntityValues.setAttributeValue(entity, inverseProp.getName(), masterContainer.getItem());
             }
         }
     }

@@ -21,7 +21,7 @@ import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlanProperty;
 import io.jmix.core.commons.util.ParamsMap;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.sys.PersistenceHelper;
@@ -94,7 +94,7 @@ public class PropertyDatasourceImpl<T extends Entity>
     }
 
     protected T getItem(Entity item) {
-        return item == null ? null : (T) EntityAccessor.getEntityValue(item, metaProperty.getName());
+        return item == null ? null : (T) EntityValues.getAttributeValue(item, metaProperty.getName());
     }
 
     @Override
@@ -168,7 +168,7 @@ public class PropertyDatasourceImpl<T extends Entity>
             if (parentDs instanceof CollectionDatasource) {
                 CollectionDatasource parentCollectionDs = (CollectionDatasource) parentDs;
                 for (Entity item : itemsToCreate) {
-                    if (parentCollectionDs.containsItem(EntityAccessor.getEntityId(item))) {
+                    if (parentCollectionDs.containsItem(EntityValues.getEntityId(item))) {
                         parentCollectionDs.modifyItem(item);
                     } else {
                         parentCollectionDs.addItem(item);
@@ -189,7 +189,7 @@ public class PropertyDatasourceImpl<T extends Entity>
                         // delete only if they have the same master item
                         if (inverseProp != null
                                 && PersistenceHelper.isLoaded(createdItem, inverseProp.getName())
-                                && Objects.equals(EntityAccessor.getEntityValue(createdItem, inverseProp.getName()), masterDs.getItem())) {
+                                && Objects.equals(EntityValues.getAttributeValue(createdItem, inverseProp.getName()), masterDs.getItem())) {
                             parentCollectionDs.removeItem(createdItem);
                         }
                     }
@@ -223,7 +223,7 @@ public class PropertyDatasourceImpl<T extends Entity>
             itemsToUpdate.add(item);
         } else {
             final Entity parentItem = masterDs.getItem();
-            EntityAccessor.setEntityValue(parentItem, metaProperty.getName(), item);
+            EntityValues.setAttributeValue(parentItem, metaProperty.getName(), item);
         }
         setModified(true);
     }
@@ -269,7 +269,7 @@ public class PropertyDatasourceImpl<T extends Entity>
 
             boolean isModified = masterDs.isModified();
 
-            EntityAccessor.setEntityValue(parentItem, metaProperty.getName(), newItem, false);
+            EntityValues.setAttributeValue(parentItem, metaProperty.getName(), newItem, false);
 
             detachListener(prevItem);
             attachListener(newItem);

@@ -17,7 +17,7 @@
 package com.haulmont.cuba.gui.data.impl;
 
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 
 import java.util.*;
@@ -50,9 +50,9 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
             Collection<K> ids = getItemIds();
             for (K id : ids) {
                 Entity<K> item = getItemNN(id);
-                Entity<K> parentItem = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-                if (parentItem != null && EntityAccessor.<K>getEntityId(parentItem).equals(itemId))
-                    res.add(EntityAccessor.getEntityId(item));
+                Entity<K> parentItem = EntityValues.getAttributeValue(item, hierarchyPropertyName);
+                if (parentItem != null && EntityValues.<K>getEntityId(parentItem).equals(itemId))
+                    res.add(EntityValues.getEntityId(item));
             }
 
             return res;
@@ -67,8 +67,8 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
             if (item == null)
                 return null;
             else {
-                Entity<K> parentItem = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-                return parentItem == null ? null : EntityAccessor.getEntityId(parentItem);
+                Entity<K> parentItem = EntityValues.getAttributeValue(item, hierarchyPropertyName);
+                return parentItem == null ? null : EntityValues.getEntityId(parentItem);
             }
         }
         return null;
@@ -82,9 +82,9 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
             Set<K> result = new LinkedHashSet<>();
             for (K id : ids) {
                 Entity<K> item = getItemNN(id);
-                Entity<K> parentItem = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-                if (parentItem == null || !containsItem(EntityAccessor.getEntityId(parentItem)))
-                    result.add(EntityAccessor.getEntityId(item));
+                Entity<K> parentItem = EntityValues.getAttributeValue(item, hierarchyPropertyName);
+                if (parentItem == null || !containsItem(EntityValues.getEntityId(parentItem)))
+                    result.add(EntityValues.getEntityId(item));
             }
             return result;
         } else {
@@ -98,8 +98,8 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
         if (item == null) return false;
 
         if (hierarchyPropertyName != null) {
-            Entity<K> parentItem = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-            return (parentItem == null || !containsItem(EntityAccessor.getEntityId(parentItem)));
+            Entity<K> parentItem = EntityValues.getAttributeValue(item, hierarchyPropertyName);
+            return (parentItem == null || !containsItem(EntityValues.getEntityId(parentItem)));
         } else {
             return true;
         }
@@ -115,8 +115,8 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
             Collection<K> ids = getItemIds();
             for (K id : ids) {
                 Entity item = getItemNN(id);
-                Entity parentItem = EntityAccessor.getEntityValue(item, hierarchyPropertyName);
-                if (parentItem != null && EntityAccessor.getEntityId(parentItem).equals(itemId))
+                Entity parentItem = EntityValues.getAttributeValue(item, hierarchyPropertyName);
+                if (parentItem != null && EntityValues.getEntityId(parentItem).equals(itemId))
                     return true;
             }
         }

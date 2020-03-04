@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.KeyValueEntity;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -53,8 +53,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static io.jmix.core.entity.EntityAccessor.getEntityId;
-import static io.jmix.core.entity.EntityAccessor.getEntityValue;
+import static io.jmix.core.entity.EntityValues.getEntityId;
+import static io.jmix.core.entity.EntityValues.getAttributeValue;
 
 /**
  * INTERNAL.
@@ -1076,20 +1076,20 @@ public class OrmDataStore implements DataStore {
                 continue;
             if (entityStates.isLoaded(entity, property.getName())) {
                 if (property.getRange().getCardinality().isMany()) {
-                    Collection collection = getEntityValue(entity, property.getName());
+                    Collection collection = getAttributeValue(entity, property.getName());
                     if (collection != null) {
                         for (Object obj : collection) {
                             updateReferences((Entity) obj, refEntity, visited);
                         }
                     }
                 } else {
-                    Entity value = getEntityValue(entity, property.getName());
+                    Entity value = getAttributeValue(entity, property.getName());
                     if (value != null) {
                         if (Objects.equals(getEntityId(value), getEntityId(refEntity))) {
                             if (property.isReadOnly() && metadataTools.isNotPersistent(property)) {
                                 continue;
                             }
-                            EntityAccessor.setEntityValue(entity, property.getName(), refEntity, false);
+                            EntityValues.setAttributeValue(entity, property.getName(), refEntity, false);
                         } else {
                             updateReferences(value, refEntity, visited);
                         }
@@ -1197,7 +1197,7 @@ public class OrmDataStore implements DataStore {
         em.detach(rootEntity);
         metadataTools.traverseAttributesByView(view, rootEntity, (entity, property) -> {
             if (property.getRange().isClass() && !metadataTools.isEmbedded(property)) {
-                Object value = getEntityValue(entity, property.getName());
+                Object value = getAttributeValue(entity, property.getName());
                 if (value != null) {
                     if (property.getRange().getCardinality().isMany()) {
                         @SuppressWarnings("unchecked")

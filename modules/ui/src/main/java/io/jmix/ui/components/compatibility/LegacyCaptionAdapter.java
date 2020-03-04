@@ -20,7 +20,7 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.ui.components.CaptionMode;
 import io.jmix.ui.components.HasItemCaptionProvider;
 import io.jmix.ui.components.HasOptionCaptionProvider;
@@ -62,7 +62,7 @@ public class LegacyCaptionAdapter implements Function<Object, String> {
                 throw new IllegalArgumentException(String.format("Couldn't find property with name '%s'", captionProperty));
             }
 
-            Object propertyValue = EntityAccessor.getEntityValueEx(entity, captionProperty);
+            Object propertyValue = EntityValues.getAttributeValueEx(entity, captionProperty);
             return propertyValue != null
                     ? propertyValue.toString()
                     : " ";

@@ -18,7 +18,7 @@ package io.jmix.ui.components.table;
 
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.screen.FrameOwner;
@@ -53,7 +53,7 @@ public class LinkCellClickListener implements Table.CellClickListener {
         }
 
         Entity entity;
-        Object value = EntityAccessor.getEntityValueEx(rowItem, columnId);
+        Object value = EntityValues.getAttributeValueEx(rowItem, columnId);
 
         if (value instanceof Entity) {
             entity = (Entity) value;

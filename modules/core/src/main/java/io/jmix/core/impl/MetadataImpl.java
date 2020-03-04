@@ -192,7 +192,7 @@ public class MetadataImpl implements Metadata {
                 if (embeddedParameters != null && !embeddedParameters.nullAllowed()) {
                     MetaClass embeddableMetaClass = property.getRange().asClass();
                     Entity embeddableEntity = create(embeddableMetaClass);
-                    EntityAccessor.setEntityValue(entity, property.getName(), embeddableEntity);
+                    EntityValues.setAttributeValue(entity, property.getName(), embeddableEntity);
                 }
             }
         }

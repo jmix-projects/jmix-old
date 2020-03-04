@@ -19,7 +19,7 @@ package io.jmix.data;
 import io.jmix.core.*;
 import io.jmix.core.entity.EmbeddableEntity;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.slf4j.Logger;
@@ -124,7 +124,7 @@ public class EntityFetcher {
 
             if (log.isTraceEnabled()) log.trace("Fetching property " + property.getName());
 
-            Object value = EntityAccessor.getEntityValue(entity, property.getName());
+            Object value = EntityValues.getAttributeValue(entity, property.getName());
             FetchPlan propertyFetchPlan = property.getFetchPlan();
             if (value != null && propertyFetchPlan != null) {
                 if (value instanceof Collection) {
@@ -143,9 +143,9 @@ public class EntityFetcher {
                             if (storeName != null) {
                                 storeAwareLocator.getTransactionTemplate(storeName).executeWithoutResult(transactionStatus -> {
                                     EntityManager em = storeAwareLocator.getEntityManager(storeName);
-                                    Entity managed = em.find(e.getClass(), EntityAccessor.getEntityId(e));
+                                    Entity managed = em.find(e.getClass(), EntityValues.getEntityId(e));
                                     if (managed != null) { // the instance here can be null if it has been deleted
-                                        EntityAccessor.setEntityValue(entity, property.getName(), managed);
+                                        EntityValues.setAttributeValue(entity, property.getName(), managed);
                                         fetch(managed, propertyFetchPlan, visited, optimizeForDetached);
                                     }
                                 });

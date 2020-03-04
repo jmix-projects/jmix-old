@@ -19,7 +19,7 @@ package io.jmix.ui.components.data.options;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.components.data.BindingState;
 import io.jmix.ui.components.data.meta.ContainerDataUnit;
@@ -96,7 +96,7 @@ public class ContainerOptions<E extends Entity<K>, K> implements Options<E>, Ent
 
     @Override
     public boolean containsItem(E item) {
-        return item != null && container.containsItem(EntityAccessor.<K>getEntityId(item));
+        return item != null && container.containsItem(EntityValues.<K>getEntityId(item));
     }
 
     @Override

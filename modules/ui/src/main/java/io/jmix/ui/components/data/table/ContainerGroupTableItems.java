@@ -19,7 +19,7 @@ package io.jmix.ui.components.data.table;
 import com.google.common.collect.ImmutableList;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.components.data.GroupTableItems;
 import io.jmix.ui.gui.data.GroupInfo;
@@ -107,7 +107,7 @@ public class ContainerGroupTableItems<E extends Entity<K>, K>
             }
 
             List<K> itemsIds = groupItems.computeIfAbsent(groupInfo, k -> new ArrayList<>());
-            itemsIds.add(EntityAccessor.getEntityId(item));
+            itemsIds.add(EntityValues.getEntityId(item));
         }
     }
 
@@ -118,7 +118,7 @@ public class ContainerGroupTableItems<E extends Entity<K>, K>
         groupValues.put(property, itemValue);
 
         GroupInfo<MetaPropertyPath> groupInfo = new GroupInfo<>(groupValues);
-        itemGroups.put(EntityAccessor.getEntityId(item), groupInfo);
+        itemGroups.put(EntityValues.getEntityId(item), groupInfo);
 
         if (!parents.containsKey(groupInfo)) {
             parents.put(groupInfo, parent);
@@ -141,7 +141,7 @@ public class ContainerGroupTableItems<E extends Entity<K>, K>
     protected Object getValueByProperty(E item, MetaPropertyPath property) {
         Preconditions.checkNotNullArgument(item);
 
-        return EntityAccessor.getEntityValueEx(item, property.toString());
+        return EntityValues.getAttributeValueEx(item, property.toString());
     }
 
     @Override
@@ -220,7 +220,7 @@ public class ContainerGroupTableItems<E extends Entity<K>, K>
     @Nullable
     @Override
     public GroupInfo getParentGroup(E item) {
-        K id = EntityAccessor.getEntityId(item);
+        K id = EntityValues.getEntityId(item);
         if (container.getItemOrNull(id) == null) {
             throw new IllegalArgumentException("Datasource doesn't contain passed entity");
         }
@@ -228,12 +228,12 @@ public class ContainerGroupTableItems<E extends Entity<K>, K>
         if (itemGroups == null) {
             return null;
         }
-        return itemGroups.get(EntityAccessor.<K>getEntityId(item));
+        return itemGroups.get(EntityValues.<K>getEntityId(item));
     }
 
     @Override
     public List<GroupInfo> getGroupPath(E item) {
-        K id = EntityAccessor.getEntityId(item);
+        K id = EntityValues.getEntityId(item);
         if (container.getItemOrNull(id) == null) {
             throw new IllegalArgumentException("Datasource doesn't contain passed entity");
         }
@@ -242,7 +242,7 @@ public class ContainerGroupTableItems<E extends Entity<K>, K>
             return Collections.emptyList();
         }
 
-        GroupInfo groupInfo = itemGroups.get(EntityAccessor.<K>getEntityId(item));
+        GroupInfo groupInfo = itemGroups.get(EntityValues.<K>getEntityId(item));
         if (groupInfo == null) {
             return Collections.emptyList();
         }

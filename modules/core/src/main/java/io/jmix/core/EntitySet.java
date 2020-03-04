@@ -19,7 +19,7 @@ package io.jmix.core;
 import com.google.common.collect.ForwardingSet;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -77,7 +77,7 @@ public class EntitySet extends ForwardingSet<Entity> implements Serializable {
         Preconditions.checkNotNullArgument(entityClass, "entityClass is null");
         Preconditions.checkNotNullArgument(entityId, "entityId is null");
         return (Optional<T>) entities.stream()
-                .filter(entity -> entityClass.equals(entity.getClass()) && EntityAccessor.getEntityId(entity).equals(entityId))
+                .filter(entity -> entityClass.equals(entity.getClass()) && EntityValues.getEntityId(entity).equals(entityId))
                 .findFirst();
     }
 
@@ -89,7 +89,7 @@ public class EntitySet extends ForwardingSet<Entity> implements Serializable {
     @SuppressWarnings("unchecked")
     public <T extends Entity> Optional<T> optional(T prototype) {
         Preconditions.checkNotNullArgument(prototype, "prototype entity is null");
-        return (Optional<T>) optional(prototype.getClass(), EntityAccessor.getEntityId(prototype));
+        return (Optional<T>) optional(prototype.getClass(), EntityValues.getEntityId(prototype));
     }
 
     /**
@@ -112,7 +112,7 @@ public class EntitySet extends ForwardingSet<Entity> implements Serializable {
     @SuppressWarnings("unchecked")
     public <T extends Entity> T get(T prototype) {
         Preconditions.checkNotNullArgument(prototype, "prototype entity is null");
-        return (T) get(prototype.getClass(), EntityAccessor.getEntityId(prototype));
+        return (T) get(prototype.getClass(), EntityValues.getEntityId(prototype));
     }
 
     @SuppressWarnings("unchecked")

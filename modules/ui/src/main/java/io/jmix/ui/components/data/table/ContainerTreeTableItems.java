@@ -17,7 +17,7 @@
 package io.jmix.ui.components.data.table;
 
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.ui.components.data.TreeTableItems;
 import io.jmix.ui.model.CollectionContainer;
 
@@ -47,9 +47,9 @@ public class ContainerTreeTableItems<E extends Entity>
             Set<Object> result = new LinkedHashSet<>();
             for (Object id : ids) {
                 Entity item = getItemNN(id);
-                Entity parentItem = EntityAccessor.getEntityValue(item, hierarchyProperty);
-                if (parentItem == null || (container.getItemOrNull(EntityAccessor.getEntityId(parentItem)) == null))
-                    result.add(EntityAccessor.getEntityId(item));
+                Entity parentItem = EntityValues.getAttributeValue(item, hierarchyProperty);
+                if (parentItem == null || (container.getItemOrNull(EntityValues.getEntityId(parentItem)) == null))
+                    result.add(EntityValues.getEntityId(item));
             }
             return result;
         } else {
@@ -64,8 +64,8 @@ public class ContainerTreeTableItems<E extends Entity>
             if (item == null)
                 return null;
             else {
-                Entity parentItem = EntityAccessor.getEntityValue(item, hierarchyProperty);
-                return parentItem == null ? null : EntityAccessor.getEntityId(parentItem);
+                Entity parentItem = EntityValues.getAttributeValue(item, hierarchyProperty);
+                return parentItem == null ? null : EntityValues.getEntityId(parentItem);
             }
         }
         return null;
@@ -83,9 +83,9 @@ public class ContainerTreeTableItems<E extends Entity>
             Collection ids = getItemIds();
             for (Object id : ids) {
                 Entity item = getItemNN(id);
-                Entity parentItem = EntityAccessor.getEntityValue(item, hierarchyProperty);
-                if (parentItem != null && EntityAccessor.getEntityId(parentItem).equals(itemId))
-                    res.add(EntityAccessor.getEntityId(item));
+                Entity parentItem = EntityValues.getAttributeValue(item, hierarchyProperty);
+                if (parentItem != null && EntityValues.getEntityId(parentItem).equals(itemId))
+                    res.add(EntityValues.getEntityId(item));
             }
 
             return res;
@@ -99,8 +99,8 @@ public class ContainerTreeTableItems<E extends Entity>
         if (item == null) return false;
 
         if (hierarchyProperty != null) {
-            Entity parentItem = EntityAccessor.getEntityValue(item, hierarchyProperty);
-            return (parentItem == null || (container.getItemOrNull(EntityAccessor.getEntityId(parentItem)) == null));
+            Entity parentItem = EntityValues.getAttributeValue(item, hierarchyProperty);
+            return (parentItem == null || (container.getItemOrNull(EntityValues.getEntityId(parentItem)) == null));
         } else {
             return true;
         }
@@ -116,8 +116,8 @@ public class ContainerTreeTableItems<E extends Entity>
             Collection ids = getItemIds();
             for (Object id : ids) {
                 Entity item = getItemNN(id);
-                Entity parentItem = EntityAccessor.getEntityValue(item, hierarchyProperty);
-                if (parentItem != null && EntityAccessor.getEntityId(parentItem).equals(itemId))
+                Entity parentItem = EntityValues.getAttributeValue(item, hierarchyProperty);
+                if (parentItem != null && EntityValues.getEntityId(parentItem).equals(itemId))
                     return true;
             }
         }

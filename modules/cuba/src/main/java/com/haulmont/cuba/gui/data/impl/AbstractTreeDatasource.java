@@ -20,7 +20,7 @@ import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 import io.jmix.core.commons.datastruct.Node;
 import io.jmix.core.commons.datastruct.Tree;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.ui.logging.UIPerformanceLogger;
 import org.perf4j.StopWatch;
 import org.perf4j.slf4j.Slf4JStopWatch;
@@ -59,7 +59,7 @@ public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
         if (tree != null) {
             for (Node<T> node : tree.toList()) {
                 final T entity = node.getData();
-                final K id = EntityAccessor.getEntityId(entity);
+                final K id = EntityValues.getEntityId(entity);
 
                 data.put(id, entity);
                 attachListener(entity);
@@ -96,7 +96,7 @@ public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
 
             List ids = new ArrayList();
             for (Node<T> rootNode : tree.getRootNodes()) {
-                ids.add(EntityAccessor.<K>getEntityId(rootNode.getData()));
+                ids.add(EntityValues.<K>getEntityId(rootNode.getData()));
             }
             return (Collection<K>) Collections.unmodifiableCollection(ids);
         }
@@ -109,7 +109,7 @@ public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
         }
 
         final Node<T> node = nodes.get(itemId);
-        return node == null ? null : node.getParent() == null ? null : EntityAccessor.getEntityId(node.getParent().getData());
+        return node == null ? null : node.getParent() == null ? null : EntityValues.getEntityId(node.getParent().getData());
     }
 
     @Override
@@ -126,7 +126,7 @@ public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
 
             final List<K> ids = new ArrayList<>();
             for (Node<T> targetNode : children) {
-                ids.add(EntityAccessor.getEntityId(targetNode.getData()));
+                ids.add(EntityValues.getEntityId(targetNode.getData()));
             }
 
             return ids;

@@ -19,7 +19,7 @@ import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlanProperty;
 import io.jmix.core.entity.EmbeddableEntity;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import com.haulmont.cuba.gui.data.DataSupplier;
@@ -116,7 +116,7 @@ public class EmbeddedDatasourceImpl<T extends EmbeddableEntity>
     }
 
     protected T getItem(Entity item) {
-        return item == null ? null : (T) EntityAccessor.getEntityValue(item, metaProperty.getName());
+        return item == null ? null : (T) EntityValues.getAttributeValue(item, metaProperty.getName());
     }
 
     @Override
@@ -128,7 +128,7 @@ public class EmbeddedDatasourceImpl<T extends EmbeddableEntity>
             itemsToUpdate.add(item);
         } else {
             final Entity parentItem = masterDs.getItem();
-            EntityAccessor.setEntityValue(parentItem, metaProperty.getName(), item);
+            EntityValues.setAttributeValue(parentItem, metaProperty.getName(), item);
         }
         setModified(true);
         ((DatasourceImplementation) masterDs).modified(masterDs.getItem());

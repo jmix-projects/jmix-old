@@ -35,7 +35,6 @@ import static io.jmix.gradle.MetaModelUtil.*;
 public class SettersEnhancingStep extends BaseEnhancingStep {
     private static final Pattern messagePattern = Pattern.compile("(\\{msg://)([\\p{L}\\w.]*})");
 
-
     @Override
     protected boolean isAlreadyEnhanced(CtClass ctClass) throws NotFoundException {
         return isSettersEnhanced(ctClass);

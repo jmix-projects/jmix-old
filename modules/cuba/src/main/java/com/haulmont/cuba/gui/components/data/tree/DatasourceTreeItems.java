@@ -23,7 +23,7 @@ import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.components.data.BindingState;
 import io.jmix.ui.components.data.meta.EntityTreeItems;
@@ -109,7 +109,7 @@ public class DatasourceTreeItems<E extends Entity<K>, K> implements EntityTreeIt
     @Override
     public Object getItemId(E item) {
         Preconditions.checkNotNullArgument(item);
-        return EntityAccessor.getEntityId(item);
+        return EntityValues.getEntityId(item);
     }
 
     @SuppressWarnings("unchecked")
@@ -125,7 +125,7 @@ public class DatasourceTreeItems<E extends Entity<K>, K> implements EntityTreeIt
 
     @Override
     public boolean containsItem(E item) {
-        return datasource.containsItem(EntityAccessor.getEntityId(item));
+        return datasource.containsItem(EntityValues.getEntityId(item));
     }
 
     @Override
@@ -152,7 +152,7 @@ public class DatasourceTreeItems<E extends Entity<K>, K> implements EntityTreeIt
     public Stream<E> getChildren(E item) {
         Collection<K> itemIds = item == null
                 ? datasource.getRootItemIds()
-                : datasource.getChildren(EntityAccessor.getEntityId(item));
+                : datasource.getChildren(EntityValues.getEntityId(item));
 
         return itemIds.stream()
                 .map(id -> datasource.getItem(id));
@@ -160,14 +160,14 @@ public class DatasourceTreeItems<E extends Entity<K>, K> implements EntityTreeIt
 
     @Override
     public boolean hasChildren(E item) {
-        return datasource.hasChildren(EntityAccessor.getEntityId(item));
+        return datasource.hasChildren(EntityValues.getEntityId(item));
     }
 
     @Nullable
     @Override
     public E getParent(E item) {
         Preconditions.checkNotNullArgument(item);
-        K parentId = datasource.getParent(EntityAccessor.getEntityId(item));
+        K parentId = datasource.getParent(EntityValues.getEntityId(item));
         return datasource.getItem(parentId);
     }
 

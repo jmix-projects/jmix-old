@@ -18,7 +18,7 @@ package com.haulmont.cuba.gui.data.impl;
 import io.jmix.core.entity.Entity;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 
 import java.util.Collection;
 import java.util.Map;
@@ -50,7 +50,7 @@ public abstract class CustomHierarchicalDatasource<T extends Entity<K>, K>
 
         if (entities != null) {
             for (T entity : entities) {
-                data.put(EntityAccessor.<K>getEntityId(entity), entity);
+                data.put(EntityValues.<K>getEntityId(entity), entity);
                 attachListener(entity);
             }
         }

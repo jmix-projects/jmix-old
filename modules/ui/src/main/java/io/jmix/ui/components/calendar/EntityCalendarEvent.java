@@ -50,7 +50,7 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
     @Override
     public V getStart() {
         if (provider.getStartDateProperty() != null) {
-            return EntityAccessor.getEntityValue(entity, provider.getStartDateProperty());
+            return EntityValues.getAttributeValue(entity, provider.getStartDateProperty());
         } else {
             return null;
         }
@@ -58,13 +58,13 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
 
     @Override
     public void setStart(V start) {
-        EntityAccessor.setEntityValue(entity, provider.getStartDateProperty(), start);
+        EntityValues.setAttributeValue(entity, provider.getStartDateProperty(), start);
     }
 
     @Override
     public V getEnd() {
         if (provider.getEndDateProperty() != null) {
-            return EntityAccessor.getEntityValue(entity, provider.getEndDateProperty());
+            return EntityValues.getAttributeValue(entity, provider.getEndDateProperty());
         } else {
             return null;
         }
@@ -72,13 +72,13 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
 
     @Override
     public void setEnd(V end) {
-        EntityAccessor.setEntityValue(entity, provider.getEndDateProperty(), end);
+        EntityValues.setAttributeValue(entity, provider.getEndDateProperty(), end);
     }
 
     @Override
     public String getCaption() {
         if (provider.getCaptionProperty() != null) {
-            return EntityAccessor.getEntityValue(entity, provider.getCaptionProperty());
+            return EntityValues.getAttributeValue(entity, provider.getCaptionProperty());
         } else {
             return null;
         }
@@ -86,18 +86,18 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
 
     @Override
     public void setCaption(String caption) {
-        EntityAccessor.setEntityValue(entity, provider.getCaptionProperty(), caption);
+        EntityValues.setAttributeValue(entity, provider.getCaptionProperty(), caption);
     }
 
     @Override
     public void setDescription(String description) {
-        EntityAccessor.setEntityValue(entity, provider.getDescriptionProperty(), description);
+        EntityValues.setAttributeValue(entity, provider.getDescriptionProperty(), description);
     }
 
     @Override
     public String getDescription() {
         if (provider.getDescriptionProperty() != null) {
-            return EntityAccessor.getEntityValue(entity, provider.getDescriptionProperty());
+            return EntityValues.getAttributeValue(entity, provider.getDescriptionProperty());
         } else {
             return null;
         }
@@ -106,7 +106,7 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
     @Override
     public String getStyleName() {
         if (provider.getStyleNameProperty() != null) {
-            return EntityAccessor.getEntityValue(entity, provider.getStyleNameProperty());
+            return EntityValues.getAttributeValue(entity, provider.getStyleNameProperty());
         } else {
             return null;
         }
@@ -114,13 +114,13 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
 
     @Override
     public void setStyleName(String styleName) {
-        EntityAccessor.setEntityValue(entity, provider.getStyleNameProperty(), styleName);
+        EntityValues.setAttributeValue(entity, provider.getStyleNameProperty(), styleName);
     }
 
     @Override
     public boolean isAllDay() {
         if (provider.getIsAllDayProperty() != null) {
-            return BooleanUtils.isTrue(EntityAccessor.getEntityValue(entity, provider.getIsAllDayProperty()));
+            return BooleanUtils.isTrue(EntityValues.getAttributeValue(entity, provider.getIsAllDayProperty()));
         } else {
             return false;
         }
@@ -128,7 +128,7 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
 
     @Override
     public void setAllDay(boolean isAllDay) {
-        EntityAccessor.setEntityValue(entity, provider.getIsAllDayProperty(), isAllDay);
+        EntityValues.setAttributeValue(entity, provider.getIsAllDayProperty(), isAllDay);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

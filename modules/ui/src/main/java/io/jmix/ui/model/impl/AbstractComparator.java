@@ -19,7 +19,7 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 
@@ -66,8 +66,8 @@ public abstract class AbstractComparator<T> implements Comparator<T> {
             } else {
                 c = 0;
                 for (MetaProperty property : namePatternProperties) {
-                    Object v1 = EntityAccessor.getEntityValue(((Entity) o1), property.getName());
-                    Object v2 = EntityAccessor.getEntityValue(((Entity) o2), property.getName());
+                    Object v1 = EntityValues.getAttributeValue(((Entity) o1), property.getName());
+                    Object v2 = EntityValues.getAttributeValue(((Entity) o2), property.getName());
                     c = compareAsc(v1, v2);
                     if (c != 0)
                         break;

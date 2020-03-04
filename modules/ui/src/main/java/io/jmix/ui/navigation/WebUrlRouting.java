@@ -20,7 +20,7 @@ import com.vaadin.server.Page;
 import io.jmix.core.Events;
 import io.jmix.core.Metadata;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.ui.*;
 import io.jmix.ui.app.navigation.notfoundwindow.NotFoundScreen;
 import io.jmix.ui.components.DialogWindow;
@@ -260,7 +260,7 @@ public class WebUrlRouting implements UrlRouting {
                 if (PersistenceHelper.isNew(editedEntity)) {
                     params.put("id", NEW_ENTITY_ID);
                 } else {
-                    Object entityId = EntityAccessor.getEntityId(editedEntity);
+                    Object entityId = EntityValues.getEntityId(editedEntity);
                     if (entityId != null) {
                         String serializedId = UrlIdSerializer.serializeId(entityId);
                         if (!"".equals(serializedId)) {
@@ -514,7 +514,7 @@ public class WebUrlRouting implements UrlRouting {
         }
 
         protected Map<String, String> prepareEditorUrlParams(Entity entity, Map<String, String> urlParams) {
-            if (EntityAccessor.getEntityId(entity) == null) {
+            if (EntityValues.getEntityId(entity) == null) {
                 throw new IllegalArgumentException("Unable to generate route for an entity without id: " + entity);
             }
 
@@ -522,7 +522,7 @@ public class WebUrlRouting implements UrlRouting {
             if (PersistenceHelper.isNew(entity)) {
                 params.put("id", NEW_ENTITY_ID);
             } else {
-                params.put("id", UrlIdSerializer.serializeId(EntityAccessor.getEntityId(entity)));
+                params.put("id", UrlIdSerializer.serializeId(EntityValues.getEntityId(entity)));
             }
             params.putAll(urlParams);
 

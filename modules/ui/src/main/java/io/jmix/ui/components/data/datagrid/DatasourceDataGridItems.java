@@ -20,7 +20,7 @@ import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityAccessor;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.components.AggregationInfo;
 import io.jmix.ui.components.data.AggregatableDataGridItems;
@@ -116,7 +116,7 @@ public class DatasourceDataGridItems<E extends Entity<K>, K>
     @Override
     public Object getItemId(E item) {
         Preconditions.checkNotNullArgument(item);
-        return EntityAccessor.getEntityId(item);
+        return EntityValues.getEntityId(item);
     }
 
     @SuppressWarnings("unchecked")
