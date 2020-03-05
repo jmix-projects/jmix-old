@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+ext {
+    jmixVersion = '0.0.1-SNAPSHOT'
+}
+
 repositories {
     if (rootProject.hasProperty('jmixRepoUrl')) {
         maven {
@@ -52,7 +56,7 @@ dependencies {
 }
 
 group = 'io.jmix.gradle'
-version = '0.0.1-SNAPSHOT'
+version = jmixVersion
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
@@ -60,6 +64,18 @@ task sourcesJar(type: Jar) {
 }
 
 publishing {
+    if (rootProject.hasProperty('jmixUploadUrl')) {
+        repositories {
+            maven {
+                url = jmixVersion.endsWith('SNAPSHOT') ? "$jmixUploadUrl/snapshots" : "$jmixUploadUrl/releases"
+                credentials {
+                    username rootProject['jmixUploadUser']
+                    password rootProject['jmixUploadPassword']
+                }
+            }
+        }
+    }
+
     publications {
         javaMaven(MavenPublication) {
             groupId = 'io.jmix.gradle'
