@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2019 Haulmont.
+  ~ Copyright 2020 Haulmont.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,12 +14,13 @@
   ~ limitations under the License.
   -->
 
-<default-permission-values xmlns="http://schemas.haulmont.com/jmix/default-permission-values.xsd">
-
-    <!-- Screens -->
-    <permission target="inputDialog" value="1" type="10"/>
-
-    <!-- Entities -->
-    <permission target="sys_KeyValueEntity:read" value="1" type="20"/>
-
-</default-permission-values>
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd">
+    <dialogMode width="theme://cuba.web.WebWindowManager.inputDialog.width"/>
+    <layout expand="actionsLayout" spacing="true">
+        <form id="form" width="100%"/>
+        <hbox id="actionsLayout" width="100%" expand="spacer" spacing="true" align="BOTTOM_RIGHT"
+              stylename="c-app-input-dialog-actions-layout">
+            <label id="spacer"/>
+        </hbox>
+    </layout>
+</window>

@@ -168,6 +168,14 @@
                     <label id="spacer"/>
                 </vbox>
             </tab>
+            <tab id="dialogsAndNotificationsTab"
+                 spacing="true"
+                 caption="Dialogs and Notifications">
+                <hbox caption="Input Dialog" spacing="true">
+                    <button id="inputDialogBtn"
+                            caption="Show InputDialog"/>
+                </hbox>
+            </tab>
         </tabSheet>
     </layout>
 </window>

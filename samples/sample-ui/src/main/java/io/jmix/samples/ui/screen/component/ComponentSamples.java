@@ -16,7 +16,13 @@
 
 package io.jmix.samples.ui.screen.component;
 
+import io.jmix.core.MetadataTools;
+import io.jmix.ui.Dialogs;
+import io.jmix.ui.Notifications;
 import io.jmix.ui.UiComponents;
+import io.jmix.ui.app.inputdialog.DialogActions;
+import io.jmix.ui.app.inputdialog.InputDialog;
+import io.jmix.ui.app.inputdialog.InputParameter;
 import io.jmix.ui.components.*;
 import io.jmix.ui.screen.*;
 
@@ -47,6 +53,13 @@ public class ComponentSamples extends Screen {
     @Inject
     private UiComponents uiComponents;
 
+    @Inject
+    private Dialogs dialogs;
+    @Inject
+    private Notifications notifications;
+    @Inject
+    private MetadataTools metadataTools;
+
 //    private ListEditor<String> listEditor;
 
     @Subscribe
@@ -63,4 +76,30 @@ public class ComponentSamples extends Screen {
 //        othersVBox.add(listEditor);
     }
 
+    @Subscribe("inputDialogBtn")
+    private void onInputDialogBtnClick(Button.ClickEvent event) {
+        dialogs.createInputDialog(this)
+                .withCaption("Enter values")
+                .withParameters(
+                        InputParameter.stringParameter("name")
+                                .withCaption("Name").withRequired(true),
+                        InputParameter.doubleParameter("quantity")
+                                .withCaption("Quantity").withDefaultValue(1.0)
+                )
+                .withActions(DialogActions.OK_CANCEL)
+                .withCloseListener(closeEvent -> {
+                    if (closeEvent.getCloseAction().equals(InputDialog.INPUT_DIALOG_OK_ACTION)) {
+                        String name = closeEvent.getValue("name");
+                        Double quantity = closeEvent.getValue("quantity");
+
+                        notifications.create()
+                                .withCaption("Entered Values")
+                                .withDescription("<strong>Name:</strong> " + name +
+                                        "<br/><strong>Quantity:</strong> " + quantity)
+                                .withContentMode(ContentMode.HTML)
+                                .show();
+                    }
+                })
+                .show();
+    }
 }
