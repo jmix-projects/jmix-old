@@ -17,19 +17,15 @@
 package io.jmix.samples.ui;
 
 import io.jmix.core.ConfigInterfaces;
-import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
 import io.jmix.core.security.Security;
-import io.jmix.ui.sys.UiControllersConfiguration;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
-import java.util.Collections;
 
 @SpringBootApplication
 public class SampleLegacyUIApplication implements CommandLineRunner {
@@ -45,15 +41,6 @@ public class SampleLegacyUIApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-	}
-
-	@Bean("my_UiControllers")
-	public UiControllersConfiguration screens(ApplicationContext applicationContext,
-											  AnnotationScanMetadataReaderFactory metadataReaderFactory) {
-		UiControllersConfiguration uiControllers
-				= new UiControllersConfiguration(applicationContext, metadataReaderFactory);
-		uiControllers.setBasePackages(Collections.singletonList("io.jmix.samples.ui"));
-		return uiControllers;
 	}
 
 	@Bean
