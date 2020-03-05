@@ -1,15 +1,14 @@
 apply plugin: 'java'
 apply plugin: 'java-library'
 
-group = 'io.jmix.starter.ui-minimal'
+group = 'io.jmix.starter.standard-nowidgets'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 dependencies {
     api project(':starters:starter-data')
-
-    api project(':modules:security')
-    api project(':modules:ui')
+    api project(':starters:starter-ui')
+    api project(':starters:starter-security')
 
     api 'org.springframework.boot:spring-boot-autoconfigure'
 }
@@ -22,8 +21,8 @@ task sourcesJar(type: Jar) {
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            groupId = 'io.jmix.starter.ui-minimal'
-            artifactId = 'jmix-starter-ui-minimal'
+            groupId = 'io.jmix.starter.standard-nowidgets'
+            artifactId = 'jmix-starter-standard-nowidgets'
 
             from components.java
             artifact sourcesJar

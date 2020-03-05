@@ -9,7 +9,7 @@ version = rootProject.jmixVersion
 sourceCompatibility = rootProject.sourceCompatibility
 
 dependencies {
-    implementation project(':starters:starter-ui-minimal')
+    implementation project(':starters:starter-standard-nowidgets')
     implementation project(':modules:ui-widgets-compiled')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'

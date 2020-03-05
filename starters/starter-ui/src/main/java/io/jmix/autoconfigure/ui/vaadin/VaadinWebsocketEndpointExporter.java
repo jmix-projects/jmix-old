@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.autoconfigure.vaadin;
+package io.jmix.autoconfigure.ui.vaadin;
 
 // import com.vaadin.server.communication.JSR356WebsocketInitializer;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;

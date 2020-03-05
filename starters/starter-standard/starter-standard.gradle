@@ -6,7 +6,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 dependencies {
-    api project(':starters:starter-ui-minimal')
+    api project(':starters:starter-standard-nowidgets')
 
     implementation project(':modules:ui-widgets-compiled')
     implementation project(':modules:ui-themes-compiled')

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.autoconfigure.vaadin;
+package io.jmix.autoconfigure.ui.vaadin;
 
 import com.vaadin.spring.annotation.EnableVaadin;
 import com.vaadin.spring.annotation.SpringUI;

@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package io.jmix.autoconfigure.vaadin;
+package io.jmix.autoconfigure.cuba;
 
+import com.haulmont.cuba.JmixCubaConfiguration;
+import io.jmix.core.JmixCoreConfiguration;
+import io.jmix.data.JmixDataConfiguration;
+import io.jmix.security.JmixSecurityConfiguration;
+import io.jmix.ui.JmixUiConfiguration;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import java.lang.annotation.*;
-
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Import(JmixVaadinServletConfiguration.class)
-public @interface EnableJmixVaadinServlet {
+@Configuration
+@Import({
+        JmixCoreConfiguration.class,
+        JmixDataConfiguration.class,
+        JmixSecurityConfiguration.class,
+        JmixUiConfiguration.class,
+        JmixCubaConfiguration.class})
+public class JmixCubaAutoConfiguration {
 }

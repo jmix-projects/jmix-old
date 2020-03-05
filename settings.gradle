@@ -32,9 +32,11 @@ include 'modules:ui-widgets'
 include 'modules:ui-widgets-compiled'
 
 include 'starters:starter-data'
-include 'starters:starter-ui-minimal'
-include 'starters:starter-cuba'
+include 'starters:starter-ui'
+include 'starters:starter-security'
+include 'starters:starter-standard-nowidgets'
 include 'starters:starter-standard'
+include 'starters:starter-cuba'
 
 include 'samples:sample-hello-world'
 include 'samples:sample-custom-security'
