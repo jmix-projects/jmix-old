@@ -28,6 +28,6 @@ public class Greeter {
     private JmixModules jmixModules;
 
     public String sayHello(String name) {
-        return "Hello " + name + " from " + jmixModules.getComponents();
+        return "Hello " + name + " from " + jmixModules.getAll();
     }
 }
