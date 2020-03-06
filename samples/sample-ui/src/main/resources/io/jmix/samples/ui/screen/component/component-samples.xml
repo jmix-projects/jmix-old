@@ -26,6 +26,59 @@
             </loader>
         </collection>
     </data>
+
+    <facets>
+        <notification id="notificationFacet"
+                      type="TRAY"
+                      caption="Notification Facet"
+                      onButton="notificationFacetBtn"/>
+
+        <messageDialog id="messageDialogFacet"
+                       caption="Message Dialog Facet"
+                       message="Message"
+                       modal="true"
+                       closeOnClickOutside="true"
+                       onButton="messageDialogFacetBtn"/>
+
+        <optionDialog id="optionDialogFacet"
+                      caption="Option Dialog Facet"
+                      message="Message"
+                      onButton="optionDialogFacetBtn">
+            <actions>
+                <action id="ok"
+                        caption="OK"
+                        icon="CHECK"
+                        primary="true"/>
+                <action id="cancel"
+                        caption="Cancel"
+                        icon="BAN"/>
+            </actions>
+        </optionDialog>
+
+        <inputDialog id="inputDialogFacet"
+                     caption="Input Dialog Facet"
+                     onButton="inputDialogFacetBtn">
+            <parameters>
+                <booleanParameter id="boolParam"
+                                  caption="Boolean parameter"
+                                  defaultValue="true"
+                                  required="true"/>
+                <intParameter id="intParam"
+                              caption="Integer parameter"
+                              required="true"/>
+            </parameters>
+            <actions>
+                <action id="ok"
+                        caption="OK"
+                        icon="CHECK"
+                        primary="true"/>
+                <action id="cancel"
+                        caption="Cancel"
+                        icon="BAN"/>
+            </actions>
+        </inputDialog>
+    </facets>
+
     <layout>
         <tabSheet id="tabSheet" width="100%" height="100%">
             <tab id="fieldsTab" caption="Fields Tab">
@@ -147,7 +200,8 @@
             <tab id="othersTab" caption="Others">
                 <vbox id="othersVBox" height="100%" width="100%" expand="spacer" spacing="true">
                     <capsLockIndicator id="capsLockIndicator"/>
-                    <passwordField id="pass" caption="Caps Lock Indicator password" capsLockIndicator="capsLockIndicator"/>
+                    <passwordField id="pass" caption="Caps Lock Indicator password"
+                                   capsLockIndicator="capsLockIndicator"/>
                     <link url="https://www.cuba-platform.com" caption="Link Button" target="_blank"/>
                     <checkBox caption="CheckBox"/>
                     <hbox spacing="true">
@@ -171,10 +225,30 @@
             <tab id="dialogsAndNotificationsTab"
                  spacing="true"
                  caption="Dialogs and Notifications">
-                <hbox caption="Input Dialog" spacing="true">
-                    <button id="inputDialogBtn"
-                            caption="Show InputDialog"/>
-                </hbox>
+                <scrollBox spacing="true" width="100%" height="100%">
+                    <hbox caption="Input Dialog" spacing="true">
+                        <button id="inputDialogBtn"
+                                caption="Show InputDialog"/>
+                        <button id="inputDialogFacetBtn"
+                                caption="Show InputDialogFacet"/>
+                    </hbox>
+                    <hbox caption="Message Dialog" spacing="true">
+                        <button id="messageDialogBtn"
+                                caption="Show MessageDialog"/>
+                        <button id="messageDialogFacetBtn"
+                                caption="Show MessageDialogFacet"/>
+                    </hbox>
+                    <hbox caption="Option Dialog" spacing="true">
+                        <button id="optionDialogBtn"
+                                caption="Show OptionDialog"/>
+                        <button id="optionDialogFacetBtn"
+                                caption="Show OptionDialogFacet"/>
+                    </hbox>
+                    <hbox caption="Notifications" spacing="true">
+                        <button id="notificationBtn" caption="Show Notification"/>
+                        <button id="notificationFacetBtn" caption="Show NotificationFacet"/>
+                    </hbox>
+                </scrollBox>
             </tab>
         </tabSheet>
     </layout>

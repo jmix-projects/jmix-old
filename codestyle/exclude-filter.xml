@@ -113,4 +113,14 @@
         <Class name="io.jmix.data.PersistenceTools"/>
     </Match>
 
+    <Match>
+        <Bug pattern="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT"/> <!-- false positive -->
+        <Class name="io.jmix.ui.components.impl.WebEditorScreenFacet"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT"/> <!-- false positive -->
+        <Class name="io.jmix.ui.components.impl.WebLookupScreenFacet"/>
+    </Match>
+
 </FindBugsFilter>

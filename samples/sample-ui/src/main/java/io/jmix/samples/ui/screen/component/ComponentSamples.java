@@ -20,11 +20,15 @@ import io.jmix.core.MetadataTools;
 import io.jmix.ui.Dialogs;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.UiComponents;
+import io.jmix.ui.actions.DialogAction;
 import io.jmix.ui.app.inputdialog.DialogActions;
-import io.jmix.ui.app.inputdialog.InputDialog;
 import io.jmix.ui.app.inputdialog.InputParameter;
 import io.jmix.ui.components.*;
-import io.jmix.ui.screen.*;
+import io.jmix.ui.screen.LoadDataBeforeShow;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.Subscribe;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -79,27 +83,44 @@ public class ComponentSamples extends Screen {
     @Subscribe("inputDialogBtn")
     private void onInputDialogBtnClick(Button.ClickEvent event) {
         dialogs.createInputDialog(this)
-                .withCaption("Enter values")
+                .withCaption("Input Dialog")
                 .withParameters(
-                        InputParameter.stringParameter("name")
-                                .withCaption("Name").withRequired(true),
-                        InputParameter.doubleParameter("quantity")
-                                .withCaption("Quantity").withDefaultValue(1.0)
+                        InputParameter.booleanParameter("boolParam")
+                                .withCaption("Boolean parameter")
+                                .withDefaultValue(true)
+                                .withRequired(true),
+                        InputParameter.intParameter("intParam")
+                                .withCaption("Integer parameter")
+                                .withRequired(true)
                 )
                 .withActions(DialogActions.OK_CANCEL)
-                .withCloseListener(closeEvent -> {
-                    if (closeEvent.getCloseAction().equals(InputDialog.INPUT_DIALOG_OK_ACTION)) {
-                        String name = closeEvent.getValue("name");
-                        Double quantity = closeEvent.getValue("quantity");
+                .show();
+    }
 
-                        notifications.create()
-                                .withCaption("Entered Values")
-                                .withDescription("<strong>Name:</strong> " + name +
-                                        "<br/><strong>Quantity:</strong> " + quantity)
-                                .withContentMode(ContentMode.HTML)
-                                .show();
-                    }
-                })
+    @Subscribe("messageDialogBtn")
+    private void onMessageDialogBtnClick(Button.ClickEvent event) {
+        dialogs.createMessageDialog()
+                .withCaption("Message Dialog")
+                .withMessage("Message")
+                .withModal(true)
+                .withCloseOnClickOutside(true)
+                .show();
+    }
+
+    @Subscribe("optionDialogBtn")
+    private void onOptionDialogBtnClick(Button.ClickEvent event) {
+        dialogs.createOptionDialog()
+                .withCaption("Option Dialog")
+                .withMessage("Message")
+                .withActions(new DialogAction(DialogAction.Type.OK),
+                        new DialogAction(DialogAction.Type.CANCEL))
+                .show();
+    }
+
+    @Subscribe("notificationBtn")
+    protected void onNotificationBtnClick(Button.ClickEvent event) {
+        notifications.create(Notifications.NotificationType.TRAY)
+                .withCaption("Notification")
                 .show();
     }
 }
