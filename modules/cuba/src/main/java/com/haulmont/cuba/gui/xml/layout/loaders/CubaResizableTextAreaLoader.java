@@ -16,14 +16,16 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
-import com.google.common.base.Strings;
+import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import com.haulmont.cuba.web.components.ResizableTextArea;
 import io.jmix.ui.components.TextArea;
 import io.jmix.ui.xml.layout.loaders.ResizableTextAreaLoader;
+import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CubaResizableTextAreaLoader extends CubaTextAreaLoader {
+public class CubaResizableTextAreaLoader extends ResizableTextAreaLoader {
 
     private static final Logger log = LoggerFactory.getLogger(ResizableTextAreaLoader.class);
 
@@ -46,41 +48,14 @@ public class CubaResizableTextAreaLoader extends CubaTextAreaLoader {
         loadId(resultComponent, element);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public void loadComponent() {
-        super.loadComponent();
+    protected void loadData(TextArea component, Element element) {
+        super.loadData(component, element);
 
-        if (resultComponent instanceof ResizableTextArea) {
-            ResizableTextArea textArea = (ResizableTextArea) resultComponent;
-            String resizable = element.attributeValue("resizable");
-            if (!Strings.isNullOrEmpty(resizable)) {
-                textArea.setResizable(Boolean.parseBoolean(resizable));
-            }
-
-            String resizableDirection = element.attributeValue("resizableDirection");
-            if (!Strings.isNullOrEmpty(resizableDirection)) {
-                textArea.setResizableDirection(ResizableTextArea.ResizeDirection.valueOf(resizableDirection));
-            }
-
-            loadSettingsEnabled(textArea, element);
+        if (resultComponent.getValueSource() == null) {
+            DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
+                    (ComponentLoaderContext) getComponentContext());
         }
-    }
-
-    protected boolean isResizable() {
-        String resizable = element.attributeValue("resizable");
-        if (!Strings.isNullOrEmpty(resizable)) {
-            return Boolean.parseBoolean(resizable);
-        }
-
-        return false;
-    }
-
-    protected boolean hasResizableDirection() {
-        String resizableDirection = element.attributeValue("resizableDirection");
-        if (!Strings.isNullOrEmpty(resizableDirection)) {
-            return ResizableTextArea.ResizeDirection.valueOf(resizableDirection) != ResizableTextArea.ResizeDirection.NONE;
-        }
-
-        return false;
     }
 }

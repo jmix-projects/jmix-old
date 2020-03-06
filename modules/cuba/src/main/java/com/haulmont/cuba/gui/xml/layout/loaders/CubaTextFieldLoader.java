@@ -16,29 +16,13 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
+import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import com.haulmont.cuba.web.components.TextField;
-import io.jmix.ui.components.TextInputField;
+import io.jmix.ui.xml.layout.loaders.TextFieldLoader;
 import org.dom4j.Element;
 
-public class CubaTextFieldLoader extends AbstractTextFieldLoader<TextField> {
-
-    @Override
-    public void loadComponent() {
-        super.loadComponent();
-
-        loadMaxLength(resultComponent, element);
-        loadTrimming(resultComponent, element);
-
-        loadDatatype(resultComponent, element);
-
-        resultComponent.setFormatter(loadFormatter(element));
-
-        loadInputPrompt(resultComponent, element);
-        loadCaseConversion(resultComponent, element);
-        loadTextChangeEventProperties(resultComponent, element);
-        loadHtmlName(resultComponent, element);
-        loadConversionErrorMessage(resultComponent, element);
-    }
+public class CubaTextFieldLoader extends TextFieldLoader {
 
     @Override
     public void createComponent() {
@@ -46,10 +30,14 @@ public class CubaTextFieldLoader extends AbstractTextFieldLoader<TextField> {
         loadId(resultComponent, element);
     }
 
-    protected void loadHtmlName(TextInputField.HtmlNameSupported component, Element element) {
-        String htmlName = element.attributeValue("htmlName");
-        if (htmlName != null && !htmlName.isEmpty()) {
-            component.setHtmlName(htmlName);
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected void loadData(io.jmix.ui.components.TextField component, Element element) {
+        super.loadData(component, element);
+
+        if (resultComponent.getValueSource() == null) {
+            DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
+                    (ComponentLoaderContext) getComponentContext());
         }
     }
 }

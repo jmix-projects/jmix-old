@@ -17,24 +17,12 @@
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
+import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import com.haulmont.cuba.web.components.LookupField;
-import com.haulmont.cuba.web.gui.components.WebLookupField;
-import io.jmix.core.commons.util.ParamsMap;
-import io.jmix.ui.GuiDevelopmentException;
-import io.jmix.ui.components.CaptionMode;
-import io.jmix.ui.components.data.options.ContainerOptions;
-import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.xml.layout.loaders.LookupFieldLoader;
-import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Map;
-
-public class CubaLookupFieldLoader extends AbstractFieldLoader<WebLookupField> {
+public class CubaLookupFieldLoader extends LookupFieldLoader {
 
     @Override
     public void createComponent() {
@@ -42,113 +30,19 @@ public class CubaLookupFieldLoader extends AbstractFieldLoader<WebLookupField> {
         loadId(resultComponent, element);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public void loadComponent() {
-        super.loadComponent();
+    protected void loadData(io.jmix.ui.components.LookupField component, Element element) {
+        super.loadData(component, element);
 
-        loadTabIndex(resultComponent, element);
-
-        String captionProperty = element.attributeValue("captionProperty");
-        if (!StringUtils.isEmpty(captionProperty)) {
-            resultComponent.setOptionCaptionProvider(o -> CaptionMode.PROPERTY);
-            resultComponent.setOptionCaptionProvider(o -> captionProperty);
+        if (resultComponent.getValueSource() == null) {
+            DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
+                    (ComponentLoaderContext) getComponentContext());
         }
 
-        String nullName = element.attributeValue("nullName");
-        if (StringUtils.isNotEmpty(nullName)) {
-            resultComponent.setNullSelectionCaption(loadResourceString(nullName));
-        }
-
-        String pageLength = element.attributeValue("pageLength");
-        if (StringUtils.isNotEmpty(pageLength)) {
-            resultComponent.setPageLength(Integer.parseInt(pageLength));
-        }
-
-        loadBuffered(resultComponent, element);
-
-        loadTextInputAllowed();
-        loadInputPrompt(resultComponent, element);
-
-        loadFilterMode(resultComponent, element);
-        loadNewOptionHandler(resultComponent, element);
-
-        loadNullOptionVisible(resultComponent, element);
-
-        loadOptionsEnum(resultComponent, element);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void loadOptionsEnum(LookupField resultComponent, Element element) {
-        String optionsEnumClass = element.attributeValue("optionsEnum");
-        if (StringUtils.isNotEmpty(optionsEnumClass)) {
-            resultComponent.setOptionsEnum(getScripting().loadClass(optionsEnumClass));
-        }
-    }
-
-    protected void loadNullOptionVisible(LookupField resultComponent, Element element) {
-        String nullOptionVisible = element.attributeValue("nullOptionVisible");
-        if (StringUtils.isNotEmpty(nullOptionVisible)) {
-            resultComponent.setNullOptionVisible(Boolean.parseBoolean(nullOptionVisible));
-        }
-    }
-
-    protected void loadTextInputAllowed() {
-        String textInputAllowed = element.attributeValue("textInputAllowed");
-        if (StringUtils.isNotEmpty(textInputAllowed)) {
-            resultComponent.setTextInputAllowed(Boolean.parseBoolean(textInputAllowed));
-        }
-    }
-
-    protected void loadNewOptionHandler(LookupField component, Element element) {
-        String newOptionAllowed = element.attributeValue("newOptionAllowed");
-        if (StringUtils.isNotEmpty(newOptionAllowed)) {
-            component.setNewOptionAllowed(Boolean.parseBoolean(newOptionAllowed));
-        }
-
-        String newOptionHandlerMethod = element.attributeValue("newOptionHandler");
-        if (StringUtils.isNotEmpty(newOptionHandlerMethod)) {
-            FrameOwner controller = getComponentContext().getFrame().getFrameOwner();
-            Class<? extends FrameOwner> windowClass = controller.getClass();
-
-            Method newOptionHandler;
-            try {
-                newOptionHandler = windowClass.getMethod(newOptionHandlerMethod, io.jmix.ui.components.LookupField.class, String.class);
-            } catch (NoSuchMethodException e) {
-                Map<String, Object> params = ParamsMap.of(
-                        "LookupField Id", component.getId(),
-                        "Method name", newOptionHandlerMethod
-                );
-
-                throw new GuiDevelopmentException("Unable to find new option handler method for lookup field",
-                        context, params);
-            }
-
-            component.setNewOptionHandler(caption -> {
-                try {
-                    newOptionHandler.invoke(controller, component, caption);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException("Unable to invoke new option handler", e);
-                }
-            });
-        }
-    }
-
-    @Override
-    protected void loadDatasource(DatasourceComponent component, Element element, Context context) {
-        super.loadDatasource(component, element, context);
-
-        String datasource = element.attributeValue("optionsDatasource");
-        if (!StringUtils.isEmpty(datasource)) {
-            ComponentLoaderContext ctx = (ComponentLoaderContext) getComponentContext();
-            Datasource ds = ctx.getDsContext().get(datasource);
-            ((LookupField) component).setOptionsDatasource((CollectionDatasource) ds);
-        }
-    }
-
-    protected void loadFilterMode(LookupField component, Element element) {
-        String filterMode = element.attributeValue("filterMode");
-        if (!StringUtils.isEmpty(filterMode)) {
-            component.setFilterMode(io.jmix.ui.components.LookupField.FilterMode.valueOf(filterMode));
+        if (resultComponent.getOptions() == null) {
+            DatasourceLoaderHelper.loadOptionsDatasource((LookupField) component, element,
+                    (ComponentLoaderContext) getComponentContext());
         }
     }
 }

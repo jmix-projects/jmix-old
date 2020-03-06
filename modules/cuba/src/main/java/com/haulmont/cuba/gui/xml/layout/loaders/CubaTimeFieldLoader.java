@@ -16,66 +16,28 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
+import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import com.haulmont.cuba.web.components.TimeField;
-import io.jmix.ui.components.Field;
-import org.apache.commons.lang3.StringUtils;
+import io.jmix.ui.xml.layout.loaders.TimeFieldLoader;
 import org.dom4j.Element;
 
-public class CubaTimeFieldLoader extends AbstractFieldLoader<TimeField> {
+public class CubaTimeFieldLoader extends TimeFieldLoader {
 
     @Override
     public void createComponent() {
-        resultComponent = factory.create(io.jmix.ui.components.TimeField.NAME);
+        resultComponent = factory.create(TimeField.NAME);
         loadId(resultComponent, element);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public void loadComponent() {
-        super.loadComponent();
+    protected void loadData(io.jmix.ui.components.TimeField component, Element element) {
+        super.loadData(component, element);
 
-        loadResolution(resultComponent, element);
-        loadTimeFormat(resultComponent, element);
-        loadShowSeconds(resultComponent, element);
-        loadTimeMode(resultComponent, element);
-
-        loadDatatype(resultComponent, element);
-
-        loadTabIndex(resultComponent, element);
-        loadBuffered(resultComponent, element);
-    }
-
-    protected void loadResolution(io.jmix.ui.components.TimeField resultComponent, Element element) {
-        String resolution = element.attributeValue("resolution");
-        if (StringUtils.isNotEmpty(resolution)) {
-            io.jmix.ui.components.TimeField.Resolution res = io.jmix.ui.components.TimeField.Resolution.valueOf(resolution);
-            resultComponent.setResolution(res);
+        if (resultComponent.getValueSource() == null) {
+            DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
+                    (ComponentLoaderContext) getComponentContext());
         }
-    }
-
-    protected void loadTimeFormat(io.jmix.ui.components.TimeField resultComponent, Element element) {
-        String timeFormat = element.attributeValue("timeFormat");
-        if (StringUtils.isNotEmpty(timeFormat)) {
-            timeFormat = loadResourceString(timeFormat);
-            resultComponent.setFormat(timeFormat);
-        }
-    }
-
-    protected void loadShowSeconds(io.jmix.ui.components.TimeField resultComponent, Element element) {
-        String showSeconds = element.attributeValue("showSeconds");
-        if (StringUtils.isNotEmpty(showSeconds)) {
-            resultComponent.setShowSeconds(Boolean.parseBoolean(showSeconds));
-        }
-    }
-
-    protected void loadTimeMode(io.jmix.ui.components.TimeField resultComponent, Element element) {
-        String timeMode = element.attributeValue("timeMode");
-        if (StringUtils.isNotEmpty(timeMode)) {
-            resultComponent.setTimeMode(io.jmix.ui.components.TimeField.TimeMode.valueOf(timeMode));
-        }
-    }
-
-    @Override
-    protected void loadValidators(Field component, Element element) {
-        // don't load any validators
     }
 }

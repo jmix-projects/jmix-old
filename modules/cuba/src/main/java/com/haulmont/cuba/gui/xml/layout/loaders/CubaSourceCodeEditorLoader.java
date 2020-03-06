@@ -16,11 +16,13 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
+import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import com.haulmont.cuba.web.components.SourceCodeEditor;
-import org.apache.commons.lang3.StringUtils;
+import io.jmix.ui.xml.layout.loaders.SourceCodeEditorLoader;
 import org.dom4j.Element;
 
-public class CubaSourceCodeEditorLoader extends AbstractFieldLoader<SourceCodeEditor> {
+public class CubaSourceCodeEditorLoader extends SourceCodeEditorLoader {
 
     @Override
     public void createComponent() {
@@ -28,49 +30,14 @@ public class CubaSourceCodeEditorLoader extends AbstractFieldLoader<SourceCodeEd
         loadId(resultComponent, element);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public void loadComponent() {
-        super.loadComponent();
+    protected void loadData(io.jmix.ui.components.SourceCodeEditor component, Element element) {
+        super.loadData(component, element);
 
-        loadTabIndex(resultComponent, element);
-
-        loadMode(resultComponent, element);
-
-        String showGutter = element.attributeValue("showGutter");
-        if (StringUtils.isNotEmpty(showGutter)) {
-            resultComponent.setShowGutter(Boolean.parseBoolean(showGutter));
-        }
-
-        String printMargin = element.attributeValue("printMargin");
-        if (StringUtils.isNotEmpty(printMargin)) {
-            resultComponent.setShowPrintMargin(Boolean.parseBoolean(printMargin));
-        }
-
-        String printMarginColumn = element.attributeValue("printMarginColumn");
-        if (StringUtils.isNotEmpty(printMarginColumn)) {
-            resultComponent.setPrintMarginColumn(Integer.parseInt(printMarginColumn));
-        }
-
-        String highlightActiveLine = element.attributeValue("highlightActiveLine");
-        if (StringUtils.isNotEmpty(highlightActiveLine)) {
-            resultComponent.setHighlightActiveLine(Boolean.parseBoolean(highlightActiveLine));
-        }
-
-        String handleTabKey = element.attributeValue("handleTabKey");
-        if (StringUtils.isNotEmpty(handleTabKey)) {
-            resultComponent.setHandleTabKey(Boolean.parseBoolean(handleTabKey));
-        }
-
-        String suggestOnDot = element.attributeValue("suggestOnDot");
-        if (StringUtils.isNotEmpty(suggestOnDot)) {
-            resultComponent.setSuggestOnDot(Boolean.parseBoolean(suggestOnDot));
-        }
-    }
-
-    protected void loadMode(io.jmix.ui.components.SourceCodeEditor component, Element element) {
-        String mode = element.attributeValue("mode");
-        if (StringUtils.isNotEmpty(mode)) {
-            component.setMode(io.jmix.ui.components.SourceCodeEditor.Mode.parse(mode));
+        if (resultComponent.getValueSource() == null) {
+            DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
+                    (ComponentLoaderContext) getComponentContext());
         }
     }
 }

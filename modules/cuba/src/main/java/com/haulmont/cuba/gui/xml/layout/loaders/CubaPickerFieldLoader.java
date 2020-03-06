@@ -16,19 +16,13 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
+import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import com.haulmont.cuba.web.components.PickerField;
-import io.jmix.core.Metadata;
-import io.jmix.ui.Actions;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.picker.ClearAction;
-import io.jmix.ui.actions.picker.LookupAction;
-import io.jmix.ui.components.ActionsHolder;
-import io.jmix.ui.components.CaptionMode;
-import io.jmix.ui.components.actions.GuiActionSupport;
-import org.apache.commons.lang3.StringUtils;
+import io.jmix.ui.xml.layout.loaders.PickerFieldLoader;
 import org.dom4j.Element;
 
-public class CubaPickerFieldLoader extends AbstractFieldLoader<PickerField> {
+public class CubaPickerFieldLoader extends PickerFieldLoader {
 
     @Override
     public void createComponent() {
@@ -36,59 +30,14 @@ public class CubaPickerFieldLoader extends AbstractFieldLoader<PickerField> {
         loadId(resultComponent, element);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public void loadComponent() {
-        super.loadComponent();
+    protected void loadData(io.jmix.ui.components.PickerField component, Element element) {
+        super.loadData(component, element);
 
-        loadTabIndex(resultComponent, element);
-
-        String captionProperty = element.attributeValue("captionProperty");
-        if (!StringUtils.isEmpty(captionProperty)) {
-            resultComponent.setCaptionMode(CaptionMode.PROPERTY);
-            resultComponent.setCaptionProperty(captionProperty);
+        if (resultComponent.getValueSource() == null) {
+            DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
+                    (ComponentLoaderContext) getComponentContext());
         }
-
-        final String metaClass = element.attributeValue("metaClass");
-        if (!StringUtils.isEmpty(metaClass)) {
-            resultComponent.setMetaClass(getMetadata().getClass(metaClass));
-        }
-
-        loadActions(resultComponent, element);
-        if (resultComponent.getActions().isEmpty()) {
-            GuiActionSupport guiActionSupport = getGuiActionSupport();
-
-            boolean actionsByMetaAnnotations = guiActionSupport.createActionsByMetaAnnotations(resultComponent);
-            if (!actionsByMetaAnnotations) {
-
-                if (isLegacyFrame()) {
-                    resultComponent.addLookupAction();
-                    resultComponent.addClearAction();
-                } else {
-                    Actions actions = getActions();
-
-                    resultComponent.addAction(actions.create(LookupAction.ID));
-                    resultComponent.addAction(actions.create(ClearAction.ID));
-                }
-            }
-        }
-
-        loadBuffered(resultComponent, element);
-    }
-
-    protected Actions getActions() {
-        return beanLocator.get(Actions.NAME);
-    }
-
-    protected GuiActionSupport getGuiActionSupport() {
-        return beanLocator.get(GuiActionSupport.NAME);
-    }
-
-    protected Metadata getMetadata() {
-        return beanLocator.get(Metadata.NAME);
-    }
-
-    @Override
-    protected Action loadDeclarativeAction(ActionsHolder actionsHolder, Element element) {
-        return loadPickerDeclarativeAction(actionsHolder, element);
     }
 }

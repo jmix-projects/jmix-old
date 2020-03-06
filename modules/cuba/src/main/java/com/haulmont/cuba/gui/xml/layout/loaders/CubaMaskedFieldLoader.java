@@ -16,10 +16,13 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
+import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import com.haulmont.cuba.web.components.MaskedField;
-import org.apache.commons.lang3.StringUtils;
+import io.jmix.ui.xml.layout.loaders.MaskedFieldLoader;
+import org.dom4j.Element;
 
-public class CubaMaskedFieldLoader extends AbstractTextFieldLoader<MaskedField> {
+public class CubaMaskedFieldLoader extends MaskedFieldLoader {
 
     @Override
     public void createComponent() {
@@ -27,19 +30,14 @@ public class CubaMaskedFieldLoader extends AbstractTextFieldLoader<MaskedField> 
         loadId(resultComponent, element);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public void loadComponent() {
-        super.loadComponent();
+    protected void loadData(io.jmix.ui.components.MaskedField component, Element element) {
+        super.loadData(component, element);
 
-        String mask = element.attributeValue("mask");
-        if (StringUtils.isNotEmpty(mask)) {
-            resultComponent.setMask(loadResourceString(mask));
+        if (resultComponent.getValueSource() == null) {
+            DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
+                    (ComponentLoaderContext) getComponentContext());
         }
-        String valueModeStr = element.attributeValue("valueMode");
-        if (StringUtils.isNotEmpty(valueModeStr)) {
-            resultComponent.setValueMode(MaskedField.ValueMode.valueOf(valueModeStr.toUpperCase()));
-        }
-
-        loadDatatype(resultComponent, element);
     }
 }

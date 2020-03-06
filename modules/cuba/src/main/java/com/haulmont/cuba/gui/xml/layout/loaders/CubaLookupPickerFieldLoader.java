@@ -16,18 +16,13 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
+import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import com.haulmont.cuba.web.components.LookupPickerField;
-import io.jmix.core.Metadata;
-import io.jmix.ui.Actions;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.picker.ClearAction;
-import io.jmix.ui.actions.picker.LookupAction;
-import io.jmix.ui.components.ActionsHolder;
-import io.jmix.ui.components.actions.GuiActionSupport;
-import org.apache.commons.lang3.StringUtils;
+import io.jmix.ui.xml.layout.loaders.LookupPickerFieldLoader;
 import org.dom4j.Element;
 
-public class CubaLookupPickerFieldLoader extends CubaLookupFieldLoader {
+public class CubaLookupPickerFieldLoader extends LookupPickerFieldLoader {
 
     @Override
     public void createComponent() {
@@ -35,56 +30,19 @@ public class CubaLookupPickerFieldLoader extends CubaLookupFieldLoader {
         loadId(resultComponent, element);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public void loadComponent() {
-        super.loadComponent();
+    protected void loadData(io.jmix.ui.components.LookupField component, Element element) {
+        super.loadData(component, element);
 
-        LookupPickerField lookupPickerField = (LookupPickerField) resultComponent;
-
-        String metaClass = element.attributeValue("metaClass");
-        if (!StringUtils.isEmpty(metaClass)) {
-            lookupPickerField.setMetaClass(getMetadata().findClass(metaClass));
+        if (resultComponent.getValueSource() == null) {
+            DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
+                    (ComponentLoaderContext) getComponentContext());
         }
 
-        loadActions(lookupPickerField, element);
-
-        if (lookupPickerField.getActions().isEmpty()) {
-            GuiActionSupport guiActionSupport = getGuiActionSupport();
-
-            boolean actionsByMetaAnnotations = guiActionSupport.createActionsByMetaAnnotations(lookupPickerField);
-            if (!actionsByMetaAnnotations) {
-                if (isLegacyFrame()) {
-                    lookupPickerField.addLookupAction();
-                    lookupPickerField.addClearAction();
-                } else {
-                    Actions actions = getActions();
-
-                    lookupPickerField.addAction(actions.create(LookupAction.ID));
-                    lookupPickerField.addAction(actions.create(ClearAction.ID));
-                }
-            }
+        if (resultComponent.getOptions() == null) {
+            DatasourceLoaderHelper.loadOptionsDatasource((LookupPickerField) component, element,
+                    (ComponentLoaderContext) getComponentContext());
         }
-
-        String refreshOptionsOnLookupClose = element.attributeValue("refreshOptionsOnLookupClose");
-        if (refreshOptionsOnLookupClose != null) {
-            lookupPickerField.setRefreshOptionsOnLookupClose(Boolean.parseBoolean(refreshOptionsOnLookupClose));
-        }
-    }
-
-    protected GuiActionSupport getGuiActionSupport() {
-        return beanLocator.get(GuiActionSupport.NAME);
-    }
-
-    protected Actions getActions() {
-        return beanLocator.get(Actions.NAME);
-    }
-
-    protected Metadata getMetadata() {
-        return beanLocator.get(Metadata.NAME);
-    }
-
-    @Override
-    protected Action loadDeclarativeAction(ActionsHolder actionsHolder, Element element) {
-        return loadPickerDeclarativeAction(actionsHolder, element);
     }
 }

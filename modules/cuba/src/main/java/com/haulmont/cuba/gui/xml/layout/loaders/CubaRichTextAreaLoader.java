@@ -16,12 +16,27 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
+import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import com.haulmont.cuba.web.components.RichTextArea;
+import io.jmix.ui.xml.layout.loaders.RichTextAreaLoader;
+import org.dom4j.Element;
 
-public class CubaRichTextAreaLoader extends AbstractTextFieldLoader<RichTextArea> {
+public class CubaRichTextAreaLoader extends RichTextAreaLoader {
     @Override
     public void createComponent() {
         resultComponent = factory.create(RichTextArea.NAME);
         loadId(resultComponent, element);
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected void loadData(io.jmix.ui.components.RichTextArea component, Element element) {
+        super.loadData(component, element);
+
+        if (resultComponent.getValueSource() == null) {
+            DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
+                    (ComponentLoaderContext) getComponentContext());
+        }
     }
 }
