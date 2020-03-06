@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@
 
 package com.haulmont.cuba.web.components;
 
-import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.components.OptionsField;
+
+import java.util.Collection;
 
 @Deprecated
-public interface Label<V> extends DatasourceComponent<V>, io.jmix.ui.components.Label<V> {
+public interface CheckBoxGroup<I> extends OptionsField<Collection<I>, I>, io.jmix.ui.components.CheckBoxGroup<I> {
 }

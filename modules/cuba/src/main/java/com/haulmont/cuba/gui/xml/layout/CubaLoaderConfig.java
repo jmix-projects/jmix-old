@@ -48,6 +48,9 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
     protected void initStandardLoaders() {
         super.initStandardLoaders();
 
+        loaders.put(Label.NAME, CubaLabelLoader.class);
+        loaders.put(CheckBoxGroup.NAME, CubaCheckBoxGroupLoader.class);
+        loaders.put(RadioButtonGroup.NAME, CubaRadioButtonGroupLoader.class);
         loaders.put(OptionsList.NAME, CubaOptionsListLoader.class);
         loaders.put(OptionsGroup.NAME, CubaOptionsGroupLoader.class);
         loaders.put(SuggestionPickerField.NAME, CubaSuggestionPickerFieldLoader.class);
