@@ -48,6 +48,10 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
     protected void initStandardLoaders() {
         super.initStandardLoaders();
 
+        loaders.put(Slider.NAME, CubaSliderLoader.class);
+        loaders.put(CurrencyField.NAME, CubaCurrencyFieldLoader.class);
+        loaders.put(ColorPicker.NAME, CubaColorPickerLoader.class);
+        loaders.put(DateField.NAME, CubaDateFieldLoader.class);
         loaders.put(TimeField.NAME, CubaTimeFieldLoader.class);
         loaders.put(LookupField.NAME, CubaLookupFieldLoader.class);
         loaders.put(LookupPickerField.NAME, CubaLookupPickerFieldLoader.class);

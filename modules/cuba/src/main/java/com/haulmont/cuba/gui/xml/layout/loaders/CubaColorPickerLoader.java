@@ -18,39 +18,20 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.web.components.ResizableTextArea;
-import com.haulmont.cuba.web.components.TextArea;
-import io.jmix.ui.xml.layout.loaders.ResizableTextAreaLoader;
+import com.haulmont.cuba.web.components.ColorPicker;
+import io.jmix.ui.xml.layout.loaders.ColorPickerLoader;
 import org.dom4j.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class CubaResizableTextAreaLoader extends ResizableTextAreaLoader {
-
-    private static final Logger log = LoggerFactory.getLogger(ResizableTextAreaLoader.class);
+public class CubaColorPickerLoader extends ColorPickerLoader {
 
     @Override
     public void createComponent() {
-        if (element.getName().equals(ResizableTextArea.NAME)) {
-            resultComponent = factory.create(ResizableTextArea.NAME);
-        }
-
-        if (element.getName().equals(TextArea.NAME)) {
-            if (isResizable() || hasResizableDirection()) {
-                resultComponent = factory.create(ResizableTextArea.NAME);
-                log.warn("The 'resizableTextArea' element must be used in order to create a resizable text area " +
-                        "instead of 'textArea'");
-            } else {
-                resultComponent = factory.create(TextArea.NAME);
-            }
-        }
-
+        resultComponent = factory.create(ColorPicker.NAME);
         loadId(resultComponent, element);
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    protected void loadData(io.jmix.ui.components.TextArea component, Element element) {
+    protected void loadData(io.jmix.ui.components.ColorPicker component, Element element) {
         super.loadData(component, element);
 
         if (resultComponent.getValueSource() == null) {

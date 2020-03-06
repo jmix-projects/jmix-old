@@ -32,6 +32,9 @@ public class CubaUiComponents extends WebUiComponents {
     public static final String NAME = "cuba_UiComponents";
 
     {
+        classes.put(Slider.NAME, WebSlider.class);
+        classes.put(CurrencyField.NAME, WebCurrencyField.class);
+        classes.put(ColorPicker.NAME, WebColorPicker.class);
         classes.put(TimeField.NAME, WebTimeField.class);
         classes.put(RichTextArea.NAME, WebRichTextArea.class);
         classes.put(SourceCodeEditor.NAME, WebSourceCodeEditor.class);
