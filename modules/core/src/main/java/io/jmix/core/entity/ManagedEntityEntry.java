@@ -73,12 +73,8 @@ public interface ManagedEntityEntry<K> extends Serializable {
      */
     void removeAllListeners();
 
-    void firePropertyChanged(String propertyName, Object prev, Object curr);
-
     /**
      * Copies the state.
      */
     void copy(ManagedEntityEntry<?> entry);
-
-    void clear();
 }

@@ -38,13 +38,12 @@ import java.util.UUID;
  * person.setValue("firstName", "Homer");
  * person.setValue("lastName", "Simpson");
  * </pre>
- *
  */
 @io.jmix.core.metamodel.annotations.MetaClass(name = "sys_KeyValueEntity")
 @SystemLevel
 @DisableEnhancing
 public class KeyValueEntity
-        implements Entity<Object>, HasInstanceMetaClass {
+        implements ManagedEntity<Object>, HasInstanceMetaClass {
 
     protected UUID uuid;
 
@@ -53,6 +52,34 @@ public class KeyValueEntity
     protected String idName;
 
     protected MetaClass metaClass;
+
+    protected ManagedEntityEntry<Object> entityEntry;
+
+    protected static class KeyValueEntityEntry extends BaseManagedEntityEntry<Object> {
+        public KeyValueEntityEntry(ManagedEntity<Object> source) {
+            super(source);
+        }
+
+        @Override
+        public Object getEntityId() {
+            return ((KeyValueEntity) source).getId();
+        }
+
+        @Override
+        public void setEntityId(Object id) {
+            ((KeyValueEntity) source).setId(id);
+        }
+
+        @Override
+        public <T> T getAttributeValue(String name) {
+            return ((KeyValueEntity) source).getValue(name);
+        }
+
+        @Override
+        public void setAttributeValue(String name, Object value, boolean checkEquals) {
+            ((KeyValueEntity) source).setValue(name, value, checkEquals);
+        }
+    }
 
     public KeyValueEntity() {
         uuid = UuidProvider.createUuid();
@@ -72,7 +99,7 @@ public class KeyValueEntity
     }
 
     /**
-     * @return  name of a property that represents this entity id, if set by {@link #setIdName(String)}
+     * @return name of a property that represents this entity id, if set by {@link #setIdName(String)}
      */
     public String getIdName() {
         return idName;
@@ -98,8 +125,7 @@ public class KeyValueEntity
         Object oldValue = getValue(name);
         if ((!checkEquals) || (!EntityValues.propertyValueEquals(oldValue, value))) {
             properties.put(name, value);
-            //TODO: implement it
-            //propertyChanged(name, oldValue, value);
+            ((KeyValueEntityEntry)__getEntityEntry()).firePropertyChanged(name, oldValue, value);
         }
     }
 
@@ -147,5 +173,17 @@ public class KeyValueEntity
         if (id == null)
             id = "?(" + uuid + ")";
         return "sys$KeyValueEntity-" + id;
+    }
+
+    @Override
+    public ManagedEntityEntry<Object> __getEntityEntry() {
+        return entityEntry == null ? entityEntry = new KeyValueEntityEntry(this) : entityEntry;
+    }
+
+    @Override
+    public void __copyEntityEntry() {
+        KeyValueEntityEntry newEntityEntry = new KeyValueEntityEntry(this);
+        newEntityEntry.copy(entityEntry);
+        entityEntry = newEntityEntry;
     }
 }

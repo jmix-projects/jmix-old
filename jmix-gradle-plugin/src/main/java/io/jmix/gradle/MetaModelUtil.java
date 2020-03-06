@@ -28,6 +28,7 @@ public class MetaModelUtil {
     public static final String ENTITY_ENTRY_TYPE = "io.jmix.core.entity.ManagedEntityEntry";
     public static final String BASE_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.BaseManagedEntityEntry";
     public static final String OBJECT_TYPE = "java.lang.Object";
+    public static final String STRING_TYPE = "java.lang.String";
 
     public static final String SETTERS_ENHANCED_TYPE = "io.jmix.core.entity.JmixSettersEnhanced";
     public static final String ENTITY_ENTRY_ENHANCED_TYPE = "io.jmix.core.entity.JmixEntityEntryEnhanced";
@@ -39,8 +40,13 @@ public class MetaModelUtil {
     public static final String ENTITY_ANNOTATION_TYPE = "javax.persistence.Entity";
     public static final String EMBEDDABLE_ANNOTATION_TYPE = "javax.persistence.Embeddable";
 
+    public static final String GET_ENTITY_ENTRY_METHOD_NAME = "__getEntityEntry";
+    public static final String COPY_ENTITY_ENTRY_METHOD_NAME = "__copyEntityEntry";
+    public static final String WRITE_OBJECT_METHOD_NAME = "writeObject";
+
+
     public static final String GEN_ENTITY_ENTRY_VAR_NAME = "_jmixEntityEntry";
-    public static final String GEN_ENTITY_ENTITY_CLASS_NAME = "JmixEntityEntry";
+    public static final String GEN_ENTITY_ENTRY_CLASS_NAME = "JmixEntityEntry";
 
     public static boolean isSettersEnhanced(CtClass ctClass) throws NotFoundException {
         for (CtClass ctInterface : ctClass.getInterfaces()) {
@@ -149,6 +155,55 @@ public class MetaModelUtil {
         for (CtField field : ctClass.getDeclaredFields()) {
             if (field.getName().equals(fieldName)) {
                 return field;
+            }
+        }
+        return null;
+    }
+
+    public static CtMethod findEqualsMethod(CtClass ctClass) throws NotFoundException {
+        for (CtMethod method : ctClass.getDeclaredMethods()) {
+            if ("equals".equals(method.getName())) {
+                if (CtClass.booleanType.equals(method.getReturnType())
+                        && method.getParameterTypes().length == 1
+                        && OBJECT_TYPE.equals(method.getParameterTypes()[0].getName())) {
+                    return method;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static CtMethod findHashCodeMethod(CtClass ctClass) throws NotFoundException {
+        for (CtMethod method : ctClass.getDeclaredMethods()) {
+            if ("hashCode".equals(method.getName())) {
+                if (CtClass.intType.equals(method.getReturnType())
+                        && method.getParameterTypes().length == 0) {
+                    return method;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static CtMethod findToStringMethod(CtClass ctClass) throws NotFoundException {
+        for (CtMethod method : ctClass.getDeclaredMethods()) {
+            if ("toString".equals(method.getName())) {
+                if (String.class.getName().equals(method.getReturnType().getName())
+                        && method.getParameterTypes().length == 0) {
+                    return method;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static CtMethod findWriteObjectMethod(CtClass ctClass) throws NotFoundException {
+        for (CtMethod method : ctClass.getDeclaredMethods()) {
+            if (WRITE_OBJECT_METHOD_NAME.equals(method.getName())) {
+                if (CtClass.voidType.equals(method.getReturnType())
+                        && method.getParameterTypes().length == 1) {
+                    return method;
+                }
             }
         }
         return null;

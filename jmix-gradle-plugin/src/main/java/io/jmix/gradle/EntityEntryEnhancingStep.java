@@ -20,6 +20,7 @@ import javassist.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import static io.jmix.gradle.MetaModelUtil.*;
 
@@ -46,14 +47,22 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
 
             makeEntityEntryField(ctClass);
 
-            makeEntityEntryMethod(ctClass);
+            makeEntityEntryMethods(ctClass);
+
+            makeEqualsMethod(ctClass);
+
+            makeHashCodeMethod(ctClass);
+
+            makeToStringMethod(ctClass);
+
+            makeWriteObjectMethod(ctClass);
         }
 
         ctClass.addInterface(classPool.get(ENTITY_ENTRY_ENHANCED_TYPE));
     }
 
     protected void makeEntityEntryClass(CtClass ctClass, CtField primaryKey) throws CannotCompileException, NotFoundException, IOException {
-        CtClass nestedCtClass = ctClass.makeNestedClass(GEN_ENTITY_ENTITY_CLASS_NAME, true);
+        CtClass nestedCtClass = ctClass.makeNestedClass(GEN_ENTITY_ENTRY_CLASS_NAME, true);
         nestedCtClass.setSuperclass(classPool.get(BASE_ENTITY_ENTRY_TYPE));
 
         CtMethod getIdMethod = CtNewMethod.make(classPool.get(OBJECT_TYPE), "getEntityId",
@@ -82,14 +91,62 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
         ctClass.addField(ctField);
     }
 
-    protected void makeEntityEntryMethod(CtClass ctClass) throws NotFoundException, CannotCompileException {
+    protected void makeEntityEntryMethods(CtClass ctClass) throws NotFoundException, CannotCompileException {
         ctClass.addInterface(classPool.get(GENERIC_ENTITY_TYPE));
 
-        CtMethod entryMethod = CtNewMethod.make(classPool.get(ENTITY_ENTRY_TYPE), "__getEntityEntry", null, null,
+        CtMethod entryMethod = CtNewMethod.make(classPool.get(ENTITY_ENTRY_TYPE), GET_ENTITY_ENTRY_METHOD_NAME, null, null,
                 String.format("return %s == null ? %s = new %s.%s(this) : %s;",
-                        GEN_ENTITY_ENTRY_VAR_NAME, GEN_ENTITY_ENTRY_VAR_NAME, ctClass.getName(), GEN_ENTITY_ENTITY_CLASS_NAME, GEN_ENTITY_ENTRY_VAR_NAME),
+                        GEN_ENTITY_ENTRY_VAR_NAME, GEN_ENTITY_ENTRY_VAR_NAME, ctClass.getName(), GEN_ENTITY_ENTRY_CLASS_NAME, GEN_ENTITY_ENTRY_VAR_NAME),
                 ctClass);
 
         ctClass.addMethod(entryMethod);
+
+        CtMethod copyEntryMethod = CtNewMethod.make(CtClass.voidType, COPY_ENTITY_ENTRY_METHOD_NAME, null, null,
+                String.format("{ %s.%s newEntityEntry = new %s.%s(this); newEntityEntry.copy(%s) ; %s = newEntityEntry; }",
+                        ctClass.getName(), GEN_ENTITY_ENTRY_CLASS_NAME,
+                        ctClass.getName(), GEN_ENTITY_ENTRY_CLASS_NAME,
+                        GEN_ENTITY_ENTRY_VAR_NAME, GEN_ENTITY_ENTRY_VAR_NAME),
+                ctClass);
+
+        ctClass.addMethod(copyEntryMethod);
+    }
+
+    protected void makeEqualsMethod(CtClass ctClass) throws NotFoundException, CannotCompileException {
+        if (findEqualsMethod(ctClass) == null) {
+            CtMethod entryMethod = CtNewMethod.make(CtClass.booleanType, "equals", new CtClass[]{classPool.get(OBJECT_TYPE)}, null,
+                    "return io.jmix.core.entity.EntityInternals.equals(this, $1);", ctClass);
+            ctClass.addMethod(entryMethod);
+        }
+    }
+
+    protected void makeHashCodeMethod(CtClass ctClass) throws NotFoundException, CannotCompileException {
+        if (findHashCodeMethod(ctClass) == null) {
+            CtMethod entryMethod = CtNewMethod.make(CtClass.intType, "hashCode", null, null,
+                    String.format("return %s().getEntityId() != null ? %s().getEntityId().hashCode() : super.hashCode();", GET_ENTITY_ENTRY_METHOD_NAME, GET_ENTITY_ENTRY_METHOD_NAME),
+                    ctClass);
+            ctClass.addMethod(entryMethod);
+        }
+    }
+
+    protected void makeToStringMethod(CtClass ctClass) throws NotFoundException, CannotCompileException {
+        if (findToStringMethod(ctClass) == null) {
+            CtMethod entryMethod = CtNewMethod.make(classPool.get(String.class.getName()), "toString", null, null,
+                    "return io.jmix.core.entity.EntityInternals.toString(this);", ctClass);
+            ctClass.addMethod(entryMethod);
+        }
+    }
+
+    protected void makeWriteObjectMethod(CtClass ctClass) throws NotFoundException, CannotCompileException {
+        CtMethod ctMethod = findWriteObjectMethod(ctClass);
+        if (ctMethod != null) {
+            ctMethod.insertBefore("io.jmix.core.entity.EntityInternals.writeObject(this, $1)");
+        } else {
+            CtMethod entryMethod = CtNewMethod.make(Modifier.PRIVATE,
+                    CtClass.voidType, WRITE_OBJECT_METHOD_NAME,
+                    new CtClass[]{classPool.get(ObjectOutputStream.class.getName())},
+                    new CtClass[]{classPool.get(IOException.class.getName())},
+                    "{ io.jmix.core.entity.EntityInternals.writeObject(this, $1); $1.defaultWriteObject(); }", ctClass);
+            ctClass.addMethod(entryMethod);
+        }
     }
 }

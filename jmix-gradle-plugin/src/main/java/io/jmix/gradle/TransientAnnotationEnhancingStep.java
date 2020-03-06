@@ -16,10 +16,7 @@
 
 package io.jmix.gradle;
 
-import javassist.CannotCompileException;
-import javassist.CtClass;
-import javassist.CtField;
-import javassist.NotFoundException;
+import javassist.*;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.annotation.Annotation;
 
@@ -27,7 +24,7 @@ import java.io.IOException;
 
 import static io.jmix.gradle.MetaModelUtil.*;
 
-public class TransientEntityEntryEnhancingStep extends BaseEnhancingStep {
+public class TransientAnnotationEnhancingStep extends BaseEnhancingStep {
     @Override
     protected boolean isAlreadyEnhanced(CtClass ctClass) throws NotFoundException {
         return false;

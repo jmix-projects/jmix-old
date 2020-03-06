@@ -16,13 +16,65 @@
 
 package io.jmix.core.entity;
 
+
+import java.io.ObjectOutputStream;
+import java.util.Objects;
+
+/**
+ * Used by enhancing process
+ */
+@SuppressWarnings("unsed")
 public class EntityInternals {
 
-    public static String toString(ManagedEntity managedEntity) {
-        return null;
+    public static String toString(ManagedEntity<?> entity) {
+        ManagedEntityEntry<?> entityEntry = entity.__getEntityEntry();
+
+        String state = "";
+        if (entityEntry.isNew())
+            state += "new,";
+        if (entityEntry.isManaged())
+            state += "managed,";
+        if (entityEntry.isDetached())
+            state += "detached,";
+        if (entityEntry.isRemoved())
+            state += "removed,";
+
+        if (state.length() > 0)
+            state = state.substring(0, state.length() - 1);
+
+        return entity.getClass().getName() + "-" + entityEntry.getEntityId() + " [" + state + "]";
     }
 
-    public static boolean equals(Object o1, Object o2) {
-        return true;
+    public static boolean equals(ManagedEntity<?> o1, Object o2) {
+        if (o1 == o2)
+            return true;
+
+        if (o2 == null || o1.getClass() != o2.getClass())
+            return false;
+
+        if (o1.__getEntityEntry().getEntityId() == null && ((ManagedEntity<?>) o2).__getEntityEntry().getEntityId() == null)
+            return false;
+
+        return Objects.equals(o1.__getEntityEntry().getEntityId(), ((ManagedEntity<?>) o2).__getEntityEntry().getEntityId());
+    }
+
+    @SuppressWarnings("unused")
+    public static void fireListeners(ManagedEntity<?> entity, String property, Object prevValue, Object newValue) {
+        if (!EntityValues.propertyValueEquals(prevValue, newValue)) {
+            ((BaseManagedEntityEntry<?>) entity.__getEntityEntry()).firePropertyChanged(property, prevValue, newValue);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static void writeObject(ManagedEntity<?> entity, ObjectOutputStream outputStream) {
+        ManagedEntityEntry<?> entityEntry = entity.__getEntityEntry();
+        if (entityEntry.isManaged()) {
+            entityEntry.setManaged(false);
+            entityEntry.setDetached(true);
+        }
     }
 }
+
+
+
+

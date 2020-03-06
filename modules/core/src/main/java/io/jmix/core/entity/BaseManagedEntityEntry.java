@@ -167,19 +167,13 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
 
     @Override
     public void copy(ManagedEntityEntry<?> entry) {
+        if (entry != null) {
+            setNew(entry.isNew());
+            setDetached(entry.isDetached());
+            setManaged(entry.isManaged());
+            setRemoved(entry.isRemoved());
 
-        setNew(entry.isNew());
-        setDetached(entry.isDetached());
-        setManaged(entry.isManaged());
-        setRemoved(entry.isRemoved());
-
-        setSecurityState(entry.getSecurityState());
-
-    }
-
-    @Override
-    public void clear() {
-        state = 0;
-        securityState = new SecurityState();
+            setSecurityState(entry.getSecurityState());
+        }
     }
 }

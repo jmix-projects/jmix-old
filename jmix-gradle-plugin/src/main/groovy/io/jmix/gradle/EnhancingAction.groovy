@@ -158,6 +158,6 @@ class EnhancingAction implements Action<Task> {
     }
 
     protected static List<EnhancingStep> enhancingSteps() {
-        Arrays.asList(new EntityEntryEnhancingStep(), new SettersEnhancingStep(), new TransientEntityEntryEnhancingStep())
+        Arrays.asList(new EntityEntryEnhancingStep(), new SettersEnhancingStep(), new TransientAnnotationEnhancingStep())
     }
 }

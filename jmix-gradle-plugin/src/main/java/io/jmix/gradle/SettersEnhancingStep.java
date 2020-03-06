@@ -86,9 +86,7 @@ public class SettersEnhancingStep extends BaseEnhancingStep {
 
             ctMethod.insertAfter(
                     "__new = this.get" + StringUtils.capitalize(fieldName) + "();" +
-                            "if (!io.jmix.core.entity.EntityAccessor.propertyValueEquals(__prev, __new)) {" +
-                            "  this.__getEntityEntry().firePropertyChanged(\"" + fieldName + "\", __prev, __new);" +
-                            "}"
+                            "io.jmix.core.entity.EntityInternals.fireListeners(this, \"" + fieldName + "\", __prev, __new);"
             );
         }
     }

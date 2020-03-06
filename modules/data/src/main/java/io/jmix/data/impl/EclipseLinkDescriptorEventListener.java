@@ -89,8 +89,8 @@ public class EclipseLinkDescriptorEventListener implements DescriptorEventListen
     public void postClone(DescriptorEvent event) {
         // in shared cache mode, postBuild event is missed, so we repeat it here
         if (event.getObject() instanceof ManagedEntity) {
-            ((ManagedEntity) event.getObject()).__getEntityEntry().clear();
-            ((ManagedEntity) event.getObject()).__getEntityEntry().setNew(false);
+            ((ManagedEntity<?>) event.getObject()).__copyEntityEntry();
+            ((ManagedEntity<?>) event.getObject()).__getEntityEntry().setNew(false);
         }
         if (event.getObject() instanceof FetchGroupTracker) {
             FetchGroupTracker entity = (FetchGroupTracker) event.getObject();
