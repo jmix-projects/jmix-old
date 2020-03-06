@@ -48,6 +48,9 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
     protected void initStandardLoaders() {
         super.initStandardLoaders();
 
+        loaders.put(TimeField.NAME, CubaTimeFieldLoader.class);
+        loaders.put(LookupField.NAME, CubaLookupFieldLoader.class);
+        loaders.put(LookupPickerField.NAME, CubaLookupPickerFieldLoader.class);
         loaders.put(PickerField.NAME, CubaPickerFieldLoader.class);
         loaders.put(PasswordField.NAME, CubaPasswordFieldLoader.class);
         loaders.put(RichTextArea.NAME, CubaRichTextAreaLoader.class);

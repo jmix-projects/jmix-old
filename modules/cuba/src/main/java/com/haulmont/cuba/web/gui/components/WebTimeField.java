@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
+package com.haulmont.cuba.web.gui.components;
 
-import io.jmix.core.entity.Entity;
+import com.haulmont.cuba.web.components.TimeField;
 
 @Deprecated
-public interface LookupPickerField<V extends Entity> extends io.jmix.ui.components.LookupPickerField<V>, LookupField<V> {
-
-    String NAME = io.jmix.ui.components.LookupPickerField.NAME;
+public class WebTimeField<V> extends io.jmix.ui.components.impl.WebTimeField<V> implements TimeField<V> {
 }
