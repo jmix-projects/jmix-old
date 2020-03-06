@@ -33,11 +33,12 @@ public class ImageLoader extends AbstractResourceViewLoader<Image> {
     public void loadComponent() {
         super.loadComponent();
 
-        loadContainer(resultComponent, element);
+        loadData(resultComponent, element);
+        /* todo move to legacy loader
         if (resultComponent.getValueSource() == null) {
             loadDatasource(resultComponent, element);
         }
-
+        */
         loadScaleMode(resultComponent, element);
     }
 
@@ -54,7 +55,7 @@ public class ImageLoader extends AbstractResourceViewLoader<Image> {
         final String datasource = element.attributeValue("datasource");
         if (!StringUtils.isEmpty(datasource)) {
             /*
-            TODO: legacy-ui
+            TODO: move to legacy loader
             Datasource ds = getComponentContext().getDsContext().get(datasource);
             if (ds == null) {
                 throw new GuiDevelopmentException(String.format("Datasource '%s' is not defined", datasource),

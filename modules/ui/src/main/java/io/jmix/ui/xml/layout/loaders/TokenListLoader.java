@@ -41,7 +41,7 @@ public class TokenListLoader extends AbstractFieldLoader<TokenList> {
         assignXmlDescriptor(resultComponent, element);
         assignFrame(resultComponent);
 
-        loadTokenListItems(element);
+        loadData(resultComponent, element);
 
         loadVisible(resultComponent, element);
         loadEditable(resultComponent, element);
@@ -82,10 +82,10 @@ public class TokenListLoader extends AbstractFieldLoader<TokenList> {
     }
 
     protected void loadTokenListItems(Element element) {
-        loadContainer(resultComponent, element);
-        if (resultComponent.getValueSource() == null) {
-            loadDatasource(resultComponent, element);
-        }
+        // TODO: move to legacy loader
+//        if (resultComponent.getValueSource() == null) {
+//            loadDatasource(resultComponent, element);
+//        }
     }
 
     protected void loadRefreshOptionsOnLookupClose(TokenList component, Element element) {
@@ -178,7 +178,7 @@ public class TokenListLoader extends AbstractFieldLoader<TokenList> {
             String optionsDatasource = lookupElement.attributeValue("optionsDatasource");
             if (!StringUtils.isEmpty(optionsDatasource)) {
                 /*
-                TODO: legacy-ui
+                TODO: move to legacy loader?
                 CollectionDatasource ds =
                         (CollectionDatasource) getComponentContext().getDsContext().get(optionsDatasource);
                 component.setOptionsDatasource(ds);*/
@@ -244,7 +244,7 @@ public class TokenListLoader extends AbstractFieldLoader<TokenList> {
     @SuppressWarnings("unchecked")
     protected void loadDatasource(TokenList tokenList, Element element) {
         /*
-        TODO: legacy-ui
+        TODO: move to legacy loader?
         final String datasourceId = element.attributeValue("datasource");
         if (StringUtils.isNotEmpty(datasourceId)) {
             Datasource datasource = getComponentContext().getDsContext().get(datasourceId);

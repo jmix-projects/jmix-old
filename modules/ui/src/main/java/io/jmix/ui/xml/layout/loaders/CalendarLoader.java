@@ -68,7 +68,7 @@ public class CalendarLoader extends AbstractComponentLoader<Calendar> {
         loadStyleName(resultComponent, element);
         loadIcon(resultComponent, element);
 
-        loadData(resultComponent, element);
+        loadCalendarData(resultComponent, element);
 
         loadDatatype(resultComponent, element);
 
@@ -90,7 +90,7 @@ public class CalendarLoader extends AbstractComponentLoader<Calendar> {
         loadMonthNames(resultComponent, element);
     }
 
-    protected void loadData(Calendar component, Element element) {
+    protected void loadCalendarData(Calendar component, Element element) {
         String containerId = element.attributeValue("dataContainer");
         String datasource = element.attributeValue("datasource");
 

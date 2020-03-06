@@ -60,8 +60,8 @@ public abstract class AbstractOptionsBaseLoader<T extends OptionsField> extends 
 
     @SuppressWarnings("unchecked")
     @Override
-    protected void loadContainer(T component, Element element) {
-        super.loadContainer(component, element);
+    protected void loadData(T component, Element element) {
+        super.loadData(component, element);
 
         loadOptionsContainer(element).ifPresent(optionsContainer ->
                 component.setOptions(new ContainerOptions(optionsContainer)));

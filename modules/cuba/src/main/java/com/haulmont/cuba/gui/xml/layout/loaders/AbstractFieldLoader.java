@@ -44,7 +44,7 @@ public abstract class AbstractFieldLoader<T extends Field>
         assignFrame(resultComponent);
         assignXmlDescriptor(resultComponent, element);
 
-        loadContainer(resultComponent, element);
+        loadData(resultComponent, element);
         if (resultComponent.getValueSource() == null) {
             loadDatasource(resultComponent, element, getContext());
         }
