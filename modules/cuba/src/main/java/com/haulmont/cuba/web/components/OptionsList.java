@@ -18,6 +18,6 @@ package com.haulmont.cuba.web.components;
 
 import com.haulmont.cuba.gui.components.OptionsField;
 
-public interface OptionsList<V, I>
-        extends OptionsField<V, I>, io.jmix.ui.components.OptionsList<V, I> {
+@Deprecated
+public interface OptionsList<V, I> extends OptionsField<V, I>, io.jmix.ui.components.OptionsList<V, I> {
 }

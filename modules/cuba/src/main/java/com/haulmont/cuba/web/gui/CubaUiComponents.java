@@ -16,13 +16,7 @@
 
 package com.haulmont.cuba.web.gui;
 
-import com.haulmont.cuba.gui.components.FieldGroup;
-import com.haulmont.cuba.gui.components.Filter;
-import com.haulmont.cuba.web.components.CheckBox;
-import com.haulmont.cuba.web.components.DateField;
-import com.haulmont.cuba.web.components.DatePicker;
-import com.haulmont.cuba.web.components.Label;
-import com.haulmont.cuba.web.components.OptionsList;
+import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.web.gui.components.*;
 import io.jmix.ui.components.*;
 import io.jmix.ui.sys.WebUiComponents;
@@ -32,6 +26,8 @@ public class CubaUiComponents extends WebUiComponents {
     public static final String NAME = "cuba_UiComponents";
 
     {
+        classes.put(SuggestionPickerField.NAME, WebSuggestionPickerField.class);
+        classes.put(SuggestionField.NAME, WebSuggestionField.class);
         classes.put(Slider.NAME, WebSlider.class);
         classes.put(CurrencyField.NAME, WebCurrencyField.class);
         classes.put(ColorPicker.NAME, WebColorPicker.class);

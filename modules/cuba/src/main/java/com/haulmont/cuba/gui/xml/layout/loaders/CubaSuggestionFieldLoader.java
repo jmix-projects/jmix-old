@@ -17,32 +17,26 @@
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
-import com.haulmont.cuba.gui.components.OptionsField;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.web.components.LookupField;
-import io.jmix.ui.xml.layout.loaders.LookupFieldLoader;
+import com.haulmont.cuba.web.components.SuggestionField;
+import io.jmix.ui.xml.layout.loaders.SuggestionFieldLoader;
 import org.dom4j.Element;
 
-public class CubaLookupFieldLoader extends LookupFieldLoader {
+public class CubaSuggestionFieldLoader extends SuggestionFieldLoader {
 
     @Override
     public void createComponent() {
-        resultComponent = factory.create(LookupField.NAME);
+        resultComponent = factory.create(SuggestionField.NAME);
         loadId(resultComponent, element);
     }
 
     @SuppressWarnings("rawtypes")
     @Override
-    protected void loadData(io.jmix.ui.components.LookupField component, Element element) {
+    protected void loadData(io.jmix.ui.components.SuggestionField component, Element element) {
         super.loadData(component, element);
 
         if (resultComponent.getValueSource() == null) {
             DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
-                    (ComponentLoaderContext) getComponentContext());
-        }
-
-        if (resultComponent.getOptions() == null) {
-            DatasourceLoaderHelper.loadOptionsDatasource((OptionsField) component, element,
                     (ComponentLoaderContext) getComponentContext());
         }
     }

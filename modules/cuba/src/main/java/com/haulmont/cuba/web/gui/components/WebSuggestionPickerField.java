@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@
 
 package com.haulmont.cuba.web.gui.components;
 
-import com.haulmont.cuba.web.components.OptionsList;
+import com.haulmont.cuba.web.components.SuggestionPickerField;
+import io.jmix.core.entity.Entity;
 
 @Deprecated
-public class WebOptionsList<V, I> extends io.jmix.ui.components.impl.WebOptionsList<V, I> implements OptionsList<V, I> {
+public class WebSuggestionPickerField<V extends Entity> extends io.jmix.ui.components.impl.WebSuggestionPickerField<V>
+        implements SuggestionPickerField<V> {
 }

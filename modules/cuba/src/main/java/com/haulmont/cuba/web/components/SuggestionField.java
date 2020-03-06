@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.gui.components;
+package com.haulmont.cuba.web.components;
 
-import com.haulmont.cuba.web.components.OptionsList;
+import com.haulmont.cuba.gui.components.Field;
 
 @Deprecated
-public class WebOptionsList<V, I> extends io.jmix.ui.components.impl.WebOptionsList<V, I> implements OptionsList<V, I> {
+public interface SuggestionField<V> extends Field<V>, io.jmix.ui.components.SuggestionField<V> {
 }
