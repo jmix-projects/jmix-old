@@ -22,7 +22,12 @@ import io.jmix.data.JmixDataConfiguration;
 import io.jmix.data.impl.JmixEntityManagerFactoryBean;
 import io.jmix.data.impl.JmixTransactionManager;
 import io.jmix.data.impl.PersistenceConfigProcessor;
+import io.jmix.data.impl.liquibase.LiquibaseChangeLogProcessor;
+import liquibase.integration.spring.SpringLiquibase;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -53,5 +58,19 @@ public class JmixDataAutoConfiguration {
     protected PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         return new JmixTransactionManager(Stores.MAIN, entityManagerFactory);
     }
-}
 
+    @Bean("jmix_LiquibaseProperties")
+    @ConfigurationProperties(prefix = "jmix.liquibase")
+    @ConditionalOnClass({SpringLiquibase.class})
+    @ConditionalOnMissingBean(name = "jmix_LiquibaseProperties")
+    public LiquibaseProperties liquibaseProperties() {
+        return new LiquibaseProperties();
+    }
+
+    @Bean(name = "jmix_Liquibase")
+    @ConditionalOnClass({SpringLiquibase.class})
+    @ConditionalOnMissingBean(name = "jmix_Liquibase")
+    public SpringLiquibase liquibase(DataSource dataSource, LiquibaseChangeLogProcessor processor) {
+        return JmixLiquibase.create(dataSource, liquibaseProperties(), processor, Stores.MAIN);
+    }
+}
