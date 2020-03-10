@@ -18,9 +18,6 @@ package io.jmix.core.entity;
 import io.jmix.core.entity.annotation.UnavailableInSecurityConstraints;
 
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
-import java.io.IOException;
-import java.util.Objects;
 
 /**
  * Base class for entities.
@@ -41,21 +38,9 @@ public abstract class BaseGenericIdEntity<T> implements Entity<T> {
 
     private static final long serialVersionUID = -8400641366148656528L;
 
-    // todo dynamic attributes
-//    @Transient
-//    protected Map<String, CategoryAttributeValue> dynamicAttributes = null;
-
     public abstract void setId(T id);
 
     public abstract T getId();
-
-//    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-//        if (__getEntityEntry().isManaged()) {
-//            __getEntityEntry().setManaged(false);
-//            __getEntityEntry().setDetached(true);
-//        }
-//        out.defaultWriteObject();
-//    }
 
     // todo dynamic attributes
 //    @Override

@@ -36,12 +36,11 @@ public abstract class BaseIntIdentityIdEntity extends BaseDbGeneratedIdEntity<In
     protected Integer id;
 
     @Override
-    protected void setDbGeneratedId(Integer id) {
-        this.id = id;
+    public Integer getId() {
+        return id;
     }
 
-    @Override
-    protected Integer getDbGeneratedId() {
-        return id;
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

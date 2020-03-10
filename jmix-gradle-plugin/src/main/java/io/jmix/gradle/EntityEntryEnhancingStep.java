@@ -40,8 +40,9 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
     protected void executeInternal(CtClass ctClass) throws IOException, CannotCompileException, NotFoundException {
 
         CtField primaryKey = getPrimaryKey(ctClass);
+        boolean embeddable = isJpaEmbeddable(ctClass);
 
-        if (primaryKey != null) {
+        if (primaryKey != null || embeddable) {
 
             makeEntityEntryClass(ctClass, primaryKey);
 
@@ -49,13 +50,15 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
 
             makeEntityEntryMethods(ctClass);
 
-            makeEqualsMethod(ctClass);
+            if (!embeddable) {
+                makeEqualsMethod(ctClass);
 
-            makeHashCodeMethod(ctClass);
+                makeHashCodeMethod(ctClass);
 
-            makeToStringMethod(ctClass);
+                makeToStringMethod(ctClass);
 
-            makeWriteObjectMethod(ctClass);
+                makeWriteObjectMethod(ctClass);
+            }
         }
 
         ctClass.addInterface(classPool.get(ENTITY_ENTRY_ENHANCED_TYPE));
@@ -63,24 +66,52 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
 
     protected void makeEntityEntryClass(CtClass ctClass, CtField primaryKey) throws CannotCompileException, NotFoundException, IOException {
         CtClass nestedCtClass = ctClass.makeNestedClass(GEN_ENTITY_ENTRY_CLASS_NAME, true);
-        nestedCtClass.setSuperclass(classPool.get(BASE_ENTITY_ENTRY_TYPE));
 
-        CtMethod getIdMethod = CtNewMethod.make(classPool.get(OBJECT_TYPE), "getEntityId",
-                null, null,
-                String.format("return ((%s)getSource()).get%s();",
-                        ctClass.getName(),
-                        StringUtils.capitalize(primaryKey.getName())),
-                nestedCtClass);
-        nestedCtClass.addMethod(getIdMethod);
+        if (primaryKey == null) {
+            nestedCtClass.setSuperclass(classPool.get(BASE_ENTITY_ENTRY_TYPE));
+            CtMethod getIdMethod = CtNewMethod.make(classPool.get(Object.class.getName()), "getEntityId",
+                    null, null,
+                    "return getSource();",
+                    nestedCtClass);
+            nestedCtClass.addMethod(getIdMethod);
 
-        CtMethod setIdMethod = CtNewMethod.make(CtClass.voidType, "setEntityId",
-                new CtClass[]{classPool.get(OBJECT_TYPE)}, null,
-                String.format("((%s)getSource()).set%s((%s)$1);",
-                        ctClass.getName(),
-                        StringUtils.capitalize(primaryKey.getName()),
-                        primaryKey.getType().getName()),
-                nestedCtClass);
-        nestedCtClass.addMethod(setIdMethod);
+            CtMethod setIdMethod = CtNewMethod.make(CtClass.voidType, "setEntityId",
+                    new CtClass[]{classPool.get(Object.class.getName())}, null,
+                    null,
+                    nestedCtClass);
+            nestedCtClass.addMethod(setIdMethod);
+        } else {
+            boolean pkGeneratedValue = isPkGeneratedValue(primaryKey);
+
+            String getterName;
+            String setterName;
+            if (pkGeneratedValue) {
+                nestedCtClass.setSuperclass(classPool.get(BASE_DB_GENERATED_ID_ENTITY_ENTRY_TYPE));
+                getterName = "getDbGeneratedId";
+                setterName = "setDbGeneratedId";
+            } else {
+                nestedCtClass.setSuperclass(classPool.get(BASE_ENTITY_ENTRY_TYPE));
+                getterName = "getEntityId";
+                setterName = "setEntityId";
+            }
+
+            CtMethod getIdMethod = CtNewMethod.make(classPool.get(Object.class.getName()), getterName,
+                    null, null,
+                    String.format("return ((%s)getSource()).get%s();",
+                            ctClass.getName(),
+                            StringUtils.capitalize(primaryKey.getName())),
+                    nestedCtClass);
+            nestedCtClass.addMethod(getIdMethod);
+
+            CtMethod setIdMethod = CtNewMethod.make(CtClass.voidType, setterName,
+                    new CtClass[]{classPool.get(Object.class.getName())}, null,
+                    String.format("((%s)getSource()).set%s((%s)$1);",
+                            ctClass.getName(),
+                            StringUtils.capitalize(primaryKey.getName()),
+                            primaryKey.getType().getName()),
+                    nestedCtClass);
+            nestedCtClass.addMethod(setIdMethod);
+        }
 
         nestedCtClass.writeFile(outputDir);
     }
@@ -113,7 +144,7 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
 
     protected void makeEqualsMethod(CtClass ctClass) throws NotFoundException, CannotCompileException {
         if (findEqualsMethod(ctClass) == null) {
-            CtMethod entryMethod = CtNewMethod.make(CtClass.booleanType, "equals", new CtClass[]{classPool.get(OBJECT_TYPE)}, null,
+            CtMethod entryMethod = CtNewMethod.make(CtClass.booleanType, "equals", new CtClass[]{classPool.get(Object.class.getName())}, null,
                     "return io.jmix.core.entity.EntityInternals.equals(this, $1);", ctClass);
             ctClass.addMethod(entryMethod);
         }

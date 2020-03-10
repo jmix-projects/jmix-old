@@ -27,8 +27,7 @@ public class MetaModelUtil {
     public static final String GENERIC_ENTITY_TYPE = "io.jmix.core.entity.ManagedEntity";
     public static final String ENTITY_ENTRY_TYPE = "io.jmix.core.entity.ManagedEntityEntry";
     public static final String BASE_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.BaseManagedEntityEntry";
-    public static final String OBJECT_TYPE = "java.lang.Object";
-    public static final String STRING_TYPE = "java.lang.String";
+    public static final String BASE_DB_GENERATED_ID_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.BaseDbGeneratedIdEntityEntry";
 
     public static final String SETTERS_ENHANCED_TYPE = "io.jmix.core.entity.JmixSettersEnhanced";
     public static final String ENTITY_ENTRY_ENHANCED_TYPE = "io.jmix.core.entity.JmixEntityEntryEnhanced";
@@ -43,7 +42,6 @@ public class MetaModelUtil {
     public static final String GET_ENTITY_ENTRY_METHOD_NAME = "__getEntityEntry";
     public static final String COPY_ENTITY_ENTRY_METHOD_NAME = "__copyEntityEntry";
     public static final String WRITE_OBJECT_METHOD_NAME = "writeObject";
-
 
     public static final String GEN_ENTITY_ENTRY_VAR_NAME = "_jmixEntityEntry";
     public static final String GEN_ENTITY_ENTRY_CLASS_NAME = "JmixEntityEntry";
@@ -121,6 +119,18 @@ public class MetaModelUtil {
         return null;
     }
 
+    public static boolean isPkGeneratedValue(CtField field) {
+        AnnotationsAttribute annotationsInfo = (AnnotationsAttribute) field.getFieldInfo().getAttribute(AnnotationsAttribute.visibleTag);
+
+        if (annotationsInfo != null) {
+            if (annotationsInfo.getAnnotation("javax.persistence.GeneratedValue") != null) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static boolean isPersistentMethod(CtMethod ctMethod) {
         return ctMethod.getName().startsWith("_persistence_get_") ||
                 ctMethod.getName().startsWith("_persistence_set_");
@@ -165,7 +175,7 @@ public class MetaModelUtil {
             if ("equals".equals(method.getName())) {
                 if (CtClass.booleanType.equals(method.getReturnType())
                         && method.getParameterTypes().length == 1
-                        && OBJECT_TYPE.equals(method.getParameterTypes()[0].getName())) {
+                        && Object.class.getName().equals(method.getParameterTypes()[0].getName())) {
                     return method;
                 }
             }

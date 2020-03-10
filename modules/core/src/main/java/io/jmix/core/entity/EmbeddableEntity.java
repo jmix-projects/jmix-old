@@ -23,38 +23,6 @@ import javax.persistence.Transient;
  */
 @MappedSuperclass
 @io.jmix.core.metamodel.annotations.MetaClass(name = "sys$EmbeddableEntity")
-public abstract class EmbeddableEntity implements Entity<Object>, ManagedEntity<Object> {
-
+public abstract class EmbeddableEntity implements Entity<Object> {
     private static final long serialVersionUID = 266201862280559076L;
-
-    @Transient
-    protected ManagedEntityEntry<Object> __entityEntry;
-
-    protected static class EmbeddableEntityEntry extends BaseManagedEntityEntry<Object> {
-        public EmbeddableEntityEntry(EmbeddableEntity entity) {
-            super(entity);
-        }
-
-        @Override
-        public void setEntityId(Object id) {
-        }
-
-        @Override
-        public Object getEntityId() {
-            return source;
-        }
-    }
-
-    @Override
-    public ManagedEntityEntry<Object> __getEntityEntry() {
-        if (__entityEntry == null) {
-            __entityEntry = new EmbeddableEntityEntry(this);
-        }
-        return __entityEntry;
-    }
-
-    @Override
-    public void __copyEntityEntry() {
-
-    }
 }

@@ -28,38 +28,6 @@ import javax.persistence.Transient;
 @MappedSuperclass
 @MetaClass(name = "sys$BaseDbGeneratedIdEntity")
 @UnavailableInSecurityConstraints
-public abstract class BaseDbGeneratedIdEntity<K extends Number> extends BaseGenericIdEntity<IdProxy<K>> {
-
+public abstract class BaseDbGeneratedIdEntity<K extends Number> extends BaseGenericIdEntity<K> {
     private static final long serialVersionUID = 4012145014806449285L;
-
-    @Transient
-    protected IdProxy<K> idProxy;
-
-    public IdProxy<K> getId() {
-        if (idProxy == null) {
-            idProxy = new IdProxy<>(this);
-        }
-        // return a copy cleaned from the reference to the entity
-        return idProxy.copy();
-    }
-
-    @Override
-    public void setId(IdProxy<K> idProxy) {
-        this.idProxy = idProxy.copy(false);
-        setDbGeneratedId(this.idProxy.get());
-        this.idProxy.setEntity(this);
-    }
-
-    protected abstract void setDbGeneratedId(K dbId);
-
-    protected abstract K getDbGeneratedId();
-
-//    @SuppressWarnings("unchecked")
-//    @Override
-//    protected void copySystemState(BaseGenericIdEntity src) {
-//        super.copySystemState(src);
-//        if (src instanceof BaseDbGeneratedIdEntity) {
-//            setDbGeneratedId((K) ((BaseDbGeneratedIdEntity) src).getDbGeneratedId());
-//        }
-//    }
 }

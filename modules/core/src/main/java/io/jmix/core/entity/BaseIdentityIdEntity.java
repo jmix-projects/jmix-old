@@ -35,13 +35,11 @@ public abstract class BaseIdentityIdEntity extends BaseDbGeneratedIdEntity<Long>
     @Column(name = "ID")
     protected Long id;
 
-    @Override
-    protected void setDbGeneratedId(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    @Override
-    protected Long getDbGeneratedId() {
+    public Long getId() {
         return id;
     }
 }
