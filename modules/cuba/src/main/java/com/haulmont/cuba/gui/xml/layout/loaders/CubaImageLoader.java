@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.xml.layout.loaders;
+package com.haulmont.cuba.gui.xml.layout.loaders;
 
-import io.jmix.ui.GuiDevelopmentException;
-import io.jmix.ui.components.Image;
-import org.apache.commons.lang3.StringUtils;
+import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
+import com.haulmont.cuba.web.components.Image;
+import io.jmix.ui.xml.layout.loaders.ImageLoader;
 import org.dom4j.Element;
 
-public class ImageLoader extends AbstractResourceViewLoader<Image> {
+public class CubaImageLoader extends ImageLoader {
 
     @Override
     public void createComponent() {
@@ -29,20 +30,14 @@ public class ImageLoader extends AbstractResourceViewLoader<Image> {
         loadId(resultComponent, element);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public void loadComponent() {
-        super.loadComponent();
+    protected void loadData(io.jmix.ui.components.Image component, Element element) {
+        super.loadData(component, element);
 
-        loadData(resultComponent, element);
-        loadScaleMode(resultComponent, element);
-    }
-
-    protected void loadScaleMode(Image image, Element element) {
-        String scaleModeString = element.attributeValue("scaleMode");
-        Image.ScaleMode scaleMode = Image.ScaleMode.NONE;
-        if (scaleModeString != null) {
-            scaleMode = Image.ScaleMode.valueOf(scaleModeString);
+        if (resultComponent.getValueSource() == null) {
+            DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
+                    (ComponentLoaderContext) getComponentContext());
         }
-        image.setScaleMode(scaleMode);
     }
 }

@@ -19,6 +19,5 @@ package com.haulmont.cuba.web.gui.components;
 import com.haulmont.cuba.web.components.DatePicker;
 
 @Deprecated
-public class WebDatePicker<V> extends io.jmix.ui.components.impl.WebDatePicker<V>
-        implements DatePicker<V> {
+public class WebDatePicker<V> extends io.jmix.ui.components.impl.WebDatePicker<V> implements DatePicker<V> {
 }

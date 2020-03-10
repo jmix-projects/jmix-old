@@ -18,5 +18,6 @@ package com.haulmont.cuba.web.components;
 
 import com.haulmont.cuba.gui.components.Field;
 
+@Deprecated
 public interface CheckBox extends Field<Boolean>, io.jmix.ui.components.CheckBox {
 }

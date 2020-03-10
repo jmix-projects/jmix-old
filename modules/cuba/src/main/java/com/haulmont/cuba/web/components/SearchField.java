@@ -16,8 +16,8 @@
 
 package com.haulmont.cuba.web.components;
 
-public interface SearchField<V>
-        extends LookupField<V>, io.jmix.ui.components.SearchField<V> {
+@Deprecated
+public interface SearchField<V> extends LookupField<V>, io.jmix.ui.components.SearchField<V> {
 
-    String NAME = "searchField";
+    String NAME = io.jmix.ui.components.SearchField.NAME;
 }

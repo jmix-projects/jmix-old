@@ -48,6 +48,10 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
     protected void initStandardLoaders() {
         super.initStandardLoaders();
 
+        loaders.put(Image.NAME, CubaImageLoader.class);
+        loaders.put(SearchPickerField.NAME, CubaSearchPickerFieldLoader.class);
+        loaders.put(SearchField.NAME, CubaSearchFieldLoader.class);
+        loaders.put(CheckBox.NAME, CubaCheckBoxLoader.class);
         loaders.put(Label.NAME, CubaLabelLoader.class);
         loaders.put(CheckBoxGroup.NAME, CubaCheckBoxGroupLoader.class);
         loaders.put(RadioButtonGroup.NAME, CubaRadioButtonGroupLoader.class);
@@ -59,6 +63,7 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
         loaders.put(CurrencyField.NAME, CubaCurrencyFieldLoader.class);
         loaders.put(ColorPicker.NAME, CubaColorPickerLoader.class);
         loaders.put(DateField.NAME, CubaDateFieldLoader.class);
+        loaders.put(DatePicker.NAME, CubaDatePickerLoader.class);
         loaders.put(TimeField.NAME, CubaTimeFieldLoader.class);
         loaders.put(LookupField.NAME, CubaLookupFieldLoader.class);
         loaders.put(LookupPickerField.NAME, CubaLookupPickerFieldLoader.class);
