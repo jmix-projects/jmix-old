@@ -29,12 +29,55 @@ import org.dom4j.Element;
 /**
  * Provides helper methods to load datasource and options datasource. Is used only in legacy component loaders.
  */
+@SuppressWarnings("rawtypes")
 public class DatasourceLoaderHelper {
+
+    /**
+     * Loads datasource is ValueSource is null.
+     *
+     * @param component        component to set datasource
+     * @param element          component descriptor
+     * @param context          loader context
+     * @param componentContext component loader context
+     */
+    public static void loadDatasourceIfValueSourceNull(DatasourceComponent component, Element element, ComponentLoader.Context context,
+                                                       ComponentLoaderContext componentContext) {
+        if (component.getValueSource() == null) {
+            loadDatasource(component, element, context, componentContext);
+        }
+    }
+
+    /**
+     * Loads options datasource if Options is null.
+     *
+     * @param field            field to set options datasource
+     * @param element          component descriptor
+     * @param componentContext component loader context
+     */
+    public static void loadOptionsDatasourceIfOptionsNull(OptionsField field, Element element, ComponentLoaderContext componentContext) {
+        if (field.getOptions() == null) {
+            loadOptionsDatasource(field, element, componentContext);
+        }
+    }
+
+    /**
+     * Loads datasource and options datasource if corresponding ValueSource and Options are null.
+     *
+     * @param component        component to set datasource
+     * @param element          component descriptor
+     * @param context          loader context
+     * @param componentContext component loader context
+     */
+    public static void loadDatasourceAndOptions(OptionsField component, Element element, ComponentLoader.Context context,
+                                                ComponentLoaderContext componentContext) {
+        loadDatasourceIfValueSourceNull(component, element, context, componentContext);
+        loadOptionsDatasourceIfOptionsNull(component, element, componentContext);
+    }
 
     /**
      * Load and set datasource to the component.
      *
-     * @param component        to set datasource
+     * @param component        component to set datasource
      * @param element          component descriptor
      * @param context          loader context
      * @param componentContext component loader context

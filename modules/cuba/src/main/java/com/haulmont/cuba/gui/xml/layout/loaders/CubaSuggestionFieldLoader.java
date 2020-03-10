@@ -35,9 +35,8 @@ public class CubaSuggestionFieldLoader extends SuggestionFieldLoader {
     protected void loadData(io.jmix.ui.components.SuggestionField component, Element element) {
         super.loadData(component, element);
 
-        if (resultComponent.getValueSource() == null) {
-            DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
-                    (ComponentLoaderContext) getComponentContext());
-        }
+        DatasourceLoaderHelper.loadDatasourceIfValueSourceNull((DatasourceComponent) resultComponent, element, getContext(),
+                (ComponentLoaderContext) getComponentContext());
+
     }
 }

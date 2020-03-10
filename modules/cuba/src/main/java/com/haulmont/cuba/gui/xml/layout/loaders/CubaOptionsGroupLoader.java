@@ -36,14 +36,7 @@ public class CubaOptionsGroupLoader extends OptionsGroupLoader {
     protected void loadData(io.jmix.ui.components.OptionsGroup component, Element element) {
         super.loadData(component, element);
 
-        if (resultComponent.getValueSource() == null) {
-            DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
-                    (ComponentLoaderContext) getComponentContext());
-        }
-
-        if (resultComponent.getOptions() == null) {
-            DatasourceLoaderHelper.loadOptionsDatasource((OptionsField) component, element,
-                    (ComponentLoaderContext) getComponentContext());
-        }
+        DatasourceLoaderHelper.loadDatasourceAndOptions((OptionsField) resultComponent, element, getContext(),
+                (ComponentLoaderContext) getComponentContext());
     }
 }

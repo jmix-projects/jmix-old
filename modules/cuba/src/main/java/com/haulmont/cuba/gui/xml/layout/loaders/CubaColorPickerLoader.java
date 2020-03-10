@@ -30,13 +30,12 @@ public class CubaColorPickerLoader extends ColorPickerLoader {
         loadId(resultComponent, element);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     protected void loadData(io.jmix.ui.components.ColorPicker component, Element element) {
         super.loadData(component, element);
 
-        if (resultComponent.getValueSource() == null) {
-            DatasourceLoaderHelper.loadDatasource((DatasourceComponent) resultComponent, element, getContext(),
-                    (ComponentLoaderContext) getComponentContext());
-        }
+        DatasourceLoaderHelper.loadDatasourceIfValueSourceNull((DatasourceComponent) resultComponent, element, getContext(),
+                (ComponentLoaderContext) getComponentContext());
     }
 }

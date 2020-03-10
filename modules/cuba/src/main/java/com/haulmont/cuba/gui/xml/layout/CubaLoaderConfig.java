@@ -48,6 +48,8 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
     protected void initStandardLoaders() {
         super.initStandardLoaders();
 
+        loaders.put(TokenList.NAME, CubaTokenListLoader.class);
+        loaders.put(TwinColumn.NAME, CubaTwinColumnLoader.class);
         loaders.put(Image.NAME, CubaImageLoader.class);
         loaders.put(SearchPickerField.NAME, CubaSearchPickerFieldLoader.class);
         loaders.put(SearchField.NAME, CubaSearchFieldLoader.class);

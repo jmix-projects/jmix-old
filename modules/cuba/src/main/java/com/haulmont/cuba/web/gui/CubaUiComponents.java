@@ -26,6 +26,8 @@ public class CubaUiComponents extends WebUiComponents {
     public static final String NAME = "cuba_UiComponents";
 
     {
+        classes.put(TokenList.NAME, WebTokenList.class);
+        classes.put(TwinColumn.NAME, WebTwinColumn.class);
         classes.put(Image.NAME, WebImage.class);
         classes.put(CheckBoxGroup.NAME, WebCheckBoxGroup.class);
         classes.put(RadioButtonGroup.NAME, WebRadioButtonGroup.class);

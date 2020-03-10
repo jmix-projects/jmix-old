@@ -17,24 +17,41 @@
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.data.CollectionDatasource;
+import com.haulmont.cuba.gui.data.Datasource;
+import com.haulmont.cuba.gui.data.options.DatasourceOptions;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.web.components.RichTextArea;
-import io.jmix.ui.xml.layout.loaders.RichTextAreaLoader;
+import com.haulmont.cuba.web.components.TokenList;
+import io.jmix.ui.xml.layout.loaders.TokenListLoader;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
-public class CubaRichTextAreaLoader extends RichTextAreaLoader {
+public class CubaTokenListLoader extends TokenListLoader {
+
     @Override
     public void createComponent() {
-        resultComponent = factory.create(RichTextArea.NAME);
+        resultComponent = factory.create(TokenList.NAME);
         loadId(resultComponent, element);
     }
 
     @SuppressWarnings("rawtypes")
     @Override
-    protected void loadData(io.jmix.ui.components.RichTextArea component, Element element) {
+    protected void loadData(io.jmix.ui.components.TokenList component, Element element) {
         super.loadData(component, element);
 
         DatasourceLoaderHelper.loadDatasourceIfValueSourceNull((DatasourceComponent) resultComponent, element, getContext(),
                 (ComponentLoaderContext) getComponentContext());
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected void loadOptionsContainer(io.jmix.ui.components.TokenList component, Element lookupElement) {
+        super.loadOptionsContainer(component, lookupElement);
+
+        String datasource = lookupElement.attributeValue("optionsDatasource");
+        if (!StringUtils.isEmpty(datasource)) {
+            Datasource ds = ((ComponentLoaderContext) getComponentContext()).getDsContext().get(datasource);
+            component.setOptions(new DatasourceOptions((CollectionDatasource) ds));
+        }
     }
 }

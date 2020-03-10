@@ -18,21 +18,21 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.OptionsField;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.web.components.RadioButtonGroup;
-import io.jmix.ui.xml.layout.loaders.RadioButtonGroupLoader;
+import com.haulmont.cuba.web.components.TwinColumn;
+import io.jmix.ui.xml.layout.loaders.TwinColumnLoader;
 import org.dom4j.Element;
 
-public class CubaRadioButtonGroupLoader extends RadioButtonGroupLoader {
+public class CubaTwinColumnLoader extends TwinColumnLoader {
 
     @Override
     public void createComponent() {
-        resultComponent = factory.create(RadioButtonGroup.NAME);
+        resultComponent = factory.create(TwinColumn.NAME);
         loadId(resultComponent, element);
     }
 
     @SuppressWarnings("rawtypes")
     @Override
-    protected void loadData(io.jmix.ui.components.RadioButtonGroup component, Element element) {
+    protected void loadData(io.jmix.ui.components.TwinColumn component, Element element) {
         super.loadData(component, element);
 
         DatasourceLoaderHelper.loadDatasourceAndOptions((OptionsField) resultComponent, element, getContext(),
