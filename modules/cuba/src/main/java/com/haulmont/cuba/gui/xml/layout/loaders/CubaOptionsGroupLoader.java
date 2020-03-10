@@ -16,10 +16,9 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.DatasourceComponent;
 import com.haulmont.cuba.gui.components.OptionsField;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.web.components.OptionsGroup;
+import com.haulmont.cuba.gui.components.OptionsGroup;
 import io.jmix.ui.xml.layout.loaders.OptionsGroupLoader;
 import org.dom4j.Element;
 

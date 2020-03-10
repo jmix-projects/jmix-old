@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
+package com.haulmont.cuba.gui.components;
 
-import io.jmix.core.entity.Entity;
+import java.util.Collection;
 
 @Deprecated
-public interface SearchPickerField<V extends Entity> extends SearchField<V>, io.jmix.ui.components.SearchPickerField<V> {
-
-    String NAME = io.jmix.ui.components.SearchPickerField.NAME;
+public interface CheckBoxGroup<I> extends OptionsField<Collection<I>, I>, io.jmix.ui.components.CheckBoxGroup<I> {
 }

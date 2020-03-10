@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
-
-import com.haulmont.cuba.gui.components.Field;
-import io.jmix.core.entity.Entity;
+package com.haulmont.cuba.gui.components;
 
 @Deprecated
-public interface PickerField<V extends Entity>
-        extends Field<V>, io.jmix.ui.components.PickerField<V> {
+public interface RadioButtonGroup<I> extends OptionsField<I, I>, io.jmix.ui.components.RadioButtonGroup<I> {
 }

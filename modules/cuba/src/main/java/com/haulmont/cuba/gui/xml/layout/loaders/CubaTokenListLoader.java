@@ -21,7 +21,7 @@ import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.data.options.DatasourceOptions;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.web.components.TokenList;
+import com.haulmont.cuba.gui.components.TokenList;
 import io.jmix.ui.xml.layout.loaders.TokenListLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;

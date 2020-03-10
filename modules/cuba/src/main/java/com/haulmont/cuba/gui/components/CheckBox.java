@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
-
-import com.haulmont.cuba.gui.components.OptionsField;
+package com.haulmont.cuba.gui.components;
 
 @Deprecated
-public interface OptionsList<V, I> extends OptionsField<V, I>, io.jmix.ui.components.OptionsList<V, I> {
+public interface CheckBox extends Field<Boolean>, io.jmix.ui.components.CheckBox {
 }

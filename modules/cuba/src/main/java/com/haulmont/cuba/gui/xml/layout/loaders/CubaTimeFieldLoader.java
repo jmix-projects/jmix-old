@@ -18,7 +18,7 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.web.components.TimeField;
+import com.haulmont.cuba.gui.components.TimeField;
 import io.jmix.ui.xml.layout.loaders.TimeFieldLoader;
 import org.dom4j.Element;
 

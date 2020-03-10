@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Haulmont.
+ * Copyright 2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
-
-import com.haulmont.cuba.gui.components.TextInputField;
+package com.haulmont.cuba.gui.components;
 
 @Deprecated
-public interface MaskedField<V> extends TextInputField<V>, io.jmix.ui.components.MaskedField<V> {
+public interface OptionsList<V, I> extends OptionsField<V, I>, io.jmix.ui.components.OptionsList<V, I> {
 }

@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.web.gui.components;
 
-import com.haulmont.cuba.web.components.CheckBoxGroup;
+import com.haulmont.cuba.gui.components.CheckBoxGroup;
 
 @Deprecated
 public class WebCheckBoxGroup<I> extends io.jmix.ui.components.impl.WebCheckBoxGroup<I> implements CheckBoxGroup<I> {

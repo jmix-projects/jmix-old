@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.web.gui.components;
 
-import com.haulmont.cuba.web.components.SearchPickerField;
+import com.haulmont.cuba.gui.components.SearchPickerField;
 import io.jmix.core.entity.Entity;
 
 @Deprecated

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Haulmont.
+ * Copyright 2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
+package com.haulmont.cuba.gui.components;
 
 @Deprecated
-public interface ResizableTextArea<V> extends TextArea<V>, io.jmix.ui.components.ResizableTextArea<V> {
-
-    String NAME = io.jmix.ui.components.ResizableTextArea.NAME;
+public interface Label<V> extends DatasourceComponent<V>, io.jmix.ui.components.Label<V> {
 }

@@ -18,7 +18,7 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.web.components.Image;
+import com.haulmont.cuba.gui.components.Image;
 import io.jmix.ui.xml.layout.loaders.ImageLoader;
 import org.dom4j.Element;
 

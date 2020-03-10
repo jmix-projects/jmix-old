@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Haulmont.
+ * Copyright 2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
-
-import com.haulmont.cuba.gui.components.Field;
-import io.jmix.core.entity.Entity;
+package com.haulmont.cuba.gui.components;
 
 @Deprecated
-public interface SuggestionPickerField<V extends Entity> extends Field<V>, io.jmix.ui.components.SuggestionPickerField<V> {
+public interface DateField<V> extends Field<V>, io.jmix.ui.components.DateField<V> {
 }

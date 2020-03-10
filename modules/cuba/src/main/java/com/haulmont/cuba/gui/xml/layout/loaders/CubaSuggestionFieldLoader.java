@@ -18,7 +18,7 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.web.components.SuggestionField;
+import com.haulmont.cuba.gui.components.SuggestionField;
 import io.jmix.ui.xml.layout.loaders.SuggestionFieldLoader;
 import org.dom4j.Element;
 

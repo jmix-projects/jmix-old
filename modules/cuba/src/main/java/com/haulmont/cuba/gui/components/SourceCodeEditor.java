@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
-
-import com.haulmont.cuba.gui.components.Field;
+package com.haulmont.cuba.gui.components;
 
 @Deprecated
-public interface TimeField<V> extends Field<V>, io.jmix.ui.components.TimeField<V> {
+public interface SourceCodeEditor extends Field<String>, io.jmix.ui.components.SourceCodeEditor {
 }

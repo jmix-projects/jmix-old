@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.web.gui.components;
 
-import com.haulmont.cuba.web.components.RichTextArea;
+import com.haulmont.cuba.gui.components.RichTextArea;
 
 @Deprecated
 public class WebRichTextArea extends io.jmix.ui.components.impl.WebRichTextArea implements RichTextArea {

@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
-
-import com.haulmont.cuba.gui.components.Field;
-import io.jmix.core.entity.Entity;
-
-import java.util.Collection;
+package com.haulmont.cuba.gui.components;
 
 @Deprecated
-public interface TokenList<V extends Entity> extends Field<Collection<V>>, io.jmix.ui.components.TokenList<V> {
+public interface MaskedField<V> extends TextInputField<V>, io.jmix.ui.components.MaskedField<V> {
 }

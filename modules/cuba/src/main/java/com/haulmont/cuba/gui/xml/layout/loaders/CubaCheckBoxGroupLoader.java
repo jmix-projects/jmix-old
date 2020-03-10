@@ -18,7 +18,7 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.OptionsField;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.web.components.CheckBoxGroup;
+import com.haulmont.cuba.gui.components.CheckBoxGroup;
 import io.jmix.ui.xml.layout.loaders.CheckBoxGroupLoader;
 import org.dom4j.Element;
 

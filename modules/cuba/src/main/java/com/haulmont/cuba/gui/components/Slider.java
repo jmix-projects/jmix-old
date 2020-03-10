@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
-
-import com.haulmont.cuba.gui.components.Field;
+package com.haulmont.cuba.gui.components;
 
 @Deprecated
-public interface CurrencyField<V extends Number> extends Field<V>, io.jmix.ui.components.CurrencyField<V> {
+public interface Slider<V extends Number> extends Field<V>, io.jmix.ui.components.Slider<V> {
 }

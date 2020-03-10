@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.web.gui.components;
 
-import com.haulmont.cuba.web.components.RadioButtonGroup;
+import com.haulmont.cuba.gui.components.RadioButtonGroup;
 
 @Deprecated
 public class WebRadioButtonGroup<V> extends io.jmix.ui.components.impl.WebRadioButtonGroup<V>

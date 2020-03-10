@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.web.gui.components;
 
-import com.haulmont.cuba.web.components.MaskedField;
+import com.haulmont.cuba.gui.components.MaskedField;
 
 @Deprecated
 public class WebMaskedField<V> extends io.jmix.ui.components.impl.WebMaskedField<V> implements MaskedField<V> {

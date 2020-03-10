@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
-
-import com.haulmont.cuba.gui.components.OptionsField;
+package com.haulmont.cuba.gui.components;
 
 @Deprecated
-public interface LookupField<V>
-        extends OptionsField<V, V>, io.jmix.ui.components.LookupField<V> {
+public interface TextField<V> extends TextInputField<V>, io.jmix.ui.components.TextField<V> {
 }

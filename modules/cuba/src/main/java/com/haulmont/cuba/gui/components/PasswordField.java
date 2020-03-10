@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
-
-import com.haulmont.cuba.gui.components.Field;
+package com.haulmont.cuba.gui.components;
 
 @Deprecated
-public interface SuggestionField<V> extends Field<V>, io.jmix.ui.components.SuggestionField<V> {
+public interface PasswordField extends TextInputField<String>, io.jmix.ui.components.PasswordField {
 }

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
+package com.haulmont.cuba.gui.components;
 
-import com.haulmont.cuba.gui.components.OptionsField;
+import io.jmix.core.entity.Entity;
 
 import java.util.Collection;
 
 @Deprecated
-public interface TwinColumn<V> extends OptionsField<Collection<V>, V>, io.jmix.ui.components.TwinColumn<V> {
+public interface TokenList<V extends Entity> extends Field<Collection<V>>, io.jmix.ui.components.TokenList<V> {
 }

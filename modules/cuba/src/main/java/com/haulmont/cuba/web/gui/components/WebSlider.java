@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.web.gui.components;
 
-import com.haulmont.cuba.web.components.Slider;
+import com.haulmont.cuba.gui.components.Slider;
 
 @Deprecated
 public class WebSlider<V extends Number> extends io.jmix.ui.components.impl.WebSlider<V> implements Slider<V> {

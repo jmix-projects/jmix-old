@@ -18,7 +18,7 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.OptionsField;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.web.components.SearchPickerField;
+import com.haulmont.cuba.gui.components.SearchPickerField;
 import io.jmix.ui.components.LookupField;
 import io.jmix.ui.xml.layout.loaders.SearchPickerFieldLoader;
 import org.dom4j.Element;

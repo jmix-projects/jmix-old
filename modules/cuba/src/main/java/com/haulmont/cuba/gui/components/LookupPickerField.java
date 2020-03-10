@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
+package com.haulmont.cuba.gui.components;
 
-import com.haulmont.cuba.gui.components.TextInputField;
+import io.jmix.core.entity.Entity;
 
 @Deprecated
-public interface TextField<V> extends TextInputField<V>, io.jmix.ui.components.TextField<V> {
+public interface LookupPickerField<V extends Entity> extends io.jmix.ui.components.LookupPickerField<V>, LookupField<V> {
+
+    String NAME = io.jmix.ui.components.LookupPickerField.NAME;
 }

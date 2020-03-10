@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
+package com.haulmont.cuba.gui.components;
 
-import com.haulmont.cuba.gui.components.Field;
+import io.jmix.core.entity.Entity;
 
 @Deprecated
-public interface SourceCodeEditor extends Field<String>, io.jmix.ui.components.SourceCodeEditor {
+public interface SearchPickerField<V extends Entity> extends SearchField<V>, io.jmix.ui.components.SearchPickerField<V> {
+
+    String NAME = io.jmix.ui.components.SearchPickerField.NAME;
 }

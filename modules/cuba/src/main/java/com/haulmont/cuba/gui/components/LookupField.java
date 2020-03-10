@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Haulmont.
+ * Copyright 2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.components;
-
-import com.haulmont.cuba.gui.components.TextInputField;
+package com.haulmont.cuba.gui.components;
 
 @Deprecated
-public interface RichTextArea extends TextInputField<String>, io.jmix.ui.components.RichTextArea {
+public interface LookupField<V>
+        extends OptionsField<V, V>, io.jmix.ui.components.LookupField<V> {
 }
