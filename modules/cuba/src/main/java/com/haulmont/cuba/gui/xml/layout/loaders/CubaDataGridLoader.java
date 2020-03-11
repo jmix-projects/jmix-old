@@ -16,57 +16,58 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.TreeTable;
+import com.google.common.base.Strings;
+import com.haulmont.cuba.gui.components.DataGrid;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import io.jmix.ui.xml.layout.loaders.TreeTableLoader;
-import org.dom4j.Element;
+import io.jmix.ui.xml.layout.loaders.DataGridLoader;
 
 @SuppressWarnings("rawtypes")
-public class CubaTreeTableLoader extends TreeTableLoader {
+public class CubaDataGridLoader extends DataGridLoader {
 
     @Override
-    public void createComponent() {
-        resultComponent = factory.create(TreeTable.NAME);
-        loadId(resultComponent, element);
-        createButtonsPanel(resultComponent, element);
+    protected DataGrid createComponentInternal() {
+        return factory.create(DataGrid.NAME);
     }
 
     @Override
-    protected TableDataHolder createTableDataHolder() {
-        return new CubaTreeTableDataHolder();
+    protected DataGridDataHolder createDataGridDataHolder() {
+        return new CubaDataGridDataHolder();
     }
 
     @Override
-    protected boolean initDataContainer(TableDataHolder holder) {
-        Element rowsElement = element.element("rows");
-        if (rowsElement == null) {
+    protected boolean initDataContainer(DataGridDataHolder holder) {
+        String datasourceId = element.attributeValue("datasource");
+        if (Strings.isNullOrEmpty(datasourceId)) {
             return false;
         }
 
-        CollectionDatasource datasource = DatasourceLoaderHelper.loadTableDatasource(
-                element, rowsElement, context, (ComponentLoaderContext) getComponentContext()
+        CollectionDatasource datasource = DatasourceLoaderHelper.loadListComponentDatasource(
+                datasourceId, context, (ComponentLoaderContext) getComponentContext()
         );
 
-        ((CubaTreeTableDataHolder) holder).setDatasource(datasource);
+        ((CubaDataGridDataHolder) holder).setDatasource(datasource);
         holder.setMetaClass(datasource.getMetaClass());
         holder.setFetchPlan(datasource.getView());
+
         return true;
     }
 
     @Override
-    protected boolean setupDataContainer(TableDataHolder holder) {
-        CollectionDatasource datasource = ((CubaTreeTableDataHolder) holder).getDatasource();
+    protected boolean setupDataContainer(DataGridDataHolder holder) {
+        CollectionDatasource datasource = ((CubaDataGridDataHolder) holder).getDatasource();
         if (datasource == null) {
             return false;
         }
+
         // todo dynamic attributes
         // addDynamicAttributes(resultComponent, metaClass, datasource, null, availableColumns);
-        ((TreeTable) resultComponent).setDatasource(datasource);
+
+        ((DataGrid) resultComponent).setDatasource(datasource);
         return true;
     }
 
-    protected static class CubaTreeTableDataHolder extends TableDataHolder {
+    protected static class CubaDataGridDataHolder extends DataGridDataHolder {
 
         protected CollectionDatasource datasource;
 

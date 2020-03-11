@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.components.data.datagrid;
+package com.haulmont.cuba.gui.components.data.datagrid;
 
+import com.haulmont.cuba.gui.components.data.meta.DatasourceDataUnit;
+import com.haulmont.cuba.gui.data.CollectionDatasource;
+import com.haulmont.cuba.gui.data.Datasource;
+import com.haulmont.cuba.gui.data.impl.CollectionDsHelper;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
@@ -24,25 +28,25 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.components.AggregationInfo;
 import io.jmix.ui.components.data.AggregatableDataGridItems;
 import io.jmix.ui.components.data.BindingState;
+import io.jmix.ui.components.data.DataGridItems;
 import io.jmix.ui.components.data.meta.EntityDataGridItems;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-// TODO: legacy-ui
 public class DatasourceDataGridItems<E extends Entity<K>, K>
-        implements EntityDataGridItems<E>, AggregatableDataGridItems<E>/*, DatasourceDataUnit*/ {
+        implements EntityDataGridItems<E>, AggregatableDataGridItems<E>, DatasourceDataUnit {
 
-//    protected CollectionDatasource.Indexed<E, K> datasource;
+    protected CollectionDatasource.Indexed<E, K> datasource;
 
     protected EventHub events = new EventHub();
 
-    /*protected BindingState state = BindingState.INACTIVE;
+    protected BindingState state = BindingState.INACTIVE;
 
     public DatasourceDataGridItems(CollectionDatasource<E, K> datasource) {
         if (!(datasource instanceof CollectionDatasource.Indexed)) {
@@ -77,39 +81,37 @@ public class DatasourceDataGridItems<E extends Entity<K>, K>
     protected void datasourceItemPropertyChanged(Datasource.ItemPropertyChangeEvent<E> e) {
         events.publish(ValueChangeEvent.class, new ValueChangeEvent(this,
                 e.getItem(), e.getProperty(), e.getPrevValue(), e.getValue()));
-    }*/
+    }
 
-    /*protected void datasourceStateChanged(Datasource.StateChangeEvent<E> e) {
+    protected void datasourceStateChanged(Datasource.StateChangeEvent<E> e) {
         if (e.getState() == Datasource.State.VALID) {
             setState(BindingState.ACTIVE);
         } else {
             setState(BindingState.INACTIVE);
         }
-    }*/
+    }
 
-    /*@Override
+    @Override
     public CollectionDatasource<E, K> getDatasource() {
         return datasource;
-    }*/
+    }
 
     @Override
     public MetaClass getEntityMetaClass() {
-        return null;
-        // return datasource.getMetaClass();
+        return datasource.getMetaClass();
     }
 
     @Override
     public BindingState getState() {
-        return null;
-//        return state;
+        return state;
     }
 
     public void setState(BindingState state) {
-        /*if (this.state != state) {
+        if (this.state != state) {
             this.state = state;
 
             events.publish(StateChangeEvent.class, new StateChangeEvent(this, state));
-        }*/
+        }
     }
 
     @Override
@@ -121,60 +123,52 @@ public class DatasourceDataGridItems<E extends Entity<K>, K>
     @SuppressWarnings("unchecked")
     @Override
     public E getItem(@Nullable Object itemId) {
-        return null;
-        // return datasource.getItem((K) itemId);
+        return datasource.getItem((K) itemId);
     }
 
     @Override
     public int indexOfItem(E item) {
         Preconditions.checkNotNullArgument(item);
-        return 0;
-        //return datasource.indexOfId(item.getId());
+        return datasource.indexOfId(item.getId());
     }
 
     @Nullable
     @Override
     public E getItemByIndex(int index) {
-        return null;
-        /*K id = datasource.getIdByIndex(index);
-        return datasource.getItem(id);*/
+        K id = datasource.getIdByIndex(index);
+        return datasource.getItem(id);
     }
 
     @Override
     public Stream<E> getItems() {
-        return Stream.of();
-//        return datasource.getItems().stream();
+        return datasource.getItems().stream();
     }
 
     @Override
     public List<E> getItems(int startIndex, int numberOfItems) {
-        return Collections.emptyList();
-        /*return datasource.getItemIds(startIndex, numberOfItems).stream()
+        return datasource.getItemIds(startIndex, numberOfItems).stream()
                 .map(id -> datasource.getItem(id))
-                .collect(Collectors.toList());*/
+                .collect(Collectors.toList());
     }
 
     @Override
     public boolean containsItem(E item) {
-        return false;
-//        return datasource.containsItem(item.getId());
+        return datasource.containsItem(item.getId());
     }
 
     @Override
     public int size() {
-        return 0;
-//        return datasource.size();
+        return datasource.size();
     }
 
     @Override
     public E getSelectedItem() {
-        return null;
-        // return datasource.getItem();
+        return datasource.getItem();
     }
 
     @Override
     public void setSelectedItem(@Nullable E item) {
-        // datasource.setItem(item);
+        datasource.setItem(item);
     }
 
     @Override
@@ -202,13 +196,11 @@ public class DatasourceDataGridItems<E extends Entity<K>, K>
 
     @Override
     public Map<AggregationInfo, String> aggregate(AggregationInfo[] aggregationInfos, Collection<?> itemIds) {
-        return Collections.emptyMap();
-        // return ((CollectionDatasource.Aggregatable) datasource).aggregate(aggregationInfos, itemIds);
+        return ((CollectionDatasource.Aggregatable) datasource).aggregate(aggregationInfos, itemIds);
     }
 
     @Override
     public Map<AggregationInfo, Object> aggregateValues(AggregationInfo[] aggregationInfos, Collection<?> itemIds) {
-        return Collections.emptyMap();
-        // return ((CollectionDatasource.Aggregatable) datasource).aggregateValues(aggregationInfos, itemIds);
+        return ((CollectionDatasource.Aggregatable) datasource).aggregateValues(aggregationInfos, itemIds);
     }
 }

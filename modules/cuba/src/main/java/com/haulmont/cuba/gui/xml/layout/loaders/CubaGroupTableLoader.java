@@ -18,7 +18,6 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.GroupTable;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import io.jmix.ui.xml.layout.loaders.GroupTableLoader;
 import org.dom4j.Element;
@@ -57,25 +56,25 @@ public class CubaGroupTableLoader extends GroupTableLoader {
 
     @Override
     protected boolean setupDataContainer(TableDataHolder holder) {
-        Datasource datasource = ((CubaGroupTableDataHolder) holder).getDatasource();
+        CollectionDatasource datasource = ((CubaGroupTableDataHolder) holder).getDatasource();
         if (datasource == null) {
             return false;
         }
         // todo dynamic attributes
         // addDynamicAttributes(resultComponent, metaClass, datasource, null, availableColumns);
-        ((GroupTable) resultComponent).setDatasource((CollectionDatasource) datasource);
+        ((GroupTable) resultComponent).setDatasource(datasource);
         return true;
     }
 
     protected static class CubaGroupTableDataHolder extends TableDataHolder {
 
-        protected Datasource datasource;
+        protected CollectionDatasource datasource;
 
-        public Datasource getDatasource() {
+        public CollectionDatasource getDatasource() {
             return datasource;
         }
 
-        public void setDatasource(Datasource datasource) {
+        public void setDatasource(CollectionDatasource datasource) {
             this.datasource = datasource;
         }
     }

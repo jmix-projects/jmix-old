@@ -173,8 +173,8 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
             loadRequired(resultComponent, column);
         }
 
-        boolean dataAdded = setupDataContainer(holder);
-        if (!dataAdded) {
+        boolean containerAdded = setupDataContainer(holder);
+        if (!containerAdded) {
             //todo dynamic attributes
 //            addDynamicAttributes(resultComponent, metaClass, null, null, availableColumns);
             //noinspection unchecked
@@ -213,11 +213,12 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
         } else {
             throw new GuiDevelopmentException("Not a CollectionContainer: " + containerId, context);
         }
-        holder.setMetaClass(collectionContainer.getEntityMetaClass());
+
         if (collectionContainer instanceof HasLoader) {
             holder.setDataLoader(((HasLoader) collectionContainer).getLoader());
         }
 
+        holder.setMetaClass(collectionContainer.getEntityMetaClass());
         holder.setContainer(collectionContainer);
         holder.setFetchPlan(collectionContainer.getFetchPlan());
 

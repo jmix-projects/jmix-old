@@ -48,6 +48,8 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
     protected void initStandardLoaders() {
         super.initStandardLoaders();
 
+        loaders.put(DataGrid.NAME, CubaDataGridLoader.class);
+        loaders.put(TreeDataGrid.NAME, CubaTreeDataGridLoader.class);
         loaders.put(Table.NAME, CubaTableLoader.class);
         loaders.put(GroupTable.NAME, CubaGroupTableLoader.class);
         loaders.put(TreeTable.NAME, CubaTreeTableLoader.class);

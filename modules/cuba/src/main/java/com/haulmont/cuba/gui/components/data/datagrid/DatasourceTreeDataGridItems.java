@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.components.data.datagrid;
+package com.haulmont.cuba.gui.components.data.datagrid;
 
+import com.haulmont.cuba.gui.data.CollectionDatasource;
+import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
 import io.jmix.ui.components.data.TreeDataGridItems;
@@ -28,15 +30,15 @@ public class DatasourceTreeDataGridItems<E extends Entity<K>, K>
         extends SortableDatasourceDataGridItems<E, K>
         implements TreeDataGridItems<E> {
 
-    /*@SuppressWarnings("unchecked")DatasourceTreeDataGridItems
-    public HierarchicalDatasource(HierarchicalDatasource<E, K> datasource) {
+    @SuppressWarnings("unchecked")
+    public DatasourceTreeDataGridItems(HierarchicalDatasource<E, K> datasource) {
         super((CollectionDatasource.Sortable<E, K>) datasource);
     }
 
     @SuppressWarnings("unchecked")
     protected HierarchicalDatasource<E, K> getHierarchicalDatasource() {
         return (HierarchicalDatasource<E, K>) datasource;
-    }*/
+    }
 
     @Override
     public int getChildCount(E parent) {
@@ -45,27 +47,24 @@ public class DatasourceTreeDataGridItems<E extends Entity<K>, K>
 
     @Override
     public Stream<E> getChildren(E item) {
-        return Stream.of();
-        /*Collection<K> itemIds = item == null
+        Collection<K> itemIds = item == null
                 ? getHierarchicalDatasource().getRootItemIds()
                 : getHierarchicalDatasource().getChildren(item.getId());
 
         return itemIds.stream()
-                .map(id -> datasource.getItem(id));*/
+                .map(id -> datasource.getItem(id));
     }
 
     @Override
     public boolean hasChildren(E item) {
-        return false;
-        // return getHierarchicalDatasource().hasChildren(item.getId());
+        return getHierarchicalDatasource().hasChildren(item.getId());
     }
 
     @Nullable
     @Override
     public E getParent(E item) {
-        return null;
-        /*Preconditions.checkNotNullArgument(item);
+        Preconditions.checkNotNullArgument(item);
         K parentId = getHierarchicalDatasource().getParent(item.getId());
-        return getHierarchicalDatasource().getItem(parentId);*/
+        return getHierarchicalDatasource().getItem(parentId);
     }
 }

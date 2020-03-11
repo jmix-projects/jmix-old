@@ -140,6 +140,20 @@ public final class DatasourceLoaderHelper {
                     context, "Table ID", element.attributeValue("id"));
         }
 
+        return loadListComponentDatasource(datasourceId, context, loaderContext);
+    }
+
+    /**
+     * Loads ListComponent datasource.
+     *
+     * @param datasourceId  datasource id
+     * @param context       loader context
+     * @param loaderContext component loader context
+     * @return collection datasource or throws an exception
+     */
+    public static CollectionDatasource loadListComponentDatasource(String datasourceId,
+                                                                   ComponentLoader.Context context,
+                                                                   ComponentLoaderContext loaderContext) {
         Datasource datasource = loaderContext.getDsContext().get(datasourceId);
         if (datasource == null) {
             throw new GuiDevelopmentException("Can't find datasource by name: " + datasourceId, context);
@@ -148,6 +162,7 @@ public final class DatasourceLoaderHelper {
         if (!(datasource instanceof CollectionDatasource)) {
             throw new GuiDevelopmentException("Not a CollectionDatasource: " + datasourceId, context);
         }
+
         return (CollectionDatasource) datasource;
     }
 }

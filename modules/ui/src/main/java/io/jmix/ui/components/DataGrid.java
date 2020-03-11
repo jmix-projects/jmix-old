@@ -24,8 +24,6 @@ import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.data.DataGridItems;
 import io.jmix.ui.components.data.ValueSourceProvider;
-import io.jmix.ui.components.data.datagrid.DatasourceDataGridItems;
-import io.jmix.ui.components.data.datagrid.SortableDatasourceDataGridItems;
 import io.jmix.ui.icons.CubaIcon;
 import io.jmix.ui.model.InstanceContainer;
 
@@ -172,45 +170,6 @@ public interface DataGrid<E extends Entity> extends ListComponent<E>, HasButtons
      * @param dataGridItems the DataGrid data source
      */
     void setItems(@Nullable DataGridItems<E> dataGridItems);
-
-    /**
-     * @return the DataGrid data source
-     * @deprecated use {@link #getItems()} instead
-     */
-    /*
-    TODO: legacy-ui
-    @Deprecated
-    default CollectionDatasource getDatasource() {
-        DataGridItems<E> dataGridItems = getItems();
-        return dataGridItems instanceof DatasourceDataGridItems
-                ? ((DatasourceDataGridItems) dataGridItems).getDatasource()
-                : null;
-    }*/
-
-    /**
-     * Sets an instance of {@code CollectionDatasource} TODO: legacy-ui
-     * as the DataGrid data source.
-     *
-     * @param datasource the DataGrid data source, not null
-     * @deprecated use {@link #setItems(DataGridItems)} instead
-     */
-    /*
-    TODO: legacy-ui
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    default void setDatasource(CollectionDatasource datasource) {
-        if (datasource == null) {
-            setItems(null);
-        } else {
-            DataGridItems<E> dataGridItems;
-            if (datasource instanceof CollectionDatasource.Sortable) {
-                dataGridItems = new SortableDatasourceDataGridItems<>((CollectionDatasource.Sortable) datasource);
-            } else {
-                dataGridItems = new DatasourceDataGridItems<>(datasource);
-            }
-            setItems(dataGridItems);
-        }
-    }*/
 
     /**
      * Marks all the items in the current data source as selected.
