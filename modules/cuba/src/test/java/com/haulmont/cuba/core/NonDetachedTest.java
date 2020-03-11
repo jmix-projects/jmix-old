@@ -27,7 +27,7 @@ import com.haulmont.cuba.core.model.sales.Order;
 import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestSupport;
 import io.jmix.core.*;
-import io.jmix.core.entity.BaseGenericIdEntity;
+import io.jmix.data.entity.BaseGenericIdEntity;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -106,10 +106,6 @@ public class CorePersistentAttributesLoadChecker implements PersistentAttributes
             return isLoadedByFetchGroup(entity, property);
         }
 
-        if (entity instanceof EmbeddableEntity) {
-            return isLoadedByFetchGroup(entity, property);
-        }
-
         return PropertyLoadedState.UNKNOWN;
     }
 

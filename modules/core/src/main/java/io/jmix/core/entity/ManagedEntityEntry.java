@@ -34,6 +34,10 @@ public interface ManagedEntityEntry<K> extends Serializable {
 
     void setAttributeValue(String name, Object value, boolean checkEquals);
 
+    default boolean isEmbeddable() {
+        return false;
+    }
+
     boolean isNew();
 
     boolean isManaged();

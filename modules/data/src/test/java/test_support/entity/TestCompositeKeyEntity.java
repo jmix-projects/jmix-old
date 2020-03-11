@@ -16,7 +16,7 @@
 
 package test_support.entity;
 
-import io.jmix.core.entity.BaseGenericIdEntity;
+import io.jmix.data.entity.BaseGenericIdEntity;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;

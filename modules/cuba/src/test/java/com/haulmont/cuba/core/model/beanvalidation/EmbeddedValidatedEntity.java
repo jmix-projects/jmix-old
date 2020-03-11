@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.core.model.beanvalidation;
 
-import io.jmix.core.entity.EmbeddableEntity;
+import io.jmix.data.entity.EmbeddableEntity;
 import io.jmix.core.metamodel.annotations.MetaClass;
 import org.hibernate.validator.constraints.Length;
 

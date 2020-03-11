@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.core.entity;
+package io.jmix.data.entity;
 
+import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.annotations.MetaClass;
 import io.jmix.core.entity.annotation.UnavailableInSecurityConstraints;
 

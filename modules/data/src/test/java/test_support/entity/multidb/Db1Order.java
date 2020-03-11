@@ -5,7 +5,7 @@
 
 package test_support.entity.multidb;
 
-import io.jmix.core.entity.BaseDbGeneratedIdEntity;
+import io.jmix.data.entity.BaseDbGeneratedIdEntity;
 import io.jmix.core.metamodel.annotations.MetaProperty;
 import io.jmix.core.metamodel.annotations.Store;
 

@@ -16,23 +16,14 @@
 
 package metadata
 
-import test_support.addon1.TestAddon1Configuration
-import test_support.AppContextTestExecutionListener
-import test_support.app.TestAppConfiguration
-import test_support.app.entity.Owner
-import test_support.app.entity.Pet
-import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.MetadataTools
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.TestExecutionListeners
-import spock.lang.Specification
+import test_support.DataSpec
+import test_support.entity.petclinic.Owner
+import test_support.entity.petclinic.Pet
 
 import javax.inject.Inject
 
-@ContextConfiguration(classes = [JmixCoreConfiguration, TestAddon1Configuration, TestAppConfiguration])
-@TestExecutionListeners(value = AppContextTestExecutionListener,
-        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
-class MetadataToolsTest extends Specification {
+class MetadataToolsTest extends DataSpec {
 
     @Inject
     private MetadataTools metadataTools

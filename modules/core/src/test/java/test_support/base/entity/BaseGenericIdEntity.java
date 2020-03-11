@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package test_support.base.entity;
 
-package io.jmix.core.entity.dummy;
+import io.jmix.core.entity.Entity;
 
-import io.jmix.core.entity.StandardEntity;
+import javax.persistence.MappedSuperclass;
 
-import javax.persistence.Entity;
+@MappedSuperclass
+@io.jmix.core.metamodel.annotations.MetaClass(name = "base$BaseGenericIdEntity")
+public abstract class BaseGenericIdEntity<T> implements Entity<T> {
 
-@Entity
-public class DummyEntity extends StandardEntity {
-    private static final long serialVersionUID = -7814076878004728831L;
+    private static final long serialVersionUID = -8400641366148656528L;
+
+    public abstract void setId(T id);
+
+    public abstract T getId();
 }

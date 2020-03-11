@@ -13,32 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package io.jmix.core.entity;
+package io.jmix.data.entity;
 
 import io.jmix.core.metamodel.annotations.MetaClass;
 import io.jmix.core.entity.annotation.UnavailableInSecurityConstraints;
 
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 
 /**
- * Base class for entities with String identifier.
- * <p>
- * Does not define an identifier field. Inheritors must define a field of type String and add
- * {@link javax.persistence.Id} annotation to it, e.g.
- * <pre>
- *  &#64;Id
- *  &#64;Column(name = "CODE")
- *  protected String code;
- * </pre>
- *
+ * Base class for entities with Integer Identity identifier.
  */
 @MappedSuperclass
-@MetaClass(name = "sys$BaseStringIdEntity")
+@MetaClass(name = "sys$BaseIntIdentityIdEntity")
 @UnavailableInSecurityConstraints
-public abstract class BaseStringIdEntity extends BaseGenericIdEntity<String> {
+public abstract class BaseIntIdentityIdEntity extends BaseDbGeneratedIdEntity<Integer> {
 
-    private static final long serialVersionUID = -1887225952123433245L;
+    private static final long serialVersionUID = 3083677558630811496L;
 
-    public abstract String getId();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    protected Integer id;
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }

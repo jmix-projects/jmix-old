@@ -20,7 +20,7 @@ import com.haulmont.cuba.core.model.Many2ManyA
 import com.haulmont.cuba.core.model.Many2ManyB
 import com.haulmont.cuba.core.model.SetGetEntity
 import io.jmix.core.Metadata
-import io.jmix.core.entity.StandardEntity
+import io.jmix.data.entity.StandardEntity
 import spec.haulmont.cuba.core.CoreTestSpecification
 
 import javax.inject.Inject

@@ -25,6 +25,7 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.data.AuditInfoProvider;
 import io.jmix.data.OrmProperties;
+import io.jmix.data.entity.BaseGenericIdEntity;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.eclipse.persistence.internal.helper.CubaUtil;

@@ -25,7 +25,10 @@ import io.jmix.core.metamodel.annotations.NamePattern;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.core.metamodel.datatypes.TimeZoneAwareDatatype;
-import io.jmix.core.metamodel.model.*;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.metamodel.model.Range;
 import io.jmix.core.security.UserSessionSource;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -68,7 +71,6 @@ public class MetadataTools {
 
     public static final List<Class> SYSTEM_INTERFACES = ImmutableList.of(
             Entity.class,
-            BaseGenericIdEntity.class,
             Versioned.class,
             Creatable.class,
             Updatable.class,
@@ -738,7 +740,7 @@ public class MetadataTools {
     /**
      * Determine whether the view contains a property, traversing a view branch according to the given property path.
      *
-     * @param fetchPlan         view instance. If null, return false immediately.
+     * @param fetchPlan    view instance. If null, return false immediately.
      * @param propertyPath property path defining the property
      */
     public boolean fetchPlanContainsProperty(@Nullable FetchPlan fetchPlan, MetaPropertyPath propertyPath) {
@@ -1111,11 +1113,16 @@ public class MetadataTools {
      */
     @SuppressWarnings("unchecked")
     public <T extends Entity> T deepCopy(T source) {
-        CachingEntitiesHolder entityFinder = new CachingEntitiesHolder();
-        Entity destination = entityFinder.create(source.getClass(), EntityValues.getEntityId(source));
-        deepCopy(source, destination, entityFinder);
+        if (source instanceof ManagedEntity) {
+            CachingEntitiesHolder entityFinder = new CachingEntitiesHolder();
+            Entity destination = entityFinder.create(source.getClass(), EntityValues.getEntityId(source));
 
-        return (T) destination;
+            deepCopy(source, destination, entityFinder);
+
+            return (T) destination;
+        }
+
+        return null;
     }
 
     /**
@@ -1252,8 +1259,8 @@ public class MetadataTools {
     @SuppressWarnings("unchecked")
     protected static Entity createInstanceWithId(Class<? extends Entity> entityClass, Object id) {
         Entity entity = createInstance(entityClass);
-        if (entity instanceof BaseGenericIdEntity) {
-            ((BaseGenericIdEntity) entity).setId(id);
+        if (entity instanceof ManagedEntity) {
+            EntityValues.setEntityId(entity, id);
         }
         return entity;
     }

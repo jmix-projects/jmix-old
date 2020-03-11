@@ -16,21 +16,12 @@
 
 package entity_enhancing
 
-import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.entity.EntityPropertyChangeListener
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.TestExecutionListeners
-import spock.lang.Specification
-import test_support.AppContextTestExecutionListener
-import test_support.addon1.TestAddon1Configuration
-import test_support.addon1.entity.TestAddon1Entity
-import test_support.app.TestAppConfiguration
-import test_support.app.entity.Pet
+import test_support.DataSpec
+import test_support.entity.TestNotStoredEntity
+import test_support.entity.petclinic.Pet
 
-@ContextConfiguration(classes = [TestAppConfiguration, TestAddon1Configuration, JmixCoreConfiguration])
-@TestExecutionListeners(value = AppContextTestExecutionListener,
-        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
-class EntityEnhancingTest extends Specification {
+class EntityEnhancingTest extends DataSpec {
 
     def "JPA entity is enhanced"() {
 
@@ -47,7 +38,7 @@ class EntityEnhancingTest extends Specification {
 
     def "non-JPA entity is enhanced"() {
 
-        def entity = new TestAddon1Entity()
+        def entity = new TestNotStoredEntity()
         EntityPropertyChangeListener listener = Mock()
         entity.__getEntityEntry().addPropertyChangeListener(listener)
 

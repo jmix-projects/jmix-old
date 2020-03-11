@@ -14,40 +14,15 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity.dummy;
+package io.jmix.data.entity.dummy;
 
-import io.jmix.core.entity.BaseStringIdEntity;
+import io.jmix.data.entity.BaseIdentityIdEntity;
 import io.jmix.core.entity.annotation.SystemLevel;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 @Entity
 @SystemLevel
-public class DummyStringIdEntity extends BaseStringIdEntity {
-
-    private static final long serialVersionUID = -6505209215115448815L;
-
-    @Id
-    @Column
-    protected String code;
-
-    @Override
-    public String getId() {
-        return code;
-    }
-
-    @Override
-    public void setId(String id) {
-        code = id;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
+public class DummyIdentityIdEntity extends BaseIdentityIdEntity {
+    private static final long serialVersionUID = 4530086175127489952L;
 }

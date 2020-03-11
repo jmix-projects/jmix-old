@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity.dummy;
+package test_support.entity.petclinic;
 
-import io.jmix.core.entity.BaseLongIdEntity;
-import io.jmix.core.entity.annotation.SystemLevel;
+import io.jmix.core.metamodel.datatypes.impl.EnumClass;
 
-import javax.persistence.Entity;
+public enum PetType implements EnumClass<String> {
 
-@Entity
-@SystemLevel
-public class DummyLongIdEntity extends BaseLongIdEntity {
-    private static final long serialVersionUID = 6844350647309377054L;
+    BIRD("B"),
+    ANIMAL("A"),
+    FISH("F");
+
+    private String id;
+
+    PetType(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
 }

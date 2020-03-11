@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity.dummy;
+package io.jmix.data.entity.dummy;
 
-import io.jmix.core.entity.EmbeddableEntity;
+import io.jmix.data.entity.BaseLongIdEntity;
 import io.jmix.core.entity.annotation.SystemLevel;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 
-@Embeddable
+@Entity
 @SystemLevel
-public class DummyEmbeddableEntity extends EmbeddableEntity {
-    private static final long serialVersionUID = 2729841188778955558L;
+public class DummyLongIdEntity extends BaseLongIdEntity {
+    private static final long serialVersionUID = 6844350647309377054L;
 }

@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.core.entity;
+package test_support.base.entity;
 
 import io.jmix.core.UuidProvider;
+import io.jmix.core.entity.HasUuid;
 import io.jmix.core.metamodel.annotations.MetaClass;
-import io.jmix.core.entity.annotation.UnavailableInSecurityConstraints;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.util.UUID;
 
-/**
- * Base class for entities with UUID identifier.
- * <p>
- * Inherit from it if you need an entity without optimistic locking, create, update and soft deletion info.
- */
 @MappedSuperclass
-@MetaClass(name = "sys_BaseUuidEntity")
-@UnavailableInSecurityConstraints
+@MetaClass(name = "base_BaseUuidEntity")
 public abstract class BaseUuidEntity extends BaseGenericIdEntity<UUID> implements HasUuid {
 
     private static final long serialVersionUID = -2217624132287086972L;
@@ -48,7 +42,6 @@ public abstract class BaseUuidEntity extends BaseGenericIdEntity<UUID> implement
         return id;
     }
 
-    @Override
     public void setId(UUID id) {
         this.id = id;
     }

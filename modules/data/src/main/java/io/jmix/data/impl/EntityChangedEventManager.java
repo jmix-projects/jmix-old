@@ -16,6 +16,7 @@
 
 package io.jmix.data.impl;
 
+import io.jmix.data.entity.EmbeddableEntity;
 import io.jmix.data.event.AttributeChanges;
 import io.jmix.data.event.EntityChangedEvent;
 import io.jmix.core.Events;

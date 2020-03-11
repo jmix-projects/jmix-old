@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.core.entity;
+package io.jmix.data.entity;
+
+import io.jmix.core.entity.Entity;
 
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;

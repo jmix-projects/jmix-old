@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.core;
 
-import io.jmix.core.entity.BaseStringIdEntity;
+import io.jmix.data.entity.BaseStringIdEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

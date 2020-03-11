@@ -16,7 +16,7 @@
 
 package io.jmix.samples.customsecurity;
 
-import io.jmix.core.entity.BaseUuidEntity;
+import io.jmix.data.entity.BaseUuidEntity;
 import io.jmix.core.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 

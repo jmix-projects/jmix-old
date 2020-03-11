@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package io.jmix.core.impl;
+package io.jmix.data.impl;
 
-import io.jmix.core.NumberIdSource;
 import org.springframework.stereotype.Component;
 
 // todo impl

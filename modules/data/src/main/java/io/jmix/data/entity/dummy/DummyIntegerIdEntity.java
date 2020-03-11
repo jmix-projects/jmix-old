@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package io.jmix.core;
+package io.jmix.data.entity.dummy;
 
-public interface NumberIdSource {
+import io.jmix.data.entity.BaseIntegerIdEntity;
+import io.jmix.core.entity.annotation.SystemLevel;
 
-    String NAME = "jmix_NumberIdSource";
+import javax.persistence.Entity;
 
-    Long createLongId(String entityName);
-
-    Integer createIntegerId(String entityName);
+@Entity
+@SystemLevel
+public class DummyIntegerIdEntity extends BaseIntegerIdEntity {
+    private static final long serialVersionUID = 3489413651786961575L;
 }

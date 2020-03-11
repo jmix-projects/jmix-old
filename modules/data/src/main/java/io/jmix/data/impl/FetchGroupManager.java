@@ -18,8 +18,8 @@ package io.jmix.data.impl;
 
 import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.BaseUuidEntity;
-import io.jmix.core.entity.EmbeddableEntity;
+import io.jmix.data.entity.BaseUuidEntity;
+import io.jmix.data.entity.EmbeddableEntity;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;

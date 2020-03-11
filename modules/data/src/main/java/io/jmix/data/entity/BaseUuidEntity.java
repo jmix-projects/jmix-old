@@ -13,35 +13,53 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.core.entity;
+package io.jmix.data.entity;
 
+import io.jmix.core.UuidProvider;
+import io.jmix.core.entity.HasUuid;
 import io.jmix.core.metamodel.annotations.MetaClass;
 import io.jmix.core.entity.annotation.UnavailableInSecurityConstraints;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.util.UUID;
 
 /**
- * Base class for entities with Long identifier.
+ * Base class for entities with UUID identifier.
+ * <p>
+ * Inherit from it if you need an entity without optimistic locking, create, update and soft deletion info.
  */
 @MappedSuperclass
-@MetaClass(name = "sys$BaseLongIdEntity")
+@MetaClass(name = "sys_BaseUuidEntity")
 @UnavailableInSecurityConstraints
-public abstract class BaseLongIdEntity extends BaseGenericIdEntity<Long> {
+public abstract class BaseUuidEntity extends BaseGenericIdEntity<UUID> implements HasUuid {
 
-    private static final long serialVersionUID = 1748237513475338490L;
+    private static final long serialVersionUID = -2217624132287086972L;
 
     @Id
     @Column(name = "ID")
-    protected Long id;
+    protected UUID id;
 
-    public Long getId() {
+    public BaseUuidEntity() {
+        id = UuidProvider.createUuid();
+    }
+
+    public UUID getId() {
         return id;
     }
 
     @Override
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
+    }
+
+    @Override
+    public UUID getUuid() {
+        return id;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.id = uuid;
     }
 }

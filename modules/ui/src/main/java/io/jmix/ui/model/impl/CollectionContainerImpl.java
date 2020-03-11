@@ -122,13 +122,17 @@ public class CollectionContainerImpl<E extends Entity>
     public int getItemIndex(Object entityOrId) {
         checkNotNullArgument(entityOrId, "entity or id is null");
         IndexKey indexKey;
-        if (entityOrId instanceof Entity && !(entityOrId instanceof EmbeddableEntity)) {
+        if (entityOrId instanceof Entity) {
             // if an entity instance is passed instead of id, check if the entity is of valid class and extract id
             Entity entity = (Entity) entityOrId;
             if (!entityMetaClass.getJavaClass().isAssignableFrom(entity.getClass())) {
                 throw new IllegalArgumentException("Invalid entity class: " + entity.getClass());
             }
-            indexKey = IndexKey.ofEntity(entity);
+            if (entityOrId instanceof ManagedEntity && ((ManagedEntity<?>) entityOrId).__getEntityEntry().isEmbeddable()) {
+                indexKey = IndexKey.of(entityOrId);
+            } else {
+                indexKey = IndexKey.ofEntity(entity);
+            }
         } else {
             indexKey = IndexKey.of(entityOrId);
         }

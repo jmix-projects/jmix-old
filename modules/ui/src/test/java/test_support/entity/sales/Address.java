@@ -16,7 +16,7 @@
 
 package test_support.entity.sales;
 
-import io.jmix.core.entity.EmbeddableEntity;
+import io.jmix.data.entity.EmbeddableEntity;
 import io.jmix.core.metamodel.annotations.MetaClass;
 
 import javax.persistence.Column;

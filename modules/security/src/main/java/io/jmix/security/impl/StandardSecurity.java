@@ -28,6 +28,7 @@ import io.jmix.core.security.*;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.data.RowLevelSecurityException;
+import io.jmix.data.entity.*;
 import io.jmix.security.entity.Permission;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.groovy.runtime.MethodClosure;

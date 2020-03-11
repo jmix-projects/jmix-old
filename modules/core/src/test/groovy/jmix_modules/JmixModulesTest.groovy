@@ -46,7 +46,7 @@ class JmixModulesTest extends Specification {
         expect:
 
         components != null
-        components.components.size() == 3
+        components.components.size() == 4
         components.components[0].id == 'io.jmix.core'
 
         def jmixCore = components.get('io.jmix.core')

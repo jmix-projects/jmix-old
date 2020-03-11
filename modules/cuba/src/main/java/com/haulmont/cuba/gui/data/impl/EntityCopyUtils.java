@@ -21,6 +21,7 @@ import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.data.entity.BaseDbGeneratedIdEntity;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.lang.reflect.InvocationTargetException;

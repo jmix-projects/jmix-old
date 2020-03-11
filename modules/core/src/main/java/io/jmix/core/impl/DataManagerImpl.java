@@ -214,6 +214,7 @@ public class DataManagerImpl implements DataManager {
                             EntityValues.setAttributeValue(entity, relatedPropertyName, null);
                         } else {
                             Object refEntityId = EntityValues.getEntityId(refEntity);
+                            MetaClass refEntityMetaClass = metadata.getClass(refEntity.getClass());
                             if (refEntityId instanceof IdProxy) {
                                 Object realId = ((IdProxy) refEntityId).get();
                                 if (realId == null) {
@@ -225,7 +226,7 @@ public class DataManagerImpl implements DataManager {
                                 } else {
                                     EntityValues.setAttributeValue(entity, relatedPropertyName, realId);
                                 }
-                            } else if (refEntityId instanceof EmbeddableEntity) {
+                            } else if (metadataTools.hasCompositePrimaryKey(refEntityMetaClass)) {
                                 MetaProperty relatedProperty = metaClass.getProperty(relatedPropertyName);
                                 if (!relatedProperty.getRange().isClass()) {
                                     log.warn("PK of entity referenced by {} is a EmbeddableEntity, but related property {} is not", property, relatedProperty);

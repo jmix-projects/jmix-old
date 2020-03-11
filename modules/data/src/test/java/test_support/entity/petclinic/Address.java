@@ -13,35 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.core.entity;
 
+package test_support.entity.petclinic;
+
+import io.jmix.data.entity.EmbeddableEntity;
 import io.jmix.core.metamodel.annotations.MetaClass;
-import io.jmix.core.entity.annotation.UnavailableInSecurityConstraints;
 
 import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Embeddable;
 
-/**
- * Base class for entities with Integer identifier.
- */
-@MappedSuperclass
-@MetaClass(name = "sys$BaseIntegerIdEntity")
-@UnavailableInSecurityConstraints
-public abstract class BaseIntegerIdEntity extends BaseGenericIdEntity<Integer> {
+@Embeddable
+@MetaClass(name = "app_Address")
+public class Address extends EmbeddableEntity {
 
-    private static final long serialVersionUID = 1748237513475338490L;
+    private static final long serialVersionUID = 3973674066005826186L;
 
-    @Id
-    @Column(name = "ID")
-    protected Integer id;
+    @Column(name = "CITY")
+    protected String city;
 
-    public Integer getId() {
-        return id;
+    @Column(name = "ZIP", length = 10)
+    protected String zip;
+
+    public String getCity() {
+        return city;
     }
 
-    @Override
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
     }
 }

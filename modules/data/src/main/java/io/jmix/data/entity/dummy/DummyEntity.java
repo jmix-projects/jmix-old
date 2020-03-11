@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity.dummy;
+package io.jmix.data.entity.dummy;
 
-import io.jmix.core.entity.BaseIntegerIdEntity;
-import io.jmix.core.entity.annotation.SystemLevel;
+import io.jmix.data.entity.StandardEntity;
 
 import javax.persistence.Entity;
 
 @Entity
-@SystemLevel
-public class DummyIntegerIdEntity extends BaseIntegerIdEntity {
-    private static final long serialVersionUID = 3489413651786961575L;
+public class DummyEntity extends StandardEntity {
+    private static final long serialVersionUID = -7814076878004728831L;
 }
