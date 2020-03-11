@@ -48,6 +48,9 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
     protected void initStandardLoaders() {
         super.initStandardLoaders();
 
+        loaders.put(Table.NAME, CubaTableLoader.class);
+        loaders.put(GroupTable.NAME, CubaGroupTableLoader.class);
+        loaders.put(TreeTable.NAME, CubaTreeTableLoader.class);
         loaders.put(TokenList.NAME, CubaTokenListLoader.class);
         loaders.put(TwinColumn.NAME, CubaTwinColumnLoader.class);
         loaders.put(Image.NAME, CubaImageLoader.class);

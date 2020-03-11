@@ -27,6 +27,9 @@ public class CubaUiComponents extends WebUiComponents {
     public static final String NAME = "cuba_UiComponents";
 
     {
+        classes.put(Table.NAME, WebTable.class);
+        classes.put(GroupTable.NAME, WebGroupTable.class);
+        classes.put(TreeTable.NAME, WebTreeTable.class);
         classes.put(TokenList.NAME, WebTokenList.class);
         classes.put(TwinColumn.NAME, WebTwinColumn.class);
         classes.put(Image.NAME, WebImage.class);

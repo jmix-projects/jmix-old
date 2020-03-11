@@ -30,7 +30,7 @@ import org.dom4j.Element;
  * Provides helper methods to load datasource and options datasource. Is used only in legacy component loaders.
  */
 @SuppressWarnings("rawtypes")
-public class DatasourceLoaderHelper {
+public final class DatasourceLoaderHelper {
 
     /**
      * Loads datasource is ValueSource is null.
@@ -119,5 +119,35 @@ public class DatasourceLoaderHelper {
             Datasource ds = componentContext.getDsContext().get(datasource);
             field.setOptionsDatasource((CollectionDatasource) ds);
         }
+    }
+
+    /**
+     * Loads table datasource from rows element.
+     *
+     * @param element       table descriptor
+     * @param rowsElement   rows element descriptor
+     * @param context       loader context
+     * @param loaderContext component loader context
+     * @return collection datasource or throws an exception
+     */
+    public static CollectionDatasource loadTableDatasource(Element element,
+                                                           Element rowsElement,
+                                                           ComponentLoader.Context context,
+                                                           ComponentLoaderContext loaderContext) {
+        String datasourceId = rowsElement.attributeValue("datasource");
+        if (StringUtils.isBlank(datasourceId)) {
+            throw new GuiDevelopmentException("Table 'rows' element doesn't have 'datasource' attribute",
+                    context, "Table ID", element.attributeValue("id"));
+        }
+
+        Datasource datasource = loaderContext.getDsContext().get(datasourceId);
+        if (datasource == null) {
+            throw new GuiDevelopmentException("Can't find datasource by name: " + datasourceId, context);
+        }
+
+        if (!(datasource instanceof CollectionDatasource)) {
+            throw new GuiDevelopmentException("Not a CollectionDatasource: " + datasourceId, context);
+        }
+        return (CollectionDatasource) datasource;
     }
 }
