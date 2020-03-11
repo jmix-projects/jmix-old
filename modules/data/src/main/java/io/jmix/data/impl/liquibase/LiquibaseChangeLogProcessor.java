@@ -57,7 +57,7 @@ public class LiquibaseChangeLogProcessor {
         List<String> moduleFiles = new ArrayList<>();
 
         for (JmixModuleDescriptor module : jmixModules.getAll()) {
-            ClassPathResource resource = new ClassPathResource(getModuleFileName(module), getClass());
+            ClassPathResource resource = new ClassPathResource(getModuleFileName(module, storeName), getClass());
             if (resource.exists()) {
                 moduleFiles.add(resource.getPath());
             }
@@ -102,7 +102,8 @@ public class LiquibaseChangeLogProcessor {
         return environment.getProperty("jmix.workDir") + "/" + prefix + "liquibase-changelog.xml";
     }
 
-    protected String getModuleFileName(JmixModuleDescriptor module) {
-        return "/" + module.getBasePackage().replace('.', '/') + "/liquibase/changelog.xml";
+    protected String getModuleFileName(JmixModuleDescriptor module, String storeName) {
+        String prefix = Stores.isMain(storeName) ? "" : storeName + "-";
+        return "/" + module.getBasePackage().replace('.', '/') + "/liquibase/" + prefix + "changelog.xml";
     }
 }

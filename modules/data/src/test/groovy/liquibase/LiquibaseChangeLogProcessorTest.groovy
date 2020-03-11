@@ -66,5 +66,10 @@ class LiquibaseChangeLogProcessorTest extends Specification {
         def masterFile = new File(fileName)
         masterFile.exists()
         masterFile.canonicalPath == new File(environment.getProperty('jmix.workDir'), 'db1-liquibase-changelog.xml').canonicalPath
+
+        and:
+        def databaseChangeLog = new XmlSlurper().parse(masterFile)
+        databaseChangeLog.include[0].@file == '/test_support_modules/addon/liquibase/db1-changelog.xml'
+        databaseChangeLog.include[1].@file == '/test_support_modules/app/liquibase/db1-changelog.xml'
     }
 }
