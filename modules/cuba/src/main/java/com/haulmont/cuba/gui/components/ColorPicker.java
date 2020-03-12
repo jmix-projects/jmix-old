@@ -16,6 +16,13 @@
 
 package com.haulmont.cuba.gui.components;
 
+import com.haulmont.cuba.gui.data.Datasource;
+
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @deprecated Use {@link io.jmix.ui.components.ColorPicker} instead
+ */
 @Deprecated
 public interface ColorPicker extends Field<String>, io.jmix.ui.components.ColorPicker {
 }

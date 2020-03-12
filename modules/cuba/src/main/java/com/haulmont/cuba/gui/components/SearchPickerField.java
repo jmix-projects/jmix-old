@@ -16,10 +16,18 @@
 
 package com.haulmont.cuba.gui.components;
 
+import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.core.entity.Entity;
 
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <V> entity
+ * @deprecated Use {@link io.jmix.ui.components.SuggestionPickerField} instead
+ */
 @Deprecated
-public interface SearchPickerField<V extends Entity> extends SearchField<V>, io.jmix.ui.components.SearchPickerField<V> {
+public interface SearchPickerField<V extends Entity> extends SearchField<V>, PickerField<V>,
+        io.jmix.ui.components.SearchPickerField<V> {
 
     String NAME = io.jmix.ui.components.SearchPickerField.NAME;
 }

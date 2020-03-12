@@ -16,7 +16,14 @@
 
 package com.haulmont.cuba.gui.components;
 
+import com.haulmont.cuba.gui.data.Datasource;
+
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <V> type of options and value
+ * @deprecated Use {@link io.jmix.ui.components.LookupField} instead
+ */
 @Deprecated
-public interface LookupField<V>
-        extends OptionsField<V, V>, io.jmix.ui.components.LookupField<V> {
+public interface LookupField<V> extends OptionsField<V, V>, io.jmix.ui.components.LookupField<V> {
 }

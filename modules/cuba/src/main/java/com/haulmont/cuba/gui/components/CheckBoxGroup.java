@@ -16,8 +16,16 @@
 
 package com.haulmont.cuba.gui.components;
 
+import com.haulmont.cuba.gui.data.Datasource;
+
 import java.util.Collection;
 
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <I> item type
+ * @deprecated Use {@link io.jmix.ui.components.CheckBox} instead
+ */
 @Deprecated
 public interface CheckBoxGroup<I> extends OptionsField<Collection<I>, I>, io.jmix.ui.components.CheckBoxGroup<I> {
 }

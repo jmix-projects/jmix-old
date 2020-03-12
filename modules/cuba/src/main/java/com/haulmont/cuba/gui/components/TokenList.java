@@ -16,10 +16,17 @@
 
 package com.haulmont.cuba.gui.components;
 
+import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.core.entity.Entity;
 
 import java.util.Collection;
 
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <V> entity
+ * @deprecated Use {@link io.jmix.ui.components.TokenList} instead
+ */
 @Deprecated
 public interface TokenList<V extends Entity> extends Field<Collection<V>>, io.jmix.ui.components.TokenList<V> {
 }

@@ -16,6 +16,15 @@
 
 package com.haulmont.cuba.gui.components;
 
+import com.haulmont.cuba.gui.data.Datasource;
+
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <V> value type: single type or {@code Collection<I>}
+ * @param <I> item type
+ * @deprecated Use {@link io.jmix.ui.components.OptionsGroup}
+ */
 @Deprecated
 public interface OptionsGroup<V, I> extends OptionsField<V, I>, io.jmix.ui.components.OptionsGroup<V, I> {
 }

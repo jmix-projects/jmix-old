@@ -16,8 +16,16 @@
 
 package com.haulmont.cuba.gui.components;
 
+import com.haulmont.cuba.gui.data.Datasource;
+
 import java.util.Collection;
 
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <V> value and options type for the component
+ * @deprecated Use {@link io.jmix.ui.components.TwinColumn} instead
+ */
 @Deprecated
 public interface TwinColumn<V> extends OptionsField<Collection<V>, V>, io.jmix.ui.components.TwinColumn<V> {
 }

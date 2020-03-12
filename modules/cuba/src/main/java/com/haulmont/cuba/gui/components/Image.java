@@ -25,6 +25,11 @@ import io.jmix.ui.components.data.meta.EntityValueSource;
 
 import javax.annotation.Nullable;
 
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @deprecated Use {@link io.jmix.ui.components.Image} instead
+ */
 @Deprecated
 public interface Image extends io.jmix.ui.components.Image {
 
@@ -33,7 +38,6 @@ public interface Image extends io.jmix.ui.components.Image {
      *
      * @deprecated Use {@link #setValueSource(ValueSource)} instead.
      */
-
     @SuppressWarnings("unchecked")
     @Deprecated
     default void setDatasource(Datasource datasource, String property) {

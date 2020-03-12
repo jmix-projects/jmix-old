@@ -18,16 +18,27 @@ package com.haulmont.cuba.gui.components;
 
 import com.haulmont.cuba.gui.components.data.table.DatasourceTreeTableItems;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
+import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 import io.jmix.core.entity.Entity;
+import io.jmix.ui.components.ListComponent;
 import io.jmix.ui.components.data.TableItems;
 
 import javax.annotation.Nullable;
 
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <E> entity
+ * @deprecated Use {@link io.jmix.ui.components.TreeTable} instead
+ */
 @Deprecated
 @SuppressWarnings("rawtypes")
-public interface TreeTable<E extends Entity> extends io.jmix.ui.components.TreeTable<E> {
+public interface TreeTable<E extends Entity> extends ListComponent<E>, io.jmix.ui.components.TreeTable<E> {
 
+    /**
+     * @return hierarchical datasource
+     */
     @Deprecated
     @Nullable
     default HierarchicalDatasource getDatasource() {
@@ -44,6 +55,12 @@ public interface TreeTable<E extends Entity> extends io.jmix.ui.components.TreeT
         return null;
     }
 
+    /**
+     * Sets {@code CollectionDatasource} as TreeTable data source.
+     *
+     * @param datasource collection datasource
+     * @deprecated Use {@link #setItems(TableItems)} instead
+     */
     @Deprecated
     default void setDatasource(CollectionDatasource datasource) {
         if (datasource == null) {
@@ -57,6 +74,11 @@ public interface TreeTable<E extends Entity> extends io.jmix.ui.components.TreeT
         }
     }
 
+    /**
+     * Sets  {@code HierarchicalDatasource} as TreeTable data source.
+     *
+     * @param datasource hierarchical datasource
+     */
     @Deprecated
     default void setDatasource(HierarchicalDatasource datasource) {
         setDatasource((CollectionDatasource) datasource);

@@ -18,14 +18,25 @@ package com.haulmont.cuba.gui.components;
 
 import com.haulmont.cuba.gui.components.data.datagrid.DatasourceTreeDataGridItems;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
+import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 import io.jmix.core.entity.Entity;
 import io.jmix.ui.components.data.DataGridItems;
 
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <E> entity
+ * @deprecated Use {@link io.jmix.ui.components.TreeDataGrid} instead
+ */
 @SuppressWarnings("rawtypes")
 @Deprecated
-public interface TreeDataGrid<E extends Entity> extends io.jmix.ui.components.TreeDataGrid<E> {
+public interface TreeDataGrid<E extends Entity> extends ListComponent<E>, io.jmix.ui.components.TreeDataGrid<E> {
 
+    /**
+     * @return the hierarchical data source
+     * @deprecated use {@link #getItems()} instead
+     */
     @Deprecated
     default HierarchicalDatasource getDatasource() {
         DataGridItems<E> dataGridItems = getItems();
@@ -34,11 +45,23 @@ public interface TreeDataGrid<E extends Entity> extends io.jmix.ui.components.Tr
                 : null;
     }
 
+    /**
+     * Sets an instance of {@code HierarchicalDatasource} as the TreeDataGrid data source.
+     *
+     * @param datasource hierarchical datasource
+     * @deprecated Use {@link #setItems(DataGridItems)} instead
+     */
     @Deprecated
     default void setDatasource(HierarchicalDatasource datasource) {
         setDatasource((CollectionDatasource) datasource);
     }
 
+    /**
+     * Sets an instance of {@code CollectionDatasource} as the TreeDataGrid data source.
+     *
+     * @param datasource collection datasource
+     * @deprecated Use {@link #setItems(DataGridItems)} instead
+     */
     @SuppressWarnings("unchecked")
     default void setDatasource(CollectionDatasource datasource) {
         if (datasource == null) {

@@ -16,6 +16,14 @@
 
 package com.haulmont.cuba.gui.components;
 
+import com.haulmont.cuba.gui.data.Datasource;
+
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <V> tpe of value
+ * @deprecated Use {@link io.jmix.ui.components.Label} instead
+ */
 @Deprecated
 public interface Label<V> extends DatasourceComponent<V>, io.jmix.ui.components.Label<V> {
 }

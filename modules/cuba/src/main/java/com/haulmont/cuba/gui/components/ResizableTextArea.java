@@ -16,6 +16,14 @@
 
 package com.haulmont.cuba.gui.components;
 
+import com.haulmont.cuba.gui.data.Datasource;
+
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <V> type of value
+ * @deprecated Use {@link io.jmix.ui.components.ResizableTextArea} instead
+ */
 @Deprecated
 public interface ResizableTextArea<V> extends TextArea<V>, io.jmix.ui.components.ResizableTextArea<V> {
 

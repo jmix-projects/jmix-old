@@ -16,9 +16,15 @@
 
 package com.haulmont.cuba.gui.components;
 
+import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.core.entity.Entity;
 
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <V> entity
+ * @deprecated Use {@link io.jmix.ui.components.PickerField} instead
+ */
 @Deprecated
-public interface PickerField<V extends Entity>
-        extends Field<V>, io.jmix.ui.components.PickerField<V> {
+public interface PickerField<V extends Entity> extends Field<V>, io.jmix.ui.components.PickerField<V> {
 }

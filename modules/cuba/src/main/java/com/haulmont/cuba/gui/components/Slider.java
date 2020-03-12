@@ -16,6 +16,14 @@
 
 package com.haulmont.cuba.gui.components;
 
+import com.haulmont.cuba.gui.data.Datasource;
+
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <V> type of number value
+ * @deprecated Use {@link io.jmix.ui.components.Slider} instead
+ */
 @Deprecated
 public interface Slider<V extends Number> extends Field<V>, io.jmix.ui.components.Slider<V> {
 }

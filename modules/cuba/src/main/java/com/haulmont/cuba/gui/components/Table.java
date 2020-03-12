@@ -19,15 +19,24 @@ package com.haulmont.cuba.gui.components;
 import com.haulmont.cuba.gui.components.data.table.DatasourceTableItems;
 import com.haulmont.cuba.gui.components.data.table.SortableDatasourceTableItems;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
+import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.core.entity.Entity;
 import io.jmix.ui.components.data.TableItems;
 
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <E> entity
+ * @deprecated Use {@link io.jmix.ui.components.Table} instead
+ */
 @Deprecated
 @SuppressWarnings("rawtypes")
-public interface Table<E extends Entity> extends io.jmix.ui.components.Table<E> {
+public interface Table<E extends Entity> extends ListComponent<E>, io.jmix.ui.components.Table<E> {
 
     /**
-     * @param datasource datasource
+     * Sets {@code CollectionDatasource} as Table data source.
+     *
+     * @param datasource collection datasource
      * @deprecated Use {@link #setItems(TableItems)} instead
      */
     @Deprecated
@@ -46,7 +55,7 @@ public interface Table<E extends Entity> extends io.jmix.ui.components.Table<E> 
     }
 
     /**
-     * @return datasource
+     * @return collection datasource
      * @deprecated Use {@link #getItems()} instead
      */
     @Deprecated

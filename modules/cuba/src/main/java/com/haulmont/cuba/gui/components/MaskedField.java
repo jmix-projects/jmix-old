@@ -16,6 +16,14 @@
 
 package com.haulmont.cuba.gui.components;
 
+import com.haulmont.cuba.gui.data.Datasource;
+
+/**
+ * Component compatible with {@link Datasource}.
+ *
+ * @param <V> type of value
+ * @deprecated Use {@link io.jmix.ui.components.MaskedField} instead
+ */
 @Deprecated
 public interface MaskedField<V> extends TextInputField<V>, io.jmix.ui.components.MaskedField<V> {
 }
