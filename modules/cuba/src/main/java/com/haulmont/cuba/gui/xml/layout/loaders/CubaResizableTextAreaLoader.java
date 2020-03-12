@@ -18,8 +18,6 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.gui.components.ResizableTextArea;
-import com.haulmont.cuba.gui.components.TextArea;
 import io.jmix.ui.xml.layout.loaders.ResizableTextAreaLoader;
 import org.dom4j.Element;
 import org.slf4j.Logger;
@@ -28,25 +26,6 @@ import org.slf4j.LoggerFactory;
 public class CubaResizableTextAreaLoader extends ResizableTextAreaLoader {
 
     private static final Logger log = LoggerFactory.getLogger(ResizableTextAreaLoader.class);
-
-    @Override
-    public void createComponent() {
-        if (element.getName().equals(ResizableTextArea.NAME)) {
-            resultComponent = factory.create(ResizableTextArea.NAME);
-        }
-
-        if (element.getName().equals(TextArea.NAME)) {
-            if (isResizable() || hasResizableDirection()) {
-                resultComponent = factory.create(ResizableTextArea.NAME);
-                log.warn("The 'resizableTextArea' element must be used in order to create a resizable text area " +
-                        "instead of 'textArea'");
-            } else {
-                resultComponent = factory.create(TextArea.NAME);
-            }
-        }
-
-        loadId(resultComponent, element);
-    }
 
     @SuppressWarnings("rawtypes")
     @Override

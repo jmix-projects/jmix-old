@@ -26,13 +26,6 @@ import org.dom4j.Element;
 public class CubaTreeTableLoader extends TreeTableLoader {
 
     @Override
-    public void createComponent() {
-        resultComponent = factory.create(TreeTable.NAME);
-        loadId(resultComponent, element);
-        createButtonsPanel(resultComponent, element);
-    }
-
-    @Override
     protected TableDataHolder createTableDataHolder() {
         return new CubaTreeTableDataHolder();
     }

@@ -18,17 +18,10 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.OptionsField;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.gui.components.OptionsList;
 import io.jmix.ui.xml.layout.loaders.OptionsListLoader;
 import org.dom4j.Element;
 
 public class CubaOptionsListLoader extends OptionsListLoader {
-
-    @Override
-    public void createComponent() {
-        resultComponent = factory.create(OptionsList.NAME);
-        loadId(resultComponent, element);
-    }
 
     @SuppressWarnings("rawtypes")
     @Override

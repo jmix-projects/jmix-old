@@ -18,17 +18,10 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.gui.components.PickerField;
 import io.jmix.ui.xml.layout.loaders.PickerFieldLoader;
 import org.dom4j.Element;
 
 public class CubaPickerFieldLoader extends PickerFieldLoader {
-
-    @Override
-    public void createComponent() {
-        resultComponent = factory.create(PickerField.NAME);
-        loadId(resultComponent, element);
-    }
 
     @SuppressWarnings("rawtypes")
     @Override

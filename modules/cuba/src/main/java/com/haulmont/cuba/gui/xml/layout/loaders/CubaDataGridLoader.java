@@ -26,11 +26,6 @@ import io.jmix.ui.xml.layout.loaders.DataGridLoader;
 public class CubaDataGridLoader extends DataGridLoader {
 
     @Override
-    protected DataGrid createComponentInternal() {
-        return factory.create(DataGrid.NAME);
-    }
-
-    @Override
     protected DataGridDataHolder createDataGridDataHolder() {
         return new CubaDataGridDataHolder();
     }

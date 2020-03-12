@@ -18,17 +18,10 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.OptionsField;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.gui.components.TwinColumn;
 import io.jmix.ui.xml.layout.loaders.TwinColumnLoader;
 import org.dom4j.Element;
 
 public class CubaTwinColumnLoader extends TwinColumnLoader {
-
-    @Override
-    public void createComponent() {
-        resultComponent = factory.create(TwinColumn.NAME);
-        loadId(resultComponent, element);
-    }
 
     @SuppressWarnings("rawtypes")
     @Override

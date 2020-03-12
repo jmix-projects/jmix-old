@@ -26,13 +26,6 @@ import org.dom4j.Element;
 public class CubaGroupTableLoader extends GroupTableLoader {
 
     @Override
-    public void createComponent() {
-        resultComponent = factory.create(GroupTable.NAME);
-        loadId(resultComponent, element);
-        createButtonsPanel(resultComponent, element);
-    }
-
-    @Override
     protected TableDataHolder createTableDataHolder() {
         return new CubaGroupTableDataHolder();
     }

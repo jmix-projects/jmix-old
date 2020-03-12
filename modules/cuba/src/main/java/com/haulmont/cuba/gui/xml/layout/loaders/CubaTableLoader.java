@@ -16,7 +16,6 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
-
 import com.haulmont.cuba.gui.components.Table;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
@@ -24,13 +23,6 @@ import org.dom4j.Element;
 
 @SuppressWarnings("rawtypes")
 public class CubaTableLoader extends io.jmix.ui.xml.layout.loaders.TableLoader {
-
-    @Override
-    public void createComponent() {
-        resultComponent = factory.create(Table.NAME);
-        loadId(resultComponent, element);
-        createButtonsPanel(resultComponent, element);
-    }
 
     @Override
     protected TableDataHolder createTableDataHolder() {

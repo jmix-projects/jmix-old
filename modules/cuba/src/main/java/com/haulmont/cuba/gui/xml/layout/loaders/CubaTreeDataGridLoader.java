@@ -26,11 +26,6 @@ import io.jmix.ui.xml.layout.loaders.TreeDataGridLoader;
 public class CubaTreeDataGridLoader extends TreeDataGridLoader {
 
     @Override
-    protected TreeDataGrid createComponentInternal() {
-        return factory.create(TreeDataGrid.NAME);
-    }
-
-    @Override
     protected DataGridDataHolder createDataGridDataHolder() {
         return new CubaTreeDataGridDataHolder();
     }

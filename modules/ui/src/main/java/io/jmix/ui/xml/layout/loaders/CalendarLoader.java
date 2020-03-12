@@ -91,14 +91,7 @@ public class CalendarLoader extends AbstractComponentLoader<Calendar> {
     }
 
     protected void loadCalendarData(Calendar component, Element element) {
-        String containerId = element.attributeValue("dataContainer");
-        String datasource = element.attributeValue("datasource");
-
-        if (!Strings.isNullOrEmpty(containerId)) {
-            loadDataContainer(component, element);
-        } else if (!Strings.isNullOrEmpty(datasource)) {
-            loadDatasource(component, element);
-        }
+        loadDataContainer(component, element);
 
         loadEventProviderRelatedProperties(component, element);
     }
@@ -106,6 +99,10 @@ public class CalendarLoader extends AbstractComponentLoader<Calendar> {
     @SuppressWarnings("unchecked")
     protected void loadDataContainer(Calendar component, Element element) {
         String containerId = element.attributeValue("dataContainer");
+        if (Strings.isNullOrEmpty(containerId)) {
+            return;
+        }
+
         FrameOwner frameOwner = getComponentContext().getFrame().getFrameOwner();
         ScreenData screenData = UiControllerUtils.getScreenData(frameOwner);
         InstanceContainer container = screenData.getContainer(containerId);
@@ -116,19 +113,6 @@ public class CalendarLoader extends AbstractComponentLoader<Calendar> {
         }
 
         component.setEventProvider(new ContainerCalendarEventProvider<>(((CollectionContainer) container)));
-    }
-
-    protected void loadDatasource(Calendar component, Element element) {
-        String datasource = element.attributeValue("datasource");
-        /*
-        TODO: legacy-ui
-        CollectionDatasource ds = (CollectionDatasource) getComponentContext().getDsContext().get(datasource);
-        if (ds == null) {
-            throw new GuiDevelopmentException(String.format("Datasource '%s' is not defined", datasource),
-                    getContext(), "Component ID", component.getId());
-        }
-
-        component.setDatasource(ds);*/
     }
 
     protected void loadEventProviderRelatedProperties(Calendar component, Element element) {

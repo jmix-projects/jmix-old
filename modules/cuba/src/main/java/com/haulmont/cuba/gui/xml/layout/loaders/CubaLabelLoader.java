@@ -18,17 +18,10 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.gui.components.Label;
 import io.jmix.ui.xml.layout.loaders.LabelLoader;
 import org.dom4j.Element;
 
 public class CubaLabelLoader extends LabelLoader {
-
-    @Override
-    public void createComponent() {
-        resultComponent = factory.create(Label.NAME);
-        loadId(resultComponent, element);
-    }
 
     @SuppressWarnings("rawtypes")
     @Override

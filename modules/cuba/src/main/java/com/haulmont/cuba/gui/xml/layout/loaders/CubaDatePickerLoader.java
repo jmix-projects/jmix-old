@@ -18,17 +18,10 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.gui.components.DatePicker;
 import io.jmix.ui.xml.layout.loaders.DatePickerLoader;
 import org.dom4j.Element;
 
 public class CubaDatePickerLoader extends DatePickerLoader {
-
-    @Override
-    public void createComponent() {
-        resultComponent = factory.create(DatePicker.NAME);
-        loadId(resultComponent, element);
-    }
 
     @SuppressWarnings("rawtypes")
     @Override

@@ -18,17 +18,10 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.gui.components.SuggestionPickerField;
 import io.jmix.ui.xml.layout.loaders.SuggestionPickerFieldLoader;
 import org.dom4j.Element;
 
 public class CubaSuggestionPickerFieldLoader extends SuggestionPickerFieldLoader {
-
-    @Override
-    public void createComponent() {
-        resultComponent = factory.create(SuggestionPickerField.NAME);
-        loadId(resultComponent, element);
-    }
 
     @SuppressWarnings("rawtypes")
     @Override

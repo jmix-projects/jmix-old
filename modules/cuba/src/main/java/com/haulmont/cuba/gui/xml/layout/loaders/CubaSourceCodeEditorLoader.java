@@ -18,17 +18,10 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.gui.components.SourceCodeEditor;
 import io.jmix.ui.xml.layout.loaders.SourceCodeEditorLoader;
 import org.dom4j.Element;
 
 public class CubaSourceCodeEditorLoader extends SourceCodeEditorLoader {
-
-    @Override
-    public void createComponent() {
-        resultComponent = factory.create(SourceCodeEditor.NAME);
-        loadId(resultComponent, element);
-    }
 
     @SuppressWarnings("rawtypes")
     @Override

@@ -18,17 +18,10 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.DatasourceComponent;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import com.haulmont.cuba.gui.components.Slider;
 import io.jmix.ui.xml.layout.loaders.SliderLoader;
 import org.dom4j.Element;
 
 public class CubaSliderLoader extends SliderLoader {
-
-    @Override
-    public void createComponent() {
-        resultComponent = factory.create(Slider.NAME);
-        loadId(resultComponent, element);
-    }
 
     @SuppressWarnings("rawtypes")
     @Override
