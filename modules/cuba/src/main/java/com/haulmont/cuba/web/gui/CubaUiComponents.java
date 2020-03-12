@@ -27,6 +27,7 @@ public class CubaUiComponents extends WebUiComponents {
     public static final String NAME = "cuba_UiComponents";
 
     {
+        classes.put(RowsCount.NAME, WebRowsCount.class);
         classes.put(Calendar.NAME, WebCalendar.class);
         classes.put(Tree.NAME, WebTree.class);
         classes.put(DataGrid.NAME, WebDataGrid.class);
