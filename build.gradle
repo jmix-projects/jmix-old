@@ -45,11 +45,6 @@ buildscript {
     }
 }
 
-ext {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
-}
-
 allprojects {
     repositories {
         if (rootProject.hasProperty('jmixRepoUrl')) {
@@ -66,6 +61,15 @@ allprojects {
         } else {
             jcenter()
             maven { url "https://dl.bintray.com/cuba-platform/main" }
+        }
+    }
+}
+
+subprojects {
+    plugins.withType(JavaPlugin) {
+        java {
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
         }
     }
 }

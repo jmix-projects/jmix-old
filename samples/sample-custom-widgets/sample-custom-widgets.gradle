@@ -5,8 +5,6 @@ apply plugin: 'war'
 apply plugin: 'io.jmix'
 
 group = 'io.jmix.sample.customwidgets'
-version = rootProject.jmixVersion
-sourceCompatibility = rootProject.sourceCompatibility
 
 dependencies {
     implementation project(':starters:starter-standard')

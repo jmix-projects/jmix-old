@@ -21,8 +21,6 @@ apply plugin: 'war'
 apply plugin: 'io.jmix'
 
 group = 'io.jmix.sample.remoting'
-version = rootProject.jmixVersion
-sourceCompatibility = rootProject.sourceCompatibility
 
 dependencies {
     implementation project(':modules:core')
