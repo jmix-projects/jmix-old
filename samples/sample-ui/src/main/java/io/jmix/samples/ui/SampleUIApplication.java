@@ -16,35 +16,18 @@
 
 package io.jmix.samples.ui;
 
-import io.jmix.core.ConfigInterfaces;
-import io.jmix.core.security.Security;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 
 @SpringBootApplication
-public class SampleUIApplication implements CommandLineRunner {
-
-	@Autowired
-	private Greeter greeter;
-	@Inject
-	private ConfigInterfaces configInterfaces;
-	@Inject
-	private Security security;
+public class SampleUIApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SampleUIApplication.class, args);
-	}
-
-	@Override
-	public void run(String... args) {
-		System.out.println(greeter.sayHello("there"));
 	}
 
 	@Bean

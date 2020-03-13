@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<menu-config xmlns="http://schemas.haulmont.com/jmix/menu.xsd">
+    <menu id="application">
+        <item screen="sec_User.browse"/>
+        <item screen="component-samples"/>
+    </menu>
+</menu-config>

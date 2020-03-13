@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 
-<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd">
+<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+        caption="Components">
     <data readOnly="true">
         <collection id="usersDc"
                     class="io.jmix.security.entity.User"

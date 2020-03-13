@@ -16,7 +16,6 @@
 
 <window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
         caption="msg://application.caption">
-
     <layout>
         <hbox id="horizontalWrap"
               expand="workArea"
@@ -38,10 +37,6 @@
                            align="MIDDLE_CENTER"
                            value="msg://application.logoLabel"/>
                 </hbox>
-                <image id="logoImage"
-                       stylename="c-app-icon"
-                       align="MIDDLE_CENTER"
-                       scaleMode="SCALE_DOWN"/>
                 <hbox id="userInfoBox"
                       align="MIDDLE_CENTER"
                       spacing="true"

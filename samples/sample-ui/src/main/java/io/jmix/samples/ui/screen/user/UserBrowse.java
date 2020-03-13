@@ -22,8 +22,6 @@ import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.screen.*;
 
 import javax.inject.Inject;
-import javax.xml.ws.BindingType;
-import java.util.Observable;
 
 @UiController("sec_User.browse")
 @UiDescriptor("user-browse.xml")
