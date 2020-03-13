@@ -19,9 +19,10 @@ package com.haulmont.cuba.gui.data.impl;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.*;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityValues;
+import io.jmix.core.entity.ManagedEntity;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.data.entity.BaseDbGeneratedIdEntity;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -54,8 +55,8 @@ public class EntityCopyUtils {
         Preconditions.checkNotNullArgument(source, "source is null");
         Preconditions.checkNotNullArgument(dest, "dest is null");
 
-        if (source instanceof BaseDbGeneratedIdEntity && dest instanceof BaseDbGeneratedIdEntity) {
-            ((BaseDbGeneratedIdEntity) dest).setId(((BaseDbGeneratedIdEntity) source).getId());
+        if (source instanceof ManagedEntity && dest instanceof ManagedEntity) {
+            EntityValues.setEntityId(dest, EntityValues.getEntityId(source));
         }
 
         Metadata metadata = AppBeans.get(Metadata.class);

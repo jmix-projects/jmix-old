@@ -25,7 +25,6 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.data.AuditInfoProvider;
 import io.jmix.data.OrmProperties;
-import io.jmix.data.entity.BaseGenericIdEntity;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.eclipse.persistence.internal.helper.CubaUtil;
@@ -165,7 +164,7 @@ public class JmixEntityManager implements EntityManager {
         Class<T> effectiveClass = extendedEntities.getEffectiveClass(entityClass);
 
         T reference = delegate.getReference(effectiveClass, getRealId(primaryKey));
-        ((ManagedEntity<?>)reference).__getEntityEntry().setNew(false);
+        ((ManagedEntity<?>) reference).__getEntityEntry().setNew(false);
         return reference;
     }
 
@@ -499,8 +498,8 @@ public class JmixEntityManager implements EntityManager {
         Entity reloadedRef = find(entityClass, id);
         if (reloadedRef == null) {
             reloadedRef = metadata.create(entityClass);
-            if (reloadedRef instanceof BaseGenericIdEntity) {
-                ((BaseGenericIdEntity) reloadedRef).setId(id);
+            if (reloadedRef instanceof ManagedEntity) {
+                EntityValues.setEntityId(reloadedRef, id);
             }
             internalPersist(reloadedRef);
         }

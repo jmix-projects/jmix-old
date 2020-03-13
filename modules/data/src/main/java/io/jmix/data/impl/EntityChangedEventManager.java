@@ -16,16 +16,17 @@
 
 package io.jmix.data.impl;
 
-import io.jmix.data.entity.EmbeddableEntity;
-import io.jmix.data.event.AttributeChanges;
-import io.jmix.data.event.EntityChangedEvent;
 import io.jmix.core.Events;
 import io.jmix.core.Id;
 import io.jmix.core.Metadata;
-import io.jmix.core.entity.*;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityValues;
+import io.jmix.core.entity.ManagedEntity;
 import io.jmix.core.entity.annotation.PublishEntityChangedEvents;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.data.event.AttributeChanges;
+import io.jmix.data.event.EntityChangedEvent;
 import org.eclipse.persistence.descriptors.changetracking.ChangeTracker;
 import org.eclipse.persistence.internal.descriptors.changetracking.AttributeChangeListener;
 import org.eclipse.persistence.sessions.changesets.AggregateChangeRecord;
@@ -251,11 +252,13 @@ public class EntityChangedEventManager {
         for (MetaProperty property : metadata.getClass(entity.getClass()).getProperties()) {
             Object value = EntityValues.getAttributeValue(entity, property.getName());
             if (deleted) {
-                if (value instanceof EmbeddableEntity) {
-                    EmbeddableEntity embedded = (EmbeddableEntity) value;
-                    embeddedChanges.computeIfAbsent(property.getName(), s -> getEntityAttributeChanges(embedded, true));
-                } else if (value instanceof Entity) {
-                    changes.add(new AttributeChanges.Change(property.getName(), Id.of((Entity) value)));
+                if (value instanceof Entity) {
+                    boolean isEmbeddable = ((ManagedEntity<?>) value).__getEntityEntry().isEmbeddable();
+                    if (isEmbeddable) {
+                        embeddedChanges.computeIfAbsent(property.getName(), s -> getEntityAttributeChanges((Entity)value, true));
+                    } else {
+                        changes.add(new AttributeChanges.Change(property.getName(), Id.of((Entity) value)));
+                    }
                 } else if (value instanceof Collection) {
                     Collection<Entity> coll = (Collection<Entity>) value;
                     Collection<Id> idColl = value instanceof List ? new ArrayList<>() : new LinkedHashSet<>();

@@ -16,14 +16,14 @@
 
 package com.haulmont.cuba.core.model.primary_keys;
 
-import io.jmix.data.entity.EmbeddableEntity;
+import io.jmix.core.entity.Entity;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.util.Objects;
 
 @Embeddable
-public class EntityKey extends EmbeddableEntity {
+public class EntityKey implements Entity<Object> {
 
     @Column(name = "TENANT")
     private Integer tenant;

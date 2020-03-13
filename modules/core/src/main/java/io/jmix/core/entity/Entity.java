@@ -22,5 +22,6 @@ import java.io.Serializable;
  *
  * @param <T> identifier type
  */
+@SuppressWarnings("unused")
 public interface Entity<T> extends Serializable {
 }

@@ -15,22 +15,21 @@
  */
 package com.haulmont.cuba.gui.data.impl;
 
-import io.jmix.core.FetchPlan;
-import io.jmix.core.FetchPlanProperty;
-import io.jmix.data.entity.EmbeddableEntity;
-import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.EntityValues;
-import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaProperty;
 import com.haulmont.cuba.gui.data.DataSupplier;
 import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.data.DsContext;
 import com.haulmont.cuba.gui.data.EmbeddedDatasource;
+import io.jmix.core.FetchPlan;
+import io.jmix.core.FetchPlanProperty;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityValues;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class EmbeddedDatasourceImpl<T extends EmbeddableEntity>
+public class EmbeddedDatasourceImpl<T extends Entity>
         extends AbstractDatasource<T>
         implements Datasource<T>, DatasourceImplementation<T>, EmbeddedDatasource<T> {
 

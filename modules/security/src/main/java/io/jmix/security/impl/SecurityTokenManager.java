@@ -26,7 +26,6 @@ import io.jmix.core.entity.*;
 import io.jmix.core.event.AppContextInitializedEvent;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.data.entity.EmbeddableEntity;
 import io.jmix.security.SecurityTokenException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -129,7 +128,7 @@ public class SecurityTokenManager {
                 }
             }
             if (!metadataTools.hasCompositePrimaryKey(metaClass)
-                    && !(entity instanceof EmbeddableEntity)) {
+                    && !((ManagedEntity<?>) entity).__getEntityEntry().isEmbeddable()) {
                 if (!jsonObject.has(ENTITY_ID_KEY) || !jsonObject.has(ENTITY_NAME_KEY)) {
                     throw new SecurityTokenException("Invalid format for security token");
                 }

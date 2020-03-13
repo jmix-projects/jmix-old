@@ -18,9 +18,9 @@ package io.jmix.data.impl;
 
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.data.entity.BaseGenericIdEntity;
 import io.jmix.data.entity.BaseIntegerIdEntity;
 import io.jmix.data.entity.BaseLongIdEntity;
 import org.springframework.core.Ordered;
@@ -47,26 +47,24 @@ public class EntityIdentifierInitializer implements EntityInitializer, Ordered {
 
     @Override
     public <T> void initEntity(Entity<T> entity) {
-        if (!(entity instanceof BaseGenericIdEntity))
-            return;
-
         MetaClass metaClass = metadata.getClass(entity.getClass());
 
         MetaProperty primaryKeyProperty = metadataTools.getPrimaryKeyProperty(metaClass);
         if (primaryKeyProperty != null && metadataTools.isEmbedded(primaryKeyProperty)) {
             // create an instance of embedded ID
             Entity key = metadata.create(primaryKeyProperty.getRange().asClass());
-            ((BaseGenericIdEntity) entity).setId(key);
-        } else {
+            //noinspection unchecked
+            EntityValues.setEntityId(entity, (T) key);
+        } else if (entity instanceof BaseLongIdEntity || entity instanceof BaseIntegerIdEntity) {
             if (!config.getEnableIdGenerationForEntitiesInAdditionalDataStores()
                     && !Stores.MAIN.equals(metadataTools.getStoreName(metaClass))) {
                 return;
             }
             if (metadataTools.isPersistent(metaClass)) {
                 if (entity instanceof BaseLongIdEntity) {
-                    ((BaseGenericIdEntity<Long>) entity).setId(numberIdSource.createLongId(getEntityNameForIdGeneration(metaClass)));
-                } else if (entity instanceof BaseIntegerIdEntity) {
-                    ((BaseGenericIdEntity<Integer>) entity).setId(numberIdSource.createIntegerId(getEntityNameForIdGeneration(metaClass)));
+                    ((BaseLongIdEntity) entity).setId(numberIdSource.createLongId(getEntityNameForIdGeneration(metaClass)));
+                } else {
+                    ((BaseIntegerIdEntity) entity).setId(numberIdSource.createIntegerId(getEntityNameForIdGeneration(metaClass)));
                 }
             }
         }
