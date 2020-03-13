@@ -19,6 +19,8 @@ import io.jmix.gradle.JmixPlugin
 apply plugin: 'java'
 
 version = rootProject.jmixVersion
+sourceCompatibility = rootProject.sourceCompatibility
+targetCompatibility = rootProject.targetCompatibility
 
 def uiThemes = project(':modules:ui-themes')
 def inputDir = new File(uiThemes.buildDir, 'themes')

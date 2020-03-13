@@ -1,5 +1,8 @@
 apply plugin: 'java'
 
+sourceCompatibility = rootProject.sourceCompatibility
+targetCompatibility = rootProject.targetCompatibility
+
 jar.manifest {
     attributes(['Vaadin-Stylesheets': 'VAADIN/addons/demo-theme-addon/demo-theme-addon.scss'])
 }

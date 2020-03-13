@@ -19,6 +19,8 @@ import io.jmix.gradle.ui.ThemeCompile
 apply plugin: 'java'
 
 version = rootProject.jmixVersion
+sourceCompatibility = rootProject.sourceCompatibility
+targetCompatibility = rootProject.targetCompatibility
 
 configurations {
     themes
