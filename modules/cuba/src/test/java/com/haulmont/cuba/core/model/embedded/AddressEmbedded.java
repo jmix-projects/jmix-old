@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.core.model.embedded;
 
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.metamodel.annotations.MetaClass;
 import io.jmix.core.metamodel.annotations.NamePattern;
 

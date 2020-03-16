@@ -16,6 +16,8 @@
 
 package io.jmix.core.entity;
 
+import io.jmix.core.Entity;
+
 import javax.annotation.Nullable;
 
 /**

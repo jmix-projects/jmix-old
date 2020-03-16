@@ -17,7 +17,7 @@
 package io.jmix.data.impl;
 
 import io.jmix.core.Events;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.data.EntityChangeType;
 import io.jmix.data.event.EntityChangingEvent;
 import org.springframework.stereotype.Component;

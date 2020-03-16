@@ -18,7 +18,7 @@ package io.jmix.ui.components.data.table;
 
 import com.google.common.collect.ImmutableList;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.components.data.GroupTableItems;

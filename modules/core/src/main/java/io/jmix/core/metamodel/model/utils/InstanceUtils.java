@@ -15,9 +15,9 @@
  */
 package io.jmix.core.metamodel.model.utils;
 
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.metamodel.model.EntityPropertyPath;
+import io.jmix.core.metamodel.model.PropertyPath;
 
 import javax.annotation.Nullable;
 
@@ -38,11 +38,11 @@ public final class InstanceUtils {
      * </pre>
      * @param path value path as string
      * @return value path as array or empty array if the input is null
-     * @deprecated replaced by {@link EntityPaths#parseValuePath(String)}
+     * @deprecated replaced by {@link ObjectPathUtils#parseValuePath(String)}
      */
     @Deprecated
     public static String[] parseValuePath(@Nullable String path) {
-        return EntityPaths.parseValuePath(path);
+        return ObjectPathUtils.parseValuePath(path);
     }
 
     /**
@@ -50,11 +50,11 @@ public final class InstanceUtils {
      * brackets.
      * @param path value path as array
      * @return value path as string or empty string if the input is null
-     * @deprecated replaced by {@link EntityPaths#formatValuePath(String[])}
+     * @deprecated replaced by {@link ObjectPathUtils#formatValuePath(String[])}
      */
     @Deprecated
     public static String formatValuePath(String[] path) {
-        return EntityPaths.formatValuePath(path);
+        return ObjectPathUtils.formatValuePath(path);
     }
 
     /**
@@ -71,15 +71,15 @@ public final class InstanceUtils {
     }
 
     /**
-     * Get value of an attribute according to the rules described in {@link EntityValues#getValueEx(Entity, EntityPropertyPath)}.
+     * Get value of an attribute according to the rules described in {@link EntityValues#getValueEx(Entity, PropertyPath)}.
      *
      * @param entity     entity
      * @param propertyPath attribute path
      * @return attribute value
-     * @deprecated replaced by {@link EntityValues#getValueEx(Entity, EntityPropertyPath)}
+     * @deprecated replaced by {@link EntityValues#getValueEx(Entity, PropertyPath)}
      */
     @Deprecated
-    public static <T> T getValueEx(Entity<?> entity, EntityPropertyPath propertyPath) {
+    public static <T> T getValueEx(Entity<?> entity, PropertyPath propertyPath) {
         return EntityValues.getValueEx(entity, propertyPath);
     }
 
@@ -110,15 +110,15 @@ public final class InstanceUtils {
     }
 
     /**
-     * Set value of an attribute according to the rules described in {@link EntityValues#setValueEx(Entity, EntityPropertyPath, Object)}.
+     * Set value of an attribute according to the rules described in {@link EntityValues#setValueEx(Entity, PropertyPath, Object)}.
      *
      * @param entity     entity
      * @param propertyPath path to the attribute
      * @param value        attribute value
-     * @deprecated replaced by {@link EntityValues#setValueEx(Entity, EntityPropertyPath, Object)}
+     * @deprecated replaced by {@link EntityValues#setValueEx(Entity, PropertyPath, Object)}
      */
     @Deprecated
-    public static void setValueEx(Entity entity, EntityPropertyPath propertyPath, Object value) {
+    public static void setValueEx(Entity entity, PropertyPath propertyPath, Object value) {
         EntityValues.setValueEx(entity, propertyPath, value);
     }
 

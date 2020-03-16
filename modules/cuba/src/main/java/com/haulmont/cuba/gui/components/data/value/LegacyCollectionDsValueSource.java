@@ -25,7 +25,7 @@ import io.jmix.core.ExtendedEntities;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.impl.BeanLocatorAware;
 import io.jmix.core.metamodel.model.MetaClass;

@@ -18,7 +18,6 @@ package io.jmix.core;
 
 import com.google.common.collect.Sets;
 import io.jmix.core.commons.util.StackTrace;
-import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;

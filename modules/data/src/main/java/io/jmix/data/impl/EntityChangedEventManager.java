@@ -19,7 +19,7 @@ package io.jmix.data.impl;
 import io.jmix.core.Events;
 import io.jmix.core.Id;
 import io.jmix.core.Metadata;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.annotation.PublishEntityChangedEvents;
 import io.jmix.core.metamodel.model.MetaClass;

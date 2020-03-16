@@ -18,7 +18,7 @@ package com.haulmont.cuba.gui.data.impl;
 import com.google.common.collect.ImmutableList;
 import com.haulmont.cuba.gui.data.*;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.gui.data.GroupInfo;

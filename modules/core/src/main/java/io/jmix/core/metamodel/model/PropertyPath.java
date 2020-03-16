@@ -19,7 +19,7 @@ package io.jmix.core.metamodel.model;
 /**
  * Property path descriptor.
  */
-public interface EntityPropertyPath {
+public interface PropertyPath {
     /**
      * @return names of properties
      */

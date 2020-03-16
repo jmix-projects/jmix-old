@@ -18,10 +18,7 @@ package io.jmix.security.impl;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
-import io.jmix.core.Metadata;
-import io.jmix.core.MetadataTools;
-import io.jmix.core.ServerConfig;
-import io.jmix.core.UuidProvider;
+import io.jmix.core.*;
 import io.jmix.core.entity.*;
 import io.jmix.core.event.AppContextInitializedEvent;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -213,7 +210,7 @@ public class SecurityTokenManager {
      * INTERNAL.
      */
     public void addFiltered(Entity<?> entity, String property, Object id) {
-        ManagedEntityEntry entityEntry = entity.__getEntityEntry();
+        EntityEntry entityEntry = entity.__getEntityEntry();
         Multimap<String, Object> filteredData = entityEntry.getSecurityState().getFilteredData();
         if (filteredData == null) {
             filteredData = ArrayListMultimap.create();
@@ -226,7 +223,7 @@ public class SecurityTokenManager {
      * INTERNAL.
      */
     public void addFiltered(Entity<?> entity, String property, Collection ids) {
-        ManagedEntityEntry entityEntry = entity.__getEntityEntry();
+        EntityEntry entityEntry = entity.__getEntityEntry();
         Multimap<String, Object> filteredData = entityEntry.getSecurityState().getFilteredData();
         if (filteredData == null) {
             filteredData = ArrayListMultimap.create();

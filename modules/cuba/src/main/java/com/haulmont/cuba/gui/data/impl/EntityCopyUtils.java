@@ -19,7 +19,7 @@ package com.haulmont.cuba.gui.data.impl;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.apache.commons.lang3.exception.ExceptionUtils;

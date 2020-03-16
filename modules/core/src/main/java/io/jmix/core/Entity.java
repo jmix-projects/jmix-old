@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.core.entity;
+package io.jmix.core;
 
 import java.io.Serializable;
 
@@ -24,7 +24,7 @@ import java.io.Serializable;
  */
 @SuppressWarnings("unused")
 public interface Entity<T> extends Serializable {
-    default ManagedEntityEntry<T> __getEntityEntry() {
+    default EntityEntry<T> __getEntityEntry() {
         throw new UnsupportedOperationException();
     }
 

@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.EntityInitializer;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.stereotype.Component;
 
@@ -37,9 +37,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Component(PostConstructorEntityInitializer.NAME)
-public class PostConstructorEntityInitializer implements EntityInitializer {
-    public static final String NAME = "jmix_PostConstructorEntityInitializer";
+@Component(EntityPostConstructInitializer.NAME)
+public class EntityPostConstructInitializer implements EntityInitializer {
+    public static final String NAME = "jmix_EntityPostConstructInitializer";
 
     @Inject
     protected BeanLocator beanLocator;

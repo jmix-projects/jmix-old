@@ -16,6 +16,7 @@
 
 package io.jmix.core.entity;
 
+import io.jmix.core.Entity;
 import io.jmix.core.UuidProvider;
 import io.jmix.core.commons.util.Preconditions;
 

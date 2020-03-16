@@ -20,7 +20,7 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.data.EntityChangeType;
 import io.jmix.data.impl.EntityAttributeChanges;

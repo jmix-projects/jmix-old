@@ -153,7 +153,7 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
     protected void makeEqualsMethod(CtClass ctClass) throws NotFoundException, CannotCompileException {
         if (findEqualsMethod(ctClass) == null) {
             CtMethod entryMethod = CtNewMethod.make(CtClass.booleanType, "equals", new CtClass[]{classPool.get(Object.class.getName())}, null,
-                    "return io.jmix.core.entity.EntityInternals.equals(this, $1);", ctClass);
+                    "return io.jmix.core.impl.EntityInternals.equals(this, $1);", ctClass);
             ctClass.addMethod(entryMethod);
         }
     }
@@ -170,7 +170,7 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
     protected void makeToStringMethod(CtClass ctClass) throws NotFoundException, CannotCompileException {
         if (findToStringMethod(ctClass) == null) {
             CtMethod entryMethod = CtNewMethod.make(classPool.get(String.class.getName()), "toString", null, null,
-                    "return io.jmix.core.entity.EntityInternals.toString(this);", ctClass);
+                    "return io.jmix.core.impl.EntityInternals.toString(this);", ctClass);
             ctClass.addMethod(entryMethod);
         }
     }
@@ -178,13 +178,13 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
     protected void makeWriteObjectMethod(CtClass ctClass) throws NotFoundException, CannotCompileException {
         CtMethod ctMethod = findWriteObjectMethod(ctClass);
         if (ctMethod != null) {
-            ctMethod.insertBefore("io.jmix.core.entity.EntityInternals.writeObject(this, $1)");
+            ctMethod.insertBefore("io.jmix.core.impl.EntityInternals.writeObject(this, $1)");
         } else {
             CtMethod entryMethod = CtNewMethod.make(Modifier.PRIVATE,
                     CtClass.voidType, WRITE_OBJECT_METHOD_NAME,
                     new CtClass[]{classPool.get(ObjectOutputStream.class.getName())},
                     new CtClass[]{classPool.get(IOException.class.getName())},
-                    "{ io.jmix.core.entity.EntityInternals.writeObject(this, $1); $1.defaultWriteObject(); }", ctClass);
+                    "{ io.jmix.core.impl.EntityInternals.writeObject(this, $1); $1.defaultWriteObject(); }", ctClass);
             ctClass.addMethod(entryMethod);
         }
     }

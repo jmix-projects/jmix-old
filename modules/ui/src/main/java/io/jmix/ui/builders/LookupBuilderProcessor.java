@@ -19,7 +19,7 @@ package io.jmix.ui.builders;
 
 import io.jmix.core.DataManager;
 import io.jmix.core.*;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;

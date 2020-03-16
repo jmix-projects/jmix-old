@@ -30,7 +30,7 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.EntityStates;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.UuidProvider;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

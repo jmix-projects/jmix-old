@@ -22,10 +22,10 @@ import io.jmix.core.BeanValidation;
 import io.jmix.core.MessageTools;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.KeyValueEntity;
-import io.jmix.core.entity.ManagedEntityEntry;
+import io.jmix.core.EntityEntry;
 import io.jmix.core.impl.BeanLocatorAware;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -339,7 +339,7 @@ public class ValueBinder {
                     targetItem = EntityValues.getValueEx(rootItem, basePropertyItem);
                 }
 
-                ManagedEntityEntry entityEntry = targetItem.__getEntityEntry();
+                EntityEntry entityEntry = targetItem.__getEntityEntry();
 
                 String metaPropertyName = metaPropertyPath.getMetaProperty().getName();
                 Object value = EntityValues.getValue(targetItem, metaPropertyName);

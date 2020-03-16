@@ -18,7 +18,7 @@ package io.jmix.ui.sys;
 import io.jmix.core.AppBeans;
 import io.jmix.core.EntityStates;
 import io.jmix.core.MetadataTools;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 
 /**
  * Utility class providing information about entity states.

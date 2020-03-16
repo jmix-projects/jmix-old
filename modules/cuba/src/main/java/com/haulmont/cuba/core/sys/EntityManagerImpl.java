@@ -20,7 +20,7 @@ import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlanRepository;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.IdProxy;
 import com.haulmont.cuba.core.EntityManager;

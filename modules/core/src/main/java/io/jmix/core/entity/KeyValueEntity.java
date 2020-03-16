@@ -16,6 +16,8 @@
 
 package io.jmix.core.entity;
 
+import io.jmix.core.Entity;
+import io.jmix.core.EntityEntry;
 import io.jmix.core.UuidProvider;
 import io.jmix.core.entity.annotation.DisableEnhancing;
 import io.jmix.core.entity.annotation.SystemLevel;
@@ -53,9 +55,9 @@ public class KeyValueEntity
 
     protected MetaClass metaClass;
 
-    protected ManagedEntityEntry<Object> entityEntry;
+    protected EntityEntry<Object> entityEntry;
 
-    protected static class KeyValueEntityEntry extends BaseManagedEntityEntry<Object> {
+    protected static class KeyValueEntityEntry extends BaseEntityEntry<Object> {
         public KeyValueEntityEntry(Entity<Object> source) {
             super(source);
         }
@@ -176,7 +178,7 @@ public class KeyValueEntity
     }
 
     @Override
-    public ManagedEntityEntry<Object> __getEntityEntry() {
+    public EntityEntry<Object> __getEntityEntry() {
         return entityEntry == null ? entityEntry = new KeyValueEntityEntry(this) : entityEntry;
     }
 

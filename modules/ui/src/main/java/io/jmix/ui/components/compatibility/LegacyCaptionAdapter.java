@@ -19,7 +19,7 @@ package io.jmix.ui.components.compatibility;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.ui.components.CaptionMode;
 import io.jmix.ui.components.HasItemCaptionProvider;

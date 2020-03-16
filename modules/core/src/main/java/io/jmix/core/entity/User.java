@@ -16,6 +16,7 @@
 
 package io.jmix.core.entity;
 
+import io.jmix.core.Entity;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.UUID;

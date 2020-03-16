@@ -17,6 +17,7 @@
 package test_support
 
 import io.jmix.core.AppBeans
+import io.jmix.core.Entity
 import io.jmix.core.EntityStates
 import io.jmix.core.JmixCoreConfiguration
 import io.jmix.core.TimeSource

@@ -22,7 +22,7 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.dynamicattributes.DynamicAttributesTools;
 import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
 import com.vaadin.ui.VerticalLayout;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.App;
 import io.jmix.ui.components.Table;

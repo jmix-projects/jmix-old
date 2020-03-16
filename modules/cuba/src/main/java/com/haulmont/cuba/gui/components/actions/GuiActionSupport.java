@@ -20,7 +20,7 @@ import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.core.EntityStates;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlanRepository;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.ui.Actions;
 import io.jmix.ui.dynamicattributes.DynamicAttributesGuiTools;
 import org.springframework.stereotype.Component;

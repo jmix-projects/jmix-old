@@ -178,7 +178,7 @@ public class MetaModelLoader {
 
     @Nullable
     protected MetaClassImpl createClass(Session session, Class<?> javaClass) {
-        if (!io.jmix.core.entity.Entity.class.isAssignableFrom(javaClass)) {
+        if (!io.jmix.core.Entity.class.isAssignableFrom(javaClass)) {
             return null;
         }
 

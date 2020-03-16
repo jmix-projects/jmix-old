@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core.impl;
 
+
+import io.jmix.core.entity.BaseEntityEntry;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.EntityValues;
+import io.jmix.core.EntityEntry;
 
 import java.io.ObjectOutputStream;
 import java.util.Objects;
@@ -27,7 +32,7 @@ import java.util.Objects;
 public class EntityInternals {
 
     public static String toString(Entity<?> entity) {
-        ManagedEntityEntry<?> entityEntry = entity.__getEntityEntry();
+        EntityEntry<?> entityEntry = entity.__getEntityEntry();
 
         String state = "";
         if (entityEntry.isNew())
@@ -61,13 +66,13 @@ public class EntityInternals {
     @SuppressWarnings("unused")
     public static void fireListeners(Entity<?> entity, String property, Object prevValue, Object newValue) {
         if (!EntityValues.propertyValueEquals(prevValue, newValue)) {
-            ((BaseManagedEntityEntry<?>) entity.__getEntityEntry()).firePropertyChanged(property, prevValue, newValue);
+            ((BaseEntityEntry<?>) entity.__getEntityEntry()).firePropertyChanged(property, prevValue, newValue);
         }
     }
 
     @SuppressWarnings("unused")
     public static void writeObject(Entity<?> entity, ObjectOutputStream outputStream) {
-        ManagedEntityEntry<?> entityEntry = entity.__getEntityEntry();
+        EntityEntry<?> entityEntry = entity.__getEntityEntry();
         if (entityEntry.isManaged()) {
             entityEntry.setManaged(false);
             entityEntry.setDetached(true);

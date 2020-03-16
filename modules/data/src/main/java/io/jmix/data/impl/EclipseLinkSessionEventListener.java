@@ -23,7 +23,7 @@ import io.jmix.core.Metadata;
 import io.jmix.core.commons.datastruct.Pair;
 import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.MetadataTools;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.JmixSettersEnhanced;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.entity.annotation.DisableEnhancing;

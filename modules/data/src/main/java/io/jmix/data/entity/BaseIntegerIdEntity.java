@@ -15,7 +15,7 @@
  */
 package io.jmix.data.entity;
 
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.annotation.UnavailableInSecurityConstraints;
 import io.jmix.core.metamodel.annotations.MetaClass;
 

@@ -18,14 +18,14 @@ package io.jmix.core.impl;
 
 import io.jmix.core.EntityInitializer;
 import io.jmix.core.UuidProvider;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.HasUuid;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
-@Component(EntityUUIDInitializer.NAME)
-public class EntityUUIDInitializer implements EntityInitializer, Ordered {
-    public static final String NAME = "jmix_EntityUUIDInitializer";
+@Component(EntityUuidInitializer.NAME)
+public class EntityUuidInitializer implements EntityInitializer, Ordered {
+    public static final String NAME = "jmix_EntityUuidInitializer";
 
     @Override
     public <T> void initEntity(Entity<T> entity) {

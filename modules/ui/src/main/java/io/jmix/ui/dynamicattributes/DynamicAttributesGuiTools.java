@@ -17,7 +17,7 @@
 package io.jmix.ui.dynamicattributes;
 
 import io.jmix.core.FetchPlan;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.components.HasValue;

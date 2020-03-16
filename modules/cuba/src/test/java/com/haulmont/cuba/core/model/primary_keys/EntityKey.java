@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.core.model.primary_keys;
 
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

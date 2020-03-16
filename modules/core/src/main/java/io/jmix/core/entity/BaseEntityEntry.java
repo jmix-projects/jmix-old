@@ -16,6 +16,8 @@
 
 package io.jmix.core.entity;
 
+import io.jmix.core.Entity;
+import io.jmix.core.EntityEntry;
 import io.jmix.core.metamodel.model.utils.MethodsCache;
 import io.jmix.core.metamodel.model.utils.RelatedPropertiesCache;
 
@@ -25,7 +27,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.function.BiConsumer;
 
-public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>, Cloneable {
+public abstract class BaseEntityEntry<K> implements EntityEntry<K>, Cloneable {
     protected byte state = NEW;
     protected SecurityState securityState = new SecurityState();
     protected transient Collection<WeakReference<EntityPropertyChangeListener>> propertyChangeListeners;
@@ -38,7 +40,7 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
 
     protected static final int PROPERTY_CHANGE_LISTENERS_INITIAL_CAPACITY = 4;
 
-    public BaseManagedEntityEntry(Entity<K> source) {
+    public BaseEntityEntry(Entity<K> source) {
         this.source = source;
     }
 
@@ -166,7 +168,7 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
     }
 
     @Override
-    public void copy(ManagedEntityEntry<?> entry) {
+    public void copy(EntityEntry<?> entry) {
         if (entry != null) {
             setNew(entry.isNew());
             setDetached(entry.isDetached());

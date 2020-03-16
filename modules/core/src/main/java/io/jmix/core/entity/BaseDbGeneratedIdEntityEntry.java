@@ -16,7 +16,10 @@
 
 package io.jmix.core.entity;
 
-public abstract class BaseDbGeneratedIdEntityEntry<K extends Number> extends BaseManagedEntityEntry<IdProxy<K>> {
+import io.jmix.core.Entity;
+import io.jmix.core.EntityEntry;
+
+public abstract class BaseDbGeneratedIdEntityEntry<K extends Number> extends BaseEntityEntry<IdProxy<K>> {
     protected IdProxy<K> idProxy;
 
     public BaseDbGeneratedIdEntityEntry(Entity<IdProxy<K>> source) {
@@ -44,7 +47,7 @@ public abstract class BaseDbGeneratedIdEntityEntry<K extends Number> extends Bas
     public abstract K getDbGeneratedId();
 
     @Override
-    public void copy(ManagedEntityEntry<?> entry) {
+    public void copy(EntityEntry<?> entry) {
         super.copy(entry);
         if (entry instanceof BaseDbGeneratedIdEntityEntry) {
             //noinspection unchecked

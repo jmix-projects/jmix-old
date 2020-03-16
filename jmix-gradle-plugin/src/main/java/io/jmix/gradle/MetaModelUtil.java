@@ -23,9 +23,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Objects;
 
 public class MetaModelUtil {
-    public static final String ENTITY_TYPE = "io.jmix.core.entity.Entity";
-    public static final String ENTITY_ENTRY_TYPE = "io.jmix.core.entity.ManagedEntityEntry";
-    public static final String BASE_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.BaseManagedEntityEntry";
+    public static final String ENTITY_TYPE = "io.jmix.core.Entity";
+    public static final String ENTITY_ENTRY_TYPE = "io.jmix.core.EntityEntry";
+    public static final String BASE_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.BaseEntityEntry";
     public static final String BASE_DB_GENERATED_ID_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.BaseDbGeneratedIdEntityEntry";
 
     public static final String SETTERS_ENHANCED_TYPE = "io.jmix.core.entity.JmixSettersEnhanced";

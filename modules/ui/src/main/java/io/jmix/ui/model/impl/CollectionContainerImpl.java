@@ -16,6 +16,7 @@
 
 package io.jmix.ui.model.impl;
 
+import io.jmix.core.Entity;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.entity.*;

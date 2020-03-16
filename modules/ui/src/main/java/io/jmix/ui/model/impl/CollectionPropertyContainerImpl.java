@@ -20,7 +20,7 @@ import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.EntityPropertyChangeEvent;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.ui.model.CollectionPropertyContainer;
 import io.jmix.ui.model.InstanceContainer;
 import org.springframework.context.ApplicationContext;

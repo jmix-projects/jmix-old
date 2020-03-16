@@ -19,7 +19,7 @@ package com.haulmont.cuba.gui.data.impl;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 import io.jmix.core.commons.datastruct.Node;
 import io.jmix.core.commons.datastruct.Tree;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.ui.logging.UIPerformanceLogger;
 import org.perf4j.StopWatch;

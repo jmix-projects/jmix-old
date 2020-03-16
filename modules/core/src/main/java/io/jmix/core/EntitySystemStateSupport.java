@@ -16,7 +16,7 @@
 
 package io.jmix.core;
 
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import org.springframework.stereotype.Component;
 
 @Component(EntitySystemStateSupport.NAME)

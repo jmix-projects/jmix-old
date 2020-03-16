@@ -16,7 +16,7 @@
 package io.jmix.data.impl;
 
 import io.jmix.core.AppBeans;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.annotation.Listeners;
 import io.jmix.data.PersistenceTools;

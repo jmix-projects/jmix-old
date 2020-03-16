@@ -17,7 +17,7 @@
 package io.jmix.ui.components.valueproviders;
 
 import com.vaadin.data.ValueProvider;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 

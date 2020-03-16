@@ -219,7 +219,7 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
     }
 
     private void addInaccessibleAttribute(Entity entity, String property) {
-        ManagedEntityEntry entityEntry = entity.__getEntityEntry();
+        EntityEntry entityEntry = entity.__getEntityEntry();
 
         String[] attributes = entityEntry.getSecurityState().getInaccessibleAttributes();
 

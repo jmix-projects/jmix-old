@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.gui.data.impl;
 
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 

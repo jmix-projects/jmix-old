@@ -16,7 +16,7 @@
 
 package io.jmix.ui.model;
 
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.Metadata;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.security.Security;

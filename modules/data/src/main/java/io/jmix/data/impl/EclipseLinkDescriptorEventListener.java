@@ -16,6 +16,7 @@
 
 package io.jmix.data.impl;
 
+import io.jmix.core.Entity;
 import io.jmix.data.AuditInfoProvider;
 import io.jmix.data.PersistenceTools;
 import io.jmix.core.TimeSource;

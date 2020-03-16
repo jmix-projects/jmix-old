@@ -17,7 +17,7 @@
 package io.jmix.core;
 
 import com.google.common.collect.ImmutableList;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.*;
 import io.jmix.core.entity.annotation.IgnoreUserTimeZone;
 import io.jmix.core.entity.annotation.SystemLevel;

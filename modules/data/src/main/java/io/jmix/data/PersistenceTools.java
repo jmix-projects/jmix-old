@@ -16,10 +16,7 @@
 
 package io.jmix.data;
 
-import io.jmix.core.EntityStates;
-import io.jmix.core.FetchPlan;
-import io.jmix.core.Metadata;
-import io.jmix.core.MetadataTools;
+import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.datatypes.impl.EnumClass;
@@ -288,7 +285,7 @@ public class PersistenceTools {
         if (!entityStates.isManaged(entity))
             throw new IllegalStateException("Entity must be in managed state");
 
-        ManagedEntityEntry entityEntry = entity.__getEntityEntry();
+        EntityEntry entityEntry = entity.__getEntityEntry();
         if (entityEntry.getSecurityState().getInaccessibleAttributes() != null) {
             for (String inaccessibleAttr : entityEntry.getSecurityState().getInaccessibleAttributes()) {
                 if (inaccessibleAttr.equals(property))

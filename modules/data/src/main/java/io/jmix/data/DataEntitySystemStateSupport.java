@@ -19,7 +19,7 @@ package io.jmix.data;
 import io.jmix.core.EntityStates;
 import io.jmix.core.EntitySystemStateSupport;
 import io.jmix.core.Metadata;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.metamodel.model.MetadataObject;
 import io.jmix.data.impl.JmixEntityFetchGroup;
 import org.eclipse.persistence.internal.queries.EntityFetchGroup;

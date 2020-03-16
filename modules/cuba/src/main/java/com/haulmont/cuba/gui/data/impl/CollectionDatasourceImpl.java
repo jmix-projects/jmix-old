@@ -21,7 +21,7 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.ConfigInterfaces;
 import com.haulmont.cuba.core.global.LoadContext;
 import io.jmix.core.commons.collections.ReadOnlyLinkedMapValuesView;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.security.EntityOp;

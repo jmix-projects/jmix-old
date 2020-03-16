@@ -16,10 +16,7 @@
 
 package io.jmix.data.impl;
 
-import io.jmix.core.AppBeans;
-import io.jmix.core.EntityStates;
-import io.jmix.core.FetchPlan;
-import io.jmix.core.entity.*;
+import io.jmix.core.*;
 import org.eclipse.persistence.core.queries.CoreAttributeGroup;
 import org.eclipse.persistence.descriptors.ClassDescriptor;
 import org.eclipse.persistence.descriptors.FetchGroupManager;
@@ -56,7 +53,7 @@ public class JmixEntityFetchGroup extends EntityFetchGroup {
     @Override
     public String onUnfetchedAttribute(FetchGroupTracker entity, String attributeName) {
         if (entity instanceof Entity) {
-            ManagedEntityEntry entityEntry = ((Entity<?>) entity).__getEntityEntry();
+            EntityEntry entityEntry = ((Entity<?>) entity).__getEntityEntry();
             if (entityEntry.getSecurityState().getInaccessibleAttributes() != null) {
                 for (String attribute : entityEntry.getSecurityState().getInaccessibleAttributes()) {
                     if (attributeName.equals(attribute))

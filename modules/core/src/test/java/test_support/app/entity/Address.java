@@ -17,7 +17,7 @@
 package test_support.app.entity;
 
 
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.metamodel.annotations.MetaClass;
 
 import javax.persistence.Column;

@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.core;
+
+import io.jmix.core.entity.EntityPropertyChangeListener;
+import io.jmix.core.entity.SecurityState;
 
 import java.io.Serializable;
 
-public interface ManagedEntityEntry<K> extends Serializable {
+public interface EntityEntry<K> extends Serializable {
 
     Entity<K> getSource();
 
@@ -80,5 +83,5 @@ public interface ManagedEntityEntry<K> extends Serializable {
     /**
      * Copies the state.
      */
-    void copy(ManagedEntityEntry<?> entry);
+    void copy(EntityEntry<?> entry);
 }

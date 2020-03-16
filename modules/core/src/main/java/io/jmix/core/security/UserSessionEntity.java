@@ -17,7 +17,7 @@
 package io.jmix.core.security;
 
 import io.jmix.core.UuidProvider;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.HasUuid;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.annotations.MetaClass;

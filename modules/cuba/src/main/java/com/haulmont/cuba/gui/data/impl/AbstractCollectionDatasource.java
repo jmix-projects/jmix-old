@@ -22,12 +22,12 @@ import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.DataSupplier;
 import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.core.*;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.core.metamodel.model.utils.EntityPaths;
+import io.jmix.core.metamodel.model.utils.ObjectPathUtils;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.components.ComponentsHelper;
@@ -184,7 +184,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
                     final List<String> list = Arrays.asList(strings);
                     final List<String> valuePath = list.subList(1, list.size());
                     String[] path1 = valuePath.toArray(new String[0]);
-                    property = EntityPaths.formatValuePath(path1);
+                    property = ObjectPathUtils.formatValuePath(path1);
                 } else {
                     property = null;
                 }
@@ -227,7 +227,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
                         final Entity item = datasource.getItem();
                         if (elements.length > 1) {
                             String[] valuePath = ArrayUtils.subarray(elements, 1, elements.length);
-                            String propertyName = EntityPaths.formatValuePath(valuePath);
+                            String propertyName = ObjectPathUtils.formatValuePath(valuePath);
                             Object value = EntityValues.getValueEx(item, propertyName);
                             map.put(name, value);
                         } else {
@@ -250,7 +250,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
                             Entity entity = (Entity) windowParams.get(elements[0]);
                             if (entity != null) {
                                 String[] valuePath = ArrayUtils.subarray(elements, 1, elements.length);
-                                String propertyName = EntityPaths.formatValuePath(valuePath);
+                                String propertyName = ObjectPathUtils.formatValuePath(valuePath);
                                 value = EntityValues.getValueEx(entity, propertyName);
                             }
                         }

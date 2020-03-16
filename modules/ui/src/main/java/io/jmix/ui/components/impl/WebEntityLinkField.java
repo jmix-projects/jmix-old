@@ -19,7 +19,7 @@ package io.jmix.ui.components.impl;
 import io.jmix.core.DataManager;
 import io.jmix.core.*;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.Datatypes;

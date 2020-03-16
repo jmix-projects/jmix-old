@@ -17,7 +17,7 @@
 package io.jmix.core;
 
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.KeyValueEntity;
 
 import javax.annotation.Nullable;

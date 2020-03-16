@@ -16,7 +16,7 @@
 
 package io.jmix.core;
 
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.HasUuid;
 import io.jmix.core.entity.IdProxy;

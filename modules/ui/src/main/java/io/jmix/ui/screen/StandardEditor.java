@@ -20,7 +20,7 @@ import com.google.common.base.Strings;
 import io.jmix.core.*;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.events.TriggerOnce;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.ClientConfig;

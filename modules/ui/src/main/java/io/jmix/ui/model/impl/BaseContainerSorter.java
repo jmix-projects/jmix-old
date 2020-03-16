@@ -19,7 +19,7 @@ package io.jmix.ui.model.impl;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.Sort;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.Sorter;

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.data.table;
 
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.ui.components.data.TreeTableItems;
 import io.jmix.ui.model.CollectionContainer;

@@ -16,14 +16,15 @@
 
 package io.jmix.core.entity;
 
-import io.jmix.core.metamodel.model.EntityPropertyPath;
+import io.jmix.core.Entity;
+import io.jmix.core.metamodel.model.PropertyPath;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-import static io.jmix.core.metamodel.model.utils.EntityPaths.formatValuePath;
-import static io.jmix.core.metamodel.model.utils.EntityPaths.parseValuePath;
+import static io.jmix.core.metamodel.model.utils.ObjectPathUtils.formatValuePath;
+import static io.jmix.core.metamodel.model.utils.ObjectPathUtils.parseValuePath;
 
 public class EntityValues {
 
@@ -103,7 +104,7 @@ public class EntityValues {
      * stops here and returns this value.
      */
     @Nullable
-    public static <T> T getValueEx(Entity<?> entity, EntityPropertyPath propertyPath) {
+    public static <T> T getValueEx(Entity<?> entity, PropertyPath propertyPath) {
         if (propertyPath.isDirectProperty()) {
             return getValue(entity, propertyPath.getFirstPropertyName());
         } else {
@@ -141,7 +142,7 @@ public class EntityValues {
      * @param propertyPath path to an attribute
      * @param value        attribute value
      */
-    public static void setValueEx(Entity<?> entity, EntityPropertyPath propertyPath, Object value) {
+    public static void setValueEx(Entity<?> entity, PropertyPath propertyPath, Object value) {
         if (propertyPath.isDirectProperty()) {
             setValue(entity, propertyPath.getFirstPropertyName(), value);
         } else {

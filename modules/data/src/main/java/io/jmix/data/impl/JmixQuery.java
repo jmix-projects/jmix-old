@@ -19,11 +19,12 @@ package io.jmix.data.impl;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import io.jmix.core.Entity;
 import io.jmix.core.Id;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.compatibility.AppContext;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.IdProxy;
 import io.jmix.core.entity.SoftDelete;
@@ -143,7 +144,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
 
         @SuppressWarnings("unchecked")
         E result = (E) getResultFromCache(jpaQuery, true, obj -> {
-            if (obj instanceof io.jmix.core.entity.Entity) {
+            if (obj instanceof Entity) {
                 for (FetchPlan fetchPlan : fetchPlans) {
                     entityFetcher.fetch((Entity) obj, fetchPlan);
                 }

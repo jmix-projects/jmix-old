@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityPaths {
+public class ObjectPathUtils {
 
     /**
      * Converts a string of identifiers separated by dots to an array. A part of the given string, enclosed in square

@@ -17,7 +17,7 @@
 package io.jmix.data.impl;
 
 import io.jmix.core.BeanLocator;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.impl.CorePersistentAttributesLoadChecker;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
