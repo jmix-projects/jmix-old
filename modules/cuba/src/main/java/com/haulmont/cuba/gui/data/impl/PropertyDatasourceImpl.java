@@ -94,7 +94,7 @@ public class PropertyDatasourceImpl<T extends Entity>
     }
 
     protected T getItem(Entity item) {
-        return item == null ? null : (T) EntityValues.getAttributeValue(item, metaProperty.getName());
+        return item == null ? null : (T) EntityValues.getValue(item, metaProperty.getName());
     }
 
     @Override
@@ -168,7 +168,7 @@ public class PropertyDatasourceImpl<T extends Entity>
             if (parentDs instanceof CollectionDatasource) {
                 CollectionDatasource parentCollectionDs = (CollectionDatasource) parentDs;
                 for (Entity item : itemsToCreate) {
-                    if (parentCollectionDs.containsItem(EntityValues.getEntityId(item))) {
+                    if (parentCollectionDs.containsItem(EntityValues.getId(item))) {
                         parentCollectionDs.modifyItem(item);
                     } else {
                         parentCollectionDs.addItem(item);
@@ -189,7 +189,7 @@ public class PropertyDatasourceImpl<T extends Entity>
                         // delete only if they have the same master item
                         if (inverseProp != null
                                 && PersistenceHelper.isLoaded(createdItem, inverseProp.getName())
-                                && Objects.equals(EntityValues.getAttributeValue(createdItem, inverseProp.getName()), masterDs.getItem())) {
+                                && Objects.equals(EntityValues.getValue(createdItem, inverseProp.getName()), masterDs.getItem())) {
                             parentCollectionDs.removeItem(createdItem);
                         }
                     }
@@ -223,7 +223,7 @@ public class PropertyDatasourceImpl<T extends Entity>
             itemsToUpdate.add(item);
         } else {
             final Entity parentItem = masterDs.getItem();
-            EntityValues.setAttributeValue(parentItem, metaProperty.getName(), item);
+            EntityValues.setValue(parentItem, metaProperty.getName(), item);
         }
         setModified(true);
     }
@@ -269,7 +269,7 @@ public class PropertyDatasourceImpl<T extends Entity>
 
             boolean isModified = masterDs.isModified();
 
-            EntityValues.setAttributeValue(parentItem, metaProperty.getName(), newItem, false);
+            EntityValues.setValue(parentItem, metaProperty.getName(), newItem, false);
 
             detachListener(prevItem);
             attachListener(newItem);

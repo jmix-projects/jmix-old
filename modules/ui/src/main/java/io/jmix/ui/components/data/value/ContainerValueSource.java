@@ -105,7 +105,7 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
                     setState(BindingState.INACTIVE);
                 }
                 propertyCont.setItem(event.getItem() != null ?
-                        EntityValues.getAttributeValueEx(event.getItem(), intermediatePath.getMetaProperty().getName()) : null);
+                        EntityValues.getValueEx(event.getItem(), intermediatePath.getMetaProperty().getName()) : null);
             });
 
             parentCont.addItemPropertyChangeListener(event -> {
@@ -114,8 +114,8 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
                     Entity prevEntity = (Entity) event.getPrevValue();
                     propertyCont.setItem(entity);
 
-                    V prevValue = prevEntity != null ? EntityValues.getAttributeValueEx(prevEntity, pathToTarget) : null;
-                    V value = entity != null ? EntityValues.getAttributeValueEx(entity, pathToTarget) : null;
+                    V prevValue = prevEntity != null ? EntityValues.getValueEx(prevEntity, pathToTarget) : null;
+                    V value = entity != null ? EntityValues.getValueEx(entity, pathToTarget) : null;
                     events.publish(ValueChangeEvent.class,
                             new ValueChangeEvent<>(this, prevValue, value));
                 }
@@ -158,7 +158,7 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
     public V getValue() {
         E item = container.getItemOrNull();
         if (item != null) {
-            return EntityValues.getAttributeValueEx(item, metaPropertyPath);
+            return EntityValues.getValueEx(item, metaPropertyPath);
         }
         return null;
     }
@@ -170,7 +170,7 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
             if (canUpdateMasterRefs()) {
                 updateMasterRefs(value);
             } else {
-                EntityValues.setAttributeValueEx(item, metaPropertyPath.toPathString(), value);
+                EntityValues.setValueEx(item, metaPropertyPath.toPathString(), value);
             }
         }
     }
@@ -269,10 +269,10 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
         //noinspection unchecked
         Collection<V> newValue = (Collection<V>) value;
 
-        Collection<? extends V> itemValue = EntityValues.getAttributeValueEx(getItem(), metaPropertyPath.toPathString());
+        Collection<? extends V> itemValue = EntityValues.getValueEx(getItem(), metaPropertyPath.toPathString());
         Collection<? extends V> oldValue = copyPropertyCollection(itemValue);
 
-        EntityValues.setAttributeValueEx(getItem(), metaPropertyPath.toPathString(), value);
+        EntityValues.setValueEx(getItem(), metaPropertyPath.toPathString(), value);
 
         container.mute();
 
@@ -280,7 +280,7 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
             for (V v : newValue) {
                 if (CollectionUtils.isEmpty(oldValue) || !oldValue.contains(v)) {
                     Entity entity = (Entity) v;
-                    EntityValues.setAttributeValue(dataContext.merge(entity), inverseProperty.getName(), getItem());
+                    EntityValues.setValue(dataContext.merge(entity), inverseProperty.getName(), getItem());
                 }
             }
         }
@@ -289,7 +289,7 @@ public class ContainerValueSource<E extends Entity, V> implements EntityValueSou
             for (V v : oldValue) {
                 if (CollectionUtils.isEmpty(newValue) || !newValue.contains(v)) {
                     Entity entity = (Entity) v;
-                    EntityValues.setAttributeValue(dataContext.merge(entity), inverseProperty.getName(), null);
+                    EntityValues.setValue(dataContext.merge(entity), inverseProperty.getName(), null);
                 }
             }
         }

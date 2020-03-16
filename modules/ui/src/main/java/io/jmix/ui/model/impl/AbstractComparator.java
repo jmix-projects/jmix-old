@@ -66,8 +66,8 @@ public abstract class AbstractComparator<T> implements Comparator<T> {
             } else {
                 c = 0;
                 for (MetaProperty property : namePatternProperties) {
-                    Object v1 = EntityValues.getAttributeValue(((Entity) o1), property.getName());
-                    Object v2 = EntityValues.getAttributeValue(((Entity) o2), property.getName());
+                    Object v1 = EntityValues.getValue(((Entity) o1), property.getName());
+                    Object v2 = EntityValues.getValue(((Entity) o2), property.getName());
                     c = compareAsc(v1, v2);
                     if (c != 0)
                         break;

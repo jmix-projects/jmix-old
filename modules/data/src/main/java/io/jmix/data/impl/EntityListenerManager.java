@@ -277,7 +277,7 @@ public class EntityListenerManager {
         if (log.isDebugEnabled()) {
             StringBuilder sb = new StringBuilder();
             sb.append("Executing ").append(type).append(" entity listener for ")
-                    .append(entity.getClass().getName()).append(" id=").append((Object) EntityValues.getEntityId(entity));
+                    .append(entity.getClass().getName()).append(" id=").append((Object) EntityValues.getId(entity));
             if (type != EntityListenerType.BEFORE_DETACH && type != EntityListenerType.BEFORE_ATTACH) {
                 Set<String> dirty = persistenceTools.getDirtyFields(entity);
                 if (!dirty.isEmpty()) {

@@ -200,7 +200,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
         }
 
         Class<? extends Entity> entityClass = item.getClass();
-        Object entityId = EntityValues.getEntityId(item);
+        Object entityId = EntityValues.getId(item);
 
         EntityStates entityStates = getBeanLocator().get(EntityStates.class);
 
@@ -208,7 +208,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
             if (!PersistenceHelper.isNew(item)
                     && !parentDs.getItemsToCreate().contains(item) && !parentDs.getItemsToUpdate().contains(item)
                     && parentDs instanceof CollectionDatasource
-                    && ((CollectionDatasource) parentDs).containsItem(EntityValues.getEntityId(item))
+                    && ((CollectionDatasource) parentDs).containsItem(EntityValues.getId(item))
                     && !entityStates.isLoadedWithFetchPlan(item, ds.getView())) {
                 item = dataservice.reload(item, ds.getView(), ds.getMetaClass(), ds.getLoadDynamicAttributes());
                 if (parentDs instanceof CollectionPropertyDatasourceImpl) {
@@ -324,7 +324,7 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
                 for (Datasource datasource : parentDs.getDsContext().getAll()) {
                     if (datasource instanceof NestedDatasource
                             && ((NestedDatasource) datasource).getMaster().equals(parentDs)) {
-                        Object value = EntityValues.getAttributeValue(entity, property.getName());
+                        Object value = EntityValues.getValue(entity, property.getName());
                         if (value instanceof Collection) {
                             Collection collection = (Collection) value;
                             //noinspection unchecked

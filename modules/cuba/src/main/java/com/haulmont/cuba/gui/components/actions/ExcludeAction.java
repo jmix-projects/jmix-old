@@ -181,7 +181,7 @@ public class ExcludeAction extends RemoveAction
                     Class dsClass = extendedEntities.getEffectiveClass(ds.getMetaClass());
                     if (inversePropClass.isAssignableFrom(dsClass)) {
                         for (Entity item : selected) {
-                            EntityValues.setAttributeValue(item, inverseProp.getName(), null);
+                            EntityValues.setValue(item, inverseProp.getName(), null);
                         }
                     }
                 }

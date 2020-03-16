@@ -107,7 +107,7 @@ public class PresentationEditor extends CubaWindow {
 
         defaultField = new CheckBox();
         defaultField.setCaption(messages.getMessage("PresentationsEditor.default"));
-        defaultField.setValue(EntityValues.<UUID>getEntityId(presentation).equals(component.getDefaultPresentationId()));
+        defaultField.setValue(EntityValues.<UUID>getId(presentation).equals(component.getDefaultPresentationId()));
         root.addComponent(defaultField);
 
         if (allowGlobalPresentations) {
@@ -202,7 +202,7 @@ public class PresentationEditor extends CubaWindow {
 
         addCloseListener(e -> {
             if (isNew) {
-                component.applyPresentation(EntityValues.<UUID>getEntityId(presentation));
+                component.applyPresentation(EntityValues.<UUID>getId(presentation));
             }
         });
     }

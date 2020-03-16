@@ -52,7 +52,7 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
     @Override
     public V getStart() {
         if (provider.getStartDateProperty() != null) {
-            return EntityValues.getAttributeValue(entity, provider.getStartDateProperty());
+            return EntityValues.getValue(entity, provider.getStartDateProperty());
         } else {
             return null;
         }
@@ -60,13 +60,13 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
 
     @Override
     public void setStart(V start) {
-        EntityValues.setAttributeValue(entity, provider.getStartDateProperty(), start);
+        EntityValues.setValue(entity, provider.getStartDateProperty(), start);
     }
 
     @Override
     public V getEnd() {
         if (provider.getEndDateProperty() != null) {
-            return EntityValues.getAttributeValue(entity, provider.getEndDateProperty());
+            return EntityValues.getValue(entity, provider.getEndDateProperty());
         } else {
             return null;
         }
@@ -74,13 +74,13 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
 
     @Override
     public void setEnd(V end) {
-        EntityValues.setAttributeValue(entity, provider.getEndDateProperty(), end);
+        EntityValues.setValue(entity, provider.getEndDateProperty(), end);
     }
 
     @Override
     public String getCaption() {
         if (provider.getCaptionProperty() != null) {
-            return EntityValues.getAttributeValue(entity, provider.getCaptionProperty());
+            return EntityValues.getValue(entity, provider.getCaptionProperty());
         } else {
             return null;
         }
@@ -88,18 +88,18 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
 
     @Override
     public void setCaption(String caption) {
-        EntityValues.setAttributeValue(entity, provider.getCaptionProperty(), caption);
+        EntityValues.setValue(entity, provider.getCaptionProperty(), caption);
     }
 
     @Override
     public void setDescription(String description) {
-        EntityValues.setAttributeValue(entity, provider.getDescriptionProperty(), description);
+        EntityValues.setValue(entity, provider.getDescriptionProperty(), description);
     }
 
     @Override
     public String getDescription() {
         if (provider.getDescriptionProperty() != null) {
-            return EntityValues.getAttributeValue(entity, provider.getDescriptionProperty());
+            return EntityValues.getValue(entity, provider.getDescriptionProperty());
         } else {
             return null;
         }
@@ -108,7 +108,7 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
     @Override
     public String getStyleName() {
         if (provider.getStyleNameProperty() != null) {
-            return EntityValues.getAttributeValue(entity, provider.getStyleNameProperty());
+            return EntityValues.getValue(entity, provider.getStyleNameProperty());
         } else {
             return null;
         }
@@ -116,13 +116,13 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
 
     @Override
     public void setStyleName(String styleName) {
-        EntityValues.setAttributeValue(entity, provider.getStyleNameProperty(), styleName);
+        EntityValues.setValue(entity, provider.getStyleNameProperty(), styleName);
     }
 
     @Override
     public boolean isAllDay() {
         if (provider.getIsAllDayProperty() != null) {
-            return BooleanUtils.isTrue(EntityValues.getAttributeValue(entity, provider.getIsAllDayProperty()));
+            return BooleanUtils.isTrue(EntityValues.getValue(entity, provider.getIsAllDayProperty()));
         } else {
             return false;
         }
@@ -130,7 +130,7 @@ public class EntityCalendarEvent<E extends Entity, V> implements CalendarEvent<V
 
     @Override
     public void setAllDay(boolean isAllDay) {
-        EntityValues.setAttributeValue(entity, provider.getIsAllDayProperty(), isAllDay);
+        EntityValues.setValue(entity, provider.getIsAllDayProperty(), isAllDay);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

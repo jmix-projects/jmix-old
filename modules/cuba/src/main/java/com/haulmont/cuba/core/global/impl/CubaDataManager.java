@@ -106,13 +106,13 @@ public class CubaDataManager implements DataManager {
             metaClass = metadata.getSession().getClass(entity.getClass());
         }
         LoadContext<E> context = new LoadContext<>(metaClass);
-        context.setId(EntityValues.getEntityId(entity));
+        context.setId(EntityValues.getId(entity));
         context.setFetchPlan(fetchPlan);
         context.setLoadDynamicAttributes(loadDynamicAttributes);
 
         E reloaded = load(context);
         if (reloaded == null)
-            throw new EntityAccessException(metaClass, EntityValues.getEntityId(entity));
+            throw new EntityAccessException(metaClass, EntityValues.getId(entity));
 
         return reloaded;
     }

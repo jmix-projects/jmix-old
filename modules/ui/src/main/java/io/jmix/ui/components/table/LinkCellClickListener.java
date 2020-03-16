@@ -53,7 +53,7 @@ public class LinkCellClickListener implements Table.CellClickListener {
         }
 
         Entity entity;
-        Object value = EntityValues.getAttributeValueEx(rowItem, columnId);
+        Object value = EntityValues.getValueEx(rowItem, columnId);
 
         if (value instanceof Entity) {
             entity = (Entity) value;

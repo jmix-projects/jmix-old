@@ -147,7 +147,7 @@ public class LegacyCollectionDsValueSource<V extends Entity> implements ValueSou
             return;
         }
 
-        Collection<V> itemValue = EntityValues.getAttributeValueEx(getMaster().getItem(), metaPropertyPath.toPathString());
+        Collection<V> itemValue = EntityValues.getValueEx(getMaster().getItem(), metaPropertyPath.toPathString());
         Collection<V> oldValue = copyPropertyCollection(itemValue);
 
         if (equalCollections(oldValue, value)) {
@@ -162,7 +162,7 @@ public class LegacyCollectionDsValueSource<V extends Entity> implements ValueSou
         if (CollectionUtils.isNotEmpty(value)) {
             for (V v : value) {
                 if (CollectionUtils.isEmpty(oldValue) || !oldValue.contains(v)) {
-                    EntityValues.setAttributeValue(v, inverseProperty.getName(), getMaster().getItem());
+                    EntityValues.setValue(v, inverseProperty.getName(), getMaster().getItem());
                 }
             }
         }
@@ -170,7 +170,7 @@ public class LegacyCollectionDsValueSource<V extends Entity> implements ValueSou
         if (CollectionUtils.isNotEmpty(oldValue)) {
             for (V v : oldValue) {
                 if (CollectionUtils.isEmpty(value) || !value.contains(v)) {
-                    EntityValues.setAttributeValue(v, inverseProperty.getName(), null);
+                    EntityValues.setValue(v, inverseProperty.getName(), null);
                 }
             }
         }
@@ -276,7 +276,7 @@ public class LegacyCollectionDsValueSource<V extends Entity> implements ValueSou
 
     protected void updateMasterCollection(MetaProperty metaProperty, @Nullable Collection<V> newCollection) {
         if (newCollection == null) {
-            EntityValues.setAttributeValue(getMaster().getItem(), metaProperty.getName(), null);
+            EntityValues.setValue(getMaster().getItem(), metaProperty.getName(), null);
         } else {
             Collection<V> masterCollection;
             if (List.class.isAssignableFrom(metaProperty.getJavaType())) {
@@ -284,7 +284,7 @@ public class LegacyCollectionDsValueSource<V extends Entity> implements ValueSou
             } else {
                 masterCollection = new LinkedHashSet(newCollection);
             }
-            EntityValues.setAttributeValue(getMaster().getItem(), metaProperty.getName(), masterCollection);
+            EntityValues.setValue(getMaster().getItem(), metaProperty.getName(), masterCollection);
         }
     }
 

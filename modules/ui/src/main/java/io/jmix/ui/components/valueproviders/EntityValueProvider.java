@@ -36,7 +36,7 @@ public class EntityValueProvider<E extends Entity, T> implements ValueProvider<E
     @Override
     public T apply(E entity) {
         return propertyPath != null
-                ? EntityValues.getAttributeValueEx(entity, propertyPath)
+                ? EntityValues.getValueEx(entity, propertyPath)
                 : null;
     }
 }

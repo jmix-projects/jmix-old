@@ -134,7 +134,7 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
             if (!metadataTools.isSystem(metaProperty)
                     && !metaProperty.isReadOnly()
                     && !security.isEntityAttrUpdatePermitted(metaClass, metaProperty.getName())) {
-                EntityValues.setAttributeValue(entity, metaProperty.getName(), null);
+                EntityValues.setValue(entity, metaProperty.getName(), null);
             }
         }
     }
@@ -154,7 +154,7 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
         for (MetaProperty metaProperty : metadata.getClass(entity).getProperties()) {
             String name = metaProperty.getName();
             if (metadataTools.isEmbedded(metaProperty) && entityStates.isLoaded(entity, name)) {
-                Entity embedded = EntityValues.getAttributeValue(entity, name);
+                Entity embedded = EntityValues.getValue(entity, name);
                 applySecurityToFetchGroup(embedded);
             }
         }

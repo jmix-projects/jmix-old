@@ -175,7 +175,7 @@ public class SecurityTokenManager {
     }
 
     protected Object getEntityId(Entity entity) {
-        Object entityId = EntityValues.getEntityId(entity);
+        Object entityId = EntityValues.getId(entity);
         if (entityId instanceof IdProxy) {
             return ((IdProxy) entityId).get();
         } else {

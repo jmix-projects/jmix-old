@@ -222,12 +222,12 @@ public class StandardSecurity implements Security {
                 Object o = evaluateConstraintScript(entity, groovyScript);
                 if (Boolean.FALSE.equals(o)) {
                     log.trace("Entity does not match security constraint. Entity class [{}]. Entity [{}]. Constraint [{}].",
-                            metaClassName, EntityValues.getEntityId(entity), constraint.getCheckType());
+                            metaClassName, EntityValues.getId(entity), constraint.getCheckType());
                     return false;
                 }
             } catch (Exception e) {
                 log.error("An error occurred while applying constraint's Groovy script. The entity has been filtered out." +
-                        "Entity class [{}]. Entity [{}].", metaClassName, EntityValues.getEntityId(entity), e);
+                        "Entity class [{}]. Entity [{}].", metaClassName, EntityValues.getId(entity), e);
                 return false;
             }
         }
@@ -285,7 +285,7 @@ public class StandardSecurity implements Security {
                     } else if (String.class.equals(pkProperty.getJavaType())) {
                         pkValue = strValue;
                     }
-                    EntityValues.setEntityId(entity, pkValue);
+                    EntityValues.setId(entity, pkValue);
                 }
                 return entity;
             } else if (EnumClass.class.isAssignableFrom(clazz)) {

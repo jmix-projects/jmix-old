@@ -55,9 +55,9 @@ public class AbbreviatedCellClickListener implements Table.CellClickListener {
             // todo dynamic attributes
             MetaClass metaClass = null/* = item.getMetaClass()*/;
             metaProperty = dynamicAttributesTools.getMetaPropertyPath(metaClass, columnId).getMetaProperty();
-            value = dynamicAttributesTools.getDynamicAttributeValueAsString(metaProperty, EntityValues.getAttributeValueEx(item, columnId));
+            value = dynamicAttributesTools.getDynamicAttributeValueAsString(metaProperty, EntityValues.getValueEx(item, columnId));
         } else {
-            value = EntityValues.getAttributeValueEx(item, columnId);
+            value = EntityValues.getValueEx(item, columnId);
         }
         if (column.getMaxTextLength() != null) {
             boolean isMultiLineCell = StringUtils.contains(value, "\n");

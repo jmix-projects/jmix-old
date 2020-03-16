@@ -150,7 +150,7 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
      * @return this instance for chaining
      */
     public LoadContext<E> setId(Object id) {
-        this.id = id instanceof Entity ? EntityValues.getEntityId(((Entity) id)) : id; // for compatibility with legacy code relying on implicit conversions
+        this.id = id instanceof Entity ? EntityValues.getId(((Entity) id)) : id; // for compatibility with legacy code relying on implicit conversions
         return this;
     }
 

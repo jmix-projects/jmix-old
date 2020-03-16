@@ -60,7 +60,7 @@ public class CollectionContainerImpl<E extends Entity>
     @Override
     public void setItem(@Nullable E item) {
         if (item != null) {
-            int idx = getItemIndex(EntityValues.getEntityId(item));
+            int idx = getItemIndex(EntityValues.getId(item));
             if (idx == -1) {
                 throw new IllegalArgumentException("CollectionContainer does not contain " + item);
             }
@@ -149,7 +149,7 @@ public class CollectionContainerImpl<E extends Entity>
     public void replaceItem(E entity) {
         checkNotNullArgument(entity, "entity is null");
 
-        Object id = EntityValues.getEntityId(entity);
+        Object id = EntityValues.getId(entity);
         int idx = getItemIndex(id);
         CollectionChangeType changeType;
         if (idx > -1) {
@@ -244,7 +244,7 @@ public class CollectionContainerImpl<E extends Entity>
 
     protected void clearItemIfNotExists() {
         if (item != null) {
-            int idx = getItemIndex(EntityValues.getEntityId(item));
+            int idx = getItemIndex(EntityValues.getId(item));
             if (idx == -1) {
                 // item doesn't exist in the collection
                 E prevItem = item;

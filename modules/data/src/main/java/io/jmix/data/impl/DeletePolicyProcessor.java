@@ -175,7 +175,7 @@ public class DeletePolicyProcessor {
                         if (value != null && checkIfEntityBelongsToMaster(property, value)) {
                             if (!(value instanceof SoftDelete)) {
                                 if (entityStates.isLoaded(entity, property.getName())) {
-                                    EntityValues.setAttributeValue(entity, property.getName(), null);
+                                    EntityValues.setValue(entity, property.getName(), null);
                                     entityManager.remove(value);
                                 } else {
                                     hardDeleteNotLoadedReference(entity, property, value);
@@ -189,7 +189,7 @@ public class DeletePolicyProcessor {
                 case UNLINK:
                     if (property.getRange().getCardinality().isMany()) {
                         if (metadataTools.isOwningSide(property)) {
-                            Collection<Entity> value = EntityValues.getAttributeValue(entity, property.getName());
+                            Collection<Entity> value = EntityValues.getValue(entity, property.getName());
                             if (value != null) {
                                 value.clear();
                             }
@@ -224,15 +224,15 @@ public class DeletePolicyProcessor {
                     String updateMasterSql = "update " + metadataTools.getDatabaseTable(metaClass)
                             + " set " + column + " = null where "
                             + metadataTools.getPrimaryKeyName(metaClass) + " = ?";
-                    log.debug("Hard delete un-fetched reference: {}, bind: [{}]", updateMasterSql, EntityValues.getEntityId(entity));
-                    jdbcTemplate.update(updateMasterSql, dbmsSpecifics.getDbTypeConverter().getSqlObject(EntityValues.getEntityId(entity)));
+                    log.debug("Hard delete un-fetched reference: {}, bind: [{}]", updateMasterSql, EntityValues.getId(entity));
+                    jdbcTemplate.update(updateMasterSql, dbmsSpecifics.getDbTypeConverter().getSqlObject(EntityValues.getId(entity)));
                 }
 
                 MetaClass refMetaClass = property.getRange().asClass();
                 String deleteRefSql = "delete from " + metadataTools.getDatabaseTable(refMetaClass) + " where "
                         + metadataTools.getPrimaryKeyName(refMetaClass) + " = ?";
-                log.debug("Hard delete un-fetched reference: {}, bind: [{}]", deleteRefSql, EntityValues.getEntityId(reference));
-                jdbcTemplate.update(deleteRefSql, dbmsSpecifics.getDbTypeConverter().getSqlObject(EntityValues.getEntityId(reference)));
+                log.debug("Hard delete un-fetched reference: {}, bind: [{}]", deleteRefSql, EntityValues.getId(reference));
+                jdbcTemplate.update(deleteRefSql, dbmsSpecifics.getDbTypeConverter().getSqlObject(EntityValues.getId(reference)));
             } catch (DataAccessException e) {
                 throw new RuntimeException("Error processing deletion of " + entity, e);
             }
@@ -243,7 +243,7 @@ public class DeletePolicyProcessor {
         Range range = property.getRange();
         if (metadataTools.isOwningSide(property) && !range.getCardinality().isMany()) {
             if (entityStates.isLoaded(entity, property.getName())) {
-                EntityValues.setAttributeValue(entity, property.getName(), null);
+                EntityValues.setValue(entity, property.getName(), null);
             } else {
                 hardSetReferenceNull(entity, property);
             }
@@ -268,8 +268,8 @@ public class DeletePolicyProcessor {
                     metadataTools.getDatabaseColumn(property),
                     metadataTools.getPrimaryKeyName(entityMetaClass));
             try {
-                log.debug("Set reference to null: {}, bind: [{}]", sql, EntityValues.getEntityId(entity));
-                jdbcTemplate.update(sql, dbmsSpecifics.getDbTypeConverter().getSqlObject(EntityValues.getEntityId(entity)));
+                log.debug("Set reference to null: {}, bind: [{}]", sql, EntityValues.getId(entity));
+                jdbcTemplate.update(sql, dbmsSpecifics.getDbTypeConverter().getSqlObject(EntityValues.getId(entity)));
             } catch (DataAccessException e) {
                 throw new RuntimeException("Error processing deletion of " + entity, e);
             }
@@ -278,12 +278,12 @@ public class DeletePolicyProcessor {
 
     protected Entity getReference(Entity entity, MetaProperty property) {
         if (entityStates.isLoaded(entity, property.getName()))
-            return EntityValues.getAttributeValue(entity, property.getName());
+            return EntityValues.getValue(entity, property.getName());
         else {
             Query query = entityManager.createQuery(
                     "select e." + property.getName() + " from " + metadata.getClass(entity.getClass()).getName()
                             + " e where e." + primaryKeyName + " = ?1");
-            query.setParameter(1, EntityValues.getEntityId(entity));
+            query.setParameter(1, EntityValues.getId(entity));
             Object refEntity = query.getFirstResult();
             return (Entity) refEntity;
         }
@@ -292,7 +292,7 @@ public class DeletePolicyProcessor {
     protected boolean checkIfEntityBelongsToMaster(MetaProperty property, Entity entityToRemove) {
         MetaProperty inverseProperty = property.getInverse();
         if (inverseProperty != null && !inverseProperty.getRange().getCardinality().isMany()) {
-            Entity master = EntityValues.getAttributeValue(entityToRemove, inverseProperty.getName());
+            Entity master = EntityValues.getValue(entityToRemove, inverseProperty.getName());
             return entity.equals(master);
         } else {
             return true;
@@ -303,7 +303,7 @@ public class DeletePolicyProcessor {
         MetaProperty inverseProperty = property.getInverse();
         if (inverseProperty == null) {
             log.warn("Inverse property not found for property {}", property);
-            Collection<Entity> value = EntityValues.getAttributeValue(entity, property.getName());
+            Collection<Entity> value = EntityValues.getValue(entity, property.getName());
             return value == null || value.isEmpty();
         }
 
@@ -314,7 +314,7 @@ public class DeletePolicyProcessor {
                 " e where e." + invPropName + "." + primaryKeyName + " = ?1";
 
         Query query = entityManager.createQuery(qlStr);
-        query.setParameter(1, EntityValues.getEntityId(entity));
+        query.setParameter(1, EntityValues.getId(entity));
         query.setMaxResults(1);
         @SuppressWarnings("unchecked")
         List<Entity> list = query.getResultList();
@@ -326,7 +326,7 @@ public class DeletePolicyProcessor {
         MetaProperty inverseProperty = property.getInverse();
         if (inverseProperty == null) {
             log.warn("Inverse property not found for property {}", property);
-            Collection<Entity> value = EntityValues.getAttributeValue(entity, property.getName());
+            Collection<Entity> value = EntityValues.getValue(entity, property.getName());
             return value == null ? Collections.emptyList() : value;
         }
 
@@ -335,7 +335,7 @@ public class DeletePolicyProcessor {
                 primaryKeyName + " = ?1";
 
         Query query = entityManager.createQuery(qlStr);
-        query.setParameter(1, EntityValues.getEntityId(entity));
+        query.setParameter(1, EntityValues.getId(entity));
         @SuppressWarnings("unchecked")
         List<Entity> list = query.getResultList();
 
@@ -347,7 +347,7 @@ public class DeletePolicyProcessor {
         // current transaction that did not affect the database yet
         List<Entity> result = new ArrayList<>(list.size());
         for (Entity item : list) {
-            Entity master = EntityValues.getAttributeValue(item, invPropName);
+            Entity master = EntityValues.getValue(item, invPropName);
             if (entity.equals(master))
                 result.add(item);
         }
@@ -360,7 +360,7 @@ public class DeletePolicyProcessor {
                 "select count(e) from %s e where e.%s." + primaryKeyName + " = ?1";
         String qstr = String.format(template, entityName, property.getName());
         Query query = entityManager.createQuery(qstr);
-        query.setParameter(1, EntityValues.getEntityId(entity));
+        query.setParameter(1, EntityValues.getId(entity));
         query.setMaxResults(1);
         Long count = (Long) query.getSingleResult();
         return count > 0;
@@ -376,7 +376,7 @@ public class DeletePolicyProcessor {
                 "select e from %s e where e.%s." + primaryKeyName + " = ?1";
         String qstr = String.format(template, entityName, property.getName());
         Query query = entityManager.createQuery(qstr);
-        query.setParameter(1, EntityValues.getEntityId(entity));
+        query.setParameter(1, EntityValues.getId(entity));
         @SuppressWarnings("unchecked")
         List<Entity> list = query.getResultList();
         for (Entity e : list) {
@@ -391,12 +391,12 @@ public class DeletePolicyProcessor {
                     "select e from %s e where e.%s." + primaryKeyName + " = ?1";
             String qstr = String.format(template, entityName, property.getName());
             Query query = entityManager.createQuery(qstr);
-            query.setParameter(1, EntityValues.getEntityId(entity));
+            query.setParameter(1, EntityValues.getId(entity));
             @SuppressWarnings("unchecked")
             List<Entity> list = query.getResultList();
             for (Entity e : list) {
                 if (property.getRange().getCardinality().isMany()) {
-                    Collection<?> collection = EntityValues.getAttributeValue(e, property.getName());
+                    Collection<?> collection = EntityValues.getValue(e, property.getName());
                     if (collection != null) {
                         collection.removeIf(o -> entity.equals(o));
                     }

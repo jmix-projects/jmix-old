@@ -61,11 +61,11 @@ public final class Id<T extends Entity<K>, K> implements Serializable {
      */
     public static <T extends Entity<K>, K> Id<T, K> of(T entity) {
         checkNotNullArgument(entity);
-        checkNotNullArgument(EntityValues.<K>getEntityId(entity));
+        checkNotNullArgument(EntityValues.<K>getId(entity));
 
         @SuppressWarnings("unchecked")
         Class<T> entityClass = (Class<T>) entity.getClass();
-        return new Id<>(EntityValues.getEntityId(entity), entityClass);
+        return new Id<>(EntityValues.getId(entity), entityClass);
     }
 
     /**

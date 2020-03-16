@@ -336,13 +336,13 @@ public class ValueBinder {
                             .map(MetadataObject::getName)
                             .collect(Collectors.joining("."));
 
-                    targetItem = EntityValues.getAttributeValueEx(rootItem, basePropertyItem);
+                    targetItem = EntityValues.getValueEx(rootItem, basePropertyItem);
                 }
 
                 ManagedEntityEntry entityEntry = targetItem.__getEntityEntry();
 
                 String metaPropertyName = metaPropertyPath.getMetaProperty().getName();
-                Object value = EntityValues.getAttributeValue(targetItem, metaPropertyName);
+                Object value = EntityValues.getValue(targetItem, metaPropertyName);
 
                 String[] filteredAttributes = entityEntry.getSecurityState().getFilteredAttributes();
 

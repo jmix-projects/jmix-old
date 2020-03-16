@@ -447,7 +447,7 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
     @Override
     public void expandPath(Entity item) {
         if (component.hasGroups()) {
-            expandGroupsFor((Collection<GroupInfo>) component.rootGroups(), EntityValues.getEntityId(item));
+            expandGroupsFor((Collection<GroupInfo>) component.rootGroups(), EntityValues.getId(item));
         }
     }
 
@@ -656,7 +656,7 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
                     TableDataContainer container = (TableDataContainer) component.getContainerDataSource();
 
                     Entity item = (Entity) container.getInternalItem(itemId);
-                    Object captionValue = EntityValues.getAttributeValueEx(item, captionProperty);
+                    Object captionValue = EntityValues.getValueEx(item, captionProperty);
 
                     // vaadin8 use metadataTools format with metaproperty
                     return metadataTools.format(captionValue);

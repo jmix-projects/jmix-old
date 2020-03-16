@@ -58,81 +58,81 @@ public final class InstanceUtils {
     }
 
     /**
-     * Get value of an attribute according to the rules described in {@link EntityValues#getAttributeValueEx(Entity, String)}.
+     * Get value of an attribute according to the rules described in {@link EntityValues#getValueEx(Entity, String)}.
      *
      * @param entity     instance
      * @param propertyPath attribute path
      * @return attribute value
-     * @deprecated replaced by {@link EntityValues#getAttributeValueEx(Entity, String)}
+     * @deprecated replaced by {@link EntityValues#getValueEx(Entity, String)}
      */
     @Deprecated
     public static <T> T getValueEx(Entity<?> entity, String propertyPath) {
-        return EntityValues.getAttributeValueEx(entity, propertyPath);
+        return EntityValues.getValueEx(entity, propertyPath);
     }
 
     /**
-     * Get value of an attribute according to the rules described in {@link EntityValues#getAttributeValueEx(Entity, EntityPropertyPath)}.
+     * Get value of an attribute according to the rules described in {@link EntityValues#getValueEx(Entity, EntityPropertyPath)}.
      *
      * @param entity     entity
      * @param propertyPath attribute path
      * @return attribute value
-     * @deprecated replaced by {@link EntityValues#getAttributeValueEx(Entity, EntityPropertyPath)}
+     * @deprecated replaced by {@link EntityValues#getValueEx(Entity, EntityPropertyPath)}
      */
     @Deprecated
     public static <T> T getValueEx(Entity<?> entity, EntityPropertyPath propertyPath) {
-        return EntityValues.getAttributeValueEx(entity, propertyPath);
+        return EntityValues.getValueEx(entity, propertyPath);
     }
 
     /**
-     * Get value of an attribute according to the rules described in {@link EntityValues#getAttributeValueEx(Entity, String[])}.
+     * Get value of an attribute according to the rules described in {@link EntityValues#getValueEx(Entity, String[])}.
      *
      * @param entity   entity
      * @param properties path to the attribute
      * @return attribute value
-     * @deprecated replaced by {@link EntityValues#getAttributeValueEx(Entity, String[])}
+     * @deprecated replaced by {@link EntityValues#getValueEx(Entity, String[])}
      */
     @Deprecated
     public static <T> T getValueEx(Entity<?> entity, String[] properties) {
-        return EntityValues.getAttributeValueEx(entity, properties);
+        return EntityValues.getValueEx(entity, properties);
     }
 
     /**
-     * Set value of an attribute according to the rules described in {@link EntityValues#setAttributeValueEx(Entity, String, Object)}.
+     * Set value of an attribute according to the rules described in {@link EntityValues#setValueEx(Entity, String, Object)}.
      *
      * @param entity     entity
      * @param propertyPath path to the attribute
      * @param value        attribute value
-     * @deprecated replaced by {@link EntityValues#setAttributeValueEx(Entity, String, Object)}
+     * @deprecated replaced by {@link EntityValues#setValueEx(Entity, String, Object)}
      */
     @Deprecated
     public static void setValueEx(Entity<?> entity, String propertyPath, Object value) {
-        EntityValues.setAttributeValueEx(entity, propertyPath, value);
+        EntityValues.setValueEx(entity, propertyPath, value);
     }
 
     /**
-     * Set value of an attribute according to the rules described in {@link EntityValues#setAttributeValueEx(Entity, EntityPropertyPath, Object)}.
+     * Set value of an attribute according to the rules described in {@link EntityValues#setValueEx(Entity, EntityPropertyPath, Object)}.
      *
      * @param entity     entity
      * @param propertyPath path to the attribute
      * @param value        attribute value
-     * @deprecated replaced by {@link EntityValues#setAttributeValueEx(Entity, EntityPropertyPath, Object)}
+     * @deprecated replaced by {@link EntityValues#setValueEx(Entity, EntityPropertyPath, Object)}
      */
     @Deprecated
     public static void setValueEx(Entity entity, EntityPropertyPath propertyPath, Object value) {
-        EntityValues.setAttributeValueEx(entity, propertyPath, value);
+        EntityValues.setValueEx(entity, propertyPath, value);
     }
 
     /**
-     * Set value of an attribute according to the rules described in {@link EntityValues#setAttributeValueEx(Entity, String[], Object)}.
+     * Set value of an attribute according to the rules described in {@link EntityValues#setValueEx(Entity, String[], Object)}.
      *
      * @param entity     entity
      * @param properties path to the attribute
      * @param value      attribute value
-     * @deprecated replaces by {@link EntityValues#setAttributeValueEx(Entity, String[], Object)}
+     * @deprecated replaces by {@link EntityValues#setValueEx(Entity, String[], Object)}
      */
     @Deprecated
     public static void setValueEx(Entity<?> entity, String[] properties, Object value) {
-        EntityValues.setAttributeValueEx(entity, properties, value);
+        EntityValues.setValueEx(entity, properties, value);
     }
 
     /**

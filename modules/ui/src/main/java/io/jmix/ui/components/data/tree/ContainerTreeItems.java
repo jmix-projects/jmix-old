@@ -84,7 +84,7 @@ public class ContainerTreeItems<E extends Entity> implements EntityTreeItems<E>,
 
     @Override
     public Object getItemId(E item) {
-        return EntityValues.getEntityId(item);
+        return EntityValues.getId(item);
     }
 
     @Override
@@ -99,7 +99,7 @@ public class ContainerTreeItems<E extends Entity> implements EntityTreeItems<E>,
 
     @Override
     public boolean containsItem(E item) {
-        return container.getItemOrNull(EntityValues.getEntityId(item)) != null;
+        return container.getItemOrNull(EntityValues.getId(item)) != null;
     }
 
     @Override
@@ -118,13 +118,13 @@ public class ContainerTreeItems<E extends Entity> implements EntityTreeItems<E>,
             // root items
             return container.getItems().stream()
                     .filter(it -> {
-                        E parentItem = EntityValues.getAttributeValue(it, hierarchyProperty);
-                        return parentItem == null || (container.getItemOrNull(EntityValues.getEntityId(parentItem)) == null);
+                        E parentItem = EntityValues.getValue(it, hierarchyProperty);
+                        return parentItem == null || (container.getItemOrNull(EntityValues.getId(parentItem)) == null);
                     });
         } else {
             return container.getItems().stream()
                     .filter(it -> {
-                        E parentItem = EntityValues.getAttributeValue(it, hierarchyProperty);
+                        E parentItem = EntityValues.getValue(it, hierarchyProperty);
                         return parentItem != null && parentItem.equals(item);
                     });
         }
@@ -133,7 +133,7 @@ public class ContainerTreeItems<E extends Entity> implements EntityTreeItems<E>,
     @Override
     public boolean hasChildren(E item) {
         return container.getItems().stream().anyMatch(it -> {
-            E parentItem = EntityValues.getAttributeValue(it, hierarchyProperty);
+            E parentItem = EntityValues.getValue(it, hierarchyProperty);
             return parentItem != null && parentItem.equals(item);
         });
     }
@@ -142,7 +142,7 @@ public class ContainerTreeItems<E extends Entity> implements EntityTreeItems<E>,
     @Override
     public E getParent(E item) {
         Preconditions.checkNotNullArgument(item, "item is null");
-        return EntityValues.getAttributeValue(item, hierarchyProperty);
+        return EntityValues.getValue(item, hierarchyProperty);
     }
 
     @Override

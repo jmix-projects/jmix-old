@@ -358,17 +358,17 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
             setSelectedIds(Collections.emptyList());
         } else if (items.size() == 1) {
             E item = items.iterator().next();
-            if (tableItems.getItem(EntityValues.getEntityId(item)) == null) {
+            if (tableItems.getItem(EntityValues.getId(item)) == null) {
                 throw new IllegalArgumentException("Datasource doesn't contain item to select: " + item);
             }
-            setSelectedIds(Collections.singletonList(EntityValues.getEntityId(item)));
+            setSelectedIds(Collections.singletonList(EntityValues.getId(item)));
         } else {
             Set<Object> itemIds = new LinkedHashSet<>();
             for (Entity item : items) {
-                if (tableItems.getItem(EntityValues.getEntityId(item)) == null) {
+                if (tableItems.getItem(EntityValues.getId(item)) == null) {
                     throw new IllegalArgumentException("Datasource doesn't contain item to select: " + item);
                 }
-                itemIds.add(EntityValues.getEntityId(item));
+                itemIds.add(EntityValues.getId(item));
             }
             setSelectedIds(itemIds);
         }
@@ -1169,7 +1169,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                     String captionProperty = column.getXmlDescriptor().attributeValue("captionProperty");
                     if (StringUtils.isNotEmpty(captionProperty)) {
                         E item = getItems().getItemNN(rowId);
-                        Object captionValue = EntityValues.getAttributeValueEx(item, captionProperty);
+                        Object captionValue = EntityValues.getValueEx(item, captionProperty);
                         return captionValue != null ? String.valueOf(captionValue) : null;
                     }
                 }
@@ -1618,7 +1618,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
             EntityTableItems entityTableSource = (EntityTableItems) tableItems;
 
             if (entityTableSource.getSelectedItem() != null) {
-                newSelection.add(EntityValues.getEntityId(entityTableSource.getSelectedItem()));
+                newSelection.add(EntityValues.getId(entityTableSource.getSelectedItem()));
             }
         }
 
@@ -2989,7 +2989,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
             return null;
         }
         Presentation def = presentations.getDefault();
-        return def == null ? null : EntityValues.<UUID>getEntityId(def);
+        return def == null ? null : EntityValues.<UUID>getId(def);
     }
 
     @Override
@@ -3200,7 +3200,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                         && dataBinding != null) {
                     Entity item = dataBinding.getTableItems().getItem(itemId);
                     if (item != null) {
-                        Boolean value = EntityValues.getAttributeValueEx(item, propertyPath);
+                        Boolean value = EntityValues.getValueEx(item, propertyPath);
                         if (BooleanUtils.isTrue(value)) {
                             style = BOOLEAN_CELL_STYLE_TRUE;
                         } else {
@@ -3221,10 +3221,10 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
         E item = entityTableSource.getItemNN(itemId);
 
-        Object value = EntityValues.getAttributeValueEx(item, propertyPath);
+        Object value = EntityValues.getValueEx(item, propertyPath);
         String stringValue;
         if (value instanceof String) {
-            stringValue = EntityValues.getAttributeValueEx(item, propertyPath);
+            stringValue = EntityValues.getValueEx(item, propertyPath);
         } else {
             MetaProperty metaProperty = propertyPath.getMetaProperty();
 
@@ -3291,17 +3291,17 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         Preconditions.checkNotNullArgument(item);
         Preconditions.checkNotNullArgument(columnId);
 
-        component.requestFocus(EntityValues.getEntityId(item), getColumn(columnId).getId());
+        component.requestFocus(EntityValues.getId(item), getColumn(columnId).getId());
     }
 
     @Override
     public void scrollTo(E item) {
         Preconditions.checkNotNullArgument(item);
-        if (!component.getItemIds().contains(EntityValues.getEntityId(item))) {
+        if (!component.getItemIds().contains(EntityValues.getId(item))) {
             throw new IllegalArgumentException("Unable to find item in Table");
         }
 
-        component.setCurrentPageFirstItemId(EntityValues.getEntityId(item));
+        component.setCurrentPageFirstItemId(EntityValues.getId(item));
     }
 
     protected void handleColumnCollapsed(com.vaadin.v7.ui.Table.ColumnCollapseEvent event) {
@@ -3357,7 +3357,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                 return null;
             }
 
-            currentValue = EntityValues.getAttributeValue(currentInstance, property);
+            currentValue = EntityValues.getValue(currentInstance, property);
             if (currentValue == null) {
                 break;
             }

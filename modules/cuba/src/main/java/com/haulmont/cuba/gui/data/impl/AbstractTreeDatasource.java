@@ -59,7 +59,7 @@ public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
         if (tree != null) {
             for (Node<T> node : tree.toList()) {
                 final T entity = node.getData();
-                final K id = EntityValues.getEntityId(entity);
+                final K id = EntityValues.getId(entity);
 
                 data.put(id, entity);
                 attachListener(entity);
@@ -96,7 +96,7 @@ public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
 
             List ids = new ArrayList();
             for (Node<T> rootNode : tree.getRootNodes()) {
-                ids.add(EntityValues.<K>getEntityId(rootNode.getData()));
+                ids.add(EntityValues.<K>getId(rootNode.getData()));
             }
             return (Collection<K>) Collections.unmodifiableCollection(ids);
         }
@@ -109,7 +109,7 @@ public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
         }
 
         final Node<T> node = nodes.get(itemId);
-        return node == null ? null : node.getParent() == null ? null : EntityValues.getEntityId(node.getParent().getData());
+        return node == null ? null : node.getParent() == null ? null : EntityValues.getId(node.getParent().getData());
     }
 
     @Override
@@ -126,7 +126,7 @@ public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
 
             final List<K> ids = new ArrayList<>();
             for (Node<T> targetNode : children) {
-                ids.add(EntityValues.getEntityId(targetNode.getData()));
+                ids.add(EntityValues.getId(targetNode.getData()));
             }
 
             return ids;

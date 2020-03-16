@@ -116,7 +116,7 @@ public class DatasourceDataGridItems<E extends Entity<K>, K>
     @Override
     public Object getItemId(E item) {
         Preconditions.checkNotNullArgument(item);
-        return EntityValues.getEntityId(item);
+        return EntityValues.getId(item);
     }
 
     @SuppressWarnings("unchecked")

@@ -397,7 +397,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
                     : null;
 
             ItemClickEvent<E> event = new ItemClickEvent<>(WebAbstractDataGrid.this,
-                    mouseEventDetails, item, EntityValues.getEntityId(item), column != null ? column.getId() : null);
+                    mouseEventDetails, item, EntityValues.getId(item), column != null ? column.getId() : null);
             publish(ItemClickEvent.class, event);
         }
     }
@@ -1022,7 +1022,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         Set<E> newSelection = new HashSet<>();
         for (E item : selectedItems) {
             if (event.getSource().containsItem(item)) {
-                newSelection.add(event.getSource().getItem(EntityValues.getEntityId(item)));
+                newSelection.add(event.getSource().getItem(EntityValues.getId(item)));
             }
         }
 
@@ -1206,7 +1206,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
     @Override
     public Object getEditedItemId() {
         E item = getEditedItem();
-        return item != null ? EntityValues.getEntityId(item) : null;
+        return item != null ? EntityValues.getId(item) : null;
     }
 
     @Override
@@ -3166,7 +3166,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         List<AggregationInfo> aggregationInfos = getAggregationInfos();
         Map<AggregationInfo, String> aggregationInfoMap = ((AggregatableDataGridItems) getItems()).aggregate(
                 aggregationInfos.toArray(new AggregationInfo[0]),
-                getItems().getItems().map(e -> EntityValues.getEntityId(e)).collect(Collectors.toList())
+                getItems().getItems().map(e -> EntityValues.getId(e)).collect(Collectors.toList())
         );
 
         return convertAggregationKeyMapToColumnIdKeyMap(aggregationInfoMap);
@@ -3182,7 +3182,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         List<AggregationInfo> aggregationInfos = getAggregationInfos();
         Map<AggregationInfo, Object> aggregationInfoMap = ((AggregatableDataGridItems) getItems()).aggregateValues(
                 aggregationInfos.toArray(new AggregationInfo[0]),
-                getItems().getItems().map(e -> EntityValues.getEntityId(e)).collect(Collectors.toList())
+                getItems().getItems().map(e -> EntityValues.getId(e)).collect(Collectors.toList())
         );
 
         return convertAggregationKeyMapToColumnIdKeyMap(aggregationInfoMap);
@@ -3355,7 +3355,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         // set changed values from editor to copied entity
         E copiedItem = metadataTools.deepCopy(item);
         for (Map.Entry<String, Object> property : properties.entrySet()) {
-            EntityValues.setAttributeValue(copiedItem, property.getKey(), property.getValue());
+            EntityValues.setValue(copiedItem, property.getKey(), property.getValue());
         }
 
         // validate copy

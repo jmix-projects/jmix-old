@@ -52,7 +52,7 @@ public class EntityCopyUtils {
         Preconditions.checkNotNullArgument(source, "source is null");
         Preconditions.checkNotNullArgument(dest, "dest is null");
 
-        EntityValues.setEntityId(dest, EntityValues.getEntityId(source));
+        EntityValues.setId(dest, EntityValues.getId(source));
 
         Metadata metadata = AppBeans.get(Metadata.class);
 
@@ -61,7 +61,7 @@ public class EntityCopyUtils {
             MetaProperty dstProperty = metadata.getClass(dest).findProperty(name);
             if (dstProperty != null && !dstProperty.isReadOnly()) {
                 try {
-                    Object value = EntityValues.getAttributeValue(source, name);
+                    Object value = EntityValues.getValue(source, name);
 
                     if (value != null && srcProperty.getRange().getCardinality().isMany()
                             && srcProperty.getType() == MetaProperty.Type.COMPOSITION) {
@@ -81,10 +81,10 @@ public class EntityCopyUtils {
                             dstCollection = new ArrayList<>(tmpCollection);
                         else
                             dstCollection = tmpCollection;
-                        EntityValues.setAttributeValue(dest, name, dstCollection);
+                        EntityValues.setValue(dest, name, dstCollection);
 
                     } else {
-                        EntityValues.setAttributeValue(dest, name, EntityValues.getAttributeValue(source, name));
+                        EntityValues.setValue(dest, name, EntityValues.getValue(source, name));
                     }
                 } catch (RuntimeException e) {
                     Throwable cause = ExceptionUtils.getRootCause(e);
@@ -113,13 +113,13 @@ public class EntityCopyUtils {
             MetaProperty dstProperty = metadata.getClass(dest).findProperty(name);
             if (dstProperty != null && !dstProperty.isReadOnly()) {
                 try {
-                    Object value = EntityValues.getAttributeValue(source, name);
+                    Object value = EntityValues.getValue(source, name);
 
                     if (value != null && srcProperty.getRange().getCardinality().isMany()
                             && srcProperty.getType() == MetaProperty.Type.COMPOSITION) {
-                        EntityValues.setAttributeValue(dest, name, EntityValues.getAttributeValue(source, name), false);
+                        EntityValues.setValue(dest, name, EntityValues.getValue(source, name), false);
                     } else {
-                        EntityValues.setAttributeValue(dest, name, EntityValues.getAttributeValue(source, name));
+                        EntityValues.setValue(dest, name, EntityValues.getValue(source, name));
                     }
                 } catch (RuntimeException e) {
                     Throwable cause = ExceptionUtils.getRootCause(e);

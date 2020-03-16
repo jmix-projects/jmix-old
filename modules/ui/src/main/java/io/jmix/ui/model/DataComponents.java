@@ -81,7 +81,7 @@ public class DataComponents implements ApplicationContextAware {
                 && security.isEntityOpPermitted(entityClass, EntityOp.READ)) {
             masterContainer.addItemChangeListener(e -> {
                 Entity item = masterContainer.getItemOrNull();
-                container.setItem(item != null ? EntityValues.getAttributeValue(item, property) : null);
+                container.setItem(item != null ? EntityValues.getValue(item, property) : null);
             });
 
             masterContainer.addItemPropertyChangeListener(e -> {
@@ -119,7 +119,7 @@ public class DataComponents implements ApplicationContextAware {
                 && security.isEntityOpPermitted(entityClass, EntityOp.READ)) {
             masterContainer.addItemChangeListener(e -> {
                 Entity item = masterContainer.getItemOrNull();
-                container.setItems(item != null ? EntityValues.getAttributeValue(item, property) : null);
+                container.setItems(item != null ? EntityValues.getValue(item, property) : null);
             });
 
             masterContainer.addItemPropertyChangeListener(e -> {

@@ -81,7 +81,7 @@ public class TablePresentations extends VerticalLayout {
                     // simple change current item
                     if (oldPresentationId != null) {
                         if (oldPresentationId instanceof Presentation)
-                            oldPresentationId = EntityValues.<UUID>getEntityId(((Presentation) oldPresentationId));
+                            oldPresentationId = EntityValues.<UUID>getId(((Presentation) oldPresentationId));
 
                         MenuBar.MenuItem lastMenuItem = presentationsMenuMap.get(oldPresentationId);
                         if (lastMenuItem != null)
@@ -90,7 +90,7 @@ public class TablePresentations extends VerticalLayout {
 
                     Presentation current = presentations.getCurrent();
                     if (current != null) {
-                        MenuBar.MenuItem menuItem = presentationsMenuMap.get(EntityValues.<UUID>getEntityId(current));
+                        MenuBar.MenuItem menuItem = presentationsMenuMap.get(EntityValues.<UUID>getId(current));
                         if (menuItem != null)
                             setCurrentItemStyle(menuItem);
                     }
@@ -109,7 +109,7 @@ public class TablePresentations extends VerticalLayout {
                 if (presentationsMenuMap != null) {
                     if (oldPresentationId != null) {
                         if (oldPresentationId instanceof Presentation)
-                            oldPresentationId = EntityValues.<UUID>getEntityId(((Presentation) oldPresentationId));
+                            oldPresentationId = EntityValues.<UUID>getId(((Presentation) oldPresentationId));
 
                         MenuBar.MenuItem lastMenuItem = presentationsMenuMap.get(oldPresentationId);
                         if (lastMenuItem != null)
@@ -118,7 +118,7 @@ public class TablePresentations extends VerticalLayout {
 
                     Presentation defaultPresentation = presentations.getDefault();
                     if (defaultPresentation != null) {
-                        MenuBar.MenuItem menuItem = presentationsMenuMap.get(EntityValues.<UUID>getEntityId(defaultPresentation));
+                        MenuBar.MenuItem menuItem = presentationsMenuMap.get(EntityValues.<UUID>getId(defaultPresentation));
                         if (menuItem != null)
                             setDefaultItemStyle(menuItem);
                     }
@@ -233,11 +233,11 @@ public class TablePresentations extends VerticalLayout {
                     selectedItem -> table.applyPresentation(presId)
             );
             Presentation current = p.getCurrent();
-            if (current != null && presId.equals(EntityValues.<UUID>getEntityId(current))) {
+            if (current != null && presId.equals(EntityValues.<UUID>getId(current))) {
                 setCurrentItemStyle(item);
             }
             Presentation defaultPresentation = p.getDefault();
-            if (defaultPresentation != null && presId.equals(EntityValues.<UUID>getEntityId(defaultPresentation))) {
+            if (defaultPresentation != null && presId.equals(EntityValues.<UUID>getId(defaultPresentation))) {
                 setDefaultItemStyle(item);
             }
             presentationsMenuMap.put(presId, item);

@@ -224,7 +224,7 @@ public class EditorBuilderProcessor {
                 Entity ownerEntity = entityValueSource.getItem();
                 MetaProperty inverseProp = entityValueSource.getMetaPropertyPath().getMetaProperty().getInverse();
                 if (inverseProp != null) {
-                    EntityValues.setAttributeValue(entity, inverseProp.getName(), ownerEntity);
+                    EntityValues.setValue(entity, inverseProp.getName(), ownerEntity);
                 }
             }
             if (builder.getInitializer() != null) {
@@ -305,7 +305,7 @@ public class EditorBuilderProcessor {
             Class<?> inversePropClass = extendedEntities.getEffectiveClass(inverseProp.getDomain());
             Class<?> containerEntityClass = extendedEntities.getEffectiveClass(((CollectionContainer) container).getEntityMetaClass());
             if (inversePropClass.isAssignableFrom(containerEntityClass)) {
-                EntityValues.setAttributeValue(entity, inverseProp.getName(), masterContainer.getItem());
+                EntityValues.setValue(entity, inverseProp.getName(), masterContainer.getItem());
             }
         }
     }

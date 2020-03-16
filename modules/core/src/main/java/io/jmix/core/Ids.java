@@ -45,11 +45,11 @@ public final class Ids<T extends Entity<K>, K> extends ArrayList<Id<T, K>> {
 
         for (T entity : entities) {
             checkNotNullArgument(entity);
-            checkNotNullArgument(EntityValues.<K>getEntityId(entity));
+            checkNotNullArgument(EntityValues.<K>getId(entity));
 
             @SuppressWarnings("unchecked")
             Class<T> entityClass = (Class<T>) entity.getClass();
-            ids.add(Id.of(EntityValues.getEntityId(entity), entityClass));
+            ids.add(Id.of(EntityValues.getId(entity), entityClass));
         }
 
         return ids;

@@ -31,7 +31,7 @@ public class IndexKey {
      */
     public static IndexKey ofEntity(Entity entity) {
         IndexKey indexKey = new IndexKey();
-        indexKey.key = EntityValues.getEntityId(entity) != null ? EntityValues.getEntityId(entity) : entity;
+        indexKey.key = EntityValues.getId(entity) != null ? EntityValues.getId(entity) : entity;
         return indexKey;
     }
 

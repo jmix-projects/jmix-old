@@ -227,11 +227,11 @@ public class CreateAction extends ListAction
 
             Entity parentItem = datasource.getItem();
             // datasource.getItem() may contain deleted item
-            if (parentItem != null && !datasource.containsItem(EntityValues.getEntityId(parentItem))) {
+            if (parentItem != null && !datasource.containsItem(EntityValues.getId(parentItem))) {
                 parentItem = null;
             }
 
-            EntityValues.setAttributeValue(item, hierarchyProperty, parentItem);
+            EntityValues.setValue(item, hierarchyProperty, parentItem);
         }
 
         if (datasource instanceof NestedDatasource) {
@@ -246,7 +246,7 @@ public class CreateAction extends ListAction
                     Class inversePropClass = extendedEntities.getEffectiveClass(inverseProp.getDomain());
                     Class dsClass = extendedEntities.getEffectiveClass(datasource.getMetaClass());
                     if (inversePropClass.isAssignableFrom(dsClass)) {
-                        EntityValues.setAttributeValue(item, inverseProp.getName(), masterDs.getItem());
+                        EntityValues.setValue(item, inverseProp.getName(), masterDs.getItem());
                     }
                 }
             }
@@ -293,7 +293,7 @@ public class CreateAction extends ListAction
         Map<String, Object> values = getInitialValues();
         if (values != null) {
             for (Map.Entry<String, Object> entry : values.entrySet()) {
-                EntityValues.setAttributeValue(item, entry.getKey(), entry.getValue());
+                EntityValues.setValue(item, entry.getKey(), entry.getValue());
             }
         }
 
@@ -301,7 +301,7 @@ public class CreateAction extends ListAction
             Map<String, Object> supplierValues = initialValuesSupplier.get();
             if (supplierValues != null) {
                 for (Map.Entry<String, Object> entry : supplierValues.entrySet()) {
-                    EntityValues.setAttributeValue(item, entry.getKey(), entry.getValue());
+                    EntityValues.setValue(item, entry.getKey(), entry.getValue());
                 }
             }
         }

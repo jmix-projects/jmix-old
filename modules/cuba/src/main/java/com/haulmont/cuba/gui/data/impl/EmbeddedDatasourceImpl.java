@@ -115,7 +115,7 @@ public class EmbeddedDatasourceImpl<T extends Entity>
     }
 
     protected T getItem(Entity item) {
-        return item == null ? null : (T) EntityValues.getAttributeValue(item, metaProperty.getName());
+        return item == null ? null : (T) EntityValues.getValue(item, metaProperty.getName());
     }
 
     @Override
@@ -127,7 +127,7 @@ public class EmbeddedDatasourceImpl<T extends Entity>
             itemsToUpdate.add(item);
         } else {
             final Entity parentItem = masterDs.getItem();
-            EntityValues.setAttributeValue(parentItem, metaProperty.getName(), item);
+            EntityValues.setValue(parentItem, metaProperty.getName(), item);
         }
         setModified(true);
         ((DatasourceImplementation) masterDs).modified(masterDs.getItem());

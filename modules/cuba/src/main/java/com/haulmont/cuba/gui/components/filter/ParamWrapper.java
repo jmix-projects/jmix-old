@@ -120,11 +120,11 @@ public class ParamWrapper implements Component, HasValue<Object> {
                 }
             }
         } else if (value instanceof Entity) {
-            value = EntityValues.getEntityId(((Entity) value));
+            value = EntityValues.getId(((Entity) value));
         } else if (value instanceof Collection) {
             List<Object> list = new ArrayList<>(((Collection) value).size());
             for (Object obj : ((Collection) value)) {
-                list.add(obj instanceof Entity ? EntityValues.getEntityId(((Entity) obj)) : obj);
+                list.add(obj instanceof Entity ? EntityValues.getId(((Entity) obj)) : obj);
             }
             value = list;
         } else if (value instanceof EnumClass) {

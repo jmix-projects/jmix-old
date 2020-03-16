@@ -50,7 +50,7 @@ public abstract class CustomGroupDatasource<T extends Entity<K>, K>
 
         if (entities != null) {
             for (T entity : entities) {
-                data.put(EntityValues.<K>getEntityId(entity), entity);
+                data.put(EntityValues.<K>getId(entity), entity);
                 attachListener(entity);
             }
         }

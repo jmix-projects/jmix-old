@@ -195,10 +195,10 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
             fireStateChanged(prevState);
         }
 
-        if (this.item != null && !prevIds.contains(EntityValues.<K>getEntityId(this.item))) {
+        if (this.item != null && !prevIds.contains(EntityValues.<K>getId(this.item))) {
             setItem(null);
         } else if (this.item != null) {
-            setItem(getItem(EntityValues.getEntityId(this.item)));
+            setItem(getItem(EntityValues.getId(this.item)));
         } else {
             setItem(null);
         }
@@ -295,7 +295,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
         sortDelegate.sort(list, sortInfos);
         data.clear();
         for (T t : list) {
-            data.put(EntityValues.<K>getEntityId(t), t);
+            data.put(EntityValues.<K>getId(t), t);
         }
     }
 
@@ -377,7 +377,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
     public void addItem(T item) {
         checkNotNullArgument(item, "item is null");
         internalAddItem(item, () -> {
-            data.put(EntityValues.<K>getEntityId(item), item);
+            data.put(EntityValues.<K>getId(item), item);
         });
     }
 
@@ -387,7 +387,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
         internalAddItem(item, () -> {
             LinkedMap tmpMap = data.clone();
             data.clear();
-            data.put(EntityValues.<K>getEntityId(item), item);
+            data.put(EntityValues.<K>getId(item), item);
             data.putAll(tmpMap);
         });
     }
@@ -417,7 +417,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
             setItem(null);
         }
 
-        data.remove(EntityValues.<K>getEntityId(item));
+        data.remove(EntityValues.<K>getId(item));
         detachListener(item);
 
         deleted(item);
@@ -429,7 +429,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
     public void includeItem(T item) {
         checkNotNullArgument(item, "item is null");
         internalIncludeItem(item, () -> {
-            data.put(EntityValues.<K>getEntityId(item), item);
+            data.put(EntityValues.<K>getId(item), item);
         });
     }
 
@@ -439,7 +439,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
         internalIncludeItem(item, () -> {
             LinkedMap tmpMap = data.clone();
             data.clear();
-            data.put(EntityValues.<K>getEntityId(item), item);
+            data.put(EntityValues.<K>getId(item), item);
             data.putAll(tmpMap);
         });
     }
@@ -466,7 +466,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
             setItem(null);
         }
 
-        data.remove(EntityValues.<K>getEntityId(item));
+        data.remove(EntityValues.<K>getId(item));
         detachListener(item);
 
         fireCollectionChanged(Operation.REMOVE, Collections.singletonList(item));
@@ -514,9 +514,9 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
     @Override
     public void modifyItem(T item) {
         checkNotNullArgument(item, "item is null");
-        if (data.containsKey(EntityValues.<K>getEntityId(item))) {
+        if (data.containsKey(EntityValues.<K>getId(item))) {
             if (PersistenceHelper.isNew(item)) {
-                Object existingItem = data.get(EntityValues.<K>getEntityId(item));
+                Object existingItem = data.get(EntityValues.<K>getId(item));
                 metadata.getTools().copy(item, (Entity) existingItem);
                 modified((T) existingItem);
             } else {
@@ -539,8 +539,8 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
             fireItemChanged(prevItem);
         }
 
-        if (data.containsKey(EntityValues.<K>getEntityId(item))) {
-            data.put(EntityValues.<K>getEntityId(item), item);
+        if (data.containsKey(EntityValues.<K>getId(item))) {
+            data.put(EntityValues.<K>getId(item), item);
             attachListener(item);
             fireCollectionChanged(Operation.UPDATE, Collections.singletonList(item));
         }
@@ -694,7 +694,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
         data.clear();
 
         for (T entity : entities) {
-            data.put(EntityValues.<K>getEntityId(entity), entity);
+            data.put(EntityValues.<K>getId(entity), entity);
             attachListener(entity);
         }
 
@@ -727,7 +727,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
     }
 
     protected Object getItemValue(MetaPropertyPath property, K itemId) {
-        return EntityValues.getAttributeValueEx(getItemNN(itemId), property);
+        return EntityValues.getValueEx(getItemNN(itemId), property);
     }
 
     @Override

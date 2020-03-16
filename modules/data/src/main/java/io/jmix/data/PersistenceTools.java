@@ -52,8 +52,8 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static io.jmix.core.entity.EntityValues.getEntityId;
-import static io.jmix.core.entity.EntityValues.getAttributeValue;
+import static io.jmix.core.entity.EntityValues.getId;
+import static io.jmix.core.entity.EntityValues.getValue;
 
 /**
  * Utility class to provide common functionality related to persistence.
@@ -178,7 +178,7 @@ public class PersistenceTools {
             return null;
 
         } else if (!isDirty(entity, attribute)) {
-            return getAttributeValue(entity, attribute);
+            return getValue(entity, attribute);
 
         } else {
             ObjectChangeSet objectChanges =
@@ -302,8 +302,8 @@ public class PersistenceTools {
                 if (!fetchGroup.containsAttributeInternal(property))
                     return RefId.createNotLoaded(property);
                 else {
-                    Entity refEntity = getAttributeValue(entity, property);
-                    return RefId.create(property, refEntity == null ? null : getEntityId(refEntity));
+                    Entity refEntity = getValue(entity, property);
+                    return RefId.create(property, refEntity == null ? null : getId(refEntity));
                 }
             }
         }
@@ -374,7 +374,7 @@ public class PersistenceTools {
             if (table == null || primaryKey == null)
                 throw new RuntimeException("Unable to determine table or primary key name for " + entity);
 
-            deleteRecord(table, primaryKey, EntityValues.<Object>getEntityId(entity));
+            deleteRecord(table, primaryKey, EntityValues.<Object>getId(entity));
         }
     }
 

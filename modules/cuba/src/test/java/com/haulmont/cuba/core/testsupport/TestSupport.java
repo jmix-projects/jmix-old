@@ -77,7 +77,7 @@ public class TestSupport {
                 throw new RuntimeException("Unable to determine table or primary key name for " + entity);
             }
 
-            deleteRecord(table, primaryKey, EntityValues.<Object>getEntityId(entity));
+            deleteRecord(table, primaryKey, EntityValues.<Object>getId(entity));
         }
     }
 }

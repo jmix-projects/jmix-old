@@ -400,10 +400,10 @@ public class AddAction extends ListAction
                 for (Object item : items) {
                     if (item instanceof Entity) {
                         Entity<?> entity = (Entity<?>) item;
-                        if (!ds.containsItem(EntityValues.getEntityId(entity))) {
+                        if (!ds.containsItem(EntityValues.getId(entity))) {
                             // Initialize reference to master entity
                             if (initializeMasterReference) {
-                                EntityValues.setAttributeValue(entity, inverseProp.getName(), masterEntity);
+                                EntityValues.setValue(entity, inverseProp.getName(), masterEntity);
                             }
                             ds.addItem(entity);
                         }

@@ -206,11 +206,11 @@ public class EntityManagerImpl implements EntityManager {
     public <T extends Entity> T reload(T entity, String... fetchPlanNames) {
         Preconditions.checkNotNullArgument(entity, "entity is null");
 
-        if (EntityValues.getEntityId(entity) instanceof IdProxy && ((IdProxy) EntityValues.getEntityId(entity)).get() == null) {
+        if (EntityValues.getId(entity) instanceof IdProxy && ((IdProxy) EntityValues.getId(entity)).get() == null) {
             return null;
         }
 
-        Entity resultEntity = find(entity.getClass(), EntityValues.getEntityId(entity), fetchPlanNames);
+        Entity resultEntity = find(entity.getClass(), EntityValues.getId(entity), fetchPlanNames);
         return (T) resultEntity;
     }
 

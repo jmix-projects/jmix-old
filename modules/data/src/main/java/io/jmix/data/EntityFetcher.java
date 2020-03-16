@@ -123,7 +123,7 @@ public class EntityFetcher {
 
             if (log.isTraceEnabled()) log.trace("Fetching property " + property.getName());
 
-            Object value = EntityValues.getAttributeValue(entity, property.getName());
+            Object value = EntityValues.getValue(entity, property.getName());
             FetchPlan propertyFetchPlan = property.getFetchPlan();
             if (value != null && propertyFetchPlan != null) {
                 if (value instanceof Collection) {
@@ -143,9 +143,9 @@ public class EntityFetcher {
                             if (storeName != null) {
                                 storeAwareLocator.getTransactionTemplate(storeName).executeWithoutResult(transactionStatus -> {
                                     EntityManager em = storeAwareLocator.getEntityManager(storeName);
-                                    Entity managed = em.find(e.getClass(), EntityValues.getEntityId(e));
+                                    Entity managed = em.find(e.getClass(), EntityValues.getId(e));
                                     if (managed != null) { // the instance here can be null if it has been deleted
-                                        EntityValues.setAttributeValue(entity, property.getName(), managed);
+                                        EntityValues.setValue(entity, property.getName(), managed);
                                         fetch(managed, propertyFetchPlan, visited, optimizeForDetached);
                                     }
                                 });

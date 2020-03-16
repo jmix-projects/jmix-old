@@ -62,7 +62,7 @@ public class LegacyCaptionAdapter implements Function<Object, String> {
                 throw new IllegalArgumentException(String.format("Couldn't find property with name '%s'", captionProperty));
             }
 
-            Object propertyValue = EntityValues.getAttributeValueEx(entity, captionProperty);
+            Object propertyValue = EntityValues.getValueEx(entity, captionProperty);
             return propertyValue != null
                     ? propertyValue.toString()
                     : " ";

@@ -131,7 +131,7 @@ public abstract class GroupDelegate<T extends Entity<K>, K> {
         groupValues.put(property, itemValue);
 
         GroupInfo<MetaPropertyPath> groupInfo = new GroupInfo<>(groupValues);
-        itemGroups.put(EntityValues.getEntityId(item), groupInfo);
+        itemGroups.put(EntityValues.getId(item), groupInfo);
 
         if (!parents.containsKey(groupInfo)) {
             parents.put(groupInfo, parent);
@@ -183,7 +183,7 @@ public abstract class GroupDelegate<T extends Entity<K>, K> {
 
                         items.clear();
                         for (T entity : entities) {
-                            items.add(EntityValues.getEntityId(entity));
+                            items.add(EntityValues.getId(entity));
                         }
                     }
                 }
@@ -285,9 +285,9 @@ public abstract class GroupDelegate<T extends Entity<K>, K> {
         Preconditions.checkNotNullArgument(item);
 
         if (property.getMetaProperties().length == 1) {
-            return EntityValues.getAttributeValue(item, property.getMetaProperty().getName());
+            return EntityValues.getValue(item, property.getMetaProperty().getName());
         } else {
-            return EntityValues.getAttributeValueEx(item, property);
+            return EntityValues.getValueEx(item, property);
         }
     }
 
@@ -332,7 +332,7 @@ public abstract class GroupDelegate<T extends Entity<K>, K> {
     }
 
     public GroupInfo getParentGroup(T entity) {
-        K id = EntityValues.getEntityId(entity);
+        K id = EntityValues.getId(entity);
         if (!datasource.containsItem(id)) {
             throw new IllegalArgumentException("Datasource doesn't contain passed entity");
         }
@@ -340,11 +340,11 @@ public abstract class GroupDelegate<T extends Entity<K>, K> {
         if (itemGroups == null) {
             return null;
         }
-        return itemGroups.get(EntityValues.<K>getEntityId(entity));
+        return itemGroups.get(EntityValues.<K>getId(entity));
     }
 
     public List<GroupInfo> getGroupPath(T entity) {
-        K id = EntityValues.getEntityId(entity);
+        K id = EntityValues.getId(entity);
         if (!datasource.containsItem(id)) {
             throw new IllegalArgumentException("Datasource doesn't contain passed entity");
         }
@@ -353,7 +353,7 @@ public abstract class GroupDelegate<T extends Entity<K>, K> {
             return Collections.emptyList();
         }
 
-        GroupInfo groupInfo = itemGroups.get(EntityValues.<K>getEntityId(entity));
+        GroupInfo groupInfo = itemGroups.get(EntityValues.<K>getId(entity));
         if (groupInfo == null) {
             return Collections.emptyList();
         }

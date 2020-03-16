@@ -260,7 +260,7 @@ public class WebUrlRouting implements UrlRouting {
                 if (PersistenceHelper.isNew(editedEntity)) {
                     params.put("id", NEW_ENTITY_ID);
                 } else {
-                    Object entityId = EntityValues.getEntityId(editedEntity);
+                    Object entityId = EntityValues.getId(editedEntity);
                     if (entityId != null) {
                         String serializedId = UrlIdSerializer.serializeId(entityId);
                         if (!"".equals(serializedId)) {
@@ -514,7 +514,7 @@ public class WebUrlRouting implements UrlRouting {
         }
 
         protected Map<String, String> prepareEditorUrlParams(Entity entity, Map<String, String> urlParams) {
-            if (EntityValues.getEntityId(entity) == null) {
+            if (EntityValues.getId(entity) == null) {
                 throw new IllegalArgumentException("Unable to generate route for an entity without id: " + entity);
             }
 
@@ -522,7 +522,7 @@ public class WebUrlRouting implements UrlRouting {
             if (PersistenceHelper.isNew(entity)) {
                 params.put("id", NEW_ENTITY_ID);
             } else {
-                params.put("id", UrlIdSerializer.serializeId(EntityValues.getEntityId(entity)));
+                params.put("id", UrlIdSerializer.serializeId(EntityValues.getId(entity)));
             }
             params.putAll(urlParams);
 

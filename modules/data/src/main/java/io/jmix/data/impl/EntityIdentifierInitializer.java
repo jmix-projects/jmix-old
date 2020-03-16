@@ -54,7 +54,7 @@ public class EntityIdentifierInitializer implements EntityInitializer, Ordered {
             // create an instance of embedded ID
             Entity key = metadata.create(primaryKeyProperty.getRange().asClass());
             //noinspection unchecked
-            EntityValues.setEntityId(entity, (T) key);
+            EntityValues.setId(entity, (T) key);
         } else if (entity instanceof BaseLongIdEntity || entity instanceof BaseIntegerIdEntity) {
             if (!config.getEnableIdGenerationForEntitiesInAdditionalDataStores()
                     && !Stores.MAIN.equals(metadataTools.getStoreName(metaClass))) {

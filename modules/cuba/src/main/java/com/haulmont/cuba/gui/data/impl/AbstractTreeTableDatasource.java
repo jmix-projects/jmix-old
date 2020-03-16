@@ -46,7 +46,7 @@ public abstract class AbstractTreeTableDatasource<T extends Entity<K>, K>
         data.clear();
         for (Node<T> node : tree.toList()) {
             T entity = node.getData();
-            K id = EntityValues.getEntityId(entity);
+            K id = EntityValues.getId(entity);
 
             data.put(id, entity);
         }
@@ -65,7 +65,7 @@ public abstract class AbstractTreeTableDatasource<T extends Entity<K>, K>
         final MetaPropertyPath propertyPath = sortInfos[0].getPropertyPath();
         final boolean asc = Order.ASC.equals(sortInfos[0].getOrder());
 
-        return Comparator.comparing(node -> node != null ? EntityValues.getAttributeValueEx(node.getData(), propertyPath) : null,
+        return Comparator.comparing(node -> node != null ? EntityValues.getValueEx(node.getData(), propertyPath) : null,
                 EntityValuesComparator.asc(asc));
     }
 }

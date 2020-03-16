@@ -62,7 +62,7 @@ public class EntityLoadInfoBuilder {
         MetaProperty primaryKeyProperty = metadataTools.getPrimaryKeyProperty(metaClass);
         boolean stringKey = primaryKeyProperty != null && primaryKeyProperty.getJavaType().equals(String.class);
 
-        return new EntityLoadInfo(EntityValues.getEntityId(entity), metaClass, viewName, stringKey);
+        return new EntityLoadInfo(EntityValues.getId(entity), metaClass, viewName, stringKey);
     }
 
     /**
@@ -99,7 +99,7 @@ public class EntityLoadInfoBuilder {
                 Entity entity = metadata.create(metaClass);
                 MetaProperty primaryKeyProp = metadataTools.getPrimaryKeyProperty(metaClass);
                 boolean stringKey = primaryKeyProp != null && primaryKeyProp.getJavaType().equals(String.class);
-                return new EntityLoadInfo(EntityValues.getEntityId(entity), metaClass, null, stringKey, true);
+                return new EntityLoadInfo(EntityValues.getId(entity), metaClass, null, stringKey, true);
             }
             return null;
         }
@@ -195,7 +195,7 @@ public class EntityLoadInfoBuilder {
         MetaClass metaClass = metadata.getClass(entity.getClass());
 
         for (EntityLoadInfo info : collection) {
-            if (metaClass.equals(info.getMetaClass()) && EntityValues.getEntityId(entity).equals(info.getId()))
+            if (metaClass.equals(info.getMetaClass()) && EntityValues.getId(entity).equals(info.getId()))
                 return true;
         }
         return false;

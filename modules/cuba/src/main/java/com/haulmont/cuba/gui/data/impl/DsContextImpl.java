@@ -289,7 +289,7 @@ public class DsContextImpl implements DsContextImplementation {
                     || !PersistenceHelper.isLoaded(entity, property.getName()))
                 continue;
 
-            Object value = EntityValues.getAttributeValue(entity, property.getName());
+            Object value = EntityValues.getValue(entity, property.getName());
             if (value != null) {
                 if (property.getRange().getCardinality().isMany()) {
                     Collection collection = (Collection) value;
@@ -306,7 +306,7 @@ public class DsContextImpl implements DsContextImplementation {
                     }
                 } else {
                     if (contextEntity.equals(value) && contextEntity != value) {
-                        EntityValues.setAttributeValue(entity, property.getName(), contextEntity);
+                        EntityValues.setValue(entity, property.getName(), contextEntity);
                     }
                 }
             }
@@ -334,13 +334,13 @@ public class DsContextImpl implements DsContextImplementation {
                 MetaClass metaClass = metadata.getExtendedEntities().getEffectiveMetaClass(inverseProp.getDomain());
                 if (metaClass.equals(datasource.getMetaClass())
                         && (PersistenceHelper.isLoaded(entity, inverseProp.getName())
-                        && EntityValues.getAttributeValue(entity, inverseProp.getName()) != null)) // replace master only if it's already set
+                        && EntityValues.getValue(entity, inverseProp.getName()) != null)) // replace master only if it's already set
                 {
                     Object masterItem = null;
                     if (masterDs instanceof CollectionDatasource) {
-                        Entity value = EntityValues.getAttributeValue(entity, inverseProp.getName());
+                        Entity value = EntityValues.getValue(entity, inverseProp.getName());
                         if (value != null) {
-                            Object id = EntityValues.getEntityId(value);
+                            Object id = EntityValues.getId(value);
                             //noinspection unchecked
                             masterItem = ((CollectionDatasource) masterDs).getItem(id);
                         }
@@ -349,7 +349,7 @@ public class DsContextImpl implements DsContextImplementation {
                     }
                     if (masterItem != null) {
                         // CAUTION need to rework this mechanism in case of two or more nested collection datasources
-                        EntityValues.setAttributeValue(entity, inverseProp.getName(), masterItem, false);
+                        EntityValues.setValue(entity, inverseProp.getName(), masterItem, false);
                     }
                 }
             }

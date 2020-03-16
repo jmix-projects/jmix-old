@@ -122,7 +122,7 @@ public class DatasourceValueSource<E extends Entity, V> implements EntityValueSo
     public V getValue() {
         E item = datasource.getItem();
         if (item != null) {
-            return EntityValues.getAttributeValueEx(item, metaPropertyPath);
+            return EntityValues.getValueEx(item, metaPropertyPath);
         }
         return null;
     }
@@ -131,7 +131,7 @@ public class DatasourceValueSource<E extends Entity, V> implements EntityValueSo
     public void setValue(Object value) {
         E item = datasource.getItem();
         if (item != null) {
-            EntityValues.setAttributeValueEx(item, metaPropertyPath, value);
+            EntityValues.setValueEx(item, metaPropertyPath, value);
         }
     }
 

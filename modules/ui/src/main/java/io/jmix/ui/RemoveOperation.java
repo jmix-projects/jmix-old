@@ -253,7 +253,7 @@ public class RemoveOperation {
             if (inversePropClass.isAssignableFrom(dcClass)) {
                 // update reference for One-To-Many
                 for (Entity item : selectedItems) {
-                    EntityValues.setAttributeValue(item, inverseMetaProperty.getName(), null);
+                    EntityValues.setValue(item, inverseMetaProperty.getName(), null);
                 }
             }
         }

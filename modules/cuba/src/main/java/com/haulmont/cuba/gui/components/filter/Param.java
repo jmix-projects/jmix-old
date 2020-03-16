@@ -520,7 +520,7 @@ public class Param {
                 if (v instanceof UUID) {
                     return v.toString();
                 } else if (v instanceof Entity) {
-                    return EntityValues.getEntityId(((Entity) v)).toString();
+                    return EntityValues.getId(((Entity) v)).toString();
                 }
 
             case ENUM:

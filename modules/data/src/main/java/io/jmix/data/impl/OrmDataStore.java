@@ -53,8 +53,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static io.jmix.core.entity.EntityValues.getEntityId;
-import static io.jmix.core.entity.EntityValues.getAttributeValue;
+import static io.jmix.core.entity.EntityValues.getId;
+import static io.jmix.core.entity.EntityValues.getValue;
 
 /**
  * INTERNAL.
@@ -336,7 +336,7 @@ public class OrmDataStore implements DataStore {
 
     protected <E extends Entity> List<E> checkAndReorderLoadedEntities(List<?> ids, List<E> entities, MetaClass metaClass) {
         List<E> result = new ArrayList<>(ids.size());
-        Map<Object, E> idToEntityMap = entities.stream().collect(Collectors.toMap(e -> getEntityId(e), Function.identity()));
+        Map<Object, E> idToEntityMap = entities.stream().collect(Collectors.toMap(e -> getId(e), Function.identity()));
         for (Object id : ids) {
             E entity = idToEntityMap.get(id);
             if (entity == null) {
@@ -1076,20 +1076,20 @@ public class OrmDataStore implements DataStore {
                 continue;
             if (entityStates.isLoaded(entity, property.getName())) {
                 if (property.getRange().getCardinality().isMany()) {
-                    Collection collection = getAttributeValue(entity, property.getName());
+                    Collection collection = getValue(entity, property.getName());
                     if (collection != null) {
                         for (Object obj : collection) {
                             updateReferences((Entity) obj, refEntity, visited);
                         }
                     }
                 } else {
-                    Entity value = getAttributeValue(entity, property.getName());
+                    Entity value = getValue(entity, property.getName());
                     if (value != null) {
-                        if (Objects.equals(getEntityId(value), getEntityId(refEntity))) {
+                        if (Objects.equals(getId(value), getId(refEntity))) {
                             if (property.isReadOnly() && metadataTools.isNotPersistent(property)) {
                                 continue;
                             }
-                            EntityValues.setAttributeValue(entity, property.getName(), refEntity, false);
+                            EntityValues.setValue(entity, property.getName(), refEntity, false);
                         } else {
                             updateReferences(value, refEntity, visited);
                         }
@@ -1197,7 +1197,7 @@ public class OrmDataStore implements DataStore {
         em.detach(rootEntity);
         metadataTools.traverseAttributesByView(view, rootEntity, (entity, property) -> {
             if (property.getRange().isClass() && !metadataTools.isEmbedded(property)) {
-                Object value = getAttributeValue(entity, property.getName());
+                Object value = getValue(entity, property.getName());
                 if (value != null) {
                     if (property.getRange().getCardinality().isMany()) {
                         @SuppressWarnings("unchecked")

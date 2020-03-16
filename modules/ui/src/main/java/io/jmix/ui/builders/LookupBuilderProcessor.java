@@ -259,7 +259,7 @@ public class LookupBuilderProcessor {
                 getFetchPlanForCollectionContainer(collectionDc, initializeMasterReference, inverseMetaProperty) :
                 null;
         for (E item : selectedItems) {
-            if (!collectionDc.containsItem(EntityValues.getEntityId(item))) {
+            if (!collectionDc.containsItem(EntityValues.getId(item))) {
                 if (viewForCollectionContainer != null && !entityStates.isLoadedWithFetchPlan(item, viewForCollectionContainer)) {
                     //noinspection unchecked
                     item = (E) dataManager.load(Id.of(item)).fetchPlan(viewForCollectionContainer).one();
@@ -268,7 +268,7 @@ public class LookupBuilderProcessor {
                 E mergedItem = dataContext.merge(item);
                 if (initializeMasterReference) {
                     // change reference, now it will be marked as modified
-                    EntityValues.setAttributeValue(mergedItem, inverseMetaProperty.getName(), masterItem);
+                    EntityValues.setValue(mergedItem, inverseMetaProperty.getName(), masterItem);
                 }
                 mergedItems.add(mergedItem);
             }

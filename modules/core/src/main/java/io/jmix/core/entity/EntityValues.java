@@ -28,11 +28,11 @@ import static io.jmix.core.metamodel.model.utils.EntityPaths.parseValuePath;
 public class EntityValues {
 
     @SuppressWarnings("unchecked")
-    public static <K> K getEntityId(Entity<?> entity) {
+    public static <K> K getId(Entity<?> entity) {
         return (K) entity.__getEntityEntry().getEntityId();
     }
 
-    public static <K> void setEntityId(Entity<K> entity, K key) {
+    public static <K> void setId(Entity<K> entity, K key) {
         entity.__getEntityEntry().setEntityId(key);
     }
 
@@ -46,7 +46,7 @@ public class EntityValues {
      * @param name  attribute name according to JavaBeans notation
      * @param value attribute value
      */
-    public static void setAttributeValue(Entity<?> entity, String name, Object value) {
+    public static void setValue(Entity<?> entity, String name, Object value) {
         entity.__getEntityEntry().setAttributeValue(name, value, true);
     }
 
@@ -62,7 +62,7 @@ public class EntityValues {
      * @param checkEquals check equals for previous and new value.
      *                    If flag is true and objects equals, then setter will not be invoked
      */
-    public static void setAttributeValue(Entity<?> entity, String name, Object value, boolean checkEquals) {
+    public static void setValue(Entity<?> entity, String name, Object value, boolean checkEquals) {
         entity.__getEntityEntry().setAttributeValue(name, value, checkEquals);
     }
 
@@ -73,7 +73,7 @@ public class EntityValues {
      * @return attribute value
      */
     @Nullable
-    public static <T> T getAttributeValue(Entity<?> entity, String name) {
+    public static <T> T getValue(Entity<?> entity, String name) {
         return entity.__getEntityEntry().getAttributeValue(name);
     }
 
@@ -88,8 +88,8 @@ public class EntityValues {
      * stops here and returns this value.
      */
     @Nullable
-    public static <T> T getAttributeValueEx(Entity<?> entity, String propertyPath) {
-        return getAttributeValueEx(entity, parseValuePath(propertyPath));
+    public static <T> T getValueEx(Entity<?> entity, String propertyPath) {
+        return getValueEx(entity, parseValuePath(propertyPath));
     }
 
     /**
@@ -103,11 +103,11 @@ public class EntityValues {
      * stops here and returns this value.
      */
     @Nullable
-    public static <T> T getAttributeValueEx(Entity<?> entity, EntityPropertyPath propertyPath) {
+    public static <T> T getValueEx(Entity<?> entity, EntityPropertyPath propertyPath) {
         if (propertyPath.isDirectProperty()) {
-            return getAttributeValue(entity, propertyPath.getFirstPropertyName());
+            return getValue(entity, propertyPath.getFirstPropertyName());
         } else {
-            return getAttributeValueEx(entity, propertyPath.getPropertyNames());
+            return getValueEx(entity, propertyPath.getPropertyNames());
         }
     }
 
@@ -124,8 +124,8 @@ public class EntityValues {
      * @param propertyPath path to an attribute
      * @param value        attribute value
      */
-    public static void setAttributeValueEx(Entity<?> entity, String propertyPath, Object value) {
-        setAttributeValueEx(entity, parseValuePath(propertyPath), value);
+    public static void setValueEx(Entity<?> entity, String propertyPath, Object value) {
+        setValueEx(entity, parseValuePath(propertyPath), value);
     }
 
     /**
@@ -141,50 +141,50 @@ public class EntityValues {
      * @param propertyPath path to an attribute
      * @param value        attribute value
      */
-    public static void setAttributeValueEx(Entity<?> entity, EntityPropertyPath propertyPath, Object value) {
+    public static void setValueEx(Entity<?> entity, EntityPropertyPath propertyPath, Object value) {
         if (propertyPath.isDirectProperty()) {
-            setAttributeValue(entity, propertyPath.getFirstPropertyName(), value);
+            setValue(entity, propertyPath.getFirstPropertyName(), value);
         } else {
             String[] properties = propertyPath.getPropertyNames();
-            setAttributeValueEx(entity, properties, value);
+            setValueEx(entity, properties, value);
         }
     }
 
     /**
-     * Set value of an attribute according to the rules described in {@link EntityValues#setAttributeValueEx(Entity, String, Object)}.
+     * Set value of an attribute according to the rules described in {@link EntityValues#setValueEx(Entity, String, Object)}.
      *
      * @param entity     instance
      * @param properties path to the attribute
      * @param value      attribute value
      */
-    public static void setAttributeValueEx(Entity<?> entity, String[] properties, Object value) {
+    public static void setValueEx(Entity<?> entity, String[] properties, Object value) {
         if (properties.length > 1) {
 
             if (properties.length == 2) {
-                entity = getAttributeValue(entity, properties[0]);
+                entity = getValue(entity, properties[0]);
             } else {
                 String[] subarray = ArrayUtils.subarray(properties, 0, properties.length - 1);
                 String path = formatValuePath(subarray);
-                entity = getAttributeValueEx(entity, path);
+                entity = getValueEx(entity, path);
             }
 
             if (entity != null) {
-                setAttributeValue(entity, properties[properties.length - 1], value);
+                setValue(entity, properties[properties.length - 1], value);
             }
         } else {
-            setAttributeValue(entity, properties[0], value);
+            setValue(entity, properties[0], value);
         }
     }
 
     /**
-     * Get value of an attribute according to the rules described in {@link EntityValues#getAttributeValueEx(Entity, String)}.
+     * Get value of an attribute according to the rules described in {@link EntityValues#getValueEx(Entity, String)}.
      *
      * @param entity     entity
      * @param properties path to the attribute
      * @return attribute value
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getAttributeValueEx(Entity<?> entity, String[] properties) {
+    public static <T> T getValueEx(Entity<?> entity, String[] properties) {
         if (properties == null) {
             return null;
         }
@@ -196,7 +196,7 @@ public class EntityValues {
                 break;
             }
 
-            currentValue = getAttributeValue(currentEntity, property);
+            currentValue = getValue(currentEntity, property);
 
             if (currentValue == null) {
                 break;

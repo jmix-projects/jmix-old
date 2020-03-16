@@ -223,7 +223,7 @@ public class MetadataTools {
             String fieldName = rec.fields[i];
             MetaProperty property = metaClass.getProperty(fieldName);
 
-            Object value = EntityValues.getAttributeValue(instance, fieldName);
+            Object value = EntityValues.getValue(instance, fieldName);
             values[i] = format(value, property);
         }
 
@@ -1031,7 +1031,7 @@ public class MetadataTools {
             MetaProperty dstProperty = destMetaClass.findProperty(name);
             if (dstProperty != null && !dstProperty.isReadOnly() && persistentAttributesLoadChecker.isLoaded(source, name)) {
                 try {
-                    EntityValues.setAttributeValue(dest, name, EntityValues.getAttributeValue(source, name));
+                    EntityValues.setValue(dest, name, EntityValues.getValue(source, name));
                 } catch (RuntimeException e) {
                     Throwable cause = ExceptionUtils.getRootCause(e);
                     if (cause == null)
@@ -1111,7 +1111,7 @@ public class MetadataTools {
 
         @Override
         public void put(Entity entity) {
-            cache.put(new CacheKey(entity.getClass(), EntityValues.getEntityId(entity)), entity);
+            cache.put(new CacheKey(entity.getClass(), EntityValues.getId(entity)), entity);
         }
     }
 
@@ -1121,7 +1121,7 @@ public class MetadataTools {
     @SuppressWarnings("unchecked")
     public <T extends Entity> T deepCopy(T source) {
         CachingEntitiesHolder entityFinder = new CachingEntitiesHolder();
-        Entity destination = entityFinder.create(source.getClass(), EntityValues.getEntityId(source));
+        Entity destination = entityFinder.create(source.getClass(), EntityValues.getId(source));
 
         deepCopy(source, destination, entityFinder);
 
@@ -1139,7 +1139,7 @@ public class MetadataTools {
                 continue;
             }
 
-            Object value = EntityValues.getAttributeValue(source, name);
+            Object value = EntityValues.getValue(source, name);
             if (value == null) {
                 continue;
             }
@@ -1156,25 +1156,25 @@ public class MetadataTools {
                     Collection<Entity> dstCollection = value instanceof List ? new ArrayList<>() : new LinkedHashSet<>();
 
                     for (Entity srcRef : srcCollection) {
-                        Entity reloadedRef = entitiesHolder.find(srcRef.getClass(), EntityValues.getEntityId(srcRef));
+                        Entity reloadedRef = entitiesHolder.find(srcRef.getClass(), EntityValues.getId(srcRef));
                         if (reloadedRef == null) {
-                            reloadedRef = entitiesHolder.create(srcRef.getClass(), EntityValues.getEntityId(srcRef));
+                            reloadedRef = entitiesHolder.create(srcRef.getClass(), EntityValues.getId(srcRef));
                             deepCopy(srcRef, reloadedRef, entitiesHolder);
                         }
                         dstCollection.add(reloadedRef);
                     }
-                    EntityValues.setAttributeValue(destination, name, dstCollection);
+                    EntityValues.setValue(destination, name, dstCollection);
                 } else {
                     Entity srcRef = (Entity) value;
-                    Entity reloadedRef = entitiesHolder.find(srcRef.getClass(), EntityValues.getEntityId(srcRef));
+                    Entity reloadedRef = entitiesHolder.find(srcRef.getClass(), EntityValues.getId(srcRef));
                     if (reloadedRef == null) {
-                        reloadedRef = entitiesHolder.create(srcRef.getClass(), EntityValues.getEntityId(srcRef));
+                        reloadedRef = entitiesHolder.create(srcRef.getClass(), EntityValues.getId(srcRef));
                         deepCopy(srcRef, reloadedRef, entitiesHolder);
                     }
-                    EntityValues.setAttributeValue(destination, name, reloadedRef);
+                    EntityValues.setValue(destination, name, reloadedRef);
                 }
             } else {
-                EntityValues.setAttributeValue(destination, name, value);
+                EntityValues.setValue(destination, name, value);
             }
         }
 
@@ -1196,7 +1196,7 @@ public class MetadataTools {
             visitor.visit(entity, property);
             if (property.getRange().isClass()) {
                 if (persistentAttributesLoadChecker.isLoaded(entity, property.getName())) {
-                    Object value = EntityValues.getAttributeValue(entity, property.getName());
+                    Object value = EntityValues.getValue(entity, property.getName());
                     if (value != null) {
                         if (value instanceof Collection) {
                             for (Object item : ((Collection) value)) {
@@ -1236,7 +1236,7 @@ public class MetadataTools {
 
             visitor.visit(entity, metaProperty);
 
-            Object value = EntityValues.getAttributeValue(entity, property.getName());
+            Object value = EntityValues.getValue(entity, property.getName());
 
             if (value != null && propertyView != null) {
                 if (value instanceof Collection) {
@@ -1262,7 +1262,7 @@ public class MetadataTools {
     @SuppressWarnings("unchecked")
     protected static Entity createInstanceWithId(Class<? extends Entity> entityClass, Object id) {
         Entity entity = createInstance(entityClass);
-        EntityValues.setEntityId(entity, id);
+        EntityValues.setId(entity, id);
         return entity;
     }
 

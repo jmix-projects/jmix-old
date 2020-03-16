@@ -205,7 +205,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen
             container.setItem(mergedEntity);
         } else {
             InstanceLoader loader = getEditedEntityLoader();
-            loader.setEntityId(EntityValues.getEntityId(entityToEdit));
+            loader.setEntityId(EntityValues.getId(entityToEdit));
         }
     }
 
@@ -298,7 +298,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen
         for (MetaProperty property : metadata.getClass(entity).getProperties()) {
             if (property.getRange().isClass()) {
                 if (getEntityStates().isLoaded(entity, property.getName())) {
-                    Object value = EntityValues.getAttributeValue(entity, property.getName());
+                    Object value = EntityValues.getValue(entity, property.getName());
                     if (value != null) {
                         if (value instanceof Collection) {
                             for (Object item : ((Collection) value)) {

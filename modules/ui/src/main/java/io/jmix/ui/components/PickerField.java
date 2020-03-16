@@ -782,7 +782,7 @@ public interface PickerField<V extends Entity> extends Field<V>, ActionsHolder, 
             Entity ownerEntity = entityValueSource.getItem();
             MetaProperty inverseProp = entityValueSource.getMetaPropertyPath().getMetaProperty().getInverse();
             if (inverseProp != null) {
-                EntityValues.setAttributeValue(entity, inverseProp.getName(), ownerEntity);
+                EntityValues.setValue(entity, inverseProp.getName(), ownerEntity);
             }
 
             return entity;

@@ -550,7 +550,7 @@ public class WebTokenList<V extends Entity>
 
         for (V value : valueSourceValue) {
             options.getOptions()
-                    .filter(option -> Objects.equals(EntityValues.getEntityId(option), EntityValues.getEntityId(value)))
+                    .filter(option -> Objects.equals(EntityValues.getId(option), EntityValues.getId(value)))
                     .findFirst()
                     .ifPresent(option -> {
                         valueSourceValue.remove(value);

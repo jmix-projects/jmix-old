@@ -120,7 +120,7 @@ public class CorePersistentAttributesLoadChecker implements PersistentAttributes
     protected boolean checkIsLoadedWithGetter(Object entity, String property) {
         if (entity instanceof Entity) {
             try {
-                Object value = EntityValues.getAttributeValue(((Entity) entity), property);
+                Object value = EntityValues.getValue(((Entity) entity), property);
                 if (value instanceof Collection) { //check for IndirectCollection behaviour, should fail if property is not loaded
                     ((Collection) value).size();
                 }

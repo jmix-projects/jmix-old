@@ -287,7 +287,7 @@ public class CubaTokenList<T extends Entity> extends CustomField<Collection<T>> 
             label.setText(owner.getInstanceCaption(entity));
             label.setWidthUndefined();
 
-            setTokenStyle(label, EntityValues.getEntityId(entity));
+            setTokenStyle(label, EntityValues.getId(entity));
 
             tokenContainer.addComponent(label);
 

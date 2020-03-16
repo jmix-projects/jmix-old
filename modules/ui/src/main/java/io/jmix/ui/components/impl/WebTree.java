@@ -534,7 +534,7 @@ public class WebTree<E extends Entity>
         TreeItems<E> source = event.getSource();
         for (E item : selectedItems) {
             if (source.containsItem(item)) {
-                newSelection.add(source.getItem(EntityValues.getEntityId(item)));
+                newSelection.add(source.getItem(EntityValues.getId(item)));
             }
         }
 

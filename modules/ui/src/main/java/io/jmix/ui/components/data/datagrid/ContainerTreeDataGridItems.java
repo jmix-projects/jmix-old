@@ -47,13 +47,13 @@ public class ContainerTreeDataGridItems<E extends Entity>
             // root items
             return container.getItems().stream()
                     .filter(it -> {
-                        E parentItem = EntityValues.getAttributeValue(it, hierarchyProperty);
-                        return parentItem == null || (container.getItemOrNull(EntityValues.getEntityId(parentItem)) == null);
+                        E parentItem = EntityValues.getValue(it, hierarchyProperty);
+                        return parentItem == null || (container.getItemOrNull(EntityValues.getId(parentItem)) == null);
                     });
         } else {
             return container.getItems().stream()
                     .filter(it -> {
-                        E parentItem = EntityValues.getAttributeValue(it, hierarchyProperty);
+                        E parentItem = EntityValues.getValue(it, hierarchyProperty);
                         return parentItem != null && parentItem.equals(item);
                     });
         }
@@ -62,7 +62,7 @@ public class ContainerTreeDataGridItems<E extends Entity>
     @Override
     public boolean hasChildren(E item) {
         return container.getItems().stream().anyMatch(it -> {
-            E parentItem = EntityValues.getAttributeValue(it, hierarchyProperty);
+            E parentItem = EntityValues.getValue(it, hierarchyProperty);
             return parentItem != null && parentItem.equals(item);
         });
     }
@@ -71,6 +71,6 @@ public class ContainerTreeDataGridItems<E extends Entity>
     @Override
     public E getParent(E item) {
         Preconditions.checkNotNullArgument(item);
-        return EntityValues.getAttributeValue(item, hierarchyProperty);
+        return EntityValues.getValue(item, hierarchyProperty);
     }
 }

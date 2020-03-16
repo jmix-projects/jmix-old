@@ -131,7 +131,7 @@ public class TransactionalDataManagerBean implements TransactionalDataManager {
     @Override
     public <T extends Entity<K>, K> T getReference(Class<T> entityClass, K id) {
         T entity = metadata.create(entityClass);
-        EntityValues.setEntityId(entity, id);
+        EntityValues.setId(entity, id);
         entityStates.makePatch(entity);
         return entity;
     }

@@ -47,7 +47,7 @@ public class EntityEmbeddedInitializer implements EntityInitializer, Ordered {
                 if (embeddedParameters != null && !embeddedParameters.nullAllowed()) {
                     MetaClass embeddableMetaClass = property.getRange().asClass();
                     Entity embeddableEntity = metadata.create(embeddableMetaClass);
-                    EntityValues.setAttributeValue(entity, property.getName(), embeddableEntity);
+                    EntityValues.setValue(entity, property.getName(), embeddableEntity);
                 }
             }
         }

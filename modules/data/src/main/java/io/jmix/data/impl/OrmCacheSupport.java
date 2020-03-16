@@ -72,7 +72,7 @@ public class OrmCacheSupport {
                         }
                     }
                 } else {
-                    Object masterEntity = EntityValues.getAttributeValue(entity, property.getName());
+                    Object masterEntity = EntityValues.getValue(entity, property.getName());
                     evictEntity(masterEntity);
                 }
             }
