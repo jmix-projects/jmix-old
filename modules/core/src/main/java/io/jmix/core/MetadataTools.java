@@ -75,8 +75,7 @@ public class MetadataTools {
             Creatable.class,
             Updatable.class,
             SoftDelete.class,
-            HasUuid.class,
-            ManagedEntity.class
+            HasUuid.class
     );
 
     @Inject
@@ -1121,16 +1120,12 @@ public class MetadataTools {
      */
     @SuppressWarnings("unchecked")
     public <T extends Entity> T deepCopy(T source) {
-        if (source instanceof ManagedEntity) {
-            CachingEntitiesHolder entityFinder = new CachingEntitiesHolder();
-            Entity destination = entityFinder.create(source.getClass(), EntityValues.getEntityId(source));
+        CachingEntitiesHolder entityFinder = new CachingEntitiesHolder();
+        Entity destination = entityFinder.create(source.getClass(), EntityValues.getEntityId(source));
 
-            deepCopy(source, destination, entityFinder);
+        deepCopy(source, destination, entityFinder);
 
-            return (T) destination;
-        }
-
-        return null;
+        return (T) destination;
     }
 
     /**
@@ -1267,9 +1262,7 @@ public class MetadataTools {
     @SuppressWarnings("unchecked")
     protected static Entity createInstanceWithId(Class<? extends Entity> entityClass, Object id) {
         Entity entity = createInstance(entityClass);
-        if (entity instanceof ManagedEntity) {
-            EntityValues.setEntityId(entity, id);
-        }
+        EntityValues.setEntityId(entity, id);
         return entity;
     }
 

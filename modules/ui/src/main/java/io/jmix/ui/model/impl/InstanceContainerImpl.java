@@ -130,13 +130,13 @@ public class InstanceContainerImpl<E extends Entity> implements InstanceContaine
 
     protected void attachListener(Entity entity) {
         if (entity != null) {
-            ((ManagedEntity<?>) entity).__getEntityEntry().addPropertyChangeListener(listener);
+            entity.__getEntityEntry().addPropertyChangeListener(listener);
         }
     }
 
     protected void detachListener(Entity entity) {
         if (entity != null) {
-            ((ManagedEntity<?>) entity).__getEntityEntry().removePropertyChangeListener(listener);
+            entity.__getEntityEntry().removePropertyChangeListener(listener);
         }
     }
 

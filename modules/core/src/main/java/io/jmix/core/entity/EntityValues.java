@@ -29,11 +29,11 @@ public class EntityValues {
 
     @SuppressWarnings("unchecked")
     public static <K> K getEntityId(Entity<?> entity) {
-        return (K)((ManagedEntity<?>) entity).__getEntityEntry().getEntityId();
+        return (K) entity.__getEntityEntry().getEntityId();
     }
 
     public static <K> void setEntityId(Entity<K> entity, K key) {
-        ((ManagedEntity<K>) entity).__getEntityEntry().setEntityId(key);
+        entity.__getEntityEntry().setEntityId(key);
     }
 
     /**
@@ -47,7 +47,7 @@ public class EntityValues {
      * @param value attribute value
      */
     public static void setAttributeValue(Entity<?> entity, String name, Object value) {
-        ((ManagedEntity<?>) entity).__getEntityEntry().setAttributeValue(name, value, true);
+        entity.__getEntityEntry().setAttributeValue(name, value, true);
     }
 
     /**
@@ -63,7 +63,7 @@ public class EntityValues {
      *                    If flag is true and objects equals, then setter will not be invoked
      */
     public static void setAttributeValue(Entity<?> entity, String name, Object value, boolean checkEquals) {
-        ((ManagedEntity<?>) entity).__getEntityEntry().setAttributeValue(name, value, checkEquals);
+        entity.__getEntityEntry().setAttributeValue(name, value, checkEquals);
     }
 
     /**
@@ -74,7 +74,7 @@ public class EntityValues {
      */
     @Nullable
     public static <T> T getAttributeValue(Entity<?> entity, String name) {
-        return ((ManagedEntity<?>) entity).__getEntityEntry().getAttributeValue(name);
+        return entity.__getEntityEntry().getAttributeValue(name);
     }
 
     /**

@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 public interface ManagedEntityEntry<K> extends Serializable {
 
-    ManagedEntity<K> getSource();
+    Entity<K> getSource();
 
     K getEntityId();
 

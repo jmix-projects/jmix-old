@@ -24,4 +24,11 @@ import java.io.Serializable;
  */
 @SuppressWarnings("unused")
 public interface Entity<T> extends Serializable {
+    default ManagedEntityEntry<T> __getEntityEntry() {
+        throw new UnsupportedOperationException();
+    }
+
+    default void __copyEntityEntry() {
+        throw new UnsupportedOperationException();
+    }
 }

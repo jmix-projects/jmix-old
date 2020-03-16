@@ -16,7 +16,7 @@
 
 package io.jmix.core;
 
-import io.jmix.core.entity.ManagedEntity;
+import io.jmix.core.entity.Entity;
 import org.springframework.stereotype.Component;
 
 @Component(EntitySystemStateSupport.NAME)
@@ -24,11 +24,11 @@ public class EntitySystemStateSupport {
 
     public static final String NAME = "jmix_EntitySystemStateSupport";
 
-    public void copySystemState(ManagedEntity<?> src, ManagedEntity<?> dst) {
+    public void copySystemState(Entity<?> src, Entity<?> dst) {
         dst.__getEntityEntry().copy(src.__getEntityEntry());
     }
 
-    public void mergeSystemState(ManagedEntity<?> src, ManagedEntity<?> dst) {
+    public void mergeSystemState(Entity<?> src, Entity<?> dst) {
         dst.__getEntityEntry().copy(src.__getEntityEntry());
     }
 }

@@ -17,7 +17,7 @@
 package data_components
 
 import io.jmix.core.EntityStates
-import io.jmix.core.entity.ManagedEntity
+
 import io.jmix.ui.model.DataComponents
 import io.jmix.ui.model.DataContext
 import test_support.DataContextSpec

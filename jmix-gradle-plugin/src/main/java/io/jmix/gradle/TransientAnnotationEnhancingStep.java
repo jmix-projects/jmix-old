@@ -16,7 +16,10 @@
 
 package io.jmix.gradle;
 
-import javassist.*;
+import javassist.CannotCompileException;
+import javassist.CtClass;
+import javassist.CtField;
+import javassist.NotFoundException;
 import javassist.bytecode.AnnotationsAttribute;
 import javassist.bytecode.annotation.Annotation;
 
@@ -37,14 +40,12 @@ public class TransientAnnotationEnhancingStep extends BaseEnhancingStep {
 
     @Override
     protected void executeInternal(CtClass ctClass) throws IOException, CannotCompileException, NotFoundException {
-        if (hasGenericEntityInterface(ctClass)) {
-            CtField ctField = findDeclaredField(ctClass, GEN_ENTITY_ENTRY_VAR_NAME);
-            if (ctField != null) {
-                AnnotationsAttribute attr = new AnnotationsAttribute(ctClass.getClassFile().getConstPool(), AnnotationsAttribute.visibleTag);
-                attr.addAnnotation(new Annotation(TRANSIENT_ANNOTATION_TYPE, ctClass.getClassFile().getConstPool()));
+        CtField ctField = findDeclaredField(ctClass, GEN_ENTITY_ENTRY_VAR_NAME);
+        if (ctField != null) {
+            AnnotationsAttribute attr = new AnnotationsAttribute(ctClass.getClassFile().getConstPool(), AnnotationsAttribute.visibleTag);
+            attr.addAnnotation(new Annotation(TRANSIENT_ANNOTATION_TYPE, ctClass.getClassFile().getConstPool()));
 
-                ctField.getFieldInfo().addAttribute(attr);
-            }
+            ctField.getFieldInfo().addAttribute(attr);
         }
     }
 }

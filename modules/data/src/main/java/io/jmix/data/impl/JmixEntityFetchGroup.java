@@ -55,8 +55,8 @@ public class JmixEntityFetchGroup extends EntityFetchGroup {
 
     @Override
     public String onUnfetchedAttribute(FetchGroupTracker entity, String attributeName) {
-        if (entity instanceof ManagedEntity) {
-            ManagedEntityEntry entityEntry = ((ManagedEntity<?>) entity).__getEntityEntry();
+        if (entity instanceof Entity) {
+            ManagedEntityEntry entityEntry = ((Entity<?>) entity).__getEntityEntry();
             if (entityEntry.getSecurityState().getInaccessibleAttributes() != null) {
                 for (String attribute : entityEntry.getSecurityState().getInaccessibleAttributes()) {
                     if (attributeName.equals(attribute))

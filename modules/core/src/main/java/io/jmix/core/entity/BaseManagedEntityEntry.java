@@ -29,7 +29,7 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
     protected byte state = NEW;
     protected SecurityState securityState = new SecurityState();
     protected transient Collection<WeakReference<EntityPropertyChangeListener>> propertyChangeListeners;
-    protected ManagedEntity<K> source;
+    protected Entity<K> source;
 
     public static final int NEW = 1;
     public static final int DETACHED = 2;
@@ -38,12 +38,12 @@ public abstract class BaseManagedEntityEntry<K> implements ManagedEntityEntry<K>
 
     protected static final int PROPERTY_CHANGE_LISTENERS_INITIAL_CAPACITY = 4;
 
-    public BaseManagedEntityEntry(ManagedEntity<K> source) {
+    public BaseManagedEntityEntry(Entity<K> source) {
         this.source = source;
     }
 
     @Override
-    public ManagedEntity<K> getSource() {
+    public Entity<K> getSource() {
         return source;
     }
 

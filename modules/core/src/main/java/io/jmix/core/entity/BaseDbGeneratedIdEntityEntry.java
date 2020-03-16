@@ -16,10 +16,10 @@
 
 package io.jmix.core.entity;
 
-public abstract class BaseDbGeneratedIdEntityEntry<K extends Number> extends BaseManagedEntityEntry<IdProxy<K>>  {
+public abstract class BaseDbGeneratedIdEntityEntry<K extends Number> extends BaseManagedEntityEntry<IdProxy<K>> {
     protected IdProxy<K> idProxy;
 
-    public BaseDbGeneratedIdEntityEntry(ManagedEntity<IdProxy<K>> source) {
+    public BaseDbGeneratedIdEntityEntry(Entity<IdProxy<K>> source) {
         super(source);
     }
 

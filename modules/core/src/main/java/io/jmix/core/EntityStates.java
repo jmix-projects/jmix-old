@@ -18,7 +18,9 @@ package io.jmix.core;
 
 import com.google.common.collect.Sets;
 import io.jmix.core.commons.util.StackTrace;
-import io.jmix.core.entity.*;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityValues;
+import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.apache.commons.lang3.StringUtils;
@@ -66,8 +68,8 @@ public class EntityStates {
      */
     public boolean isNew(Object entity) {
         checkNotNullArgument(entity, "entity is null");
-        if (entity instanceof ManagedEntity) {
-            return ((ManagedEntity<?>) entity).__getEntityEntry().isNew();
+        if (entity instanceof Entity) {
+            return ((Entity<?>) entity).__getEntityEntry().isNew();
         } else {
             if (log.isTraceEnabled()) {
                 log.trace("EntityStates.isNew is called for unsupported type '{}'. Stacktrace:\n{}",
@@ -87,8 +89,8 @@ public class EntityStates {
      */
     public boolean isManaged(Object entity) {
         checkNotNullArgument(entity, "entity is null");
-        if (entity instanceof ManagedEntity) {
-            return ((ManagedEntity<?>) entity).__getEntityEntry().isManaged();
+        if (entity instanceof Entity) {
+            return ((Entity<?>) entity).__getEntityEntry().isManaged();
         } else {
             if (log.isTraceEnabled()) {
                 log.trace("EntityStates.isManaged is called for unsupported type '{}'. Stacktrace:\n{}",
@@ -109,7 +111,7 @@ public class EntityStates {
      */
     public boolean isDetached(Object entity) {
         checkNotNullArgument(entity, "entity is null");
-        if (entity instanceof ManagedEntity && ((ManagedEntity<?>) entity).__getEntityEntry().isDetached()) {
+        if (entity instanceof Entity && ((Entity<?>) entity).__getEntityEntry().isDetached()) {
             return true;
         } else {
             if (log.isTraceEnabled()) {
@@ -396,7 +398,7 @@ public class EntityStates {
         if (entity instanceof SoftDelete && ((SoftDelete) entity).isDeleted())
             return true;
 
-        if (entity instanceof ManagedEntity && ((ManagedEntity<?>) entity).__getEntityEntry().isRemoved()) {
+        if (entity instanceof Entity && ((Entity<?>) entity).__getEntityEntry().isRemoved()) {
             return true;
         }
         return false;
@@ -417,11 +419,11 @@ public class EntityStates {
     public void makeDetached(Entity entity) {
         checkNotNullArgument(entity, "entity is null");
 
-        if (((ManagedEntity<?>) entity).__getEntityEntry().isManaged())
+        if (((Entity<?>) entity).__getEntityEntry().isManaged())
             throw new IllegalStateException("entity is managed");
 
-        ((ManagedEntity) entity).__getEntityEntry().setNew(false);
-        ((ManagedEntity) entity).__getEntityEntry().setDetached(true);
+        entity.__getEntityEntry().setNew(false);
+        entity.__getEntityEntry().setDetached(true);
     }
 
     /**
@@ -441,10 +443,10 @@ public class EntityStates {
     public void makePatch(Entity entity) {
         checkNotNullArgument(entity, "entity is null");
 
-        if (((ManagedEntity<?>) entity).__getEntityEntry().isManaged())
+        if (entity.__getEntityEntry().isManaged())
             throw new IllegalStateException("entity is managed");
 
-        ((ManagedEntity) entity).__getEntityEntry().setNew(false);
-        ((ManagedEntity) entity).__getEntityEntry().setDetached(false);
+        entity.__getEntityEntry().setNew(false);
+        entity.__getEntityEntry().setDetached(false);
     }
 }

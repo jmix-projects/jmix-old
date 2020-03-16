@@ -26,7 +26,7 @@ import java.util.Objects;
 @SuppressWarnings("unsed")
 public class EntityInternals {
 
-    public static String toString(ManagedEntity<?> entity) {
+    public static String toString(Entity<?> entity) {
         ManagedEntityEntry<?> entityEntry = entity.__getEntityEntry();
 
         String state = "";
@@ -45,28 +45,28 @@ public class EntityInternals {
         return entity.getClass().getName() + "-" + entityEntry.getEntityId() + " [" + state + "]";
     }
 
-    public static boolean equals(ManagedEntity<?> o1, Object o2) {
+    public static boolean equals(Entity<?> o1, Object o2) {
         if (o1 == o2)
             return true;
 
         if (o2 == null || o1.getClass() != o2.getClass())
             return false;
 
-        if (o1.__getEntityEntry().getEntityId() == null && ((ManagedEntity<?>) o2).__getEntityEntry().getEntityId() == null)
+        if (o1.__getEntityEntry().getEntityId() == null && ((Entity<?>) o2).__getEntityEntry().getEntityId() == null)
             return false;
 
-        return Objects.equals(o1.__getEntityEntry().getEntityId(), ((ManagedEntity<?>) o2).__getEntityEntry().getEntityId());
+        return Objects.equals(o1.__getEntityEntry().getEntityId(), ((Entity<?>) o2).__getEntityEntry().getEntityId());
     }
 
     @SuppressWarnings("unused")
-    public static void fireListeners(ManagedEntity<?> entity, String property, Object prevValue, Object newValue) {
+    public static void fireListeners(Entity<?> entity, String property, Object prevValue, Object newValue) {
         if (!EntityValues.propertyValueEquals(prevValue, newValue)) {
             ((BaseManagedEntityEntry<?>) entity.__getEntityEntry()).firePropertyChanged(property, prevValue, newValue);
         }
     }
 
     @SuppressWarnings("unused")
-    public static void writeObject(ManagedEntity<?> entity, ObjectOutputStream outputStream) {
+    public static void writeObject(Entity<?> entity, ObjectOutputStream outputStream) {
         ManagedEntityEntry<?> entityEntry = entity.__getEntityEntry();
         if (entityEntry.isManaged()) {
             entityEntry.setManaged(false);

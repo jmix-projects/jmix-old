@@ -21,7 +21,6 @@ import io.jmix.core.EntityStates;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlanRepository;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.ManagedEntity;
 import io.jmix.ui.Actions;
 import io.jmix.ui.dynamicattributes.DynamicAttributesGuiTools;
 import org.springframework.stereotype.Component;
@@ -66,7 +65,7 @@ public class GuiActionSupport {
         if (!entityStates.isLoadedWithFetchPlan(entity, view)) {
             entity = targetDatasource.getDsContext().getDataSupplier().reload(entity, view, null, needDynamicAttributes);
         } else if (needDynamicAttributes && !dynamicAttributesAreLoaded) {
-            dynamicAttributesGuiTools.reloadDynamicAttributes((ManagedEntity) entity);
+            dynamicAttributesGuiTools.reloadDynamicAttributes(entity);
         }
         return entity;
     }

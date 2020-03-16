@@ -128,7 +128,7 @@ public class CollectionContainerImpl<E extends Entity>
             if (!entityMetaClass.getJavaClass().isAssignableFrom(entity.getClass())) {
                 throw new IllegalArgumentException("Invalid entity class: " + entity.getClass());
             }
-            if (entityOrId instanceof ManagedEntity && ((ManagedEntity<?>) entityOrId).__getEntityEntry().isEmbeddable()) {
+            if (entity.__getEntityEntry().isEmbeddable()) {
                 indexKey = IndexKey.of(entityOrId);
             } else {
                 indexKey = IndexKey.ofEntity(entity);

@@ -132,7 +132,6 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
     }
 
     protected void makeEntityEntryMethods(CtClass ctClass) throws NotFoundException, CannotCompileException {
-        ctClass.addInterface(classPool.get(GENERIC_ENTITY_TYPE));
 
         CtMethod entryMethod = CtNewMethod.make(classPool.get(ENTITY_ENTRY_TYPE), GET_ENTITY_ENTRY_METHOD_NAME, null, null,
                 String.format("return %s == null ? %s = new %s.%s(this) : %s;",

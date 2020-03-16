@@ -234,7 +234,7 @@ public class IdProxy<T extends Number> extends Number implements Serializable {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected T getDbGeneratedId(Entity entity) {
-        return (T) ((BaseDbGeneratedIdEntityEntry) ((ManagedEntity) entity).__getEntityEntry()).getDbGeneratedId();
+        return (T) ((BaseDbGeneratedIdEntityEntry) entity.__getEntityEntry()).getDbGeneratedId();
     }
 
     @Override

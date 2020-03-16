@@ -22,7 +22,10 @@ import io.jmix.core.BeanValidation;
 import io.jmix.core.MessageTools;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.entity.*;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityValues;
+import io.jmix.core.entity.KeyValueEntity;
+import io.jmix.core.entity.ManagedEntityEntry;
 import io.jmix.core.impl.BeanLocatorAware;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -336,18 +339,16 @@ public class ValueBinder {
                     targetItem = EntityValues.getAttributeValueEx(rootItem, basePropertyItem);
                 }
 
-                if (targetItem instanceof ManagedEntity) {
-                    ManagedEntityEntry entityEntry = ((ManagedEntity<?>) targetItem).__getEntityEntry();
+                ManagedEntityEntry entityEntry = targetItem.__getEntityEntry();
 
-                    String metaPropertyName = metaPropertyPath.getMetaProperty().getName();
-                    Object value = EntityValues.getAttributeValue(targetItem, metaPropertyName);
+                String metaPropertyName = metaPropertyPath.getMetaProperty().getName();
+                Object value = EntityValues.getAttributeValue(targetItem, metaPropertyName);
 
-                    String[] filteredAttributes = entityEntry.getSecurityState().getFilteredAttributes();
+                String[] filteredAttributes = entityEntry.getSecurityState().getFilteredAttributes();
 
-                    if (value == null && filteredAttributes != null
-                            && ArrayUtils.contains(filteredAttributes, metaPropertyName)) {
-                        field.setRequired(false);
-                    }
+                if (value == null && filteredAttributes != null
+                        && ArrayUtils.contains(filteredAttributes, metaPropertyName)) {
+                    field.setRequired(false);
                 }
             }
         }

@@ -21,7 +21,6 @@ import io.jmix.core.Id;
 import io.jmix.core.Metadata;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.entity.ManagedEntity;
 import io.jmix.core.entity.annotation.PublishEntityChangedEvents;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -85,14 +84,10 @@ public class EntityChangedEventManager {
                 MetaClass metaClass = metadata.getClass(entity.getClass());
                 Map attrMap = (Map) metaClass.getAnnotations().get(PublishEntityChangedEvents.class.getName());
                 if (attrMap != null) {
-                    if (!(entity instanceof ManagedEntity)) {
-                        log.warn("Cannot publish EntityChangedEvent for {} because it is not a ManagedEntity", entity);
-                    } else {
-                        return new PublishingInfo(
-                                Boolean.TRUE.equals(attrMap.get("created")),
-                                Boolean.TRUE.equals(attrMap.get("updated")),
-                                Boolean.TRUE.equals(attrMap.get("deleted")));
-                    }
+                    return new PublishingInfo(
+                            Boolean.TRUE.equals(attrMap.get("created")),
+                            Boolean.TRUE.equals(attrMap.get("updated")),
+                            Boolean.TRUE.equals(attrMap.get("deleted")));
                 }
                 return new PublishingInfo();
             });
@@ -101,7 +96,7 @@ public class EntityChangedEventManager {
             if (info.publish) {
                 EntityChangedEvent.Type type = null;
                 AttributeChanges attributeChanges = null;
-                if (info.onCreated && ((ManagedEntity) entity).__getEntityEntry().isNew()) {
+                if (info.onCreated && entity.__getEntityEntry().isNew()) {
                     type = EntityChangedEvent.Type.CREATED;
                     attributeChanges = getEntityAttributeChanges(entity, false);
                 } else {
@@ -112,7 +107,7 @@ public class EntityChangedEventManager {
                             log.warn("Cannot publish EntityChangedEvent for {} because its AttributeChangeListener is null", entity);
                             continue;
                         }
-                        if (info.onDeleted && PersistenceSupport.isDeleted((ManagedEntity) entity, changeListener)) {
+                        if (info.onDeleted && PersistenceSupport.isDeleted(entity, changeListener)) {
                             type = EntityChangedEvent.Type.DELETED;
                             attributeChanges = getEntityAttributeChanges(entity, true);
                         } else if (info.onUpdated && changeListener.hasChanges()) {
@@ -253,9 +248,9 @@ public class EntityChangedEventManager {
             Object value = EntityValues.getAttributeValue(entity, property.getName());
             if (deleted) {
                 if (value instanceof Entity) {
-                    boolean isEmbeddable = ((ManagedEntity<?>) value).__getEntityEntry().isEmbeddable();
+                    boolean isEmbeddable = ((Entity<?>) value).__getEntityEntry().isEmbeddable();
                     if (isEmbeddable) {
-                        embeddedChanges.computeIfAbsent(property.getName(), s -> getEntityAttributeChanges((Entity)value, true));
+                        embeddedChanges.computeIfAbsent(property.getName(), s -> getEntityAttributeChanges((Entity) value, true));
                     } else {
                         changes.add(new AttributeChanges.Change(property.getName(), Id.of((Entity) value)));
                     }

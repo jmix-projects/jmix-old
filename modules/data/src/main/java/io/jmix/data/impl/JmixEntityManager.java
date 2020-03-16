@@ -20,7 +20,9 @@ import com.google.common.collect.Sets;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
-import io.jmix.core.entity.*;
+import io.jmix.core.entity.EntityValues;
+import io.jmix.core.entity.IdProxy;
+import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.data.AuditInfoProvider;
@@ -132,9 +134,7 @@ public class JmixEntityManager implements EntityManager {
             ((SoftDelete) entity).setDeletedBy(auditInfoProvider.getCurrentUserLogin());
         } else {
             delegate.remove(entity);
-            if (entity instanceof ManagedEntity) {
-                ((ManagedEntity) entity).__getEntityEntry().setRemoved(true);
-            }
+            entity.__getEntityEntry().setRemoved(true);
         }
     }
 
@@ -164,7 +164,7 @@ public class JmixEntityManager implements EntityManager {
         Class<T> effectiveClass = extendedEntities.getEffectiveClass(entityClass);
 
         T reference = delegate.getReference(effectiveClass, getRealId(primaryKey));
-        ((ManagedEntity<?>) reference).__getEntityEntry().setNew(false);
+        ((Entity<?>) reference).__getEntityEntry().setNew(false);
         return reference;
     }
 
@@ -498,9 +498,7 @@ public class JmixEntityManager implements EntityManager {
         Entity reloadedRef = find(entityClass, id);
         if (reloadedRef == null) {
             reloadedRef = metadata.create(entityClass);
-            if (reloadedRef instanceof ManagedEntity) {
-                EntityValues.setEntityId(reloadedRef, id);
-            }
+            EntityValues.setEntityId(reloadedRef, id);
             internalPersist(reloadedRef);
         }
         return (T) reloadedRef;

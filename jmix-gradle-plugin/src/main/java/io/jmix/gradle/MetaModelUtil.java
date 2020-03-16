@@ -24,7 +24,6 @@ import java.util.Objects;
 
 public class MetaModelUtil {
     public static final String ENTITY_TYPE = "io.jmix.core.entity.Entity";
-    public static final String GENERIC_ENTITY_TYPE = "io.jmix.core.entity.ManagedEntity";
     public static final String ENTITY_ENTRY_TYPE = "io.jmix.core.entity.ManagedEntityEntry";
     public static final String BASE_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.BaseManagedEntityEntry";
     public static final String BASE_DB_GENERATED_ID_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.BaseDbGeneratedIdEntityEntry";
@@ -58,15 +57,6 @@ public class MetaModelUtil {
     public static boolean isEntityEntryEnhanced(CtClass ctClass) throws NotFoundException {
         for (CtClass ctInterface : ctClass.getInterfaces()) {
             if (Objects.equals(ctInterface.getName(), ENTITY_ENTRY_ENHANCED_TYPE)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean hasGenericEntityInterface(CtClass ctClass) throws NotFoundException {
-        for (CtClass ctInterface : ctClass.getInterfaces()) {
-            if (Objects.equals(ctInterface.getName(), GENERIC_ENTITY_TYPE)) {
                 return true;
             }
         }

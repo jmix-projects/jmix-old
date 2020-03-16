@@ -21,7 +21,6 @@ import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.entity.ManagedEntity;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -44,9 +43,7 @@ public class EntityCopyUtils {
         }
         copyCompositions(src, dest);
 
-        if (src instanceof ManagedEntity) {
-            ((ManagedEntity<?>) dest).__getEntityEntry().setSecurityState(((ManagedEntity<?>) src).__getEntityEntry().getSecurityState());
-        }
+        dest.__getEntityEntry().setSecurityState(src.__getEntityEntry().getSecurityState());
 
         return dest;
     }
@@ -55,9 +52,7 @@ public class EntityCopyUtils {
         Preconditions.checkNotNullArgument(source, "source is null");
         Preconditions.checkNotNullArgument(dest, "dest is null");
 
-        if (source instanceof ManagedEntity && dest instanceof ManagedEntity) {
-            EntityValues.setEntityId(dest, EntityValues.getEntityId(source));
-        }
+        EntityValues.setEntityId(dest, EntityValues.getEntityId(source));
 
         Metadata metadata = AppBeans.get(Metadata.class);
 
@@ -101,15 +96,11 @@ public class EntityCopyUtils {
                 }
             }
         }
-        if (source instanceof ManagedEntity && dest instanceof ManagedEntity) {
-            ManagedEntity destManaged = (ManagedEntity) dest;
-            ManagedEntity sourceManaged = (ManagedEntity) source;
 
-            destManaged.__getEntityEntry().setDetached(sourceManaged.__getEntityEntry().isDetached());
-            destManaged.__getEntityEntry().setNew(sourceManaged.__getEntityEntry().isNew());
-            // todo dynamic attributes
+        dest.__getEntityEntry().setDetached(source.__getEntityEntry().isDetached());
+        dest.__getEntityEntry().setNew(source.__getEntityEntry().isNew());
+        // todo dynamic attributes
 //            destGenericEntity.setDynamicAttributes(sourceGenericEntity.getDynamicAttributes());
-        }
     }
 
     public static void copyCompositionsBack(Entity source, Entity dest) {

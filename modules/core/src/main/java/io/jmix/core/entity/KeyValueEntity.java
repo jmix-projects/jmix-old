@@ -43,7 +43,7 @@ import java.util.UUID;
 @SystemLevel
 @DisableEnhancing
 public class KeyValueEntity
-        implements ManagedEntity<Object>, HasInstanceMetaClass {
+        implements HasInstanceMetaClass, Entity<Object> {
 
     protected UUID uuid;
 
@@ -56,7 +56,7 @@ public class KeyValueEntity
     protected ManagedEntityEntry<Object> entityEntry;
 
     protected static class KeyValueEntityEntry extends BaseManagedEntityEntry<Object> {
-        public KeyValueEntityEntry(ManagedEntity<Object> source) {
+        public KeyValueEntityEntry(Entity<Object> source) {
             super(source);
         }
 
@@ -125,7 +125,7 @@ public class KeyValueEntity
         Object oldValue = getValue(name);
         if ((!checkEquals) || (!EntityValues.propertyValueEquals(oldValue, value))) {
             properties.put(name, value);
-            ((KeyValueEntityEntry)__getEntityEntry()).firePropertyChanged(name, oldValue, value);
+            ((KeyValueEntityEntry) __getEntityEntry()).firePropertyChanged(name, oldValue, value);
         }
     }
 

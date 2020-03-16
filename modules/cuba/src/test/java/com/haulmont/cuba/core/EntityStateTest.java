@@ -21,7 +21,6 @@ import com.haulmont.cuba.core.model.common.Group;
 import com.haulmont.cuba.core.model.common.User;
 import com.haulmont.cuba.core.testsupport.CoreTest;
 import com.haulmont.cuba.core.testsupport.TestSupport;
-import io.jmix.core.entity.ManagedEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -60,10 +59,10 @@ public class EntityStateTest {
             EntityManager em = persistence.getEntityManager();
 
             user = new User();
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isNew());
+            assertTrue(user.__getEntityEntry().isNew());
 
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+            assertFalse(user.__getEntityEntry().isManaged());
+            assertFalse(user.__getEntityEntry().isDetached());
 
             group = new Group();
             group.setName("group");
@@ -75,20 +74,20 @@ public class EntityStateTest {
             user.setGroup(group);
             em.persist(user);
 
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isNew());
+            assertTrue(user.__getEntityEntry().isNew());
 
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+            assertTrue(user.__getEntityEntry().isManaged());
+            assertFalse(user.__getEntityEntry().isDetached());
 
             tx.commit();
         } finally {
             tx.end();
         }
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+        assertFalse(user.__getEntityEntry().isNew());
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-        assertTrue(((ManagedEntity)user).__getEntityEntry().isDetached());
+        assertFalse(user.__getEntityEntry().isManaged());
+        assertTrue(user.__getEntityEntry().isDetached());
 
         // load from DB
 
@@ -99,18 +98,18 @@ public class EntityStateTest {
             user = em.find(User.class, userId);
             assertNotNull(user);
 
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+            assertFalse(user.__getEntityEntry().isNew());
 
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+            assertTrue(user.__getEntityEntry().isManaged());
+            assertFalse(user.__getEntityEntry().isDetached());
 
             localGroup = user.getGroup();
             assertNotNull(localGroup);
 
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+            assertFalse(user.__getEntityEntry().isNew());
 
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+            assertTrue(user.__getEntityEntry().isManaged());
+            assertFalse(user.__getEntityEntry().isDetached());
 
             tx.commit();
         } finally {
@@ -125,33 +124,33 @@ public class EntityStateTest {
             user = (User) query.getFirstResult();
             assertNotNull(user);
 
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+            assertFalse(user.__getEntityEntry().isNew());
 
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+            assertTrue(user.__getEntityEntry().isManaged());
+            assertFalse(user.__getEntityEntry().isDetached());
 
             localGroup = user.getGroup();
             assertNotNull(localGroup);
 
-            assertFalse(((ManagedEntity)localGroup).__getEntityEntry().isNew());
+            assertFalse(localGroup.__getEntityEntry().isNew());
 
-            assertTrue(((ManagedEntity)localGroup).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)localGroup).__getEntityEntry().isDetached());
+            assertTrue(localGroup.__getEntityEntry().isManaged());
+            assertFalse(localGroup.__getEntityEntry().isDetached());
 
             tx.commit();
         } finally {
             tx.end();
         }
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+        assertFalse(user.__getEntityEntry().isNew());
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-        assertTrue(((ManagedEntity)user).__getEntityEntry().isDetached());
+        assertFalse(user.__getEntityEntry().isManaged());
+        assertTrue(user.__getEntityEntry().isDetached());
 
-        assertFalse(((ManagedEntity)localGroup).__getEntityEntry().isNew());
+        assertFalse(localGroup.__getEntityEntry().isNew());
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-        assertTrue(((ManagedEntity)user).__getEntityEntry().isDetached());
+        assertFalse(user.__getEntityEntry().isManaged());
+        assertTrue(user.__getEntityEntry().isDetached());
 
         user.setName("changed name");
 
@@ -162,20 +161,20 @@ public class EntityStateTest {
             EntityManager em = persistence.getEntityManager();
             user = em.merge(user);
 
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+            assertFalse(user.__getEntityEntry().isNew());
 
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+            assertTrue(user.__getEntityEntry().isManaged());
+            assertFalse(user.__getEntityEntry().isDetached());
 
             tx.commit();
         } finally {
             tx.end();
         }
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+        assertFalse(user.__getEntityEntry().isNew());
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-        assertTrue(((ManagedEntity)user).__getEntityEntry().isDetached());
+        assertFalse(user.__getEntityEntry().isManaged());
+        assertTrue(user.__getEntityEntry().isDetached());
     }
 
     @Test
@@ -185,17 +184,17 @@ public class EntityStateTest {
 
         // serialize new
         user = new User();
-        assertTrue(((ManagedEntity)user).__getEntityEntry().isNew());
+        assertTrue(user.__getEntityEntry().isNew());
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+        assertFalse(user.__getEntityEntry().isManaged());
+        assertFalse(user.__getEntityEntry().isDetached());
 
         user = reserialize(user);
 
-        assertTrue(((ManagedEntity)user).__getEntityEntry().isNew());
+        assertTrue(user.__getEntityEntry().isNew());
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+        assertFalse(user.__getEntityEntry().isManaged());
+        assertFalse(user.__getEntityEntry().isDetached());
 
         // serialize managed
 
@@ -227,25 +226,25 @@ public class EntityStateTest {
             user = em.find(User.class, userId);
             assertNotNull(user);
 
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+            assertFalse(user.__getEntityEntry().isNew());
 
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+            assertTrue(user.__getEntityEntry().isManaged());
+            assertFalse(user.__getEntityEntry().isDetached());
 
             localGroup = user.getGroup();
             assertNotNull(localGroup);
 
-            assertFalse(((ManagedEntity)localGroup).__getEntityEntry().isNew());
+            assertFalse(localGroup.__getEntityEntry().isNew());
 
-            assertTrue(((ManagedEntity)localGroup).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)localGroup).__getEntityEntry().isDetached());
+            assertTrue(localGroup.__getEntityEntry().isManaged());
+            assertFalse(localGroup.__getEntityEntry().isDetached());
 
             user = reserialize(user);
 
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+            assertFalse(user.__getEntityEntry().isNew());
 
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isDetached());
+            assertFalse(user.__getEntityEntry().isManaged());
+            assertTrue(user.__getEntityEntry().isDetached());
 
             tx.commit();
         } finally {
@@ -261,27 +260,27 @@ public class EntityStateTest {
             EntityManager em = persistence.getEntityManager();
             user = em.merge(user);
 
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+            assertFalse(user.__getEntityEntry().isNew());
 
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+            assertTrue(user.__getEntityEntry().isManaged());
+            assertFalse(user.__getEntityEntry().isDetached());
 
             tx.commit();
         } finally {
             tx.end();
         }
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+        assertFalse(user.__getEntityEntry().isNew());
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-        assertTrue(((ManagedEntity)user).__getEntityEntry().isDetached());
+        assertFalse(user.__getEntityEntry().isManaged());
+        assertTrue(user.__getEntityEntry().isDetached());
 
         user = reserialize(user);
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+        assertFalse(user.__getEntityEntry().isNew());
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-        assertTrue(((ManagedEntity)user).__getEntityEntry().isDetached());
+        assertFalse(user.__getEntityEntry().isManaged());
+        assertTrue(user.__getEntityEntry().isDetached());
     }
 
     @Test
@@ -293,19 +292,19 @@ public class EntityStateTest {
         Transaction tx = persistence.createTransaction();
         try {
             user = new User();
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isNew());
+            assertTrue(user.__getEntityEntry().isNew());
 
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+            assertFalse(user.__getEntityEntry().isManaged());
+            assertFalse(user.__getEntityEntry().isDetached());
 
             userId = user.getId();
 
             persistence.getEntityManager().persist(user);
 
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isNew());
+            assertTrue(user.__getEntityEntry().isNew());
 
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+            assertTrue(user.__getEntityEntry().isManaged());
+            assertFalse(user.__getEntityEntry().isDetached());
 
             tx.commit();
 
@@ -316,10 +315,10 @@ public class EntityStateTest {
             tx.end();
         }
 
-        assertTrue(((ManagedEntity)user).__getEntityEntry().isNew());
+        assertTrue(user.__getEntityEntry().isNew());
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+        assertFalse(user.__getEntityEntry().isManaged());
+        assertFalse(user.__getEntityEntry().isDetached());
     }
 
     @Test
@@ -331,10 +330,10 @@ public class EntityStateTest {
             EntityManager em = persistence.getEntityManager();
 
             user = new User();
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isNew());
+            assertTrue(user.__getEntityEntry().isNew());
 
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+            assertFalse(user.__getEntityEntry().isManaged());
+            assertFalse(user.__getEntityEntry().isDetached());
 
             group = new Group();
             group.setName("group");
@@ -356,17 +355,17 @@ public class EntityStateTest {
         try {
             user = persistence.getEntityManager().find(User.class, userId);
 
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+            assertFalse(user.__getEntityEntry().isNew());
 
-            assertTrue(((ManagedEntity)user).__getEntityEntry().isManaged());
-            assertFalse(((ManagedEntity)user).__getEntityEntry().isDetached());
+            assertTrue(user.__getEntityEntry().isManaged());
+            assertFalse(user.__getEntityEntry().isDetached());
         } finally {
             tx.end();
         }
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isNew());
+        assertFalse(user.__getEntityEntry().isNew());
 
-        assertFalse(((ManagedEntity)user).__getEntityEntry().isManaged());
-        assertTrue(((ManagedEntity)user).__getEntityEntry().isDetached());
+        assertFalse(user.__getEntityEntry().isManaged());
+        assertTrue(user.__getEntityEntry().isDetached());
     }
 }

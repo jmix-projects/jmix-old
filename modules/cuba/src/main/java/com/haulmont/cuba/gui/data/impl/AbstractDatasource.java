@@ -16,16 +16,18 @@
 package com.haulmont.cuba.gui.data.impl;
 
 import com.haulmont.cuba.core.global.Metadata;
-import io.jmix.core.AppBeans;
-import io.jmix.core.FetchPlan;
-import io.jmix.core.commons.events.EventRouter;
-import io.jmix.core.entity.*;
-import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.ui.executors.BackgroundWorker;
 import com.haulmont.cuba.gui.data.DataSupplier;
 import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.data.DsContext;
 import com.haulmont.cuba.gui.data.NestedDatasource;
+import io.jmix.core.AppBeans;
+import io.jmix.core.FetchPlan;
+import io.jmix.core.commons.events.EventRouter;
+import io.jmix.core.entity.Entity;
+import io.jmix.core.entity.EntityPropertyChangeEvent;
+import io.jmix.core.entity.EntityPropertyChangeListener;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.ui.executors.BackgroundWorker;
 import io.jmix.ui.sys.PersistenceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -246,7 +248,7 @@ public abstract class AbstractDatasource<T extends Entity> implements Datasource
             return;
         }
 
-        ((ManagedEntity<?>) item).__getEntityEntry().addPropertyChangeListener(listener);
+        item.__getEntityEntry().addPropertyChangeListener(listener);
     }
 
     protected void detachListener(Entity item) {
@@ -254,7 +256,7 @@ public abstract class AbstractDatasource<T extends Entity> implements Datasource
             return;
         }
 
-        ((ManagedEntity<?>) item).__getEntityEntry().removePropertyChangeListener(listener);
+        item.__getEntityEntry().removePropertyChangeListener(listener);
     }
 
     protected void fireItemChanged(T prevItem) {

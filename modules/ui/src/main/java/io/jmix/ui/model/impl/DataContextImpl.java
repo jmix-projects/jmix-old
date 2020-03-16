@@ -17,8 +17,6 @@
 package io.jmix.ui.model.impl;
 
 import com.google.common.collect.Sets;
-import io.jmix.core.SaveContext;
-import io.jmix.core.DataManager;
 import io.jmix.core.*;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
@@ -215,7 +213,7 @@ public class DataContextImpl implements DataContext {
 
             mergeState(entity, managed, mergedMap, isRoot);
 
-            ((ManagedEntity<?>) managed).__getEntityEntry().addPropertyChangeListener(propertyChangeListener);
+            managed.__getEntityEntry().addPropertyChangeListener(propertyChangeListener);
 
             if (getEntityStates().isNew(managed)) {
                 modifiedInstances.add(managed);
@@ -313,7 +311,7 @@ public class DataContextImpl implements DataContext {
                         EntityValues.setAttributeValue(dstEntity, propertyName, managedRef, false);
                         if (getMetadataTools().isEmbedded(property)) {
                             EmbeddedPropertyChangeListener listener = new EmbeddedPropertyChangeListener(dstEntity);
-                            ((ManagedEntity<?>) managedRef).__getEntityEntry().addPropertyChangeListener(listener);
+                            managedRef.__getEntityEntry().addPropertyChangeListener(listener);
                             embeddedPropertyListeners.computeIfAbsent(dstEntity, e -> new HashMap<>()).put(propertyName, listener);
                         }
                     } else {
@@ -349,10 +347,8 @@ public class DataContextImpl implements DataContext {
 
     @SuppressWarnings("unchecked")
     protected void copySystemState(Entity srcEntity, Entity dstEntity) {
-        if (dstEntity instanceof ManagedEntity) {
-            EntityValues.setEntityId(dstEntity, EntityValues.getEntityId(srcEntity));
-            getEntitySystemStateSupport().copySystemState((ManagedEntity) srcEntity, (ManagedEntity) dstEntity);
-        }
+        EntityValues.setEntityId(dstEntity, EntityValues.getEntityId(srcEntity));
+        getEntitySystemStateSupport().copySystemState(srcEntity, dstEntity);
 
         if (dstEntity instanceof Versioned) {
             ((Versioned) dstEntity).setVersion(((Versioned) srcEntity).getVersion());
@@ -360,10 +356,8 @@ public class DataContextImpl implements DataContext {
     }
 
     protected void mergeSystemState(Entity srcEntity, Entity dstEntity, boolean isRoot) {
-        if (dstEntity instanceof ManagedEntity) {
-            if (isRoot) {
-                getEntitySystemStateSupport().mergeSystemState((ManagedEntity) srcEntity, (ManagedEntity) dstEntity);
-            }
+        if (isRoot) {
+            getEntitySystemStateSupport().mergeSystemState(srcEntity, dstEntity);
         }
     }
 
@@ -535,14 +529,14 @@ public class DataContextImpl implements DataContext {
     }
 
     protected void removeListeners(Entity entity) {
-        ((ManagedEntity<?>) entity).__getEntityEntry().removePropertyChangeListener(propertyChangeListener);
+        entity.__getEntityEntry().removePropertyChangeListener(propertyChangeListener);
         Map<String, EmbeddedPropertyChangeListener> listenerMap = embeddedPropertyListeners.get(entity);
         if (listenerMap != null) {
             for (Map.Entry<String, EmbeddedPropertyChangeListener> entry : listenerMap.entrySet()) {
                 Entity embedded = EntityValues.getAttributeValue(entity, entry.getKey());
                 if (embedded != null) {
-                    ((ManagedEntity<?>) embedded).__getEntityEntry().removePropertyChangeListener(entry.getValue());
-                    ((ManagedEntity<?>) embedded).__getEntityEntry().removePropertyChangeListener(propertyChangeListener);
+                    embedded.__getEntityEntry().removePropertyChangeListener(entry.getValue());
+                    embedded.__getEntityEntry().removePropertyChangeListener(propertyChangeListener);
                 }
             }
             embeddedPropertyListeners.remove(entity);

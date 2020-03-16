@@ -19,7 +19,6 @@ package io.jmix.data;
 import io.jmix.core.*;
 import io.jmix.core.entity.Entity;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.entity.ManagedEntity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.slf4j.Logger;
@@ -134,7 +133,7 @@ public class EntityFetcher {
                     }
                 } else if (value instanceof Entity) {
                     Entity e = (Entity) value;
-                    boolean isEmbeddable = ((ManagedEntity<?>) e).__getEntityEntry().isEmbeddable();
+                    boolean isEmbeddable =  e.__getEntityEntry().isEmbeddable();
                     if (!metaProperty.isReadOnly() && entityStates.isDetached(value) && !isEmbeddable) {
                         if (!optimizeForDetached || needReloading(e, propertyFetchPlan)) {
                             if (log.isTraceEnabled()) {
