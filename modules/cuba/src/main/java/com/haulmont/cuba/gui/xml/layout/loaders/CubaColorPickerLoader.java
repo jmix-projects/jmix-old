@@ -16,19 +16,27 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.components.data.value.DatasourceValueSource;
+import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import io.jmix.ui.xml.layout.loaders.ColorPickerLoader;
 import org.dom4j.Element;
 
 public class CubaColorPickerLoader extends ColorPickerLoader {
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     protected void loadData(io.jmix.ui.components.ColorPicker component, Element element) {
         super.loadData(component, element);
 
-        DatasourceLoaderHelper.loadDatasourceIfValueSourceNull((DatasourceComponent) resultComponent, element, getContext(),
-                (ComponentLoaderContext) getComponentContext());
+        if (component.getValueSource() == null) {
+            Datasource datasource = DatasourceLoaderHelper.loadDatasource(
+                    component.getId(), element, context, (ComponentLoaderContext) getComponentContext());
+
+            if (datasource != null) {
+                String property = DatasourceLoaderHelper.loadProperty(component.getId(), element, context);
+                component.setValueSource(new DatasourceValueSource(datasource, property));
+            }
+        }
     }
 }

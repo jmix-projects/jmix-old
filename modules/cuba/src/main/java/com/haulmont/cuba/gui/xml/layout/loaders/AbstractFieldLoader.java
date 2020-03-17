@@ -17,6 +17,8 @@
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.Field;
+import com.haulmont.cuba.gui.components.data.value.DatasourceValueSource;
+import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.dom4j.Element;
@@ -24,7 +26,7 @@ import org.dom4j.Element;
 import java.util.List;
 import java.util.function.Consumer;
 
-@SuppressWarnings({"rawtypes"})
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Deprecated
 public abstract class AbstractFieldLoader<T extends Field>
         extends io.jmix.ui.xml.layout.loaders.AbstractFieldLoader<T> {
@@ -64,8 +66,14 @@ public abstract class AbstractFieldLoader<T extends Field>
     protected void loadData(T component, Element element) {
         super.loadData(component, element);
 
-        if (resultComponent.getValueSource() == null) {
-            DatasourceLoaderHelper.loadDatasource(resultComponent, element, getContext(), getComponentContext());
+        if (component.getValueSource() == null) {
+            Datasource datasource = DatasourceLoaderHelper.loadDatasource(
+                    component.getId(), element, context, getComponentContext());
+
+            if (datasource != null) {
+                String property = DatasourceLoaderHelper.loadProperty(component.getId(), element, context);
+                component.setValueSource(new DatasourceValueSource(datasource, property));
+            }
         }
     }
 }

@@ -16,35 +16,43 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.components.data.value.DatasourceValueSource;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.data.options.DatasourceOptions;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import io.jmix.ui.xml.layout.loaders.TokenListLoader;
-import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class CubaTokenListLoader extends TokenListLoader {
 
-    @SuppressWarnings("rawtypes")
     @Override
     protected void loadData(io.jmix.ui.components.TokenList component, Element element) {
         super.loadData(component, element);
 
-        DatasourceLoaderHelper.loadDatasourceIfValueSourceNull((DatasourceComponent) resultComponent, element, getContext(),
-                (ComponentLoaderContext) getComponentContext());
+        if (component.getValueSource() == null) {
+            Datasource datasource = DatasourceLoaderHelper.loadDatasource(
+                    component.getId(), element, context, (ComponentLoaderContext) getComponentContext());
+
+            if (datasource != null) {
+                String property = DatasourceLoaderHelper.loadProperty(component.getId(), element, context);
+                component.setValueSource(new DatasourceValueSource(datasource, property));
+            }
+        }
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     protected void loadOptionsContainer(io.jmix.ui.components.TokenList component, Element lookupElement) {
         super.loadOptionsContainer(component, lookupElement);
 
-        String datasource = lookupElement.attributeValue("optionsDatasource");
-        if (!StringUtils.isEmpty(datasource)) {
-            Datasource ds = ((ComponentLoaderContext) getComponentContext()).getDsContext().get(datasource);
-            component.setOptions(new DatasourceOptions((CollectionDatasource) ds));
+        if (component.getOptions() == null) {
+            CollectionDatasource options = DatasourceLoaderHelper.loadOptionsDatasource(
+                    lookupElement, (ComponentLoaderContext) getComponentContext());
+
+            if (options != null) {
+                component.setOptions(new DatasourceOptions(options));
+            }
         }
     }
 }

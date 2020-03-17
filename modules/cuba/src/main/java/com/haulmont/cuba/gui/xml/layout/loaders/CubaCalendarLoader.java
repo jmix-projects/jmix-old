@@ -8,6 +8,7 @@ import org.dom4j.Element;
 
 public class CubaCalendarLoader extends CalendarLoader {
 
+    @SuppressWarnings("rawtypes")
     @Override
     protected void loadDataContainer(Calendar component, Element element) {
         String datasource = element.attributeValue("datasource");
