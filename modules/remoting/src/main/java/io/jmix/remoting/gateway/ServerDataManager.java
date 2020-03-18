@@ -18,7 +18,7 @@ package io.jmix.remoting.gateway;
 import io.jmix.core.LoadContext;
 import io.jmix.core.SaveContext;
 import io.jmix.core.ValueLoadContext;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.KeyValueEntity;
 
 import javax.annotation.Nullable;

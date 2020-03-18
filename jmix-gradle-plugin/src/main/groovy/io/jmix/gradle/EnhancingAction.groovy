@@ -20,10 +20,11 @@ import groovy.xml.MarkupBuilder
 import javassist.ClassPool
 import javassist.CtClass
 import javassist.NotFoundException
-import javassist.bytecode.AnnotationsAttribute
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.Task
+
+import static io.jmix.gradle.MetaModelUtil.*
 
 class EnhancingAction implements Action<Task> {
 
@@ -36,19 +37,26 @@ class EnhancingAction implements Action<Task> {
     @Override
     void execute(Task task) {
         Project project = task.getProject()
+
         project.logger.warn "Enhancing entities in $project for source set '$sourceSetName'"
 
+        List<String> classNames = []
+        List<String> nonMappedClassNames = []
         def sourceSet = project.sourceSets.findByName(sourceSetName)
-        def srcDirs = sourceSet.allJava.getSrcDirs()
 
+        generateEntityClassesList(project, sourceSet, classNames, nonMappedClassNames)
+
+        runEclipseLinkEnhancing(project, classNames, sourceSet)
+
+        runJmixEnhancing(project, classNames + nonMappedClassNames, sourceSet)
+    }
+
+    protected void generateEntityClassesList(Project project, sourceSet, classNames, nonMappedClassNames) {
         ClassPool classPool = new ClassPool(null)
         classPool.appendSystemPath()
         classPool.insertClassPath(sourceSet.java.outputDir.absolutePath)
 
-        List<String> classNames = []
-        List<String> nonMappedClassNames = []
-
-        srcDirs.each { File srcDir ->
+        sourceSet.allJava.getSrcDirs().each { File srcDir ->
             project.fileTree(srcDir).each { File file ->
                 if (file.name.endsWith('.java')) {
                     String pathStr = srcDir.toPath().relativize(file.toPath()).join('.')
@@ -58,27 +66,23 @@ class EnhancingAction implements Action<Task> {
                     try {
                         ctClass = classPool.get(className)
                     } catch (NotFoundException e) {
-                        project.logger.warn "Entity $className for enhancing is not found in $project"
+                        project.logger.info "Entity $className for enhancing is not found in $project"
                     }
 
                     if (ctClass != null) {
-                        AnnotationsAttribute attribute =
-                                ctClass.getClassFile().getAttribute(AnnotationsAttribute.visibleTag)
-                        if (attribute != null) {
-                            if (attribute.getAnnotation("javax.persistence.Entity") != null
-                                    || attribute.getAnnotation("javax.persistence.MappedSuperclass") != null
-                                    || attribute.getAnnotation("javax.persistence.Embeddable") != null) {
-                                project.logger.warn "Entity $className for enhancing in $project"
-                                classNames.add(className)
-                            } else if (attribute.getAnnotation("io.jmix.core.metamodel.annotations.MetaClass") != null) {
-                                nonMappedClassNames.add(className)
-                            }
+                        if (isJpaEntity(ctClass) || isJpaMappedSuperclass(ctClass) || isJpaEmbeddable(ctClass)) {
+                            project.logger.warn "Entity $className for enhancing in $project"
+                            classNames.add(className)
+                        } else if (isMetaClass(ctClass)) {
+                            nonMappedClassNames.add(className)
                         }
                     }
                 }
             }
         }
+    }
 
+    protected void runEclipseLinkEnhancing(Project project, List<String> classNames, sourceSet) {
         if (!classNames.isEmpty()) {
             File file = new File(project.buildDir, "dummy/enhancing/$sourceSetName/META-INF/persistence.xml")
             file.parentFile.mkdirs()
@@ -112,39 +116,48 @@ class EnhancingAction implements Action<Task> {
                 args sourceSet.java.outputDir.absolutePath
                 debug = project.hasProperty("debugEnhancing") ? Boolean.valueOf(project.getProperty("debugEnhancing")) : false
             }
-
         }
+    }
 
-        List<String> allClassNames = classNames + nonMappedClassNames
-        if (!allClassNames.isEmpty()) {
-            project.logger.info "[JmixEnhancer] Start Jmix enhancing"
-
-            ClassPool pool = new ClassPool(null)
-            pool.appendSystemPath()
-
-            for (file in sourceSet.compileClasspath) {
-                pool.insertClassPath(file.getAbsolutePath())
-            }
+    protected void runJmixEnhancing(Project project, List<String> classNames, sourceSet) {
+        if (!classNames.isEmpty()) {
+            project.logger.info "[JmixEnhancer] Start Jmix enhancing..."
 
             String javaOutputDir = sourceSet.java.outputDir.absolutePath
 
-            pool.insertClassPath(javaOutputDir)
-            project.configurations.enhancing.files.each { File dep ->
-                pool.insertClassPath(dep.absolutePath)
-            }
+            for (EnhancingStep step : enhancingSteps()) {
 
-            def cubaEnhancer = new JmixEnhancer(pool, sourceSet.java.outputDir.absolutePath)
-            cubaEnhancer.logger = project.logger
+                ClassPool classPool = new ClassPool(null)
+                classPool.appendSystemPath()
 
-            for (className in allClassNames) {
-                def classFileName = className.replace('.', '/') + '.class'
-                def classFile = new File(javaOutputDir, classFileName)
+                for (File file in sourceSet.compileClasspath) {
+                    classPool.insertClassPath(file.getAbsolutePath())
+                }
 
-                if (classFile.exists()) {
-                    // skip files from dependencies, enhance only classes from `javaOutputDir`
-                    cubaEnhancer.run(className)
+                classPool.insertClassPath(javaOutputDir)
+
+                project.configurations.enhancing.files.each { File dep ->
+                    classPool.insertClassPath(dep.absolutePath)
+                }
+
+                step.classPool = classPool
+                step.outputDir = javaOutputDir
+                step.logger = project.logger
+
+                for (className in classNames) {
+                    def classFileName = className.replace('.', '/') + '.class'
+                    def classFile = new File(javaOutputDir, classFileName)
+
+                    if (classFile.exists()) {
+                        // skip files from dependencies, enhance only classes from `javaOutputDir`
+                        step.execute(className)
+                    }
                 }
             }
         }
+    }
+
+    protected static List<EnhancingStep> enhancingSteps() {
+        Arrays.asList(new EntityEntryEnhancingStep(), new SettersEnhancingStep(), new TransientAnnotationEnhancingStep())
     }
 }

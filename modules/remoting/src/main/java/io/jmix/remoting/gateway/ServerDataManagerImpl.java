@@ -19,7 +19,7 @@ import io.jmix.core.DataManager;
 import io.jmix.core.LoadContext;
 import io.jmix.core.SaveContext;
 import io.jmix.core.ValueLoadContext;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.KeyValueEntity;
 import io.jmix.remoting.annotation.Remote;
 import org.springframework.context.annotation.Profile;
