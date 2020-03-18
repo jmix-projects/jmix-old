@@ -26,37 +26,35 @@ import org.dom4j.Element;
 public class CubaTreeTableLoader extends TreeTableLoader {
 
     @Override
-    protected TableDataHolder createTableDataHolder() {
-        return new CubaTreeTableDataHolder();
-    }
-
-    @Override
-    protected boolean initDataContainer(TableDataHolder holder) {
+    protected CubaTreeTableDataHolder initTableDataHolder() {
+        CubaTreeTableDataHolder holder = new CubaTreeTableDataHolder();
         Element rowsElement = element.element("rows");
         if (rowsElement == null) {
-            return false;
+            return holder;
         }
 
         CollectionDatasource datasource = DatasourceLoaderHelper.loadTableDatasource(
                 element, rowsElement, context, (ComponentLoaderContext) getComponentContext()
         );
 
-        ((CubaTreeTableDataHolder) holder).setDatasource(datasource);
+        holder.setDatasource(datasource);
         holder.setMetaClass(datasource.getMetaClass());
         holder.setFetchPlan(datasource.getView());
-        return true;
+
+        return holder;
     }
 
     @Override
-    protected boolean setupDataContainer(TableDataHolder holder) {
+    protected void setupDataContainer(TableDataHolder holder) {
         CollectionDatasource datasource = ((CubaTreeTableDataHolder) holder).getDatasource();
         if (datasource == null) {
-            return false;
+            return;
         }
+
         // todo dynamic attributes
         // addDynamicAttributes(resultComponent, metaClass, datasource, null, availableColumns);
+
         ((TreeTable) resultComponent).setDatasource(datasource);
-        return true;
     }
 
     protected static class CubaTreeTableDataHolder extends TableDataHolder {
@@ -69,6 +67,11 @@ public class CubaTreeTableLoader extends TreeTableLoader {
 
         public void setDatasource(CollectionDatasource datasource) {
             this.datasource = datasource;
+        }
+
+        @Override
+        public boolean isContainerLoaded() {
+            return super.isContainerLoaded() || datasource != null;
         }
     }
 }

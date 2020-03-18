@@ -25,37 +25,34 @@ import org.dom4j.Element;
 public class CubaTableLoader extends io.jmix.ui.xml.layout.loaders.TableLoader {
 
     @Override
-    protected TableDataHolder createTableDataHolder() {
-        return new CubaTableDataHolder();
-    }
-
-    @Override
-    protected boolean initDataContainer(TableDataHolder holder) {
+    protected CubaTableDataHolder initTableDataHolder() {
+        CubaTableDataHolder holder = new CubaTableDataHolder();
         Element rowsElement = element.element("rows");
         if (rowsElement == null) {
-            return false;
+            return holder;
         }
 
         CollectionDatasource datasource = DatasourceLoaderHelper.loadTableDatasource(
                 element, rowsElement, context, (ComponentLoaderContext) getComponentContext()
         );
 
-        ((CubaTableDataHolder) holder).setDatasource(datasource);
+        holder.setDatasource(datasource);
         holder.setMetaClass(datasource.getMetaClass());
         holder.setFetchPlan(datasource.getView());
-        return true;
+
+        return holder;
     }
 
     @Override
-    protected boolean setupDataContainer(TableDataHolder holder) {
+    protected void setupDataContainer(TableDataHolder holder) {
         CollectionDatasource datasource = ((CubaTableDataHolder) holder).getDatasource();
         if (datasource == null) {
-            return false;
+            return;
         }
+
         // todo dynamic attributes
         // addDynamicAttributes(resultComponent, metaClass, datasource, null, availableColumns);
         ((Table) resultComponent).setDatasource(datasource);
-        return true;
     }
 
     protected static class CubaTableDataHolder extends TableDataHolder {
@@ -68,6 +65,11 @@ public class CubaTableLoader extends io.jmix.ui.xml.layout.loaders.TableLoader {
 
         public void setDatasource(CollectionDatasource datasource) {
             this.datasource = datasource;
+        }
+
+        @Override
+        public boolean isContainerLoaded() {
+            return super.isContainerLoaded() || datasource != null;
         }
     }
 }

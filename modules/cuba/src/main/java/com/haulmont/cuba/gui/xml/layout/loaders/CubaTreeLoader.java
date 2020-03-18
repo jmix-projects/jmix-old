@@ -17,7 +17,9 @@
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.Tree;
+import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
+import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.xml.layout.loaders.TreeLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
@@ -34,9 +36,12 @@ public class CubaTreeLoader extends TreeLoader {
 
                 ComponentLoaderContext loaderContext = (ComponentLoaderContext) getComponentContext();
 
-                HierarchicalDatasource ds =
-                        (HierarchicalDatasource) loaderContext.getDsContext().get(datasource);
-                ((Tree) resultComponent).setDatasource(ds);
+                Datasource ds = loaderContext.getDsContext().get(datasource);
+                if (!(ds instanceof HierarchicalDatasource)) {
+                    throw new GuiDevelopmentException("Not a HierarchicalDatasource: " + datasource, context);
+                }
+
+                ((Tree) resultComponent).setDatasource((HierarchicalDatasource) ds);
             }
         }
     }

@@ -26,40 +26,36 @@ import io.jmix.ui.xml.layout.loaders.DataGridLoader;
 public class CubaDataGridLoader extends DataGridLoader {
 
     @Override
-    protected DataGridDataHolder createDataGridDataHolder() {
-        return new CubaDataGridDataHolder();
-    }
+    protected CubaDataGridDataHolder initDataGridDataHolder() {
+        CubaDataGridDataHolder holder = new CubaDataGridDataHolder();
 
-    @Override
-    protected boolean initDataContainer(DataGridDataHolder holder) {
         String datasourceId = element.attributeValue("datasource");
         if (Strings.isNullOrEmpty(datasourceId)) {
-            return false;
+            return holder;
         }
 
         CollectionDatasource datasource = DatasourceLoaderHelper.loadListComponentDatasource(
                 datasourceId, context, (ComponentLoaderContext) getComponentContext()
         );
 
-        ((CubaDataGridDataHolder) holder).setDatasource(datasource);
+        holder.setDatasource(datasource);
         holder.setMetaClass(datasource.getMetaClass());
         holder.setFetchPlan(datasource.getView());
 
-        return true;
+        return holder;
     }
 
     @Override
-    protected boolean setupDataContainer(DataGridDataHolder holder) {
+    protected void setupDataContainer(DataGridDataHolder holder) {
         CollectionDatasource datasource = ((CubaDataGridDataHolder) holder).getDatasource();
         if (datasource == null) {
-            return false;
+            return;
         }
 
         // todo dynamic attributes
         // addDynamicAttributes(resultComponent, metaClass, datasource, null, availableColumns);
 
         ((DataGrid) resultComponent).setDatasource(datasource);
-        return true;
     }
 
     protected static class CubaDataGridDataHolder extends DataGridDataHolder {
@@ -72,6 +68,11 @@ public class CubaDataGridLoader extends DataGridLoader {
 
         public void setDatasource(CollectionDatasource datasource) {
             this.datasource = datasource;
+        }
+
+        @Override
+        public boolean isContainerLoaded() {
+            return super.isContainerLoaded() || datasource != null;
         }
     }
 }

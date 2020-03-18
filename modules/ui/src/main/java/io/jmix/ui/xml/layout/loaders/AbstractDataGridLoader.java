@@ -143,10 +143,8 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
     }
 
     protected void loadDataGridData() {
-        DataGridDataHolder holder = createDataGridDataHolder();
-
-        boolean containerCreated = initDataContainer(holder);
-        if (!containerCreated) {
+        DataGridDataHolder holder= initDataGridDataHolder();
+        if (!holder.isContainerLoaded()) {
             String metaClassStr = element.attributeValue("metaClass");
             if (Strings.isNullOrEmpty(metaClassStr)) {
                 throw new GuiDevelopmentException("DataGrid doesn't have data binding",
@@ -170,8 +168,9 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
             availableColumns = new ArrayList<>();
         }
 
-        boolean containerIsAdded = setupDataContainer(holder);
-        if (!containerIsAdded) {
+        setupDataContainer(holder);
+
+        if (resultComponent.getItems() == null) {
             // todo dynamic attributes
 //            addDynamicAttributes(resultComponent, metaClass, null, null, availableColumns);
             //noinspection unchecked
@@ -179,14 +178,12 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
         }
     }
 
-    protected DataGridDataHolder createDataGridDataHolder() {
-        return new DataGridDataHolder();
-    }
+    protected DataGridDataHolder initDataGridDataHolder() {
+        DataGridDataHolder holder = new DataGridDataHolder();
 
-    protected boolean initDataContainer(DataGridDataHolder holder) {
         String containerId = element.attributeValue("dataContainer");
         if (Strings.isNullOrEmpty(containerId)) {
-            return false;
+            return holder;
         }
 
         FrameOwner frameOwner = getComponentContext().getFrame().getFrameOwner();
@@ -208,20 +205,19 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
         holder.setContainer(collectionContainer);
         holder.setFetchPlan(collectionContainer.getFetchPlan());
 
-        return true;
+        return holder;
     }
 
     @SuppressWarnings("unchecked")
-    protected boolean setupDataContainer(DataGridDataHolder holder) {
+    protected void setupDataContainer(DataGridDataHolder holder) {
        /* // todo dynamic attributes
             if (dataLoader instanceof CollectionLoader) {
                 addDynamicAttributes(resultComponent, metaClass, null, (CollectionLoader) dataLoader, availableColumns);
             }*/
+
         if (holder.getContainer() != null) {
             resultComponent.setItems(createContainerDataGridSource(holder.getContainer()));
-            return true;
         }
-        return false;
     }
 
     protected Scripting getScripting() {
@@ -900,6 +896,10 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
 
         public void setFetchPlan(FetchPlan fetchPlan) {
             this.fetchPlan = fetchPlan;
+        }
+
+        public boolean isContainerLoaded() {
+            return container != null;
         }
     }
 }

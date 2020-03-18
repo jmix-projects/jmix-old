@@ -141,17 +141,15 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
     }
 
     protected void loadTableData() {
-        TableDataHolder holder = createTableDataHolder();
-
-        boolean containerCreated = initDataContainer(holder);
-         if (!containerCreated) {
+        TableDataHolder holder = initTableDataHolder();
+        if (!holder.isContainerLoaded()) {
             String metaClassStr = element.attributeValue("metaClass");
             if (Strings.isNullOrEmpty(metaClassStr)) {
                 throw new GuiDevelopmentException("Table doesn't have data binding",
                         context, "Table ID", element.attributeValue("id"));
             }
 
-             holder.setMetaClass(getMetadata().getClass(metaClassStr));
+            holder.setMetaClass(getMetadata().getClass(metaClassStr));
         }
 
         List<Table.Column> availableColumns;
@@ -173,8 +171,9 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
             loadRequired(resultComponent, column);
         }
 
-        boolean containerAdded = setupDataContainer(holder);
-        if (!containerAdded) {
+        setupDataContainer(holder);
+
+        if (resultComponent.getItems() == null) {
             //todo dynamic attributes
 //            addDynamicAttributes(resultComponent, metaClass, null, null, availableColumns);
             //noinspection unchecked
@@ -193,14 +192,12 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
         }
     }
 
-    protected TableDataHolder createTableDataHolder() {
-        return new TableDataHolder();
-    }
+    protected TableDataHolder initTableDataHolder() {
+        TableDataHolder holder = new TableDataHolder();
 
-    protected boolean initDataContainer(TableDataHolder holder) {
         String containerId = element.attributeValue("dataContainer");
         if (containerId == null) {
-            return false;
+            return holder;
         }
 
         FrameOwner frameOwner = getComponentContext().getFrame().getFrameOwner();
@@ -222,11 +219,11 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
         holder.setContainer(collectionContainer);
         holder.setFetchPlan(collectionContainer.getFetchPlan());
 
-        return true;
+        return holder;
     }
 
     @SuppressWarnings("unchecked")
-    protected boolean setupDataContainer(TableDataHolder holder) {
+    protected void setupDataContainer(TableDataHolder holder) {
         /* //todo dynamic attributes
             if (dataLoader instanceof CollectionLoader) {
                 addDynamicAttributes(resultComponent, metaClass, null, (CollectionLoader) dataLoader, availableColumns);
@@ -236,9 +233,7 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
 
         if (holder.getContainer() != null) {
             resultComponent.setItems(createContainerTableSource(holder.getContainer()));
-            return true;
         }
-        return false;
     }
 
     protected Metadata getMetadata() {
@@ -827,6 +822,7 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
             table.setEmptyStateMessage(loadResourceString(emptyStateMessage));
         }
     }
+
     protected void loadEmptyStateLinkMessage(Table table, Element element) {
         String emptyStateLinkMessage = element.attributeValue("emptyStateLinkMessage");
         if (!Strings.isNullOrEmpty(emptyStateLinkMessage)) {
@@ -877,6 +873,10 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
 
         public void setFetchPlan(FetchPlan fetchPlan) {
             this.fetchPlan = fetchPlan;
+        }
+
+        public boolean isContainerLoaded() {
+            return container != null;
         }
     }
 }

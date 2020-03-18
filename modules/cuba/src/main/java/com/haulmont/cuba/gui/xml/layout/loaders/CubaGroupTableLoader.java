@@ -26,37 +26,34 @@ import org.dom4j.Element;
 public class CubaGroupTableLoader extends GroupTableLoader {
 
     @Override
-    protected TableDataHolder createTableDataHolder() {
-        return new CubaGroupTableDataHolder();
-    }
-
-    @Override
-    protected boolean initDataContainer(TableDataHolder holder) {
+    protected CubaGroupTableDataHolder initTableDataHolder() {
+        CubaGroupTableDataHolder holder = new CubaGroupTableDataHolder();
         Element rowsElement = element.element("rows");
         if (rowsElement == null) {
-            return false;
+            return holder;
         }
 
         CollectionDatasource datasource = DatasourceLoaderHelper.loadTableDatasource(
                 element, rowsElement, context, (ComponentLoaderContext) getComponentContext()
         );
 
-        ((CubaGroupTableDataHolder) holder).setDatasource(datasource);
+        holder.setDatasource(datasource);
         holder.setMetaClass(datasource.getMetaClass());
         holder.setFetchPlan(datasource.getView());
-        return true;
+
+        return holder;
     }
 
     @Override
-    protected boolean setupDataContainer(TableDataHolder holder) {
+    protected void setupDataContainer(TableDataHolder holder) {
         CollectionDatasource datasource = ((CubaGroupTableDataHolder) holder).getDatasource();
         if (datasource == null) {
-            return false;
+            return;
         }
+
         // todo dynamic attributes
         // addDynamicAttributes(resultComponent, metaClass, datasource, null, availableColumns);
         ((GroupTable) resultComponent).setDatasource(datasource);
-        return true;
     }
 
     protected static class CubaGroupTableDataHolder extends TableDataHolder {
@@ -69,6 +66,11 @@ public class CubaGroupTableLoader extends GroupTableLoader {
 
         public void setDatasource(CollectionDatasource datasource) {
             this.datasource = datasource;
+        }
+
+        @Override
+        public boolean isContainerLoaded() {
+            return super.isContainerLoaded() || datasource != null;
         }
     }
 }

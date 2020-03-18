@@ -26,40 +26,36 @@ import io.jmix.ui.xml.layout.loaders.TreeDataGridLoader;
 public class CubaTreeDataGridLoader extends TreeDataGridLoader {
 
     @Override
-    protected DataGridDataHolder createDataGridDataHolder() {
-        return new CubaTreeDataGridDataHolder();
-    }
+    protected CubaTreeDataGridDataHolder initDataGridDataHolder() {
+        CubaTreeDataGridDataHolder holder = new CubaTreeDataGridDataHolder();
 
-    @Override
-    protected boolean initDataContainer(DataGridDataHolder holder) {
         String datasourceId = element.attributeValue("datasource");
         if (Strings.isNullOrEmpty(datasourceId)) {
-            return false;
+            return holder;
         }
 
         CollectionDatasource datasource = DatasourceLoaderHelper.loadListComponentDatasource(
                 datasourceId, context, (ComponentLoaderContext) getComponentContext()
         );
 
-        ((CubaTreeDataGridDataHolder) holder).setDatasource(datasource);
+        holder.setDatasource(datasource);
         holder.setMetaClass(datasource.getMetaClass());
         holder.setFetchPlan(datasource.getView());
 
-        return true;
+        return holder;
     }
 
     @Override
-    protected boolean setupDataContainer(DataGridDataHolder holder) {
+    protected void setupDataContainer(DataGridDataHolder holder) {
         CollectionDatasource datasource = ((CubaTreeDataGridDataHolder) holder).getDatasource();
         if (datasource == null) {
-            return false;
+            return;
         }
 
         // todo dynamic attributes
         // addDynamicAttributes(resultComponent, metaClass, datasource, null, availableColumns);
 
         ((TreeDataGrid) resultComponent).setDatasource(datasource);
-        return true;
     }
 
     protected static class CubaTreeDataGridDataHolder extends DataGridDataHolder {
@@ -72,6 +68,11 @@ public class CubaTreeDataGridLoader extends TreeDataGridLoader {
 
         public void setDatasource(CollectionDatasource datasource) {
             this.datasource = datasource;
+        }
+
+        @Override
+        public boolean isContainerLoaded() {
+            return super.isContainerLoaded() || datasource != null;
         }
     }
 }
