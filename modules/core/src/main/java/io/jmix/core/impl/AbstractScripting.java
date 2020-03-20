@@ -26,6 +26,7 @@ import groovy.util.ResourceException;
 import groovy.util.ScriptException;
 import io.jmix.core.ScriptExecutionPolicy;
 import io.jmix.core.Scripting;
+import io.jmix.core.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
@@ -58,6 +59,7 @@ public abstract class AbstractScripting implements Scripting {
     private static final Pattern PACKAGE_PATTERN = Pattern.compile("\\bpackage\\b\\s+.+");
     private final Environment environment;
     protected JavaClassLoader javaClassLoader;
+    protected HotDeployManager hotDeployManager;
     protected SpringBeanLoader springBeanLoader;
     protected String groovyClassPath;
 
@@ -70,9 +72,12 @@ public abstract class AbstractScripting implements Scripting {
     public AbstractScripting(Environment environment,
                              JavaClassLoader javaClassLoader,
                              String confDir,
+                             HotDeployManager hotDeployManager,
+                             ConfigInterfaces configInterfaces,
                              SpringBeanLoader springBeanLoader) {
         this.environment = environment;
         this.javaClassLoader = javaClassLoader;
+        this.hotDeployManager = hotDeployManager;
         this.springBeanLoader = springBeanLoader;
 
         StringBuilder groovyClassPathBuilder = new StringBuilder(confDir).append(File.pathSeparator);
@@ -176,7 +181,7 @@ public abstract class AbstractScripting implements Scripting {
         CompilerConfiguration cc = new CompilerConfiguration();
         cc.setClasspath(groovyClassPath);
         cc.setRecompileGroovySource(true);
-        GroovyShell shell = new GroovyShell(javaClassLoader, new Binding(), cc);
+        GroovyShell shell = new GroovyShell(hotDeployManager.getJavaClassLoader(), new Binding(), cc);
         //noinspection UnnecessaryLocalVariable
         Script script = shell.parse(result);
         return script;
@@ -306,13 +311,13 @@ public abstract class AbstractScripting implements Scripting {
 
     @Override
     public boolean removeClass(String name) {
-        return getGroovyClassLoader().removeClass(name) || javaClassLoader.removeClass(name);
+        return getGroovyClassLoader().removeClass(name) || hotDeployManager.removeClass(name);
     }
 
     @Override
     public void clearCache() {
         getGroovyClassLoader().clearCache();
-        javaClassLoader.clearCache();
+        hotDeployManager.clearCache();
         getPool().clear();
         GroovyScriptEngine gse = getGroovyScriptEngine();
         try {
@@ -330,9 +335,10 @@ public abstract class AbstractScripting implements Scripting {
         /**
          * This implementation works for sources located in conf directory or packed into JARs.
          * It will throw ResourceException for resources in class directories, which is the case for running tests.
-         * @param resourceName          resource to load
-         * @return                      connection to the resource
-         * @throws ResourceException    if the requested resource can not be loaded
+         *
+         * @param resourceName resource to load
+         * @return connection to the resource
+         * @throws ResourceException if the requested resource can not be loaded
          */
         @Override
         public URLConnection getResourceConnection(String resourceName) throws ResourceException {
@@ -433,7 +439,7 @@ public abstract class AbstractScripting implements Scripting {
     protected class CubaGroovyClassLoader extends GroovyClassLoader {
 
         public CubaGroovyClassLoader(CompilerConfiguration cc) {
-            super(AbstractScripting.this.javaClassLoader, cc);
+            super(AbstractScripting.this.hotDeployManager.getJavaClassLoader(), cc);
         }
 
         public boolean removeClass(String className) {

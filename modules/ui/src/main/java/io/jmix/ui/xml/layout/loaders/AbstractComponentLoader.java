@@ -27,6 +27,10 @@ import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.ConstraintOperationType;
 import io.jmix.core.security.Security;
 import io.jmix.ui.Actions;
+import io.jmix.ui.ClientConfig;
+import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.UiComponents;
+import io.jmix.ui.Actions;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.UiProperties;
@@ -194,8 +198,8 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         return beanLocator.get(MessageTools.NAME);
     }
 
-    protected Scripting getScripting() {
-        return beanLocator.get(Scripting.NAME);
+    protected HotDeployManager getHotDeployManager() {
+        return beanLocator.get(HotDeployManager.NAME);
     }
 
     protected UiProperties getProperties() {
@@ -544,7 +548,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         if (StringUtils.isNotBlank(scriptPath) || StringUtils.isNotBlank(script)) {
             validator = new ScriptValidator(validatorElement, context.getMessagesPack());
         } else {
-            Class aClass = getScripting().loadClass(className);
+            Class aClass = getHotDeployManager().loadClass(className);
             if (aClass == null)
                 throw new GuiDevelopmentException(String.format("Class %s is not found", className), context);
             if (!StringUtils.isBlank(context.getMessagesPack()))
@@ -845,7 +849,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         String id = loadActionId(element);
 
         if (StringUtils.isBlank(element.attributeValue("invoke"))) {
-                            String type = element.attributeValue("type");
+            String type = element.attributeValue("type");
             if (StringUtils.isNotEmpty(type)) {
                 Actions actions = beanLocator.get(Actions.NAME);
 
@@ -868,7 +872,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
                 throw new GuiDevelopmentException("Formatter's attribute 'class' is not specified", context);
             }
 
-            Class<?> aClass = getScripting().loadClass(className);
+            Class<?> aClass = getHotDeployManager().loadClass(className);
             if (aClass == null) {
                 throw new GuiDevelopmentException(String.format("Class %s is not found", className), context);
             }
