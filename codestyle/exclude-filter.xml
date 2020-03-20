@@ -74,13 +74,13 @@
     </Match>
 
     <Match>
-        <Class name="io.jmix.core.config.ConfigGetter"/>
+        <Class name="com.haulmont.cuba.core.config.ConfigGetter"/>
         <Bug pattern="ES_COMPARING_PARAMETER_STRING_WITH_EQ"/>
     </Match>
 
     <Match>
         <Bug pattern="DM_STRING_VOID_CTOR"/>
-        <Class name="io.jmix.core.config.ConfigUtil"/>
+        <Class name="com.haulmont.cuba.core.config.ConfigUtil"/>
     </Match>
 
     <Match>

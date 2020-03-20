@@ -16,7 +16,7 @@
 
 package io.jmix.samples.ui;
 
-import io.jmix.core.ConfigInterfaces;
+import com.haulmont.cuba.core.global.Configuration;
 import io.jmix.core.security.Security;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.boot.CommandLineRunner;
@@ -31,7 +31,7 @@ import javax.sql.DataSource;
 public class SampleLegacyUIApplication implements CommandLineRunner {
 
 	@Inject
-	private ConfigInterfaces configInterfaces;
+	private Configuration configuration;
 	@Inject
 	private Security security;
 
