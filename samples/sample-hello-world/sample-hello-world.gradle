@@ -16,3 +16,7 @@ dependencies {
 entitiesEnhancing {
     enabled = true
 }
+
+test {
+    useJUnitPlatform()
+}
