@@ -41,7 +41,7 @@ buildscript {
     dependencies {
         classpath("io.jmix.gradle:jmix-gradle-plugin:0.0.1-SNAPSHOT")
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.7.1")
+        classpath("gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.0.4")
     }
 }
 
@@ -101,42 +101,41 @@ configure([project(':jmix-platform'), project(':modules:core'), project(':module
     }
 }
 
-configure([project(':modules:core'), project(':modules:data'), project(':modules:security'), project(':modules:remoting'),
-           project(':modules:audit')]) {
+configure([project(':modules:core'), project(':modules:data'), project(':modules:security')]) {
     if (rootProject.hasProperty('spotbugsEnabled')) {
         apply plugin: 'com.github.spotbugs'
 
         project.afterEvaluate {
             spotbugs {
-                toolVersion = '3.1.12'
-                ignoreFailures = true
+                toolVersion = '4.0.1'
+                ignoreFailures = false
                 omitVisitors = ['FindDoubleCheck']
-                excludeFilter = rootProject.file("codestyle/exclude-filter.xml")
+                excludeFilter = rootProject.file("codequality/spotbugs-exclude-filter.xml")
                 effort = "max"
                 reportLevel = "medium"
             }
 
             spotbugsMain {
-                jvmArgs '-Xmx1024m'
+                jvmArgs = ['-Xmx1024m']
 
                 reports {
                     xml.enabled = false
                     html {
                         enabled = true
-                        stylesheet = rootProject.resources.text.fromFile('codestyle/fancy-hist.xsl')
+                        stylesheet = rootProject.resources.text.fromFile('codequality/spotbugs-fancy-hist.xsl')
                         destination file("${project.buildDir}/reports/spotbugs/${project.name}.html")
                     }
                 }
             }
 
             spotbugsTest {
-                jvmArgs '-Xmx1024m'
+                jvmArgs = ['-Xmx1024m']
 
                 reports {
                     xml.enabled = false
                     html {
                         enabled = true
-                        stylesheet = project.resources.text.fromFile('codestyle/fancy-hist.xsl')
+                        stylesheet = project.resources.text.fromFile('codequality/spotbugs-fancy-hist.xsl')
                         destination file("${project.buildDir}/reports/spotbugs/test-${project.name}.html")
                     }
                 }
