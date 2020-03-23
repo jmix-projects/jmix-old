@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.core.impl;
+package com.haulmont.cuba.core.app;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -22,7 +22,7 @@ import java.util.Map;
  * Supports configuration parameters framework functionality.
  *
  */
-public interface ConfigStorage {
+public interface ConfigStorageAPI {
 
     String NAME = "jmix_ConfigStorage";
 

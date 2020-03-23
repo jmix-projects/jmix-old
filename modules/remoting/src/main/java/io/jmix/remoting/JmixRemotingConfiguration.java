@@ -18,7 +18,6 @@ package io.jmix.remoting;
 
 import io.jmix.core.DataManager;
 import io.jmix.core.annotation.JmixModule;
-import io.jmix.core.impl.ConfigStorage;
 import io.jmix.core.security.Authenticator;
 import io.jmix.core.security.UserSessionManager;
 import io.jmix.core.security.UserSessions;
@@ -59,12 +58,6 @@ public class JmixRemotingConfiguration {
     @Profile("client")
     public DataManager dataManager() {
         return new ClientDataManager();
-    }
-
-    @Bean(name = ConfigStorage.NAME)
-    @Profile("client")
-    public ConfigStorage configStorage() {
-        return new ClientConfigStorage();
     }
 
     @Configuration

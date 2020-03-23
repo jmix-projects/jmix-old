@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.data.impl;
+package com.haulmont.cuba.core.app;
 
 import io.jmix.core.Metadata;
 import io.jmix.core.cluster.ClusterListenerAdapter;
 import io.jmix.core.cluster.ClusterManager;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.impl.ConfigStorage;
 import io.jmix.data.entity.ConfigEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +46,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * Supports configuration parameters framework functionality.
  */
-@Component(ConfigStorage.NAME)
-public class ConfigStorageImpl implements ConfigStorage {
+@Component(ConfigStorageAPI.NAME)
+public class ConfigStorage implements ConfigStorageAPI {
 
     @Inject
     private Metadata metadata;
@@ -69,7 +68,7 @@ public class ConfigStorageImpl implements ConfigStorage {
     protected Lock readLock = lock.readLock();
     protected Lock writeLock = lock.writeLock();
 
-    private static final Logger log = LoggerFactory.getLogger(ConfigStorage.class);
+    private static final Logger log = LoggerFactory.getLogger(ConfigStorageAPI.class);
 
     private static class InvalidateCacheMsg implements Serializable {
         private static final long serialVersionUID = -3116358584797500962L;
