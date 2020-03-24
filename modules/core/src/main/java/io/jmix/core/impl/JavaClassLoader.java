@@ -17,6 +17,8 @@
 package io.jmix.core.impl;
 
 import com.google.common.base.Preconditions;
+import io.jmix.core.ConfigInterfaces;
+import io.jmix.core.GlobalConfig;
 import io.jmix.core.TimeSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -59,11 +61,15 @@ public class JavaClassLoader extends URLClassLoader {
     @Inject
     protected SpringBeanLoader springBeanLoader;
 
-    public JavaClassLoader() {
+    @Inject
+    public JavaClassLoader(ConfigInterfaces configInterfaces) {
         super(new URL[0], Thread.currentThread().getContextClassLoader());
 
+        GlobalConfig config = configInterfaces.getConfig(GlobalConfig.class);
         this.proxyClassLoader = new ProxyClassLoader(Thread.currentThread().getContextClassLoader(), compiled);
-        this.rootDirs = getRootPaths();
+        this.rootDirs = new HashSet<String>() {{
+            add(config.getConfDir());
+        }}; //getRootPaths(); ToDo: multiple root paths
         this.classFilesProviders = new HashMap<>();
         for (String dir : this.rootDirs) {
             this.classFilesProviders.put(dir, new ClassFilesProvider(dir));
