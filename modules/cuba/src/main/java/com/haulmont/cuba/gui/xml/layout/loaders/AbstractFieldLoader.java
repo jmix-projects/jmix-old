@@ -17,8 +17,6 @@
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.Field;
-import com.haulmont.cuba.gui.components.data.value.DatasourceValueSource;
-import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.dom4j.Element;
@@ -66,14 +64,8 @@ public abstract class AbstractFieldLoader<T extends Field>
     protected void loadData(T component, Element element) {
         super.loadData(component, element);
 
-        if (component.getValueSource() == null) {
-            Datasource datasource = DatasourceLoaderHelper.loadDatasource(
-                    component.getId(), element, context, getComponentContext());
-
-            if (datasource != null) {
-                String property = DatasourceLoaderHelper.loadProperty(component.getId(), element, context);
-                component.setValueSource(new DatasourceValueSource(datasource, property));
-            }
-        }
+        DatasourceLoaderHelper
+                .loadDatasourceIfValueSourceNull(resultComponent, element, context, getComponentContext())
+                .ifPresent(component::setValueSource);
     }
 }

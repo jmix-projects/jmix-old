@@ -16,10 +16,8 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.data.value.DatasourceValueSource;
-import com.haulmont.cuba.gui.data.CollectionDatasource;
-import com.haulmont.cuba.gui.data.Datasource;
-import com.haulmont.cuba.gui.data.options.DatasourceOptions;
+import com.haulmont.cuba.gui.components.DatasourceComponent;
+import com.haulmont.cuba.gui.components.OptionsField;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import io.jmix.ui.xml.layout.loaders.CheckBoxGroupLoader;
 import org.dom4j.Element;
@@ -31,23 +29,14 @@ public class CubaCheckBoxGroupLoader extends CheckBoxGroupLoader {
     protected void loadData(io.jmix.ui.components.CheckBoxGroup component, Element element) {
         super.loadData(component, element);
 
-        if (component.getValueSource() == null) {
-            Datasource datasource = DatasourceLoaderHelper.loadDatasource(
-                    component.getId(), element, context, (ComponentLoaderContext) getComponentContext());
+        DatasourceLoaderHelper
+                .loadDatasourceIfValueSourceNull((DatasourceComponent) resultComponent, element, context,
+                        (ComponentLoaderContext) getComponentContext())
+                .ifPresent(component::setValueSource);
 
-            if (datasource != null) {
-                String property = DatasourceLoaderHelper.loadProperty(component.getId(), element, context);
-                component.setValueSource(new DatasourceValueSource(datasource, property));
-            }
-        }
-
-        if (component.getOptions() == null) {
-            CollectionDatasource options = DatasourceLoaderHelper.loadOptionsDatasource(
-                    element, (ComponentLoaderContext) getComponentContext());
-
-            if (options != null) {
-                component.setOptions(new DatasourceOptions(options));
-            }
-        }
+        DatasourceLoaderHelper
+                .loadOptionsDatasourceIfOptionsNull((OptionsField) resultComponent, element,
+                        (ComponentLoaderContext) getComponentContext())
+                .ifPresent(component::setOptions);
     }
 }

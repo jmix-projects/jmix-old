@@ -16,8 +16,7 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.data.value.DatasourceValueSource;
-import com.haulmont.cuba.gui.data.Datasource;
+import com.haulmont.cuba.gui.components.DatasourceComponent;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import io.jmix.ui.xml.layout.loaders.DateFieldLoader;
 import org.dom4j.Element;
@@ -29,14 +28,9 @@ public class CubaDateFieldLoader extends DateFieldLoader {
     protected void loadData(io.jmix.ui.components.DateField component, Element element) {
         super.loadData(component, element);
 
-        if (component.getValueSource() == null) {
-            Datasource datasource = DatasourceLoaderHelper.loadDatasource(
-                    component.getId(), element, context, (ComponentLoaderContext) getComponentContext());
-
-            if (datasource != null) {
-                String property = DatasourceLoaderHelper.loadProperty(component.getId(), element, context);
-                component.setValueSource(new DatasourceValueSource(datasource, property));
-            }
-        }
+        DatasourceLoaderHelper
+                .loadDatasourceIfValueSourceNull((DatasourceComponent) resultComponent, element, context,
+                        (ComponentLoaderContext) getComponentContext())
+                .ifPresent(component::setValueSource);
     }
 }

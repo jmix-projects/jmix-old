@@ -34,7 +34,7 @@ public class CubaTreeDataGridLoader extends TreeDataGridLoader {
             return holder;
         }
 
-        CollectionDatasource datasource = DatasourceLoaderHelper.loadListComponentDatasource(
+        CollectionDatasource datasource = DatasourceLoaderHelper.loadCollectionDatasource(
                 datasourceId, context, (ComponentLoaderContext) getComponentContext()
         );
 
