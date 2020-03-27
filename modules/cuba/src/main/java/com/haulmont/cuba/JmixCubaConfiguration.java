@@ -16,14 +16,12 @@
 
 package com.haulmont.cuba;
 
+import com.haulmont.cuba.core.global.impl.CubaInstanceNameProviderImpl;
 import com.haulmont.cuba.core.global.impl.CubaMetadata;
 import com.haulmont.cuba.core.global.impl.MessagesImpl;
 import com.haulmont.cuba.web.gui.CubaUiComponents;
 import com.haulmont.cuba.web.gui.CubaUiControllerReflectionInspector;
-import io.jmix.core.BeanLocator;
-import io.jmix.core.JmixCoreConfiguration;
-import io.jmix.core.Messages;
-import io.jmix.core.Metadata;
+import io.jmix.core.*;
 import io.jmix.core.annotation.JmixModule;
 import io.jmix.core.annotation.JmixProperty;
 import io.jmix.core.impl.MetadataLoader;
@@ -87,6 +85,11 @@ public class JmixCubaConfiguration {
     @Bean(UiComponents.NAME)
     protected UiComponents uiComponents() {
         return new CubaUiComponents();
+    }
+
+    @Bean(InstanceNameProvider.NAME)
+    protected InstanceNameProvider instanceNameProvider() {
+        return new CubaInstanceNameProviderImpl();
     }
 
     @Bean("cuba_UiControllers")

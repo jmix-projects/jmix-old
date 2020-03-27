@@ -32,6 +32,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
+import javax.el.MethodNotFoundException;
 import javax.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -120,7 +121,9 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
 
         if (rec.methodName != null) {
             try {
-                Method method = instance.getClass().getMethod(rec.methodName);
+                Method method = Stream.of(metaClass.getJavaClass().getDeclaredMethods())
+                        .filter(m -> m.getName().equals(rec.methodName))
+                        .findFirst().orElseThrow(NoSuchMethodException::new);
                 Object result = method.invoke(instance, methodArgumentsProvider.getMethodArgumentValues(method));
                 return (String) result;
             } catch (Exception e) {
@@ -160,7 +163,7 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
     @Nullable
     public NamePatternRec parseNamePattern(MetaClass metaClass) {
         MetaProperty nameProperty = metaClass.getProperties().stream()
-                .filter(p -> p.getAnnotations().get(InstanceName.class.getName()) != null)
+                .filter(p -> p.getAnnotatedElement().getAnnotation(InstanceName.class) != null)
                 .findFirst().orElse(null);
 
         if (nameProperty != null) {
