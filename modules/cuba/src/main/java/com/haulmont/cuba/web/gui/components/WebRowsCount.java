@@ -58,21 +58,16 @@ public class WebRowsCount extends io.jmix.ui.components.impl.WebRowsCount implem
 
     @Override
     protected Adapter createDefaultAdapter(DataUnit items) {
-        Adapter adapter = null;
         try {
             // since RowsCount does not have its own loader and cuba module is added
             // AbstractTableLoader will always create legacy component, so firstly we
             // need to invoke parent implementation
-            adapter = super.createDefaultAdapter(items);
+            return super.createDefaultAdapter(items);
         } catch (IllegalStateException e) {
             // try to create with datasource
             if (items instanceof DatasourceDataUnit) {
                 return createDatasourceAdapter(((DatasourceDataUnit) items).getDatasource());
             }
-        }
-
-        if (adapter != null) {
-            return adapter;
         }
 
         throw new IllegalStateException("Unsupported data unit type: " + items);
