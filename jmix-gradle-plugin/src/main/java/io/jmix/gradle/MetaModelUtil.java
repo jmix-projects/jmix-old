@@ -33,9 +33,9 @@ public class MetaModelUtil {
     public static final String ENTITY_ENTRY_ENHANCED_TYPE = "io.jmix.core.entity.JmixEntityEntryEnhanced";
 
     public static final String TRANSIENT_ANNOTATION_TYPE = "javax.persistence.Transient";
-    public static final String META_PROPERTY_ANNOTATION_TYPE = "io.jmix.core.metamodel.annotations.MetaProperty";
+    public static final String MODEL_PROPERTY_ANNOTATION_TYPE = "io.jmix.core.metamodel.annotations.ModelProperty";
     public static final String DISABLE_ENHANCING_ANNOTATION_TYPE = "io.jmix.core.entity.annotations.DisableEnhancing";
-    public static final String META_CLASS_ANNOTATION_TYPE = "io.jmix.core.metamodel.annotations.MetaClass";
+    public static final String MODEL_OBJECT_ANNOTATION_TYPE = "io.jmix.core.metamodel.annotations.ModelObject";
     public static final String ENTITY_ANNOTATION_TYPE = "javax.persistence.Entity";
     public static final String EMBEDDABLE_ANNOTATION_TYPE = "javax.persistence.Embeddable";
 
@@ -88,9 +88,9 @@ public class MetaModelUtil {
         return attribute != null && attribute.getAnnotation("javax.persistence.MappedSuperclass") != null;
     }
 
-    public static boolean isMetaClass(CtClass ctClass) {
+    public static boolean isModelObject(CtClass ctClass) {
         AnnotationsAttribute attribute = (AnnotationsAttribute) ctClass.getClassFile().getAttribute(AnnotationsAttribute.visibleTag);
-        return attribute != null && attribute.getAnnotation(META_CLASS_ANNOTATION_TYPE) != null;
+        return attribute != null && attribute.getAnnotation(MODEL_OBJECT_ANNOTATION_TYPE) != null;
     }
 
     public static CtField getPrimaryKey(CtClass ctClass) {
@@ -138,7 +138,7 @@ public class MetaModelUtil {
 
     public static boolean isMetaPropertyField(CtClass ctClass, String fieldName) {
         CtField ctField = findDeclaredField(ctClass, fieldName);
-        return ctField != null && hasAnnotationOnField(ctField, META_PROPERTY_ANNOTATION_TYPE);
+        return ctField != null && hasAnnotationOnField(ctField, MODEL_PROPERTY_ANNOTATION_TYPE);
     }
 
     public static boolean isSetterMethod(CtMethod ctMethod) throws NotFoundException {

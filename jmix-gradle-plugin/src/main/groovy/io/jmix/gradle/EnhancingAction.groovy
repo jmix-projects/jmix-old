@@ -73,7 +73,7 @@ class EnhancingAction implements Action<Task> {
                         if (isJpaEntity(ctClass) || isJpaMappedSuperclass(ctClass) || isJpaEmbeddable(ctClass)) {
                             project.logger.warn "Entity $className for enhancing in $project"
                             classNames.add(className)
-                        } else if (isMetaClass(ctClass)) {
+                        } else if (isModelObject(ctClass)) {
                             nonMappedClassNames.add(className)
                         }
                     }

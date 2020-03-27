@@ -39,10 +39,12 @@ import java.util.List;
 import java.util.Set;
 
 public class TableWidgetDelegate {
+    public static final String CUBA_TABLE_CLICKABLE_CELL_CONTENT = "c-table-clickable-cell-content";
     public static final String CUBA_TABLE_CLICKABLE_CELL_STYLE = "c-table-clickable-cell";
     public static final String CUBA_TABLE_CLICKABLE_TEXT_STYLE = "c-table-clickable-text";
     public static final String WIDGET_CELL_CLASSNAME = "widget-container";
     public static final String TABLE_SORT_CONTEXTMENU_ITEM = "c-table-contextmenu-item";
+    public static final String TREE_TABLE_SPACER = "v-treetable-treespacer";
 
     public VScrollTable table;
     public TableWidget tableWidget;
@@ -71,6 +73,7 @@ public class TableWidgetDelegate {
     public Runnable emptyStateLinkClickHandler;
 
     public Set<String> clickableColumns;
+    public Set<String> clickableTableColumns;
     public Set<String> htmlCaptionColumns;
     public TableCellClickListener cellClickListener;
 
@@ -91,6 +94,13 @@ public class TableWidgetDelegate {
     public String deselectAllLabel;
 
     public List<AfterBodyUpdateListener> afterBodyUpdateListeners;
+
+    /*
+     * Table page can contain partially visible rows and when we try to scroll to the last row (which in the current page
+     * is partially visible) it will not be fully shown. Given property should be used only when scrollTo is invoked for
+     * last item.
+     */
+    public boolean scrollToLastItemEnabled = false;
 
     public void requestFocus(final String itemKey, final String columnKey) {
         Scheduler.get().scheduleDeferred(() -> {
@@ -143,13 +153,8 @@ public class TableWidgetDelegate {
     }
 
     public void reassignHeaderCellWidth(int colIndex, VScrollTable.HeaderCell hCell, int minWidth) {
-        if (tableWidget.isCustomColumn(colIndex)) {
-            return;
-        }
-
         for (Widget rowWidget : tableWidget.getRenderedRows()) {
-            if (isAggregationVisible()
-                    && tableWidget.isGenericRow(rowWidget)) {
+            if (tableWidget.isGenericRow(rowWidget)) {
                 VScrollTable.VScrollTableBody.VScrollTableRow row = (VScrollTable.VScrollTableBody.VScrollTableRow) rowWidget;
 
                 double realColWidth = row.getRealCellWidth(colIndex);
@@ -392,5 +397,13 @@ public class TableWidgetDelegate {
     public boolean isAggregationVisible() {
         return aggregationRow != null
                 && aggregationRow.isVisible();
+    }
+
+    public boolean isScrollToLastItemEnabled() {
+        return scrollToLastItemEnabled;
+    }
+
+    public void setScrollToLastItemEnabled(boolean scrollToLastItemEnabled) {
+        this.scrollToLastItemEnabled = scrollToLastItemEnabled;
     }
 }

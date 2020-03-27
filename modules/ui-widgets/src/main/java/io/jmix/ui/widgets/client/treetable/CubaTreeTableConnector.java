@@ -42,6 +42,8 @@ import static io.jmix.ui.widgets.client.Tools.findCurrentOrParentTd;
 @Connect(CubaTreeTable.class)
 public class CubaTreeTableConnector extends TreeTableConnector {
 
+    protected static final String HAS_FOOTER_STYLENAME = "has-footer";
+
     protected HandlerRegistration tooltipHandlerRegistration;
 
     public CubaTreeTableConnector() {
@@ -120,6 +122,13 @@ public class CubaTreeTableConnector extends TreeTableConnector {
                 getWidget()._delegate.clickableColumns = new HashSet<String>(Arrays.asList(getState().clickableColumnKeys));
             } else {
                 getWidget()._delegate.clickableColumns = null;
+            }
+        }
+        if (stateChangeEvent.hasPropertyChanged("clickableTableColumnKeys")) {
+            if (getState().clickableTableColumnKeys != null) {
+                getWidget()._delegate.clickableTableColumns = new HashSet<>(Arrays.asList(getState().clickableTableColumnKeys));
+            } else {
+                getWidget()._delegate.clickableTableColumns = null;
             }
         }
         if (stateChangeEvent.hasPropertyChanged("customPopup")) {
@@ -251,6 +260,15 @@ public class CubaTreeTableConnector extends TreeTableConnector {
             getWidget().removeStyleName("collapsing-allowed");
         }
 
+        if (uidl.hasAttribute("colfooters")) {
+            boolean hasFooter = uidl.getBooleanAttribute("colfooters");
+            if (hasFooter) {
+                getWidget().addStyleName(HAS_FOOTER_STYLENAME);
+            } else {
+                getWidget().removeStyleName(HAS_FOOTER_STYLENAME);
+            }
+        }
+
         // We may have actions attached to this table
         if (uidl.getChildCount() > 1) {
             final int cnt = uidl.getChildCount();
@@ -264,6 +282,10 @@ public class CubaTreeTableConnector extends TreeTableConnector {
                 }
             }
         }
+
+        getWidget().setScrollToLastItemEnabled(
+                uidl.getBooleanAttribute("scrolltolast"));
+
 
         getWidget().updateTableBodyScroll();
     }
@@ -282,10 +304,11 @@ public class CubaTreeTableConnector extends TreeTableConnector {
 
         getWidget()._delegate.cellClickListener = new TableCellClickListener() {
             @Override
-            public void onClick(String columnKey, int rowKey) {
-                getRpcProxy(CubaTableServerRpc.class).onClick(columnKey, String.valueOf(rowKey));
+            public void onClick(String columnKey, int rowKey, boolean isText) {
+                getRpcProxy(CubaTableServerRpc.class).onClick(columnKey, String.valueOf(rowKey), isText);
             }
         };
+
         tooltipHandlerRegistration = Event.addNativePreviewHandler(new Event.NativePreviewHandler() {
             @Override
             public void onPreviewNativeEvent(Event.NativePreviewEvent event) {

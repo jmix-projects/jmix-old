@@ -490,7 +490,7 @@
             <xs:enumeration value="java.util.Date"/>
             <xs:enumeration value="java.time.LocalDate"/>
             <xs:enumeration value="java.time.LocalDateTime"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.icons.Icons.Icon"/>
+            <xs:enumeration value="com.haulmont.cuba.gui.icons.Icons$Icon"/>
             <xs:enumeration value="com.haulmont.cuba.gui.components.Component"/>
         </xs:restriction>
     </xs:simpleType>
@@ -1344,6 +1344,8 @@
                     <xs:element name="digits" minOccurs="0" type="digitsValidatorType"/>
                     <xs:element name="decimalMin" minOccurs="0" type="decimalMaxMinValidatorType"/>
                     <xs:element name="decimalMax" minOccurs="0" type="decimalMaxMinValidatorType"/>
+                    <xs:element name="doubleMin" minOccurs="0" type="decimalMaxMinValidatorType"/>
+                    <xs:element name="doubleMax" minOccurs="0" type="decimalMaxMinValidatorType"/>
                     <xs:element name="negativeOrZero" minOccurs="0" type="messageValidatorType"/>
                     <xs:element name="negative" minOccurs="0" type="messageValidatorType"/>
                     <xs:element name="positiveOrZero" minOccurs="0" type="messageValidatorType"/>
@@ -2348,6 +2350,8 @@
 
                 <xs:attribute name="multiselect" type="xs:boolean"/>
                 <xs:attribute name="selectionMode" type="treeSelectionMode"/>
+
+                <xs:attribute name="rowHeight" type="xs:double"/>
 
                 <xs:attributeGroup ref="hasTabIndex"/>
                 <xs:attributeGroup ref="hasContextHelp"/>
