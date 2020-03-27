@@ -130,7 +130,7 @@ public class DatasourceDataGridItems<E extends Entity<K>, K>
     @Override
     public int indexOfItem(E item) {
         Preconditions.checkNotNullArgument(item);
-        return datasource.indexOfId(item.getId());
+        return datasource.indexOfId(EntityValues.getId(item));
     }
 
     @Nullable
@@ -154,7 +154,7 @@ public class DatasourceDataGridItems<E extends Entity<K>, K>
 
     @Override
     public boolean containsItem(E item) {
-        return datasource.containsItem(item.getId());
+        return datasource.containsItem(EntityValues.getId(item));
     }
 
     @Override

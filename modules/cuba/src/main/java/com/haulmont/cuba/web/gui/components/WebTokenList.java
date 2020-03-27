@@ -17,7 +17,7 @@
 package com.haulmont.cuba.web.gui.components;
 
 import com.haulmont.cuba.gui.components.TokenList;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 
 @Deprecated
 public class WebTokenList<V extends Entity> extends io.jmix.ui.components.impl.WebTokenList<V> implements TokenList<V> {

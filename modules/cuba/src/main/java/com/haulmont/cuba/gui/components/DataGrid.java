@@ -19,7 +19,7 @@ package com.haulmont.cuba.gui.components;
 import com.haulmont.cuba.gui.components.data.datagrid.SortableDatasourceDataGridItems;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.Datasource;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.ui.components.data.DataGridItems;
 import com.haulmont.cuba.gui.components.data.datagrid.DatasourceDataGridItems;
 

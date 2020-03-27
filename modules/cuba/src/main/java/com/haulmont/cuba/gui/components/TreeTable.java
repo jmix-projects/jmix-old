@@ -20,7 +20,7 @@ import com.haulmont.cuba.gui.components.data.table.DatasourceTreeTableItems;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.ui.components.ListComponent;
 import io.jmix.ui.components.data.TableItems;
 
