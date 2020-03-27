@@ -15,7 +15,6 @@
  */
 package com.haulmont.cuba.core.model.common;
 
-import com.haulmont.cuba.core.model.Address;
 import io.jmix.core.DeletePolicy;
 import io.jmix.core.compatibility.AppContext;
 import io.jmix.data.entity.StandardEntity;
@@ -24,7 +23,7 @@ import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.entity.annotation.TrackEditScreenHistory;
 import io.jmix.core.metamodel.annotations.Composition;
-import io.jmix.core.metamodel.annotations.NamePattern;
+import com.haulmont.chile.core.annotations.NamePattern;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
