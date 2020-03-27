@@ -19,26 +19,27 @@ package io.jmix.core.impl.method;
 import io.jmix.core.BeanLocator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Resolves method parameters by delegating to a list of registered
+ * Resolves method parameters by delegating to a list of registered in Spring context
  * {@link MethodArgumentResolver MethodArgumentResolvers}.
  * Previously resolved method parameters are cached for faster lookups.
  */
 public class ContextArgumentResolverComposite extends CachedArgumentResolverComposite {
 
-	protected BeanLocator beanLocator;
+    protected BeanLocator beanLocator;
 
-	public ContextArgumentResolverComposite(BeanLocator beanLocator) {
-		this.beanLocator = beanLocator;
-	}
+    public ContextArgumentResolverComposite(BeanLocator beanLocator) {
+        this.beanLocator = beanLocator;
+    }
 
-	/**
-	 * Return a read-only list with the contained resolvers, or an empty list.
-	 */
-	public List<MethodArgumentResolver> getResolvers() {
-		return new ArrayList<>(beanLocator.getAll(MethodArgumentResolver.class).values());
-	}
+    /**
+     * Return a read-only list with the contained resolvers, or an empty list.
+     */
+    public List<MethodArgumentResolver> getResolvers() {
+        return Collections.unmodifiableList(new ArrayList<>(beanLocator.getAll(MethodArgumentResolver.class).values()));
+    }
 
 }

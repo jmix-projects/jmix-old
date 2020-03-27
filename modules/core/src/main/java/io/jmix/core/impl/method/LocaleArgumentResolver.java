@@ -16,15 +16,17 @@
 
 package io.jmix.core.impl.method;
 
-import io.jmix.core.impl.CrossDataStoreReferenceLoader;
 import io.jmix.core.security.UserSessionSource;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Locale;
 
+/**
+ * Allows resolving the current {@link Locale} as method argument.
+ * Current user session locale will be returned if user is authorized otherwise will be returned default system locale
+ */
 @Component(LocaleArgumentResolver.NAME)
 public class LocaleArgumentResolver extends TypedArgumentResolver<Locale> {
 
@@ -47,7 +49,7 @@ public class LocaleArgumentResolver extends TypedArgumentResolver<Locale> {
         if (userSessionSource.checkCurrentUserSession()) {
             locale = userSessionSource.getLocale();
         } else {
-            locale = Locale.ENGLISH;
+            locale = Locale.getDefault();
         }
         return locale;
     }

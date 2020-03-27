@@ -20,8 +20,13 @@ import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+/**
+ * Strategy interface to handle the value returned from the invocation of a
+ * handler method .
+ */
 public interface MethodArgumentResolver {
 
     /**
@@ -35,11 +40,7 @@ public interface MethodArgumentResolver {
     boolean supportsParameter(MethodParameter parameter);
 
     /**
-     * Resolves a method parameter into an argument value from a given request.
-     * A {@link ModelAndViewContainer} provides access to the model for the
-     * request. A {@link WebDataBinderFactory} provides a way to create
-     * a {@link WebDataBinder} instance when needed for data binding and
-     * type conversion purposes.
+     * Resolves a method parameter into an argument value.
      *
      * @param parameter     the method parameter to resolve. This parameter must
      *                      have previously been passed to {@link #supportsParameter} which must

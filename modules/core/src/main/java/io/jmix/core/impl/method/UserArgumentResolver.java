@@ -22,7 +22,11 @@ import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
+import java.util.Locale;
 
+/**
+ * Allows resolving the current authorized {@link User} as method argument.
+ */
 @Component(UserArgumentResolver.NAME)
 public class UserArgumentResolver extends TypedArgumentResolver<User> {
 
@@ -37,6 +41,10 @@ public class UserArgumentResolver extends TypedArgumentResolver<User> {
 
     @Override
     public User resolveArgument(MethodParameter parameter) {
-        return userSessionSource.getUserSession().getUser();
+        if (userSessionSource.checkCurrentUserSession()) {
+            return userSessionSource.getUserSession().getUser();
+        } else {
+            return null;
+        }
     }
 }

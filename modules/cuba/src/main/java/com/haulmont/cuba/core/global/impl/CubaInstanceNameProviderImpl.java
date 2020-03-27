@@ -17,6 +17,7 @@
 package com.haulmont.cuba.core.global.impl;
 
 import io.jmix.core.DevelopmentException;
+import io.jmix.core.InstanceNameProvider;
 import io.jmix.core.impl.InstanceNameProviderImpl;
 import com.haulmont.chile.core.annotations.NamePattern;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -30,6 +31,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+/**
+ * {@link InstanceNameProvider} implementation for CUBA compatible module to support {@link NamePattern} annotation
+ */
 public class CubaInstanceNameProviderImpl extends InstanceNameProviderImpl {
 
     private static final Pattern INSTANCE_NAME_SPLIT_PATTERN = Pattern.compile("[,;]");

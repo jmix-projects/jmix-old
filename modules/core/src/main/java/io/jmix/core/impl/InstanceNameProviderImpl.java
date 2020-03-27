@@ -26,13 +26,10 @@ import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.UserSessionSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.el.MethodNotFoundException;
 import javax.inject.Inject;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -65,11 +62,9 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
     @Inject
     protected BeanLocator beanLocator;
 
-    private ContextArgumentResolverComposite resolvers;
+    protected ContextArgumentResolverComposite resolvers;
 
-    private MethodArgumentsProvider methodArgumentsProvider;
-
-    private final Logger logger = LoggerFactory.getLogger(MetadataTools.class);
+    protected MethodArgumentsProvider methodArgumentsProvider;
 
     public static class NamePatternRec {
         /**

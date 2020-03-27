@@ -18,6 +18,9 @@ package io.jmix.core.impl.method;
 
 import org.springframework.core.MethodParameter;
 
+/**
+ * Abstract typed {@link MethodArgumentResolver} class
+ */
 public abstract class TypedArgumentResolver<T> implements MethodArgumentResolver {
 
     protected Class<T> paramClass;

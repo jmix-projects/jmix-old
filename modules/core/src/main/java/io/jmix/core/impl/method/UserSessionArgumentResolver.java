@@ -16,6 +16,7 @@
 
 package io.jmix.core.impl.method;
 
+import io.jmix.core.entity.User;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;
 import org.springframework.core.MethodParameter;
@@ -23,6 +24,9 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 
+/**
+ * Allows resolving the current {@link UserSession} as method argument.
+ */
 @Component(UserSessionArgumentResolver.NAME)
 public class UserSessionArgumentResolver extends TypedArgumentResolver<UserSession> {
 
@@ -37,6 +41,10 @@ public class UserSessionArgumentResolver extends TypedArgumentResolver<UserSessi
 
     @Override
     public UserSession resolveArgument(MethodParameter parameter) {
-        return userSessionSource.getUserSession();
+        if (userSessionSource.checkCurrentUserSession()) {
+            return userSessionSource.getUserSession();
+        } else {
+            return null;
+        }
     }
 }

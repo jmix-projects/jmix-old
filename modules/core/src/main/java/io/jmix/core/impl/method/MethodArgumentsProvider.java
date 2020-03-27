@@ -25,16 +25,19 @@ import org.springframework.util.ObjectUtils;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 
+/**
+ * Utility class to provide {@link Method} argument values from {@link MethodArgumentResolver}
+ */
 public class MethodArgumentsProvider {
 
     private static final Object[] EMPTY_ARGS = new Object[0];
 
-    private ContextArgumentResolverComposite resolvers;
+    private MethodArgumentResolver resolver;
 
     private final Logger logger = LoggerFactory.getLogger(MetadataTools.class);
 
-    public MethodArgumentsProvider(ContextArgumentResolverComposite resolvers) {
-        this.resolvers = resolvers;
+    public MethodArgumentsProvider(MethodArgumentResolver resolver) {
+        this.resolver = resolver;
     }
 
     /**
@@ -56,11 +59,11 @@ public class MethodArgumentsProvider {
             if (args[i] != null) {
                 continue;
             }
-            if (!this.resolvers.supportsParameter(parameter)) {
+            if (!this.resolver.supportsParameter(parameter)) {
                 throw new IllegalStateException(formatArgumentError(parameter, "No suitable resolver"));
             }
             try {
-                args[i] = this.resolvers.resolveArgument(parameter);
+                args[i] = this.resolver.resolveArgument(parameter);
             } catch (Exception ex) {
                 // Leave stack trace for later, exception may actually be resolved and handled...
                 if (logger.isDebugEnabled()) {

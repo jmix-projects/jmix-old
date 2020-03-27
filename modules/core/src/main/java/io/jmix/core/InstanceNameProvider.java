@@ -16,16 +16,35 @@
 
 package io.jmix.core;
 
+import io.jmix.core.metamodel.annotations.InstanceName;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 
 import java.util.Collection;
 
+/**
+ * Provide instance name and instance name properties.
+ */
 public interface InstanceNameProvider {
 
     String NAME = "jmix_InstanceNameProvider";
 
+    /**
+     * Get entity instance name defined by {@link InstanceName} annotation
+     *
+     * @param instance   instance
+     *
+     * @return instance name
+     */
     String getInstanceName(Entity instance);
 
+    /**
+     * Return a collection of properties included into entity's name pattern (see {@link InstanceName}).
+     *
+     * @param metaClass   entity metaclass
+     * @param useOriginal if true, and if the given metaclass doesn't define a {@link InstanceName} and if it is an
+     *                    extended entity, this method tries to find a name pattern in an original entity
+     * @return collection of the name pattern properties
+     */
     Collection<MetaProperty> getNamePatternProperties(MetaClass metaClass, boolean useOriginal);
 }
