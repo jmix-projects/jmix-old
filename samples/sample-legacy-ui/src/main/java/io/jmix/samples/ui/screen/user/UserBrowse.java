@@ -18,6 +18,7 @@ package io.jmix.samples.ui.screen.user;
 
 import com.haulmont.cuba.gui.components.AbstractLookup;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
+import com.haulmont.cuba.gui.data.GroupDatasource;
 import io.jmix.security.entity.User;
 
 import javax.inject.Inject;
@@ -29,6 +30,9 @@ public class UserBrowse extends AbstractLookup {
     private CollectionDatasource<User, UUID> userDs;
 
     @Inject
+    private GroupDatasource<User, UUID> groupUserDs;
+
+    @Inject
     private SampleConfig sampleConfig;
 
     @Override
@@ -37,16 +41,18 @@ public class UserBrowse extends AbstractLookup {
 
         User user1 = new User();
         user1.setActive(true);
-        user1.setFirstName("asd");
-        user1.setLastName("asxcvcx");
+        user1.setFirstName("John");
+        user1.setLastName("Doe");
 
         User user2 = new User();
         user2.setActive(true);
-        user2.setFirstName("asd");
-        user2.setLastName("asxcvcx");
+        user2.setFirstName("Katherine");
+        user2.setLastName("Potter");
 
         userDs.addItem(user1);
         userDs.addItem(user2);
 
+        groupUserDs.addItem(user1);
+        groupUserDs.addItem(user2);
     }
 }
