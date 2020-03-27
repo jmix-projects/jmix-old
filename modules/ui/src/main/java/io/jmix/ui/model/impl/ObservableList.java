@@ -17,7 +17,7 @@
 package io.jmix.ui.model.impl;
 
 import com.google.common.collect.ForwardingList;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.ui.model.CollectionChangeType;
 
 import java.io.ObjectStreamException;
@@ -26,7 +26,6 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-@SuppressWarnings("NullableProblems")
 public class ObservableList<T> extends ForwardingList<T> implements Serializable {
 
     private static final long serialVersionUID = -1887633822578545041L;

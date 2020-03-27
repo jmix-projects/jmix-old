@@ -38,7 +38,7 @@ import java.util.List;
 public class WebSourceCodeEditor extends WebV8AbstractField<CubaSourceCodeEditor, String, String>
         implements SourceCodeEditor {
 
-    protected boolean suggestOnDot = false;
+    protected boolean suggestOnDot = true;
 
     protected HighlightMode mode = Mode.Text;
     protected Suggester suggester;
@@ -255,7 +255,7 @@ public class WebSourceCodeEditor extends WebV8AbstractField<CubaSourceCodeEditor
             if (suggestion.getStartPosition() > 0)
                 return StringUtils.substring(text, 0, suggestion.getStartPosition()) + suggestionText
                         + StringUtils.substring(text, cursor);
-            return StringUtils.substring(text, 0, cursor) + suggestionText + StringUtils.substring(text, cursor);
+            return suggestionText + StringUtils.substring(text, cursor);
         }
     }
 }

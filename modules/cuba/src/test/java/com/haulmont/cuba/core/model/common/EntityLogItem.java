@@ -19,12 +19,11 @@ package com.haulmont.cuba.core.model.common;
 import com.haulmont.cuba.core.global.Messages;
 import com.haulmont.cuba.core.global.Metadata;
 import io.jmix.core.AppBeans;
-import io.jmix.core.entity.BaseDbGeneratedIdEntity;
-import io.jmix.core.entity.BaseUuidEntity;
+import io.jmix.data.entity.BaseUuidEntity;
 import io.jmix.core.entity.Creatable;
 import io.jmix.core.entity.annotation.EmbeddedParameters;
 import io.jmix.core.entity.annotation.SystemLevel;
-import io.jmix.core.metamodel.annotations.MetaProperty;
+import io.jmix.core.metamodel.annotations.ModelProperty;
 import io.jmix.core.metamodel.datatypes.impl.EnumClass;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.data.entity.ReferenceToEntity;
@@ -106,10 +105,7 @@ public class EntityLogItem extends BaseUuidEntity implements Creatable {
     private String entityInstanceName;
 
     @Transient
-    private transient BaseDbGeneratedIdEntity dbGeneratedIdEntity;
-
-    @Transient
-    @MetaProperty
+    @ModelProperty
     private Set<EntityLogAttr> attributes;
 
     @Column(name = "CHANGES")
@@ -157,7 +153,7 @@ public class EntityLogItem extends BaseUuidEntity implements Creatable {
         this.entity = entity;
     }
 
-    @MetaProperty
+    @ModelProperty
     public String getDisplayedEntityName() {
         Metadata metadata = AppBeans.get(Metadata.NAME);
         Messages messages = AppBeans.get(Messages.NAME);
@@ -215,14 +211,6 @@ public class EntityLogItem extends BaseUuidEntity implements Creatable {
 
     public void setEntityRef(ReferenceToEntity entityRef) {
         this.entityRef = entityRef;
-    }
-
-    public BaseDbGeneratedIdEntity getDbGeneratedIdEntity() {
-        return dbGeneratedIdEntity;
-    }
-
-    public void setDbGeneratedIdEntity(BaseDbGeneratedIdEntity dbGeneratedIdEntity) {
-        this.dbGeneratedIdEntity = dbGeneratedIdEntity;
     }
 
     public String getEntityInstanceName() {

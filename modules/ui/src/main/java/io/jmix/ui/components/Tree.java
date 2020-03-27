@@ -17,7 +17,7 @@ package io.jmix.ui.components;
 
 import com.google.common.reflect.TypeToken;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.data.TreeItems;
 
@@ -271,6 +271,14 @@ public interface Tree<E extends Entity> extends ListComponent<E>, HasButtonsPane
      * @return a registration object for removing an event listener added to a source
      */
     Subscription addCollapseListener(Consumer<CollapseEvent<E>> listener);
+
+    /**
+     * Sets the height of a row. If -1 (default), the row height is calculated based on the theme for an empty row
+     * before the Tree is displayed.
+     *
+     * @param rowHeight The height of a row in pixels or -1 for automatic calculation
+     */
+    void setRowHeight(double rowHeight);
 
     enum SelectionMode {
         /**

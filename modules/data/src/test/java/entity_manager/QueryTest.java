@@ -19,17 +19,17 @@ package entity_manager;
 import io.jmix.core.DataManager;
 import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.data.JmixDataConfiguration;
-import io.jmix.data.OrmProperties;
+import io.jmix.data.PersistenceHints;
 import io.jmix.data.impl.JmixQuery;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import test_support.JmixDataTestConfiguration;
@@ -38,12 +38,11 @@ import test_support.entity.sales.Customer;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {JmixCoreConfiguration.class, JmixDataConfiguration.class, JmixDataTestConfiguration.class})
 public class QueryTest {
 
@@ -59,8 +58,8 @@ public class QueryTest {
     @Autowired
     TransactionTemplate tx;
 
-    @Before
-    @After
+    @BeforeEach
+    @AfterEach
     public void cleanup() throws Exception {
         try {
             jdbc.update("delete from SALES_CUSTOMER");
@@ -124,7 +123,7 @@ public class QueryTest {
 
         // when:
         list = tx.execute(status -> {
-            entityManager.setProperty(OrmProperties.SOFT_DELETION, false);
+            entityManager.setProperty(PersistenceHints.SOFT_DELETION, false);
             TypedQuery<Customer> query = entityManager.createQuery("select c from sales$Customer c where c.id = ?1", Customer.class);
             query.setParameter(1, customer.getId());
             return query.getResultList();

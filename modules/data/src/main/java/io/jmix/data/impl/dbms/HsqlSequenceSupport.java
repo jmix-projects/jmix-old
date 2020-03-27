@@ -19,7 +19,7 @@ package io.jmix.data.impl.dbms;
 import io.jmix.data.SequenceSupport;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("hsqlSequenceSupport")
 public class HsqlSequenceSupport implements SequenceSupport {
 
     @Override
@@ -46,7 +46,7 @@ public class HsqlSequenceSupport implements SequenceSupport {
 
     @Override
     public String getNextValueSql(String sequenceName) {
-        return "select next value for " + sequenceName + " from dual";
+        return "call next value for " + sequenceName;
     }
 
     @Override

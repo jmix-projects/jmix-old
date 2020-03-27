@@ -17,7 +17,7 @@
 package com.haulmont.cuba.web.gui.components;
 
 import com.haulmont.cuba.gui.components.Tree;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 
 @Deprecated
 public class WebTree<E extends Entity> extends io.jmix.ui.components.impl.WebTree<E> implements Tree<E> {

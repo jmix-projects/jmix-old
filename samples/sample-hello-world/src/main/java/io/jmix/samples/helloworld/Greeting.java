@@ -16,15 +16,17 @@
 
 package io.jmix.samples.helloworld;
 
-import io.jmix.core.entity.StandardEntity;
+import io.jmix.data.entity.StandardEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "GREETING")
 public class Greeting extends StandardEntity {
 
-    @Column
+    @Column(name = "TEXT_")
     private String text;
 
     public String getText() {

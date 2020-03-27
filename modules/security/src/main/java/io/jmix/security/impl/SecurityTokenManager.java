@@ -18,14 +18,12 @@ package io.jmix.security.impl;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
-import io.jmix.core.Metadata;
-import io.jmix.core.MetadataTools;
-import io.jmix.core.ServerConfig;
-import io.jmix.core.UuidProvider;
+import io.jmix.core.*;
 import io.jmix.core.entity.*;
 import io.jmix.core.event.AppContextInitializedEvent;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.security.SecurityProperties;
 import io.jmix.security.SecurityTokenException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,7 +38,6 @@ import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-import static io.jmix.core.entity.BaseEntityInternalAccess.*;
 import static org.apache.commons.lang3.StringUtils.rightPad;
 import static org.apache.commons.lang3.StringUtils.substring;
 
@@ -51,11 +48,11 @@ public class SecurityTokenManager {
     private static final Logger log = LoggerFactory.getLogger(SecurityTokenManager.class);
 
     @Inject
-    protected ServerConfig config;
+    protected SecurityProperties properties;
     @Inject
     protected Metadata metadata;
     @Inject
-    private MetadataTools metadataTools;
+    protected MetadataTools metadataTools;
 
     protected static final String ENTITY_NAME_KEY = "__entityName";
     protected static final String ENTITY_ID_KEY = "__entityId";
@@ -69,10 +66,10 @@ public class SecurityTokenManager {
      * Encrypt filtered data and write the result to the security token
      */
     public void writeSecurityToken(Entity entity) {
-        SecurityState securityState = getOrCreateSecurityState(entity);
+        SecurityState securityState = entity.__getEntityEntry().getSecurityState();
         if (securityState != null) {
             JSONObject jsonObject = new JSONObject();
-            Multimap<String, Object> filtered = getFilteredData(securityState);
+            Multimap<String, Object> filtered = securityState.getFilteredData();
             if (filtered != null) {
                 Set<Map.Entry<String, Collection<Object>>> entries = filtered.asMap().entrySet();
                 String[] filteredAttributes = new String[entries.size()];
@@ -81,7 +78,7 @@ public class SecurityTokenManager {
                     jsonObject.put(entry.getKey(), entry.getValue());
                     filteredAttributes[i++] = entry.getKey();
                 }
-                setFilteredAttributes(securityState, filteredAttributes);
+                securityState.setFilteredAttributes(filteredAttributes);
             }
             MetaClass metaClass = metadata.getClass(entity.getClass());
             jsonObject.put(ENTITY_NAME_KEY, metaClass.getName());
@@ -97,7 +94,7 @@ public class SecurityTokenManager {
             } catch (Exception e) {
                 throw new RuntimeException("An error occurred while generating security token", e);
             }
-            setSecurityToken(securityState, encrypted);
+            securityState.setSecurityToken(encrypted);
         }
     }
 
@@ -105,16 +102,16 @@ public class SecurityTokenManager {
      * Decrypt security token and read filtered data
      */
     public void readSecurityToken(Entity entity) {
-        SecurityState securityState = getSecurityState(entity);
-        if (getSecurityToken(entity) == null) {
+        SecurityState securityState = entity.__getEntityEntry().getSecurityState();
+        if (securityState.getSecurityToken() == null) {
             return;
         }
         MetaClass metaClass = metadata.getClass(entity);
         Multimap<String, Object> filteredData = ArrayListMultimap.create();
-        setFilteredData(securityState, filteredData);
+        securityState.setFilteredData(filteredData);
         Cipher cipher = getCipher(Cipher.DECRYPT_MODE);
         try {
-            byte[] decrypted = cipher.doFinal(getSecurityToken(securityState));
+            byte[] decrypted = cipher.doFinal(securityState.getSecurityToken());
             String json = new String(decrypted, StandardCharsets.UTF_8);
             JSONObject jsonObject = new JSONObject(json);
             for (String key : jsonObject.keySet()) {
@@ -129,7 +126,7 @@ public class SecurityTokenManager {
                 }
             }
             if (!metadataTools.hasCompositePrimaryKey(metaClass)
-                    && !(entity instanceof EmbeddableEntity)) {
+                    && !entity.__getEntityEntry().isEmbeddable()) {
                 if (!jsonObject.has(ENTITY_ID_KEY) || !jsonObject.has(ENTITY_NAME_KEY)) {
                     throw new SecurityTokenException("Invalid format for security token");
                 }
@@ -156,7 +153,7 @@ public class SecurityTokenManager {
     protected Cipher getCipher(int mode) {
         try {
             Cipher cipher = Cipher.getInstance("AES");
-            byte[] encryptionKey = rightPad(substring(config.getKeyForSecurityTokenEncryption(), 0, 16), 16)
+            byte[] encryptionKey = rightPad(substring(properties.getKeyForSecurityTokenEncryption(), 0, 16), 16)
                     .getBytes(StandardCharsets.UTF_8);
 
             SecretKeySpec sKeySpec = new SecretKeySpec(encryptionKey, "AES");
@@ -176,7 +173,7 @@ public class SecurityTokenManager {
     }
 
     protected Object getEntityId(Entity entity) {
-        Object entityId = entity.getId();
+        Object entityId = EntityValues.getId(entity);
         if (entityId instanceof IdProxy) {
             return ((IdProxy) entityId).get();
         } else {
@@ -213,28 +210,32 @@ public class SecurityTokenManager {
     /**
      * INTERNAL.
      */
-    public void addFiltered(BaseGenericIdEntity<?> entity, String property, Object id) {
-        SecurityState securityState = getOrCreateSecurityState(entity);
-        if (getFilteredData(securityState) == null) {
-            setFilteredData(securityState, ArrayListMultimap.create());
+    public void addFiltered(Entity<?> entity, String property, Object id) {
+        EntityEntry entityEntry = entity.__getEntityEntry();
+        Multimap<String, Object> filteredData = entityEntry.getSecurityState().getFilteredData();
+        if (filteredData == null) {
+            filteredData = ArrayListMultimap.create();
+            entityEntry.getSecurityState().setFilteredData(filteredData);
         }
-        getFilteredData(securityState).put(property, id);
+        filteredData.put(property, id);
     }
 
     /**
      * INTERNAL.
      */
-    public void addFiltered(BaseGenericIdEntity<?> entity, String property, Collection ids) {
-        SecurityState securityState = getOrCreateSecurityState(entity);
-        if (getFilteredData(securityState) == null) {
-            setFilteredData(securityState, ArrayListMultimap.create());
+    public void addFiltered(Entity<?> entity, String property, Collection ids) {
+        EntityEntry entityEntry = entity.__getEntityEntry();
+        Multimap<String, Object> filteredData = entityEntry.getSecurityState().getFilteredData();
+        if (filteredData == null) {
+            filteredData = ArrayListMultimap.create();
+            entityEntry.getSecurityState().setFilteredData(filteredData);
         }
-        getFilteredData(securityState).putAll(property, ids);
+        filteredData.putAll(property, ids);
     }
 
     @EventListener(AppContextInitializedEvent.class)
     protected void applicationInitialized() {
-        if ("CUBA.Platform".equals(config.getKeyForSecurityTokenEncryption())) {
+        if ("CUBA.Platform".equals(properties.getKeyForSecurityTokenEncryption())) {
             log.warn("\nWARNING:\n" +
                     "=================================================================\n" +
                     "'cuba.keyForSecurityTokenEncryption' app property is set to\n " +

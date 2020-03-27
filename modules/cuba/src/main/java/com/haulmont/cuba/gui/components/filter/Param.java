@@ -19,6 +19,7 @@ package com.haulmont.cuba.gui.components.filter;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.haulmont.cuba.CubaProperties;
 import com.haulmont.cuba.core.global.DataManager;
 import com.haulmont.cuba.core.global.LoadContext;
 import com.haulmont.cuba.core.global.Messages;
@@ -32,7 +33,8 @@ import io.jmix.core.*;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.ParamsMap;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.annotation.IgnoreUserTimeZone;
 import io.jmix.core.entity.annotation.Lookup;
 import io.jmix.core.entity.annotation.LookupType;
@@ -43,7 +45,6 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;
-import io.jmix.ui.ClientConfig;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.data.ValueConversionException;
@@ -70,11 +71,7 @@ import javax.inject.Inject;
 import javax.persistence.TemporalType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
+import java.time.*;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -137,7 +134,7 @@ public class Param {
     @Inject
     protected DataManager dataManager;
     @Inject
-    protected ConfigInterfaces configuration;
+    protected CubaProperties properties;
     @Inject
     protected DataComponents dataComponents;
 
@@ -519,7 +516,7 @@ public class Param {
                 if (v instanceof UUID) {
                     return v.toString();
                 } else if (v instanceof Entity) {
-                    return ((Entity) v).getId().toString();
+                    return EntityValues.getId(((Entity) v)).toString();
                 }
 
             case ENUM:
@@ -672,7 +669,7 @@ public class Param {
                 paramValue = e.getValue();
             }
 
-            if (configuration.getConfig(ClientConfig.class).getGenericFilterTrimParamValues()) {
+            if (properties.isGenericFilterTrimParamValues()) {
                 _setValue(StringUtils.trimToNull(paramValue), valueProperty);
             } else {
                 _setValue(paramValue, valueProperty);

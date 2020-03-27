@@ -18,6 +18,7 @@ package spec.haulmont.cuba.web.messagedialog.screens;
 
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.Button;
+import io.jmix.ui.components.MessageDialogFacet;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
@@ -32,6 +33,6 @@ public class MessageDialogScreen extends Screen {
     public Action dialogAction;
     @Inject
     public Button dialogButton;
-    /*@Inject todo port
-    public MessageDialogFacet messageDialog;*/
+    @Inject
+    public MessageDialogFacet messageDialog;
 }

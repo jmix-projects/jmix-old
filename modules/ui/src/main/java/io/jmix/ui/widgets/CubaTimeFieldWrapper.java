@@ -17,6 +17,7 @@
 package io.jmix.ui.widgets;
 
 import com.vaadin.data.HasValue;
+import com.vaadin.server.ErrorMessage;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomField;
 import io.jmix.ui.widgets.client.timefield.AmPm;
@@ -24,6 +25,7 @@ import io.jmix.ui.widgets.client.timefield.TimeMode;
 import io.jmix.ui.widgets.client.timefield.TimeResolution;
 
 import java.time.LocalTime;
+import java.util.function.Supplier;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -62,6 +64,24 @@ public class CubaTimeFieldWrapper extends CustomField<LocalTime> {
     public void setReadOnly(boolean readOnly) {
         timeField.setReadOnly(readOnly);
         amPmField.setReadOnly(readOnly);
+    }
+
+    @Override
+    public void setComponentErrorProvider(Supplier<ErrorMessage> componentErrorProvider) {
+        if (componentErrorProvider != null) {
+            timeField.setComponentErrorProvider(() -> {
+                ErrorMessage errorMessage = componentErrorProvider.get();
+                amPmField.setComponentError(errorMessage);
+                return errorMessage;
+            });
+        } else {
+            timeField.setComponentErrorProvider(null);
+        }
+    }
+
+    @Override
+    public Supplier<ErrorMessage> getComponentErrorProvider() {
+        return timeField.getComponentErrorProvider();
     }
 
     @Override
@@ -159,7 +179,8 @@ public class CubaTimeFieldWrapper extends CustomField<LocalTime> {
         if (event.isUserOriginated()) {
             LocalTime oldValue = this.internalValue;
 
-            this.internalValue = constructModelValue(event.getValue());
+            LocalTime newValue = event.getValue();
+            this.internalValue = newValue == null ? null : constructModelValue(newValue);
 
             setValueToPresentation(convertToPresentation(this.internalValue));
 

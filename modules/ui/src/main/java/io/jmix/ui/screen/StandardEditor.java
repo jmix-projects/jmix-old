@@ -17,13 +17,16 @@
 package io.jmix.ui.screen;
 
 import com.google.common.base.Strings;
-import io.jmix.core.*;
+import io.jmix.core.EntityStates;
+import io.jmix.core.ExtendedEntities;
+import io.jmix.core.Messages;
+import io.jmix.core.Metadata;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.events.TriggerOnce;
-import io.jmix.core.entity.BaseGenericIdEntity;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.ui.ClientConfig;
+import io.jmix.ui.UiProperties;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.BaseAction;
 import io.jmix.ui.components.Component;
@@ -72,11 +75,10 @@ public abstract class StandardEditor<T extends Entity> extends Screen
     protected void initActions(@SuppressWarnings("unused") InitEvent event) {
         Window window = getWindow();
 
-        ConfigInterfaces configuration = getBeanLocator().get(ConfigInterfaces.NAME);
         Messages messages = getBeanLocator().get(Messages.NAME);
         Icons icons = getBeanLocator().get(Icons.NAME);
 
-        String commitShortcut = configuration.getConfig(ClientConfig.class).getCommitShortcut();
+        String commitShortcut = getBeanLocator().get(UiProperties.class).getCommitShortcut();
 
         Action commitAndCloseAction = new BaseAction(WINDOW_COMMIT_AND_CLOSE)
                 .withCaption(messages.getMessage("actions.Ok"))
@@ -147,14 +149,11 @@ public abstract class StandardEditor<T extends Entity> extends Screen
         if (action instanceof ChangeTrackerCloseAction
                 && ((ChangeTrackerCloseAction) action).isCheckForUnsavedChanges()
                 && hasUnsavedChanges()) {
-            ConfigInterfaces configuration = getBeanLocator().get(ConfigInterfaces.NAME);
-            ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
-
             ScreenValidation screenValidation = getBeanLocator().get(ScreenValidation.NAME);
 
             UnknownOperationResult result = new UnknownOperationResult();
 
-            if (clientConfig.getUseSaveConfirmation()) {
+            if (getBeanLocator().get(UiProperties.class).isUseSaveConfirmation()) {
                 screenValidation.showSaveConfirmationDialog(this, action)
                         .onCommit(() -> result.resume(closeWithCommit()))
                         .onDiscard(() -> result.resume(closeWithDiscard()))
@@ -194,8 +193,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen
 
             if (instanceLoader != null
                     && instanceLoader.isLoadDynamicAttributes()
-                    && getEntityStates().isNew(entityToEdit)
-                    && mergedEntity instanceof BaseGenericIdEntity) {
+                    && getEntityStates().isNew(entityToEdit)) {
                 // todo dynamic attributes
                 // tools.initDefaultAttributeValues((BaseGenericIdEntity) mergedEntity, mergedEntity.getMetaClass());
             }
@@ -206,7 +204,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen
             container.setItem(mergedEntity);
         } else {
             InstanceLoader loader = getEditedEntityLoader();
-            loader.setEntityId(entityToEdit.getId());
+            loader.setEntityId(EntityValues.getId(entityToEdit));
         }
     }
 
@@ -299,7 +297,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen
         for (MetaProperty property : metadata.getClass(entity).getProperties()) {
             if (property.getRange().isClass()) {
                 if (getEntityStates().isLoaded(entity, property.getName())) {
-                    Object value = entity.getValue(property.getName());
+                    Object value = EntityValues.getValue(entity, property.getName());
                     if (value != null) {
                         if (value instanceof Collection) {
                             for (Object item : ((Collection) value)) {

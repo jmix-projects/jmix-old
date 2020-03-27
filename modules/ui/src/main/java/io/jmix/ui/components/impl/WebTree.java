@@ -35,7 +35,8 @@ import com.vaadin.ui.components.grid.MultiSelectionModel;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.security.Security;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.actions.Action;
@@ -533,7 +534,7 @@ public class WebTree<E extends Entity>
         TreeItems<E> source = event.getSource();
         for (E item : selectedItems) {
             if (source.containsItem(item)) {
-                newSelection.add(source.getItem(item.getId()));
+                newSelection.add(source.getItem(EntityValues.getId(item)));
             }
         }
 
@@ -941,6 +942,11 @@ public class WebTree<E extends Entity>
         // Every time we change selection mode, the new selection model is set,
         // so we need to add selection listener again.
         component.addSelectionListener(this::onSelectionChange);
+    }
+
+    @Override
+    public void setRowHeight(double rowHeight) {
+        component.setRowHeight(rowHeight);
     }
 
     @Override

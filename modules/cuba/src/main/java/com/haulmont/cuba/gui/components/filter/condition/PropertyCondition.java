@@ -18,6 +18,7 @@
 package com.haulmont.cuba.gui.components.filter.condition;
 
 import com.google.common.base.Strings;
+import com.haulmont.cuba.CubaProperties;
 import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.gui.components.filter.ConditionParamBuilder;
 import com.haulmont.cuba.gui.components.filter.Param;
@@ -26,14 +27,12 @@ import com.haulmont.cuba.gui.components.filter.descriptor.AbstractConditionDescr
 import com.haulmont.cuba.gui.components.filter.operationedit.AbstractOperationEditor;
 import com.haulmont.cuba.gui.components.filter.operationedit.PropertyOperationEditor;
 import io.jmix.core.AppBeans;
-import io.jmix.core.ConfigInterfaces;
-import io.jmix.core.GlobalConfig;
 import io.jmix.core.MessageTools;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.QueryUtils;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
-import io.jmix.core.metamodel.annotations.MetaClass;
+import io.jmix.core.metamodel.annotations.ModelObject;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.filter.ConditionType;
@@ -47,7 +46,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@MetaClass(name = "sec$PropertyCondition")
+@ModelObject(name = "sec$PropertyCondition")
 @SystemLevel
 public class PropertyCondition extends AbstractCondition {
 
@@ -185,8 +184,8 @@ public class PropertyCondition extends AbstractCondition {
 
             if (operator == Op.ENDS_WITH || operator == Op.STARTS_WITH
                     || operator == Op.CONTAINS || operator == Op.DOES_NOT_CONTAIN) {
-                GlobalConfig config = AppBeans.get(ConfigInterfaces.class).getConfig(GlobalConfig.class);
-                if (config.getDisableEscapingLikeForDataStores() == null || !config.getDisableEscapingLikeForDataStores().contains(thisStore)) {
+                CubaProperties properties = AppBeans.get(CubaProperties.class);
+                if (properties.getDisableEscapingLikeForDataStores() == null || !properties.getDisableEscapingLikeForDataStores().contains(thisStore)) {
                     sb.append(" ESCAPE '").append(QueryUtils.ESCAPE_CHARACTER).append("' ");
                 }
             }

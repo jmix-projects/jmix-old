@@ -19,7 +19,8 @@ package io.jmix.ui.navigation;
 import com.vaadin.server.Page;
 import io.jmix.core.Events;
 import io.jmix.core.Metadata;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.ui.*;
 import io.jmix.ui.app.navigation.notfoundwindow.NotFoundScreen;
 import io.jmix.ui.components.DialogWindow;
@@ -60,7 +61,7 @@ public class WebUrlRouting implements UrlRouting {
     @Inject
     protected Events events;
     @Inject
-    protected WebConfig webConfig;
+    protected UiProperties uiProperties;
     @Inject
     protected WindowConfig windowConfig;
     @Inject
@@ -96,8 +97,8 @@ public class WebUrlRouting implements UrlRouting {
 
     @Override
     public NavigationState getState() {
-        if (UrlHandlingMode.URL_ROUTES != webConfig.getUrlHandlingMode()) {
-            log.debug("UrlRouting is disabled for '{}' URL handling mode", webConfig.getUrlHandlingMode());
+        if (UrlHandlingMode.URL_ROUTES != uiProperties.getUrlHandlingMode()) {
+            log.debug("UrlRouting is disabled for '{}' URL handling mode", uiProperties.getUrlHandlingMode());
             return NavigationState.EMPTY;
         }
 
@@ -259,7 +260,7 @@ public class WebUrlRouting implements UrlRouting {
                 if (PersistenceHelper.isNew(editedEntity)) {
                     params.put("id", NEW_ENTITY_ID);
                 } else {
-                    Object entityId = editedEntity.getId();
+                    Object entityId = EntityValues.getId(editedEntity);
                     if (entityId != null) {
                         String serializedId = UrlIdSerializer.serializeId(entityId);
                         if (!"".equals(serializedId)) {
@@ -324,7 +325,10 @@ public class WebUrlRouting implements UrlRouting {
 
     protected String getStateMark(Screen screen) {
         WebWindow webWindow = (WebWindow) screen.getWindow();
-        return String.valueOf(webWindow.getResolvedState().getStateMark());
+        NavigationState resolvedState = webWindow.getResolvedState();
+        return resolvedState != null
+                ? resolvedState.getStateMark()
+                : NavigationState.EMPTY.getStateMark();
     }
 
     protected boolean externalNavigation(NavigationState currentState, NavigationState newState) {
@@ -368,8 +372,8 @@ public class WebUrlRouting implements UrlRouting {
     }
 
     protected boolean checkConditions(Screen screen, Map<String, String> urlParams) {
-        if (UrlHandlingMode.URL_ROUTES != webConfig.getUrlHandlingMode()) {
-            log.debug("UrlRouting is disabled for '{}' URL handling mode", webConfig.getUrlHandlingMode());
+        if (UrlHandlingMode.URL_ROUTES != uiProperties.getUrlHandlingMode()) {
+            log.debug("UrlRouting is disabled for '{}' URL handling mode", uiProperties.getUrlHandlingMode());
             return false;
         }
 
@@ -513,7 +517,7 @@ public class WebUrlRouting implements UrlRouting {
         }
 
         protected Map<String, String> prepareEditorUrlParams(Entity entity, Map<String, String> urlParams) {
-            if (entity.getId() == null) {
+            if (EntityValues.getId(entity) == null) {
                 throw new IllegalArgumentException("Unable to generate route for an entity without id: " + entity);
             }
 
@@ -521,7 +525,7 @@ public class WebUrlRouting implements UrlRouting {
             if (PersistenceHelper.isNew(entity)) {
                 params.put("id", NEW_ENTITY_ID);
             } else {
-                params.put("id", UrlIdSerializer.serializeId(entity.getId()));
+                params.put("id", UrlIdSerializer.serializeId(EntityValues.getId(entity)));
             }
             params.putAll(urlParams);
 

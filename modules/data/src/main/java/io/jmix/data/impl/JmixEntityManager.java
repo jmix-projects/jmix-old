@@ -19,12 +19,12 @@ package io.jmix.data.impl;
 import com.google.common.collect.Sets;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.data.AuditInfoProvider;
-import io.jmix.data.OrmProperties;
+import io.jmix.data.PersistenceHints;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.eclipse.persistence.internal.helper.CubaUtil;
@@ -32,6 +32,7 @@ import org.eclipse.persistence.sessions.UnitOfWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
@@ -99,9 +100,9 @@ public class JmixEntityManager implements EntityManager {
         String storeName = support.getStorageName(delegate.unwrap(UnitOfWork.class));
         entityListenerMgr.fireListener(entity, EntityListenerType.BEFORE_ATTACH, storeName);
 
-        if ((entityStates.isNew(entity) || !entityStates.isDetached(entity)) && entity.getId() != null) {
+        if ((entityStates.isNew(entity) || !entityStates.isDetached(entity)) && EntityValues.getId(entity) != null) {
             // if a new instance is passed to merge(), we suppose it is persistent but "not detached"
-            Entity destEntity = findOrCreate(entity.getClass(), entity.getId());
+            Entity destEntity = findOrCreate(entity.getClass(), EntityValues.getId(entity));
             deepCopyIgnoringNulls(entity, destEntity, Sets.newIdentityHashSet());
             if (entityStates.isNew(destEntity)) {
                 entityPersistingEventMgr.publishEvent(entity);
@@ -127,33 +128,35 @@ public class JmixEntityManager implements EntityManager {
         if (entityStates.isDetached(entity)) {
             entity = internalMerge(entity);
         }
-        if (entity instanceof SoftDelete && OrmProperties.isSoftDeletion(delegate)) {
+        if (entity instanceof SoftDelete && PersistenceHints.isSoftDeletion(delegate)) {
             ((SoftDelete) entity).setDeleteTs(timeSource.currentTimestamp());
             ((SoftDelete) entity).setDeletedBy(auditInfoProvider.getCurrentUserLogin());
         } else {
             delegate.remove(entity);
-            if (entity instanceof BaseGenericIdEntity) {
-                BaseEntityInternalAccess.setRemoved((BaseGenericIdEntity) entity, true);
-            }
+            entity.__getEntityEntry().setRemoved(true);
         }
     }
 
     @Override
+    @Nullable
     public <T> T find(Class<T> entityClass, Object primaryKey) {
         return internalFind(entityClass, primaryKey, LockModeType.NONE, Collections.emptyMap());
     }
 
     @Override
+    @Nullable
     public <T> T find(Class<T> entityClass, Object primaryKey, Map<String, Object> properties) {
         return internalFind(entityClass, primaryKey, LockModeType.NONE, properties);
     }
 
     @Override
+    @Nullable
     public <T> T find(Class<T> entityClass, Object primaryKey, LockModeType lockMode) {
         return internalFind(entityClass, primaryKey, lockMode, Collections.emptyMap());
     }
 
     @Override
+    @Nullable
     public <T> T find(Class<T> entityClass, Object primaryKey, LockModeType lockMode, Map<String, Object> properties) {
         return internalFind(entityClass, primaryKey, lockMode, properties);
     }
@@ -164,7 +167,7 @@ public class JmixEntityManager implements EntityManager {
         Class<T> effectiveClass = extendedEntities.getEffectiveClass(entityClass);
 
         T reference = delegate.getReference(effectiveClass, getRealId(primaryKey));
-        BaseEntityInternalAccess.setNew((BaseGenericIdEntity) reference, false);
+        ((Entity<?>) reference).__getEntityEntry().setNew(false);
         return reference;
     }
 
@@ -239,7 +242,7 @@ public class JmixEntityManager implements EntityManager {
 
     @Override
     public void setProperty(String propertyName, Object value) {
-        if (OrmProperties.SOFT_DELETION.equals(propertyName)) {
+        if (PersistenceHints.SOFT_DELETION.equals(propertyName)) {
             Preconditions.checkNotNullArgument(value, "soft deletion value must not be null");
             setSoftDeletion((Boolean) value);
         } else {
@@ -400,23 +403,24 @@ public class JmixEntityManager implements EntityManager {
     }
 
     private void setSoftDeletion(boolean softDeletion) {
-        delegate.setProperty(OrmProperties.SOFT_DELETION, softDeletion);
+        delegate.setProperty(PersistenceHints.SOFT_DELETION, softDeletion);
         CubaUtil.setSoftDeletion(softDeletion);
         CubaUtil.setOriginalSoftDeletion(softDeletion);
     }
 
     private boolean isSoftDeletion(Map<String, Object> properties) {
-        Boolean softDeletionInProps = properties == null ? null : (Boolean) properties.get(OrmProperties.SOFT_DELETION);
-        return (softDeletionInProps == null || softDeletionInProps) && OrmProperties.isSoftDeletion(delegate);
+        Boolean softDeletionInProps = properties == null ? null : (Boolean) properties.get(PersistenceHints.SOFT_DELETION);
+        return (softDeletionInProps == null || softDeletionInProps) && PersistenceHints.isSoftDeletion(delegate);
     }
 
+    @Nullable
     private <T> T internalFind(Class<T> entityClass, Object primaryKey, LockModeType lockMode, Map<String, Object> properties) {
         Preconditions.checkNotNullArgument(entityClass, "entityClass is null");
         Preconditions.checkNotNullArgument(primaryKey, "primaryKey is null");
 
         MetaClass metaClass = extendedEntities.getEffectiveMetaClass(entityClass);
 
-        Collection<FetchPlan> fetchPlans = OrmProperties.getFetchPlans(properties);
+        Collection<FetchPlan> fetchPlans = PersistenceHints.getFetchPlans(properties);
         if (!fetchPlans.isEmpty()) {
             return findPartial(metaClass, primaryKey, fetchPlans);
         }
@@ -443,7 +447,7 @@ public class JmixEntityManager implements EntityManager {
         JmixQuery query = (JmixQuery) createQuery(String.format("select e from %s e where e.%s = ?1", metaClass.getName(), pkName));
         query.setSingleResultExpected(true);
         query.setParameter(1, realId);
-        query.setHint(OrmProperties.FETCH_PLAN, fetchPlans);
+        query.setHint(PersistenceHints.FETCH_PLAN, fetchPlans);
 
         //noinspection unchecked
         return (T) query.getSingleResultOrNull();
@@ -455,16 +459,16 @@ public class JmixEntityManager implements EntityManager {
             CubaUtil.setOriginalSoftDeletion(false);
 
             UUID uuid = null;
-            if (entity.getId() instanceof IdProxy) {
-                uuid = ((IdProxy) entity.getId()).getUuid();
+            if (EntityValues.getId(entity) instanceof IdProxy) {
+                uuid = ((IdProxy) EntityValues.getId(entity)).getUuid();
             }
 
             T merged = delegate.merge(entity);
 
-            if (entity.getId() instanceof IdProxy
+            if (EntityValues.getId(entity) instanceof IdProxy
                     && uuid != null
-                    && !uuid.equals(((IdProxy) merged.getId()).getUuid())) {
-                ((IdProxy) merged.getId()).setUuid(uuid);
+                    && !uuid.equals(((IdProxy) EntityValues.getId(merged)).getUuid())) {
+                ((IdProxy) EntityValues.getId(merged)).setUuid(uuid);
             }
 
             // copy non-persistent attributes to the resulting merged instance
@@ -487,7 +491,7 @@ public class JmixEntityManager implements EntityManager {
 
             return merged;
         } finally {
-            boolean softDeletion = OrmProperties.isSoftDeletion(delegate);
+            boolean softDeletion = PersistenceHints.isSoftDeletion(delegate);
             CubaUtil.setSoftDeletion(softDeletion);
             CubaUtil.setOriginalSoftDeletion(softDeletion);
         }
@@ -498,9 +502,7 @@ public class JmixEntityManager implements EntityManager {
         Entity reloadedRef = find(entityClass, id);
         if (reloadedRef == null) {
             reloadedRef = metadata.create(entityClass);
-            if (reloadedRef instanceof BaseGenericIdEntity) {
-                ((BaseGenericIdEntity) reloadedRef).setId(id);
-            }
+            EntityValues.setId(reloadedRef, id);
             internalPersist(reloadedRef);
         }
         return (T) reloadedRef;
@@ -525,7 +527,7 @@ public class JmixEntityManager implements EntityManager {
                 continue;
             }
 
-            Object value = source.getValue(name);
+            Object value = EntityValues.getValue(source, name);
             if (value == null) {
                 continue;
             }
@@ -544,7 +546,7 @@ public class JmixEntityManager implements EntityManager {
                     }
                     @SuppressWarnings("unchecked")
                     Collection<Entity> srcCollection = (Collection) value;
-                    Collection<Entity> dstCollection = dest.getValue(name);
+                    Collection<Entity> dstCollection = EntityValues.getValue(dest, name);
                     if (dstCollection == null)
                         throw new RuntimeException("Collection is null: " + srcProperty);
                     boolean equal = srcCollection.size() == dstCollection.size();
@@ -558,34 +560,34 @@ public class JmixEntityManager implements EntityManager {
                     if (!equal) {
                         dstCollection.clear();
                         for (Entity srcRef : srcCollection) {
-                            Entity reloadedRef = findOrCreate(srcRef.getClass(), srcRef.getId());
+                            Entity reloadedRef = findOrCreate(srcRef.getClass(), EntityValues.getId(srcRef));
                             dstCollection.add(reloadedRef);
                             deepCopyIgnoringNulls(srcRef, reloadedRef, visited);
                         }
                     }
                 } else {
                     Entity srcRef = (Entity) value;
-                    Entity destRef = dest.getValue(name);
+                    Entity destRef = EntityValues.getValue(dest, name);
                     if (srcRef.equals(destRef)) {
                         deepCopyIgnoringNulls(srcRef, destRef, visited);
                     } else {
-                        Entity reloadedRef = findOrCreate(srcRef.getClass(), srcRef.getId());
-                        dest.setValue(name, reloadedRef);
+                        Entity reloadedRef = findOrCreate(srcRef.getClass(), EntityValues.getId(srcRef));
+                        EntityValues.setValue(dest, name, reloadedRef);
                         deepCopyIgnoringNulls(srcRef, reloadedRef, visited);
                     }
                 }
             } else if (metadataTools.isEmbedded(srcProperty)) {
                 Entity srcRef = (Entity) value;
-                Entity destRef = dest.getValue(name);
+                Entity destRef = EntityValues.getValue(dest, name);
                 if (destRef != null) {
                     deepCopyIgnoringNulls(srcRef, destRef, visited);
                 } else {
                     Entity newRef = metadata.create(srcProperty.getRange().asClass().getJavaClass());
-                    dest.setValue(name, newRef);
+                    EntityValues.setValue(dest, name, newRef);
                     deepCopyIgnoringNulls(srcRef, newRef, visited);
                 }
             } else {
-                dest.setValue(name, value);
+                EntityValues.setValue(dest, name, value);
             }
         }
     }

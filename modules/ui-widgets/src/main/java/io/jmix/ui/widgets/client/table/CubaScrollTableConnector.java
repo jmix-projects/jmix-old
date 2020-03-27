@@ -38,6 +38,8 @@ import static io.jmix.ui.widgets.client.Tools.findCurrentOrParentTd;
 @Connect(value = CubaTable.class, loadStyle = Connect.LoadStyle.EAGER)
 public class CubaScrollTableConnector extends TableConnector {
 
+    protected static final String HAS_FOOTER_STYLENAME = "has-footer";
+
     protected HandlerRegistration tooltipHandlerRegistration;
 
     public CubaScrollTableConnector() {
@@ -116,6 +118,13 @@ public class CubaScrollTableConnector extends TableConnector {
                 getWidget()._delegate.clickableColumns = new HashSet<>(Arrays.asList(getState().clickableColumnKeys));
             } else {
                 getWidget()._delegate.clickableColumns = null;
+            }
+        }
+        if (stateChangeEvent.hasPropertyChanged("clickableTableColumnKeys")) {
+            if (getState().clickableTableColumnKeys != null) {
+                getWidget()._delegate.clickableTableColumns = new HashSet<>(Arrays.asList(getState().clickableTableColumnKeys));
+            } else {
+                getWidget()._delegate.clickableTableColumns = null;
             }
         }
         if (stateChangeEvent.hasPropertyChanged("customPopup")) {
@@ -201,7 +210,7 @@ public class CubaScrollTableConnector extends TableConnector {
             Element targetAggregatedElement = findCurrentOrParentTd(element);
             if (targetAggregatedElement != null
                     && (targetAggregatedElement.hasClassName("v-table-aggregation-cell")
-                        || targetAggregatedElement.getFirstChildElement().hasClassName("v-table-footer-container"))) {
+                    || targetAggregatedElement.getFirstChildElement().hasClassName("v-table-footer-container"))) {
                 int childIndex = DOM.getChildIndex(targetAggregatedElement.getParentElement(), targetAggregatedElement);
 
                 String columnKey = getWidget().tHead.getHeaderCell(childIndex).getColKey();
@@ -237,6 +246,15 @@ public class CubaScrollTableConnector extends TableConnector {
             getWidget().removeStyleName("collapsing-allowed");
         }
 
+        if (uidl.hasAttribute("colfooters")) {
+            boolean hasFooter = uidl.getBooleanAttribute("colfooters");
+            if (hasFooter) {
+                getWidget().addStyleName(HAS_FOOTER_STYLENAME);
+            } else {
+                getWidget().removeStyleName(HAS_FOOTER_STYLENAME);
+            }
+        }
+
         // We may have actions attached to this table
         if (uidl.getChildCount() > 1) {
             final int cnt = uidl.getChildCount();
@@ -250,6 +268,9 @@ public class CubaScrollTableConnector extends TableConnector {
                 }
             }
         }
+
+        getWidget().setScrollToLastItemEnabled(
+                uidl.getBooleanAttribute("scrolltolast"));
     }
 
     @Override
@@ -266,8 +287,8 @@ public class CubaScrollTableConnector extends TableConnector {
 
         getWidget()._delegate.cellClickListener = new TableCellClickListener() {
             @Override
-            public void onClick(String columnKey, int rowKey) {
-                getRpcProxy(CubaTableServerRpc.class).onClick(columnKey, String.valueOf(rowKey));
+            public void onClick(String columnKey, int rowKey, boolean isText) {
+                getRpcProxy(CubaTableServerRpc.class).onClick(columnKey, String.valueOf(rowKey), isText);
             }
         };
 

@@ -25,10 +25,10 @@ import com.haulmont.cuba.gui.components.filter.operationedit.AbstractOperationEd
 import io.jmix.core.AppBeans;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Scripting;
-import io.jmix.core.entity.BaseUuidEntity;
+import io.jmix.data.entity.BaseUuidEntity;
 import io.jmix.core.entity.annotation.SystemLevel;
-import io.jmix.core.metamodel.annotations.MetaClass;
-import io.jmix.core.metamodel.annotations.MetaProperty;
+import io.jmix.core.metamodel.annotations.ModelObject;
+import io.jmix.core.metamodel.annotations.ModelProperty;
 import io.jmix.ui.filter.Op;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,7 +44,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 /**
  * Class that encapsulates common filter condition behaviour.
  */
-@MetaClass(name = "sec$AbstractCondition")
+@ModelObject(name = "sec$AbstractCondition")
 @SystemLevel
 public abstract class AbstractCondition extends BaseUuidEntity {
 
@@ -61,7 +61,7 @@ public abstract class AbstractCondition extends BaseUuidEntity {
     protected String paramName;
     protected String caption;
     protected String messagesPack;
-    @MetaProperty
+    @ModelProperty
     protected String locCaption;
     protected String filterComponentName;
     protected String text;

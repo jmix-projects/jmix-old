@@ -17,20 +17,16 @@
 package remoting
 
 import io.jmix.core.JmixCoreConfiguration
-import io.jmix.core.impl.ConfigStorage
 import io.jmix.data.JmixDataConfiguration
-import io.jmix.data.impl.ConfigStorageImpl
 import io.jmix.remoting.JmixRemotingConfiguration
-import io.jmix.remoting.gateway.ServerConfigStorage
-import io.jmix.remoting.gateway.ServerConfigStorageImpl
 import io.jmix.remoting.impl.ServerEndpointExporter
-import test_support.JmixRemotingTestConfiguration
-import test_support.TestService
-import test_support.TestServiceImpl
 import org.springframework.context.ApplicationContext
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
+import test_support.JmixRemotingTestConfiguration
+import test_support.TestService
+import test_support.TestServiceImpl
 
 import javax.inject.Inject
 
@@ -44,21 +40,14 @@ class ServerTest extends Specification {
 
     def "context has correct beans"() {
 
-        def configStorage = applicationContext.getBean(ConfigStorage.NAME)
-        def configStorageService = applicationContext.getBean(ServerConfigStorage.NAME)
         def testService = applicationContext.getBean(TestService.class)
 
         expect:
 
         // direct implementation
-        configStorage instanceof ConfigStorageImpl
         testService instanceof TestServiceImpl
 
-        // transport bean
-        configStorageService instanceof ServerConfigStorageImpl
-
         // export
-        applicationContext.getBean('/remoting/' + ServerConfigStorage.NAME) instanceof ServerEndpointExporter
         applicationContext.getBean('/remoting/' + TestService.NAME) instanceof ServerEndpointExporter
     }
 }

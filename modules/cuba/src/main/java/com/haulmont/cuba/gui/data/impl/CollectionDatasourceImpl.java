@@ -16,17 +16,15 @@
 package com.haulmont.cuba.gui.data.impl;
 
 import com.google.common.base.Preconditions;
+import com.haulmont.cuba.core.global.LoadContext;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import io.jmix.core.AppBeans;
-import io.jmix.core.ConfigInterfaces;
-import com.haulmont.cuba.core.global.LoadContext;
 import io.jmix.core.commons.collections.ReadOnlyLinkedMapValuesView;
-import io.jmix.core.entity.Entity;
-import io.jmix.core.metamodel.model.Instance;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
-import io.jmix.ui.ClientConfig;
 import io.jmix.ui.components.AggregationInfo;
 import io.jmix.ui.filter.Condition;
 import io.jmix.ui.filter.DenyingClause;
@@ -40,13 +38,7 @@ import org.perf4j.StopWatch;
 import org.perf4j.slf4j.Slf4JStopWatch;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 
@@ -95,8 +87,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
 
     protected int firstResult;
 
-    protected boolean sortOnDb = AppBeans.<ConfigInterfaces>get(ConfigInterfaces.NAME)
-            .getConfig(ClientConfig.class).getCollectionDatasourceDbSortEnabled();
+    protected boolean sortOnDb = true;
 
     protected LoadContext.Query lastQuery;
     protected LinkedList<LoadContext.Query> prevQueries = new LinkedList<>();
@@ -195,10 +186,10 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
             fireStateChanged(prevState);
         }
 
-        if (this.item != null && !prevIds.contains(this.item.getId())) {
+        if (this.item != null && !prevIds.contains(EntityValues.<K>getId(this.item))) {
             setItem(null);
         } else if (this.item != null) {
-            setItem(getItem(this.item.getId()));
+            setItem(getItem(EntityValues.getId(this.item)));
         } else {
             setItem(null);
         }
@@ -295,7 +286,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
         sortDelegate.sort(list, sortInfos);
         data.clear();
         for (T t : list) {
-            data.put(t.getId(), t);
+            data.put(EntityValues.<K>getId(t), t);
         }
     }
 
@@ -377,7 +368,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
     public void addItem(T item) {
         checkNotNullArgument(item, "item is null");
         internalAddItem(item, () -> {
-            data.put(item.getId(), item);
+            data.put(EntityValues.<K>getId(item), item);
         });
     }
 
@@ -387,7 +378,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
         internalAddItem(item, () -> {
             LinkedMap tmpMap = data.clone();
             data.clear();
-            data.put(item.getId(), item);
+            data.put(EntityValues.<K>getId(item), item);
             data.putAll(tmpMap);
         });
     }
@@ -417,7 +408,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
             setItem(null);
         }
 
-        data.remove(item.getId());
+        data.remove(EntityValues.<K>getId(item));
         detachListener(item);
 
         deleted(item);
@@ -429,7 +420,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
     public void includeItem(T item) {
         checkNotNullArgument(item, "item is null");
         internalIncludeItem(item, () -> {
-            data.put(item.getId(), item);
+            data.put(EntityValues.<K>getId(item), item);
         });
     }
 
@@ -439,7 +430,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
         internalIncludeItem(item, () -> {
             LinkedMap tmpMap = data.clone();
             data.clear();
-            data.put(item.getId(), item);
+            data.put(EntityValues.<K>getId(item), item);
             data.putAll(tmpMap);
         });
     }
@@ -466,7 +457,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
             setItem(null);
         }
 
-        data.remove(item.getId());
+        data.remove(EntityValues.<K>getId(item));
         detachListener(item);
 
         fireCollectionChanged(Operation.REMOVE, Collections.singletonList(item));
@@ -514,10 +505,10 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
     @Override
     public void modifyItem(T item) {
         checkNotNullArgument(item, "item is null");
-        if (data.containsKey(item.getId())) {
+        if (data.containsKey(EntityValues.<K>getId(item))) {
             if (PersistenceHelper.isNew(item)) {
-                Object existingItem = data.get(item.getId());
-                metadata.getTools().copy(item, (Instance) existingItem);
+                Object existingItem = data.get(EntityValues.<K>getId(item));
+                metadata.getTools().copy(item, (Entity) existingItem);
                 modified((T) existingItem);
             } else {
                 updateItem(item);
@@ -539,8 +530,8 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
             fireItemChanged(prevItem);
         }
 
-        if (data.containsKey(item.getId())) {
-            data.put(item.getId(), item);
+        if (data.containsKey(EntityValues.<K>getId(item))) {
+            data.put(EntityValues.<K>getId(item), item);
             attachListener(item);
             fireCollectionChanged(Operation.UPDATE, Collections.singletonList(item));
         }
@@ -694,7 +685,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
         data.clear();
 
         for (T entity : entities) {
-            data.put(entity.getId(), entity);
+            data.put(EntityValues.<K>getId(entity), entity);
             attachListener(entity);
         }
 
@@ -710,8 +701,8 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
 
     protected void detachListener(Collection instances) {
         for (Object obj : instances) {
-            if (obj instanceof Instance)
-                detachListener((Instance) obj);
+            if (obj instanceof Entity)
+                detachListener((Entity) obj);
         }
     }
 
@@ -727,8 +718,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
     }
 
     protected Object getItemValue(MetaPropertyPath property, K itemId) {
-        Instance instance = getItemNN(itemId);
-        return instance.getValueEx(property);
+        return EntityValues.getValueEx(getItemNN(itemId), property);
     }
 
     @Override

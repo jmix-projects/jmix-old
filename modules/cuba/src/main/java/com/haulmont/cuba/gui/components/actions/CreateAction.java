@@ -21,16 +21,16 @@ import com.haulmont.cuba.gui.components.ListComponent;
 import com.haulmont.cuba.gui.data.*;
 import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
 import io.jmix.core.AppBeans;
-import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.Messages;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityAttrAccess;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
-import io.jmix.ui.ClientConfig;
+import io.jmix.ui.UiProperties;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.Component;
@@ -166,11 +166,10 @@ public class CreateAction extends ListAction
 
         this.icon = AppBeans.get(Icons.class).get(CubaIcon.CREATE_ACTION);
 
-        ConfigInterfaces configuration = AppBeans.get(ConfigInterfaces.NAME);
-        ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
-        setShortcut(clientConfig.getTableInsertShortcut());
+        UiProperties properties = AppBeans.get(UiProperties.class);
+        setShortcut(properties.getTableInsertShortcut());
 
-        this.addFirst = clientConfig.getCreateActionAddsFirst();
+        this.addFirst = properties.isCreateActionAddsFirst();
     }
 
     /**
@@ -226,11 +225,11 @@ public class CreateAction extends ListAction
 
             Entity parentItem = datasource.getItem();
             // datasource.getItem() may contain deleted item
-            if (parentItem != null && !datasource.containsItem(parentItem.getId())) {
+            if (parentItem != null && !datasource.containsItem(EntityValues.getId(parentItem))) {
                 parentItem = null;
             }
 
-            item.setValue(hierarchyProperty, parentItem);
+            EntityValues.setValue(item, hierarchyProperty, parentItem);
         }
 
         if (datasource instanceof NestedDatasource) {
@@ -245,7 +244,7 @@ public class CreateAction extends ListAction
                     Class inversePropClass = extendedEntities.getEffectiveClass(inverseProp.getDomain());
                     Class dsClass = extendedEntities.getEffectiveClass(datasource.getMetaClass());
                     if (inversePropClass.isAssignableFrom(dsClass)) {
-                        item.setValue(inverseProp.getName(), masterDs.getItem());
+                        EntityValues.setValue(item, inverseProp.getName(), masterDs.getItem());
                     }
                 }
             }
@@ -292,7 +291,7 @@ public class CreateAction extends ListAction
         Map<String, Object> values = getInitialValues();
         if (values != null) {
             for (Map.Entry<String, Object> entry : values.entrySet()) {
-                item.setValue(entry.getKey(), entry.getValue());
+                EntityValues.setValue(item, entry.getKey(), entry.getValue());
             }
         }
 
@@ -300,7 +299,7 @@ public class CreateAction extends ListAction
             Map<String, Object> supplierValues = initialValuesSupplier.get();
             if (supplierValues != null) {
                 for (Map.Entry<String, Object> entry : supplierValues.entrySet()) {
-                    item.setValue(entry.getKey(), entry.getValue());
+                    EntityValues.setValue(item, entry.getKey(), entry.getValue());
                 }
             }
         }
@@ -451,7 +450,7 @@ public class CreateAction extends ListAction
      * Whether this action will add a new instance to the beginning of the datasource's collection.
      * Affects only standalone datasources, for nested datasources new items are always added to the end.
      *
-     * @see ClientConfig#getCreateActionAddsFirst()
+     * @see io.jmix.ui.UiProperties#isCreateActionAddsFirst()
      */
     public void setAddFirst(boolean addFirst) {
         this.addFirst = addFirst;

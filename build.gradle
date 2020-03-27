@@ -17,6 +17,7 @@
 buildscript {
     ext {
         springBootVersion = '2.2.4.RELEASE'
+        jmixVersion = '0.0.1-SNAPSHOT'
     }
     repositories {
         if (rootProject.hasProperty('jmixRepoUrl')) {
@@ -40,14 +41,8 @@ buildscript {
     dependencies {
         classpath("io.jmix.gradle:jmix-gradle-plugin:0.0.1-SNAPSHOT")
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.7.1")
+        classpath("gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.0.4")
     }
-}
-
-ext {
-    jmixVersion = '0.0.1-SNAPSHOT'
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
 }
 
 allprojects {
@@ -70,11 +65,24 @@ allprojects {
     }
 }
 
+subprojects {
+    plugins.withType(JavaPlugin) {
+        java {
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
+    }
+}
+
 configure([project(':jmix-platform'), project(':modules:core'), project(':modules:cuba'), project(':modules:data'),
-           project(':modules:remoting'), project(':modules:security'), project(':modules:ui'), project(':modules:audit'),
+           project(':modules:remoting'), project(':modules:security'), project(':modules:ui'),
+           project(':modules:audit'), project(':modules:audit-ui'),
            project(':modules:ui-themes'), project(':modules:ui-themes-compiled'),
            project(':modules:ui-widgets'), project(':modules:ui-widgets-compiled'),
-           project(':starters:starter-data'), project(':starters:starter-ui-minimal'), project(':starters:starter-standard'), project(':starters:starter-cuba')]) {
+           project(':starters:starter-data'), project(':starters:starter-ui'), project(':starters:starter-security'),
+           project(':starters:starter-standard-nowidgets'), project(':starters:starter-standard'),
+           project(':starters:starter-audit'), project(':starters:starter-audit-ui'),
+           project(':starters:starter-cuba')]) {
 
     apply plugin: 'maven-publish'
     
@@ -93,42 +101,41 @@ configure([project(':jmix-platform'), project(':modules:core'), project(':module
     }
 }
 
-configure([project(':modules:core'), project(':modules:data'), project(':modules:security'), project(':modules:remoting'),
-           project(':modules:audit')]) {
+configure([project(':modules:core'), project(':modules:data'), project(':modules:security')]) {
     if (rootProject.hasProperty('spotbugsEnabled')) {
         apply plugin: 'com.github.spotbugs'
 
         project.afterEvaluate {
             spotbugs {
-                toolVersion = '3.1.12'
-                ignoreFailures = true
+                toolVersion = '4.0.1'
+                ignoreFailures = false
                 omitVisitors = ['FindDoubleCheck']
-                excludeFilter = rootProject.file("codestyle/exclude-filter.xml")
+                excludeFilter = rootProject.file("codequality/spotbugs-exclude-filter.xml")
                 effort = "max"
                 reportLevel = "medium"
             }
 
             spotbugsMain {
-                jvmArgs '-Xmx1024m'
+                jvmArgs = ['-Xmx1024m']
 
                 reports {
                     xml.enabled = false
                     html {
                         enabled = true
-                        stylesheet = rootProject.resources.text.fromFile('codestyle/fancy-hist.xsl')
+                        stylesheet = rootProject.resources.text.fromFile('codequality/spotbugs-fancy-hist.xsl')
                         destination file("${project.buildDir}/reports/spotbugs/${project.name}.html")
                     }
                 }
             }
 
             spotbugsTest {
-                jvmArgs '-Xmx1024m'
+                jvmArgs = ['-Xmx1024m']
 
                 reports {
                     xml.enabled = false
                     html {
                         enabled = true
-                        stylesheet = project.resources.text.fromFile('codestyle/fancy-hist.xsl')
+                        stylesheet = project.resources.text.fromFile('codequality/spotbugs-fancy-hist.xsl')
                         destination file("${project.buildDir}/reports/spotbugs/test-${project.name}.html")
                     }
                 }

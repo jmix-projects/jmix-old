@@ -19,7 +19,7 @@ package com.haulmont.cuba.gui.components.data.datagrid;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.ui.components.data.TreeDataGridItems;
 
 import javax.annotation.Nullable;

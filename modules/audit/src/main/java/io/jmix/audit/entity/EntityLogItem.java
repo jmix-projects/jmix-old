@@ -20,15 +20,14 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Metadata;
-import io.jmix.core.entity.BaseDbGeneratedIdEntity;
-import io.jmix.core.entity.BaseUuidEntity;
 import io.jmix.core.entity.Creatable;
 import io.jmix.core.entity.annotation.EmbeddedParameters;
 import io.jmix.core.entity.annotation.Listeners;
 import io.jmix.core.entity.annotation.SystemLevel;
-import io.jmix.core.metamodel.annotations.MetaProperty;
+import io.jmix.core.metamodel.annotations.ModelProperty;
 import io.jmix.core.metamodel.datatypes.impl.EnumClass;
 import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.data.entity.BaseUuidEntity;
 import io.jmix.data.entity.ReferenceToEntity;
 
 import javax.annotation.PostConstruct;
@@ -105,10 +104,10 @@ public class EntityLogItem extends BaseUuidEntity implements Creatable {
     private String entityInstanceName;
 
     @Transient
-    private transient BaseDbGeneratedIdEntity dbGeneratedIdEntity;
+    private transient io.jmix.core.Entity dbGeneratedIdEntity;
 
     @Transient
-    @MetaProperty
+    @ModelProperty
     private Set<EntityLogAttr> attributes;
 
     @Column(name = "CHANGES")
@@ -148,7 +147,7 @@ public class EntityLogItem extends BaseUuidEntity implements Creatable {
         this.entity = entity;
     }
 
-    @MetaProperty
+    @ModelProperty
     public String getDisplayedEntityName() {
         Metadata metadata = AppBeans.get(Metadata.NAME);
         ExtendedEntities extendedEntities = AppBeans.get(ExtendedEntities.NAME);
@@ -209,11 +208,11 @@ public class EntityLogItem extends BaseUuidEntity implements Creatable {
         this.entityRef = entityRef;
     }
 
-    public BaseDbGeneratedIdEntity getDbGeneratedIdEntity() {
+    public io.jmix.core.Entity getDbGeneratedIdEntity() {
         return dbGeneratedIdEntity;
     }
 
-    public void setDbGeneratedIdEntity(BaseDbGeneratedIdEntity dbGeneratedIdEntity) {
+    public void setDbGeneratedIdEntity(io.jmix.core.Entity dbGeneratedIdEntity) {
         this.dbGeneratedIdEntity = dbGeneratedIdEntity;
     }
 

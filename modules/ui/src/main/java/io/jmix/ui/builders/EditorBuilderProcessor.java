@@ -19,16 +19,20 @@ package io.jmix.ui.builders;
 import io.jmix.core.DevelopmentException;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.Metadata;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.ui.ClientConfig;
 import io.jmix.ui.Screens;
+import io.jmix.ui.UiProperties;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowInfo;
 import io.jmix.ui.components.*;
-import io.jmix.ui.components.data.*;
+import io.jmix.ui.components.data.DataUnit;
+import io.jmix.ui.components.data.HasValueSource;
+import io.jmix.ui.components.data.Options;
+import io.jmix.ui.components.data.ValueSource;
 import io.jmix.ui.components.data.meta.ContainerDataUnit;
 import io.jmix.ui.components.data.meta.EntityOptions;
 import io.jmix.ui.components.data.meta.EntityValueSource;
@@ -55,7 +59,7 @@ public class EditorBuilderProcessor {
     @Inject
     protected WindowConfig windowConfig;
     @Inject
-    protected ClientConfig clientConfig;
+    protected UiProperties properties;
 
     @SuppressWarnings("unchecked")
     public  <E extends Entity, S extends Screen> S buildEditor(EditorBuilder<E> builder) {
@@ -98,7 +102,7 @@ public class EditorBuilderProcessor {
                         boolean addsFirst;
 
                         if (!(ct instanceof Nested)) {
-                            addsFirst = clientConfig.getCreateActionAddsFirst();
+                            addsFirst = properties.isCreateActionAddsFirst();
                             if (builder.getAddFirst() != null) {
                                 addsFirst = builder.getAddFirst();
                             }
@@ -221,7 +225,7 @@ public class EditorBuilderProcessor {
                 Entity ownerEntity = entityValueSource.getItem();
                 MetaProperty inverseProp = entityValueSource.getMetaPropertyPath().getMetaProperty().getInverse();
                 if (inverseProp != null) {
-                    entity.setValue(inverseProp.getName(), ownerEntity);
+                    EntityValues.setValue(entity, inverseProp.getName(), ownerEntity);
                 }
             }
             if (builder.getInitializer() != null) {
@@ -302,7 +306,7 @@ public class EditorBuilderProcessor {
             Class<?> inversePropClass = extendedEntities.getEffectiveClass(inverseProp.getDomain());
             Class<?> containerEntityClass = extendedEntities.getEffectiveClass(((CollectionContainer) container).getEntityMetaClass());
             if (inversePropClass.isAssignableFrom(containerEntityClass)) {
-                entity.setValue(inverseProp.getName(), masterContainer.getItem());
+                EntityValues.setValue(entity, inverseProp.getName(), masterContainer.getItem());
             }
         }
     }

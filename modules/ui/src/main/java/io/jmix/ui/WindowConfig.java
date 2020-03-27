@@ -25,7 +25,7 @@ import io.jmix.core.Resources;
 import io.jmix.core.Scripting;
 import io.jmix.core.commons.util.Dom4j;
 import io.jmix.core.compatibility.AppContext;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.components.Window;
@@ -71,8 +71,8 @@ public class WindowConfig {
     protected static final List<String> LOGIN_SCREEN_IDS = ImmutableList.of("login", "loginWindow");
     protected static final List<String> MAIN_SCREEN_IDS = ImmutableList.of("main", "mainWindow");
 
-    protected static final String LOGIN_SCREEN_PROP = "cuba.web.loginScreenId";
-    protected static final String MAIN_SCREEN_PROP = "cuba.web.mainScreenId";
+    protected static final String LOGIN_SCREEN_PROP = "jmix.ui.loginScreenId";
+    protected static final String MAIN_SCREEN_PROP = "jmix.ui.mainScreenId";
 
     private final Logger log = LoggerFactory.getLogger(WindowConfig.class);
 

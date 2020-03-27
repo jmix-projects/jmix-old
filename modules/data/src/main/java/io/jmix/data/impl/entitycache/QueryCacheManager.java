@@ -23,10 +23,12 @@ import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.cluster.ClusterListenerAdapter;
 import io.jmix.core.cluster.ClusterManager;
-import io.jmix.core.entity.BaseGenericIdEntity;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetadataObject;
-import io.jmix.data.OrmProperties;
+import io.jmix.data.DataProperties;
+import io.jmix.data.PersistenceHints;
 import io.jmix.data.StoreAwareLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +49,7 @@ public class QueryCacheManager {
     public static final String NAME = "cuba_QueryCacheManager";
 
     @Inject
-    protected QueryCacheConfig queryCacheConfig;
+    protected DataProperties properties;
     @Inject
     protected ClusterManager clusterManager;
     @Inject
@@ -81,7 +83,7 @@ public class QueryCacheManager {
      * Returns true if query cache enabled
      */
     public boolean isEnabled() {
-        return queryCacheConfig.getQueryCacheEnabled();
+        return properties.isQueryCacheEnabled();
     }
 
     /**
@@ -101,7 +103,7 @@ public class QueryCacheManager {
                 log.warn("Using cacheable query without entity cache for {}", queryResult.getType());
             }
             for (Object id : queryResult.getResult()) {
-                resultList.add(em.find(metaClass.getJavaClass(), id, OrmProperties.builder().withFetchPlans(views).build()));
+                resultList.add(em.find(metaClass.getJavaClass(), id, PersistenceHints.builder().withFetchPlans(views).build()));
             }
         } else {
             log.debug("Query results are not found in cache: {}", queryKey.printDescription());
@@ -130,7 +132,7 @@ public class QueryCacheManager {
             String storeName = metadataTools.getStoreName(metaClass);
             EntityManager em = storeAwareLocator.getEntityManager(storeName);
             for (Object id : queryResult.getResult()) {
-                return (T) em.find(metaClass.getJavaClass(), id, OrmProperties.builder().withFetchPlans(views).build());
+                return (T) em.find(metaClass.getJavaClass(), id, PersistenceHints.builder().withFetchPlans(views).build());
             }
         }
         log.debug("Query results are not found in cache: {}", queryKey.printDescription());
@@ -150,8 +152,8 @@ public class QueryCacheManager {
         QueryResult queryResult;
         if (resultList.size() > 0) {
             List idList = (List) resultList.stream()
-                    .filter(item -> item instanceof BaseGenericIdEntity)
-                    .map(item -> ((BaseGenericIdEntity) item).getId())
+                    .filter(item -> item instanceof Entity)
+                    .map(item -> EntityValues.getId(((Entity) item)))
                     .collect(Collectors.toList());
             queryResult = new QueryResult(idList, type, getDescendants(relatedTypes));
         } else {
@@ -173,7 +175,7 @@ public class QueryCacheManager {
     public <T> void putResultToCache(QueryKey queryKey, T result, String type, Set<String> relatedTypes, RuntimeException exception) {
         QueryResult queryResult;
         if (exception == null) {
-            queryResult = new QueryResult(Collections.singletonList(((BaseGenericIdEntity) result).getId()), type, relatedTypes);
+            queryResult = new QueryResult(Collections.singletonList(EntityValues.getId(((Entity) result))), type, relatedTypes);
         } else {
             queryResult = new QueryResult(Collections.emptyList(), type, relatedTypes, exception);
         }

@@ -18,14 +18,9 @@ package io.jmix.ui.sys;
 
 import com.google.common.base.Strings;
 import io.jmix.core.BeanLocator;
-import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.DevelopmentException;
 import io.jmix.core.Events;
-import io.jmix.core.config.Config;
-import io.jmix.ui.Dialogs;
-import io.jmix.ui.Fragments;
-import io.jmix.ui.Notifications;
-import io.jmix.ui.Screens;
+import io.jmix.ui.*;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.*;
 import io.jmix.ui.components.Component.HasXmlDescriptor;
@@ -34,6 +29,7 @@ import io.jmix.ui.model.DataContext;
 import io.jmix.ui.model.DataLoader;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.navigation.UrlRouting;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.screen.compatibility.CubaLegacyFrame;
 import io.jmix.ui.sys.UiControllerReflectionInspector.AnnotatedMethod;
@@ -242,6 +238,8 @@ public class UiControllerDependencyInjector {
             }
         } else if (annotation.target() == Target.DATA_LOADER) {
             targetInstance = getScreenData(frameOwner).getLoader(target);
+        } else if (annotation.target() == Target.DATA_CONTAINER) {
+            targetInstance = getScreenData(frameOwner).getContainer(target);
         } else {
             targetInstance = findMethodTarget(frame, target);
         }
@@ -431,6 +429,14 @@ public class UiControllerDependencyInjector {
                     }
                 }
             }
+
+            Facet facet = frame.getFacet(pathPrefix(elements));
+            if (facet instanceof HasSubParts) {
+                Object subPart = ((HasSubParts) facet).getSubPart(id);
+                if (subPart != null) {
+                    return subPart;
+                }
+            }
         }
 
         return null;
@@ -594,11 +600,6 @@ public class UiControllerDependencyInjector {
             exportDisplay.setFrame(frame);
             return exportDisplay;
 
-        } else if (Config.class.isAssignableFrom(type)) {
-            ConfigInterfaces configuration = beanLocator.get(ConfigInterfaces.NAME);
-            //noinspection unchecked
-            return configuration.getConfig((Class<? extends Config>) type);
-
         } else if (Logger.class == type && element instanceof Field) {
             // injecting logger
             return LoggerFactory.getLogger(((Field) element).getDeclaringClass());
@@ -619,17 +620,21 @@ public class UiControllerDependencyInjector {
             // injecting fragments
             return getScreenContext(frameOwner).getFragments();
 
-        } /*else if (UrlRouting.class.isAssignableFrom(type)) {
-            // todo injecting urlRouting
+        } else if (UrlRouting.class.isAssignableFrom(type)) {
+            // injecting urlRouting
             return getScreenContext(frameOwner).getUrlRouting();
 
-        } */else if (MessageBundle.class == type) {
+        } else if (MessageBundle.class == type) {
             return createMessageBundle(element, frameOwner, frame);
 
         } else if (ThemeConstants.class == type) {
             // Injecting a Theme
             ThemeConstantsManager themeManager = beanLocator.get(ThemeConstantsManager.NAME);
             return themeManager.getConstants();
+
+        } else if (WebBrowserTools.class.isAssignableFrom(type)) {
+            // Injecting WebBrowserTools
+            return getScreenContext(frameOwner).getWebBrowserTools();
 
         } else {
             Object instance;

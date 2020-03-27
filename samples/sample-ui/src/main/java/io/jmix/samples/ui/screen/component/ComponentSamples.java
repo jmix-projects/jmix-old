@@ -16,9 +16,19 @@
 
 package io.jmix.samples.ui.screen.component;
 
+import io.jmix.core.MetadataTools;
+import io.jmix.ui.Dialogs;
+import io.jmix.ui.Notifications;
 import io.jmix.ui.UiComponents;
+import io.jmix.ui.actions.DialogAction;
+import io.jmix.ui.app.inputdialog.DialogActions;
+import io.jmix.ui.app.inputdialog.InputParameter;
 import io.jmix.ui.components.*;
-import io.jmix.ui.screen.*;
+import io.jmix.ui.screen.LoadDataBeforeShow;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.Subscribe;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiDescriptor;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -47,6 +57,13 @@ public class ComponentSamples extends Screen {
     @Inject
     private UiComponents uiComponents;
 
+    @Inject
+    private Dialogs dialogs;
+    @Inject
+    private Notifications notifications;
+    @Inject
+    private MetadataTools metadataTools;
+
 //    private ListEditor<String> listEditor;
 
     @Subscribe
@@ -63,4 +80,47 @@ public class ComponentSamples extends Screen {
 //        othersVBox.add(listEditor);
     }
 
+    @Subscribe("inputDialogBtn")
+    private void onInputDialogBtnClick(Button.ClickEvent event) {
+        dialogs.createInputDialog(this)
+                .withCaption("Input Dialog")
+                .withParameters(
+                        InputParameter.booleanParameter("boolParam")
+                                .withCaption("Boolean parameter")
+                                .withDefaultValue(true)
+                                .withRequired(true),
+                        InputParameter.intParameter("intParam")
+                                .withCaption("Integer parameter")
+                                .withRequired(true)
+                )
+                .withActions(DialogActions.OK_CANCEL)
+                .show();
+    }
+
+    @Subscribe("messageDialogBtn")
+    private void onMessageDialogBtnClick(Button.ClickEvent event) {
+        dialogs.createMessageDialog()
+                .withCaption("Message Dialog")
+                .withMessage("Message")
+                .withModal(true)
+                .withCloseOnClickOutside(true)
+                .show();
+    }
+
+    @Subscribe("optionDialogBtn")
+    private void onOptionDialogBtnClick(Button.ClickEvent event) {
+        dialogs.createOptionDialog()
+                .withCaption("Option Dialog")
+                .withMessage("Message")
+                .withActions(new DialogAction(DialogAction.Type.OK),
+                        new DialogAction(DialogAction.Type.CANCEL))
+                .show();
+    }
+
+    @Subscribe("notificationBtn")
+    protected void onNotificationBtnClick(Button.ClickEvent event) {
+        notifications.create(Notifications.NotificationType.TRAY)
+                .withCaption("Notification")
+                .show();
+    }
 }

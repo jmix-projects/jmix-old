@@ -17,26 +17,53 @@
 package io.jmix.ui.components;
 
 import com.google.common.base.Strings;
-import io.jmix.core.entity.BaseUuidEntity;
+import io.jmix.core.UuidProvider;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.HasUuid;
 import io.jmix.core.entity.annotation.SystemLevel;
-import io.jmix.core.metamodel.annotations.MetaProperty;
+import io.jmix.core.metamodel.annotations.ModelProperty;
+import io.jmix.core.metamodel.annotations.ModelObject;
 import org.dom4j.Element;
 
-@io.jmix.core.metamodel.annotations.MetaClass(name = "sec$ScreenComponentDescriptor")
-@SystemLevel
-public class ScreenComponentDescriptor extends BaseUuidEntity {
+import javax.persistence.Id;
+import java.util.UUID;
 
+@ModelObject(name = "sec$ScreenComponentDescriptor")
+@SystemLevel
+public class ScreenComponentDescriptor implements Entity<UUID>, HasUuid {
+
+    @Id
+    protected UUID id;
     protected Element element;
 
-    @MetaProperty
+    @ModelProperty
     protected ScreenComponentDescriptor parent;
 
     public ScreenComponentDescriptor(Element element, ScreenComponentDescriptor parent) {
+        this.id = UuidProvider.createUuid();
         this.element = element;
         this.parent = parent;
     }
 
-    @MetaProperty
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    @Override
+    public UUID getUuid() {
+        return id;
+    }
+
+    @Override
+    public void setUuid(UUID uuid) {
+        this.id = uuid;
+    }
+
+    @ModelProperty
     public String getCaption() {
         return toString();
     }

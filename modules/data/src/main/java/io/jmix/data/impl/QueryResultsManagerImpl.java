@@ -22,7 +22,7 @@ import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.core.security.UserSessions;
-import io.jmix.data.OrmProperties;
+import io.jmix.data.PersistenceHints;
 import io.jmix.data.persistence.DbTypeConverter;
 import io.jmix.data.persistence.DbmsSpecifics;
 import org.slf4j.Logger;
@@ -62,9 +62,6 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
 
     @Inject
     protected ClusterManager clusterManager;
-
-    @Inject
-    protected ConfigInterfaces configuration;
 
     @Inject
     protected Metadata metadata;
@@ -115,10 +112,14 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
             return;
 
         List idList = transaction.execute(status -> {
-            entityManager.setProperty(OrmProperties.SOFT_DELETION, loadContext.isSoftDeletion());
+            entityManager.setProperty(PersistenceHints.SOFT_DELETION, loadContext.isSoftDeletion());
 
             QueryTransformer transformer = QueryTransformerFactory.createTransformer(contextQuery.getQueryString());
-            transformer.replaceWithSelectId(metadataTools.getPrimaryKeyName(metadata.getClass(entityName)));
+            String primaryKeyName = metadataTools.getPrimaryKeyName(metadata.getClass(entityName));
+            if (primaryKeyName == null) {
+                throw new IllegalStateException("Cannot find primarykey name for " + entityName);
+            }
+            transformer.replaceWithSelectId(primaryKeyName);
             transformer.removeOrderBy();
             String queryString = transformer.getResult();
 
@@ -143,6 +144,7 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
             log.debug("Done in " + (System.currentTimeMillis() - start) + "ms : " + logMsg);
             return resultList;
         });
+        assert idList != null;
 
         delete(queryKey);
         insert(queryKey, idList);
@@ -243,8 +245,7 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
 
     @Override
     public void deleteForInactiveSessions() {
-        if (!AppContext.isStarted() || !clusterManager.isMaster()
-                || !configuration.getConfig(GlobalConfig.class).getAllowQueryFromSelected())
+        if (!AppContext.isStarted() || !clusterManager.isMaster())
             return;
 
         internalDeleteForInactiveSessions();
@@ -259,6 +260,7 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
             query.setMaxResults(INACTIVE_DELETION_MAX);
             return query.getResultList();
         });
+        assert rows != null;
         if (rows.size() == INACTIVE_DELETION_MAX) {
             log.debug("Processing " + INACTIVE_DELETION_MAX + " records, run again for the rest");
         }

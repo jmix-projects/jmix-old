@@ -31,7 +31,8 @@ import io.jmix.core.*;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.compatibility.AppContext;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.Presentation;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
 import io.jmix.core.metamodel.datatypes.Datatype;
@@ -41,9 +42,8 @@ import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.AppUI;
-import io.jmix.ui.ClientConfig;
 import io.jmix.ui.Notifications;
-import io.jmix.ui.WebConfig;
+import io.jmix.ui.UiProperties;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.actions.BaseAction;
 import io.jmix.ui.components.*;
@@ -131,7 +131,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
     // Beans
 
-    protected ConfigInterfaces configuration;
+    protected UiProperties uiProperties;
     protected IconResolver iconResolver;
     protected MetadataTools metadataTools;
     protected Security security;
@@ -208,11 +208,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     }
 
     @Inject
-    public void setConfiguration(ConfigInterfaces configuration) {
-        this.configuration = configuration;
-
-        ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
-        ignoreUnfetchedAttributes = clientConfig.getIgnoreUnfetchedAttributesInTable();
+    public void setUiProperties(UiProperties uiProperties) {
+        this.uiProperties = uiProperties;
     }
 
     @Inject
@@ -357,17 +354,17 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
             setSelectedIds(Collections.emptyList());
         } else if (items.size() == 1) {
             E item = items.iterator().next();
-            if (tableItems.getItem(item.getId()) == null) {
+            if (tableItems.getItem(EntityValues.getId(item)) == null) {
                 throw new IllegalArgumentException("Datasource doesn't contain item to select: " + item);
             }
-            setSelectedIds(Collections.singletonList(item.getId()));
+            setSelectedIds(Collections.singletonList(EntityValues.getId(item)));
         } else {
             Set<Object> itemIds = new LinkedHashSet<>();
             for (Entity item : items) {
-                if (tableItems.getItem(item.getId()) == null) {
+                if (tableItems.getItem(EntityValues.getId(item)) == null) {
                     throw new IllegalArgumentException("Datasource doesn't contain item to select: " + item);
                 }
-                itemIds.add(item.getId());
+                itemIds.add(EntityValues.getId(item));
             }
             setSelectedIds(itemIds);
         }
@@ -1168,7 +1165,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                     String captionProperty = column.getXmlDescriptor().attributeValue("captionProperty");
                     if (StringUtils.isNotEmpty(captionProperty)) {
                         E item = getItems().getItemNN(rowId);
-                        Object captionValue = item.getValueEx(captionProperty);
+                        Object captionValue = EntityValues.getValueEx(item, captionProperty);
                         return captionValue != null ? String.valueOf(captionValue) : null;
                     }
                 }
@@ -1201,12 +1198,10 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     }
 
     protected void setClientCaching() {
-        WebConfig webConfig = configuration.getConfig(WebConfig.class);
-
-        double cacheRate = webConfig.getTableCacheRate();
+        double cacheRate = uiProperties.getTableCacheRate();
         cacheRate = cacheRate >= 0 ? cacheRate : 2;
 
-        int pageLength = webConfig.getTablePageLength();
+        int pageLength = uiProperties.getTablePageLength();
         pageLength = pageLength >= 0 ? pageLength : 15;
 
         componentComposition.setClientCaching(cacheRate, pageLength);
@@ -1326,6 +1321,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     protected void removeAllClickListeners() {
         for (Column column : columnsOrder) {
             component.removeClickListener(column.getId());
+            component.removeTableCellClickListener(column.getId());
         }
     }
 
@@ -1617,7 +1613,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
             EntityTableItems entityTableSource = (EntityTableItems) tableItems;
 
             if (entityTableSource.getSelectedItem() != null) {
-                newSelection.add(entityTableSource.getSelectedItem().getId());
+                newSelection.add(EntityValues.getId(entityTableSource.getSelectedItem()));
             }
         }
 
@@ -2060,10 +2056,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                 loadedIds.add(colElem.attributeValue("id"));
             }
 
-            ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
-
-            if (clientConfig.getLoadObsoleteSettingsForTable()
-                    || CollectionUtils.isEqualCollection(modelIds, loadedIds)) {
+            if (CollectionUtils.isEqualCollection(modelIds, loadedIds)) {
                 applyColumnSettings(element);
             }
 
@@ -2988,7 +2981,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
             return null;
         }
         Presentation def = presentations.getDefault();
-        return def == null ? null : def.getId();
+        return def == null ? null : EntityValues.<UUID>getId(def);
     }
 
     @Override
@@ -3023,6 +3016,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     }
 
     @Override
+    @Deprecated
     public void setCellClickListener(String columnId, Consumer<CellClickEvent<E>> clickListener) {
         checkNotNullArgument(getColumn(columnId), String.format("column with id '%s' not found", columnId));
 
@@ -3039,10 +3033,46 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     }
 
     @Override
+    @Deprecated
     public void removeClickListener(String columnId) {
         component.removeClickListener(getColumn(columnId).getId());
     }
 
+    @Override
+    public void addCellClickListener(String columnId) {
+        Table.Column<E> column = getColumn(columnId);
+        checkNotNullArgument(column, String.format("column with id '%s' not found", columnId));
+
+        component.addTableCellClickListener(column.getId(), this::onCellClick);
+    }
+
+    protected void onCellClick(CubaEnhancedTable.TableCellClickEvent event) {
+        TableItems<E> tableItems = getItems();
+        if (tableItems == null) {
+            return;
+        }
+
+        E item = tableItems.getItem(event.getItemId());
+        if (item == null) {
+            return;
+        }
+
+        Table.Column<E> column = getColumn(String.valueOf(event.getColumnId()));
+        if (column == null) {
+            return;
+        }
+
+        Column.ClickEvent<E> clickEvent = new Column.ClickEvent<>(column, item, event.isText());
+        column.fireClickEvent(clickEvent);
+    }
+
+    @Override
+    public void removeCellClickListener(String columnId) {
+        Table.Column<E> column = getColumn(columnId);
+        checkNotNullArgument(column, String.format("column with id '%s' not found", columnId));
+
+        component.removeTableCellClickListener(column.getId());
+    }
     @SuppressWarnings("unchecked")
     @Override
     public Subscription addSelectionListener(Consumer<SelectionEvent<E>> listener) {
@@ -3199,7 +3229,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                         && dataBinding != null) {
                     Entity item = dataBinding.getTableItems().getItem(itemId);
                     if (item != null) {
-                        Boolean value = item.getValueEx(propertyPath);
+                        Boolean value = EntityValues.getValueEx(item, propertyPath);
                         if (BooleanUtils.isTrue(value)) {
                             style = BOOLEAN_CELL_STYLE_TRUE;
                         } else {
@@ -3220,10 +3250,10 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
         E item = entityTableSource.getItemNN(itemId);
 
-        Object value = item.getValueEx(propertyPath);
+        Object value = EntityValues.getValueEx(item, propertyPath);
         String stringValue;
         if (value instanceof String) {
-            stringValue = item.getValueEx(propertyPath);
+            stringValue = EntityValues.getValueEx(item, propertyPath);
         } else {
             MetaProperty metaProperty = propertyPath.getMetaProperty();
 
@@ -3290,17 +3320,17 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         Preconditions.checkNotNullArgument(item);
         Preconditions.checkNotNullArgument(columnId);
 
-        component.requestFocus(item.getId(), getColumn(columnId).getId());
+        component.requestFocus(EntityValues.getId(item), getColumn(columnId).getId());
     }
 
     @Override
     public void scrollTo(E item) {
         Preconditions.checkNotNullArgument(item);
-        if (!component.getItemIds().contains(item.getId())) {
+        if (!component.getItemIds().contains(EntityValues.getId(item))) {
             throw new IllegalArgumentException("Unable to find item in Table");
         }
 
-        component.setCurrentPageFirstItemId(item.getId());
+        component.setCurrentPageFirstItemId(EntityValues.getId(item));
     }
 
     protected void handleColumnCollapsed(com.vaadin.v7.ui.Table.ColumnCollapseEvent event) {
@@ -3341,9 +3371,9 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         }
     }
 
-    protected Object getValueExIgnoreUnfetched(Instance instance, String[] properties) {
+    protected Object getValueExIgnoreUnfetched(Entity instance, String[] properties) {
         Object currentValue = null;
-        Instance currentInstance = instance;
+        Entity currentInstance = instance;
         for (String property : properties) {
             if (currentInstance == null) {
                 break;
@@ -3356,12 +3386,12 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                 return null;
             }
 
-            currentValue = currentInstance.getValue(property);
+            currentValue = EntityValues.getValue(currentInstance, property);
             if (currentValue == null) {
                 break;
             }
 
-            currentInstance = currentValue instanceof Instance ? (Instance) currentValue : null;
+            currentInstance = currentValue instanceof Entity ? (Entity) currentValue : null;
         }
         return currentValue;
     }

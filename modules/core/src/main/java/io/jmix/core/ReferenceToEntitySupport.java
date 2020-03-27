@@ -16,13 +16,15 @@
 
 package io.jmix.core;
 
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.HasUuid;
 import io.jmix.core.entity.IdProxy;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.UUID;
 
@@ -47,19 +49,20 @@ public class ReferenceToEntitySupport {
         if (entity instanceof HasUuid) {
             return ((HasUuid) entity).getUuid();
         }
-        Object entityId = entity.getId();
+        Object entityId = EntityValues.getId(entity);
         if (entityId instanceof IdProxy) {
             return ((IdProxy) entityId).get();
         }
-        return entity.getId();
+        return EntityValues.getId(entity);
     }
 
     /**
      * @param entity entity
      * @return entity id for links
      */
+    @Nullable
     public Object getReferenceIdForLink(Entity entity) {
-        Object entityId = entity.getId();
+        Object entityId = EntityValues.getId(entity);
         if (entityId instanceof IdProxy) {
             entityId = ((IdProxy) entityId).get();
         }

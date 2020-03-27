@@ -19,7 +19,6 @@ import com.google.common.base.Splitter;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.commons.util.ReflectionHelper;
-import io.jmix.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Range;
@@ -111,7 +110,7 @@ public class FetchPlanRepositoryImpl implements FetchPlanRepository {
         storage.clear();
         readFileNames.clear();
 
-        String configName = environment.getProperty("jmix.viewsConfig");
+        String configName = environment.getProperty("jmix.core.fetchPlansConfig");
         if (!StringUtils.isBlank(configName)) {
             Element rootElem = DocumentHelper.createDocument().addElement("views");
 
@@ -237,9 +236,7 @@ public class FetchPlanRepositoryImpl implements FetchPlanRepository {
     @Override
     @Nullable
     public FetchPlan findFetchPlan(MetaClass metaClass, @Nullable String name) {
-        if (metaClass == null) {
-            throw new IllegalArgumentException("Passed metaClass should not be null");
-        }
+        Preconditions.checkNotNullArgument(metaClass, "metaClass is null");
 
         if (name == null) {
             return null;
@@ -250,26 +247,10 @@ public class FetchPlanRepositoryImpl implements FetchPlanRepository {
             checkInitialized();
 
             FetchPlan view = retrieveView(metaClass, name, new HashSet<>());
-            return copyView(view);
+            return FetchPlan.copyNullable(view);
         } finally {
             lock.readLock().unlock();
         }
-    }
-
-    protected FetchPlan copyView(@Nullable FetchPlan view) {
-        if (view == null) {
-            return null;
-        }
-
-        FetchPlan.FetchPlanParams viewParams = new FetchPlan.FetchPlanParams()
-                .entityClass(view.getEntityClass())
-                .name(view.getName());
-        FetchPlan copy = new FetchPlan(viewParams);
-        for (FetchPlanProperty property : view.getProperties()) {
-            copy.addProperty(property.getName(), copyView(property.getFetchPlan()), property.getFetchMode());
-        }
-
-        return copy;
     }
 
     @Override
@@ -435,6 +416,7 @@ public class FetchPlanRepositoryImpl implements FetchPlanRepository {
         }
     }
 
+    @Nullable
     protected FetchPlan retrieveView(MetaClass metaClass, String name, Set<ViewInfo> visited) {
         Map<String, FetchPlan> views = storage.get(metaClass);
         FetchPlan view = (views == null ? null : views.get(name));

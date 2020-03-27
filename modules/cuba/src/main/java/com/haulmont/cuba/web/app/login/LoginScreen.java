@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright (c) 2008-2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 package com.haulmont.cuba.web.app.login;
 
 import com.haulmont.cuba.core.global.Messages;
-import io.jmix.core.GlobalConfig;
-import io.jmix.core.security.AbstractClientCredentials;
+import com.vaadin.server.ErrorEvent;
+import io.jmix.core.CoreProperties;
 import io.jmix.core.security.Credentials;
 import io.jmix.core.security.LoginException;
 import io.jmix.core.security.LoginPasswordCredentials;
@@ -26,27 +26,21 @@ import io.jmix.ui.App;
 import io.jmix.ui.Connection;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.Screens;
-import io.jmix.ui.WebConfig;
-import io.jmix.ui.components.CheckBox;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Image;
-import io.jmix.ui.components.LookupField;
-import io.jmix.ui.components.PasswordField;
-import io.jmix.ui.components.TextField;
-import io.jmix.ui.components.ThemeResource;
+import io.jmix.ui.components.*;
+import io.jmix.ui.exception.ExceptionHandlers;
 import io.jmix.ui.navigation.Route;
-import io.jmix.ui.screen.OpenMode;
-import io.jmix.ui.screen.Screen;
-import io.jmix.ui.screen.Subscribe;
-import io.jmix.ui.screen.UiController;
-import io.jmix.ui.screen.UiControllerUtils;
-import io.jmix.ui.screen.UiDescriptor;
+import io.jmix.ui.navigation.UrlRouting;
+import io.jmix.ui.screen.*;
+import io.jmix.ui.security.LoginScreenAuthDelegate;
+import io.jmix.ui.security.UiLoginProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Base class for Login screen.
@@ -59,12 +53,10 @@ public class LoginScreen extends Screen {
     private static final Logger log = LoggerFactory.getLogger(LoginScreen.class);
 
     @Inject
-    protected GlobalConfig globalConfig;
+    protected CoreProperties coreProperties;
     @Inject
-    protected WebConfig webConfig;
+    protected UiLoginProperties uiLoginProperties;
 
-    /*@Inject
-    protected UserManagementService userManagementService;*/
     @Inject
     protected Messages messages;
     @Inject
@@ -76,6 +68,8 @@ public class LoginScreen extends Screen {
     protected App app;
     @Inject
     protected Connection connection;
+    @Inject
+    protected LoginScreenAuthDelegate authDelegate;
 
     @Inject
     protected Image logoImage;
@@ -87,6 +81,8 @@ public class LoginScreen extends Screen {
     protected PasswordField passwordField;
     @Inject
     protected LookupField<Locale> localesSelect;
+    @Inject
+    protected UrlRouting urlRouting;
 
     @Subscribe
     protected void onInit(InitEvent event) {
@@ -113,15 +109,15 @@ public class LoginScreen extends Screen {
     protected void initPoweredByLink() {
         Component poweredByLink = getWindow().getComponent("poweredByLink");
         if (poweredByLink != null) {
-            poweredByLink.setVisible(webConfig.getLoginDialogPoweredByLinkVisible());
+            poweredByLink.setVisible(uiLoginProperties.isPoweredByLinkVisible());
         }
     }
 
     protected void initLocales() {
-        localesSelect.setOptionsMap(globalConfig.getAvailableLocales());
+        localesSelect.setOptionsMap(coreProperties.getAvailableLocales());
         localesSelect.setValue(app.getLocale());
 
-        boolean localeSelectVisible = globalConfig.getLocaleSelectVisible();
+        boolean localeSelectVisible = coreProperties.isLocaleSelectVisible();
         localesSelect.setVisible(localeSelectVisible);
 
         // if old layout is used
@@ -133,7 +129,7 @@ public class LoginScreen extends Screen {
         localesSelect.addValueChangeListener(e -> {
             app.setLocale(e.getValue());
 
-            AuthInfo authInfo = new AuthInfo(loginField.getValue(),
+            LoginScreenAuthDelegate.AuthInfo authInfo = new LoginScreenAuthDelegate.AuthInfo(loginField.getValue(),
                     passwordField.getValue(),
                     rememberMeCheckBox.getValue());
 
@@ -161,7 +157,7 @@ public class LoginScreen extends Screen {
     }
 
     protected void initRememberMe() {
-        if (!webConfig.getRememberMeEnabled()) {
+        if (!uiLoginProperties.isRememberMeEnabled()) {
             rememberMeCheckBox.setValue(false);
             rememberMeCheckBox.setVisible(false);
         }
@@ -175,14 +171,14 @@ public class LoginScreen extends Screen {
     }
 
     protected void initDefaultCredentials() {
-        String defaultUser = webConfig.getLoginDialogDefaultUser();
+        String defaultUser = uiLoginProperties.getDefaultUser();
         if (!StringUtils.isBlank(defaultUser) && !"<disabled>".equals(defaultUser)) {
             loginField.setValue(defaultUser);
         } else {
             loginField.setValue("");
         }
 
-        String defaultPassw = webConfig.getLoginDialogDefaultPassword();
+        String defaultPassw = uiLoginProperties.getDefaultPassword();
         if (!StringUtils.isBlank(defaultPassw) && !"<disabled>".equals(defaultPassw)) {
             passwordField.setValue(defaultPassw);
         } else {
@@ -216,39 +212,18 @@ public class LoginScreen extends Screen {
     }
 
     protected void setRememberMeCookies() {
-        // todo remember me
-        /*if (connection.isAuthenticated() && webConfig.getRememberMeEnabled()) {
-            if (Boolean.TRUE.equals(rememberMeCheckBox.getValue())) {
-                int rememberMeExpiration = globalConfig.getRememberMeExpirationTimeoutSec();
-
-                app.addCookie(COOKIE_REMEMBER_ME, Boolean.TRUE.toString(), rememberMeExpiration);
-
-                String encodedLogin = URLEncodeUtils.encodeUtf8(loginField.getValue());
-                app.addCookie(COOKIE_LOGIN, StringEscapeUtils.escapeJava(encodedLogin), rememberMeExpiration);
-
-                UserSession session = connection.getSession();
-                if (session == null) {
-                    throw new IllegalStateException("Unable to get session after login");
-                }
-                User user = session.getUser();
-                String rememberMeToken = userManagementService.generateRememberMeToken(user.getId());
-                app.addCookie(COOKIE_PASSWORD, rememberMeToken, rememberMeExpiration);
-            } else {
-                resetRememberCookies();
-            }
-        }*/
-    }
-
-    protected void resetRememberCookies() {
-        // todo remember me
-        /*app.removeCookie(COOKIE_REMEMBER_ME);
-        app.removeCookie(COOKIE_LOGIN);
-        app.removeCookie(COOKIE_PASSWORD);*/
+        if (Boolean.TRUE.equals(rememberMeCheckBox.getValue())) {
+            authDelegate.setRememberMeCookies(loginField.getValue());
+        } else {
+            authDelegate.resetRememberCookies();
+        }
     }
 
     protected void doLogin() {
         String login = loginField.getValue();
         String password = passwordField.getValue() != null ? passwordField.getValue() : "";
+
+        Map<String, Object> params = new HashMap<>(urlRouting.getState().getParams());
 
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
             notifications.create(Notifications.NotificationType.WARNING)
@@ -261,123 +236,52 @@ public class LoginScreen extends Screen {
             Locale selectedLocale = localesSelect.getValue();
             app.setLocale(selectedLocale);
 
-            doLogin(new LoginPasswordCredentials(login, password, selectedLocale));
+            doLogin(new LoginPasswordCredentials(login, password, selectedLocale, params));
 
             // locale could be set on the server
             if (connection.getSession() != null) {
                 Locale loggedInLocale = connection.getSession().getLocale();
 
-                if (globalConfig.getLocaleSelectVisible()) {
+                if (coreProperties.isLocaleSelectVisible()) {
                     app.addCookie(App.COOKIE_LOCALE, loggedInLocale.toLanguageTag());
                 }
             }
-        } /*catch (InternalAuthenticationException e) {
+            // todo see ConnectionImpl#loginInternal
+        /*} catch (InternalAuthenticationException e) {
             log.error("Internal error during login", e);
 
             showUnhandledExceptionOnLogin(e);
-        }*/ catch (LoginException e) {
+        */
+        } catch (LoginException e) {
             log.info("Login failed: {}", e.toString());
 
             String message = StringUtils.abbreviate(e.getMessage(), 1000);
             showLoginException(message);
         } catch (Exception e) {
-            log.warn("Unable to login", e);
+            if (connection.isAuthenticated()) {
+                ExceptionHandlers handlers = app.getExceptionHandlers();
+                handlers.handle(new ErrorEvent(e));
+            } else {
+                log.warn("Unable to login", e);
 
-            showUnhandledExceptionOnLogin(e);
+                showUnhandledExceptionOnLogin(e);
+            }
         }
     }
 
     protected void doLogin(Credentials credentials) throws LoginException {
-        if (credentials instanceof AbstractClientCredentials) {
-            ((AbstractClientCredentials) credentials).setOverrideLocale(localesSelect.isVisibleRecursive());
-        }
-        connection.login(credentials);
+        authDelegate.doLogin(credentials, localesSelect.isVisibleRecursive());
     }
 
     protected void doRememberMeLogin() {
-        // todo remember me
-        /*if (!webConfig.getRememberMeEnabled()) {
-            return;
-        }
-
-        String rememberMeCookie = app.getCookieValue(COOKIE_REMEMBER_ME);
-        if (!Boolean.parseBoolean(rememberMeCookie)) {
-            return;
-        }
-
-        String encodedLogin = app.getCookieValue(COOKIE_LOGIN) != null
-                ? app.getCookieValue(COOKIE_LOGIN) : "";
-        String login = URLEncodeUtils.decodeUtf8(encodedLogin);
-
-        String rememberMeToken = app.getCookieValue(COOKIE_PASSWORD) != null
-                ? app.getCookieValue(COOKIE_PASSWORD) : "";
-
-        if (StringUtils.isEmpty(login)
-                || StringUtils.isEmpty(rememberMeToken)) {
-            return;
-        }
-
-        boolean tokenValid = userManagementService.isRememberMeTokenValid(login, rememberMeToken);
-        if (!tokenValid) {
-            resetRememberCookies();
-            return;
-        }
-
-        Locale locale = messages.getTools().getDefaultLocale();
-
-        String lastLocale = app.getCookieValue(COOKIE_LOCALE);
-        if (lastLocale != null
-                && !lastLocale.isEmpty()) {
-            Map<String, Locale> availableLocales = globalConfig.getAvailableLocales();
-            for (Locale availableLocale : availableLocales.values()) {
-                if (availableLocale.toLanguageTag().equals(lastLocale)) {
-                    locale = availableLocale;
-                }
-            }
-        }
-
-        if (StringUtils.isNotEmpty(rememberMeToken)) {
-            RememberMeCredentials credentials = new RememberMeCredentials(login, rememberMeToken, locale);
-            credentials.setOverrideLocale(localesSelect.isVisibleRecursive());
-            try {
-                connection.login(credentials);
-            } catch (LoginException e) {
-                log.info("Failed to login with remember me token. Reset corresponding cookies.");
-                resetRememberCookies();
-            }
-        }*/
+        authDelegate.doRememberMeLogin(localesSelect.isVisibleRecursive());
     }
 
-    protected void setAuthInfo(AuthInfo authInfo) {
+    protected void setAuthInfo(LoginScreenAuthDelegate.AuthInfo authInfo) {
         loginField.setValue(authInfo.getLogin());
         passwordField.setValue(authInfo.getPassword());
         rememberMeCheckBox.setValue(authInfo.getRememberMe());
 
         localesSelect.focus();
-    }
-
-    public static class AuthInfo {
-
-        protected final String login;
-        protected final String password;
-        protected final Boolean rememberMe;
-
-        public AuthInfo(String login, String password, Boolean rememberMe) {
-            this.login = login;
-            this.password = password;
-            this.rememberMe = rememberMe;
-        }
-
-        public String getLogin() {
-            return login;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public Boolean getRememberMe() {
-            return rememberMe;
-        }
     }
 }

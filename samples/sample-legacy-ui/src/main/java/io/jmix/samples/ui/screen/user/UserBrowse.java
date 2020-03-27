@@ -32,8 +32,13 @@ public class UserBrowse extends AbstractLookup {
     @Inject
     private GroupDatasource<User, UUID> groupUserDs;
 
+    @Inject
+    private SampleConfig sampleConfig;
+
     @Override
     protected void init(InitEvent initEvent) {
+        System.out.println(">>> " + sampleConfig.getSampleProp());
+
         User user1 = new User();
         user1.setActive(true);
         user1.setFirstName("John");

@@ -17,13 +17,13 @@
 
  package com.haulmont.cuba.core.model;
 
- import io.jmix.core.entity.StandardEntity;
- import io.jmix.core.metamodel.annotations.MetaClass;
+ import io.jmix.data.entity.StandardEntity;
+ import io.jmix.core.metamodel.annotations.ModelObject;
 
  import javax.persistence.Transient;
  import java.util.Map;
 
- @MetaClass(name = "test$SetGetEntity")
+ @ModelObject(name = "test$SetGetEntity")
  public class SetGetEntity<T> extends StandardEntity {
 
      @Transient

@@ -22,6 +22,8 @@ import io.jmix.core.Stores;
 import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.entity.annotation.MetaAnnotation;
 import io.jmix.core.metamodel.annotations.Composition;
+import io.jmix.core.metamodel.annotations.ModelObject;
+import io.jmix.core.metamodel.annotations.ModelProperty;
 import io.jmix.core.metamodel.annotations.NumberFormat;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
@@ -178,7 +180,7 @@ public class MetaModelLoader {
 
     @Nullable
     protected MetaClassImpl createClass(Session session, Class<?> javaClass) {
-        if (!Instance.class.isAssignableFrom(javaClass)) {
+        if (!io.jmix.core.Entity.class.isAssignableFrom(javaClass)) {
             return null;
         }
 
@@ -198,15 +200,16 @@ public class MetaModelLoader {
         }
     }
 
+    @Nullable
     protected String getMetaClassName(Class<?> javaClass) {
         Entity entityAnnotation = javaClass.getAnnotation(Entity.class);
         MappedSuperclass mappedSuperclassAnnotation = javaClass.getAnnotation(MappedSuperclass.class);
 
-        io.jmix.core.metamodel.annotations.MetaClass metaClassAnnotation = javaClass.getAnnotation(io.jmix.core.metamodel.annotations.MetaClass.class);
+        ModelObject modelObjectAnnotation = javaClass.getAnnotation(ModelObject.class);
         Embeddable embeddableAnnotation = javaClass.getAnnotation(Embeddable.class);
 
         if ((entityAnnotation == null && mappedSuperclassAnnotation == null) &&
-                (embeddableAnnotation == null) && (metaClassAnnotation == null)) {
+                (embeddableAnnotation == null) && (modelObjectAnnotation == null)) {
             log.trace("Class '{}' isn't annotated as metadata entity, ignore it", javaClass.getName());
             return null;
         }
@@ -214,8 +217,8 @@ public class MetaModelLoader {
         String name = null;
         if (entityAnnotation != null) {
             name = entityAnnotation.name();
-        } else if (metaClassAnnotation != null) {
-            name = metaClassAnnotation.name();
+        } else if (modelObjectAnnotation != null) {
+            name = modelObjectAnnotation.name();
         }
 
         if (StringUtils.isEmpty(name)) {
@@ -302,11 +305,11 @@ public class MetaModelLoader {
                 || field.isAnnotationPresent(OneToOne.class)
                 || field.isAnnotationPresent(Embedded.class)
                 || field.isAnnotationPresent(EmbeddedId.class)
-                || field.isAnnotationPresent(io.jmix.core.metamodel.annotations.MetaProperty.class);
+                || field.isAnnotationPresent(ModelProperty.class);
     }
 
     protected boolean isMetaPropertyMethod(Method method) {
-        return method.isAnnotationPresent(io.jmix.core.metamodel.annotations.MetaProperty.class);
+        return method.isAnnotationPresent(ModelProperty.class);
     }
 
     protected MetadataObjectInfo<MetaProperty> loadProperty(Session session, MetaClassImpl metaClass, Field field) {
@@ -484,6 +487,7 @@ public class MetaModelLoader {
         return false;
     }
 
+    @Nullable
     protected Class getFieldTypeAccordingAnnotations(Field field) {
         OneToOne oneToOneAnnotation = field.getAnnotation(OneToOne.class);
         OneToMany oneToManyAnnotation = field.getAnnotation(OneToMany.class);
@@ -503,6 +507,7 @@ public class MetaModelLoader {
         return result;
     }
 
+    @Nullable
     protected Class getTypeOverride(AnnotatedElement element) {
         Temporal temporal = element.getAnnotation(Temporal.class);
         if (temporal != null && temporal.value().equals(TemporalType.DATE))
@@ -525,10 +530,10 @@ public class MetaModelLoader {
         OneToOne oneToOneAnnotation = field.getAnnotation(OneToOne.class);
         ManyToOne manyToOneAnnotation = field.getAnnotation(ManyToOne.class);
 
-        io.jmix.core.metamodel.annotations.MetaProperty metaPropertyAnnotation =
-                field.getAnnotation(io.jmix.core.metamodel.annotations.MetaProperty.class);
+        ModelProperty modelPropertyAnnotation =
+                field.getAnnotation(ModelProperty.class);
 
-        boolean superMandatory = (metaPropertyAnnotation != null && metaPropertyAnnotation.mandatory())
+        boolean superMandatory = (modelPropertyAnnotation != null && modelPropertyAnnotation.mandatory())
                 || (field.getAnnotation(NotNull.class) != null
                     && isDefinedForDefaultValidationGroup(field.getAnnotation(NotNull.class)));  // @NotNull without groups
 
@@ -566,6 +571,7 @@ public class MetaModelLoader {
         }
     }
 
+    @Nullable
     protected String getInverseField(Field field) {
         OneToMany oneToManyAnnotation = field.getAnnotation(OneToMany.class);
         if (oneToManyAnnotation != null)
@@ -641,10 +647,10 @@ public class MetaModelLoader {
             }
         }
 
-        io.jmix.core.metamodel.annotations.MetaProperty metaPropertyAnnotation =
-                annotatedElement.getAnnotation(io.jmix.core.metamodel.annotations.MetaProperty.class);
-        if (metaPropertyAnnotation != null) {
-            String[] related = metaPropertyAnnotation.related();
+        ModelProperty modelPropertyAnnotation =
+                annotatedElement.getAnnotation(ModelProperty.class);
+        if (modelPropertyAnnotation != null) {
+            String[] related = modelPropertyAnnotation.related();
             if (!(related.length == 1 && related[0].equals(""))) {
                 metaProperty.getAnnotations().put("relatedProperties", Joiner.on(',').join(related));
             }
@@ -727,8 +733,7 @@ public class MetaModelLoader {
 
     @Nullable
     protected Datatype getAdaptiveDatatype(AnnotatedElement annotatedElement) {
-        io.jmix.core.metamodel.annotations.MetaProperty annotation =
-                annotatedElement.getAnnotation(io.jmix.core.metamodel.annotations.MetaProperty.class);
+        ModelProperty annotation = annotatedElement.getAnnotation(ModelProperty.class);
         return annotation != null && !annotation.datatype().equals("") ? datatypes.get(annotation.datatype()) : null;
     }
 
@@ -949,7 +954,7 @@ public class MetaModelLoader {
         }
 
         @SuppressWarnings("unchecked")
-        public MetadataObjectInfo(T object, Collection<? extends RangeInitTask> tasks) {
+        public MetadataObjectInfo(@Nullable T object, Collection<? extends RangeInitTask> tasks) {
             this.object = object;
             this.tasks = (Collection<RangeInitTask>) tasks;
         }

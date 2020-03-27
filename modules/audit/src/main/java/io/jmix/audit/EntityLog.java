@@ -23,10 +23,16 @@ import io.jmix.audit.entity.LoggedEntity;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.compatibility.AppContext;
-import io.jmix.core.entity.*;
+import io.jmix.core.entity.EntityValues;
+import io.jmix.core.entity.HasUuid;
+import io.jmix.core.entity.IdProxy;
+import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.impl.EnumClass;
-import io.jmix.core.metamodel.model.*;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.core.metamodel.model.Range;
 import io.jmix.data.AuditInfoProvider;
 import io.jmix.data.EntityChangeType;
 import io.jmix.data.PersistenceTools;
@@ -101,11 +107,10 @@ public class EntityLog implements EntityLogAPI, PersistenceLifecycleListener {
 
     @Inject
     protected DataManager dataManager;
-    @Inject
-    protected ServerConfig serverConfig;
-    @Inject
-    protected EntityLogConfig config;
 
+    protected AuditProperties properties;
+
+    protected volatile boolean enabled;
     protected volatile boolean loaded;
 
     @GuardedBy("lock")
@@ -115,6 +120,12 @@ public class EntityLog implements EntityLogAPI, PersistenceLifecycleListener {
 
     protected ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     protected ThreadLocal<Boolean> entityLogSwitchedOn = new ThreadLocal<>();
+
+    @Inject
+    public void setProperties(AuditProperties properties) {
+        this.properties = properties;
+        this.enabled = properties.isEnabled();
+    }
 
     @Override
     public void processLoggingForCurrentThread(boolean enabled) {
@@ -281,7 +292,7 @@ public class EntityLog implements EntityLogAPI, PersistenceLifecycleListener {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
                 @Override
                 public void afterCommit() {
-                    Number id = item.getDbGeneratedIdEntity().getId().getNN();
+                    Number id = ((IdProxy) EntityValues.getId(item.getDbGeneratedIdEntity())).getNN();
                     item.setObjectEntityId(id);
                     transaction.executeWithoutResult(status -> {
                         entityManager.persist(item);
@@ -293,14 +304,12 @@ public class EntityLog implements EntityLogAPI, PersistenceLifecycleListener {
 
     @Override
     public synchronized boolean isEnabled() {
-        return config.getEnabled() && isLoggingForCurrentThread();
+        return enabled && isLoggingForCurrentThread();
     }
 
     @Override
     public synchronized void setEnabled(boolean enabled) {
-        if (enabled != config.getEnabled()) {
-            config.setEnabled(enabled);
-        }
+        this.enabled = enabled;
     }
 
     @Override
@@ -501,7 +510,7 @@ public class EntityLog implements EntityLogAPI, PersistenceLifecycleListener {
         if (AppContext.isStarted() && currentUserId != null)
             return auditInfoProvider.getCurrentUserLogin();
         else {
-            String login = serverConfig.getSystemUserLogin();
+            String login = properties.getSystemUserLogin();
             if (login != null)
                 return login;
             else
@@ -646,10 +655,10 @@ public class EntityLog implements EntityLogAPI, PersistenceLifecycleListener {
             MetaPropertyPath propertyPath = metadata.getClass(entity).getPropertyPath(name);
             MetaProperty metaProperty = propertyPath.getMetaProperty();
 
-            String value = stringify(entity.getValueEx(name), metaProperty);
+            String value = stringify(EntityValues.getValueEx(entity, name), metaProperty);
             attr.setValue(value);
 
-            Object valueId = getValueId(entity.getValueEx(name));
+            Object valueId = getValueId(EntityValues.getValueEx(entity, name));
             if (valueId != null)
                 attr.setValueId(valueId.toString());
 
@@ -772,8 +781,8 @@ public class EntityLog implements EntityLogAPI, PersistenceLifecycleListener {
         item.setType(type);
         item.setEntity(entityName);
         item.setEntityInstanceName(metadataTools.getInstanceName(entity));
-        if (entity instanceof BaseDbGeneratedIdEntity && EntityLogItem.Type.CREATE.equals(type)) {
-            item.setDbGeneratedIdEntity((BaseDbGeneratedIdEntity) entity);
+        if (metadataTools.hasDbGeneratedPrimaryKey(metadata.getClass(entity)) && EntityLogItem.Type.CREATE.equals(type)) {
+            item.setDbGeneratedIdEntity(entity);
         } else {
             item.setObjectEntityId(referenceToEntitySupport.getReferenceId(entity));
         }
@@ -808,10 +817,12 @@ public class EntityLog implements EntityLogAPI, PersistenceLifecycleListener {
     }
 
     protected Object getValueId(Object value) {
-        if (value instanceof EmbeddableEntity) {
-            return null;
-        } else if (value instanceof BaseGenericIdEntity) {
-            return referenceToEntitySupport.getReferenceId((Entity) value);
+        if (value instanceof Entity) {
+            if (((Entity<?>) value).__getEntityEntry().isEmbeddable()) {
+                return null;
+            } else {
+                return referenceToEntitySupport.getReferenceId((Entity) value);
+            }
         } else {
             return null;
         }
@@ -820,8 +831,8 @@ public class EntityLog implements EntityLogAPI, PersistenceLifecycleListener {
     protected String stringify(Object value, MetaProperty metaProperty) {
         if (value == null)
             return "";
-        else if (value instanceof Instance) {
-            return metadataTools.getInstanceName((Instance) value);
+        else if (value instanceof Entity) {
+            return metadataTools.getInstanceName((Entity<?>) value);
         } else if (value instanceof Date) {
             Datatype datatype = metaProperty.getRange().asDatatype();
             return datatype.format(value);
@@ -919,7 +930,7 @@ public class EntityLog implements EntityLogAPI, PersistenceLifecycleListener {
 //    }
 
     protected void logError(Entity entity, Exception e) {
-        log.warn("Unable to log entity {}, id={}", entity, entity.getId(), e);
+        log.warn("Unable to log entity {}, id={}", entity, EntityValues.getId(entity), e);
     }
 
     public static class EntityLogResourceHolder extends ResourceHolderSupport {

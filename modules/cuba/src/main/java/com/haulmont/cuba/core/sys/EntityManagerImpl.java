@@ -20,10 +20,11 @@ import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlanRepository;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.IdProxy;
 import com.haulmont.cuba.core.EntityManager;
-import io.jmix.data.OrmProperties;
+import io.jmix.data.PersistenceHints;
 import com.haulmont.cuba.core.Query;
 import com.haulmont.cuba.core.TypedQuery;
 import io.jmix.data.impl.JmixEntityManager;
@@ -65,12 +66,12 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public boolean isSoftDeletion() {
-        return OrmProperties.isSoftDeletion(delegate);
+        return PersistenceHints.isSoftDeletion(delegate);
     }
 
     @Override
     public void setSoftDeletion(boolean softDeletion) {
-        delegate.setProperty(OrmProperties.SOFT_DELETION, softDeletion);
+        delegate.setProperty(PersistenceHints.SOFT_DELETION, softDeletion);
     }
 
     @Override
@@ -116,7 +117,7 @@ public class EntityManagerImpl implements EntityManager {
     @Nullable
     @Override
     public <T extends Entity<K>, K> T find(Class<T> entityClass, K id, FetchPlan... fetchPlans) {
-        return delegate.find(entityClass, id, OrmProperties.builder().withFetchPlans(fetchPlans).build());
+        return delegate.find(entityClass, id, PersistenceHints.builder().withFetchPlans(fetchPlans).build());
     }
 
     @Nullable
@@ -205,11 +206,11 @@ public class EntityManagerImpl implements EntityManager {
     public <T extends Entity> T reload(T entity, String... fetchPlanNames) {
         Preconditions.checkNotNullArgument(entity, "entity is null");
 
-        if (entity.getId() instanceof IdProxy && ((IdProxy) entity.getId()).get() == null) {
+        if (EntityValues.getId(entity) instanceof IdProxy && ((IdProxy) EntityValues.getId(entity)).get() == null) {
             return null;
         }
 
-        Entity resultEntity = find(entity.getClass(), entity.getId(), fetchPlanNames);
+        Entity resultEntity = find(entity.getClass(), EntityValues.getId(entity), fetchPlanNames);
         return (T) resultEntity;
     }
 

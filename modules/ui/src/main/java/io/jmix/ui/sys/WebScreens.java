@@ -113,7 +113,7 @@ public class WebScreens implements Screens {
     protected ScreenHistorySupport screenHistorySupport;*/
 
     @Inject
-    protected WebConfig webConfig;
+    protected UiProperties uiProperties;
 
     protected AppUI ui;
 
@@ -177,7 +177,8 @@ public class WebScreens implements Screens {
                         ui.getDialogs(),
                         ui.getNotifications(),
                         ui.getFragments(),
-                        ui.getUrlRouting())
+                        ui.getUrlRouting(),
+                        ui.getWebBrowserTools())
         );
         setScreenData(controller, new ScreenDataImpl());
 
@@ -433,7 +434,7 @@ public class WebScreens implements Screens {
                     }
                 }
             } else {
-                int maxTabCount = webConfig.getMaxTabCount();
+                int maxTabCount = uiProperties.getMaxTabCount();
                 if (maxTabCount > 0
                         && workArea.getOpenedTabCount() + 1 > maxTabCount) {
                     ui.getNotifications()
@@ -1133,7 +1134,7 @@ public class WebScreens implements Screens {
         windowBreadCrumbs.setUI(ui);
         windowBreadCrumbs.setBeanLocator(beanLocator);
 
-        boolean showBreadCrumbs = webConfig.getShowBreadCrumbs() || appWorkArea.getMode() == Mode.SINGLE;
+        boolean showBreadCrumbs = uiProperties.isShowBreadCrumbs() || appWorkArea.getMode() == Mode.SINGLE;
         windowBreadCrumbs.setVisible(showBreadCrumbs);
 
         return windowBreadCrumbs;

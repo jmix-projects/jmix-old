@@ -22,13 +22,16 @@ import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.core.PersistentAttributesLoadChecker;
 import io.jmix.core.annotation.JmixModule;
 import io.jmix.data.impl.DataPersistentAttributesLoadChecker;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @Configuration
 @ComponentScan
+@ConfigurationPropertiesScan
 @JmixModule(dependsOn = JmixCoreConfiguration.class)
 @EnableTransactionManagement
 public class JmixDataConfiguration {

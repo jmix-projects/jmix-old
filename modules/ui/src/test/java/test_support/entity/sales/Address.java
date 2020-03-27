@@ -16,15 +16,15 @@
 
 package test_support.entity.sales;
 
-import io.jmix.core.entity.EmbeddableEntity;
-import io.jmix.core.metamodel.annotations.MetaClass;
+import io.jmix.core.Entity;
+import io.jmix.core.metamodel.annotations.ModelObject;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-@MetaClass(name = "test$Address")
-public class Address extends EmbeddableEntity {
+@ModelObject(name = "test$Address")
+public class Address implements Entity<Object> {
 
     private static final long serialVersionUID = 2116285103670251834L;
 

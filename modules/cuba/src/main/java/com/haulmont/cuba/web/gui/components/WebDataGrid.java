@@ -16,8 +16,8 @@
 
 package com.haulmont.cuba.web.gui.components;
 
-import com.haulmont.cuba.gui.components.DataGrid;
-import io.jmix.core.entity.Entity;
+import com.haulmont.cuba.gui.components.OptionsField;
+import io.jmix.core.Entity;
 
 @Deprecated
 public class WebDataGrid<E extends Entity> extends io.jmix.ui.components.impl.WebDataGrid<E> implements DataGrid<E> {

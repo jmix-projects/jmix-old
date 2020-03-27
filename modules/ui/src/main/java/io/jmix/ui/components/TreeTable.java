@@ -16,7 +16,8 @@
 package io.jmix.ui.components;
 
 import com.google.common.reflect.TypeToken;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
+import io.jmix.ui.components.data.TableItems;
 
 /**
  * TreeTable extends the {@link Table} component so that it can also visualize a hierarchy of its Items in a similar

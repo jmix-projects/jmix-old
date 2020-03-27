@@ -3,8 +3,6 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.jmix'
 
 group = 'io.jmix.sample.helloworld'
-version = rootProject.jmixVersion
-sourceCompatibility = rootProject.sourceCompatibility
 
 dependencies {
     implementation project(':starters:starter-standard')
@@ -17,4 +15,8 @@ dependencies {
 
 entitiesEnhancing {
     enabled = true
+}
+
+test {
+    useJUnitPlatform()
 }

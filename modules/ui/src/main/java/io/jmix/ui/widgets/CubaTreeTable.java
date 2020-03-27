@@ -80,6 +80,10 @@ public class CubaTreeTable extends com.vaadin.v7.ui.TreeTable implements TreeTab
 
     protected Set<Object> htmlCaptionColumns; // lazily initialized set
 
+    protected List<Object> clickableTableColumnIds; // lazily initialized list
+
+    protected Registration tableCellClickListenerRegistration;
+
     protected AggregationStyle aggregationStyle = AggregationStyle.TOP;
     protected Object focusColumn;
     protected Object focusItem;
@@ -98,18 +102,24 @@ public class CubaTreeTable extends com.vaadin.v7.ui.TreeTable implements TreeTab
 
     protected Runnable emptyStateLinkClickHandler;
 
+    protected Object scrollToItemId;
+
     public CubaTreeTable() {
         registerRpc(new CubaTableServerRpc() {
             @Override
-            public void onClick(String columnKey, String rowKey) {
+            public void onClick(String columnKey, String rowKey, boolean isText) {
                 Object columnId = _columnIdMap().get(columnKey);
                 Object itemId = itemIdMapper.get(rowKey);
 
-                if (cellClickListeners != null) {
-                    CellClickListener cellClickListener = cellClickListeners.get(columnId);
-                    if (cellClickListener != null) {
-                        cellClickListener.onClick(itemId, columnId);
+                if (itemId != null) {
+                    if (cellClickListeners != null && isText) {
+                        CellClickListener cellClickListener = cellClickListeners.get(columnId);
+                        if (cellClickListener != null) {
+                            cellClickListener.onClick(itemId, columnId);
+                        }
                     }
+
+                    fireEvent(new TableCellClickEvent(CubaTreeTable.this, itemId, columnId, isText));
                 }
             }
 
@@ -709,6 +719,10 @@ public class CubaTreeTable extends com.vaadin.v7.ui.TreeTable implements TreeTab
             }
             target.addAttribute("colcubaids", visibleColOrder.toArray());
         }
+
+        if (scrollToItemId != null && isLastId(scrollToItemId)) {
+            target.addAttribute("scrolltolast", true);
+        }
     }
 
     protected void paintAggregationRow(PaintTarget target, Map<Object, Object> aggregations) throws PaintException {
@@ -758,6 +772,34 @@ public class CubaTreeTable extends com.vaadin.v7.ui.TreeTable implements TreeTab
     public void removeClickListener(Object propertyId) {
         if (cellClickListeners != null) {
             cellClickListeners.remove(propertyId);
+        }
+    }
+
+    @Override
+    public void addTableCellClickListener(Object propertyId, TableCellClickListener listener) {
+        if (clickableTableColumnIds == null) {
+            clickableTableColumnIds = new ArrayList<>();
+        }
+        clickableTableColumnIds.add(propertyId);
+
+        // Register only one TableCellClickListener for all clickable table columns
+        if (tableCellClickListenerRegistration == null) {
+            tableCellClickListenerRegistration = addListener(TableCellClickEvent.class, listener, TableCellClickListener.clickMethod);
+        }
+    }
+
+    @Override
+    public void removeTableCellClickListener(Object propertyId) {
+        if (clickableTableColumnIds != null) {
+            clickableTableColumnIds.remove(propertyId);
+
+            if (tableCellClickListenerRegistration != null
+                    && clickableTableColumnIds.isEmpty()) {
+                tableCellClickListenerRegistration.remove();
+                tableCellClickListenerRegistration = null;
+
+                clickableTableColumnIds = null;
+            }
         }
     }
 
@@ -832,6 +874,7 @@ public class CubaTreeTable extends com.vaadin.v7.ui.TreeTable implements TreeTab
         super.beforeClientResponse(initial);
 
         updateClickableColumnKeys();
+        updateClickableTableColumnKeys();
         updateColumnDescriptions();
         updateAggregatableTooltips();
         updateHtmlCaptionColumns();
@@ -876,15 +919,24 @@ public class CubaTreeTable extends com.vaadin.v7.ui.TreeTable implements TreeTab
 
     protected void updateClickableColumnKeys() {
         if (cellClickListeners != null) {
-            String[] clickableColumnKeys = new String[cellClickListeners.size()];
-            int i = 0;
-            for (Object columnId : cellClickListeners.keySet()) {
-                clickableColumnKeys[i] = _columnIdMap().key(columnId);
-                i++;
-            }
-
-            getState().clickableColumnKeys = clickableColumnKeys;
+            getState().clickableColumnKeys = getClickableColumnKeys(cellClickListeners.keySet());
         }
+    }
+
+    protected void updateClickableTableColumnKeys() {
+        if (clickableTableColumnIds != null) {
+            getState().clickableTableColumnKeys = getClickableColumnKeys(clickableTableColumnIds);
+        }
+    }
+
+    protected String[] getClickableColumnKeys(Collection<Object> columnIds) {
+        String[] clickableColumnKeys = new String[columnIds.size()];
+        int i = 0;
+        for (Object columnId : columnIds) {
+            clickableColumnKeys[i] = _columnIdMap().key(columnId);
+            i++;
+        }
+        return clickableColumnKeys;
     }
 
     @Override
@@ -1174,5 +1226,12 @@ public class CubaTreeTable extends com.vaadin.v7.ui.TreeTable implements TreeTab
     @Override
     public void setSortOptions(Object propertyId, boolean sortAscending) {
         super.setContainerSortOptions(propertyId, sortAscending);
+    }
+
+    @Override
+    public void setCurrentPageFirstItemId(Object currentPageFirstItemId) {
+        super.setCurrentPageFirstItemId(currentPageFirstItemId);
+
+        scrollToItemId = currentPageFirstItemId;
     }
 }

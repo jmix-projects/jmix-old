@@ -17,7 +17,7 @@
 package io.jmix.ui.builders;
 
 
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.ui.Screens;
 import io.jmix.ui.components.HasValue;
 import io.jmix.ui.components.ListComponent;
@@ -172,7 +172,7 @@ public class LookupBuilder<E extends Entity> {
     }
 
     /**
-     * Sets code to transform the edited entity after editor commit and returns the builder for chaining.
+     * Sets code to transform entities after selection and returns the builder for chaining.
      * <br>
      * Applied only if either field or container or listComponent is assigned.
      *

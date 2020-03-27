@@ -20,13 +20,9 @@ import com.vaadin.event.Action;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Layout;
 import io.jmix.core.AppBeans;
-import io.jmix.core.ConfigInterfaces;
 import io.jmix.core.Messages;
-import io.jmix.core.Metadata;
-import io.jmix.core.entity.Entity;
-import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.security.Security;
-import io.jmix.ui.ClientConfig;
+import io.jmix.ui.UiProperties;
 import io.jmix.ui.components.Window;
 import io.jmix.ui.sys.ShowInfoAction;
 import io.jmix.ui.widgets.HasTabSheetBehaviour;
@@ -79,9 +75,8 @@ public class MainTabSheetActionHandler implements Action.Handler {
         actions.add(closeAllTabs);
 
         if (target != null) {
-            ConfigInterfaces configuration = AppBeans.get(ConfigInterfaces.NAME);
-            ClientConfig clientConfig = configuration.getConfig(ClientConfig.class);
-            if (clientConfig.getManualScreenSettingsSaving()) {
+            UiProperties properties = AppBeans.get(UiProperties.class);
+            if (properties.isManualScreenSettingsSaving()) {
                 actions.add(saveSettings);
                 actions.add(restoreToDefaults);
             }
@@ -91,7 +86,7 @@ public class MainTabSheetActionHandler implements Action.Handler {
                     findEditor((Layout) target) != null) {
                 actions.add(showInfo);
             }
-            if (clientConfig.getLayoutAnalyzerEnabled()) {
+            if (properties.isLayoutAnalyzerEnabled()) {
                 actions.add(analyzeLayout);
             }
         }

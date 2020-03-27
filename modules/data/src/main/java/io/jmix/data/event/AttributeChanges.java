@@ -16,7 +16,7 @@
 
 package io.jmix.data.event;
 
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.core.Id;
 
 import javax.annotation.Nullable;
@@ -162,7 +162,7 @@ public class AttributeChanges {
         public final String name;
         public final Object oldValue;
 
-        public Change(String name, Object oldValue) {
+        public Change(String name, @Nullable Object oldValue) {
             this.name = name;
             this.oldValue = oldValue;
         }

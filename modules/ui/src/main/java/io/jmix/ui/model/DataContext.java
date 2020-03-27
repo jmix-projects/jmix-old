@@ -19,7 +19,7 @@ package io.jmix.ui.model;
 import io.jmix.core.EntitySet;
 import io.jmix.core.SaveContext;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
 import io.jmix.ui.screen.InstallSubject;
 import io.jmix.ui.screen.Subscribe;
 
@@ -375,6 +375,7 @@ public interface DataContext {
     /**
      * Returns a function which will be used to commit data instead of standard implementation.
      */
+    @Nullable
     Function<SaveContext, Set<Entity>> getCommitDelegate();
 
     /**

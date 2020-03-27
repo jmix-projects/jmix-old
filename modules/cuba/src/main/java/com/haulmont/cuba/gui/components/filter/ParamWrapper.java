@@ -17,18 +17,18 @@
 
 package com.haulmont.cuba.gui.components.filter;
 
+import com.haulmont.cuba.CubaProperties;
 import com.haulmont.cuba.gui.components.filter.condition.AbstractCondition;
 import com.haulmont.cuba.gui.components.filter.condition.CustomCondition;
 import com.haulmont.cuba.gui.components.filter.condition.DynamicAttributesCondition;
 import com.haulmont.cuba.gui.components.filter.condition.PropertyCondition;
 import io.jmix.core.AppBeans;
-import io.jmix.core.ConfigInterfaces;
-import io.jmix.core.GlobalConfig;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.QueryUtils;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.entity.Entity;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.datatypes.impl.EnumClass;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.HasValue;
@@ -81,8 +81,8 @@ public class ParamWrapper implements Component, HasValue<Object> {
                 String escapedValue = value.toString();
                 if (condition.getEntityMetaClass() != null) {
                     String thisStore = AppBeans.get(MetadataTools.class).getStoreName(condition.getEntityMetaClass());
-                    GlobalConfig config = AppBeans.get(ConfigInterfaces.class).getConfig(GlobalConfig.class);
-                    if (config.getDisableEscapingLikeForDataStores() == null || !config.getDisableEscapingLikeForDataStores().contains(thisStore)) {
+                    CubaProperties properties = AppBeans.get(CubaProperties.class);
+                    if (properties.getDisableEscapingLikeForDataStores() == null || !properties.getDisableEscapingLikeForDataStores().contains(thisStore)) {
                         escapedValue = QueryUtils.escapeForLike(escapedValue);
                     }
                 } else {
@@ -119,11 +119,11 @@ public class ParamWrapper implements Component, HasValue<Object> {
                 }
             }
         } else if (value instanceof Entity) {
-            value = ((Entity) value).getId();
+            value = EntityValues.getId(((Entity) value));
         } else if (value instanceof Collection) {
             List<Object> list = new ArrayList<>(((Collection) value).size());
             for (Object obj : ((Collection) value)) {
-                list.add(obj instanceof Entity ? ((Entity) obj).getId() : obj);
+                list.add(obj instanceof Entity ? EntityValues.getId(((Entity) obj)) : obj);
             }
             value = list;
         } else if (value instanceof EnumClass) {

@@ -16,17 +16,17 @@
 
 package com.haulmont.cuba.core.model.embedded;
 
-import io.jmix.core.entity.EmbeddableEntity;
-import io.jmix.core.metamodel.annotations.MetaClass;
+import io.jmix.core.Entity;
+import io.jmix.core.metamodel.annotations.ModelObject;
 import io.jmix.core.metamodel.annotations.NamePattern;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @NamePattern("%s|index")
-@MetaClass(name = "test$AddressEmbedded")
+@ModelObject(name = "test$AddressEmbedded")
 @Embeddable
-public class AddressEmbedded extends EmbeddableEntity {
+public class AddressEmbedded implements Entity<Object> {
     private static final long serialVersionUID = 728993860314123316L;
 
     @Column(name = "STREET")
