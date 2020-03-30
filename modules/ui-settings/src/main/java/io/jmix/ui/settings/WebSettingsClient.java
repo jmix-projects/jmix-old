@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2016 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,17 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package com.haulmont.cuba.web.settings;
+package io.jmix.ui.settings;
 
 import com.vaadin.server.VaadinSession;
 import io.jmix.ui.executors.IllegalConcurrentAccessException;
-import io.jmix.ui.settings.SettingsClient;
+import io.jmix.ui.settings.entity.ClientType;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -33,8 +33,8 @@ import java.util.Optional;
 @Component(SettingsClient.NAME)
 public class WebSettingsClient implements SettingsClient {
 
-    /*@Inject todo user settings
-    protected UserSettingService userSettingService;*/
+    @Inject
+    protected UserSettingService userSettingService;
 
     @Override
     public String getSetting(String name) {
@@ -44,8 +44,8 @@ public class WebSettingsClient implements SettingsClient {
             return cached.orElse(null);
         }
 
-        /*String setting = userSettingService.loadSetting(ClientType.WEB, name);
-        settings.put(name, Optional.ofNullable(setting));*/
+        String setting = userSettingService.loadSetting(ClientType.WEB, name);
+        settings.put(name, Optional.ofNullable(setting));
 
         return "";
     }
@@ -53,13 +53,13 @@ public class WebSettingsClient implements SettingsClient {
     @Override
     public void setSetting(String name, @Nullable String value) {
         getCache().put(name, Optional.ofNullable(value));
-        // userSettingService.saveSetting(ClientType.WEB, name, value);
+        userSettingService.saveSetting(ClientType.WEB, name, value);
     }
 
     @Override
     public void deleteSettings(String name) {
         getCache().put(name, Optional.empty());
-        // userSettingService.deleteSettings(ClientType.WEB, name);
+        userSettingService.deleteSettings(ClientType.WEB, name);
     }
 
     public void clearCache() {
