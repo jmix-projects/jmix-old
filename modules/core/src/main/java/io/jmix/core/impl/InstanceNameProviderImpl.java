@@ -18,22 +18,22 @@ package io.jmix.core.impl;
 
 import io.jmix.core.*;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.event.AppContextInitializedEvent;
-import io.jmix.core.impl.method.ContextArgumentResolverComposite;
+import io.jmix.core.impl.method.ArgumentResolverComposite;
 import io.jmix.core.impl.method.MethodArgumentsProvider;
 import io.jmix.core.metamodel.annotations.InstanceName;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.UserSessionSource;
-import org.springframework.context.event.EventListener;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.HashSet;
 import java.util.stream.Stream;
 
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
@@ -59,10 +59,7 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
     @Inject
     protected MetadataTools metadataTools;
 
-    @Inject
-    protected BeanLocator beanLocator;
-
-    protected ContextArgumentResolverComposite resolvers;
+    protected ArgumentResolverComposite resolvers;
 
     protected MethodArgumentsProvider methodArgumentsProvider;
 
@@ -87,20 +84,13 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
         }
     }
 
-    @EventListener
-    void onInitialized(AppContextInitializedEvent event) {
-        if (resolvers == null) {
-            resolvers = new ContextArgumentResolverComposite(beanLocator);
-        }
-        methodArgumentsProvider = new MethodArgumentsProvider(resolvers);
-    }
-
-    public ContextArgumentResolverComposite getResolvers() {
+    public ArgumentResolverComposite getResolvers() {
         return resolvers;
     }
 
-    public void setResolvers(ContextArgumentResolverComposite resolvers) {
+    public void setResolvers(ArgumentResolverComposite resolvers) {
         this.resolvers = resolvers;
+        this.methodArgumentsProvider = new MethodArgumentsProvider(resolvers);
     }
 
     @Override
@@ -140,16 +130,28 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
 
     @Override
     public Collection<MetaProperty> getNamePatternProperties(MetaClass metaClass, boolean useOriginal) {
-        Collection<MetaProperty> properties;
-        properties = metaClass.getProperties().stream()
-                .filter(p -> p.getAnnotations().get(InstanceName.class.getName()) != null)
-                .collect(Collectors.toList());
+        Collection<MetaProperty> properties = getInstanceNameProperties(metaClass);
         if (properties.isEmpty() && useOriginal) {
             MetaClass original = extendedEntities.getOriginalMetaClass(metaClass);
             if (original != null) {
-                properties = original.getProperties().stream()
-                        .filter(p -> p.getAnnotations().get(InstanceName.class.getName()) != null)
-                        .collect(Collectors.toList());
+                properties = getInstanceNameProperties(original);
+            }
+        }
+        return properties;
+    }
+
+    private Collection<MetaProperty> getInstanceNameProperties(MetaClass metaClass) {
+        final Collection<MetaProperty> properties = new HashSet<>();
+        MetaProperty nameProperty = metaClass.getProperties().stream()
+                .filter(p -> p.getAnnotatedElement().getAnnotation(InstanceName.class) != null)
+                .findFirst().orElse(null);
+        if (nameProperty != null) {
+            properties.add(nameProperty);
+            String relatedPropertiesStr = nameProperty.getAnnotatedElement().getAnnotation(InstanceName.class).value();
+            if (StringUtils.isNotBlank(relatedPropertiesStr)) {
+                Arrays.stream(relatedPropertiesStr.split(","))
+                        .map(metaClass::getProperty)
+                        .forEach(properties::add);
             }
         }
         return properties;

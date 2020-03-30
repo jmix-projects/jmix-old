@@ -18,6 +18,7 @@ package io.jmix.core.impl.method;
 
 import io.jmix.core.BeanLocator;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
  */
 public class ContextArgumentResolverComposite extends CachedArgumentResolverComposite {
 
+    @Inject
     protected BeanLocator beanLocator;
 
     public ContextArgumentResolverComposite(BeanLocator beanLocator) {

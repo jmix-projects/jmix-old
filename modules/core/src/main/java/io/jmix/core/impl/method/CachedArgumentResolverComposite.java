@@ -28,61 +28,62 @@ import java.util.concurrent.ConcurrentHashMap;
  * {@link MethodArgumentResolver MethodArgumentResolvers}.
  * Previously resolved method parameters are cached for faster lookups.
  */
-public abstract class CachedArgumentResolverComposite implements MethodArgumentResolver {
+public abstract class CachedArgumentResolverComposite implements MethodArgumentResolver, ArgumentResolverComposite {
 
-	private final Map<MethodParameter, MethodArgumentResolver> argumentResolverCache =
-			new ConcurrentHashMap<>(256);
+    private final Map<MethodParameter, MethodArgumentResolver> argumentResolverCache =
+            new ConcurrentHashMap<>(256);
 
 
-	/**
-	 * Return a read-only list with the contained resolvers, or an empty list.
-	 */
-	public abstract List<MethodArgumentResolver> getResolvers();
+    /**
+     * Return a read-only list with the contained resolvers, or an empty list.
+     */
+    public abstract List<MethodArgumentResolver> getResolvers();
 
-	/**
-	 * Whether the given {@linkplain MethodParameter method parameter} is
-	 * supported by any registered {@link MethodArgumentResolver}.
-	 */
-	@Override
-	public boolean supportsParameter(MethodParameter parameter) {
-		return getArgumentResolver(parameter) != null;
-	}
+    /**
+     * Whether the given {@linkplain MethodParameter method parameter} is
+     * supported by any registered {@link MethodArgumentResolver}.
+     */
+    @Override
+    public boolean supportsParameter(MethodParameter parameter) {
+        return getArgumentResolver(parameter) != null;
+    }
 
-	/**
-	 * Iterate over registered
-	 * {@link MethodArgumentResolver MethodArgumentResolvers}
-	 * and invoke the one that supports it.
-	 * @throws IllegalArgumentException if no suitable argument resolver is found
-	 */
-	@Override
-	@Nullable
-	public Object resolveArgument(MethodParameter parameter) throws Exception {
+    /**
+     * Iterate over registered
+     * {@link MethodArgumentResolver MethodArgumentResolvers}
+     * and invoke the one that supports it.
+     *
+     * @throws IllegalArgumentException if no suitable argument resolver is found
+     */
+    @Override
+    @Nullable
+    public Object resolveArgument(MethodParameter parameter) throws Exception {
 
-		MethodArgumentResolver resolver = getArgumentResolver(parameter);
-		if (resolver == null) {
-			throw new IllegalArgumentException("Unsupported parameter type [" +
-					parameter.getParameterType().getName() + "]. supportsParameter should be called first.");
-		}
-		return resolver.resolveArgument(parameter);
-	}
+        MethodArgumentResolver resolver = getArgumentResolver(parameter);
+        if (resolver == null) {
+            throw new IllegalArgumentException("Unsupported parameter type [" +
+                    parameter.getParameterType().getName() + "]. supportsParameter should be called first.");
+        }
+        return resolver.resolveArgument(parameter);
+    }
 
-	/**
-	 * Find a registered {@link MethodArgumentResolver} that supports
-	 * the given method parameter.
-	 */
-	@Nullable
-	private MethodArgumentResolver getArgumentResolver(MethodParameter parameter) {
-		MethodArgumentResolver result = this.argumentResolverCache.get(parameter);
-		if (result == null) {
-			for (MethodArgumentResolver resolver : getResolvers()) {
-				if (resolver.supportsParameter(parameter)) {
-					result = resolver;
-					this.argumentResolverCache.put(parameter, result);
-					break;
-				}
-			}
-		}
-		return result;
-	}
+    /**
+     * Find a registered {@link MethodArgumentResolver} that supports
+     * the given method parameter.
+     */
+    @Nullable
+    private MethodArgumentResolver getArgumentResolver(MethodParameter parameter) {
+        MethodArgumentResolver result = this.argumentResolverCache.get(parameter);
+        if (result == null) {
+            for (MethodArgumentResolver resolver : getResolvers()) {
+                if (resolver.supportsParameter(parameter)) {
+                    result = resolver;
+                    this.argumentResolverCache.put(parameter, result);
+                    break;
+                }
+            }
+        }
+        return result;
+    }
 
 }

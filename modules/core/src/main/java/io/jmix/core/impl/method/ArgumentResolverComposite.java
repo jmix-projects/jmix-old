@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package io.jmix.core.metamodel.annotations;
+package io.jmix.core.impl.method;
 
-import io.jmix.core.entity.annotation.MetaAnnotation;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.List;
 
 /**
+ * Strategy interface to Resolves method parameters by delegating to a list of registered
+ * {@link MethodArgumentResolver MethodArgumentResolvers}.
  */
-@Target({java.lang.annotation.ElementType.METHOD, java.lang.annotation.ElementType.FIELD})
-@Retention(RetentionPolicy.RUNTIME)
-@MetaAnnotation
-public @interface InstanceName {
+public interface ArgumentResolverComposite extends MethodArgumentResolver {
 
-    String value() default "";
+    /**
+     * Return a read-only list with the contained resolvers, or an empty list.
+     */
+    List<MethodArgumentResolver> getResolvers();
 }

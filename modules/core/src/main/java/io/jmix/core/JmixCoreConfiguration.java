@@ -19,7 +19,9 @@ package io.jmix.core;
 import io.jmix.core.annotation.JmixModule;
 import io.jmix.core.annotation.JmixProperty;
 import io.jmix.core.compatibility.AppContext;
+import io.jmix.core.impl.InstanceNameProviderImpl;
 import io.jmix.core.impl.JmixMessageSource;
+import io.jmix.core.impl.method.ContextArgumentResolverComposite;
 import io.jmix.core.security.JmixCoreSecurityConfiguration;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
@@ -63,6 +65,13 @@ public class JmixCoreConfiguration {
     @Bean
     public MessageSource messageSource(JmixModules modules, Resources resources) {
         return new JmixMessageSource(modules, resources);
+    }
+
+    @Bean(InstanceNameProvider.NAME)
+    public InstanceNameProvider instanceNameProvider(BeanLocator beanLocator) {
+        InstanceNameProviderImpl instanceNameProvider = new InstanceNameProviderImpl();
+        instanceNameProvider.setResolvers(new ContextArgumentResolverComposite(beanLocator));
+        return instanceNameProvider;
     }
 
     @EventListener
