@@ -36,7 +36,7 @@ entitiesEnhancing {
 }
 
 jar {
-    archivesBaseName = 'jmix-ui-settings'
+    archivesBaseName = 'jmix-ui-persistence'
 }
 
 task sourcesJar(type: Jar) {
@@ -47,8 +47,8 @@ task sourcesJar(type: Jar) {
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            groupId = 'io.jmix.ui.settings'
-            artifactId = 'jmix-ui-settings'
+            groupId = 'io.jmix.ui.persistence'
+            artifactId = 'jmix-ui-persistence'
 
             from components.java
             artifact sourcesJar

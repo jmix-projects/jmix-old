@@ -40,6 +40,7 @@ dependencies {
         api "io.jmix.remoting:jmix-remoting:$jmixVersion"
         api "io.jmix.security:jmix-security:$jmixVersion"
         api "io.jmix.ui:jmx-ui:$jmixVersion"
+        api "io.jmix.ui:jmx-ui-persistence:$jmixVersion"
         api "io.jmix.ui-themes:jmix-ui-themes:$jmixVersion"
         api "io.jmix.ui-themes-compiled:jmix-ui-themes-compiled:$jmixVersion"
         api "io.jmix.ui-widgets:jmix-ui-widgets:$jmixVersion"
