@@ -19,10 +19,19 @@ package io.jmix.ui.settings;
 import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.core.annotation.JmixModule;
 import io.jmix.ui.JmixUiConfiguration;
+import io.jmix.ui.settings.web.UserSettingServiceBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ComponentScan
 @JmixModule(dependsOn = {JmixCoreConfiguration.class, JmixUiConfiguration.class})
 public class JmixUiSettingsConfiguration {
+
+    @Bean(UserSettingService.NAME)
+    public UserSettingService userSettingService() {
+        return new UserSettingServiceBean();
+    }
 }
 

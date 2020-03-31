@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2016 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,12 +12,10 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package io.jmix.ui.settings;
 
-import io.jmix.security.entity.User;
-import io.jmix.ui.settings.entity.ClientType;
+import io.jmix.core.ClientType;
 
 import javax.annotation.Nullable;
 import java.util.Set;
@@ -48,7 +46,8 @@ public interface UserSettingService {
     void deleteSettings(ClientType clientType, String name);
 
     /** Copy user settings to another user */
-    void copySettings(User fromUser, User toUser);
+    // todo User non-entity
+   /* void copySettings(User fromUser, User toUser);*/
 
     /**
      * Delete settings of screens (settings of tables, filters etc) for the current user.

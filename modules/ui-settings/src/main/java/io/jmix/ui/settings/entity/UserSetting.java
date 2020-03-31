@@ -19,7 +19,6 @@ package io.jmix.ui.settings.entity;
 import io.jmix.core.entity.Creatable;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.data.entity.BaseUuidEntity;
-//import io.jmix.security.entity.User;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,8 +27,8 @@ import java.util.Date;
  * Record for user setting.
  * Used by <code>UserSettingServiceBean</code>.
  */
-@Entity(name = "sec$UserSetting")
-@Table(name = "SEC_USER_SETTING")
+@Entity(name = "ui_UserSetting")
+@Table(name = "UI_USER_SETTING")
 @SystemLevel
 public class UserSetting extends BaseUuidEntity implements Creatable {
 
@@ -46,7 +45,7 @@ public class UserSetting extends BaseUuidEntity implements Creatable {
 //    @JoinColumn(name = "USER_ID")
 //    private User user;
 
-    @Column(name = "CLIENT_TYPE", length = 1)
+    @Column(name = "CLIENT_TYPE", length = 10)
     private String clientType;
 
     @Column(name = "NAME", length = 255)
@@ -84,12 +83,12 @@ public class UserSetting extends BaseUuidEntity implements Creatable {
 //        this.user = user;
 //    }
 
-    public ClientType getClientType() {
-        return ClientType.fromId(clientType);
+    public String getClientType() {
+        return clientType;
     }
 
-    public void setClientType(ClientType clientType) {
-        this.clientType = clientType == null ? null : clientType.getId();
+    public void setClientType(String clientType) {
+        this.clientType = clientType;
     }
 
     public String getName() {

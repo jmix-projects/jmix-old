@@ -14,27 +14,23 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings;
+package io.jmix.ui.settings.impl;
 
+import io.jmix.core.ClientType;
 import io.jmix.core.Metadata;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
-import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.security.Security;
 import io.jmix.core.security.UserSessionSource;
-import io.jmix.security.entity.User;
-import io.jmix.ui.settings.entity.ClientType;
+import io.jmix.ui.settings.UserSettingsManager;
 import io.jmix.ui.settings.entity.UserSetting;
-import org.dom4j.Attribute;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Set;
 
-@Service(UserSettingService.NAME)
-public class UserSettingServiceBean implements UserSettingService {
+@Component(UserSettingsManager.NAME)
+public class UserSettingsManagerImpl implements UserSettingsManager {
 
 //    @Inject
 //    protected Persistence persistence;
@@ -105,75 +101,75 @@ public class UserSettingServiceBean implements UserSettingService {
             tx.commit();
         }*/
     }
+    /*
+        @Override
+        public void copySettings(User fromUser, User toUser) {
+           MetaClass metaClass = metadata.getClassNN(UserSetting.class);
 
-    @Override
-    public void copySettings(User fromUser, User toUser) {
-   /*     MetaClass metaClass = metadata.getClassNN(UserSetting.class);
+            if (!security.isEntityOpPermitted(metaClass, EntityOp.CREATE)) {
+                throw new AccessDeniedException(PermissionType.ENTITY_OP, metaClass.getName());
+            }
 
-        if (!security.isEntityOpPermitted(metaClass, EntityOp.CREATE)) {
-            throw new AccessDeniedException(PermissionType.ENTITY_OP, metaClass.getName());
-        }
+            Map<UUID, Presentation> presentationsMap = copyPresentations(fromUser, toUser);
+            copyUserFolders(fromUser, toUser, presentationsMap);
+            Map<UUID, FilterEntity> filtersMap = copyFilters(fromUser, toUser);
 
-        Map<UUID, Presentation> presentationsMap = copyPresentations(fromUser, toUser);
-        copyUserFolders(fromUser, toUser, presentationsMap);
-        Map<UUID, FilterEntity> filtersMap = copyFilters(fromUser, toUser);
+            try (Transaction tx = persistence.createTransaction()) {
+                EntityManager em = persistence.getEntityManager();
 
-        try (Transaction tx = persistence.createTransaction()) {
-            EntityManager em = persistence.getEntityManager();
+                Query deleteSettingsQuery = em.createQuery("delete from sec$UserSetting s where s.user.id = ?1");
+                deleteSettingsQuery.setParameter(1, toUser.getId());
+                deleteSettingsQuery.executeUpdate();
+                tx.commitRetaining();
+                em = persistence.getEntityManager();
 
-            Query deleteSettingsQuery = em.createQuery("delete from sec$UserSetting s where s.user.id = ?1");
-            deleteSettingsQuery.setParameter(1, toUser.getId());
-            deleteSettingsQuery.executeUpdate();
-            tx.commitRetaining();
-            em = persistence.getEntityManager();
+                TypedQuery<UserSetting> q = em.createQuery("select s from sec$UserSetting s where s.user.id = ?1", UserSetting.class);
+                q.setParameter(1, fromUser.getId());
+                List<UserSetting> fromUserSettings = q.getResultList();
 
-            TypedQuery<UserSetting> q = em.createQuery("select s from sec$UserSetting s where s.user.id = ?1", UserSetting.class);
-            q.setParameter(1, fromUser.getId());
-            List<UserSetting> fromUserSettings = q.getResultList();
+                for (UserSetting currSetting : fromUserSettings) {
+                    UserSetting newSetting = metadata.create(UserSetting.class);
+                    newSetting.setUser(toUser);
+                    newSetting.setClientType(currSetting.getClientType());
+                    newSetting.setName(currSetting.getName());
 
-            for (UserSetting currSetting : fromUserSettings) {
-                UserSetting newSetting = metadata.create(UserSetting.class);
-                newSetting.setUser(toUser);
-                newSetting.setClientType(currSetting.getClientType());
-                newSetting.setName(currSetting.getName());
+                    try {
+                        Document doc = dom4JTools.readDocument(currSetting.getValue());
 
-                try {
-                    Document doc = dom4JTools.readDocument(currSetting.getValue());
-
-                    List<Element> components = doc.getRootElement().element("components").elements("component");
-                    for (Element component : components) {
-                        Attribute presentationAttr = component.attribute("presentation");
-                        if (presentationAttr != null) {
-                            UUID presentationId = UuidProvider.fromString(presentationAttr.getValue());
-                            Presentation newPresentation = presentationsMap.get(presentationId);
-                            if (newPresentation != null) {
-                                presentationAttr.setValue(newPresentation.getId().toString());
+                        List<Element> components = doc.getRootElement().element("components").elements("component");
+                        for (Element component : components) {
+                            Attribute presentationAttr = component.attribute("presentation");
+                            if (presentationAttr != null) {
+                                UUID presentationId = UuidProvider.fromString(presentationAttr.getValue());
+                                Presentation newPresentation = presentationsMap.get(presentationId);
+                                if (newPresentation != null) {
+                                    presentationAttr.setValue(newPresentation.getId().toString());
+                                }
                             }
-                        }
-                        Element defaultFilterEl = component.element("defaultFilter");
-                        if (defaultFilterEl != null) {
-                            Attribute idAttr = defaultFilterEl.attribute("id");
-                            if (idAttr != null) {
-                                UUID filterId = UuidProvider.fromString(idAttr.getValue());
-                                FilterEntity newFilter = filtersMap.get(filterId);
-                                if (newFilter != null) {
-                                    idAttr.setValue(newFilter.getId().toString());
+                            Element defaultFilterEl = component.element("defaultFilter");
+                            if (defaultFilterEl != null) {
+                                Attribute idAttr = defaultFilterEl.attribute("id");
+                                if (idAttr != null) {
+                                    UUID filterId = UuidProvider.fromString(idAttr.getValue());
+                                    FilterEntity newFilter = filtersMap.get(filterId);
+                                    if (newFilter != null) {
+                                        idAttr.setValue(newFilter.getId().toString());
+                                    }
                                 }
                             }
                         }
+
+                        newSetting.setValue(dom4JTools.writeDocument(doc, true));
+                    } catch (Exception e) {
+                        newSetting.setValue(currSetting.getValue());
                     }
-
-                    newSetting.setValue(dom4JTools.writeDocument(doc, true));
-                } catch (Exception e) {
-                    newSetting.setValue(currSetting.getValue());
+                    em.persist(newSetting);
                 }
-                em.persist(newSetting);
+
+                tx.commit();
             }
-
-            tx.commit();
-        }*/
-    }
-
+        }
+    */
     @Override
     public void deleteScreenSettings(ClientType clientType, Set<String> screens) {
      /*   try (Transaction tx = persistence.createTransaction()) {

@@ -18,6 +18,8 @@ package io.jmix.core;
 
 public class ClientType {
 
+    public static final ClientType WEB = new ClientType("WEB");
+
     protected final String name;
 
     public ClientType(String name) {

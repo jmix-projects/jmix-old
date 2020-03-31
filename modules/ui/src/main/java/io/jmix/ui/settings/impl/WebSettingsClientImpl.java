@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings;
+package io.jmix.ui.settings.impl;
 
 import com.vaadin.server.VaadinSession;
+import io.jmix.core.ClientType;
 import io.jmix.ui.executors.IllegalConcurrentAccessException;
-import io.jmix.ui.settings.entity.ClientType;
+import io.jmix.ui.settings.SettingsClient;
+import io.jmix.ui.settings.UserSettingService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -31,7 +33,7 @@ import java.util.Optional;
  * User settings provider for web application. Caches settings in HTTP session.
  */
 @Component(SettingsClient.NAME)
-public class WebSettingsClient implements SettingsClient {
+public class WebSettingsClientImpl implements SettingsClient {
 
     @Inject
     protected UserSettingService userSettingService;
@@ -47,7 +49,7 @@ public class WebSettingsClient implements SettingsClient {
         String setting = userSettingService.loadSetting(ClientType.WEB, name);
         settings.put(name, Optional.ofNullable(setting));
 
-        return "";
+        return setting;
     }
 
     @Override
