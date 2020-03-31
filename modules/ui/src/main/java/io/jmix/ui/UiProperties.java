@@ -45,6 +45,7 @@ public class UiProperties {
     String pickerLookupShortcut;
     String pickerOpenShortcut;
     String pickerClearShortcut;
+    String appWindowMode;
     boolean useSaveConfirmation;
     boolean layoutAnalyzerEnabled;
     boolean manualScreenSettingsSaving;
@@ -89,6 +90,7 @@ public class UiProperties {
             @DefaultValue("CTRL-ALT-L") String pickerLookupShortcut,
             @DefaultValue("CTRL-ALT-O") String pickerOpenShortcut,
             @DefaultValue("CTRL-ALT-C") String pickerClearShortcut,
+            @DefaultValue("TABBED") String appWindowMode,
             @DefaultValue("true") boolean useSaveConfirmation,
             @DefaultValue("true") boolean layoutAnalyzerEnabled,
             boolean manualScreenSettingsSaving,
@@ -132,6 +134,7 @@ public class UiProperties {
         this.pickerLookupShortcut = pickerLookupShortcut;
         this.pickerOpenShortcut = pickerOpenShortcut;
         this.pickerClearShortcut = pickerClearShortcut;
+        this.appWindowMode = appWindowMode;
         this.useSaveConfirmation = useSaveConfirmation;
         this.layoutAnalyzerEnabled = layoutAnalyzerEnabled;
         this.manualScreenSettingsSaving = manualScreenSettingsSaving;
@@ -228,6 +231,14 @@ public class UiProperties {
 
     public String getPickerClearShortcut() {
         return pickerClearShortcut;
+    }
+
+    /**
+     * @return Default main window mode. Takes place until the user did not change its own preference through user
+     * settings.
+     */
+    public String getAppWindowMode() {
+        return appWindowMode;
     }
 
     public boolean isUseSaveConfirmation() {

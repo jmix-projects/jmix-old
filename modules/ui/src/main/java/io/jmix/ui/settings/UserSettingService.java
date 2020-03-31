@@ -28,7 +28,7 @@ import java.util.Set;
  */
 public interface UserSettingService {
 
-    String NAME = "cuba_UserSettingService";
+    String NAME = "jmix_UserSettingService";
 
     /** Load settings for the current user and null client type. Returns null if no such setting found. */
     String loadSetting(String name);

@@ -16,11 +16,16 @@
 
 package io.jmix.ui.sys;
 
-import io.jmix.ui.ScreenTools;
-import io.jmix.ui.Screens;
+import io.jmix.core.Entity;
+import io.jmix.core.Metadata;
+import io.jmix.ui.*;
+import io.jmix.ui.navigation.EditorTypeExtractor;
+import io.jmix.ui.settings.UserSettingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import javax.inject.Inject;
 
 @Component(ScreenTools.NAME)
 public class WebScreenTools implements ScreenTools {
@@ -28,17 +33,19 @@ public class WebScreenTools implements ScreenTools {
     private static final Logger log = LoggerFactory.getLogger(WebScreenTools.class);
 
     /*@Inject
-    protected WebConfig webConfig;
+    protected WebConfig webConfig;*/
+    @Inject
+    protected UiProperties uiProperties;
     @Inject
     protected Metadata metadata;
     @Inject
     protected WindowConfig windowConfig;
     @Inject
-    protected UserSettingService userSettingService;*/
+    protected UserSettingService userSettingService;
 
     @Override
     public void openDefaultScreen(Screens screens) {
-        // todo settings
+        // todo db properties
         /*String defaultScreenId = webConfig.getDefaultScreenId();
 
         if (webConfig.getUserCanChooseDefaultScreen()) {
@@ -76,12 +83,13 @@ public class WebScreenTools implements ScreenTools {
         }
         webWindow.setDefaultScreenWindow(true);
 
-        if (!webConfig.getDefaultScreenCanBeClosed()) {
+        if (!uiProperties.isDefaultScreenCanBeClosed()) {
             window.setCloseable(false);
-        }*/
+        }
+        */
     }
 
-    /*protected Entity getEntityToEdit(String screenId) {
+    protected Entity getEntityToEdit(String screenId) {
         WindowInfo windowInfo = windowConfig.getWindowInfo(screenId);
         Class<? extends Entity> entityClass = EditorTypeExtractor.extractEntityClass(windowInfo);
 
@@ -92,5 +100,5 @@ public class WebScreenTools implements ScreenTools {
         }
 
         return metadata.create(entityClass);
-    }*/
+    }
 }
