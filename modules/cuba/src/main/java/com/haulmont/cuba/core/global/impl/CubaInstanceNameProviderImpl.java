@@ -73,7 +73,7 @@ public class CubaInstanceNameProviderImpl extends InstanceNameProviderImpl {
      * @return collection of the name pattern properties
      */
     @Nonnull
-    public Collection<MetaProperty> getNamePatternProperties(MetaClass metaClass, boolean useOriginal) {
+    public Collection<MetaProperty> getInstanceNameRelatedProperties(MetaClass metaClass, boolean useOriginal) {
         Collection<MetaProperty> properties = new ArrayList<>();
         String pattern = (String) metadataTools.getMetaAnnotationAttributes(metaClass.getAnnotations(), NamePattern.class).get("value");
         if (pattern == null && useOriginal) {

@@ -38,7 +38,7 @@ public class Address implements Entity<Object> {
     @Column(name = "ZIP", length = 10)
     protected String zip;
 
-    @InstanceName
+    @InstanceName(relatedProperties = {"city","zip"})
     public String getName(Locale locale) {
         if (LocaleUtils.toLocale("ru").equals(locale))
             return "Город: " + city + ", индекс: " + zip;

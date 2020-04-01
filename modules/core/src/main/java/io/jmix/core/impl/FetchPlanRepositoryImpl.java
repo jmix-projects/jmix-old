@@ -321,7 +321,7 @@ public class FetchPlanRepositoryImpl implements FetchPlanRepository {
     }
 
     protected void addAttributesToMinimalView(MetaClass metaClass, FetchPlan view, ViewInfo info, Set<ViewInfo> visited) {
-        Collection<MetaProperty> metaProperties = metadataTools.getNamePatternProperties(metaClass, true);
+        Collection<MetaProperty> metaProperties = metadataTools.getInstanceNameRelatedProperties(metaClass, true);
         for (MetaProperty metaProperty : metaProperties) {
             if (metadataTools.isPersistent(metaProperty)) {
                 addPersistentAttributeToMinimalView(metaClass, visited, info, view, metaProperty);

@@ -46,5 +46,5 @@ public interface InstanceNameProvider {
      *                    extended entity, this method tries to find a name pattern in an original entity
      * @return collection of the name pattern properties
      */
-    Collection<MetaProperty> getNamePatternProperties(MetaClass metaClass, boolean useOriginal);
+    Collection<MetaProperty> getInstanceNameRelatedProperties(MetaClass metaClass, boolean useOriginal);
 }

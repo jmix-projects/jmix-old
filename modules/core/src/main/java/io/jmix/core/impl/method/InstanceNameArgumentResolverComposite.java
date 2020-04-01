@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,13 @@
  * limitations under the License.
  */
 
-package io.jmix.core.metamodel.annotations;
+package io.jmix.core.impl.method;
 
-import io.jmix.core.entity.annotation.MetaAnnotation;
+import org.springframework.stereotype.Component;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.List;
+@Component(InstanceNameArgumentResolverComposite.NAME)
+public class InstanceNameArgumentResolverComposite extends ContextArgumentResolverComposite<MethodArgumentResolver> {
 
-/**
- */
-@Target({java.lang.annotation.ElementType.METHOD, java.lang.annotation.ElementType.FIELD})
-@Retention(RetentionPolicy.RUNTIME)
-@MetaAnnotation
-public @interface InstanceName {
+    public static final String NAME = "jmix_ContextArgumentResolverComposite";
 
-    String[] relatedProperties() default {};
 }

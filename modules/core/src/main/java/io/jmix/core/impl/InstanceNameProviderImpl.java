@@ -19,13 +19,13 @@ package io.jmix.core.impl;
 import io.jmix.core.*;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.impl.method.ArgumentResolverComposite;
+import io.jmix.core.impl.method.InstanceNameArgumentResolverComposite;
 import io.jmix.core.impl.method.MethodArgumentsProvider;
 import io.jmix.core.metamodel.annotations.InstanceName;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.UserSessionSource;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -34,6 +34,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
@@ -59,7 +61,7 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
     @Inject
     protected MetadataTools metadataTools;
 
-    protected ArgumentResolverComposite resolvers;
+    protected InstanceNameArgumentResolverComposite resolvers;
 
     protected MethodArgumentsProvider methodArgumentsProvider;
 
@@ -88,7 +90,8 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
         return resolvers;
     }
 
-    public void setResolvers(ArgumentResolverComposite resolvers) {
+    @Inject
+    public void setResolvers(InstanceNameArgumentResolverComposite resolvers) {
         this.resolvers = resolvers;
         this.methodArgumentsProvider = new MethodArgumentsProvider(resolvers);
     }
@@ -129,7 +132,7 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
     }
 
     @Override
-    public Collection<MetaProperty> getNamePatternProperties(MetaClass metaClass, boolean useOriginal) {
+    public Collection<MetaProperty> getInstanceNameRelatedProperties(MetaClass metaClass, boolean useOriginal) {
         Collection<MetaProperty> properties = getInstanceNameProperties(metaClass);
         if (properties.isEmpty() && useOriginal) {
             MetaClass original = extendedEntities.getOriginalMetaClass(metaClass);
@@ -142,34 +145,48 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
 
     private Collection<MetaProperty> getInstanceNameProperties(MetaClass metaClass) {
         final Collection<MetaProperty> properties = new HashSet<>();
-        MetaProperty nameProperty = metaClass.getProperties().stream()
-                .filter(p -> p.getAnnotatedElement().getAnnotation(InstanceName.class) != null)
-                .findFirst().orElse(null);
+        Method nameMethod = getInstanceNameMethod(metaClass);
+        if (nameMethod != null) {
+            return getPropertiesFromAnnotation(metaClass, nameMethod.getAnnotation(InstanceName.class));
+        }
+        MetaProperty nameProperty = getInstanceNameProperty(metaClass);
         if (nameProperty != null) {
             properties.add(nameProperty);
-            String relatedPropertiesStr = nameProperty.getAnnotatedElement().getAnnotation(InstanceName.class).value();
-            if (StringUtils.isNotBlank(relatedPropertiesStr)) {
-                Arrays.stream(relatedPropertiesStr.split(","))
-                        .map(metaClass::getProperty)
-                        .forEach(properties::add);
-            }
+            InstanceName annotation = nameProperty.getAnnotatedElement().getAnnotation(InstanceName.class);
+            properties.addAll(getPropertiesFromAnnotation(metaClass, annotation));
         }
         return properties;
     }
 
     @Nullable
-    public NamePatternRec parseNamePattern(MetaClass metaClass) {
-        MetaProperty nameProperty = metaClass.getProperties().stream()
+    private MetaProperty getInstanceNameProperty(MetaClass metaClass) {
+        return metaClass.getProperties().stream()
                 .filter(p -> p.getAnnotatedElement().getAnnotation(InstanceName.class) != null)
                 .findFirst().orElse(null);
+    }
+
+    @Nullable
+    private Method getInstanceNameMethod(MetaClass metaClass) {
+        return Stream.of(metaClass.getJavaClass().getDeclaredMethods())
+                .filter(m -> m.isAnnotationPresent(InstanceName.class))
+                .findFirst().orElse(null);
+    }
+
+    private List<MetaProperty> getPropertiesFromAnnotation(MetaClass metaClass, InstanceName annotation) {
+        return Arrays.stream(annotation.relatedProperties())
+                .map(metaClass::getProperty)
+                .collect(Collectors.toList());
+    }
+
+    @Nullable
+    public NamePatternRec parseNamePattern(MetaClass metaClass) {
+        MetaProperty nameProperty = getInstanceNameProperty(metaClass);
 
         if (nameProperty != null) {
             return new NamePatternRec("%s", null, new String[]{nameProperty.getName()});
         }
 
-        Method nameMethod = Stream.of(metaClass.getJavaClass().getDeclaredMethods())
-                .filter(m -> m.isAnnotationPresent(InstanceName.class))
-                .findFirst().orElse(null);
+        Method nameMethod = getInstanceNameMethod(metaClass);
 
         if (nameMethod != null) {
             return new NamePatternRec("%s", nameMethod.getName(), new String[]{});

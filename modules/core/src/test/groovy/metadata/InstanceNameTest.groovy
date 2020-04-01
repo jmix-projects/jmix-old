@@ -33,6 +33,7 @@ import test_support.app.entity.Address
 import test_support.app.entity.Owner
 
 import javax.inject.Inject
+import java.util.stream.Collectors
 
 @ContextConfiguration(classes = [JmixCoreConfiguration, TestAddon1Configuration, TestAppConfiguration])
 @TestExecutionListeners(value = AppContextTestExecutionListener,
@@ -72,6 +73,9 @@ class InstanceNameTest extends Specification {
         expect:
 
         instanceNameProvider.getInstanceName(address) == "Город: Samara, индекс: 443011"
+        instanceNameProvider.getInstanceNameRelatedProperties(metadata.getClass(Address),true).stream()
+                .map{p->p.getName()}
+                .collect(Collectors.toSet()) == ["city", "zip"] as Set
     }
 
     def "instance name property"() {
@@ -82,5 +86,8 @@ class InstanceNameTest extends Specification {
         expect:
 
         instanceNameProvider.getInstanceName(owner) == "John"
+        instanceNameProvider.getInstanceNameRelatedProperties(metadata.getClass(Owner),true).stream()
+                .map{p->p.getName()}
+                .collect(Collectors.toSet()) == ["name"] as Set
     }
 }

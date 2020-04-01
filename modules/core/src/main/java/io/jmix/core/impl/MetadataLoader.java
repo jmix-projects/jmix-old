@@ -107,16 +107,16 @@ public class MetadataLoader {
                 .filter(p -> p.getAnnotatedElement().getAnnotation(InstanceName.class) != null)
                 .collect(Collectors.toList());
         if (instanceNameMethods.size() > 1) {
-            log.warn("Multiple @InstanceName annotated methods found in {} class, for instance name will be used method {}",
+            log.warn("Multiple @InstanceName annotated methods found in {} class, method {} will be used for instance name",
                     metaClass.getName(),
                     instanceNameMethods.get(0));
         } else if (instanceNameMethods.size() == 1 && !nameProperties.isEmpty()) {
-            log.warn("@InstanceName annotated method and @InstanceName annotated properties found in {} class, f" +
-                            "or instance name will be used method {}",
+            log.warn("@InstanceName annotated method and @InstanceName annotated properties found in {} class, " +
+                            "method {} will be used for instance name",
                     metaClass.getName(),
                     instanceNameMethods.get(0));
         } else if (nameProperties.size() > 1) {
-            log.warn("Multiple @InstanceName annotated properties found in {} class, for instance name will be used property {}",
+            log.warn("Multiple @InstanceName annotated properties found in {} class, property {} will be used for instance name",
                     metaClass.getName(),
                     nameProperties.get(0));
         }

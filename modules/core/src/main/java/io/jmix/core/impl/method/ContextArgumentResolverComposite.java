@@ -16,10 +16,7 @@
 
 package io.jmix.core.impl.method;
 
-import io.jmix.core.BeanLocator;
-
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,20 +25,16 @@ import java.util.List;
  * {@link MethodArgumentResolver MethodArgumentResolvers}.
  * Previously resolved method parameters are cached for faster lookups.
  */
-public class ContextArgumentResolverComposite extends CachedArgumentResolverComposite {
+public class ContextArgumentResolverComposite<T extends MethodArgumentResolver> extends CachedArgumentResolverComposite {
 
     @Inject
-    protected BeanLocator beanLocator;
-
-    public ContextArgumentResolverComposite(BeanLocator beanLocator) {
-        this.beanLocator = beanLocator;
-    }
+    protected List<T> resolvers;
 
     /**
      * Return a read-only list with the contained resolvers, or an empty list.
      */
     public List<MethodArgumentResolver> getResolvers() {
-        return Collections.unmodifiableList(new ArrayList<>(beanLocator.getAll(MethodArgumentResolver.class).values()));
+        return Collections.unmodifiableList(resolvers);
     }
 
 }

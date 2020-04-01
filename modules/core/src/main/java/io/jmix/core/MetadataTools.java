@@ -573,8 +573,8 @@ public class MetadataTools {
      * @return collection of the name pattern properties
      */
     @Nonnull
-    public Collection<MetaProperty> getNamePatternProperties(MetaClass metaClass) {
-        return getNamePatternProperties(metaClass, false);
+    public Collection<MetaProperty> getInstanceNameRelatedProperties(MetaClass metaClass) {
+        return getInstanceNameRelatedProperties(metaClass, false);
     }
 
     /**
@@ -586,10 +586,9 @@ public class MetadataTools {
      * @return collection of the name pattern properties
      */
 
-    //TODO is this method still required?
     @Nonnull
-    public Collection<MetaProperty> getNamePatternProperties(MetaClass metaClass, boolean useOriginal) {
-        return instanceNameProvider.getNamePatternProperties(metaClass,useOriginal);
+    public Collection<MetaProperty> getInstanceNameRelatedProperties(MetaClass metaClass, boolean useOriginal) {
+        return instanceNameProvider.getInstanceNameRelatedProperties(metaClass,useOriginal);
     }
 
     /**
