@@ -15,6 +15,7 @@
  */
 package io.jmix.ui.settings;
 
+import io.jmix.ui.screen.Screen;
 import org.dom4j.Element;
 
 import javax.annotation.Nonnull;
@@ -23,8 +24,7 @@ import javax.annotation.Nonnull;
  * Interface defining methods for working with screen settings.
  * <p>Screen settings are saved in the database for the current user.
  *
- * @see io.jmix.ui.components.AbstractWindow#getSettings()
- * @see io.jmix.ui.components.AbstractWindow#applySettings(Settings)
+ * @see Screen
  */
 public interface Settings {
 

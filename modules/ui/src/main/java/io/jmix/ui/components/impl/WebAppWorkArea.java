@@ -31,6 +31,7 @@ import io.jmix.ui.Screens.WindowStack;
 import io.jmix.ui.components.*;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.Screen;
+import io.jmix.ui.settings.UserSettingsTools;
 import io.jmix.ui.util.OperationResult;
 import io.jmix.ui.widgets.*;
 import org.apache.commons.lang3.StringUtils;
@@ -90,9 +91,8 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
 
         this.tabbedContainer = createTabbedModeContainer();
 
-        // todo settings
-        /*UserSettingsTools userSettingsTools = beanLocator.get(UserSettingsTools.NAME);
-        setMode(userSettingsTools.loadAppWindowMode());*/
+        UserSettingsTools userSettingsTools = beanLocator.get(UserSettingsTools.NAME);
+        setMode(userSettingsTools.loadAppWindowMode());
     }
 
     @Override

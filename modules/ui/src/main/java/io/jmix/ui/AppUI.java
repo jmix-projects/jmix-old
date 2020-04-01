@@ -38,6 +38,7 @@ import io.jmix.ui.events.UIRefreshEvent;
 import io.jmix.ui.exception.UiExceptionHandler;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.navigation.*;
+import io.jmix.ui.settings.UserSettingsTools;
 import io.jmix.ui.sys.*;
 import io.jmix.ui.sys.events.UiEventsMulticaster;
 import io.jmix.ui.theme.ThemeConstantsRepository;
@@ -79,8 +80,8 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     @Inject
     protected UiProperties properties;
 
-//    @Inject
-//    protected UserSettingsTools userSettingsTools; todo settings
+    @Inject
+    protected UserSettingsTools userSettingsTools;
     @Inject
     protected ThemeConstantsRepository themeConstantsRepository;
 
@@ -673,8 +674,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
 
         if (userSession.isAuthenticated()) {
             // load theme from user settings
-            // todo settings
-            /*String themeName = userSettingsTools.loadAppWindowTheme();
+            String themeName = userSettingsTools.loadAppWindowTheme();
 
             if (!Objects.equals(themeName, getTheme())) {
                 // check theme support
@@ -683,7 +683,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
                     app.applyTheme(themeName);
                     setTheme(themeName);
                 }
-            }*/
+            }
         }
     }
 

@@ -47,6 +47,8 @@ import io.jmix.ui.model.impl.ScreenDataImpl;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.screen.Screen.*;
 import io.jmix.ui.screen.compatibility.CubaLegacyFrame;
+import io.jmix.ui.settings.Settings;
+import io.jmix.ui.settings.SettingsImpl;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.util.OperationResult;
 import io.jmix.ui.util.UnknownOperationResult;
@@ -505,10 +507,12 @@ public class WebScreens implements Screens {
     protected void afterShowWindow(Screen screen) {
         WindowContext windowContext = screen.getWindow().getContext();
 
-        // todo settings
+        // TODO: legacy-ui
         /*if (!WindowParams.DISABLE_APPLY_SETTINGS.getBool(windowContext)) {
             applySettings(screen, getSettingsImpl(screen.getId()));
         }*/
+
+        applySettings(screen, getSettingsImpl(screen.getId()));
 
         /*
         TODO: legacy-ui
@@ -528,10 +532,9 @@ public class WebScreens implements Screens {
         }*/
     }
 
-    // todo settings
-    /*protected Settings getSettingsImpl(String id) {
+    protected Settings getSettingsImpl(String id) {
         return new SettingsImpl(id);
-    }*/
+    }
 
     @Override
     public void remove(Screen screen) {
@@ -1073,14 +1076,13 @@ public class WebScreens implements Screens {
     }
 
     public void saveScreenSettings() {
-        // todo settings
-        /*Screen rootScreen = getOpenedScreens().getRootScreen();
+        Screen rootScreen = getOpenedScreens().getRootScreen();
 
         saveSettings(rootScreen);
 
         getOpenedWorkAreaScreensStream().forEach(UiControllerUtils::saveSettings);
 
-        getDialogScreensStream().forEach(UiControllerUtils::saveSettings);*/
+        getDialogScreensStream().forEach(UiControllerUtils::saveSettings);
     }
 
     // used only for legacy screens

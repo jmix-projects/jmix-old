@@ -37,6 +37,8 @@ import io.jmix.ui.logging.AppLog;
 import io.jmix.ui.screen.OpenMode;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.settings.SettingsClient;
+import io.jmix.ui.settings.impl.WebSettingsClientImpl;
 import io.jmix.ui.sys.*;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsRepository;
@@ -97,8 +99,8 @@ public abstract class App {
     protected UserSessionSource userSessionSource;
     @Inject
     protected MessageTools messageTools;
-    /*@Inject
-    protected SettingsClient settingsClient;*/ // todo settings
+    @Inject
+    protected SettingsClient settingsClient;
 
     @Inject
     protected Events events;
@@ -535,7 +537,7 @@ public abstract class App {
     }
 
     protected void clearSettingsCache() {
-        // ((WebSettingsClient) settingsClient).clearCache(); todo settings
+        ((WebSettingsClientImpl) settingsClient).clearCache();
     }
 
     /**
@@ -606,7 +608,7 @@ public abstract class App {
 //        todo implement
 //        ((WebScreens) ui.getScreens()).saveScreenHistory();
 //
-//        ((WebScreens) ui.getScreens()).saveScreenSettings();
+        ((WebScreens) ui.getScreens()).saveScreenSettings();
 
         forceLogout();
     }

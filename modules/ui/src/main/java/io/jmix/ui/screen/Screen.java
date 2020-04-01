@@ -324,10 +324,9 @@ public abstract class Screen implements FrameOwner {
             return OperationResult.fail();
         }
 
-        // todo save settings right before removing
-        /*if (isSaveSettingsOnClose(action)) {
+        if (isSaveSettingsOnClose(action)) {
             saveSettings();
-        }*/
+        }
 
         // todo history
         /*if (isSaveScreenHistoryOnClose(action)) {
