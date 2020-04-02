@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.ui.presentations.model;
 
 import io.jmix.core.Entity;
+import io.jmix.core.entity.User;
 
 import java.util.UUID;
 
-// todo implementations
 public interface Presentation extends Entity<UUID> {
 
     String getName();

@@ -18,7 +18,7 @@ package io.jmix.ui.components.presentations.actions;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.Metadata;
-import io.jmix.core.entity.Presentation;
+import io.jmix.ui.presentations.model.Presentation;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.Table;

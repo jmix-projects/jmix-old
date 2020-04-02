@@ -17,7 +17,7 @@
 package io.jmix.ui.components.presentations.actions;
 
 import io.jmix.core.DevelopmentException;
-import io.jmix.core.entity.Presentation;
+import io.jmix.ui.presentations.model.Presentation;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.components.HasPresentations;
 import io.jmix.ui.components.Table;

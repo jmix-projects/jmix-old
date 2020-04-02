@@ -19,7 +19,7 @@ import io.jmix.core.*;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
 import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.entity.Presentation;
+import io.jmix.ui.presentations.model.Presentation;
 import io.jmix.core.entity.User;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;

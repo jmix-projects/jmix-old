@@ -19,7 +19,7 @@ import com.vaadin.ui.*;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.entity.Presentation;
+import io.jmix.ui.presentations.model.Presentation;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.actions.Action;
 import io.jmix.ui.components.Table;

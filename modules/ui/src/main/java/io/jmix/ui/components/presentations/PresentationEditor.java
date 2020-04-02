@@ -24,7 +24,7 @@ import com.vaadin.ui.*;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
 import io.jmix.core.commons.util.Dom4j;
-import io.jmix.core.entity.Presentation;
+import io.jmix.ui.presentations.model.Presentation;
 import io.jmix.core.entity.User;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.App;

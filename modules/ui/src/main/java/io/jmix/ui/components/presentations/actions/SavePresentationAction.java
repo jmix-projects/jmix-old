@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.presentations.actions;
 
-import io.jmix.core.entity.Presentation;
+import io.jmix.ui.presentations.model.Presentation;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.presentations.Presentations;
