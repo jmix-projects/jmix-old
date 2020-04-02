@@ -27,9 +27,6 @@
             <column name="ID" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="VERSION" type="int">
-                <constraints nullable="false"/>
-            </column>
             <column name="CREATE_TS" type="datetime"/>
             <column name="CREATED_BY" type="varchar(50)"/>
             <column name="USER_LOGIN" type="varchar(255)"/>

@@ -19,6 +19,7 @@ package io.jmix.ui.persistence.impl;
 import io.jmix.core.ClientType;
 import io.jmix.core.Metadata;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
+import io.jmix.core.entity.User;
 import io.jmix.core.security.Security;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.persistence.UserSettingsManager;
@@ -85,41 +86,36 @@ public class UserSettingsManagerImpl implements UserSettingsManager {
 
     @Override
     public void saveSetting(ClientType clientType, String name, String value) {
-    /*    try (Transaction tx = persistence.createTransaction()) {
-            EntityManager em = persistence.getEntityManager();
-
+        transaction.executeWithoutResult(status -> {
             UserSetting us = findUserSettings(clientType, name);
             if (us == null) {
                 us = metadata.create(UserSetting.class);
-                us.setUser(em.getReference(User.class, userSessionSource.getUserSession().getUser().getId()));
+                us.setUserLogin(userSessionSource.getUserSession().getUser().getLogin());
                 us.setName(name);
-                us.setClientType(clientType);
+                us.setClientType(clientType.getName());
                 us.setValue(value);
 
-                em.persist(us);
+                entityManager.persist(us);
             } else {
                 us.setValue(value);
             }
-
-            tx.commit();
-        }*/
+        });
     }
 
     @Override
     public void deleteSettings(ClientType clientType, String name) {
-/*        try (Transaction tx = persistence.createTransaction()) {
+        transaction.executeWithoutResult(status -> {
             UserSetting us = findUserSettings(clientType, name);
-            if (us!=null){
-                EntityManager em = persistence.getEntityManager();
-                em.remove(us);
+            if (us != null) {
+                entityManager.remove(us);
             }
-            tx.commit();
-        }*/
+        });
     }
-    /*
-        @Override
-        public void copySettings(User fromUser, User toUser) {
-           MetaClass metaClass = metadata.getClassNN(UserSetting.class);
+
+
+    @Override
+    public void copySettings(User fromUser, User toUser) {
+            /*MetaClass metaClass = metadata.getClassNN(UserSetting.class);
 
             if (!security.isEntityOpPermitted(metaClass, EntityOp.CREATE)) {
                 throw new AccessDeniedException(PermissionType.ENTITY_OP, metaClass.getName());
@@ -182,27 +178,24 @@ public class UserSettingsManagerImpl implements UserSettingsManager {
                 }
 
                 tx.commit();
-            }
-        }
-    */
+            }*/
+    }
+
     @Override
     public void deleteScreenSettings(ClientType clientType, Set<String> screens) {
-     /*   try (Transaction tx = persistence.createTransaction()) {
-            EntityManager em = persistence.getEntityManager();
-            TypedQuery<UserSetting> selectQuery = em.createQuery(
+        transaction.executeWithoutResult(status -> {
+            TypedQuery<UserSetting> selectQuery = entityManager.createQuery(
                     "select e from sec$UserSetting e where e.user.id = ?1 and e.clientType=?2",
                     UserSetting.class);
             selectQuery.setParameter(1, userSessionSource.getUserSession().getUser().getId());
-            selectQuery.setParameter(2, clientType.getId());
+            selectQuery.setParameter(2, clientType.getName());
             List<UserSetting> userSettings = selectQuery.getResultList();
             for (UserSetting userSetting : userSettings) {
                 if (screens.contains(userSetting.getName())) {
-                    em.remove(userSetting);
+                    entityManager.remove(userSetting);
                 }
             }
-
-            tx.commit();
-        }*/
+        });
     }
 
     @Nullable
