@@ -180,16 +180,14 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
 
     @Nullable
     public NamePatternRec parseNamePattern(MetaClass metaClass) {
-        MetaProperty nameProperty = getInstanceNameProperty(metaClass);
-
-        if (nameProperty != null) {
-            return new NamePatternRec("%s", null, new String[]{nameProperty.getName()});
-        }
-
         Method nameMethod = getInstanceNameMethod(metaClass);
-
         if (nameMethod != null) {
             return new NamePatternRec("%s", nameMethod.getName(), new String[]{});
+        }
+
+        MetaProperty nameProperty = getInstanceNameProperty(metaClass);
+        if (nameProperty != null) {
+            return new NamePatternRec("%s", null, new String[]{nameProperty.getName()});
         }
         return null;
     }
