@@ -18,18 +18,14 @@ package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Strings;
 import io.jmix.core.BeanLocator;
+import io.jmix.core.HotDeployManager;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
-import io.jmix.core.Scripting;
 import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.ConstraintOperationType;
 import io.jmix.core.security.Security;
-import io.jmix.ui.Actions;
-import io.jmix.ui.ClientConfig;
-import io.jmix.ui.GuiDevelopmentException;
-import io.jmix.ui.UiComponents;
 import io.jmix.ui.Actions;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.UiComponents;
@@ -548,7 +544,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         if (StringUtils.isNotBlank(scriptPath) || StringUtils.isNotBlank(script)) {
             validator = new ScriptValidator(validatorElement, context.getMessagesPack());
         } else {
-            Class aClass = getHotDeployManager().loadClass(className);
+            Class aClass = getHotDeployManager().findClass(className);
             if (aClass == null)
                 throw new GuiDevelopmentException(String.format("Class %s is not found", className), context);
             if (!StringUtils.isBlank(context.getMessagesPack()))
@@ -872,7 +868,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
                 throw new GuiDevelopmentException("Formatter's attribute 'class' is not specified", context);
             }
 
-            Class<?> aClass = getHotDeployManager().loadClass(className);
+            Class<?> aClass = getHotDeployManager().findClass(className);
             if (aClass == null) {
                 throw new GuiDevelopmentException(String.format("Class %s is not found", className), context);
             }

@@ -30,13 +30,13 @@ public class HotDeployManager {
     protected JavaClassLoader javaClassLoader;
 
     /**
-     * Loads class by name
+     * Finds class by name and loads if found
      *
      * @param className fully qualified class name
      * @return class or null if not found
      */
     @Nullable
-    public Class<?> loadClass(String className) {
+    public Class<?> findClass(String className) {
         try {
             return javaClassLoader.loadClass(className);
         } catch (ClassNotFoundException e) {
@@ -51,7 +51,7 @@ public class HotDeployManager {
      * @return class
      * @throws IllegalStateException if the class is not found
      */
-    public Class<?> loadClassNN(String className) {
+    public Class<?> loadClass(String className) {
         try {
             return javaClassLoader.loadClass(className);
         } catch (ClassNotFoundException e) {
@@ -76,7 +76,7 @@ public class HotDeployManager {
      */
     public Class<?> reloadClass(String className) {
         javaClassLoader.removeClass(className);
-        return loadClass(className);
+        return findClass(className);
     }
 
     /**

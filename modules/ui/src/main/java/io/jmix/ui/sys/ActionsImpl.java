@@ -181,7 +181,7 @@ public class ActionsImpl implements Actions, ApplicationListener<ContextRefreshe
             classes.clear();
 
             for (Map.Entry<String, String> entry : squashedMap.entrySet()) {
-                Class clazz = hotDeployManager.loadClassNN(entry.getValue());
+                Class clazz = hotDeployManager.loadClass(entry.getValue());
                 classes.put(entry.getKey(), clazz);
             }
 

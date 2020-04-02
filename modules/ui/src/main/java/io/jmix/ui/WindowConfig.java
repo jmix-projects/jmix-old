@@ -204,7 +204,7 @@ public class WindowConfig {
 
     @SuppressWarnings("unchecked")
     protected Class<? extends FrameOwner> loadDefinedScreenClass(String className) {
-        return (Class<? extends FrameOwner>) hotDeployManager.loadClassNN(className);
+        return (Class<? extends FrameOwner>) hotDeployManager.loadClass(className);
     }
 
     protected void checkInitialized() {

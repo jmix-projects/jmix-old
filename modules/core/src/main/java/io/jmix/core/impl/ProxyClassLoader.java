@@ -20,17 +20,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProxyClassLoader extends ClassLoader {
-    Map<String, TimestampClass> compiled;
-    ThreadLocal<Map<String, TimestampClass>> removedFromCompilation = new ThreadLocal<>();
+    Map<String, TimestampClass> loaded;
+    ThreadLocal<Map<String, TimestampClass>> removedFromLoading = new ThreadLocal<>();
 
-    ProxyClassLoader(ClassLoader parent, Map<String, TimestampClass> compiled) {
+    ProxyClassLoader(ClassLoader parent, Map<String, TimestampClass> loaded) {
         super(parent);
-        this.compiled = compiled;
+        this.loaded = loaded;
     }
 
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        TimestampClass tsClass = compiled.get(name);
+        TimestampClass tsClass = loaded.get(name);
         if (tsClass != null) {
             return tsClass.clazz;
         } else {
@@ -39,16 +39,16 @@ public class ProxyClassLoader extends ClassLoader {
     }
 
     public TimestampClass removeFromCache(String className) {
-        Map<String, TimestampClass> removedFromCompilationMap = removedFromCompilation.get();
+        Map<String, TimestampClass> removedFromCompilationMap = removedFromLoading.get();
         if (removedFromCompilationMap == null) {
             removedFromCompilationMap = new HashMap<>();
-            removedFromCompilation.set(removedFromCompilationMap);
+            removedFromLoading.set(removedFromCompilationMap);
         }
 
-        TimestampClass timestampClass = compiled.get(className);
+        TimestampClass timestampClass = loaded.get(className);
         if (timestampClass != null) {
             removedFromCompilationMap.put(className, timestampClass);
-            compiled.remove(className);
+            loaded.remove(className);
             return timestampClass;
         }
 
@@ -56,18 +56,18 @@ public class ProxyClassLoader extends ClassLoader {
     }
 
     public void restoreRemoved() {
-        Map<String, TimestampClass> map = removedFromCompilation.get();
+        Map<String, TimestampClass> map = removedFromLoading.get();
         if (map != null) {
-            compiled.putAll(map);
+            loaded.putAll(map);
         }
-        removedFromCompilation.remove();
+        removedFromLoading.remove();
     }
 
     public void cleanupRemoved() {
-        removedFromCompilation.remove();
+        removedFromLoading.remove();
     }
 
     public boolean contains(String className) {
-        return compiled.containsKey(className);
+        return loaded.containsKey(className);
     }
 }

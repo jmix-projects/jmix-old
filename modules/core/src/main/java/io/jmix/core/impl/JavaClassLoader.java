@@ -17,8 +17,8 @@
 package io.jmix.core.impl;
 
 import com.google.common.base.Preconditions;
-import io.jmix.core.ConfigInterfaces;
-import io.jmix.core.GlobalConfig;
+import com.google.common.collect.Sets;
+import io.jmix.core.CoreProperties;
 import io.jmix.core.TimeSource;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +50,7 @@ public class JavaClassLoader extends URLClassLoader {
 
     protected final Set<String> rootDirs;
 
-    protected final Map<String, TimestampClass> compiled = new ConcurrentHashMap<>();
+    protected final Map<String, TimestampClass> loaded = new ConcurrentHashMap<>();
     protected final ConcurrentHashMap<String, Lock> locks = new ConcurrentHashMap<>();
 
     protected final ProxyClassLoader proxyClassLoader;
@@ -62,14 +62,11 @@ public class JavaClassLoader extends URLClassLoader {
     protected SpringBeanLoader springBeanLoader;
 
     @Inject
-    public JavaClassLoader(ConfigInterfaces configInterfaces) {
+    public JavaClassLoader(CoreProperties coreProperties) {
         super(new URL[0], Thread.currentThread().getContextClassLoader());
 
-        GlobalConfig config = configInterfaces.getConfig(GlobalConfig.class);
-        this.proxyClassLoader = new ProxyClassLoader(Thread.currentThread().getContextClassLoader(), compiled);
-        this.rootDirs = new HashSet<String>() {{
-            add(config.getConfDir());
-        }}; //getRootPaths(); ToDo: multiple root paths
+        this.proxyClassLoader = new ProxyClassLoader(Thread.currentThread().getContextClassLoader(), loaded);
+        this.rootDirs = Sets.newHashSet(coreProperties.getConfDir()); //getRootPaths(); ToDo: multiple root paths
         this.classFilesProviders = new HashMap<>();
         for (String dir : this.rootDirs) {
             this.classFilesProviders.put(dir, new ClassFilesProvider(dir));
@@ -82,7 +79,7 @@ public class JavaClassLoader extends URLClassLoader {
 
         Preconditions.checkNotNull(rootDir);
 
-        this.proxyClassLoader = new ProxyClassLoader(parent, compiled);
+        this.proxyClassLoader = new ProxyClassLoader(parent, loaded);
         this.springBeanLoader = springBeanLoader;
         this.rootDirs = rootDirs;
         this.classFilesProviders = new HashMap<>();
@@ -92,7 +89,7 @@ public class JavaClassLoader extends URLClassLoader {
     }
 
     public void clearCache() {
-        compiled.clear();
+        loaded.clear();
     }
 
     @Override
@@ -122,7 +119,7 @@ public class JavaClassLoader extends URLClassLoader {
     }
 
     protected Class loadClassFromClassFile(String fullClassName, String containerClassName, File classFile) {
-        TimestampClass timestampClass = compiled.get(containerClassName);
+        TimestampClass timestampClass = loaded.get(containerClassName);
         if (timestampClass != null && !FileUtils.isFileNewer(classFile, timestampClass.timestamp)) {
             return timestampClass.clazz;
         }
@@ -145,7 +142,7 @@ public class JavaClassLoader extends URLClassLoader {
                 throw new RuntimeException("Class not found", e);
             }
             loadedClasses.put(fqn, clazz);
-            compiled.put(fqn, new TimestampClass(clazz, getCurrentTimestamp()));
+            loaded.put(fqn, new TimestampClass(clazz, getCurrentTimestamp()));
         }
         springBeanLoader.updateContext(loadedClasses.values());
         return loadedClasses.get(fullClassName);
@@ -225,7 +222,7 @@ public class JavaClassLoader extends URLClassLoader {
     }
 
     public boolean removeClass(String className) {
-        TimestampClass removed = compiled.remove(className);
+        TimestampClass removed = loaded.remove(className);
         if (removed != null) {
             for (String dependent : removed.dependent) {
                 removeClass(dependent);
@@ -235,11 +232,11 @@ public class JavaClassLoader extends URLClassLoader {
     }
 
     public boolean isLoadedClass(String className) {
-        return compiled.containsKey(className);
+        return loaded.containsKey(className);
     }
 
     public Collection<String> getClassDependencies(String className) {
-        TimestampClass timestampClass = compiled.get(className);
+        TimestampClass timestampClass = loaded.get(className);
         if (timestampClass != null) {
             return timestampClass.dependencies;
         }
@@ -247,7 +244,7 @@ public class JavaClassLoader extends URLClassLoader {
     }
 
     public Collection<String> getClassDependent(String className) {
-        TimestampClass timestampClass = compiled.get(className);
+        TimestampClass timestampClass = loaded.get(className);
         if (timestampClass != null) {
             return timestampClass.dependent;
         }
@@ -311,7 +308,7 @@ public class JavaClassLoader extends URLClassLoader {
     }
 
     TimestampClass getTimestampClass(String name) {
-        return compiled.get(name);
+        return loaded.get(name);
     }
 
     private void unlock(String name) {

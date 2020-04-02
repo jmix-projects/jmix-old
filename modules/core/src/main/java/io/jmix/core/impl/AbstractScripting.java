@@ -24,9 +24,9 @@ import groovy.util.GroovyScriptEngine;
 import groovy.util.ResourceConnector;
 import groovy.util.ResourceException;
 import groovy.util.ScriptException;
+import io.jmix.core.HotDeployManager;
 import io.jmix.core.ScriptExecutionPolicy;
 import io.jmix.core.Scripting;
-import io.jmix.core.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
@@ -58,7 +58,6 @@ public abstract class AbstractScripting implements Scripting {
     private static final Pattern IMPORT_PATTERN = Pattern.compile("\\bimport\\b\\s+");
     private static final Pattern PACKAGE_PATTERN = Pattern.compile("\\bpackage\\b\\s+.+");
     private final Environment environment;
-    protected JavaClassLoader javaClassLoader;
     protected HotDeployManager hotDeployManager;
     protected SpringBeanLoader springBeanLoader;
     protected String groovyClassPath;
@@ -70,13 +69,10 @@ public abstract class AbstractScripting implements Scripting {
     protected GenericKeyedObjectPool<String, Script> pool;
 
     public AbstractScripting(Environment environment,
-                             JavaClassLoader javaClassLoader,
                              String confDir,
                              HotDeployManager hotDeployManager,
-                             ConfigInterfaces configInterfaces,
                              SpringBeanLoader springBeanLoader) {
         this.environment = environment;
-        this.javaClassLoader = javaClassLoader;
         this.hotDeployManager = hotDeployManager;
         this.springBeanLoader = springBeanLoader;
 

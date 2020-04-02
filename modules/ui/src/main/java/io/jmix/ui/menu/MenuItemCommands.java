@@ -481,7 +481,7 @@ public class MenuItemCommands {
 
             StopWatch sw = createStopWatch(item);
 
-            Class<?> clazz = hotDeployManager.loadClass(runnableClass);
+            Class<?> clazz = hotDeployManager.findClass(runnableClass);
             if (clazz == null) {
                 throw new IllegalStateException(String.format("Can't load class: %s", runnableClass));
             }

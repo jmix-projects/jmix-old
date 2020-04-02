@@ -103,7 +103,7 @@ public class FragmentHelper {
 
         String className = windowElement.attributeValue("class");
         if (StringUtils.isNotEmpty(className)) {
-            fragmentClass = (Class<? extends ScreenFragment>) hotDeployManager.loadClassNN(className);
+            fragmentClass = (Class<? extends ScreenFragment>) hotDeployManager.loadClass(className);
         } else {
             // fragmentClass = AbstractFrame.class; todo
             throw new UnsupportedOperationException();
