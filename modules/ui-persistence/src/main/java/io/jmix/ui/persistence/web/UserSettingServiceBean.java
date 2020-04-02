@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.web;
+package io.jmix.ui.persistence.web;
 
 import io.jmix.core.ClientType;
-import io.jmix.ui.settings.UserSettingsManager;
+import io.jmix.ui.persistence.UserSettingsManager;
 import io.jmix.ui.settings.UserSettingService;
 
 import javax.annotation.Nullable;

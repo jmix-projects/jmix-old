@@ -14,27 +14,32 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.impl;
+package io.jmix.ui.persistence.impl;
 
 import io.jmix.core.ClientType;
 import io.jmix.core.Metadata;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
 import io.jmix.core.security.Security;
 import io.jmix.core.security.UserSessionSource;
-import io.jmix.ui.settings.UserSettingsManager;
-import io.jmix.ui.settings.entity.UserSetting;
+import io.jmix.ui.persistence.UserSettingsManager;
+import io.jmix.ui.persistence.entity.UserSetting;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.Set;
 
 @Component(UserSettingsManager.NAME)
 public class UserSettingsManagerImpl implements UserSettingsManager {
 
-//    @Inject
-//    protected Persistence persistence;
-
+    // TODO get User
     @Inject
     protected UserSessionSource userSessionSource;
 
@@ -47,6 +52,17 @@ public class UserSettingsManagerImpl implements UserSettingsManager {
     @Inject
     protected Dom4jTools dom4JTools;
 
+    @PersistenceContext
+    protected EntityManager entityManager;
+
+    protected TransactionTemplate transaction;
+
+    @Inject
+    protected void setTransactionManager(PlatformTransactionManager transactionManager) {
+        transaction = new TransactionTemplate(transactionManager);
+        transaction.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+    }
+
     @Override
     public String loadSetting(String name) {
         return loadSetting(null, name);
@@ -54,12 +70,11 @@ public class UserSettingsManagerImpl implements UserSettingsManager {
 
     @Override
     public String loadSetting(ClientType clientType, String name) {
-        String value = null;
-/*        try (Transaction tx = persistence.createTransaction(new TransactionParams().setReadOnly(true))) {
+        String value = transaction.execute(status -> {
             UserSetting us = findUserSettings(clientType, name);
-            value = us == null ? null : us.getValue();
-            tx.commit();
-        }*/
+            return us == null ? null : us.getValue();
+        });
+
         return value;
     }
 
@@ -192,17 +207,19 @@ public class UserSettingsManagerImpl implements UserSettingsManager {
 
     @Nullable
     protected UserSetting findUserSettings(ClientType clientType, String name) {
-  /*      EntityManager em = persistence.getEntityManager();
-
-        TypedQuery<UserSetting> q = em.createQuery(
-                "select s from sec$UserSetting s where s.user.id = ?1 and s.name =?2 and s.clientType = ?3",
+        TypedQuery<UserSetting> q = entityManager.createQuery(
+                "select s from ui_UserSetting s where s.userLogin = ?1 and s.name =?2 and s.clientType = ?3",
                 UserSetting.class);
-        q.setParameter(1, userSessionSource.getUserSession().getUser().getId());
+        q.setParameter(1, userSessionSource.getUserSession().getUser().getLogin());
         q.setParameter(2, name);
-        q.setParameter(3, clientType == null ? null : clientType.getId());
+        q.setParameter(3, clientType == null ? null : clientType.getName());
 
-        return q.getFirstResult();*/
-        return null;
+        List result = q.getResultList();
+        if (result.isEmpty()) {
+            return null;
+        }
+
+        return (UserSetting) result.get(0);
     }
 
     /*protected Map<UUID, Presentation> copyPresentations(User fromUser, User toUser) {

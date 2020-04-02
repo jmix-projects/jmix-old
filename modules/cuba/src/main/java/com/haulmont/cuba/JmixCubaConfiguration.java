@@ -33,7 +33,6 @@ import io.jmix.ui.JmixUiConfiguration;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.ScreenOptions;
-import io.jmix.ui.settings.JmixUiSettingsConfiguration;
 import io.jmix.ui.sys.UiControllerDependencyInjector;
 import io.jmix.ui.sys.UiControllerReflectionInspector;
 import io.jmix.ui.sys.UiControllersConfiguration;
@@ -55,8 +54,7 @@ import java.util.Collections;
         dependsOn = {
                 JmixCoreConfiguration.class,
                 JmixDataConfiguration.class,
-                JmixUiConfiguration.class,
-                JmixUiSettingsConfiguration.class},
+                JmixUiConfiguration.class},
         properties = {
                 @JmixProperty(name = "jmix.core.fetchPlansConfig", value = "/com/haulmont/cuba/cuba-views.xml", append = true),
                 @JmixProperty(name = "cuba.windowConfig", value = "/com/haulmont/cuba/web-screens.xml", append = true)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2016 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,9 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
-package io.jmix.ui.settings.entity;
+package io.jmix.ui.persistence.entity;
 
 import io.jmix.core.entity.Creatable;
 import io.jmix.core.entity.annotation.SystemLevel;
@@ -40,15 +39,13 @@ public class UserSetting extends BaseUuidEntity implements Creatable {
     @Column(name = "CREATED_BY", length = 50)
     private String createdBy;
 
-    // todo User non-entity
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "USER_ID")
-//    private User user;
+    @Column(name = "USER_LOGIN")
+    private String userLogin;
 
     @Column(name = "CLIENT_TYPE", length = 10)
     private String clientType;
 
-    @Column(name = "NAME", length = 255)
+    @Column(name = "NAME")
     private String name;
 
     @Lob
@@ -75,13 +72,13 @@ public class UserSetting extends BaseUuidEntity implements Creatable {
         this.createdBy = createdBy;
     }
 
-//    public User getUser() {
-//        return user;
-//    }
+    public String getUserLogin() {
+        return userLogin;
+    }
 
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
+    }
 
     public String getClientType() {
         return clientType;

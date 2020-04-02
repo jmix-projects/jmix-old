@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings;
+package io.jmix.ui.persistence;
 
 import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.core.annotation.JmixModule;
+import io.jmix.data.JmixDataConfiguration;
 import io.jmix.ui.JmixUiConfiguration;
-import io.jmix.ui.settings.web.UserSettingServiceBean;
+import io.jmix.ui.settings.UserSettingService;
+import io.jmix.ui.persistence.web.UserSettingServiceBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan
-@JmixModule(dependsOn = {JmixCoreConfiguration.class, JmixUiConfiguration.class})
-public class JmixUiSettingsConfiguration {
+@EnableTransactionManagement
+@JmixModule(dependsOn = {JmixCoreConfiguration.class, JmixDataConfiguration.class, JmixUiConfiguration.class})
+public class JmixUiPersistenceConfiguration {
 
     @Bean(UserSettingService.NAME)
     public UserSettingService userSettingService() {

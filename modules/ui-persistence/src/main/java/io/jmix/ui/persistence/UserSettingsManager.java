@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings;
+package io.jmix.ui.persistence;
 
 import io.jmix.core.ClientType;
 
