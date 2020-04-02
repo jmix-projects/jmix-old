@@ -80,7 +80,8 @@ configure([project(':jmix-platform'), project(':modules:core'), project(':module
            project(':modules:audit'), project(':modules:audit-ui'),
            project(':modules:ui-themes'), project(':modules:ui-themes-compiled'),
            project(':modules:ui-widgets'), project(':modules:ui-widgets-compiled'),
-           project(':starters:starter-data'), project(':starters:starter-ui'), project(':starters:starter-security'),
+           project(':starters:starter-data'), project(':starters:starter-ui'),
+           project(':starters:starter-ui-persistence'), project(':starters:starter-security'),
            project(':starters:starter-standard-nowidgets'), project(':starters:starter-standard'),
            project(':starters:starter-audit'), project(':starters:starter-audit-ui'),
            project(':starters:starter-cuba')]) {
