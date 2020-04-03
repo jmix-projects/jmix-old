@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,41 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.presentations;
+
+package io.jmix.ui.persistence;
 
 import io.jmix.core.*;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
-import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.ui.presentations.model.Presentation;
 import io.jmix.core.entity.User;
 import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.ComponentsHelper;
-import io.jmix.ui.sys.PersistenceHelper;
+import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.presentations.PresentationsChangeListener;
+import io.jmix.ui.presentations.model.Presentation;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import javax.inject.Inject;
 import java.util.*;
 
-public class PresentationsImpl implements Presentations {
+public class PersistencePresentations implements Presentations {
 
-    private String name;
-    private Map<Object, Presentation> presentations;
-    private Presentation current;
-    private Presentation def;
+    @Inject
+    protected Metadata metadata;
+    @Inject
+    protected FetchPlanRepository fetchPlanRepository;
+    @Inject
+    protected DataManager dataManager;
+    @Inject
+    protected Dom4jTools dom4jTools;
+    @Inject
+    protected UserSessionSource sessionSource;
+    @Inject
+    protected EntityStates entityStates;
 
-    private Set<Presentation> needToUpdate = new HashSet<>();
-    private Set<Presentation> needToRemove = new HashSet<>();
+    protected String name;
+    protected Map<Object, Presentation> presentations;
+    protected Presentation current;
+    protected Presentation def;
 
-    private List<PresentationsChangeListener> listeners;
-    private FetchPlanRepository fetchPlanRepository;
+    protected Set<Presentation> needToUpdate = new HashSet<>();
+    protected Set<Presentation> needToRemove = new HashSet<>();
 
-    public PresentationsImpl(Component c) {
+    protected List<PresentationsChangeListener> listeners;
+
+
+    public PersistencePresentations(Component c) {
         name = ComponentsHelper.getComponentPath(c);
     }
 
@@ -55,7 +70,7 @@ public class PresentationsImpl implements Presentations {
     public void add(Presentation p) {
         checkLoad();
         presentations.put(EntityValues.<UUID>getId(p), p);
-        if (PersistenceHelper.isNew(p)) {
+        if (entityStates.isNew(p)) {
             needToUpdate.add(p);
 
             if (BooleanUtils.isTrue(p.getDefault())) {
@@ -93,7 +108,7 @@ public class PresentationsImpl implements Presentations {
         if (p != null) {
             Document doc;
             if (!StringUtils.isEmpty(p.getXml())) {
-                doc = AppBeans.get(Dom4jTools.class).readDocument(p.getXml());
+                doc = dom4jTools.readDocument(p.getXml());
             } else {
                 doc = DocumentHelper.createDocument();
                 doc.setRootElement(doc.addElement("presentation"));
@@ -108,7 +123,7 @@ public class PresentationsImpl implements Presentations {
     public void setSettings(Presentation p, Element e) {
         p = getPresentation(EntityValues.<UUID>getId(p));
         if (p != null) {
-            p.setXml(AppBeans.get(Dom4jTools.class).writeDocument(e.getDocument(), false));
+            p.setXml(dom4jTools.writeDocument(e.getDocument(), false));
             modify(p);
         }
     }
@@ -163,7 +178,7 @@ public class PresentationsImpl implements Presentations {
     public void remove(Presentation p) {
         checkLoad();
         if (presentations.remove(EntityValues.<UUID>getId(p)) != null) {
-            if (PersistenceHelper.isNew(p)) {
+            if (entityStates.isNew(p)) {
                 needToUpdate.remove(p);
             } else {
                 needToUpdate.remove(p);
@@ -206,16 +221,14 @@ public class PresentationsImpl implements Presentations {
     @Override
     public boolean isGlobal(Presentation p) {
         p = getPresentation(EntityValues.<UUID>getId(p));
-        return p != null && !PersistenceHelper.isNew(p) && p.getUser() == null;
+        return p != null && !entityStates.isNew(p) && p.getUserLogin() == null;
     }
 
     @Override
     public void commit() {
         if (!needToUpdate.isEmpty() || !needToRemove.isEmpty()) {
-            DataManager ds = AppBeans.get(DataManager.NAME);
-
             SaveContext ctx = new SaveContext().saving(needToUpdate).removing(needToRemove);
-            Set<Entity> commitResult = ds.save(ctx);
+            Set<Entity> commitResult = dataManager.save(ctx);
             commited(commitResult);
 
             clearCommitList();
@@ -265,6 +278,16 @@ public class PresentationsImpl implements Presentations {
         return null;
     }
 
+    @Override
+    public Presentation create() {
+        return metadata.create(io.jmix.ui.persistence.entity.Presentation.class);
+    }
+
+    @Override
+    public boolean isPresentationsAvailable() {
+        return true;
+    }
+
     protected void fireCurrentPresentationChanged(Object oldPresentationId) {
         if (listeners != null) {
             for (final PresentationsChangeListener listener : listeners) {
@@ -289,23 +312,24 @@ public class PresentationsImpl implements Presentations {
         }
     }
 
-    private void checkLoad() {
+    protected void checkLoad() {
         if (presentations == null) {
-            DataManager ds = AppBeans.get(DataManager.NAME);
-            LoadContext<Presentation> ctx = new LoadContext<>(Presentation.class);
-            ctx.setFetchPlan(AppBeans.get(FetchPlanRepository.class).getFetchPlan(Presentation.class, "app"));
+            LoadContext<io.jmix.ui.persistence.entity.Presentation> ctx
+                    = new LoadContext<>(io.jmix.ui.persistence.entity.Presentation.class);
 
-            UserSessionSource sessionSource = AppBeans.get(UserSessionSource.NAME);
+            ctx.setFetchPlan(fetchPlanRepository.getFetchPlan(
+                    io.jmix.ui.persistence.entity.Presentation.class, "app"));
+
             UserSession session = sessionSource.getUserSession();
             // todo user substitution
             User user = session.getUser();
 
             ctx.setQueryString("select p from sec$Presentation p " +
-                    "where p.componentId = :component and (p.user is null or p.user.id = :userId)")
+                    "where p.componentId = :component and (p.userLogin is null or p.userLogin = :userLogin)")
                     .setParameter("component", name)
-                    .setParameter("userId", EntityValues.<UUID>getId(user));
+                    .setParameter("userLogin", user.getLogin());
 
-            final List<Presentation> list = ds.loadList(ctx);
+            final List<io.jmix.ui.persistence.entity.Presentation> list = dataManager.loadList(ctx);
 
             presentations = new LinkedHashMap<>(list.size());
             for (final Presentation p : list) {
@@ -314,7 +338,7 @@ public class PresentationsImpl implements Presentations {
         }
     }
 
-    private void clearCommitList() {
+    protected void clearCommitList() {
         needToUpdate.clear();
         needToRemove.clear();
     }

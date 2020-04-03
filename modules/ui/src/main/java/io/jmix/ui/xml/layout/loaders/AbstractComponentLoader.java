@@ -42,6 +42,7 @@ import io.jmix.ui.icons.Icons;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.presentations.Presentations;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiControllerUtils;
@@ -56,6 +57,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,6 +74,8 @@ import static io.jmix.ui.icons.Icons.ICON_NAME_REGEX;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 public abstract class AbstractComponentLoader<T extends Component> implements ComponentLoader<T> {
+
+    private static final Logger log = LoggerFactory.getLogger(AbstractComponentLoader.class);
 
     // todo shortcuts https://github.com/jmix-framework/jmix/issues/312
 //    protected static final Map<String, Function<UiProperties, String>> SHORTCUT_ALIASES =
@@ -500,8 +505,15 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
     protected void loadPresentations(HasPresentations component, Element element) {
         String presentations = element.attributeValue("presentations");
         if (StringUtils.isNotEmpty(presentations)) {
-            component.usePresentations(Boolean.parseBoolean(presentations));
-            getComponentContext().addPostInitTask(new LoadPresentationsPostInitTask(component));
+
+            Presentations presentationBean = beanLocator.getPrototype(Presentations.NAME, component);
+            if (presentationBean.isPresentationsAvailable()) {
+                component.usePresentations(Boolean.parseBoolean(presentations));
+                getComponentContext().addPostInitTask(new LoadPresentationsPostInitTask(component));
+            } else {
+                log.warn("Presentations is not available for the project. Add `ui-persistence`" +
+                        " add-on in order to use Presentations.");
+            }
         }
     }
 

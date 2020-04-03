@@ -26,8 +26,8 @@ import java.util.Date;
  * Record for user setting.
  * Used by <code>UserSettingServiceBean</code>.
  */
-@Entity(name = "ui_UserSetting")
-@Table(name = "UI_USER_SETTING")
+@Entity(name = "sec$UserSetting")
+@Table(name = "SEC_USER_SETTING")
 @SystemLevel
 public class UserSetting extends BaseUuidEntity implements Creatable {
 

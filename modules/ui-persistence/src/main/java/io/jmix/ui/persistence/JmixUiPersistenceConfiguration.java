@@ -18,24 +18,33 @@ package io.jmix.ui.persistence;
 
 import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.core.annotation.JmixModule;
+import io.jmix.core.annotation.JmixProperty;
 import io.jmix.data.JmixDataConfiguration;
 import io.jmix.ui.JmixUiConfiguration;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.presentations.Presentations;
 import io.jmix.ui.settings.UserSettingService;
-import io.jmix.ui.persistence.web.UserSettingServiceBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.*;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan
 @EnableTransactionManagement
-@JmixModule(dependsOn = {JmixCoreConfiguration.class, JmixDataConfiguration.class, JmixUiConfiguration.class})
+@JmixModule(
+        dependsOn = {JmixCoreConfiguration.class, JmixDataConfiguration.class, JmixUiConfiguration.class},
+        properties = {@JmixProperty(name = "jmix.core.fetchPlansConfig", value = "io/jmix/ui/persistence/views.xml", append = true)})
 public class JmixUiPersistenceConfiguration {
 
     @Bean(UserSettingService.NAME)
     public UserSettingService userSettingService() {
-        return new UserSettingServiceBean();
+        return new UserSettingsPersistence();
+    }
+
+    @Bean(Presentations.NAME)
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    public Presentations presentations(Component component) {
+        return new PersistencePresentations(component);
     }
 }
 

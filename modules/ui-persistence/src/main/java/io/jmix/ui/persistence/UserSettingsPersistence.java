@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.persistence.impl;
+package io.jmix.ui.persistence;
 
 import io.jmix.core.ClientType;
 import io.jmix.core.Metadata;
@@ -22,9 +22,8 @@ import io.jmix.core.commons.xmlparsing.Dom4jTools;
 import io.jmix.core.entity.User;
 import io.jmix.core.security.Security;
 import io.jmix.core.security.UserSessionSource;
-import io.jmix.ui.persistence.UserSettingsManager;
 import io.jmix.ui.persistence.entity.UserSetting;
-import org.springframework.stereotype.Component;
+import io.jmix.ui.settings.UserSettingService;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -37,10 +36,8 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Set;
 
-@Component(UserSettingsManager.NAME)
-public class UserSettingsManagerImpl implements UserSettingsManager {
+public class UserSettingsPersistence implements UserSettingService {
 
-    // TODO get User
     @Inject
     protected UserSessionSource userSessionSource;
 
@@ -201,7 +198,7 @@ public class UserSettingsManagerImpl implements UserSettingsManager {
     @Nullable
     protected UserSetting findUserSettings(ClientType clientType, String name) {
         TypedQuery<UserSetting> q = entityManager.createQuery(
-                "select s from ui_UserSetting s where s.userLogin = ?1 and s.name =?2 and s.clientType = ?3",
+                "select s from sec$UserSetting s where s.userLogin = ?1 and s.name =?2 and s.clientType = ?3",
                 UserSetting.class);
         q.setParameter(1, userSessionSource.getUserSession().getUser().getLogin());
         q.setParameter(2, name);

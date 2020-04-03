@@ -113,7 +113,7 @@ public class PresentationEditor extends CubaWindow {
         if (allowGlobalPresentations) {
             globalField = new CheckBox();
             globalField.setCaption(messages.getMessage("PresentationsEditor.global"));
-            globalField.setValue(!isNew && presentation.getUser() == null);
+            globalField.setValue(!isNew && presentation.getUserLogin() == null);
             root.addComponent(globalField);
         }
 
@@ -187,7 +187,7 @@ public class PresentationEditor extends CubaWindow {
         User user = sessionSource.getUserSession().getUser();
 
         boolean userOnly = !allowGlobalPresentations || !BooleanUtils.isTrue(globalField.getValue());
-        presentation.setUser(userOnly ? user : null);
+        presentation.setUserLogin(userOnly ? user.getLogin() : null);
 
         if (log.isTraceEnabled()) {
             log.trace(String.format("XML: %s", Dom4j.writeDocument(doc, true)));

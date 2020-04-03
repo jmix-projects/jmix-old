@@ -65,7 +65,6 @@ import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.model.*;
 import io.jmix.ui.model.impl.KeyValueContainerImpl;
 import io.jmix.ui.presentations.Presentations;
-import io.jmix.ui.presentations.PresentationsImpl;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.InstallTargetHandler;
 import io.jmix.ui.screen.ScreenContext;
@@ -2926,7 +2925,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     @Override
     public void loadPresentations() {
         if (isUsePresentations()) {
-            presentations = new PresentationsImpl(this);
+            presentations = beanLocator.getPrototype(Presentations.NAME, this);
 
             setTablePresentations(new TablePresentations(this));
         } else {

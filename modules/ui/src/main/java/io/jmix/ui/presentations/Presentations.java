@@ -15,6 +15,7 @@
  */
 package io.jmix.ui.presentations;
 
+import io.jmix.ui.presentations.model.PresentationStub;
 import io.jmix.ui.presentations.model.Presentation;
 import org.dom4j.Element;
 
@@ -28,10 +29,16 @@ import java.util.Collection;
  */
 public interface Presentations {
 
-    /** Returns the current active presentation or <code>null</code> if a current presentation didn't set */
+    String NAME = "jmix_Presentations";
+
+    /**
+     * Returns the current active presentation or <code>null</code> if a current presentation didn't set
+     */
     Presentation getCurrent();
 
-    /** Sets current active presentation for a component */
+    /**
+     * Sets current active presentation for a component
+     */
     void setCurrent(Presentation p);
 
     /**
@@ -40,40 +47,64 @@ public interface Presentations {
      */
     Element getSettings(Presentation p);
 
-    /** Sets user settings for the selected presentation */
+    /**
+     * Sets user settings for the selected presentation
+     */
     void setSettings(Presentation p, Element e);
 
-    /** Returns presentation by its id or <code>null</code> if a presentation doesn't exist */
+    /**
+     * Returns presentation by its id or <code>null</code> if a presentation doesn't exist
+     */
     Presentation getPresentation(Object id);
 
-    /** Returns presentation caption by its id */
+    /**
+     * Returns presentation caption by its id
+     */
     String getCaption(Object id);
 
-    /** Returns a collection of the component presentations */
+    /**
+     * Returns a collection of the component presentations
+     */
     Collection<Object> getPresentationIds();
 
-    /** Returns a default presentation or <code>null</code> if it didn't set */
+    /**
+     * Returns a default presentation or <code>null</code> if it didn't set
+     */
     Presentation getDefault();
 
-    /** Sets a default presentation */
+    /**
+     * Sets a default presentation
+     */
     void setDefault(Presentation p);
 
-    /** Adds a new presentation */
+    /**
+     * Adds a new presentation
+     */
     void add(Presentation p);
 
-    /** Removes a presentation from the list of available presentations */
+    /**
+     * Removes a presentation from the list of available presentations
+     */
     void remove(Presentation p);
 
-    /** Modifies the selected presentation */
+    /**
+     * Modifies the selected presentation
+     */
     void modify(Presentation p);
 
-    /** Returns <code>true</code> if the selected presentation has an <code>autoSave</code> settings else returns <code>false</code> */
+    /**
+     * Returns <code>true</code> if the selected presentation has an <code>autoSave</code> settings else returns <code>false</code>
+     */
     boolean isAutoSave(Presentation p);
 
-    /** Returns <code>true</code> if the selected presentation is marked as global else returns <code>false</code> */
+    /**
+     * Returns <code>true</code> if the selected presentation is marked as global else returns <code>false</code>
+     */
     boolean isGlobal(Presentation p);
 
-    /** Commits all changes into the database */
+    /**
+     * Commits all changes into the database
+     */
     void commit();
 
     /**
@@ -82,9 +113,27 @@ public interface Presentations {
      */
     Presentation getPresentationByName(String name);
 
-    /** Adds listener */
+    /**
+     * Adds listener
+     */
     void addListener(PresentationsChangeListener listener);
 
-    /** Removes listener */
+    /**
+     * Removes listener
+     */
     void removeListener(PresentationsChangeListener listener);
+
+    /**
+     * @return Presentation instance or stub if ui-persistence add-on is not added to the project
+     */
+    default Presentation create() {
+        return new PresentationStub();
+    }
+
+    /**
+     * @return true if ui-persistence add-on is added to the project
+     */
+    default boolean isPresentationsAvailable() {
+        return false;
+    }
 }

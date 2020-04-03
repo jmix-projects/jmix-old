@@ -17,7 +17,6 @@
 package io.jmix.ui.presentations.model;
 
 import io.jmix.core.Entity;
-import io.jmix.core.entity.User;
 
 import java.util.UUID;
 
@@ -31,13 +30,13 @@ public interface Presentation extends Entity<UUID> {
 
     void setXml(String xml);
 
-    User getUser();
+    String getUserLogin();
 
-    void setUser(User user);
+    void setUserLogin(String userLogin);
 
     Boolean getDefault();
 
-    void setDefault(Boolean aDefault);
+    void setDefault(Boolean isDefault);
 
     Boolean getAutoSave();
 
