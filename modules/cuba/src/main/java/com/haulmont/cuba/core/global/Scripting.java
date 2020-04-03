@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package io.jmix.core;
+package com.haulmont.cuba.core.global;
 
 import groovy.lang.Binding;
+import io.jmix.core.ScriptExecutionPolicy;
+import io.jmix.core.impl.JavaClassLoader;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -82,7 +84,7 @@ public interface Scripting {
 
     /**
      * Returns the dynamic classloader.
-     * <p>Actually it is the GroovyClassLoader which parent is {@link com.haulmont.cuba.core.sys.javacl.JavaClassLoader}.
+     * <p>Actually it is the GroovyClassLoader which parent is {@link io.jmix.core.impl.JavaClassLoader}.
      * For explanation on class loading sequence see {@link #loadClass(String)}
      * </p>
      * @return dynamic classloader

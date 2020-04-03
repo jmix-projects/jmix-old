@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package io.jmix.core.impl;
+package com.haulmont.cuba.core.sys;
 
+import com.haulmont.cuba.core.global.Scripting;
 import io.jmix.core.CoreProperties;
 import io.jmix.core.HotDeployManager;
-import io.jmix.core.Scripting;
+import io.jmix.core.impl.SpringBeanLoader;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 

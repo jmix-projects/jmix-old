@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package io.jmix.core.impl;
+package com.haulmont.cuba.core.sys;
 
+import com.haulmont.cuba.core.global.Scripting;
 import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyShell;
@@ -26,7 +27,7 @@ import groovy.util.ResourceException;
 import groovy.util.ScriptException;
 import io.jmix.core.HotDeployManager;
 import io.jmix.core.ScriptExecutionPolicy;
-import io.jmix.core.Scripting;
+import io.jmix.core.impl.SpringBeanLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
