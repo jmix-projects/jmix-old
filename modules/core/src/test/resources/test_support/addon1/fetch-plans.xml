@@ -15,6 +15,10 @@
   ~ limitations under the License.
   -->
 
-<metadata>
+<fetchPlans xmlns="http://jmix.io/schema/core/fetch-plans">
 
-</metadata>
+    <fetchPlan class="test_support.addon1.entity.TestAddon1Entity" name="test-view-1">
+        <property name="name"/>
+    </fetchPlan>
+
+</fetchPlans>

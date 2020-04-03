@@ -15,10 +15,12 @@
   ~ limitations under the License.
   -->
 
-<views xmlns="http://schemas.haulmont.com/jmix/views.xsd">
-
-    <view class="test_support.addon1.entity.TestAddon1Entity" name="test-view-1">
+<fetchPlans xmlns="http://jmix.io/schema/core/fetch-plans">
+    <fetchPlan class="com.haulmont.cuba.security.entity.FilterEntity" name="app">
+        <property name="componentId"/>
         <property name="name"/>
-    </view>
-
-</views>
+        <property name="code"/>
+        <property name="xml"/>
+        <property name="globalDefault"/>
+    </fetchPlan>
+</fetchPlans>
