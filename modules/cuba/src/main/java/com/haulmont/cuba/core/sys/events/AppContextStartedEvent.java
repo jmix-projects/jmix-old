@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.core.event;
+package com.haulmont.cuba.core.sys.events;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ApplicationContextEvent;

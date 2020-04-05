@@ -14,28 +14,20 @@
  * limitations under the License.
  */
 
-package test_support.singlerun;
+package com.haulmont.cuba.core.testsupport;
 
-import io.jmix.core.event.AppContextInitializedEvent;
-import io.jmix.core.event.AppContextStartedEvent;
-import io.jmix.core.security.SystemUserSession;
-import io.jmix.core.security.UserSessionSource;
+import com.haulmont.cuba.core.sys.events.AppContextInitializedEvent;
+import com.haulmont.cuba.core.sys.events.AppContextStartedEvent;
 import org.springframework.context.event.ApplicationContextEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class AppContextLifecycleListener {
+public class TestAppContextLifecycleListener {
 
     List<ApplicationContextEvent> events = new ArrayList<>();
-
-    @Inject
-    private UserSessionSource userSessionSource;
 
     public List<ApplicationContextEvent> getEvents() {
         return events;
@@ -49,12 +41,10 @@ public class AppContextLifecycleListener {
     @EventListener
     void onInitialized(AppContextInitializedEvent event) {
         events.add(event);
-        assert userSessionSource.getUserSession() instanceof SystemUserSession;
     }
 
     @EventListener
     void onStarted(AppContextStartedEvent event) {
         events.add(event);
-        assert userSessionSource.getUserSession() instanceof SystemUserSession;
     }
 }

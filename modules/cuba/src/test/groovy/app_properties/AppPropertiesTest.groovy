@@ -16,20 +16,11 @@
 
 package app_properties
 
-import test_support.addon1.TestAddon1Configuration
-import test_support.AppContextTestExecutionListener
-import test_support.app.TestAppConfiguration
-import io.jmix.core.JmixCoreConfiguration
-import io.jmix.core.compatibility.AppProperties
+import com.haulmont.cuba.core.sys.AppProperties
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.TestExecutionListeners
-import spock.lang.Specification
+import spec.haulmont.cuba.core.CoreTestSpecification
 
-@ContextConfiguration(classes = [TestAppConfiguration, TestAddon1Configuration, JmixCoreConfiguration])
-@TestExecutionListeners(value = AppContextTestExecutionListener,
-        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
-class AppPropertiesTest extends Specification {
+class AppPropertiesTest extends CoreTestSpecification {
 
     @Autowired
     AppProperties appProperties

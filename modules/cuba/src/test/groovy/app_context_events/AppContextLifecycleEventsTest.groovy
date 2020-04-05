@@ -16,27 +16,19 @@
 
 package app_context_events
 
-import io.jmix.core.JmixCoreConfiguration
-import io.jmix.core.compatibility.AppContext
-import io.jmix.core.event.AppContextInitializedEvent
-import io.jmix.core.event.AppContextStartedEvent
+import com.haulmont.cuba.core.sys.AppContext
+import com.haulmont.cuba.core.sys.events.AppContextInitializedEvent
+import com.haulmont.cuba.core.sys.events.AppContextStartedEvent
 import org.springframework.context.event.ContextRefreshedEvent
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.TestExecutionListeners
-import spock.lang.Specification
-import test_support.AppContextTestExecutionListener
-import test_support.singlerun.AppContextLifecycleListener
-import test_support.singlerun.TestSingleRunConfiguration
+import spec.haulmont.cuba.core.CoreTestSpecification
+import com.haulmont.cuba.core.testsupport.TestAppContextLifecycleListener
 
 import javax.inject.Inject
 
-@ContextConfiguration(classes = [JmixCoreConfiguration, TestSingleRunConfiguration])
-@TestExecutionListeners(value = AppContextTestExecutionListener,
-        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
-class AppContextLifecycleEventsTest extends Specification {
+class AppContextLifecycleEventsTest extends CoreTestSpecification {
 
     @Inject
-    AppContextLifecycleListener listenerBean
+    TestAppContextLifecycleListener listenerBean
 
     def "test"() {
         expect:

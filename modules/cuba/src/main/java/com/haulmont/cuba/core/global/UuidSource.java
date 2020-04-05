@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package io.jmix.core.impl;
-
-import io.jmix.core.UuidSource;
-import org.springframework.stereotype.Component;
+package com.haulmont.cuba.core.global;
 
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
-@Component(UuidSource.NAME)
-public class UuidSourceImpl implements UuidSource {
+/**
+ * Global interface to create UUIDs.
+ *
+ */
+public interface UuidSource {
 
-    @Override
-    public UUID createUuid() {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        return new UUID(random.nextLong(), random.nextLong());
-    }
+    String NAME = "cuba_UuidSource";
+
+    /**
+     * @return new UUID
+     */
+    UUID createUuid();
 }

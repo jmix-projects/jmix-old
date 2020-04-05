@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.core.compatibility;
+package com.haulmont.cuba.core.sys;
 
 import io.jmix.core.EnvironmentUtils;
 import org.slf4j.Logger;
@@ -49,11 +49,11 @@ public class AppProperties {
     @PostConstruct
     protected void init() {
         if (!(environment instanceof ConfigurableEnvironment)) {
-            log.warn("{} is not a ConfigurableEnvironment, cannot register Jmix mutable property source", environment);
+            log.warn("{} is not a ConfigurableEnvironment, cannot register CUBA mutable property source", environment);
             return;
         }
         MutablePropertySources sources = ((ConfigurableEnvironment) environment).getPropertySources();
-        sources.addFirst(new MapPropertySource("Jmix mutable properties", properties));
+        sources.addFirst(new MapPropertySource("CUBA mutable properties", properties));
     }
 
     public String[] getPropertyNames() {

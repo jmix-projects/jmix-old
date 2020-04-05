@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package io.jmix.core.event;
+package com.haulmont.cuba.core.sys;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.event.ApplicationContextEvent;
+import com.haulmont.cuba.core.global.UuidSource;
+import io.jmix.core.UuidProvider;
+import org.springframework.stereotype.Component;
 
-/**
- * Application lifecycle event.
- * <p>
- * Published right after initialization of Spring context. {@link AppContext} and {@link AppBeans} can be used
- * in the handlers of this event.
- *
- * @see AppContextStartedEvent
- */
-public class AppContextInitializedEvent extends ApplicationContextEvent {
+import java.util.UUID;
 
-    public AppContextInitializedEvent(ApplicationContext source) {
-        super(source);
+@Component(UuidSource.NAME)
+public class UuidSourceImpl implements UuidSource {
+
+    @Override
+    public UUID createUuid() {
+        return UuidProvider.createUuid();
     }
 }

@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.core.compatibility;
+package com.haulmont.cuba.core.sys;
 
+import io.jmix.core.AppBeans;
 import io.jmix.core.Events;
-import io.jmix.core.event.AppContextInitializedEvent;
-import io.jmix.core.event.AppContextStartedEvent;
-import io.jmix.core.event.AppContextStoppedEvent;
+import com.haulmont.cuba.core.sys.events.AppContextInitializedEvent;
+import com.haulmont.cuba.core.sys.events.AppContextStartedEvent;
+import com.haulmont.cuba.core.sys.events.AppContextStoppedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -119,6 +120,7 @@ public class AppContext {
          * @param publishEvent - fire AppContextInitializedEvent event if true
          */
         public static void setApplicationContext(@Nullable ApplicationContext applicationContext, boolean publishEvent) {
+            AppBeans.setApplicationContext(applicationContext);
             context = applicationContext;
             if (publishEvent) {
                 Events events = getApplicationContext().getBean(Events.NAME, Events.class);

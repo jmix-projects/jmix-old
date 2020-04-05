@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
-package io.jmix.core.commons.xmlparsing;
+package com.haulmont.cuba.core.sys.events;
 
+import com.haulmont.cuba.core.sys.AppContext;
 import io.jmix.core.AppBeans;
-import org.springframework.context.event.ContextClosedEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.ApplicationContextEvent;
 
-@Component
-public class Dom4jToolsShutdownListener {
+/**
+ * Application lifecycle event.
+ * <p>
+ * Published right after initialization of Spring context. {@link AppContext} and {@link AppBeans} can be used
+ * in the handlers of this event.
+ *
+ * @see AppContextStartedEvent
+ */
+public class AppContextInitializedEvent extends ApplicationContextEvent {
 
-    @EventListener(ContextClosedEvent.class)
-    public void appContextStopped() {
-        AppBeans.get(Dom4jTools.class).shutdown();
+    public AppContextInitializedEvent(ApplicationContext source) {
+        super(source);
     }
-
 }

@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.core.testsupport;
 
-import io.jmix.core.compatibility.AppContext;
+import com.haulmont.cuba.core.sys.AppContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.test.context.event.BeforeTestClassEvent;
 
