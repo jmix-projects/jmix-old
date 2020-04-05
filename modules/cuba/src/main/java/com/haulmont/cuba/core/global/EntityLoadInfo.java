@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.core.compatibility;
+package com.haulmont.cuba.core.global;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.Entity;

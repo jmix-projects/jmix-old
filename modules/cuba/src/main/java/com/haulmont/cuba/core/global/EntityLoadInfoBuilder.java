@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.core.compatibility;
+package com.haulmont.cuba.core.global;
 
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.sys.linkhandling;
+package com.haulmont.cuba.web.sys.linkhandling;
 
 import io.jmix.core.DataManager;
 import io.jmix.core.EntityAccessException;
@@ -23,7 +23,7 @@ import io.jmix.core.Metadata;
 import io.jmix.core.ReferenceToEntitySupport;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlanRepository;
-import io.jmix.core.compatibility.EntityLoadInfo;
+import com.haulmont.cuba.core.global.EntityLoadInfo;
 import io.jmix.core.Entity;
 import io.jmix.ui.App;
 import io.jmix.ui.AppUI;
@@ -37,6 +37,8 @@ import io.jmix.ui.gui.OpenType;
 import io.jmix.ui.screen.EditorScreen;
 import io.jmix.ui.screen.MapScreenOptions;
 import io.jmix.ui.screen.Screen;
+import io.jmix.ui.sys.linkhandling.ExternalLinkContext;
+import io.jmix.ui.sys.linkhandling.LinkHandlerProcessor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
