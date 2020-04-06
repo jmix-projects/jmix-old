@@ -98,11 +98,12 @@ public class UserSettingsTools {
         }
     }
 
+    /* todo folders panel
     public void saveFoldersState(boolean visible, int horizontalSplit, int verticalSplit) {
         userSettingService.saveSetting(ClientType.WEB, "foldersState",
                 String.valueOf(visible) + ","
                 + String.valueOf(horizontalSplit) + ","
                 + String.valueOf(verticalSplit)
         );
-    }
+    }*/
 }

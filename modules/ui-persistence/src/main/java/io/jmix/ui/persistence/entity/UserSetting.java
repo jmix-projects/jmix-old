@@ -18,13 +18,15 @@ package io.jmix.ui.persistence.entity;
 import io.jmix.core.entity.Creatable;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.data.entity.BaseUuidEntity;
+import io.jmix.ui.persistence.UserSettingsPersistence;
 
 import javax.persistence.*;
 import java.util.Date;
 
 /**
  * Record for user setting.
- * Used by <code>UserSettingServiceBean</code>.
+ *
+ * @see UserSettingsPersistence
  */
 @Entity(name = "sec$UserSetting")
 @Table(name = "SEC_USER_SETTING")

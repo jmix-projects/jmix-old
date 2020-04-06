@@ -501,11 +501,9 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         }
     }
 
-    // todo vm
     protected void loadPresentations(HasPresentations component, Element element) {
         String presentations = element.attributeValue("presentations");
         if (StringUtils.isNotEmpty(presentations)) {
-
             Presentations presentationBean = beanLocator.getPrototype(Presentations.NAME, component);
             if (presentationBean.isPresentationsAvailable()) {
                 component.usePresentations(Boolean.parseBoolean(presentations));

@@ -234,8 +234,7 @@ public class UiProperties {
     }
 
     /**
-     * @return Default main window mode. Takes place until the user did not change its own preference through user
-     * settings.
+     * @return Default main window mode.
      */
     public String getAppWindowMode() {
         return appWindowMode;

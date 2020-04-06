@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @JmixModule(
         dependsOn = {JmixCoreConfiguration.class, JmixDataConfiguration.class, JmixUiConfiguration.class},
-        properties = {@JmixProperty(name = "jmix.core.fetchPlansConfig", value = "io/jmix/ui/persistence/views.xml", append = true)})
+        properties = {@JmixProperty(name = "jmix.core.fetchPlansConfig", value = "io/jmix/ui/persistence/fetch-plan.xml", append = true)})
 public class JmixUiPersistenceConfiguration {
 
     @Bean(UserSettingService.NAME)
