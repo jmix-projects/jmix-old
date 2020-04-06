@@ -18,11 +18,10 @@ package io.jmix.ui.xml.layout.loaders;
 
 import com.google.common.base.Strings;
 import io.jmix.core.BeanLocator;
+import io.jmix.core.HotDeployManager;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
-import io.jmix.core.Scripting;
 import io.jmix.core.commons.util.ReflectionHelper;
-import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.ConstraintOperationType;
 import io.jmix.core.security.Security;
@@ -56,6 +55,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
+import org.springframework.core.env.Environment;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -102,6 +102,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
     protected T resultComponent;
 
     protected BeanLocator beanLocator;
+    protected Environment environment;
 
     protected AbstractComponentLoader() {
     }
@@ -109,6 +110,11 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
     @Override
     public void setBeanLocator(BeanLocator beanLocator) {
         this.beanLocator = beanLocator;
+    }
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
     }
 
     @Override
@@ -194,8 +200,8 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         return beanLocator.get(MessageTools.NAME);
     }
 
-    protected Scripting getScripting() {
-        return beanLocator.get(Scripting.NAME);
+    protected HotDeployManager getHotDeployManager() {
+        return beanLocator.get(HotDeployManager.NAME);
     }
 
     protected UiProperties getProperties() {
@@ -544,7 +550,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         if (StringUtils.isNotBlank(scriptPath) || StringUtils.isNotBlank(script)) {
             validator = new ScriptValidator(validatorElement, context.getMessagesPack());
         } else {
-            Class aClass = getScripting().loadClass(className);
+            Class aClass = getHotDeployManager().findClass(className);
             if (aClass == null)
                 throw new GuiDevelopmentException(String.format("Class %s is not found", className), context);
             if (!StringUtils.isBlank(context.getMessagesPack()))
@@ -830,7 +836,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
     protected String loadShortcutFromConfig(String shortcut) {
         if (shortcut.contains(".")) {
             String shortcutPropertyKey = shortcut.substring(2, shortcut.length() - 1);
-            String shortcutValue = AppContext.getProperty(shortcutPropertyKey);
+            String shortcutValue = environment.getProperty(shortcutPropertyKey);
             if (StringUtils.isNotEmpty(shortcutValue)) {
                 return shortcutValue;
             } else {
@@ -845,7 +851,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         String id = loadActionId(element);
 
         if (StringUtils.isBlank(element.attributeValue("invoke"))) {
-                            String type = element.attributeValue("type");
+            String type = element.attributeValue("type");
             if (StringUtils.isNotEmpty(type)) {
                 Actions actions = beanLocator.get(Actions.NAME);
 
@@ -868,7 +874,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
                 throw new GuiDevelopmentException("Formatter's attribute 'class' is not specified", context);
             }
 
-            Class<?> aClass = getScripting().loadClass(className);
+            Class<?> aClass = getHotDeployManager().findClass(className);
             if (aClass == null) {
                 throw new GuiDevelopmentException(String.format("Class %s is not found", className), context);
             }
@@ -1025,6 +1031,13 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         String requiredIndicatorVisible = element.attributeValue("requiredIndicatorVisible");
         if (!Strings.isNullOrEmpty(requiredIndicatorVisible)) {
             component.setRequiredIndicatorVisible(Boolean.parseBoolean(requiredIndicatorVisible));
+        }
+    }
+
+    protected void loadHtmlSanitizerEnabled(HasHtmlSanitizer component, Element element) {
+        String htmlSanitizerEnabled = element.attributeValue("htmlSanitizerEnabled");
+        if (StringUtils.isNotEmpty(htmlSanitizerEnabled)) {
+            component.setHtmlSanitizerEnabled(Boolean.parseBoolean(htmlSanitizerEnabled));
         }
     }
 }

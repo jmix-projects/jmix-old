@@ -30,10 +30,10 @@ dependencies {
     api 'com.vaadin:vaadin-push'
     api 'com.vaadin:vaadin-spring'
 
-    api 'org.perf4j:perf4j'
-
     api 'org.springframework:spring-websocket'
     api 'org.springframework.boot:spring-boot-autoconfigure'
+
+    api 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20191001.1'
 
     testImplementation 'org.springframework:spring-test'
     testImplementation 'org.spockframework:spock-core'

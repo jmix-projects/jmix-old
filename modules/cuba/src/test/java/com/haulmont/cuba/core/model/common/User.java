@@ -16,13 +16,13 @@
 package com.haulmont.cuba.core.model.common;
 
 import io.jmix.core.DeletePolicy;
-import io.jmix.core.compatibility.AppContext;
-import io.jmix.data.entity.StandardEntity;
 import io.jmix.core.entity.annotation.Listeners;
 import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.entity.annotation.TrackEditScreenHistory;
 import io.jmix.core.metamodel.annotations.Composition;
+import io.jmix.core.metamodel.annotations.NamePattern;
+import io.jmix.data.entity.StandardEntity;
 import com.haulmont.chile.core.annotations.NamePattern;
 import org.apache.commons.lang3.StringUtils;
 
@@ -286,10 +286,11 @@ public class User extends StandardEntity {
     }
 
     public String getCaption() {
-        String pattern = AppContext.getProperty("cuba.user.namePattern");
+        // todo rework when new instance name is ready
+        String pattern = /*AppContext.getProperty("cuba.user.namePattern");
         if (StringUtils.isBlank(pattern)) {
-            pattern = "{1} [{0}]";
-        }
+            pattern =*/ "{1} [{0}]";
+        /*}*/
         MessageFormat fmt = new MessageFormat(pattern);
         return StringUtils.trimToEmpty(fmt.format(new Object[]{
                 StringUtils.trimToEmpty(login),

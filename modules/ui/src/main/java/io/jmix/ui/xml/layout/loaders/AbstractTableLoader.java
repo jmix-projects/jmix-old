@@ -85,6 +85,8 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
         loadDescription(resultComponent, element);
         loadContextHelp(resultComponent, element);
 
+        loadHtmlSanitizerEnabled(resultComponent, element);
+
         loadTabIndex(resultComponent, element);
 
         loadSortable(resultComponent, element);
@@ -684,7 +686,7 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
 
             String strategyClass = aggregationElement.attributeValue("strategyClass");
             if (StringUtils.isNotEmpty(strategyClass)) {
-                Class<?> aggregationClass = getScripting().loadClass(strategyClass);
+                Class<?> aggregationClass = getHotDeployManager().findClass(strategyClass);
                 if (aggregationClass == null) {
                     throw new GuiDevelopmentException(String.format("Class %s is not found", strategyClass), context);
                 }

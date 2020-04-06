@@ -18,7 +18,6 @@ package io.jmix.core;
 
 import io.jmix.core.annotation.JmixModule;
 import io.jmix.core.annotation.JmixProperty;
-import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.impl.JmixMessageSource;
 import io.jmix.core.security.JmixCoreSecurityConfiguration;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
@@ -44,7 +43,6 @@ import org.springframework.core.annotation.Order;
 @ComponentScan
 @ConfigurationPropertiesScan
 @JmixModule(dependsOn = {}, properties = {
-        @JmixProperty(name = "jmix.core.fetchPlansConfig", value = "io/jmix/core/views.xml"),
         @JmixProperty(name = "jmix.core.workDir", value = "${user.dir}/.jmix/work"),
         @JmixProperty(name = "jmix.core.confDir", value = "${user.dir}/.jmix/conf")
 })
@@ -66,14 +64,8 @@ public class JmixCoreConfiguration {
     }
 
     @EventListener
-    @Order(Events.HIGHEST_CORE_PRECEDENCE + 10)
+    @Order(Events.HIGHEST_CORE_PRECEDENCE + 5)
     public void onApplicationContextRefreshFirst(ContextRefreshedEvent event) {
-        AppContext.Internals.setApplicationContext(event.getApplicationContext());
-    }
-
-    @EventListener
-    @Order(Events.LOWEST_CORE_PRECEDENCE - 10)
-    public void onApplicationContextRefreshLast(ContextRefreshedEvent event) {
-        AppContext.Internals.startContext();
+        AppBeans.setApplicationContext(event.getApplicationContext());
     }
 }

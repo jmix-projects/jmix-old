@@ -18,6 +18,7 @@ package io.jmix.ui.components;
 public interface BoxLayout extends ExpandingLayout, OrderedContainer, HasSpacing, HasMargin,
                                    Component.BelongToFrame, Component.HasCaption, Component.HasIcon,
                                    LayoutClickNotifier, ShortcutNotifier, SupportsExpandRatio,
-                                   HasContextHelp, HasHtmlCaption, HasHtmlDescription, HasRequiredIndicator {
+                                   HasContextHelp, HasHtmlCaption, HasHtmlDescription, HasRequiredIndicator,
+                                   HasHtmlSanitizer {
 
 }

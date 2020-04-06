@@ -101,7 +101,7 @@ configure([project(':jmix-platform'), project(':modules:core'), project(':module
     }
 }
 
-configure([project(':modules:core'), project(':modules:data'), project(':modules:security')]) {
+configure([project(':modules:core'), project(':modules:data'), project(':modules:security'), project(':modules:audit')]) {
     if (rootProject.hasProperty('spotbugsEnabled')) {
         apply plugin: 'com.github.spotbugs'
 
