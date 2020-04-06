@@ -20,28 +20,35 @@ import io.jmix.core.DevelopmentException;
 import io.jmix.core.InstanceNameProvider;
 import io.jmix.core.impl.InstanceNameProviderImpl;
 import com.haulmont.chile.core.annotations.NamePattern;
+import io.jmix.core.impl.MetadataLoader;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * {@link InstanceNameProvider} implementation for CUBA compatible module to support {@link NamePattern} annotation
  */
 public class CubaInstanceNameProviderImpl extends InstanceNameProviderImpl {
 
+    private final Logger log = LoggerFactory.getLogger(CubaInstanceNameProviderImpl.class);
+
     private static final Pattern INSTANCE_NAME_SPLIT_PATTERN = Pattern.compile("[,;]");
 
     @Nullable
     @Override
-    public NamePatternRec parseNamePattern(MetaClass metaClass) {
-        NamePatternRec namePattern = super.parseNamePattern(metaClass);
+    public InstanceNameRec parseNamePattern(MetaClass metaClass) {
+        InstanceNameRec namePattern = super.parseNamePattern(metaClass);
         if (namePattern != null) {
             return namePattern;
         }
@@ -59,48 +66,23 @@ public class CubaInstanceNameProviderImpl extends InstanceNameProviderImpl {
         String format = StringUtils.substring(pattern, 0, pos);
         String trimmedFormat = format.trim();
         String methodName = trimmedFormat.startsWith("#") ? trimmedFormat.substring(1) : null;
+        Method method = null;
+        if (methodName != null) {
+            try {
+                method = Stream.of(metaClass.getJavaClass().getDeclaredMethods())
+                        .filter(m -> m.getName().equals(methodName))
+                        .findFirst().orElseThrow(NoSuchMethodException::new);
+            } catch (NoSuchMethodException e) {
+                log.error("Instance name method {} not found in meta class {}", methodName, metaClass.getName(), e);
+                throw new RuntimeException(
+                        String.format("Instance name method %s not found in meta class %s", methodName, metaClass.getName()),
+                        e);
+            }
+        }
         String fieldsStr = StringUtils.substring(pattern, pos + 1);
-        String[] fields = INSTANCE_NAME_SPLIT_PATTERN.split(fieldsStr);
-        return new NamePatternRec(format, methodName, fields);
-    }
-
-    /**
-     * Return a collection of properties included into entity's name pattern (see {@link NamePattern}).
-     *
-     * @param metaClass   entity metaclass
-     * @param useOriginal if true, and if the given metaclass doesn't define a {@link NamePattern} and if it is an
-     *                    extended entity, this method tries to find a name pattern in an original entity
-     * @return collection of the name pattern properties
-     */
-    @Nonnull
-    public Collection<MetaProperty> getInstanceNameRelatedProperties(MetaClass metaClass, boolean useOriginal) {
-        Collection<MetaProperty> properties = super.getInstanceNameRelatedProperties(metaClass, useOriginal);
-        if (!properties.isEmpty()) {
-            return properties;
-        }
-        String pattern = (String) metadataTools.getMetaAnnotationAttributes(metaClass.getAnnotations(), NamePattern.class).get("value");
-        if (pattern == null && useOriginal) {
-            MetaClass original = extendedEntities.getOriginalMetaClass(metaClass);
-            if (original != null) {
-                pattern = (String) metadataTools.getMetaAnnotationAttributes(original.getAnnotations(), NamePattern.class).get("value");
-            }
-        }
-        if (!StringUtils.isBlank(pattern)) {
-            String value = StringUtils.substringAfter(pattern, "|");
-            String[] fields = StringUtils.splitPreserveAllTokens(value, ",");
-            for (String field : fields) {
-                String fieldName = StringUtils.trim(field);
-
-                MetaProperty property = metaClass.findProperty(fieldName);
-                if (property != null) {
-                    properties.add(metaClass.findProperty(fieldName));
-                } else {
-                    throw new DevelopmentException(
-                            String.format("Property '%s' is not found in %s", field, metaClass.toString()),
-                            "NamePattern", pattern);
-                }
-            }
-        }
-        return properties;
+        MetaProperty[] fields = INSTANCE_NAME_SPLIT_PATTERN.splitAsStream(fieldsStr)
+                .map(metaClass::getProperty)
+                .toArray(MetaProperty[]::new);
+        return new InstanceNameRec(format, method, fields);
     }
 }

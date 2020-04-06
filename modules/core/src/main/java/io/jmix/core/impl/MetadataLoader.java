@@ -16,6 +16,7 @@
 
 package io.jmix.core.impl;
 
+import io.jmix.core.InstanceNameProvider;
 import io.jmix.core.impl.scanning.EntitiesScanner;
 import io.jmix.core.metamodel.annotations.InstanceName;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -66,6 +67,9 @@ public class MetadataLoader {
     protected List<String> basePackages;
 
     @Inject
+    protected InstanceNameProvider instanceNameProvider;
+
+    @Inject
     public MetadataLoader(EntitiesScanner entitiesScanner, MetaModelLoader metaModelLoader) {
         this.session = new SessionImpl();
 
@@ -81,7 +85,7 @@ public class MetadataLoader {
         for (MetaClass metaClass : session.getClasses()) {
             postProcessClass(metaClass);
             initMetaAnnotations(metaClass);
-            validateInstanceNameAnnotation(metaClass);
+            instanceNameProvider.validateInstanceNameDefinition(metaClass);
         }
 
 //        initStoreMetaAnnotations(entityPackages);
@@ -97,29 +101,6 @@ public class MetadataLoader {
 //        replaceExtendedMetaClasses();
 
         log.info("Metadata initialized in {} ms", System.currentTimeMillis() - startTime);
-    }
-
-    private void validateInstanceNameAnnotation(MetaClass metaClass) {
-        List<Method> instanceNameMethods = Stream.of(metaClass.getJavaClass().getDeclaredMethods())
-                .filter(m -> m.isAnnotationPresent(InstanceName.class))
-                .collect(Collectors.toList());
-        List<MetaProperty> nameProperties = metaClass.getProperties().stream()
-                .filter(p -> p.getAnnotatedElement().getAnnotation(InstanceName.class) != null)
-                .collect(Collectors.toList());
-        if (instanceNameMethods.size() > 1) {
-            log.warn("Multiple @InstanceName annotated methods found in {} class, method {} will be used for instance name",
-                    metaClass.getName(),
-                    instanceNameMethods.get(0));
-        } else if (instanceNameMethods.size() == 1 && !nameProperties.isEmpty()) {
-            log.warn("@InstanceName annotated method and @InstanceName annotated properties found in {} class, " +
-                            "method {} will be used for instance name",
-                    metaClass.getName(),
-                    instanceNameMethods.get(0));
-        } else if (nameProperties.size() > 1) {
-            log.warn("Multiple @InstanceName annotated properties found in {} class, property {} will be used for instance name",
-                    metaClass.getName(),
-                    nameProperties.get(0));
-        }
     }
 
     /**

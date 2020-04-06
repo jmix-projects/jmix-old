@@ -16,6 +16,8 @@
 
 package io.jmix.core.impl.method;
 
+import org.springframework.stereotype.Component;
+
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
@@ -25,10 +27,13 @@ import java.util.List;
  * {@link MethodArgumentResolver MethodArgumentResolvers}.
  * Previously resolved method parameters are cached for faster lookups.
  */
-public class ContextArgumentResolverComposite<T extends MethodArgumentResolver> extends CachedArgumentResolverComposite {
+@Component(ContextArgumentResolverComposite.NAME)
+public class ContextArgumentResolverComposite extends CachedArgumentResolverComposite {
+
+    public static final String NAME = "jmix_ContextArgumentResolverComposite";
 
     @Inject
-    protected List<T> resolvers;
+    protected List<MethodArgumentResolver> resolvers;
 
     /**
      * Return a read-only list with the contained resolvers, or an empty list.
