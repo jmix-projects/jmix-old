@@ -18,12 +18,17 @@ package io.jmix.ui.persistence;
 
 import io.jmix.core.ClientType;
 import io.jmix.core.Metadata;
+import io.jmix.core.UuidProvider;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
 import io.jmix.core.entity.User;
-import io.jmix.core.security.Security;
-import io.jmix.core.security.UserSessionSource;
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.security.*;
+import io.jmix.ui.persistence.entity.Presentation;
 import io.jmix.ui.persistence.entity.UserSetting;
 import io.jmix.ui.settings.UserSettingService;
+import org.dom4j.Attribute;
+import org.dom4j.Document;
+import org.dom4j.Element;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -32,9 +37,9 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class UserSettingsPersistence implements UserSettingService {
 
@@ -109,73 +114,75 @@ public class UserSettingsPersistence implements UserSettingService {
         });
     }
 
-
     @Override
     public void copySettings(User fromUser, User toUser) {
-            /*MetaClass metaClass = metadata.getClassNN(UserSetting.class);
+        MetaClass metaClass = metadata.getClass(UserSetting.class);
 
-            if (!security.isEntityOpPermitted(metaClass, EntityOp.CREATE)) {
-                throw new AccessDeniedException(PermissionType.ENTITY_OP, metaClass.getName());
-            }
+        if (!security.isEntityOpPermitted(metaClass, EntityOp.CREATE)) {
+            throw new AccessDeniedException(PermissionType.ENTITY_OP, metaClass.getName());
+        }
 
-            Map<UUID, Presentation> presentationsMap = copyPresentations(fromUser, toUser);
-            copyUserFolders(fromUser, toUser, presentationsMap);
-            Map<UUID, FilterEntity> filtersMap = copyFilters(fromUser, toUser);
+        transaction.executeWithoutResult(status -> {
+            Query deleteSettingsQuery = entityManager.createQuery("delete from sec$UserSetting s where s.userLogin = ?1");
+            deleteSettingsQuery.setParameter(1, toUser.getLogin());
+            deleteSettingsQuery.executeUpdate();
+        });
 
-            try (Transaction tx = persistence.createTransaction()) {
-                EntityManager em = persistence.getEntityManager();
+        Map<UUID, Presentation> presentationsMap = copyPresentations(fromUser, toUser);
 
-                Query deleteSettingsQuery = em.createQuery("delete from sec$UserSetting s where s.user.id = ?1");
-                deleteSettingsQuery.setParameter(1, toUser.getId());
-                deleteSettingsQuery.executeUpdate();
-                tx.commitRetaining();
-                em = persistence.getEntityManager();
+        /* todo folders panel
+        copyUserFolders(fromUser, toUser, presentationsMap);
 
-                TypedQuery<UserSetting> q = em.createQuery("select s from sec$UserSetting s where s.user.id = ?1", UserSetting.class);
-                q.setParameter(1, fromUser.getId());
-                List<UserSetting> fromUserSettings = q.getResultList();
+        todo filter
+        Map<UUID, FilterEntity> filtersMap = copyFilters(fromUser, toUser);
+        */
 
-                for (UserSetting currSetting : fromUserSettings) {
-                    UserSetting newSetting = metadata.create(UserSetting.class);
-                    newSetting.setUser(toUser);
-                    newSetting.setClientType(currSetting.getClientType());
-                    newSetting.setName(currSetting.getName());
+        transaction.executeWithoutResult(status -> {
+            TypedQuery<UserSetting> q = entityManager.
+                    createQuery("select s from sec$UserSetting s where s.userLogin = ?1", UserSetting.class);
+            q.setParameter(1, fromUser.getLogin());
+            List<UserSetting> fromUserSettings = q.getResultList();
 
-                    try {
-                        Document doc = dom4JTools.readDocument(currSetting.getValue());
+            for (UserSetting currSetting : fromUserSettings) {
+                UserSetting newSetting = metadata.create(UserSetting.class);
+                newSetting.setUserLogin(toUser.getLogin());
+                newSetting.setClientType(currSetting.getClientType());
+                newSetting.setName(currSetting.getName());
 
-                        List<Element> components = doc.getRootElement().element("components").elements("component");
-                        for (Element component : components) {
-                            Attribute presentationAttr = component.attribute("presentation");
-                            if (presentationAttr != null) {
-                                UUID presentationId = UuidProvider.fromString(presentationAttr.getValue());
-                                Presentation newPresentation = presentationsMap.get(presentationId);
-                                if (newPresentation != null) {
-                                    presentationAttr.setValue(newPresentation.getId().toString());
-                                }
-                            }
-                            Element defaultFilterEl = component.element("defaultFilter");
-                            if (defaultFilterEl != null) {
-                                Attribute idAttr = defaultFilterEl.attribute("id");
-                                if (idAttr != null) {
-                                    UUID filterId = UuidProvider.fromString(idAttr.getValue());
-                                    FilterEntity newFilter = filtersMap.get(filterId);
-                                    if (newFilter != null) {
-                                        idAttr.setValue(newFilter.getId().toString());
-                                    }
-                                }
+                try {
+                    Document doc = dom4JTools.readDocument(currSetting.getValue());
+
+                    List<Element> components = doc.getRootElement().element("components").elements("component");
+                    for (Element component : components) {
+                        Attribute presentationAttr = component.attribute("presentation");
+                        if (presentationAttr != null) {
+                            UUID presentationId = UuidProvider.fromString(presentationAttr.getValue());
+                            Presentation newPresentation = presentationsMap.get(presentationId);
+                            if (newPresentation != null) {
+                                presentationAttr.setValue(newPresentation.getId().toString());
                             }
                         }
-
-                        newSetting.setValue(dom4JTools.writeDocument(doc, true));
-                    } catch (Exception e) {
-                        newSetting.setValue(currSetting.getValue());
+                        /* todo filter
+                        Element defaultFilterEl = component.element("defaultFilter");
+                        if (defaultFilterEl != null) {
+                            Attribute idAttr = defaultFilterEl.attribute("id");
+                            if (idAttr != null) {
+                                UUID filterId = UuidProvider.fromString(idAttr.getValue());
+                                FilterEntity newFilter = filtersMap.get(filterId);
+                                if (newFilter != null) {
+                                    idAttr.setValue(newFilter.getId().toString());
+                                }
+                            }
+                        }*/
                     }
-                    em.persist(newSetting);
-                }
 
-                tx.commit();
-            }*/
+                    newSetting.setValue(dom4JTools.writeDocument(doc, true));
+                } catch (Exception e) {
+                    newSetting.setValue(currSetting.getValue());
+                }
+                entityManager.persist(newSetting);
+            }
+        });
     }
 
     @Override
@@ -212,37 +219,37 @@ public class UserSettingsPersistence implements UserSettingService {
         return (UserSetting) result.get(0);
     }
 
-    /*protected Map<UUID, Presentation> copyPresentations(User fromUser, User toUser) {
-        Map<UUID, Presentation> presentationMap = new HashMap<>();
-        try (Transaction tx = persistence.createTransaction()) {
-            EntityManager em = persistence.getEntityManager();
-
+    protected Map<UUID, Presentation> copyPresentations(User fromUser, User toUser) {
+        Map<UUID, Presentation> resultMap = transaction.execute(status -> {
             // delete existing
-            Query delete = em.createQuery("delete from sec$Presentation p where p.user.id = ?1");
-            delete.setParameter(1, toUser.getId());
+            Query delete = entityManager.createQuery("delete from sec$Presentation p where p.userLogin = ?1");
+            delete.setParameter(1, toUser.getLogin());
             delete.executeUpdate();
 
             // copy settings
-            TypedQuery<Presentation> selectQuery = em.createQuery(
-                    "select p from sec$Presentation p where p.user.id = ?1", Presentation.class);
-            selectQuery.setParameter(1, fromUser.getId());
+            TypedQuery<Presentation> selectQuery = entityManager.createQuery(
+                    "select p from sec$Presentation p where p.userLogin = ?1", Presentation.class);
+            selectQuery.setParameter(1, fromUser.getLogin());
             List<Presentation> presentations = selectQuery.getResultList();
 
+            Map<UUID, Presentation> presentationMap = new HashMap<>();
             for (Presentation presentation : presentations) {
                 Presentation newPresentation = metadata.create(Presentation.class);
-                newPresentation.setUser(toUser);
+                newPresentation.setUserLogin(toUser.getLogin());
                 newPresentation.setComponentId(presentation.getComponentId());
                 newPresentation.setAutoSave(presentation.getAutoSave());
                 newPresentation.setName(presentation.getName());
                 newPresentation.setXml(presentation.getXml());
                 presentationMap.put(presentation.getId(), newPresentation);
-                em.persist(newPresentation);
+                entityManager.persist(newPresentation);
             }
-            tx.commit();
             return presentationMap;
-        }
+        });
+
+        return resultMap;
     }
 
+    /* todo folders panel
     protected void copyUserFolders(User fromUser, User toUser, Map<UUID, Presentation> presentationsMap) {
         try (Transaction tx = persistence.createTransaction()) {
             MetaClass effectiveMetaClass = metadata.getExtendedEntities().getEffectiveMetaClass(SearchFolder.class);
@@ -270,9 +277,9 @@ public class UserSettingsPersistence implements UserSettingService {
             }
             tx.commit();
         }
-    }*/
+    }
 
-  /*  protected SearchFolder copyFolder(SearchFolder searchFolder,
+    protected SearchFolder copyFolder(SearchFolder searchFolder,
                                       User toUser,
                                       Map<SearchFolder, SearchFolder> copiedFolders,
                                       Map<UUID, Presentation> presentationsMap) {
