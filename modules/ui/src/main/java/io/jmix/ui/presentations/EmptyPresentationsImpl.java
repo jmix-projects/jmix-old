@@ -23,6 +23,10 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.*;
 
+/**
+ * Stub. By default, UI does not provide persistence functionality for presentations. To save/load presentations add
+ * "ui-persistence" add-on.
+ */
 @org.springframework.stereotype.Component(Presentations.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class EmptyPresentationsImpl implements Presentations {

@@ -16,7 +16,11 @@
 
 package io.jmix.ui.presentations.model;
 
-public class PresentationStub implements Presentation {
+/**
+ * Stub. By default, UI does not provide persistence functionality for presentations. To save/load presentations add
+ * "ui-persistence" add-on.
+ */
+public class EmptyPresentation implements Presentation {
 
     protected String name;
 

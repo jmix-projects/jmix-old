@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.presentations;
 
-import io.jmix.ui.presentations.model.PresentationStub;
+import io.jmix.ui.presentations.model.EmptyPresentation;
 import io.jmix.ui.presentations.model.Presentation;
 import org.dom4j.Element;
 
@@ -124,14 +124,14 @@ public interface Presentations {
     void removeListener(PresentationsChangeListener listener);
 
     /**
-     * @return Presentation instance or stub if ui-persistence add-on is not added to the project
+     * @return Presentation instance or stub if "ui-persistence" add-on is not added to the project
      */
     default Presentation create() {
-        return new PresentationStub();
+        return new EmptyPresentation();
     }
 
     /**
-     * @return true if ui-persistence add-on is added to the project
+     * @return true if "ui-persistence" add-on is added to the project
      */
     default boolean isPresentationsAvailable() {
         return false;

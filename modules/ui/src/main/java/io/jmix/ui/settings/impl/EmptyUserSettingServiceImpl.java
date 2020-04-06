@@ -24,6 +24,10 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Nullable;
 import java.util.Set;
 
+/**
+ * Stub. By default, UI does not provide persistence functionality for settings. To save/load settings add
+ * "ui-persistence" add-on.
+ */
 @Service(UserSettingService.NAME)
 public class EmptyUserSettingServiceImpl implements UserSettingService {
 
