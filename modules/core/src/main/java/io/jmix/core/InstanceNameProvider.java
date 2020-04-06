@@ -16,7 +16,6 @@
 
 package io.jmix.core;
 
-import io.jmix.core.impl.InstanceNameProviderImpl;
 import io.jmix.core.metamodel.annotations.InstanceName;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -29,14 +28,6 @@ import java.util.Collection;
 public interface InstanceNameProvider {
 
     String NAME = "jmix_InstanceNameProvider";
-
-    /**
-     * Validate instance name definition by {@link InstanceName} annotation
-     *
-     * @param metaClass   instance
-     *
-     */
-    void validateInstanceNameDefinition(MetaClass metaClass);
 
     /**
      * Get entity instance name defined by {@link InstanceName} annotation

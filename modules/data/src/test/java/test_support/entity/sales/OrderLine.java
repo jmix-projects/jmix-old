@@ -43,8 +43,8 @@ public class OrderLine extends StandardEntity {
     protected Order order;
 
     @InstanceName
-    public String getCaption(){
-        return getProduct().getName()+" "+getQuantity();
+    public String getCaption() {
+        return getProduct().getName() + " " + getQuantity();
     }
 
     public void setOrder(Order order) {

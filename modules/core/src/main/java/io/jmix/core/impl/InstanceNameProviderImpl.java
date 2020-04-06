@@ -115,11 +115,6 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
     }
 
     @Override
-    public void validateInstanceNameDefinition(MetaClass metaClass) {
-        instanceNameRecCache.getUnchecked(metaClass);
-    }
-
-    @Override
     public String getInstanceName(Entity instance) {
         checkNotNullArgument(instance, "instance is null");
 
@@ -162,33 +157,17 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
         return rec != null ? Arrays.asList(rec.nameProperties) : Collections.emptyList();
     }
 
-    protected Collection<MetaProperty> getInstanceNameProperties(MetaClass metaClass) {
+    protected Collection<MetaProperty> getInstanceNameProperties(MetaClass metaClass, @Nullable Method nameMethod, @Nullable MetaProperty nameProperty) {
         final Collection<MetaProperty> properties = new HashSet<>();
-        Method nameMethod = getInstanceNameMethod(metaClass);
         if (nameMethod != null) {
             return getPropertiesFromAnnotation(metaClass, nameMethod.getAnnotation(InstanceName.class));
         }
-        MetaProperty nameProperty = getInstanceNameProperty(metaClass);
         if (nameProperty != null) {
             properties.add(nameProperty);
             InstanceName annotation = nameProperty.getAnnotatedElement().getAnnotation(InstanceName.class);
             properties.addAll(getPropertiesFromAnnotation(metaClass, annotation));
         }
         return properties;
-    }
-
-    @Nullable
-    private MetaProperty getInstanceNameProperty(MetaClass metaClass) {
-        return metaClass.getProperties().stream()
-                .filter(p -> p.getAnnotatedElement().getAnnotation(InstanceName.class) != null)
-                .findFirst().orElse(null);
-    }
-
-    @Nullable
-    private Method getInstanceNameMethod(MetaClass metaClass) {
-        return Stream.of(metaClass.getJavaClass().getDeclaredMethods())
-                .filter(m -> m.isAnnotationPresent(InstanceName.class))
-                .findFirst().orElse(null);
     }
 
     private List<MetaProperty> getPropertiesFromAnnotation(MetaClass metaClass, InstanceName annotation) {
@@ -200,6 +179,7 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
     @Nullable
     public InstanceNameRec parseNamePattern(MetaClass metaClass) {
         Method method = null;
+        MetaProperty nameProperty = null;
         List<Method> instanceNameMethods = Stream.of(metaClass.getJavaClass().getDeclaredMethods())
                 .filter(m -> m.isAnnotationPresent(InstanceName.class))
                 .collect(Collectors.toList());
@@ -208,12 +188,16 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
                 .collect(Collectors.toList());
         if (!instanceNameMethods.isEmpty()) {
             method = instanceNameMethods.get(0);
+        } else if (!nameProperties.isEmpty()) {
+            nameProperty = nameProperties.get(0);
         }
         if (instanceNameMethods.isEmpty() && nameProperties.isEmpty()) {
             return null;
         }
         validateInstanceNameAnnotation(metaClass, instanceNameMethods, nameProperties);
-        return new InstanceNameRec("%s", method, getInstanceNameProperties(metaClass).stream().toArray(MetaProperty[]::new));
+        return new InstanceNameRec("%s", method,
+                getInstanceNameProperties(metaClass, method, nameProperty).stream()
+                        .toArray(MetaProperty[]::new));
     }
 
     private void validateInstanceNameAnnotation(MetaClass metaClass, List<Method> instanceNameMethods, List<MetaProperty> nameProperties) {

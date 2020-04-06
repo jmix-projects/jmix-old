@@ -16,15 +16,14 @@
 
 package io.jmix.core.impl;
 
-import io.jmix.core.InstanceNameProvider;
+import io.jmix.core.Entity;
+import io.jmix.core.entity.annotation.*;
 import io.jmix.core.impl.scanning.EntitiesScanner;
-import io.jmix.core.metamodel.annotations.InstanceName;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Session;
-import io.jmix.core.metamodel.model.impl.*;
-import io.jmix.core.Entity;
-import io.jmix.core.entity.annotation.*;
+import io.jmix.core.metamodel.model.impl.MetaPropertyImpl;
+import io.jmix.core.metamodel.model.impl.SessionImpl;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +34,10 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * INTERNAL.
@@ -66,9 +65,6 @@ public class MetadataLoader {
     protected List<String> basePackages;
 
     @Inject
-    protected InstanceNameProvider instanceNameProvider;
-
-    @Inject
     public MetadataLoader(EntitiesScanner entitiesScanner, MetaModelLoader metaModelLoader) {
         this.session = new SessionImpl();
 
@@ -84,7 +80,6 @@ public class MetadataLoader {
         for (MetaClass metaClass : session.getClasses()) {
             postProcessClass(metaClass);
             initMetaAnnotations(metaClass);
-            instanceNameProvider.validateInstanceNameDefinition(metaClass);
         }
 
 //        initStoreMetaAnnotations(entityPackages);
