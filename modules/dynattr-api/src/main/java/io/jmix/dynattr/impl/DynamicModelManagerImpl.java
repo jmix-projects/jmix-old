@@ -27,7 +27,7 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
-import io.jmix.data.OrmProperties;
+import io.jmix.data.PersistenceHints;
 import io.jmix.data.StoreAwareLocator;
 import io.jmix.data.entity.BaseUuidEntity;
 import io.jmix.dynattr.*;
@@ -298,7 +298,7 @@ public class DynamicModelManagerImpl implements DynamicModelManager {
                     String.format("select v from sys$CategoryAttributeValue v where v.entity.%s in :ids and v.parent is null",
                             referenceToEntitySupport.getReferenceIdPropertyName(metaClass)), CategoryAttributeValue.class)
                     .setParameter("ids", entityIds)
-                    .setHint(OrmProperties.FETCH_PLAN, fetchPlan)
+                    .setHint(PersistenceHints.FETCH_PLAN, fetchPlan)
                     .getResultList();
         } else {
             result = entityManager.createQuery(String.format("select v from sys$CategoryAttributeValue v where v.entity.%s in :ids " +
@@ -306,7 +306,7 @@ public class DynamicModelManagerImpl implements DynamicModelManager {
                     referenceToEntitySupport.getReferenceIdPropertyName(metaClass)), CategoryAttributeValue.class)
                     .setParameter("ids", entityIds)
                     .setParameter("entityType", metaClass.getName())
-                    .setHint(OrmProperties.FETCH_PLAN, fetchPlan)
+                    .setHint(PersistenceHints.FETCH_PLAN, fetchPlan)
                     .getResultList();
         }
         return result.stream()
@@ -349,7 +349,7 @@ public class DynamicModelManagerImpl implements DynamicModelManager {
                 List<Entity<?>> resultList = entityManager.createQuery(
                         String.format("select e from %s e where e.%s in :ids", metaClass.getName(), pkName))
                         .setParameter("ids", ids)
-                        .setHint(OrmProperties.FETCH_PLAN, FetchPlan.MINIMAL)
+                        .setHint(PersistenceHints.FETCH_PLAN, FetchPlan.MINIMAL)
                         .getResultList();
 
                 Map<Object, Entity<?>> entityById = new LinkedHashMap<>();
@@ -380,7 +380,7 @@ public class DynamicModelManagerImpl implements DynamicModelManager {
 
         return entityManager.createQuery("select v from sys$CategoryAttributeValue v where v.id in :ids", CategoryAttributeValue.class)
                 .setParameter("ids", ids)
-                .setHint(OrmProperties.FETCH_PLAN, fetchPlan)
+                .setHint(PersistenceHints.FETCH_PLAN, fetchPlan)
                 .getResultList();
     }
 

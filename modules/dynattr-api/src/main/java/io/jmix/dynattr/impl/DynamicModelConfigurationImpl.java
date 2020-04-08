@@ -20,7 +20,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import io.jmix.core.*;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.data.OrmProperties;
+import io.jmix.data.PersistenceHints;
 import io.jmix.data.StoreAwareLocator;
 import io.jmix.dynattr.AttributeDefinition;
 import io.jmix.dynattr.DynamicModelConfiguration;
@@ -103,7 +103,7 @@ public class DynamicModelConfigurationImpl implements DynamicModelConfiguration 
                             .build();
 
                     List<Category> resultList = entityManager.createQuery("select c from sys$Category c", Category.class)
-                            .setHint(OrmProperties.FETCH_PLAN, fetchPlan)
+                            .setHint(PersistenceHints.FETCH_PLAN, fetchPlan)
                             .getResultList();
 
                     Multimap<String, Category> categoriesCache = HashMultimap.create();
