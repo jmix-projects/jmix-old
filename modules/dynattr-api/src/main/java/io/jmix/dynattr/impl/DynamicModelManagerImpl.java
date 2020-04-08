@@ -64,7 +64,7 @@ public class DynamicModelManagerImpl implements DynamicModelManager {
     @Inject
     protected EntityStates entityStates;
     @Inject
-    protected DynamicModelConfiguration dynamicModelConfiguration;
+    protected DynamicModelMetadata dynamicModelConfiguration;
 
     protected String dynamicAttributesStore = Stores.MAIN;
 

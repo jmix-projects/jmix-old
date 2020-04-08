@@ -20,8 +20,8 @@ import io.jmix.core.metamodel.model.MetaClass;
 
 import java.util.Collection;
 
-public interface DynamicModelConfiguration {
-    String NAME = "jmix_DynamicModelConfiguration";
+public interface DynamicModelMetadata {
+    String NAME = "jmix_DynamicModelMetadata";
 
     boolean hasAttributesForClass(MetaClass metaClass);
 

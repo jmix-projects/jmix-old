@@ -23,7 +23,7 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.data.PersistenceHints;
 import io.jmix.data.StoreAwareLocator;
 import io.jmix.dynattr.AttributeDefinition;
-import io.jmix.dynattr.DynamicModelConfiguration;
+import io.jmix.dynattr.DynamicModelMetadata;
 import io.jmix.dynattr.impl.model.Category;
 import io.jmix.dynattr.impl.model.CategoryAttribute;
 import org.apache.commons.lang3.StringUtils;
@@ -40,8 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Component(DynamicModelConfiguration.NAME)
-public class DynamicModelConfigurationImpl implements DynamicModelConfiguration {
+@Component(DynamicModelMetadata.NAME)
+public class DynamicModelMetadataImpl implements DynamicModelMetadata {
 
     @Inject
     protected StoreAwareLocator storeAwareLocator;
@@ -54,7 +54,7 @@ public class DynamicModelConfigurationImpl implements DynamicModelConfiguration 
 
     protected String dynamicAttributesStore = Stores.MAIN;
 
-    private static final Logger log = LoggerFactory.getLogger(DynamicModelConfigurationImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(DynamicModelMetadataImpl.class);
 
     @Override
     public boolean hasAttributesForClass(MetaClass metaClass) {

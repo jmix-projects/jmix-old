@@ -22,7 +22,7 @@ import io.jmix.core.entity.EntityValues
 import io.jmix.data.JmixDataConfiguration
 import io.jmix.data.entity.ReferenceToEntity
 import io.jmix.dynattr.AttributeType
-import io.jmix.dynattr.DynamicModelConfiguration
+import io.jmix.dynattr.DynamicModelMetadata
 import io.jmix.dynattr.JmixDynAttrConfiguration
 import io.jmix.dynattr.impl.model.CategoryAttribute
 import org.springframework.test.context.ContextConfiguration
@@ -39,7 +39,7 @@ class DynamicAttributesTest extends Specification {
     @Inject
     protected DataManager dataManager
     @Inject
-    protected DynamicModelConfiguration dynamicModelConfiguration
+    protected DynamicModelMetadata dynamicModelConfiguration
 
     protected io.jmix.dynattr.impl.model.Category userCategory, userRoleCategory, roleCategory
 
