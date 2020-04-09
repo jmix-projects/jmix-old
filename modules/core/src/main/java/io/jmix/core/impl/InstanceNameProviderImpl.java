@@ -71,12 +71,12 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
     protected MethodArgumentsProvider methodArgumentsProvider;
 
     // stores methods in the execution order, all methods are accessible
-    protected LoadingCache<MetaClass, InstanceNameRec> instanceNameRecCache =
+    protected LoadingCache<MetaClass, Optional<InstanceNameRec>> instanceNameRecCache =
             CacheBuilder.newBuilder()
-                    .build(new CacheLoader<MetaClass, InstanceNameRec>() {
+                    .build(new CacheLoader<MetaClass, Optional<InstanceNameRec>>() {
                         @Override
-                        public InstanceNameRec load(@Nonnull MetaClass metaClass) {
-                            return parseNamePattern(metaClass);
+                        public Optional<InstanceNameRec> load(@Nonnull MetaClass metaClass) {
+                            return Optional.ofNullable(parseNamePattern(metaClass));
                         }
                     });
 
@@ -120,10 +120,12 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
 
         MetaClass metaClass = metadata.getClass(instance.getClass());
 
-        InstanceNameRec rec = instanceNameRecCache.getUnchecked(metaClass);
-        if (rec == null) {
+        Optional<InstanceNameRec> optional = instanceNameRecCache.getUnchecked(metaClass);
+        if (!optional.isPresent()) {
             return instance.toString();
         }
+
+        InstanceNameRec rec = optional.get();
 
         if (rec.method != null) {
             try {
@@ -147,14 +149,14 @@ public class InstanceNameProviderImpl implements InstanceNameProvider {
 
     @Override
     public Collection<MetaProperty> getInstanceNameRelatedProperties(MetaClass metaClass, boolean useOriginal) {
-        InstanceNameRec rec = instanceNameRecCache.getUnchecked(metaClass);
-        if (rec == null && useOriginal) {
+        Optional<InstanceNameRec> optional = instanceNameRecCache.getUnchecked(metaClass);
+        if (!optional.isPresent() && useOriginal) {
             MetaClass original = extendedEntities.getOriginalMetaClass(metaClass);
             if (original != null) {
-                rec = instanceNameRecCache.getUnchecked(original);
+                optional = instanceNameRecCache.getUnchecked(original);
             }
         }
-        return rec != null ? Arrays.asList(rec.nameProperties) : Collections.emptyList();
+        return optional.map(instanceNameRec -> Arrays.asList(instanceNameRec.nameProperties)).orElse(Collections.emptyList());
     }
 
     protected Collection<MetaProperty> getInstanceNameProperties(MetaClass metaClass, @Nullable Method nameMethod, @Nullable MetaProperty nameProperty) {

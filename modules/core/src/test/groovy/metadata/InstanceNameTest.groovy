@@ -76,6 +76,9 @@ class InstanceNameTest extends Specification {
         instanceNameProvider.getInstanceNameRelatedProperties(metadata.getClass(Address),true).stream()
                 .map{p->p.getName()}
                 .collect(Collectors.toSet()) == ["city", "zip"] as Set
+
+        cleanup:
+        authenticator.end()
     }
 
     def "instance name property"() {
