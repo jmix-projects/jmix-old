@@ -18,6 +18,7 @@ package io.jmix.ui.components.impl;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.*;
+import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.widgets.CubaHorizontalSplitPanel;
 import io.jmix.ui.widgets.client.split.SplitPanelDockMode;
 import com.vaadin.server.Sizeable.Unit;
@@ -215,6 +216,16 @@ public class WebSplitPanel extends WebAbstractComponent<AbstractSplitPanel> impl
         e.addAttribute("value", String.valueOf(component.getSplitPosition()));
         e.addAttribute("unit", String.valueOf(component.getSplitPositionUnit()));
         return true;
+    }
+
+    @Override
+    public void applySettings(SettingsWrapper settings) {
+
+    }
+
+    @Override
+    public boolean saveSettings(SettingsWrapper settings) {
+        return false;
     }
 
     @Override

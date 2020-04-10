@@ -17,9 +17,7 @@
 package io.jmix.ui.persistence.settings.facet;
 
 import com.google.common.base.Strings;
-import io.jmix.core.commons.util.Preconditions;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Frame;
+import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.xml.FacetProvider;
 import io.jmix.ui.xml.layout.ComponentLoader;
 import org.dom4j.Element;
@@ -55,11 +53,11 @@ public class ScreenSettingsFacetProvider implements FacetProvider<ScreenSettings
         loadIncludeAll(element).ifPresent(facet::setIncludeAll);
 
         if (facet.isIncludeAll()) {
-            List<Component> excludes = loadComponents(context, element, "exclude");
-            facet.addExcludeComponents(excludes.toArray(new Component[0]));
+            List<String> excludes = loadIds(context, element, "exclude");
+            facet.addExcludeComponentIds(excludes.toArray(new String[0]));
         } else {
-            List<Component> includes = loadComponents(context, element, "include");
-            facet.addIncludeComponents(includes.toArray(new Component[0]));
+            List<String> includes = loadIds(context, element, "include");
+            facet.addIncludeComponentIds(includes.toArray(new String[0]));
         }
     }
 
@@ -79,20 +77,18 @@ public class ScreenSettingsFacetProvider implements FacetProvider<ScreenSettings
     }
 
     @SuppressWarnings("ConstantConditions")
-    protected List<Component> loadComponents(ComponentLoader.ComponentContext context, Element root, String type) {
+    protected List<String> loadIds(ComponentLoader.ComponentContext context, Element root, String type) {
         List<Element> components = root.elements(type);
-        Frame frame = context.getFrame();
+        List<String> result = new ArrayList<>(components.size());
 
-        List<Component> result = new ArrayList<>(components.size());
         for (Element element : components) {
-
             String id = element.attributeValue("componentId");
-            Preconditions.checkNotNullArgument(id, String.format("ScreenSettings `%s` component does not define an id", type));
+            if (id == null) {
+                throw new GuiDevelopmentException(
+                        String.format("ScreenSettings `%s` component does not define an id", type), context);
+            }
 
-            Component component = frame.getComponent(id);
-            Preconditions.checkNotNullArgument(component, String.format("There is no component with '%s' id", id));
-
-            result.add(component);
+            result.add(id);
         }
 
         return result;

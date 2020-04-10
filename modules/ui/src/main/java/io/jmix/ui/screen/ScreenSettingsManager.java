@@ -32,11 +32,11 @@ import java.util.UUID;
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 import static io.jmix.ui.components.ComponentsHelper.walkComponents;
 
-@Component(ScreenSettings.NAME)
-public class ScreenSettings {
+@Component(ScreenSettingsManager.NAME)
+public class ScreenSettingsManager {
     public static final String NAME = "jmix_ScreenSettings";
 
-    private static final Logger log = LoggerFactory.getLogger(ScreenSettings.class);
+    private static final Logger log = LoggerFactory.getLogger(ScreenSettingsManager.class);
 
     /**
      * Apply settings for screen.
@@ -48,7 +48,8 @@ public class ScreenSettings {
         checkNotNullArgument(screen);
         checkNotNullArgument(settings);
 
-        walkComponents(
+        // TODO settings
+    /*    walkComponents(
                 screen.getWindow(),
                 (component, name) -> {
                     if (component.getId() != null
@@ -68,7 +69,7 @@ public class ScreenSettings {
                         }
                     }
                 }
-        );
+        );*/
     }
 
     /**
@@ -81,7 +82,7 @@ public class ScreenSettings {
         checkNotNullArgument(screen);
         checkNotNullArgument(settings);
 
-        walkComponents(
+    /*    walkComponents(
                 screen.getWindow(),
                 (component, name) -> {
                     if (component.getId() != null
@@ -92,7 +93,7 @@ public class ScreenSettings {
                         ((HasDataLoadingSettings) component).applyDataLoadingSettings(e);
                     }
                 }
-        );
+        );*/
     }
 
 
@@ -106,7 +107,7 @@ public class ScreenSettings {
         checkNotNullArgument(screen);
         checkNotNullArgument(settings);
 
-        walkComponents(
+     /*   walkComponents(
                 screen.getWindow(),
                 (component, name) -> {
                     if (component.getId() != null
@@ -131,6 +132,6 @@ public class ScreenSettings {
                     }
                 }
         );
-        settings.commit();
+        settings.commit();*/
     }
 }

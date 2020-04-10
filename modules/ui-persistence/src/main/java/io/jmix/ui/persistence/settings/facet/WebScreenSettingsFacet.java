@@ -18,27 +18,28 @@ package io.jmix.ui.persistence.settings.facet;
 
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.impl.WebAbstractFacet;
+import io.jmix.ui.persistence.settings.ScreenSettings;
+import io.jmix.ui.persistence.settings.ScreenSettingsCoordinator;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Screen.AfterDetachEvent;
 import io.jmix.ui.screen.Screen.AfterShowEvent;
 import io.jmix.ui.screen.Screen.BeforeShowEvent;
 import io.jmix.ui.screen.UiControllerUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import javax.inject.Inject;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSettingsFacet {
 
-    protected List<Component> includeComponents;
-    protected List<Component> excludeComponents;
+    protected Set<String> includeIds;
+    protected Set<String> excludeIds;
 
     protected boolean includeAll = true;
 
@@ -48,6 +49,9 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     protected Consumer<ScreenSettings> applyDataLoadSettingsProvider;
     protected Consumer<ScreenSettings> saveSettingsProvider;
 
+    @Inject
+    protected ScreenSettingsCoordinator settingsCoordinator;
+
     @Override
     public ScreenSettings getSettings() {
         return screenSettings;
@@ -55,6 +59,9 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
 
     @Override
     public void applySettings(ScreenSettings settings) {
+        Collection<Component> components = getComponents();
+
+        settingsCoordinator.applySettings(components, settings);
     }
 
     @Override
@@ -63,6 +70,9 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
 
     @Override
     public void saveSettings(ScreenSettings settings) {
+        Collection<Component> components = getComponents();
+
+        settingsCoordinator.saveSettings(components, screenSettings);
     }
 
     @Override
@@ -77,67 +87,38 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
 
     @Override
     public void addExcludeComponentIds(String... ids) {
-        if (excludeComponents == null) {
-            excludeComponents = new ArrayList<>();
+        if (excludeIds == null) {
+            excludeIds = new HashSet<>();
         }
 
-        for (String id : ids) {
-            excludeComponents.add(getComponent(id));
-        }
+        excludeIds.addAll(Arrays.asList(ids));
     }
 
     @Override
-    public void addExcludeComponents(Component... components) {
-        if (excludeComponents == null) {
-            excludeComponents = new ArrayList<>();
+    public Set<String> getExcludeIds() {
+        if (excludeIds == null) {
+            return Collections.emptySet();
         }
 
-        for (Component component : components) {
-            checkNotNullId(component);
-
-            excludeComponents.add(component);
-        }
-    }
-
-    @Override
-    public Collection<Component> getExcludeComponents() {
-        if (excludeComponents == null) {
-            return Collections.emptyList();
-        }
-
-        return excludeComponents;
+        return excludeIds;
     }
 
     @Override
     public void addIncludeComponentIds(String... ids) {
-        if (includeComponents == null) {
-            includeComponents = new ArrayList<>();
+        if (includeIds == null) {
+            includeIds = new HashSet<>();
         }
 
-        for (String id : ids) {
-            includeComponents.add(getComponent(id));
-        }
+        includeIds.addAll(Arrays.asList(ids));
     }
 
     @Override
-    public void addIncludeComponents(Component... components) {
-        if (includeComponents == null) {
-            includeComponents = new ArrayList<>();
+    public Set<String> getIncludeIds() {
+        if (includeIds == null) {
+            return Collections.emptySet();
         }
 
-        for (Component component : components) {
-            checkNotNullId(component);
-            includeComponents.add(component);
-        }
-    }
-
-    @Override
-    public Collection<Component> getIncludeComponents() {
-        if (includeComponents == null) {
-            return Collections.emptyList();
-        }
-
-        return includeComponents;
+        return includeIds;
     }
 
     @Override
@@ -246,23 +227,25 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
         }
     }
 
-    protected Component getComponent(String id) {
-        Preconditions.checkNotNullArgument(id);
-
-        assert getOwner() != null;
-        Component component = getOwner().getComponent(id);
-
-        if (component != null) {
-            return component;
-        } else {
-            throw new IllegalArgumentException(String.format("There is no component with id: '%s'", id));
+    protected Collection<Component> getComponents() {
+        Frame frame = getOwner();
+        if (frame == null) {
+            throw new IllegalStateException("ScreenSettingsFacet is not attached to the screen");
         }
-    }
 
-    protected void checkNotNullId(Component component) {
-        if (component.getId() == null) {
-            throw new IllegalArgumentException(
-                    String.format("Component %s does not have an id", component.getClass()));
+        if (includeAll) {
+            return CollectionUtils.isEmpty(excludeIds) ?
+                    frame.getComponents() :
+                    frame.getComponents().stream()
+                            .filter(component -> !excludeIds.contains(component.getId()))
+                            .collect(Collectors.toList());
+
+        } else if (CollectionUtils.isNotEmpty(includeIds)) {
+            return frame.getComponents().stream()
+                    .filter(component -> includeIds.contains(component.getId()))
+                    .collect(Collectors.toList());
         }
+
+        return Collections.emptyList();
     }
 }

@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.persistence.settings;
+package io.jmix.ui.settings.component;
 
-import org.json.JSONObject;
+public interface SettingsWrapper {
 
-public interface ComponentSettings<V> {
-
-    V getSettings();
-
-    JSONObject toJSONObject();
-
-    String getComponentId();
+    <S> S getSettings();
 }

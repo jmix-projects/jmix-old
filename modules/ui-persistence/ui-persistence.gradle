@@ -28,7 +28,7 @@ dependencies {
     api project(':modules:data')
     api project(':modules:ui')
 
-    implementation 'org.json:json'
+    api 'org.json:json'
 }
 
 entitiesEnhancing {

@@ -14,32 +14,11 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.persistence.settings;
+package io.jmix.ui.settings.component;
 
-import org.json.JSONObject;
+public interface ComponentSettings {
 
-public class PojoSettings<V> implements ComponentSettings<V> {
+    String getId();
 
-    protected V settings;
-    protected String componentId;
-
-    public PojoSettings(String componentId, V settings) {
-        this.settings = settings;
-        this.componentId = componentId;
-    }
-
-    @Override
-    public V getSettings() {
-        return settings;
-    }
-
-    @Override
-    public String getComponentId() {
-        return componentId;
-    }
-
-    @Override
-    public JSONObject toJSONObject() {
-        return new JSONObject(settings);
-    }
+    void setId(String id);
 }

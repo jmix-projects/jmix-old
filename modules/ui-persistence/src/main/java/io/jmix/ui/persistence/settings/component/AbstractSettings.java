@@ -14,32 +14,26 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.persistence.settings;
+package io.jmix.ui.persistence.settings.component;
 
+import io.jmix.ui.settings.component.ComponentSettings;
 import org.json.JSONObject;
 
-public class JsonSettings implements ComponentSettings<JSONObject> {
+public abstract class AbstractSettings implements ComponentSettings {
 
-    protected JSONObject settings;
-    protected String componentId;
+    protected String id;
 
-    public JsonSettings(String componentId, JSONObject settings) {
-        this.settings = settings;
-        this.componentId = componentId;
+    protected AbstractSettings(JSONObject json) {
+        if (json.keySet().contains("id")) {
+            setId(json.getString("id"));
+        }
     }
 
-    @Override
-    public JSONObject getSettings() {
-        return settings;
+    public String getId() {
+        return id;
     }
 
-    @Override
-    public String getComponentId() {
-        return componentId;
-    }
-
-    @Override
-    public JSONObject toJSONObject() {
-        return settings;
+    public void setId(String id) {
+        this.id = id;
     }
 }

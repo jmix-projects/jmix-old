@@ -69,6 +69,8 @@ import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.InstallTargetHandler;
 import io.jmix.ui.screen.ScreenContext;
 import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.settings.component.SettingsWrapper;
+import io.jmix.ui.settings.component.TableSettings;
 import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.ui.sys.PersistenceManagerClient;
 import io.jmix.ui.sys.ShowInfoAction;
@@ -2097,6 +2099,34 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                 }
             }
         }
+    }
+
+    @Override
+    public void applySettings(SettingsWrapper settings) {
+        TableSettings tableSettings = settings.getSettings();
+        if (tableSettings.getTextSelection() != null) {
+            component.setTextSelectionEnabled(tableSettings.getTextSelection());
+
+            if (component.getPresentations() != null) {
+                ((TablePresentations) component.getPresentations()).updateTextSelection();
+            }
+        }
+    }
+
+    @Override
+    public boolean saveSettings(SettingsWrapper settings) {
+        boolean settingsChanged = false;
+
+        TableSettings tableSettings = settings.getSettings();
+
+        boolean textSelection = BooleanUtils.toBoolean(tableSettings.getTextSelection());
+        if (textSelection != component.isTextSelectionEnabled()) {
+            tableSettings.setTextSelection(component.isTextSelectionEnabled());
+
+            settingsChanged = true;
+        }
+
+        return settingsChanged;
     }
 
     protected void applyColumnSettings(Element element) {

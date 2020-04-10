@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.components;
+package io.jmix.ui.persistence.settings.component;
 
 import io.jmix.ui.settings.component.SettingsWrapper;
-import org.dom4j.Element;
 
-/**
- * Object supporting save/restore of user settings.
- * @see com.haulmont.cuba.security.app.UserSettingService
- */
-public interface HasSettings {
-    void applySettings(Element element);
-    boolean saveSettings(Element element);
+public class SettingsWrapperImpl implements SettingsWrapper {
 
-    // TODO settings
-    void applySettings(SettingsWrapper settings);
-    boolean saveSettings(SettingsWrapper settings);
+    protected AbstractSettings settings;
 
-    boolean isSettingsEnabled();
-    void setSettingsEnabled(boolean settingsEnabled);
+    public SettingsWrapperImpl(AbstractSettings settings) {
+        this.settings = settings;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <S> S getSettings() {
+        return (S) settings;
+    }
 }

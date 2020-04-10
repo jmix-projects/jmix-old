@@ -17,12 +17,12 @@
 package io.jmix.ui.persistence.settings.facet;
 
 import io.jmix.core.commons.events.Subscription;
-import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Facet;
+import io.jmix.ui.persistence.settings.ScreenSettings;
 import io.jmix.ui.screen.Screen;
 
-import java.util.Collection;
 import java.util.EventObject;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public interface ScreenSettingsFacet extends Facet {
@@ -33,15 +33,11 @@ public interface ScreenSettingsFacet extends Facet {
 
     void addExcludeComponentIds(String... ids);
 
-    void addExcludeComponents(Component... components);
-
-    Collection<Component> getExcludeComponents();
+    Set<String> getExcludeIds();
 
     void addIncludeComponentIds(String... ids);
 
-    void addIncludeComponents(Component... components);
-
-    Collection<Component> getIncludeComponents();
+    Set<String> getIncludeIds();
 
     ScreenSettings getSettings();
 

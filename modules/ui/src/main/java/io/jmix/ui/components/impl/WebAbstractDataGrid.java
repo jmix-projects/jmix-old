@@ -86,6 +86,7 @@ import io.jmix.ui.model.HasLoader;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.impl.KeyValueContainerImpl;
 import io.jmix.ui.screen.ScreenValidation;
+import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.sys.PersistenceManagerClient;
 import io.jmix.ui.sys.ShortcutsDelegate;
 import io.jmix.ui.sys.ShowInfoAction;
@@ -2395,6 +2396,16 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         }
 
         return settingsChanged;
+    }
+
+    @Override
+    public void applySettings(SettingsWrapper settings) {
+
+    }
+
+    @Override
+    public boolean saveSettings(SettingsWrapper settings) {
+        return false;
     }
 
     protected boolean isCommonDataGridSettingsChanged(Element columnsElem) {

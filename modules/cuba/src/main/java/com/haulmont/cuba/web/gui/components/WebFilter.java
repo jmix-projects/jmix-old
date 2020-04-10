@@ -31,6 +31,7 @@ import io.jmix.ui.components.HasOuterMargin;
 import io.jmix.ui.components.MarginInfo;
 import io.jmix.ui.components.impl.WebAbstractComponent;
 import io.jmix.ui.model.BaseCollectionLoader;
+import io.jmix.ui.settings.component.SettingsWrapper;
 import org.dom4j.Element;
 import org.slf4j.LoggerFactory;
 
@@ -183,6 +184,16 @@ public class WebFilter extends WebAbstractComponent<com.vaadin.ui.Component> imp
         if (isSettingsEnabled()) {
             delegate.applyDataLoadingSettings(element);
         }
+    }
+
+    @Override
+    public void applySettings(SettingsWrapper settings) {
+
+    }
+
+    @Override
+    public boolean saveSettings(SettingsWrapper settings) {
+        return false;
     }
 
     @Override

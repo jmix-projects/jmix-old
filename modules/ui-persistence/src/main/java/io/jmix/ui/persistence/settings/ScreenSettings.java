@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.persistence.settings.facet;
+package io.jmix.ui.persistence.settings;
 
 import io.jmix.core.AppBeans;
-import io.jmix.ui.persistence.settings.ComponentSettings;
+import io.jmix.ui.persistence.settings.component.AbstractSettings;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.settings.SettingsClient;
+import io.jmix.ui.settings.component.ComponentSettings;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.Optional;
 
 public class ScreenSettings {
+
+    protected static final int JSON_INDENT = 4;
 
     protected SettingsClient settingsClient;
 
@@ -48,24 +53,23 @@ public class ScreenSettings {
         JSONObject component = getComponentOrCreate(componentId);
         component.put(property, value);
 
+        root.put(component);
+
         return this;
     }
 
     /**
-     * kk
+     *
      * @param settings
-     * @param <V>
      * @return
      */
-    public <V> ScreenSettings put(ComponentSettings<V> settings) {
-        String componentId = settings.getComponentId();
-        if (componentId == null) {
-            throw new IllegalArgumentException("ComponentSettings does not have an component id");
-        }
+    public ScreenSettings put(ComponentSettings settings) {
+        root.put(new JSONObject(settings));
 
-        JSONObject json = settings.toJSONObject();
-        json.put("id", settings.getComponentId());
+        return this;
+    }
 
+    public ScreenSettings put(JSONObject json) {
         root.put(json);
 
         return this;
@@ -77,9 +81,14 @@ public class ScreenSettings {
      * @return
      */
     @Nullable
-    public String getString(String componentId, String property) {
+    public Optional<String> getString(String componentId, String property) {
         JSONObject component = getComponent(componentId);
-        return component == null ? null : component.getString(property);
+
+        if (component == null)
+            return Optional.empty();
+
+        return component.keySet().contains(property) ?
+                Optional.of(component.getString(property)) : Optional.empty();
     }
 
     /**
@@ -89,9 +98,14 @@ public class ScreenSettings {
      * @return
      */
     @Nullable
-    public Integer getInteger(String componentId, String property) {
+    public Optional<Integer> getInteger(String componentId, String property) {
         JSONObject component = getComponent(componentId);
-        return component == null ? null : component.getInt(property);
+
+        if (component == null)
+            return Optional.empty();
+
+        return component.keySet().contains(property) ?
+                Optional.of(component.getInt(property)) : Optional.empty();
     }
 
     /**
@@ -101,9 +115,14 @@ public class ScreenSettings {
      * @return
      */
     @Nullable
-    public Long getLong(String componentId, String property) {
+    public Optional<Long> getLong(String componentId, String property) {
         JSONObject component = getComponent(componentId);
-        return component == null ? null : component.getLong(property);
+
+        if (component == null)
+            return Optional.empty();
+
+        return component.keySet().contains(property) ?
+                Optional.of(component.getLong(property)) : Optional.empty();
     }
 
     /**
@@ -113,9 +132,14 @@ public class ScreenSettings {
      * @return
      */
     @Nullable
-    public Double getDouble(String componentId, String property) {
+    public Optional<Double> getDouble(String componentId, String property) {
         JSONObject component = getComponent(componentId);
-        return component == null ? null : component.getDouble(property);
+
+        if (component == null)
+            return Optional.empty();
+
+        return component.keySet().contains(property) ?
+                Optional.of(component.getDouble(property)) : Optional.empty();
     }
 
     /**
@@ -125,9 +149,14 @@ public class ScreenSettings {
      * @return
      */
     @Nullable
-    public Boolean getBoolean(String componentId, String property) {
+    public Optional<Boolean> getBoolean(String componentId, String property) {
         JSONObject component = getComponent(componentId);
-        return component == null ? null : component.getBoolean(property);
+
+        if (component == null)
+            return Optional.empty();
+
+        return component.keySet().contains(property) ?
+                Optional.of(component.getBoolean(property)) : Optional.empty();
     }
 
     /**
@@ -135,9 +164,30 @@ public class ScreenSettings {
      * @param componentId
      * @return
      */
-    @Nullable
-    public JSONObject get(String componentId) {
-        return getComponent(componentId);
+    public Optional<JSONObject> getSettingsRaw(String componentId) {
+        return Optional.ofNullable(getComponent(componentId));
+    }
+
+    /**
+     *
+     * @param componentId
+     * @param settingsClass
+     * @return
+     */
+    public Optional<ComponentSettings> getSettings(String componentId, Class<? extends AbstractSettings> settingsClass) {
+        SettingsRegister register = AppBeans.get(SettingsRegister.NAME);
+
+        JSONObject json = getComponent(componentId);
+        if (json == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(register.createSettings(settingsClass, json));
+    }
+
+    public <T extends AbstractSettings> Optional<T> getTypeSettings(String componentId, Class<T> settingsClass) {
+        ComponentSettings settings = getSettings(componentId, settingsClass).orElse(null);
+        return settings == null ? Optional.empty() : Optional.of(settingsClass.cast(settings));
     }
 
     protected SettingsClient getSettingsClient() {
@@ -174,13 +224,20 @@ public class ScreenSettings {
     protected JSONObject getComponent(String componentId) {
         loadSettings();
 
-        for (Object obj : root.toList()) {
-            JSONObject component = (JSONObject) obj;
-            if (component.getString("id").equals(componentId)) {
+        Iterator<Object> iterator = root.iterator();
+        while (iterator.hasNext()) {
+            JSONObject component = (JSONObject) iterator.next();
+
+            boolean keyExist = component.keySet().contains("id");
+            if (keyExist && component.getString("id").equals(componentId)) {
                 return component;
             }
         }
 
         return null;
+    }
+
+    protected void commit() {
+        getSettingsClient().setSetting(screenId, root.toString(JSON_INDENT));
     }
 }

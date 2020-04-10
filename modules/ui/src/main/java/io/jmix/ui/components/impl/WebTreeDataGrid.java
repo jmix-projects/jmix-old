@@ -31,6 +31,7 @@ import io.jmix.ui.components.data.DataGridItems;
 import io.jmix.ui.components.data.TreeDataGridItems;
 import io.jmix.ui.components.datagrid.DataGridDataProvider;
 import io.jmix.ui.components.datagrid.HierarchicalDataGridDataProvider;
+import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.widgets.CubaTreeGrid;
 import org.dom4j.Element;
 
@@ -298,6 +299,16 @@ public class WebTreeDataGrid<E extends Entity> extends WebAbstractDataGrid<CubaT
         }
 
         return settingsChanged;
+    }
+
+    @Override
+    public void applySettings(SettingsWrapper settings) {
+        super.applySettings(settings);
+    }
+
+    @Override
+    public boolean saveSettings(SettingsWrapper settings) {
+        return super.saveSettings(settings);
     }
 
     @Override

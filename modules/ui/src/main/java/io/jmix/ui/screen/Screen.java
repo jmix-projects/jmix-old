@@ -422,7 +422,7 @@ public abstract class Screen implements FrameOwner {
      */
     protected void saveSettings() {
         if (settings != null) {
-            ScreenSettings screenSettings = getBeanLocator().get(ScreenSettings.NAME);
+            ScreenSettingsManager screenSettings = getBeanLocator().get(ScreenSettingsManager.NAME);
             screenSettings.saveSettings(this, settings);
         }
     }
@@ -435,7 +435,7 @@ public abstract class Screen implements FrameOwner {
     protected void applySettings(Settings settings) {
         this.settings = settings;
 
-        ScreenSettings screenSettings = getBeanLocator().get(ScreenSettings.NAME);
+        ScreenSettingsManager screenSettings = getBeanLocator().get(ScreenSettingsManager.NAME);
         screenSettings.applySettings(this, settings);
     }
 
@@ -447,7 +447,7 @@ public abstract class Screen implements FrameOwner {
     protected void applyDataLoadingSettings(Settings settings) {
         this.settings = settings;
 
-        ScreenSettings screenSettings = getBeanLocator().get(ScreenSettings.NAME);
+        ScreenSettingsManager screenSettings = getBeanLocator().get(ScreenSettingsManager.NAME);
         screenSettings.applyDataLoadingSettings(this, settings);
     }
 
