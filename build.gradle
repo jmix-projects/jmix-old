@@ -17,7 +17,7 @@
 buildscript {
     ext {
         springBootVersion = '2.2.4.RELEASE'
-        jmixVersion = '0.0.1-SNAPSHOT'
+        jmixPluginVersion = '1.0-SNAPSHOT'
     }
     repositories {
         if (rootProject.hasProperty('jmixRepoUrl')) {
@@ -39,7 +39,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath("io.jmix.gradle:jmix-gradle-plugin:0.0.1-SNAPSHOT")
+        classpath("io.jmix.gradle:jmix-gradle-plugin:${jmixPluginVersion}")
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.0.4")
     }
@@ -91,7 +91,7 @@ configure([project(':jmix-platform'), project(':modules:core'), project(':module
         if (rootProject.hasProperty('jmixUploadUrl')) {
             repositories {
                 maven {
-                    url = jmixVersion.endsWith('SNAPSHOT') ? "$jmixUploadUrl/snapshots" : "$jmixUploadUrl/releases"
+                    url = version.endsWith('SNAPSHOT') ? "$jmixUploadUrl/snapshots" : "$jmixUploadUrl/releases"
                     credentials {
                         username rootProject['jmixUploadUser']
                         password rootProject['jmixUploadPassword']

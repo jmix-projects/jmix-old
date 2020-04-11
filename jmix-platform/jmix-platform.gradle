@@ -28,23 +28,23 @@ dependencies {
     api platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
     
     constraints {
-        api "io.jmix.starter.standard:jmix-starter-standard:$jmixVersion"
-        api "io.jmix.starter.ui-minimal:jmix-starter-ui-minimal:$jmixVersion"
-        api "io.jmix.starter.data:jmix-starter-data:$jmixVersion"
-        api "io.jmix.starter.cuba:jmix-starter-cuba:$jmixVersion"
-        api "io.jmix.core:jmix-core:$jmixVersion"
-        api "io.jmix.cuba:jmix-cuba:$jmixVersion"
-        api "io.jmix.data:jmix-data:$jmixVersion"
-        api "io.jmix.data:dynattr-api:$jmixVersion"
-        api "io.jmix.audit:jmix-audit:$jmixVersion"
-        api "io.jmix.audit.ui:jmix-audit-ui:$jmixVersion"
-        api "io.jmix.remoting:jmix-remoting:$jmixVersion"
-        api "io.jmix.security:jmix-security:$jmixVersion"
-        api "io.jmix.ui:jmx-ui:$jmixVersion"
-        api "io.jmix.ui-themes:jmix-ui-themes:$jmixVersion"
-        api "io.jmix.ui-themes-compiled:jmix-ui-themes-compiled:$jmixVersion"
-        api "io.jmix.ui-widgets:jmix-ui-widgets:$jmixVersion"
-        api "io.jmix.ui-widgets-compiled:jmix-ui-widgets-compiled:$jmixVersion"
+        api "io.jmix.starter.standard:jmix-starter-standard:$version"
+        api "io.jmix.starter.ui-minimal:jmix-starter-ui-minimal:$version"
+        api "io.jmix.starter.data:jmix-starter-data:$version"
+        api "io.jmix.starter.cuba:jmix-starter-cuba:$version"
+        api "io.jmix.core:jmix-core:$version"
+        api "io.jmix.cuba:jmix-cuba:$version"
+        api "io.jmix.data:jmix-data:$version"
+        api "io.jmix.data:dynattr-api:$version"
+        api "io.jmix.audit:jmix-audit:$version"
+        api "io.jmix.audit.ui:jmix-audit-ui:$version"
+        api "io.jmix.remoting:jmix-remoting:$version"
+        api "io.jmix.security:jmix-security:$version"
+        api "io.jmix.ui:jmx-ui:$version"
+        api "io.jmix.ui-themes:jmix-ui-themes:$version"
+        api "io.jmix.ui-themes-compiled:jmix-ui-themes-compiled:$version"
+        api "io.jmix.ui-widgets:jmix-ui-widgets:$version"
+        api "io.jmix.ui-widgets-compiled:jmix-ui-widgets-compiled:$version"
         
         api 'com.google.guava:guava:27.0.1-jre'
         api 'commons-io:commons-io:2.6'
@@ -82,7 +82,6 @@ publishing {
         javaPlatformMaven(MavenPublication) {
             groupId = 'io.jmix.bom'
             artifactId = 'jmix-bom'
-            version = jmixVersion
 
             from components.javaPlatform
         }
