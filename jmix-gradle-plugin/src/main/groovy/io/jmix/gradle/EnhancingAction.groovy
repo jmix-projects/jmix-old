@@ -23,6 +23,7 @@ import javassist.NotFoundException
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.artifacts.ResolvedDependency
 
 import static io.jmix.gradle.MetaModelUtil.*
 
@@ -38,13 +39,14 @@ class EnhancingAction implements Action<Task> {
     void execute(Task task) {
         Project project = task.getProject()
 
-        project.logger.warn "Enhancing entities in $project for source set '$sourceSetName'"
+        project.logger.lifecycle "Enhancing entities in $project for source set '$sourceSetName'"
 
         List<String> classNames = []
         List<String> nonMappedClassNames = []
         def sourceSet = project.sourceSets.findByName(sourceSetName)
 
         generateEntityClassesList(project, sourceSet, classNames, nonMappedClassNames)
+        project.logger.lifecycle("Found JPA entities: $classNames, other model objects: $nonMappedClassNames")
 
         runEclipseLinkEnhancing(project, classNames, sourceSet)
 
@@ -66,12 +68,11 @@ class EnhancingAction implements Action<Task> {
                     try {
                         ctClass = classPool.get(className)
                     } catch (NotFoundException e) {
-                        project.logger.info "Entity $className for enhancing is not found in $project"
+                        project.logger.info "Cannot find $className in ${project} for enhancing: $e"
                     }
 
                     if (ctClass != null) {
                         if (isJpaEntity(ctClass) || isJpaMappedSuperclass(ctClass) || isJpaEmbeddable(ctClass)) {
-                            project.logger.warn "Entity $className for enhancing in $project"
                             classNames.add(className)
                         } else if (isModelObject(ctClass)) {
                             nonMappedClassNames.add(className)
@@ -82,8 +83,25 @@ class EnhancingAction implements Action<Task> {
         }
     }
 
+    protected boolean findEclipseLink(Set<ResolvedDependency> deps) {
+        for (def dep: deps) {
+            if (dep.moduleGroup == 'org.eclipse.persistence' && dep.moduleName == 'org.eclipse.persistence.jpa')
+                return true
+            if (findEclipseLink(dep.children))
+                return true
+        }
+        return false
+    }
+
     protected void runEclipseLinkEnhancing(Project project, List<String> classNames, sourceSet) {
         if (!classNames.isEmpty()) {
+
+            def conf = project.configurations.findByName(sourceSet.getCompileClasspathConfigurationName())
+            if (!findEclipseLink(conf.resolvedConfiguration.firstLevelModuleDependencies)) {
+                project.logger.info("EclipseLink not found in classpath, EclipseLink enhancer will not run")
+                return
+            }
+
             File file = new File(project.buildDir, "dummy/enhancing/$sourceSetName/META-INF/persistence.xml")
             file.parentFile.mkdirs()
             file.withWriter { writer ->
@@ -100,6 +118,8 @@ class EnhancingAction implements Action<Task> {
                     }
                 }
             }
+
+            project.logger.lifecycle "Running EclipseLink enhancer in $project for $sourceSet"
 
             project.javaexec {
                 main = 'org.eclipse.persistence.tools.weaving.jpa.StaticWeave'
@@ -121,7 +141,7 @@ class EnhancingAction implements Action<Task> {
 
     protected void runJmixEnhancing(Project project, List<String> classNames, sourceSet) {
         if (!classNames.isEmpty()) {
-            project.logger.info "[JmixEnhancer] Start Jmix enhancing..."
+            project.logger.lifecycle "Running Jmix enhancer in $project for $sourceSet"
 
             String javaOutputDir = sourceSet.java.outputDir.absolutePath
 

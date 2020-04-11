@@ -19,10 +19,18 @@ package io.jmix.gradle
 
 import org.gradle.api.Project
 
+/**
+ * Entity enhancing can be disabled in the project's build.gradle as follows:
+ * <pre>
+ * entitiesEnhancing {
+ *     enabled = false
+ * }
+ * </pre>
+ */
 class EnhancingExtension {
 
     Project project
-    boolean enabled = false
+    boolean enabled = true
 
     EnhancingExtension(Project project) {
         this.project = project
