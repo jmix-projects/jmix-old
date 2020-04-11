@@ -14,34 +14,21 @@
  * limitations under the License.
  */
 
-ext {
-    jmixVersion = '0.0.1-SNAPSHOT'
+plugins {
+    id 'java-gradle-plugin'
+    id 'groovy'
+    id 'maven-publish'
+    id 'com.gradle.plugin-publish' version '0.11.0'
 }
+
+version = '0.1.0'
+group = 'io.jmix.gradle'
 
 repositories {
-    if (rootProject.hasProperty('jmixRepoUrl')) {
-        maven {
-            url rootProject['jmixRepoUrl']
-
-            if (rootProject.hasProperty('jmixRepoUser') && rootProject.hasProperty('jmixRepoPassword')) {
-                credentials {
-                    username rootProject['jmixRepoUser']
-                    password rootProject['jmixRepoPassword']
-                }
-            }
-        }
-    } else {
-        jcenter()
-        maven { url "https://dl.bintray.com/cuba-platform/main" }
-    }
+    jcenter()
 }
 
-apply plugin: 'java'
-apply plugin: 'groovy'
-apply plugin: 'maven-publish'
-
 dependencies {
-    implementation gradleApi()
     implementation localGroovy()
     
     implementation('org.javassist:javassist:3.24.1-GA')
@@ -55,34 +42,43 @@ dependencies {
     }
 }
 
-group = 'io.jmix.gradle'
-version = jmixVersion
-
 task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
     archiveClassifier = 'sources'
+}
+
+gradlePlugin {
+    plugins {
+        jmixPlugin {
+            id = 'io.jmix'
+            implementationClass = 'io.jmix.gradle.JmixPlugin'
+        }
+    }
+}
+
+pluginBundle {
+    website = 'http://jmix.io'
+    vcsUrl = 'https://github.com/jmix-framework/jmix'
+    description = 'Jmix Framework Gradle Plugin'
+    tags = ['jmix', 'spring']
+
+    plugins {
+        jmixPlugin {
+            displayName = 'Jmix Framework Gradle Plugin'
+        }
+    }
 }
 
 publishing {
     if (rootProject.hasProperty('jmixUploadUrl')) {
         repositories {
             maven {
-                url = jmixVersion.endsWith('SNAPSHOT') ? "$jmixUploadUrl/snapshots" : "$jmixUploadUrl/releases"
+                url = version.endsWith('SNAPSHOT') ? "$jmixUploadUrl/snapshots" : "$jmixUploadUrl/releases"
                 credentials {
                     username rootProject['jmixUploadUser']
                     password rootProject['jmixUploadPassword']
                 }
             }
-        }
-    }
-
-    publications {
-        javaMaven(MavenPublication) {
-            groupId = 'io.jmix.gradle'
-            artifactId = 'jmix-gradle-plugin'
-
-            from components.java
-            artifact sourcesJar
         }
     }
 }
