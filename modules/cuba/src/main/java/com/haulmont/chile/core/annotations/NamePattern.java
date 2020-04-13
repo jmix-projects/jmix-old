@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.core.metamodel.annotations;
+package com.haulmont.chile.core.annotations;
 
 import io.jmix.core.entity.annotation.MetaAnnotation;
 
