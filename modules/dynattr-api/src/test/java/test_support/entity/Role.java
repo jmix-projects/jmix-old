@@ -17,7 +17,7 @@
 package test_support.entity;
 
 import io.jmix.core.entity.annotation.TrackEditScreenHistory;
-import io.jmix.core.metamodel.annotations.NamePattern;
+import io.jmix.core.metamodel.annotations.InstanceName;
 import io.jmix.data.entity.StandardEntity;
 
 import javax.persistence.Column;
@@ -30,7 +30,6 @@ import javax.persistence.Transient;
  */
 @Entity(name = "test$Role")
 @Table(name = "TEST_ROLE")
-@NamePattern("%s [%s]|locName,name")
 @TrackEditScreenHistory
 public class Role extends StandardEntity {
 
@@ -53,6 +52,11 @@ public class Role extends StandardEntity {
 
     @Transient
     private boolean isPredefined = false;
+
+    @InstanceName(relatedProperties = {"locName", "name"})
+    public String getCaption() {
+        return String.format("%s [%s]", getLocName(), getName());
+    }
 
     public String getName() {
         return name;

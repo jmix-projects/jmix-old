@@ -18,7 +18,7 @@ package test_support.entity;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.entity.annotation.TrackEditScreenHistory;
 import io.jmix.core.metamodel.annotations.Composition;
-import io.jmix.core.metamodel.annotations.NamePattern;
+import io.jmix.core.metamodel.annotations.InstanceName;
 import io.jmix.data.entity.StandardEntity;
 
 import javax.persistence.*;
@@ -29,7 +29,6 @@ import java.util.List;
  */
 @Entity(name = "test$User")
 @Table(name = "TEST_USER")
-@NamePattern("#getCaption|login,name")
 @TrackEditScreenHistory
 public class User extends StandardEntity {
 
@@ -229,8 +228,9 @@ public class User extends StandardEntity {
         this.sysTenantId = sysTenantId;
     }
 
-    public String getCaption() {
-        return login;
+    @InstanceName(relatedProperties = {"login","name"})
+    public String getCaption(){
+        return String.format("%s[%s]",getLogin(),getName());
     }
 
     public Boolean getChangePasswordAtNextLogon() {

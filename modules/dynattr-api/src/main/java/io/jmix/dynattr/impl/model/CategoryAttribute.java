@@ -22,8 +22,8 @@ import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.entity.annotation.EmbeddedParameters;
 import io.jmix.core.entity.annotation.SystemLevel;
+import io.jmix.core.metamodel.annotations.InstanceName;
 import io.jmix.core.metamodel.annotations.ModelProperty;
-import io.jmix.core.metamodel.annotations.NamePattern;
 import io.jmix.data.entity.ReferenceToEntity;
 import io.jmix.data.entity.StandardEntity;
 import io.jmix.dynattr.AttributeDefinition;
@@ -39,7 +39,6 @@ import java.util.*;
 
 @Entity(name = "sys$CategoryAttribute")
 @Table(name = "SYS_CATEGORY_ATTR")
-@NamePattern("%s (%s)|localeName,code")
 @SystemLevel
 public class CategoryAttribute extends StandardEntity implements AttributeDefinition {
 
@@ -165,10 +164,14 @@ public class CategoryAttribute extends StandardEntity implements AttributeDefini
     @ModelProperty(related = "enumerationLocales")
     protected String enumerationLocale;
 
-
     @PostConstruct
     public void init(Metadata metadata) {
         defaultEntity = metadata.create(ReferenceToEntity.class);
+    }
+
+    @InstanceName(relatedProperties = {"localeName", "code"})
+    public String getCaption() {
+        return String.format("%s (%s)", getLocaleName(), getCode());
     }
 
     public void setCategory(Category entityType) {

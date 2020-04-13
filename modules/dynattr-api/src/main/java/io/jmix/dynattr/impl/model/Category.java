@@ -22,8 +22,8 @@ import io.jmix.core.DeletePolicy;
 import io.jmix.core.entity.annotation.OnDelete;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.annotations.Composition;
+import io.jmix.core.metamodel.annotations.InstanceName;
 import io.jmix.core.metamodel.annotations.ModelProperty;
-import io.jmix.core.metamodel.annotations.NamePattern;
 import io.jmix.data.entity.StandardEntity;
 
 import javax.persistence.*;
@@ -34,7 +34,6 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "DISCRIMINATOR", discriminatorType = DiscriminatorType.INTEGER)
 @DiscriminatorValue("0")
-@NamePattern("%s|localeName")
 @SystemLevel
 public class Category extends StandardEntity {
 
@@ -59,6 +58,7 @@ public class Category extends StandardEntity {
     protected String localeNames;
 
     @Transient
+    @InstanceName
     @ModelProperty(related = "localeNames,name")
     protected String localeName;
 
