@@ -18,9 +18,9 @@ package io.jmix.ui.persistence.settings;
 
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.HasSettings;
-import io.jmix.ui.persistence.settings.component.AbstractSettings;
 import io.jmix.ui.persistence.settings.component.SettingsWrapperImpl;
-import org.json.JSONObject;
+import io.jmix.ui.settings.ScreenSettings;
+import io.jmix.ui.settings.component.ComponentSettings;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -43,9 +43,9 @@ public class ScreenSettingsCoordinator {
                 continue;
             }
 
-            JSONObject json = getJsonObject(component.getId(), screenSettings);
+            Class<? extends ComponentSettings> settingsClass = settingsRegister.getSettingsClass(component.getClass());
 
-            AbstractSettings settings = settingsRegister.create(component.getClass(), json);
+            ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
 
             ((HasSettings) component).applySettings(new SettingsWrapperImpl(settings));
         }
@@ -63,9 +63,9 @@ public class ScreenSettingsCoordinator {
                 continue;
             }
 
-            JSONObject json = getJsonObject(component.getId(), screenSettings);
+            Class<? extends ComponentSettings> settingsClass = settingsRegister.getSettingsClass(component.getClass());
 
-            AbstractSettings settings = settingsRegister.create(component.getClass(), json);
+            ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
 
             boolean settingsChanged = ((HasSettings) component).saveSettings(new SettingsWrapperImpl(settings));
             if (settingsChanged) {
@@ -75,7 +75,7 @@ public class ScreenSettingsCoordinator {
             }
         }
 
-        if (isModified) {
+        if (isModified || screenSettings.isForceModified()) {
             commitSettings(screenSettings);
         }
     }
@@ -85,13 +85,5 @@ public class ScreenSettingsCoordinator {
      */
     public void commitSettings(ScreenSettings settings) {
         settings.commit();
-    }
-
-    protected JSONObject getJsonObject(String id, ScreenSettings settings) {
-        return settings.getSettingsRaw(id).orElseGet(() -> {
-            JSONObject newJson = new JSONObject();
-            newJson.put("id", id);
-            return newJson;
-        });
     }
 }

@@ -16,15 +16,13 @@
 
 package io.jmix.ui.persistence.settings;
 
+import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.components.Component;
-import io.jmix.ui.persistence.settings.component.AbstractSettings;
 import io.jmix.ui.persistence.settings.component.register.SettingsRegistration;
-import org.json.JSONObject;
+import io.jmix.ui.settings.component.ComponentSettings;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.inject.Inject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,7 +36,7 @@ public class SettingsRegister implements InitializingBean {
     protected List<SettingsRegistration> settings;
 
     protected Map<Class<? extends Component>, String> classes = new ConcurrentHashMap<>();
-    protected Map<String, Class<? extends AbstractSettings>> names = new ConcurrentHashMap<>();
+    protected Map<String, Class<? extends ComponentSettings>> names = new ConcurrentHashMap<>();
 
     @Override
     public void afterPropertiesSet() {
@@ -47,72 +45,32 @@ public class SettingsRegister implements InitializingBean {
         }
     }
 
-    /**
-     *
-     * @param componentClass
-     * @param json
-     * @return
-     */
-    public AbstractSettings create(Class<? extends Component> componentClass, JSONObject json) {
+    public Class<? extends ComponentSettings> getSettingsClass(Class<? extends Component> componentClass) {
+        Preconditions.checkNotNullArgument(componentClass);
+
         String name = classes.get(componentClass);
         if (name != null) {
-            return create(name, json);
+            return getSettingsClass(name);
         }
 
         throw new IllegalStateException(String.format("Can't find settings class for '%s'", componentClass));
     }
 
-    /**
-     *
-     * @param name
-     * @param json
-     * @return
-     */
-    public AbstractSettings create(String name, JSONObject json) {
-        Class<? extends AbstractSettings> settingsClass = names.get(name);
+    public Class<? extends ComponentSettings> getSettingsClass(String componentName) {
+        Preconditions.checkNotNullArgument(componentName);
+
+        Class<? extends ComponentSettings> settingsClass = names.get(componentName);
 
         if (settingsClass == null) {
-            throw new IllegalStateException(String.format("Can't find component settings class for '%s'", name));
+            throw new IllegalStateException(String.format("Can't find component settings class for '%s'", componentName));
         }
 
-        Constructor<? extends AbstractSettings> constructor;
-        try {
-            constructor = settingsClass.getConstructor(JSONObject.class);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(String.format("Unable to get constructor for '%s' component settings", name), e);
-        }
-
-        try {
-            return constructor.newInstance(json);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(String.format("Error creating the '%s' component settings instance", name), e);
-        }
-    }
-
-    /**
-     *
-     * @param settingsClass
-     * @param json
-     * @return
-     */
-    public AbstractSettings createSettings(Class<? extends AbstractSettings> settingsClass, JSONObject json) {
-        Constructor<? extends AbstractSettings> constructor;
-        try {
-            constructor = settingsClass.getConstructor(JSONObject.class);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(String.format("Unable to get constructor for '%s'", settingsClass), e);
-        }
-
-        try {
-            return constructor.newInstance(json);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(String.format("Error creating the '%s' instance", settingsClass), e);
-        }
+        return settingsClass;
     }
 
     protected void register(String componentName,
-                         Class<? extends Component> componentClass,
-                         Class<? extends AbstractSettings> settingsClass) {
+                            Class<? extends Component> componentClass,
+                            Class<? extends ComponentSettings> settingsClass) {
         names.put(componentName, settingsClass);
         classes.put(componentClass, componentName);
     }

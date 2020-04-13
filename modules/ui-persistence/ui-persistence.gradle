@@ -28,7 +28,7 @@ dependencies {
     api project(':modules:data')
     api project(':modules:ui')
 
-    api 'org.json:json'
+    api 'com.google.code.gson:gson:2.8.6'
 }
 
 entitiesEnhancing {

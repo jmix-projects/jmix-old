@@ -17,18 +17,23 @@
 package io.jmix.ui.persistence.settings.component;
 
 import io.jmix.ui.settings.component.TableSettings;
-import org.json.JSONObject;
 
-public class TableSettingsImpl extends AbstractSettings implements TableSettings {
+public class TableSettingsImpl implements TableSettings {
 
+    protected String id;
     protected Boolean textSelection;
 
-    public TableSettingsImpl(JSONObject json) {
-        super(json);
+    public TableSettingsImpl() {
+    }
 
-        for (String key : json.keySet()) {
-            setValue(key, json);
-        }
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override
@@ -40,16 +45,4 @@ public class TableSettingsImpl extends AbstractSettings implements TableSettings
     public void setTextSelection(Boolean textPresentation) {
         this.textSelection = textPresentation;
     }
-
-    protected void setValue(String key, JSONObject json) {
-        switch (key) {
-            case "id":
-                setId(json.getString(key));
-                break;
-            case "textSelection":
-                setTextSelection(json.getBoolean(key));
-                break;
-        }
-    }
-
 }

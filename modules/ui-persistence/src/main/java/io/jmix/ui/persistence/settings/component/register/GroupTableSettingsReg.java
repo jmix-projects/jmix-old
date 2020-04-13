@@ -19,8 +19,8 @@ package io.jmix.ui.persistence.settings.component.register;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.GroupTable;
 import io.jmix.ui.components.impl.WebGroupTable;
-import io.jmix.ui.persistence.settings.component.AbstractSettings;
 import io.jmix.ui.persistence.settings.component.GroupTableSettingsImpl;
+import io.jmix.ui.settings.component.ComponentSettings;
 
 @org.springframework.stereotype.Component
 public class GroupTableSettingsReg implements SettingsRegistration {
@@ -38,7 +38,7 @@ public class GroupTableSettingsReg implements SettingsRegistration {
     }
 
     @Override
-    public Class<? extends AbstractSettings> getSettingsClass() {
+    public Class<? extends ComponentSettings> getSettingsClass() {
         return GroupTableSettingsImpl.class;
     }
 }

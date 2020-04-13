@@ -21,13 +21,14 @@ import io.jmix.core.commons.events.Subscription;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.impl.WebAbstractFacet;
-import io.jmix.ui.persistence.settings.ScreenSettings;
+import io.jmix.ui.persistence.settings.ScreenSettingsJson;
 import io.jmix.ui.persistence.settings.ScreenSettingsCoordinator;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Screen.AfterDetachEvent;
 import io.jmix.ui.screen.Screen.AfterShowEvent;
 import io.jmix.ui.screen.Screen.BeforeShowEvent;
 import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.settings.ScreenSettings;
 import org.apache.commons.collections4.CollectionUtils;
 
 import javax.annotation.Nullable;
@@ -170,7 +171,7 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     public void setOwner(@Nullable Frame owner) {
         super.setOwner(owner);
 
-        screenSettings = new ScreenSettings(getScreenOwner());
+        screenSettings = new ScreenSettingsJson(getScreenOwner());
 
         subscribe();
     }

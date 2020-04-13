@@ -19,8 +19,8 @@ package io.jmix.ui.persistence.settings.component.register;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.components.impl.WebTable;
-import io.jmix.ui.persistence.settings.component.AbstractSettings;
 import io.jmix.ui.persistence.settings.component.TableSettingsImpl;
+import io.jmix.ui.settings.component.ComponentSettings;
 
 @org.springframework.stereotype.Component(TableSettingsReg.NAME)
 public class TableSettingsReg implements SettingsRegistration {
@@ -38,7 +38,7 @@ public class TableSettingsReg implements SettingsRegistration {
     }
 
     @Override
-    public Class<? extends AbstractSettings> getSettingsClass() {
+    public Class<? extends ComponentSettings> getSettingsClass() {
         return TableSettingsImpl.class;
     }
 }

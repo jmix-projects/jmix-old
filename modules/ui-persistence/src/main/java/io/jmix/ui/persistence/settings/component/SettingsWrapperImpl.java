@@ -16,13 +16,14 @@
 
 package io.jmix.ui.persistence.settings.component;
 
+import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
 
 public class SettingsWrapperImpl implements SettingsWrapper {
 
-    protected AbstractSettings settings;
+    protected ComponentSettings settings;
 
-    public SettingsWrapperImpl(AbstractSettings settings) {
+    public SettingsWrapperImpl(ComponentSettings settings) {
         this.settings = settings;
     }
 

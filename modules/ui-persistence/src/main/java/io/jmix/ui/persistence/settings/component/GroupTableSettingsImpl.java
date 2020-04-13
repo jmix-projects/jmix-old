@@ -16,11 +16,8 @@
 
 package io.jmix.ui.persistence.settings.component;
 
-import org.json.JSONObject;
-
 public class GroupTableSettingsImpl extends TableSettingsImpl {
 
-    public GroupTableSettingsImpl(JSONObject json) {
-        super(json);
+    public GroupTableSettingsImpl() {
     }
 }

@@ -18,8 +18,8 @@ package io.jmix.ui.persistence.settings.facet;
 
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.ui.components.Facet;
-import io.jmix.ui.persistence.settings.ScreenSettings;
 import io.jmix.ui.screen.Screen;
+import io.jmix.ui.settings.ScreenSettings;
 
 import java.util.EventObject;
 import java.util.Set;

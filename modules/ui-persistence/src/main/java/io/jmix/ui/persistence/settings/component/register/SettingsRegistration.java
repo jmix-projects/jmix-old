@@ -17,7 +17,7 @@
 package io.jmix.ui.persistence.settings.component.register;
 
 import io.jmix.ui.components.Component;
-import io.jmix.ui.persistence.settings.component.AbstractSettings;
+import io.jmix.ui.settings.component.ComponentSettings;
 
 public interface SettingsRegistration {
 
@@ -25,5 +25,5 @@ public interface SettingsRegistration {
 
     Class<? extends Component> getComponentClass();
 
-    Class<? extends AbstractSettings> getSettingsClass();
+    Class<? extends ComponentSettings> getSettingsClass();
 }
