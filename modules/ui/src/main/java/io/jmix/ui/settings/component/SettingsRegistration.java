@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.persistence.settings.component.register;
+package io.jmix.ui.settings.component;
 
 import io.jmix.ui.components.Component;
-import io.jmix.ui.settings.component.ComponentSettings;
 
 public interface SettingsRegistration {
 

@@ -16,12 +16,12 @@
 
 package io.jmix.ui.persistence.settings.facet;
 
+import io.jmix.core.AppBeans;
 import io.jmix.core.commons.events.EventHub;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.impl.WebAbstractFacet;
-import io.jmix.ui.persistence.settings.ScreenSettingsJson;
 import io.jmix.ui.persistence.settings.ScreenSettingsCoordinator;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Screen.AfterDetachEvent;
@@ -171,7 +171,7 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     public void setOwner(@Nullable Frame owner) {
         super.setOwner(owner);
 
-        screenSettings = new ScreenSettingsJson(getScreenOwner());
+        screenSettings = AppBeans.getPrototype(ScreenSettings.NAME, getScreenOwner().getId());
 
         subscribe();
     }

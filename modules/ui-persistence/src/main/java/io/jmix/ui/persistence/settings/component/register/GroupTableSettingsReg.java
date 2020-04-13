@@ -21,6 +21,7 @@ import io.jmix.ui.components.GroupTable;
 import io.jmix.ui.components.impl.WebGroupTable;
 import io.jmix.ui.persistence.settings.component.GroupTableSettingsImpl;
 import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.SettingsRegistration;
 
 @org.springframework.stereotype.Component
 public class GroupTableSettingsReg implements SettingsRegistration {

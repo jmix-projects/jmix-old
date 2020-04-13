@@ -21,6 +21,7 @@ import io.jmix.ui.components.Table;
 import io.jmix.ui.components.impl.WebTable;
 import io.jmix.ui.persistence.settings.component.TableSettingsImpl;
 import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.SettingsRegistration;
 
 @org.springframework.stereotype.Component(TableSettingsReg.NAME)
 public class TableSettingsReg implements SettingsRegistration {

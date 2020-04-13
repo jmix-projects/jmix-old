@@ -22,6 +22,8 @@ import java.util.Optional;
 
 public interface ScreenSettings {
 
+    String NAME = "jmix_ui_ScreenSettings";
+
     void setForceModified(boolean forceModified);
 
     boolean isForceModified();

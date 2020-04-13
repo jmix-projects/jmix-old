@@ -17,19 +17,14 @@
 package io.jmix.ui.persistence.settings;
 
 import com.google.gson.*;
-import io.jmix.core.AppBeans;
-import io.jmix.ui.screen.Screen;
 import io.jmix.ui.settings.ScreenSettings;
-import io.jmix.ui.settings.SettingsClient;
 import io.jmix.ui.settings.component.ComponentSettings;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class ScreenSettingsJson implements ScreenSettings {
 
-    protected SettingsClient settingsClient;
+public abstract class AbstractScreenSettings implements ScreenSettings {
 
     protected String screenId;
 
@@ -39,8 +34,8 @@ public class ScreenSettingsJson implements ScreenSettings {
 
     protected boolean forceModified = false;
 
-    public ScreenSettingsJson(Screen screen) {
-        screenId = screen.getId();
+    public AbstractScreenSettings(String screenId) {
+        this.screenId = screenId;
 
         initGson();
     }
@@ -56,7 +51,7 @@ public class ScreenSettingsJson implements ScreenSettings {
     }
 
     @Override
-    public ScreenSettingsJson put(String componentId, String property, String value) {
+    public AbstractScreenSettings put(String componentId, String property, String value) {
         JsonObject component = getComponentOrCreate(componentId);
 
         component.addProperty(property, value);
@@ -111,7 +106,7 @@ public class ScreenSettingsJson implements ScreenSettings {
     }
 
     @Override
-    public ScreenSettingsJson put(ComponentSettings settings) {
+    public AbstractScreenSettings put(ComponentSettings settings) {
         root.add(gson.toJsonTree(settings));
 
         return this;
@@ -121,7 +116,7 @@ public class ScreenSettingsJson implements ScreenSettings {
      * @param json json object that represents component settings
      * @return current instance of {@link ScreenSettings}
      */
-    public ScreenSettingsJson put(JsonObject json) {
+    public AbstractScreenSettings put(JsonObject json) {
         root.add(json);
 
         return this;
@@ -220,11 +215,6 @@ public class ScreenSettingsJson implements ScreenSettings {
         return this;
     }
 
-    @Override
-    public void commit() {
-        settingsClient.setSetting(screenId, gson.toJson(root));
-    }
-
     /**
      * @param componentId component id
      * @return json object that represents component settings
@@ -233,31 +223,13 @@ public class ScreenSettingsJson implements ScreenSettings {
         return Optional.ofNullable(getComponent(componentId));
     }
 
-    protected SettingsClient getSettingsClient() {
-        if (settingsClient == null) {
-            settingsClient = AppBeans.get(SettingsClient.NAME);
-        }
-
-        return settingsClient;
-    }
-
     protected void initGson() {
         gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
     }
 
-    protected void loadSettings() {
-        if (root == null) {
-            // use cache
-            String jsonArray = getSettingsClient().getSetting(screenId);
-            if (StringUtils.isNotBlank(jsonArray)) {
-                root = gson.fromJson(jsonArray, JsonArray.class);
-            } else {
-                root = new JsonArray();
-            }
-        }
-    }
+    protected abstract void loadSettings();
 
     protected JsonObject getComponentOrCreate(String componentId) {
         JsonObject component = getComponent(componentId);
