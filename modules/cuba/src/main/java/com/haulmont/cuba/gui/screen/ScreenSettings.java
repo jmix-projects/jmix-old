@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.screen;
+package com.haulmont.cuba.gui.screen;
 
 import io.jmix.ui.components.HasDataLoadingSettings;
 import io.jmix.ui.components.HasPresentations;
 import io.jmix.ui.components.HasSettings;
 import io.jmix.ui.presentations.Presentations;
-import io.jmix.ui.settings.Settings;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.settings.compatibility.Settings;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 import org.slf4j.Logger;
@@ -32,11 +33,11 @@ import java.util.UUID;
 import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 import static io.jmix.ui.components.ComponentsHelper.walkComponents;
 
-@Component(ScreenSettingsManager.NAME)
-public class ScreenSettingsManager {
+@Component(ScreenSettings.NAME)
+public class ScreenSettings {
     public static final String NAME = "jmix_ScreenSettings";
 
-    private static final Logger log = LoggerFactory.getLogger(ScreenSettingsManager.class);
+    private static final Logger log = LoggerFactory.getLogger(ScreenSettings.class);
 
     /**
      * Apply settings for screen.

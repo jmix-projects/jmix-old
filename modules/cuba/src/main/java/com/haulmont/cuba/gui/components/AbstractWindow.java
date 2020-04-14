@@ -18,6 +18,7 @@ package com.haulmont.cuba.gui.components;
 import com.haulmont.cuba.core.global.Messages;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.data.DsContext;
+import com.haulmont.cuba.gui.screen.ScreenSettings;
 import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
 import io.jmix.core.Events;
 import io.jmix.core.MessageTools;
@@ -31,7 +32,7 @@ import io.jmix.ui.gui.OpenType;
 import io.jmix.ui.icons.Icons;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.screen.compatibility.CubaLegacySettings;
-import io.jmix.ui.settings.Settings;
+import io.jmix.ui.settings.compatibility.Settings;
 import io.jmix.ui.util.OperationResult;
 import io.jmix.ui.util.UnknownOperationResult;
 import org.dom4j.Element;
@@ -772,7 +773,7 @@ public class AbstractWindow extends Screen
     public void applySettings(Settings settings) {
         this.settings = settings;
 
-        ScreenSettingsManager screenSettings = getBeanLocator().get(ScreenSettingsManager.NAME);
+        ScreenSettings screenSettings = getBeanLocator().get(ScreenSettings.NAME);
         screenSettings.applySettings(this, settings);
     }
 
@@ -782,7 +783,7 @@ public class AbstractWindow extends Screen
     @Override
     public void saveSettings() {
         if (settings != null) {
-            ScreenSettingsManager screenSettings = getBeanLocator().get(ScreenSettingsManager.NAME);
+            ScreenSettings screenSettings = getBeanLocator().get(ScreenSettings.NAME);
             screenSettings.saveSettings(this, settings);
         }
     }

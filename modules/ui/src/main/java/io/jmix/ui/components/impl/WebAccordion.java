@@ -28,7 +28,7 @@ import io.jmix.ui.icons.Icons;
 import io.jmix.ui.screen.compatibility.CubaLegacySettings;
 import io.jmix.ui.security.UiPermissionDescriptor;
 import io.jmix.ui.security.UiPermissionValue;
-import io.jmix.ui.settings.Settings;
+import io.jmix.ui.settings.compatibility.Settings;
 import io.jmix.ui.settings.facet.ScreenSettingsFacet;
 import io.jmix.ui.sys.TestIdManager;
 import io.jmix.ui.widgets.CubaAccordion;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.settings;
+package io.jmix.ui.settings.compatibility;
 
 import io.jmix.ui.screen.Screen;
 import org.dom4j.Element;

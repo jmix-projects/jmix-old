@@ -16,6 +16,7 @@
 
 package io.jmix.ui.settings;
 
+import io.jmix.ui.settings.compatibility.Settings;
 import org.dom4j.*;
 
 import java.io.IOException;

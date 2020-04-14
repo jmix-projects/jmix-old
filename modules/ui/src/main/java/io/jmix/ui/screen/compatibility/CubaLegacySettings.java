@@ -16,7 +16,7 @@
 
 package io.jmix.ui.screen.compatibility;
 
-import io.jmix.ui.settings.Settings;
+import io.jmix.ui.settings.compatibility.Settings;
 
 public interface CubaLegacySettings {
 

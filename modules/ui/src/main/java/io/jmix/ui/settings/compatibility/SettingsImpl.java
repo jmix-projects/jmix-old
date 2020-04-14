@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.settings;
+package io.jmix.ui.settings.compatibility;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
+import io.jmix.ui.settings.SettingsClient;
+import io.jmix.ui.settings.SettingsElementWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
