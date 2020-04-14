@@ -48,7 +48,7 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     protected ScreenSettings screenSettings;
 
     protected Consumer<ScreenSettings> applySettingsProvider;
-    protected Consumer<ScreenSettings> applyDataLoadSettingsProvider;
+    protected Consumer<ScreenSettings> applyDataLoadingSettingsProvider;
     protected Consumer<ScreenSettings> saveSettingsProvider;
 
     @Inject
@@ -67,7 +67,10 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     }
 
     @Override
-    public void applyDataLoadSettings(ScreenSettings settings) {
+    public void applyDataLoadingSettings(ScreenSettings settings) {
+        Collection<Component> components = getComponents();
+
+        settingsCoordinator.applyDataLoadingSettings(components, settings);
     }
 
     @Override
@@ -134,13 +137,13 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     }
 
     @Override
-    public Consumer<ScreenSettings> getApplyDataLoadSettingsProvider() {
-        return applyDataLoadSettingsProvider;
+    public Consumer<ScreenSettings> getApplyDataLoadingSettingsProvider() {
+        return applyDataLoadingSettingsProvider;
     }
 
     @Override
-    public void setApplyDataLoadSettingsProvider(Consumer<ScreenSettings> provider) {
-        this.applyDataLoadSettingsProvider = provider;
+    public void setApplyDataLoadingSettingsProvider(Consumer<ScreenSettings> provider) {
+        this.applyDataLoadingSettingsProvider = provider;
     }
 
     @Override
@@ -200,10 +203,10 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
         getEventHub().publish(BeforeApplyDataLoadSettingsEvent.class,
                 new BeforeApplyDataLoadSettingsEvent(getScreenOwner(), screenSettings));
 
-        if (applyDataLoadSettingsProvider != null) {
-            applyDataLoadSettingsProvider.accept(screenSettings);
+        if (applyDataLoadingSettingsProvider != null) {
+            applyDataLoadingSettingsProvider.accept(screenSettings);
         } else {
-            applyDataLoadSettings(screenSettings);
+            applyDataLoadingSettings(screenSettings);
         }
     }
 

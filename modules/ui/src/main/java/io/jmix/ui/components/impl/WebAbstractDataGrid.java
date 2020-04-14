@@ -2237,6 +2237,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         }
     }
 
+    @Override
     public void applyDataLoadingSettings(Element element) {
         if (!isSettingsEnabled()) {
             return;
@@ -2269,6 +2270,10 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
                 }
             }
         }
+    }
+
+    @Override
+    public void applyDataLoadingSettings(SettingsWrapper settings) {
     }
 
     protected void applyColumnSettings(Element element, Collection<Column<E>> oldColumns) {

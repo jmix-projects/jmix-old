@@ -187,6 +187,11 @@ public class WebFilter extends WebAbstractComponent<com.vaadin.ui.Component> imp
     }
 
     @Override
+    public void applyDataLoadingSettings(SettingsWrapper settings) {
+
+    }
+
+    @Override
     public void applySettings(SettingsWrapper settings) {
 
     }

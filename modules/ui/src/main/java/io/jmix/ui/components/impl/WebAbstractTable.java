@@ -2104,6 +2104,11 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     }
 
     @Override
+    public void applyDataLoadingSettings(SettingsWrapper settings) {
+
+    }
+
+    @Override
     public void applySettings(SettingsWrapper settings) {
         TableSettings tableSettings = settings.getSettings();
 

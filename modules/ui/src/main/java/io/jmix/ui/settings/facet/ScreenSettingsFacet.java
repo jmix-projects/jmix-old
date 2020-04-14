@@ -43,15 +43,15 @@ public interface ScreenSettingsFacet extends Facet {
 
     void applySettings(ScreenSettings settings);
 
-    void applyDataLoadSettings(ScreenSettings settings);
+    void applyDataLoadingSettings(ScreenSettings settings);
 
     void saveSettings(ScreenSettings settings);
 
     Consumer<ScreenSettings> getApplySettingsProvider();
     void setApplySettingsProvider(Consumer<ScreenSettings> provider);
 
-    Consumer<ScreenSettings> getApplyDataLoadSettingsProvider();
-    void setApplyDataLoadSettingsProvider(Consumer<ScreenSettings> provider);
+    Consumer<ScreenSettings> getApplyDataLoadingSettingsProvider();
+    void setApplyDataLoadingSettingsProvider(Consumer<ScreenSettings> provider);
 
     Consumer<ScreenSettings> getSaveSettingsProvider();
     void setSaveSettingsProvider(Consumer<ScreenSettings> provider);
