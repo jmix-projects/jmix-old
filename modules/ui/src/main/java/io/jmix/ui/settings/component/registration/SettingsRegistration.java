@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component;
+package io.jmix.ui.settings.component.registration;
 
 import io.jmix.ui.components.Component;
+import io.jmix.ui.settings.component.ComponentSettings;
 
 public interface SettingsRegistration {
 

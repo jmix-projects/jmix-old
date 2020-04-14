@@ -70,6 +70,7 @@ import io.jmix.ui.screen.InstallTargetHandler;
 import io.jmix.ui.screen.ScreenContext;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.settings.component.SettingsWrapper;
+import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.component.TableSettings;
 import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.ui.sys.PersistenceManagerClient;
@@ -180,6 +181,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     protected boolean usePresentations;
     protected Presentations presentations;
     protected Document defaultSettings;
+    protected TableSettings defaultTableSettings;
 
     protected com.vaadin.v7.ui.Table.ColumnCollapseListener columnCollapseListener;
 
@@ -2104,11 +2106,100 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     @Override
     public void applySettings(SettingsWrapper settings) {
         TableSettings tableSettings = settings.getSettings();
+
+        if (defaultTableSettings == null) {
+            defaultTableSettings = new TableSettings();
+            saveSettings(new SettingsWrapperImpl(defaultTableSettings));
+        }
+
         if (tableSettings.getTextSelection() != null) {
             component.setTextSelectionEnabled(tableSettings.getTextSelection());
 
             if (component.getPresentations() != null) {
                 ((TablePresentations) component.getPresentations()).updateTextSelection();
+            }
+        }
+
+        List<TableSettings.ColumnSettings> columnSettings = tableSettings.getColumns();
+        if (columnSettings != null) {
+            boolean refreshWasEnabled = component.disableContentBufferRefreshing();
+
+            Collection<String> modelIds = new ArrayList<>();
+            for (Object column : component.getVisibleColumns()) {
+                modelIds.add(String.valueOf(column));
+            }
+
+            Collection<String> loadedIds = new ArrayList<>();
+            for (TableSettings.ColumnSettings column : columnSettings) {
+                loadedIds.add(column.getId());
+            }
+
+            if (CollectionUtils.isEqualCollection(modelIds, loadedIds)) {
+                applyColumnSettings(tableSettings);
+            }
+
+            component.enableContentBufferRefreshing(refreshWasEnabled);
+        }
+    }
+
+    // todo settings
+    protected void applyColumnSettings(TableSettings tableSettings) {
+        Object[] oldColumns = component.getVisibleColumns();
+        List<Object> newColumns = new ArrayList<>();
+
+        // add columns from saved settings
+        for (TableSettings.ColumnSettings columnSetting : tableSettings.getColumns()) {
+            for (Object column : oldColumns) {
+                if (column.toString().equals(columnSetting.getId())) {
+                    newColumns.add(column);
+
+                    Integer width = columnSetting.getWidth();
+                    if (width != null) {
+                        component.setColumnWidth(column, width);
+                    } else {
+                        component.setColumnWidth(column, -1);
+                    }
+
+                    Boolean visible = columnSetting.getVisible();
+                    if (visible != null) {
+                        if (component.isColumnCollapsingAllowed()) { // throws exception if not
+                            component.setColumnCollapsed(column, !visible);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        // add columns not saved in settings (perhaps new)
+        for (Object column : oldColumns) {
+            if (!newColumns.contains(column)) {
+                newColumns.add(column);
+            }
+        }
+        // if the table contains only one column, always show it
+        if (newColumns.size() == 1) {
+            if (component.isColumnCollapsingAllowed()) { // throws exception if not
+                component.setColumnCollapsed(newColumns.get(0), false);
+            }
+        }
+
+        component.setVisibleColumns(newColumns.toArray());
+
+        @SuppressWarnings("unchecked")
+        EntityTableItems<E> entityTableSource = (EntityTableItems) getItems();
+        if (isSortable() && !isApplyDataLoadingSettings()) {
+            String sortProp = tableSettings.getSortProperty();
+            if (!StringUtils.isEmpty(sortProp)) {
+                MetaPropertyPath sortProperty = entityTableSource.getEntityMetaClass().getPropertyPath(sortProp);
+                if (newColumns.contains(sortProperty)) {
+                    boolean sortAscending = tableSettings.getSortAscending();
+
+                    component.setSortContainerPropertyId(null);
+                    component.setSortAscending(sortAscending);
+                    component.setSortContainerPropertyId(sortProperty);
+                }
+            } else {
+                component.setSortContainerPropertyId(null);
             }
         }
     }
@@ -2119,14 +2210,89 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
         TableSettings tableSettings = settings.getSettings();
 
-        boolean textSelection = BooleanUtils.toBoolean(tableSettings.getTextSelection());
-        if (textSelection != component.isTextSelectionEnabled()) {
-            tableSettings.setTextSelection(component.isTextSelectionEnabled());
+        if (isUsePresentations()) {
+            boolean textSelection = BooleanUtils.toBoolean(tableSettings.getTextSelection());
+            if (textSelection != component.isTextSelectionEnabled()) {
+                tableSettings.setTextSelection(component.isTextSelectionEnabled());
+
+                settingsChanged = true;
+            }
+        }
+
+        boolean commonSettingsChanged = isCommonTableSettingsChanged(tableSettings);
+
+        if (commonSettingsChanged) {
+            tableSettings.setColumns(new ArrayList<>());
+
+            Object[] visibleColumns = component.getVisibleColumns();
+            for (Object column : visibleColumns) {
+                TableSettings.ColumnSettings columnSettings = new TableSettings.ColumnSettings();
+
+                columnSettings.setId(column.toString());
+
+                int width = component.getColumnWidth(column);
+                if (width > -1)
+                    columnSettings.setWidth(width);
+
+                boolean visible = !component.isColumnCollapsed(column);
+                columnSettings.setVisible(visible);
+
+                tableSettings.getColumns().add(columnSettings);
+            }
 
             settingsChanged = true;
         }
 
         return settingsChanged;
+    }
+
+    // todo settings
+    protected boolean isCommonTableSettingsChanged(TableSettings tableSettings) {
+        if (tableSettings.getColumns() == null) {
+            if (defaultTableSettings != null) {
+                if (defaultTableSettings.getColumns() == null) {
+                    return true;
+                }
+                tableSettings.setColumns(new ArrayList<>(defaultTableSettings.getColumns()));
+            } else {
+                return false;
+            }
+        }
+
+        List<TableSettings.ColumnSettings> columnSettings = tableSettings.getColumns();
+        if (columnSettings.size() != component.getVisibleColumns().length) {
+            return true;
+        }
+
+        Object[] visibleColumns = component.getVisibleColumns();
+        for (int i = 0; i < visibleColumns.length; i++) {
+            Object columnId = visibleColumns[i];
+
+            TableSettings.ColumnSettings settingsColumn = columnSettings.get(i);
+            String settingsColumnId = settingsColumn.getId();
+
+            if (columnId.toString().equals(settingsColumnId)) {
+                int columnWidth = component.getColumnWidth(columnId);
+
+                Integer settingsColumnWidth = settingsColumn.getWidth();
+                int settingColumnWidth = settingsColumnWidth == null ? -1 : settingsColumnWidth;
+
+                if (columnWidth != settingColumnWidth) {
+                    return true;
+                }
+
+                boolean columnVisible = !component.isColumnCollapsed(columnId);
+                boolean settingsColumnVisible = settingsColumn.getVisible() == null ? true : settingsColumn.getVisible();
+
+                if (columnVisible != settingsColumnVisible) {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected void applyColumnSettings(Element element) {

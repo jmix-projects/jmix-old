@@ -16,9 +16,89 @@
 
 package io.jmix.ui.settings.component;
 
-public interface TableSettings extends ComponentSettings {
+import java.util.List;
 
-    Boolean getTextSelection();
+public class TableSettings implements ComponentSettings {
 
-    void setTextSelection(Boolean textSelection);
+    protected String id;
+    protected Boolean textSelection;
+
+    protected String sortProperty;
+    protected Boolean sortAscending;
+
+    protected List<ColumnSettings> columns;
+
+    public TableSettings() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Boolean getTextSelection() {
+        return textSelection;
+    }
+
+    public void setTextSelection(Boolean textPresentation) {
+        this.textSelection = textPresentation;
+    }
+
+    public String getSortProperty() {
+        return sortProperty;
+    }
+
+    public void setSortProperty(String sortProperty) {
+        this.sortProperty = sortProperty;
+    }
+
+    public Boolean getSortAscending() {
+        return sortAscending;
+    }
+
+    public void setSortAscending(Boolean sortAscending) {
+        this.sortAscending = sortAscending;
+    }
+
+    public List<ColumnSettings> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<ColumnSettings> columns) {
+        this.columns = columns;
+    }
+
+    public static class ColumnSettings {
+
+        protected String id;
+        protected Integer width;
+        protected Boolean visible;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public Integer getWidth() {
+            return width;
+        }
+
+        public void setWidth(Integer width) {
+            this.width = width;
+        }
+
+        public Boolean getVisible() {
+            return visible;
+        }
+
+        public void setVisible(Boolean visible) {
+            this.visible = visible;
+        }
+    }
 }

@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.persistence.settings.component;
-
-import io.jmix.ui.settings.component.ComponentSettings;
-import io.jmix.ui.settings.component.SettingsWrapper;
+package io.jmix.ui.settings.component;
 
 public class SettingsWrapperImpl implements SettingsWrapper {
 

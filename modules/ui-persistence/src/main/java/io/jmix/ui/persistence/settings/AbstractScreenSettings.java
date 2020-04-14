@@ -23,7 +23,6 @@ import io.jmix.ui.settings.component.ComponentSettings;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-
 public abstract class AbstractScreenSettings implements ScreenSettings {
 
     protected String screenId;
@@ -56,7 +55,7 @@ public abstract class AbstractScreenSettings implements ScreenSettings {
 
         component.addProperty(property, value);
 
-        root.add(component);
+        put(component, componentId);
 
         return this;
     }
@@ -67,7 +66,7 @@ public abstract class AbstractScreenSettings implements ScreenSettings {
 
         component.addProperty(property, value);
 
-        root.add(component);
+        put(component, componentId);
 
         return this;
     }
@@ -78,7 +77,7 @@ public abstract class AbstractScreenSettings implements ScreenSettings {
 
         component.addProperty(property, value);
 
-        root.add(component);
+        put(component, componentId);
 
         return this;
     }
@@ -89,7 +88,7 @@ public abstract class AbstractScreenSettings implements ScreenSettings {
 
         component.addProperty(property, value);
 
-        root.add(component);
+        put(component, componentId);
 
         return this;
     }
@@ -100,14 +99,14 @@ public abstract class AbstractScreenSettings implements ScreenSettings {
 
         component.addProperty(property, value);
 
-        root.add(component);
+        put(component, componentId);
 
         return this;
     }
 
     @Override
     public AbstractScreenSettings put(ComponentSettings settings) {
-        root.add(gson.toJsonTree(settings));
+        put(gson.toJsonTree(settings), settings.getId());
 
         return this;
     }
@@ -117,7 +116,12 @@ public abstract class AbstractScreenSettings implements ScreenSettings {
      * @return current instance of {@link ScreenSettings}
      */
     public AbstractScreenSettings put(JsonObject json) {
-        root.add(json);
+        if (!json.keySet().contains("id")) {
+            throw new IllegalArgumentException("Cannot put settings, json must have an id property");
+        }
+
+        String componentId = json.getAsJsonPrimitive("id").getAsString();
+        put(json, componentId);
 
         return this;
     }
@@ -221,6 +225,14 @@ public abstract class AbstractScreenSettings implements ScreenSettings {
      */
     public Optional<JsonObject> getSettingsRaw(String componentId) {
         return Optional.ofNullable(getComponent(componentId));
+    }
+
+    protected void put(JsonElement json, String componentId) {
+        loadSettings();
+
+        remove(componentId);
+
+        root.add(json);
     }
 
     protected void initGson() {

@@ -16,5 +16,8 @@
 
 package io.jmix.ui.settings.component;
 
-public interface GroupTableSettings extends TableSettings {
+public class GroupTableSettings extends TableSettings {
+
+    public GroupTableSettings() {
+    }
 }

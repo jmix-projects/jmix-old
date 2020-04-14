@@ -18,7 +18,7 @@ package io.jmix.ui.persistence.settings;
 
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.components.Component;
-import io.jmix.ui.settings.component.SettingsRegistration;
+import io.jmix.ui.settings.component.registration.SettingsRegistration;
 import io.jmix.ui.settings.component.ComponentSettings;
 import org.springframework.beans.factory.InitializingBean;
 

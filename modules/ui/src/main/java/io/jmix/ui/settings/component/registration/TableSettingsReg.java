@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.persistence.settings.component.register;
+package io.jmix.ui.settings.component.registration;
 
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.components.impl.WebTable;
-import io.jmix.ui.persistence.settings.component.TableSettingsImpl;
 import io.jmix.ui.settings.component.ComponentSettings;
-import io.jmix.ui.settings.component.SettingsRegistration;
+import io.jmix.ui.settings.component.TableSettings;
 
 @org.springframework.stereotype.Component(TableSettingsReg.NAME)
 public class TableSettingsReg implements SettingsRegistration {
@@ -40,6 +39,6 @@ public class TableSettingsReg implements SettingsRegistration {
 
     @Override
     public Class<? extends ComponentSettings> getSettingsClass() {
-        return TableSettingsImpl.class;
+        return TableSettings.class;
     }
 }

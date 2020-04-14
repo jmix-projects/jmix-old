@@ -18,7 +18,7 @@ package io.jmix.ui.persistence.settings;
 
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.HasSettings;
-import io.jmix.ui.persistence.settings.component.SettingsWrapperImpl;
+import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.component.ComponentSettings;
 
