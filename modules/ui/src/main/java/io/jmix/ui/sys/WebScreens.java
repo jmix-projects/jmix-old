@@ -47,6 +47,7 @@ import io.jmix.ui.model.impl.ScreenDataImpl;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.screen.Screen.*;
 import io.jmix.ui.screen.compatibility.CubaLegacyFrame;
+import io.jmix.ui.screen.compatibility.CubaLegacySettings;
 import io.jmix.ui.settings.Settings;
 import io.jmix.ui.settings.SettingsImpl;
 import io.jmix.ui.theme.ThemeConstants;
@@ -512,7 +513,9 @@ public class WebScreens implements Screens {
             applySettings(screen, getSettingsImpl(screen.getId()));
         }*/
 
-        applySettings(screen, getSettingsImpl(screen.getId()));
+        if (screen instanceof CubaLegacySettings) {
+            ((CubaLegacySettings) screen).applySettings(getSettingsImpl(screen.getId()));
+        }
 
         /*
         TODO: legacy-ui
@@ -1078,11 +1081,18 @@ public class WebScreens implements Screens {
     public void saveScreenSettings() {
         Screen rootScreen = getOpenedScreens().getRootScreen();
 
-        saveSettings(rootScreen);
+        if (rootScreen instanceof CubaLegacySettings)
+            ((CubaLegacySettings) rootScreen).saveSettings();
 
-        getOpenedWorkAreaScreensStream().forEach(UiControllerUtils::saveSettings);
+        getOpenedWorkAreaScreensStream().forEach(screen -> {
+            if (screen instanceof CubaLegacySettings)
+                ((CubaLegacySettings) screen).saveSettings();
+        });
 
-        getDialogScreensStream().forEach(UiControllerUtils::saveSettings);
+        getDialogScreensStream().forEach((screen -> {
+            if (screen instanceof CubaLegacySettings)
+                ((CubaLegacySettings) screen).saveSettings();
+        }));
     }
 
     // used only for legacy screens

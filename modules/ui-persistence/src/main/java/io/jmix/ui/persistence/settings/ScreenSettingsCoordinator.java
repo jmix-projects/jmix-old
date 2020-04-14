@@ -76,14 +76,7 @@ public class ScreenSettingsCoordinator {
         }
 
         if (isModified || screenSettings.isForceModified()) {
-            commitSettings(screenSettings);
+            screenSettings.commit();
         }
-    }
-
-    /**
-     * @param settings
-     */
-    public void commitSettings(ScreenSettings settings) {
-        settings.commit();
     }
 }

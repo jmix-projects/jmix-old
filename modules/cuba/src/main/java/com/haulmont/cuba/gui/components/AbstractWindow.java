@@ -30,6 +30,7 @@ import io.jmix.ui.components.*;
 import io.jmix.ui.gui.OpenType;
 import io.jmix.ui.icons.Icons;
 import io.jmix.ui.screen.*;
+import io.jmix.ui.screen.compatibility.CubaLegacySettings;
 import io.jmix.ui.settings.Settings;
 import io.jmix.ui.util.OperationResult;
 import io.jmix.ui.util.UnknownOperationResult;
@@ -52,7 +53,8 @@ import java.util.stream.Stream;
  */
 @Deprecated
 public class AbstractWindow extends Screen
-        implements Window, Window.Wrapper, LegacyFrame, Component.HasXmlDescriptor, SecuredActionsHolder, ChangeTracker {
+        implements Window, Window.Wrapper, LegacyFrame, Component.HasXmlDescriptor, SecuredActionsHolder, ChangeTracker,
+        CubaLegacySettings {
 
     public static final String UNKNOWN_CLOSE_ACTION_ID = "unknown";
 
@@ -62,6 +64,8 @@ public class AbstractWindow extends Screen
     private Component parent;
 
     private DsContext dsContext;
+
+    private Settings settings;
 
     @Inject
     protected Messages messages;
@@ -766,7 +770,10 @@ public class AbstractWindow extends Screen
      */
     @Override
     public void applySettings(Settings settings) {
-        super.applySettings(settings);
+        this.settings = settings;
+
+        ScreenSettingsManager screenSettings = getBeanLocator().get(ScreenSettingsManager.NAME);
+        screenSettings.applySettings(this, settings);
     }
 
     /**
@@ -774,17 +781,20 @@ public class AbstractWindow extends Screen
      */
     @Override
     public void saveSettings() {
-        super.saveSettings();
+        if (settings != null) {
+            ScreenSettingsManager screenSettings = getBeanLocator().get(ScreenSettingsManager.NAME);
+            screenSettings.saveSettings(this, settings);
+        }
     }
 
     @Override
     public void deleteSettings() {
-        super.deleteSettings();
+        settings.delete();
     }
 
     @Override
     public Settings getSettings() {
-        return super.getSettings();
+        return settings;
     }
 
     @Override

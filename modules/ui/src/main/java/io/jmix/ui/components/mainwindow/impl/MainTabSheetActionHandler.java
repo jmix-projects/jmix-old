@@ -169,16 +169,18 @@ public class MainTabSheetActionHandler implements Action.Handler {
 
     protected void restoreToDefaults(Object target) {
         io.jmix.ui.components.Window window = getWindow(target);
+        /* todo settings
         if (window != null) {
             window.deleteSettings();
-        }
+        }*/
     }
 
     protected void saveSettings(Object target) {
         io.jmix.ui.components.Window window = getWindow(target);
+        /* todo settings
         if (window != null) {
             window.saveSettings();
-        }
+        }*/
     }
 
     protected io.jmix.ui.components.Window.Editor findEditor(Layout layout) {

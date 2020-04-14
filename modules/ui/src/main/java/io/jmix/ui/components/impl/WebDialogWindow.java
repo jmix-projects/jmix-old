@@ -355,7 +355,7 @@ public class WebDialogWindow extends WebWindow implements DialogWindow, Initiali
         @Override
         public void handleAction(Action action, Object sender, Object target) {
             // todo actions
-
+            // todo settings
             /*if (initialized) {
                 if (saveSettingsAction == action) {
                     Screen screen = getFrameOwner();

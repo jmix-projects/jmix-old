@@ -26,7 +26,7 @@ import io.jmix.ui.WindowInfo;
 import io.jmix.ui.components.Window;
 import io.jmix.ui.components.impl.WindowImplementation;
 import io.jmix.ui.model.ScreenData;
-import io.jmix.ui.settings.Settings;
+import io.jmix.ui.screen.compatibility.CubaLegacySettings;
 import io.jmix.ui.util.OperationResult;
 import org.springframework.context.ApplicationListener;
 
@@ -53,8 +53,6 @@ public abstract class Screen implements FrameOwner {
     private ScreenData screenData;
 
     private Window window;
-
-     private Settings settings;
 
     private EventHub eventHub = new EventHub();
 
@@ -324,8 +322,12 @@ public abstract class Screen implements FrameOwner {
             return OperationResult.fail();
         }
 
+        // todo settings
+        // support legacy screens with settings
         if (isSaveSettingsOnClose(action)) {
-            saveSettings();
+            if (this instanceof CubaLegacySettings) {
+                ((CubaLegacySettings) this).saveSettings();
+            }
         }
 
         // todo history
@@ -408,55 +410,6 @@ public abstract class Screen implements FrameOwner {
     protected boolean isSameScreen(Screen openedScreen) {
         return this.getClass() == openedScreen.getClass()
                 && this.getId().equals(openedScreen.getId());
-    }
-
-    /**
-     * @return screen settings
-     */
-    protected Settings getSettings() {
-        return settings;
-    }
-
-    /**
-     * Saves screen settings.
-     */
-    protected void saveSettings() {
-        if (settings != null) {
-            ScreenSettingsManager screenSettings = getBeanLocator().get(ScreenSettingsManager.NAME);
-            screenSettings.saveSettings(this, settings);
-        }
-    }
-
-    /**
-     * Applies screen settings to UI components.
-     *
-     * @param settings screen settings
-     */
-    protected void applySettings(Settings settings) {
-        this.settings = settings;
-
-        ScreenSettingsManager screenSettings = getBeanLocator().get(ScreenSettingsManager.NAME);
-        screenSettings.applySettings(this, settings);
-    }
-
-    /**
-     * Applies screen settings to data components.
-     *
-     * @param settings screen settings
-     */
-    protected void applyDataLoadingSettings(Settings settings) {
-        this.settings = settings;
-
-        ScreenSettingsManager screenSettings = getBeanLocator().get(ScreenSettingsManager.NAME);
-        screenSettings.applyDataLoadingSettings(this, settings);
-    }
-
-
-    /**
-     * Deletes screen settings associated with this screen.
-     */
-    protected void deleteSettings() {
-        settings.delete();
     }
 
     /**

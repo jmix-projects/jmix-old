@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.persistence.settings.facet;
+package io.jmix.ui.settings.facet;
 
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.ui.components.Facet;

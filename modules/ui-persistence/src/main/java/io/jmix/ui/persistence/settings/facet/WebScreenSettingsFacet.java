@@ -29,6 +29,7 @@ import io.jmix.ui.screen.Screen.AfterShowEvent;
 import io.jmix.ui.screen.Screen.BeforeShowEvent;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.settings.ScreenSettings;
+import io.jmix.ui.settings.facet.ScreenSettingsFacet;
 import org.apache.commons.collections4.CollectionUtils;
 
 import javax.annotation.Nullable;

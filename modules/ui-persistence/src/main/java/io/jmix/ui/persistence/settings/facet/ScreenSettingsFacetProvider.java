@@ -18,6 +18,7 @@ package io.jmix.ui.persistence.settings.facet;
 
 import com.google.common.base.Strings;
 import io.jmix.ui.GuiDevelopmentException;
+import io.jmix.ui.settings.facet.ScreenSettingsFacet;
 import io.jmix.ui.xml.FacetProvider;
 import io.jmix.ui.xml.layout.ComponentLoader;
 import org.dom4j.Element;

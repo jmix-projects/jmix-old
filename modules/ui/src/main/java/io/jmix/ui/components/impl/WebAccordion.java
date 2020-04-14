@@ -25,10 +25,11 @@ import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.*;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.icons.Icons;
-import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.screen.compatibility.CubaLegacySettings;
 import io.jmix.ui.security.UiPermissionDescriptor;
 import io.jmix.ui.security.UiPermissionValue;
 import io.jmix.ui.settings.Settings;
+import io.jmix.ui.settings.facet.ScreenSettingsFacet;
 import io.jmix.ui.sys.TestIdManager;
 import io.jmix.ui.widgets.CubaAccordion;
 import io.jmix.ui.xml.layout.ComponentLoader;
@@ -585,23 +586,31 @@ public class WebAccordion extends WebAbstractComponent<CubaAccordion>
 
                 Window window = ComponentsHelper.getWindow(WebAccordion.this);
                 if (window != null) {
-                    Settings settings = UiControllerUtils.getSettings(window.getFrameOwner());
+                    if (window.getFrameOwner() instanceof CubaLegacySettings) {
+                        Settings settings = ((CubaLegacySettings) window.getFrameOwner()).getSettings();
+                        if (settings != null) {
+                            walkComponents(tabContent, (settingsComponent, name) -> {
+                                if (settingsComponent.getId() != null
+                                        && settingsComponent instanceof HasSettings) {
+                                    Element e = settings.get(name);
+                                    ((HasSettings) settingsComponent).applySettings(e);
 
-                    if (settings != null) {
-                        walkComponents(tabContent, (settingsComponent, name) -> {
-                            if (settingsComponent.getId() != null
-                                    && settingsComponent instanceof HasSettings) {
-                                Element e = settings.get(name);
-                                ((HasSettings) settingsComponent).applySettings(e);
-
-                                if (component instanceof HasPresentations
-                                        && e.attributeValue("presentation") != null) {
-                                    final String def = e.attributeValue("presentation");
-                                    if (!StringUtils.isEmpty(def)) {
-                                        UUID defaultId = UUID.fromString(def);
-                                        ((HasPresentations) component).applyPresentationAsDefault(defaultId);
+                                    if (component instanceof HasPresentations
+                                            && e.attributeValue("presentation") != null) {
+                                        final String def = e.attributeValue("presentation");
+                                        if (!StringUtils.isEmpty(def)) {
+                                            UUID defaultId = UUID.fromString(def);
+                                            ((HasPresentations) component).applyPresentationAsDefault(defaultId);
+                                        }
                                     }
                                 }
+                            });
+                        }
+                    } else {
+                        window.getFacets().forEach(facet -> {
+                            if (facet instanceof ScreenSettingsFacet) {
+                                ScreenSettingsFacet settingsFacet = (ScreenSettingsFacet) facet;
+                                settingsFacet.applySettings(settingsFacet.getSettings());
                             }
                         });
                     }

@@ -48,8 +48,7 @@ public class ScreenSettingsManager {
         checkNotNullArgument(screen);
         checkNotNullArgument(settings);
 
-        // TODO settings
-    /*    walkComponents(
+        walkComponents(
                 screen.getWindow(),
                 (component, name) -> {
                     if (component.getId() != null
@@ -69,7 +68,7 @@ public class ScreenSettingsManager {
                         }
                     }
                 }
-        );*/
+        );
     }
 
     /**
@@ -82,7 +81,7 @@ public class ScreenSettingsManager {
         checkNotNullArgument(screen);
         checkNotNullArgument(settings);
 
-    /*    walkComponents(
+        walkComponents(
                 screen.getWindow(),
                 (component, name) -> {
                     if (component.getId() != null
@@ -93,7 +92,7 @@ public class ScreenSettingsManager {
                         ((HasDataLoadingSettings) component).applyDataLoadingSettings(e);
                     }
                 }
-        );*/
+        );
     }
 
 
@@ -107,7 +106,7 @@ public class ScreenSettingsManager {
         checkNotNullArgument(screen);
         checkNotNullArgument(settings);
 
-     /*   walkComponents(
+        walkComponents(
                 screen.getWindow(),
                 (component, name) -> {
                     if (component.getId() != null
@@ -132,6 +131,6 @@ public class ScreenSettingsManager {
                     }
                 }
         );
-        settings.commit();*/
+        settings.commit();
     }
 }
