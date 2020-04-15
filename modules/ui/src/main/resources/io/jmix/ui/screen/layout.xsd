@@ -3543,21 +3543,6 @@
         <xs:attribute name="primary" type="xs:boolean"/>
     </xs:complexType>
 
-    <!-- Screen Settings Facet -->
-    <xs:complexType name="screenSettingsType" >
-        <xs:all>
-            <xs:element name="exclude" type="screenSettingsComponentType" minOccurs="0"/>
-            <xs:element name="include" type="screenSettingsComponentType" minOccurs="0"/>
-        </xs:all>
-
-        <xs:attribute name="id" type="xs:string" use="required"/>
-        <xs:attribute name="includeAll" type="xs:boolean"/>
-    </xs:complexType>
-
-    <xs:complexType name="screenSettingsComponentType">
-        <xs:attribute name="componentId" type="xs:string" use="required"/>
-    </xs:complexType>
-
     <!-- Screen Facet -->
     <xs:complexType name="screenType">
         <xs:all>
@@ -3650,8 +3635,6 @@
                 <xs:element name="screen" type="screenType" minOccurs="0"/>
                 <xs:element name="editorScreen" type="editorScreenType" minOccurs="0"/>
                 <xs:element name="lookupScreen" type="lookupScreenType" minOccurs="0"/>
-
-                <xs:element name="screenSettings" type="screenSettingsType" minOccurs="0"/>
 
                 <!-- allow custom facets from any namespace -->
                 <xs:any/>

@@ -50,11 +50,13 @@ public interface Presentations {
     /**
      * Sets user settings for the selected presentation
      */
+    // todo settings
     void setSettings(Presentation p, Element e);
 
     /**
      * Returns presentation by its id or <code>null</code> if a presentation doesn't exist
      */
+    // todo settings
     Presentation getPresentation(Object id);
 
     /**
