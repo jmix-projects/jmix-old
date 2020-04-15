@@ -22,7 +22,7 @@ import io.jmix.core.commons.events.Subscription;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.impl.WebAbstractFacet;
-import io.jmix.ui.persistence.settings.ScreenSettingsCoordinator;
+import io.jmix.ui.persistence.settings.ScreenSettingsManager;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Screen.AfterDetachEvent;
 import io.jmix.ui.screen.Screen.AfterShowEvent;
@@ -52,7 +52,7 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     protected Consumer<ScreenSettings> saveSettingsProvider;
 
     @Inject
-    protected ScreenSettingsCoordinator settingsCoordinator;
+    protected ScreenSettingsManager settingsCoordinator;
 
     @Override
     public ScreenSettings getSettings() {
@@ -175,7 +175,8 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     public void setOwner(@Nullable Frame owner) {
         super.setOwner(owner);
 
-        screenSettings = AppBeans.getPrototype(ScreenSettings.NAME, getScreenOwner().getId());
+        if (getScreenOwner() != null)
+            screenSettings = AppBeans.getPrototype(ScreenSettings.NAME, getScreenOwner().getId());
 
         subscribe();
     }
@@ -194,9 +195,9 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
 
     }
 
+    @Nullable
     protected Screen getScreenOwner() {
-        assert getOwner() != null;
-        return (Screen) getOwner().getFrameOwner();
+        return getOwner() == null ? null : (Screen) getOwner().getFrameOwner();
     }
 
     protected void onScreenBeforeShow(BeforeShowEvent event) {

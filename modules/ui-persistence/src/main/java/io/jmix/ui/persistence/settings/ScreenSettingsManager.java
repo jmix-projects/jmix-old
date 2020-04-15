@@ -30,19 +30,24 @@ import java.util.Collection;
 
 import static io.jmix.ui.components.ComponentsHelper.getComponentPath;
 
-@org.springframework.stereotype.Component(ScreenSettingsCoordinator.NAME)
-public class ScreenSettingsCoordinator {
+/**
+ * Provides functionality for applying and saving component settings.
+ */
+@org.springframework.stereotype.Component(ScreenSettingsManager.NAME)
+public class ScreenSettingsManager {
 
-    private static final Logger log = LoggerFactory.getLogger(ScreenSettingsCoordinator.class);
+    private static final Logger log = LoggerFactory.getLogger(ScreenSettingsManager.class);
 
-    public static final String NAME = "jmix_ui_persistence_ScreenSettingsTools";
+    public static final String NAME = "jmix_ui_persistence_ScreenSettingsManager";
 
     @Inject
-    protected SettingsRegister settingsRegister;
+    protected ComponentSettingsRegistry settingsRegister;
 
     /**
-     * @param components
-     * @param screenSettings
+     * Applies settings for components which implement {@link HasSettings} interface.
+     *
+     * @param components     components to apply settings
+     * @param screenSettings screen settings
      */
     public void applySettings(Collection<Component> components, ScreenSettings screenSettings) {
         for (Component component : components) {
@@ -61,8 +66,10 @@ public class ScreenSettingsCoordinator {
     }
 
     /**
-     * @param components
-     * @param screenSettings
+     * Applies data loading settings for components which implement {@link HasDataLoadingSettings} interface.
+     *
+     * @param components     components to apply settings
+     * @param screenSettings screen settings
      */
     public void applyDataLoadingSettings(Collection<Component> components, ScreenSettings screenSettings) {
         for (Component component : components) {
@@ -81,8 +88,11 @@ public class ScreenSettingsCoordinator {
     }
 
     /**
-     * @param components
-     * @param screenSettings
+     * Saves settings and persist if they are changed or screen settings is force modified. Components must
+     * implement {@link HasSettings}.
+     *
+     * @param components     components to save settings
+     * @param screenSettings screen settings
      */
     public void saveSettings(Collection<Component> components, ScreenSettings screenSettings) {
         boolean isModified = false;
@@ -106,8 +116,10 @@ public class ScreenSettingsCoordinator {
             }
         }
 
-        if (isModified || screenSettings.isForceModified()) {
-            screenSettings.commit();
+        if (isModified || screenSettings.isModified()) {
+            if (screenSettings instanceof AbstractScreenSettings) {
+                ((AbstractScreenSettings) screenSettings).commit();
+            }
         }
     }
 }

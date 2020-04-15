@@ -14,9 +14,9 @@
   ~ limitations under the License.
   -->
 
-<xs:schema targetNamespace="http://schemas.haulmont.com/ui/ui-persistence.xsd"
+<xs:schema targetNamespace="http://jmix.io/schema/ui/ui-persistence.xsd"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://schemas.haulmont.com/ui/ui-persistence.xsd"
+           xmlns="http://jmix.io/schema/ui/ui-persistence.xsd"
            elementFormDefault="qualified">
 
     <!-- Screen Settings Facet -->

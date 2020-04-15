@@ -17,49 +17,153 @@
 package io.jmix.ui.settings;
 
 import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.TableSettings;
 
 import java.util.Optional;
 
+/**
+ * Base interface for screen settings container. It provides API for putting, getting, removing component settings.
+ */
 public interface ScreenSettings {
 
     String NAME = "jmix_ui_ScreenSettings";
 
-    void setForceModified(boolean forceModified);
-
-    boolean isForceModified();
-
-    ScreenSettings put(String componentId, String property, String value);
-
-    ScreenSettings put(String componentId, String property, Integer value);
-
-    ScreenSettings put(String componentId, String property, Long value);
-
-    ScreenSettings put(String componentId, String property, Double value);
-
-    ScreenSettings put(String componentId, String property, Boolean value);
-
-    ScreenSettings remove(String componentId);
-
-    ScreenSettings remove(String componentId, String property);
-
-    ScreenSettings put(ComponentSettings settings);
-
-    Optional<String> getString(String componentId, String property);
-
-    Optional<Integer> getInteger(String componentId, String property);
-
-    Optional<Long> getLong(String componentId, String property);
-
-    Optional<Double> getDouble(String componentId, String property);
-
-    Optional<Boolean> getBoolean(String componentId, String property);
-
-    <T extends ComponentSettings> Optional<T> getSettings(String componentId, Class<T> settingsClass);
-
-    <T extends ComponentSettings> T getSettingsOrCreate(String componentId, Class<T> settingsClass);
+    /**
+     * Set to true if screen settings changed manually. It will guarantee that settings will be persisted.
+     *
+     * @param modified whether settings were modified
+     */
+    void setModified(boolean modified);
 
     /**
-     * INTERNAL. The lifecycle of screen settings is controlled by the framework.
+     * @return true if screen setting were modified
      */
-    void commit();
+    boolean isModified();
+
+    /**
+     * Puts a String value. Will replace value if property already exist.
+     *
+     * @param componentId component id
+     * @param property    component's property
+     * @param value       String value
+     * @return current instance of screen settings
+     */
+    ScreenSettings put(String componentId, String property, String value);
+
+    /**
+     * Puts a Integer value. Will replace value if property already exist.
+     *
+     * @param componentId component id
+     * @param property    component's property
+     * @param value       Integer value
+     * @return current instance of screen settings
+     */
+    ScreenSettings put(String componentId, String property, Integer value);
+
+    /**
+     * Puts a Long value. Will replace value if property already exist.
+     *
+     * @param componentId component id
+     * @param property    component's property
+     * @param value       Long value
+     * @return current instance of screen settings
+     */
+    ScreenSettings put(String componentId, String property, Long value);
+
+    /**
+     * Puts a Double value. Will replace value if property already exist.
+     *
+     * @param componentId component id
+     * @param property    component's property
+     * @param value       Double value
+     * @return current instance of screen settings
+     */
+    ScreenSettings put(String componentId, String property, Double value);
+
+    /**
+     * Puts a Boolean value. Will replace value if property already exist.
+     *
+     * @param componentId component id
+     * @param property    component's property
+     * @param value       Boolean value
+     * @return current instance of screen settings
+     */
+    ScreenSettings put(String componentId, String property, Boolean value);
+
+    /**
+     * Puts component's settings, e.g {@link TableSettings}. If settings with provided id already exist they will be
+     * replaced.
+     *
+     * @param settings component settings
+     * @return current instance of screen settings
+     */
+    ScreenSettings put(ComponentSettings settings);
+
+    /**
+     * Removes component's settings if they exist.
+     *
+     * @param componentId component id to remove
+     * @return current instance of screen settings
+     */
+    ScreenSettings remove(String componentId);
+
+    /**
+     * Removes property of component's settings if it exists.
+     *
+     * @param componentId component id
+     * @param property    component's property to remove
+     * @return current instance of screen settings
+     */
+    ScreenSettings remove(String componentId, String property);
+
+    /**
+     * @param componentId component id
+     * @param property    component's property
+     * @return String value wrapped in {@code Optional} if it exists
+     */
+    Optional<String> getString(String componentId, String property);
+
+    /**
+     * @param componentId component id
+     * @param property    component's property
+     * @return Integer value wrapped in {@code Optional} if it exists
+     */
+    Optional<Integer> getInteger(String componentId, String property);
+
+    /**
+     * @param componentId component id
+     * @param property    component's property
+     * @return Long value wrapped in {@code Optional} if it exists
+     */
+    Optional<Long> getLong(String componentId, String property);
+
+    /**
+     * @param componentId component id
+     * @param property    component's property
+     * @return Double value wrapped in {@code Optional} if it exists
+     */
+    Optional<Double> getDouble(String componentId, String property);
+
+    /**
+     * @param componentId component id
+     * @param property    component's property
+     * @return Boolean value wrapped in {@code Optional} if it exists
+     */
+    Optional<Boolean> getBoolean(String componentId, String property);
+
+    /**
+     * @param componentId   component id
+     * @param settingsClass settings class
+     * @param <T>           type of component settings class
+     * @return component settings wrapped in {@code Optional} if it exists
+     */
+    <T extends ComponentSettings> Optional<T> getSettings(String componentId, Class<T> settingsClass);
+
+    /**
+     * @param componentId   component id
+     * @param settingsClass settings class
+     * @param <T>           type of component settings class
+     * @return component settings if exist otherwise return created settings with corresponding id
+     */
+    <T extends ComponentSettings> T getSettingsOrCreate(String componentId, Class<T> settingsClass);
 }

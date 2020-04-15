@@ -18,6 +18,7 @@ package io.jmix.ui.persistence.settings;
 
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.components.Component;
+import io.jmix.ui.components.Table;
 import io.jmix.ui.settings.component.registration.SettingsRegistration;
 import io.jmix.ui.settings.component.ComponentSettings;
 import org.springframework.beans.factory.InitializingBean;
@@ -27,10 +28,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@org.springframework.stereotype.Component(SettingsRegister.NAME)
-public class SettingsRegister implements InitializingBean {
+/**
+ * Collects {@link SettingsRegistration} and provides information for which component registered settings class.
+ */
+@org.springframework.stereotype.Component(ComponentSettingsRegistry.NAME)
+public class ComponentSettingsRegistry implements InitializingBean {
 
-    public static final String NAME = "jmix_ui_persistence_SettingsRegister";
+    public static final String NAME = "jmix_ui_persistence_ComponentSettingsRegistry";
 
     @Inject
     protected List<SettingsRegistration> settings;
@@ -45,6 +49,10 @@ public class SettingsRegister implements InitializingBean {
         }
     }
 
+    /**
+     * @param componentClass component class (e.g. WebTable)
+     * @return component settings class
+     */
     public Class<? extends ComponentSettings> getSettingsClass(Class<? extends Component> componentClass) {
         Preconditions.checkNotNullArgument(componentClass);
 
@@ -56,6 +64,10 @@ public class SettingsRegister implements InitializingBean {
         throw new IllegalStateException(String.format("Can't find settings class for '%s'", componentClass));
     }
 
+    /**
+     * @param componentName component name (e.g. {@link Table#NAME})
+     * @return component settings class
+     */
     public Class<? extends ComponentSettings> getSettingsClass(String componentName) {
         Preconditions.checkNotNullArgument(componentName);
 

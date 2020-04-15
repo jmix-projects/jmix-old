@@ -16,6 +16,15 @@
 
 package io.jmix.ui.settings.component;
 
+import io.jmix.ui.settings.ScreenSettings;
+import io.jmix.ui.settings.component.registration.SettingsRegistration;
+
+/**
+ * Base interface for component settings. See {@link TableSettings} as an example.
+ *
+ * @see ScreenSettings
+ * @see SettingsRegistration
+ */
 public interface ComponentSettings {
 
     String getId();

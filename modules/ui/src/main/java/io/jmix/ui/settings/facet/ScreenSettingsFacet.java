@@ -19,48 +19,183 @@ package io.jmix.ui.settings.facet;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.ui.components.Facet;
 import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.Screen.AfterDetachEvent;
+import io.jmix.ui.screen.Screen.AfterShowEvent;
+import io.jmix.ui.screen.Screen.BeforeShowEvent;
 import io.jmix.ui.settings.ScreenSettings;
 
+import javax.annotation.Nullable;
 import java.util.EventObject;
 import java.util.Set;
 import java.util.function.Consumer;
 
 public interface ScreenSettingsFacet extends Facet {
 
+    /**
+     * @return true if facet should apply and save settings for all supported component in the screen. True by default.
+     */
     boolean isIncludeAll();
 
+    /**
+     * Set to true if facet should apply and save settings for all supported component in the screen. True by default.
+     *
+     * @param includeAll whether facet should include all components
+     */
     void setIncludeAll(boolean includeAll);
 
+    /**
+     * Adds excluded component ids. It will work if {@code includeAll} is set to true.
+     *
+     * @param ids component ids
+     */
     void addExcludeComponentIds(String... ids);
 
+    /**
+     * @return excluded component ids
+     */
     Set<String> getExcludeIds();
 
+    /**
+     * Adds included component ids. It will work if {@code includeAll} is set to false.
+     *
+     * @param ids component ids
+     */
     void addIncludeComponentIds(String... ids);
 
+    /**
+     * @return included component ids
+     */
     Set<String> getIncludeIds();
 
+    /**
+     * @return screen settings or null if facet is not attached to the screen
+     */
+    @Nullable
     ScreenSettings getSettings();
 
+    /**
+     * Applies screen settings. By default facet applies setting on {@link AfterShowEvent}.
+     *
+     * @param settings screen settings
+     */
     void applySettings(ScreenSettings settings);
 
+    /**
+     * Applies data loading settings. By default facet applies data loading settings on {@link BeforeShowEvent}.
+     *
+     * @param settings screen settings
+     */
     void applyDataLoadingSettings(ScreenSettings settings);
 
+    /**
+     * Saves and persist settings. By default facet saves settings of {@link AfterDetachEvent}.
+     *
+     * @param settings screen settings
+     */
     void saveSettings(ScreenSettings settings);
 
+    /**
+     * @return apply settings provider or null if not set
+     */
+    @Nullable
     Consumer<ScreenSettings> getApplySettingsProvider();
+
+    /**
+     * Sets apply settings provider. It will replace default behavior of facet and will be invoked on
+     * {@link AfterShowEvent}.
+     * <p>
+     * For instance:
+     * <pre>{@code
+     * @Install(to = "settingsFacet", subject = "applySettingsProvider")
+     * private void applySettingProvider(ScreenSettings settings) {
+     *
+     *     // default behavior
+     *     settingsFacet.applySettings(settings);
+     * }
+     * }
+     * </pre>
+     *
+     * @param provider apply settings provider
+     */
     void setApplySettingsProvider(Consumer<ScreenSettings> provider);
 
+    /**
+     * @return apply data loading settings provider or null if not set
+     */
+    @Nullable
     Consumer<ScreenSettings> getApplyDataLoadingSettingsProvider();
+
+    /**
+     * Sets apply data loading settings provider. It will replace default behavior of facet and will be invoked on
+     * {@link BeforeShowEvent}.
+     * <p>
+     * For instance:
+     * <pre>{@code
+     * @Install(to = "settingsFacet", subject = "applyDataLoadingSettingsProvider")
+     * private void applyDataLoadingSettingProvider(ScreenSettings settings) {
+     *
+     *     // default behavior
+     *     settingsFacet.applyDataLoadingSettings(settings);
+     * }
+     * }
+     * </pre>
+     *
+     * @param provider apply settings provider
+     */
     void setApplyDataLoadingSettingsProvider(Consumer<ScreenSettings> provider);
 
+    /**
+     * @return save settings provider or null if not set
+     */
+    @Nullable
     Consumer<ScreenSettings> getSaveSettingsProvider();
+
+    /**
+     * Set save settings provider. It will replace default behavior of facet and will be invoked on
+     * {@link AfterDetachEvent}.
+     * <p>
+     * For instance:
+     * <pre>{@code
+     * @Install(to = "settingsFacet", subject = "saveSettingsProvider")
+     * private void saveSettingProvider(ScreenSettings settings) {
+     *
+     *     // default behavior
+     *     settingsFacet.saveSettings(settings);
+     * }
+     * }
+     * </pre>
+     *
+     * @param provider save settings provider
+     */
     void setSaveSettingsProvider(Consumer<ScreenSettings> provider);
 
-    // todo remove?
+    /**
+     * Adds before apply settings listener.
+     *
+     * @param listener listener to add
+     * @return registration object for removing an event listener
+     */
     Subscription addBeforeApplySettingsListener(Consumer<BeforeApplySettingsEvent> listener);
+
+    /**
+     * Adds before apply data loading settings listener.
+     *
+     * @param listener listener to add
+     * @return registration object for removing an event listener
+     */
     Subscription addBeforeApplyDataLoadSettingsListener(Consumer<BeforeApplyDataLoadSettingsEvent> listener);
+
+    /**
+     * Adds before save settings listener.
+     *
+     * @param listener listener to add
+     * @return registration object for removing an event listener
+     */
     Subscription addBeforeSaveSettingsListener(Consumer<BeforeSaveSettingsEvent> listener);
 
+    /**
+     * Base class for screen settings facet events.
+     */
     abstract class AbstractSettingsEvent extends EventObject {
 
         protected ScreenSettings settings;

@@ -17,13 +17,28 @@
 package io.jmix.ui.settings.component.registration;
 
 import io.jmix.ui.components.Component;
+import io.jmix.ui.components.Table;
+import io.jmix.ui.components.impl.WebTable;
 import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.TableSettings;
 
+/**
+ * Base interface for component settings registration. As an example see {@link TableSettingsReg}.
+ */
 public interface SettingsRegistration {
 
+    /**
+     * @return component name, e.g. {@link Table#NAME}
+     */
     String getComponentName();
 
+    /**
+     * @return component class, e.g. {@link WebTable}
+     */
     Class<? extends Component> getComponentClass();
 
+    /**
+     * @return component settings class, e.g. {@link TableSettings}
+     */
     Class<? extends ComponentSettings> getSettingsClass();
 }
