@@ -19,6 +19,8 @@ package io.jmix.ui.settings.component;
 import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.component.registration.SettingsRegistration;
 
+import java.util.UUID;
+
 /**
  * Base interface for component settings. See {@link TableSettings} as an example.
  *
@@ -30,4 +32,9 @@ public interface ComponentSettings {
     String getId();
 
     void setId(String id);
+
+    interface HasSettingsPresentation {
+
+        UUID getPresentationId();
+    }
 }

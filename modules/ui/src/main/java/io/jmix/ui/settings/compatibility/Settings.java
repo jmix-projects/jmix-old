@@ -25,7 +25,9 @@ import javax.annotation.Nonnull;
  * <p>Screen settings are saved in the database for the current user.
  *
  * @see Screen
+ * @deprecated For the {@link Screen} use ScreenSettingsFacet in the "ui-persistence" add-on instead.
  */
+@Deprecated
 public interface Settings {
 
     /**

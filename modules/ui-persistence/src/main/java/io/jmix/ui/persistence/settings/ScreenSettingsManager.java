@@ -18,7 +18,10 @@ package io.jmix.ui.persistence.settings;
 
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.HasDataLoadingSettings;
+import io.jmix.ui.components.HasPresentations;
 import io.jmix.ui.components.HasSettings;
+import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.settings.component.ComponentSettings.HasSettingsPresentation;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.component.ComponentSettings;
@@ -27,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.UUID;
 
 import static io.jmix.ui.components.ComponentsHelper.getComponentPath;
 
@@ -62,6 +66,14 @@ public class ScreenSettingsManager {
             ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
 
             ((HasSettings) component).applySettings(new SettingsWrapperImpl(settings));
+
+            if (component instanceof HasPresentations
+                    && settings instanceof HasSettingsPresentation) {
+                UUID presentationId = ((HasSettingsPresentation) settings).getPresentationId();
+                if (presentationId != null) {
+                    ((HasPresentations) component).applyPresentationAsDefault(presentationId);
+                }
+            }
         }
     }
 
@@ -113,6 +125,11 @@ public class ScreenSettingsManager {
                 isModified = true;
 
                 screenSettings.put(settings);
+            }
+
+            if (component instanceof HasPresentations) {
+                Presentations presentations = ((HasPresentations) component).getPresentations();
+                presentations.commit();
             }
         }
 

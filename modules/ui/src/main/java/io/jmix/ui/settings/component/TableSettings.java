@@ -17,14 +17,17 @@
 package io.jmix.ui.settings.component;
 
 import java.util.List;
+import java.util.UUID;
 
-public class TableSettings implements ComponentSettings {
+public class TableSettings implements ComponentSettings, ComponentSettings.HasSettingsPresentation {
 
     protected String id;
     protected Boolean textSelection;
 
     protected String sortProperty;
     protected Boolean sortAscending;
+
+    protected UUID presentationId;
 
     protected List<ColumnSettings> columns;
 
@@ -61,6 +64,15 @@ public class TableSettings implements ComponentSettings {
 
     public void setSortAscending(Boolean sortAscending) {
         this.sortAscending = sortAscending;
+    }
+
+    @Override
+    public UUID getPresentationId() {
+        return presentationId;
+    }
+
+    public void setPresentationId(UUID presentationId) {
+        this.presentationId = presentationId;
     }
 
     public List<ColumnSettings> getColumns() {

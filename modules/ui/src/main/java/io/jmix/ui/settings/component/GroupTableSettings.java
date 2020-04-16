@@ -16,8 +16,20 @@
 
 package io.jmix.ui.settings.component;
 
+import java.util.List;
+
 public class GroupTableSettings extends TableSettings {
 
+    protected List<String> groupProperties;
+
     public GroupTableSettings() {
+    }
+
+    public List<String> getGroupProperties() {
+        return groupProperties;
+    }
+
+    public void setGroupProperties(List<String> groupProperties) {
+        this.groupProperties = groupProperties;
     }
 }

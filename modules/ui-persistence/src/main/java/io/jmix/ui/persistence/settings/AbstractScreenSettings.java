@@ -20,7 +20,25 @@ import io.jmix.ui.settings.ScreenSettings;
 
 public abstract class AbstractScreenSettings implements ScreenSettings {
 
+    protected String screenId;
+
+    protected boolean modified = false;
+
+    public AbstractScreenSettings(String screenId) {
+        this.screenId = screenId;
+    }
+
     protected abstract void loadSettings();
 
     protected abstract void commit();
+
+    @Override
+    public void setModified(boolean modified) {
+        this.modified = modified;
+    }
+
+    @Override
+    public boolean isModified() {
+        return modified;
+    }
 }

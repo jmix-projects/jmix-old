@@ -39,28 +39,14 @@ public class JsonScreenSettings extends AbstractScreenSettings {
     @Inject
     protected SettingsClient settingsClient;
 
-    protected String screenId;
-
     protected JsonArray root;
 
     protected Gson gson;
 
-    protected boolean modified = false;
-
     public JsonScreenSettings(String screenId) {
-        this.screenId = screenId;
+        super(screenId);
 
         initGson();
-    }
-
-    @Override
-    public void setModified(boolean modified) {
-        this.modified = modified;
-    }
-
-    @Override
-    public boolean isModified() {
-        return modified;
     }
 
     @Override
@@ -273,7 +259,11 @@ public class JsonScreenSettings extends AbstractScreenSettings {
     }
 
     protected void commit() {
-        settingsClient.setSetting(screenId, gson.toJson(root));
+        if (isModified() && root != null) {
+            settingsClient.setSetting(screenId, gson.toJson(root));
+
+            setModified(false);
+        }
     }
 
     protected JsonObject getComponentOrCreate(String componentId) {

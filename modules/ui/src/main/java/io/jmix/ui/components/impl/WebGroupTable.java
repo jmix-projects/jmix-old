@@ -32,6 +32,10 @@ import io.jmix.ui.components.table.TableDataContainer;
 import io.jmix.ui.components.table.TableItemsEventsDelegate;
 import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
 import io.jmix.ui.gui.data.GroupInfo;
+import io.jmix.ui.settings.compatibility.converter.LegacyGroupTableSettingsConverter;
+import io.jmix.ui.settings.component.GroupTableSettings;
+import io.jmix.ui.settings.component.SettingsWrapper;
+import io.jmix.ui.settings.component.TableSettings;
 import io.jmix.ui.widgets.CubaEnhancedTable.AggregationInputValueChangeContext;
 import io.jmix.ui.widgets.CubaGroupTable;
 import io.jmix.ui.widgets.CubaGroupTable.GroupAggregationContext;
@@ -61,6 +65,8 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
     protected boolean showItemsCountForGroup = true;
 
     protected GroupCellValueFormatter<E> groupCellValueFormatter;
+
+    protected LegacyGroupTableSettingsConverter groupSettingsConverter = new LegacyGroupTableSettingsConverter();
 
     public WebGroupTable() {
         component = createComponent();
@@ -191,13 +197,30 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
     }
 
     @Override
-    public boolean saveSettings(Element element) {
+    protected TableSettings convertToTableSettings(Element element) {
+        return groupSettingsConverter.convertToComponentSettings(element);
+    }
+
+    @Override
+    protected void saveSettingsToElement(TableSettings tableSettings, Element element) {
+        groupSettingsConverter.convertToElement(tableSettings, element);
+    }
+
+    @Override
+    protected TableSettings createDefaultSettings() {
+        return new GroupTableSettings();
+    }
+
+    @Override
+    public boolean saveSettings(SettingsWrapper settings) {
         if (!isSettingsEnabled()) {
             return false;
         }
 
-        boolean commonTableSettingsChanged = super.saveSettings(element);
-        boolean groupTableSettingsChanged = isGroupTableSettingsChanged(element.element("groupProperties"));
+        GroupTableSettings groupTableSettings = settings.getSettings();
+
+        boolean commonTableSettingsChanged = super.saveSettings(settings);
+        boolean groupTableSettingsChanged = isGroupTableSettingsChanged(groupTableSettings);
 
         if (!groupTableSettingsChanged && !commonTableSettingsChanged) {
             return false;
@@ -206,44 +229,40 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
         if (groupTableSettingsChanged) {
 
             // add "column" if there is no such element
-            if (element.element("columns") == null) {
-                Element columnsElem = element.addElement("columns");
-                saveCommonTableColumnSettings(columnsElem);
+            if (groupTableSettings.getColumns() == null) {
+                groupTableSettings.setColumns(saveTableColumnSettings());
             }
 
-            Element groupPropertiesElement = element.element("groupProperties");
-            if (groupPropertiesElement != null) {
-                element.remove(groupPropertiesElement);
-            }
-
-            groupPropertiesElement = element.addElement("groupProperties");
+            List<String> groupProperties = new ArrayList<>(component.getGroupProperties().size());
 
             for (Object groupProperty : component.getGroupProperties()) {
                 Column<E> column = getColumn(groupProperty.toString());
 
                 if (getNotCollapsedColumns().contains(column)) {
-                    Element groupPropertyElement = groupPropertiesElement.addElement("property");
-                    groupPropertyElement.addAttribute("id", groupProperty.toString());
+                    groupProperties.add(groupProperty.toString());
                 }
             }
+
+            groupTableSettings.setGroupProperties(groupProperties);
         }
 
         return true;
     }
 
-    protected boolean isGroupTableSettingsChanged(Element groupPropertiesElement) {
-        if (groupPropertiesElement == null) {
-            if (defaultSettings != null) {
-                groupPropertiesElement = defaultSettings.getRootElement().element("groupProperties");
-                if (groupPropertiesElement == null) {
+    protected boolean isGroupTableSettingsChanged(GroupTableSettings groupTableSettings) {
+        if (groupTableSettings.getGroupProperties() == null) {
+            if (defaultTableSettings != null) {
+                List<String> groupProperties = ((GroupTableSettings) defaultTableSettings).getGroupProperties();
+                if (groupProperties == null) {
                     return true;
                 }
+                groupTableSettings.setGroupProperties(new ArrayList<>(groupProperties));
             } else {
                 return false;
             }
         }
 
-        List<Element> settingsProperties = groupPropertiesElement.elements("property");
+        List<String> settingsProperties = groupTableSettings.getGroupProperties();
         if (settingsProperties.size() != component.getGroupProperties().size()) {
             return true;
         }
@@ -253,7 +272,7 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
         for (int i = 0; i < groupProperties.size(); i++) {
             String columnId = groupProperties.get(i).toString();
 
-            String settingsColumnId = settingsProperties.get(i).attributeValue("id");
+            String settingsColumnId = settingsProperties.get(i);
 
             Column<E> column = getColumn(columnId);
             if (getNotCollapsedColumns().contains(column)) {
@@ -269,16 +288,17 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
     }
 
     @Override
-    public void applyColumnSettings(Element element) {
-        super.applyColumnSettings(element);
+    protected void applyColumnSettings(TableSettings tableSettings) {
+        super.applyColumnSettings(tableSettings);
 
-        Element groupPropertiesElement = element.element("groupProperties");
-        if (groupPropertiesElement != null) {
+        GroupTableSettings groupTableSettings = (GroupTableSettings) tableSettings;
+        List<String> groupProperties = groupTableSettings.getGroupProperties();
+
+        if (groupProperties != null) {
             MetaClass metaClass = ((EntityTableItems) getItems()).getEntityMetaClass();
-            List elements = groupPropertiesElement.elements("property");
-            List<MetaPropertyPath> properties = new ArrayList<>(elements.size());
-            for (Object o : elements) {
-                String id = ((Element) o).attributeValue("id");
+            List<MetaPropertyPath> properties = new ArrayList<>(groupProperties.size());
+
+            for (String id : groupProperties) {
                 MetaPropertyPath property = DynamicAttributesUtils.isDynamicAttribute(id)
                         ? dynamicAttributesTools.getMetaPropertyPath(metaClass, id)
                         : metaClass.getPropertyPath(id);
@@ -290,6 +310,7 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
                             .warn("Ignored group property '{}'", id);
                 }
             }
+
             groupBy(properties.toArray());
         }
     }
