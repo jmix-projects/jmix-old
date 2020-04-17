@@ -16,10 +16,11 @@
 
 package io.jmix.ui.settings.component;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
-public class TableSettings implements ComponentSettings, ComponentSettings.HasSettingsPresentation {
+public class TableSettings implements ComponentSettings, ComponentSettings.HasSettingsPresentation, Serializable {
 
     protected String id;
     protected Boolean textSelection;

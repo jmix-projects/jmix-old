@@ -32,11 +32,9 @@ public class LegacyTableSettingsConverter implements LegacySettingsConverter {
 
     @Override
     public void convertToElement(ComponentSettings settings, Element element) {
-        TableSettings tableSettings = (TableSettings) settings;
-
         element.clearContent();
 
-        copyPropertiesToElement(tableSettings, element);
+        copyPropertiesToElement((TableSettings) settings, element);
     }
 
     @Override
@@ -115,9 +113,8 @@ public class LegacyTableSettingsConverter implements LegacySettingsConverter {
         if (columns != null) {
             Element columnsElem = element.addElement("columns");
 
-            String sortProperty = tableSettings.getSortProperty();
-            if (sortProperty != null) {
-                columnsElem.addAttribute("sortProperty", sortProperty);
+            if (tableSettings.getSortProperty() != null) {
+                columnsElem.addAttribute("sortProperty", tableSettings.getSortProperty());
                 columnsElem.addAttribute("sortAscending", tableSettings.getSortAscending().toString());
             }
 
