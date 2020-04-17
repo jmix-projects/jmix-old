@@ -31,9 +31,11 @@ import io.jmix.ui.components.data.DataGridItems;
 import io.jmix.ui.components.data.TreeDataGridItems;
 import io.jmix.ui.components.datagrid.DataGridDataProvider;
 import io.jmix.ui.components.datagrid.HierarchicalDataGridDataProvider;
+import io.jmix.ui.settings.compatibility.converter.LegacyTreeDataGridSettingsConverter;
+import io.jmix.ui.settings.component.DataGridSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
+import io.jmix.ui.settings.component.TreeDataGridSettings;
 import io.jmix.ui.widgets.CubaTreeGrid;
-import org.dom4j.Element;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -53,6 +55,12 @@ public class WebTreeDataGrid<E extends Entity> extends WebAbstractDataGrid<CubaT
     protected Registration collapseListener;
 
     protected Column<E> hierarchyColumn;
+
+    public WebTreeDataGrid() {
+        super();
+
+        settingsConverter = new LegacyTreeDataGridSettingsConverter();
+    }
 
     @Override
     protected CubaTreeGrid<E> createComponent() {
@@ -269,14 +277,16 @@ public class WebTreeDataGrid<E extends Entity> extends WebAbstractDataGrid<CubaT
     }
 
     @Override
-    public void applySettings(Element element) {
-        super.applySettings(element);
+    public void applySettings(SettingsWrapper settings) {
+        super.applySettings(settings);
 
         if (!isSettingsEnabled()) {
             return;
         }
 
-        String hierarchyColumn = element.attributeValue("hierarchyColumn");
+        TreeDataGridSettings treeDataGridSettings = settings.getSettings();
+
+        String hierarchyColumn = treeDataGridSettings.getHierarchyColumn();
         if (!Strings.isNullOrEmpty(hierarchyColumn)
                 && getColumn(hierarchyColumn) != null) {
             setHierarchyColumn(hierarchyColumn);
@@ -284,17 +294,19 @@ public class WebTreeDataGrid<E extends Entity> extends WebAbstractDataGrid<CubaT
     }
 
     @Override
-    public boolean saveSettings(Element element) {
-        boolean settingsChanged = super.saveSettings(element);
+    public boolean saveSettings(SettingsWrapper settings) {
+        boolean settingsChanged = super.saveSettings(settings);
 
         if (!isSettingsEnabled()) {
             return false;
         }
 
+        TreeDataGridSettings treeDataGridSettings = settings.getSettings();
+
         Column<E> hierarchyColumn = getHierarchyColumn();
         if (hierarchyColumn != null
-                && !hierarchyColumn.getId().equals(element.attributeValue("hierarchyColumn"))) {
-            element.addAttribute("hierarchyColumn", hierarchyColumn.getId());
+                && !hierarchyColumn.getId().equals(treeDataGridSettings.getHierarchyColumn())) {
+            treeDataGridSettings.setHierarchyColumn(hierarchyColumn.getId());
             settingsChanged = true;
         }
 
@@ -302,13 +314,8 @@ public class WebTreeDataGrid<E extends Entity> extends WebAbstractDataGrid<CubaT
     }
 
     @Override
-    public void applySettings(SettingsWrapper settings) {
-        super.applySettings(settings);
-    }
-
-    @Override
-    public boolean saveSettings(SettingsWrapper settings) {
-        return super.saveSettings(settings);
+    protected DataGridSettings createDefaultDataGridSettings() {
+        return new TreeDataGridSettings();
     }
 
     @Override

@@ -21,10 +21,10 @@
 
     <!-- Screen Settings Facet -->
     <xs:complexType name="screenSettingsType">
-        <xs:all>
+        <xs:sequence maxOccurs="unbounded">
             <xs:element name="exclude" type="screenSettingsComponentType" minOccurs="0"/>
             <xs:element name="include" type="screenSettingsComponentType" minOccurs="0"/>
-        </xs:all>
+        </xs:sequence>
 
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attribute name="includeAll" type="xs:boolean"/>
