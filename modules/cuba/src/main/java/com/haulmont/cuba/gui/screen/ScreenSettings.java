@@ -35,7 +35,7 @@ import static io.jmix.ui.components.ComponentsHelper.walkComponents;
 
 @Component(ScreenSettings.NAME)
 public class ScreenSettings {
-    public static final String NAME = "jmix_ScreenSettings";
+    public static final String NAME = "jmix_CubaScreenSettings";
 
     private static final Logger log = LoggerFactory.getLogger(ScreenSettings.class);
 

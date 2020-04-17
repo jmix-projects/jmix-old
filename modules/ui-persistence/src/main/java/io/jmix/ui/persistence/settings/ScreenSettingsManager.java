@@ -42,7 +42,7 @@ public class ScreenSettingsManager {
 
     private static final Logger log = LoggerFactory.getLogger(ScreenSettingsManager.class);
 
-    public static final String NAME = "jmix_ui_persistence_ScreenSettingsManager";
+    public static final String NAME = "jmix_ScreenSettingsManager";
 
     @Inject
     protected ComponentSettingsRegistry settingsRegister;

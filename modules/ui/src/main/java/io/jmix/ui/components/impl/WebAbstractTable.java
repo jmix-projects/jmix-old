@@ -69,6 +69,7 @@ import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.InstallTargetHandler;
 import io.jmix.ui.screen.ScreenContext;
 import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
 import io.jmix.ui.settings.compatibility.converter.LegacyTableSettingsConverter;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
@@ -202,7 +203,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
     protected Consumer<EmptyStateClickEvent<E>> emptyStateClickLinkHandler;
 
-    protected LegacyTableSettingsConverter settingsConverter = new LegacyTableSettingsConverter();
+    protected LegacySettingsConverter settingsConverter = new LegacyTableSettingsConverter();
 
     protected WebAbstractTable() {
     }
@@ -2026,13 +2027,13 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
     @Override
     public void applySettings(Element element) {
-        TableSettings settings = convertToTableSettings(element);
+        TableSettings settings = settingsConverter.convertToComponentSettings(element);
         applySettings(new SettingsWrapperImpl(settings));
     }
 
     @Override
     public void applyDataLoadingSettings(Element element) {
-        ComponentSettings settings = convertToTableSettings(element);
+        ComponentSettings settings = settingsConverter.convertToComponentSettings(element);
         applyDataLoadingSettings(new SettingsWrapperImpl(settings));
     }
 
@@ -2300,23 +2301,14 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
     @Override
     public boolean saveSettings(Element element) {
-        TableSettings tableSettings = convertToTableSettings(element);
+        TableSettings tableSettings = settingsConverter.convertToComponentSettings(element);
 
         boolean modified = saveSettings(new SettingsWrapperImpl(tableSettings));
 
-        if (modified) {
-            saveSettingsToElement(tableSettings, element);
-        }
+        if (modified)
+            settingsConverter.convertToElement(tableSettings, element);
 
         return modified;
-    }
-
-    protected void saveSettingsToElement(TableSettings tableSettings, Element element) {
-        settingsConverter.convertToElement(tableSettings, element);
-    }
-
-    protected TableSettings convertToTableSettings(Element element) {
-        return settingsConverter.convertToComponentSettings(element);
     }
 
     protected TableSettings createDefaultSettings() {

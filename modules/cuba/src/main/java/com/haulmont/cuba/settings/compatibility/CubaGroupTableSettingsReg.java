@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.registration;
+package com.haulmont.cuba.settings.compatibility;
 
+import com.haulmont.cuba.gui.components.GroupTable;
+import com.haulmont.cuba.web.gui.components.WebGroupTable;
 import io.jmix.ui.components.Component;
-import io.jmix.ui.components.GroupTable;
-import io.jmix.ui.components.impl.WebGroupTable;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.GroupTableSettings;
+import io.jmix.ui.settings.component.registration.SettingsRegistration;
 
 @org.springframework.stereotype.Component
-public class GroupTableSettingsReg implements SettingsRegistration {
+public class CubaGroupTableSettingsReg implements SettingsRegistration {
 
-    public static final String NAME = "jmix_GroupTableSettingsReg";
+    public static final String NAME = "jmix_CubaGroupTableSettingsReg";
 
     @Override
     public String getComponentName() {

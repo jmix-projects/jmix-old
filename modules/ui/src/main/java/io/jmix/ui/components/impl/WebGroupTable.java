@@ -66,10 +66,10 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
 
     protected GroupCellValueFormatter<E> groupCellValueFormatter;
 
-    protected LegacyGroupTableSettingsConverter groupSettingsConverter = new LegacyGroupTableSettingsConverter();
-
     public WebGroupTable() {
         component = createComponent();
+
+        settingsConverter = new LegacyGroupTableSettingsConverter();
     }
 
     @Override
@@ -194,16 +194,6 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
 
     protected CubaGroupTable createComponent() {
         return new CubaGroupTableExt();
-    }
-
-    @Override
-    protected TableSettings convertToTableSettings(Element element) {
-        return groupSettingsConverter.convertToComponentSettings(element);
-    }
-
-    @Override
-    protected void saveSettingsToElement(TableSettings tableSettings, Element element) {
-        groupSettingsConverter.convertToElement(tableSettings, element);
     }
 
     @Override

@@ -25,7 +25,7 @@ import io.jmix.ui.settings.component.TableSettings;
 @org.springframework.stereotype.Component(TableSettingsReg.NAME)
 public class TableSettingsReg implements SettingsRegistration {
 
-    public static final String NAME = "jmix_ui_persistence_TableSettings";
+    public static final String NAME = "jmix_TableSettingsReg";
 
     @Override
     public String getComponentName() {

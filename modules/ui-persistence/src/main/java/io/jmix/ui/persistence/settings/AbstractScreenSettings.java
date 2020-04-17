@@ -28,10 +28,6 @@ public abstract class AbstractScreenSettings implements ScreenSettings {
         this.screenId = screenId;
     }
 
-    protected abstract void loadSettings();
-
-    protected abstract void commit();
-
     @Override
     public void setModified(boolean modified) {
         this.modified = modified;
@@ -41,4 +37,8 @@ public abstract class AbstractScreenSettings implements ScreenSettings {
     public boolean isModified() {
         return modified;
     }
+
+    protected abstract void loadSettings();
+
+    protected abstract void commit();
 }
