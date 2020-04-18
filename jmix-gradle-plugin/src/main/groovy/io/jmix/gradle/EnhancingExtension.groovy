@@ -26,11 +26,31 @@ import org.gradle.api.Project
  *     enabled = false
  * }
  * </pre>
+ * If the project's entities refer to JPA converters defined in another module, provide class names of the converters as follows:
+ * <pre>
+ * entitiesEnhancing {
+ *     jpaConverters = ['com.company.module.entity.SomeConverter']
+ * }
+ * </pre>
  */
 class EnhancingExtension {
 
     Project project
+
+    /**
+     * Use this property to disable entity enhancing.
+     */
     boolean enabled = true
+
+    /**
+     * If the project's entities refer to JPA converters defined in another module, provide class names of the converters as follows:
+     * <pre>
+     * entitiesEnhancing {
+     *     jpaConverters = ['com.company.module.entity.SomeConverter']
+     * }
+     * </pre>
+     */
+    List<String> jpaConverters = []
 
     EnhancingExtension(Project project) {
         this.project = project

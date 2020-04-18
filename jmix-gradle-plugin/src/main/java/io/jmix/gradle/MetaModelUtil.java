@@ -38,6 +38,7 @@ public class MetaModelUtil {
     public static final String MODEL_OBJECT_ANNOTATION_TYPE = "io.jmix.core.metamodel.annotations.ModelObject";
     public static final String ENTITY_ANNOTATION_TYPE = "javax.persistence.Entity";
     public static final String EMBEDDABLE_ANNOTATION_TYPE = "javax.persistence.Embeddable";
+    public static final String CONVERTER_ANNOTATION_TYPE = "javax.persistence.Converter";
 
     public static final String GET_ENTITY_ENTRY_METHOD_NAME = "__getEntityEntry";
     public static final String COPY_ENTITY_ENTRY_METHOD_NAME = "__copyEntityEntry";
@@ -81,6 +82,11 @@ public class MetaModelUtil {
     public static boolean isJpaEmbeddable(CtClass ctClass) {
         AnnotationsAttribute attribute = (AnnotationsAttribute) ctClass.getClassFile().getAttribute(AnnotationsAttribute.visibleTag);
         return attribute != null && attribute.getAnnotation(EMBEDDABLE_ANNOTATION_TYPE) != null;
+    }
+
+    public static boolean isJpaConverter(CtClass ctClass) {
+        AnnotationsAttribute attribute = (AnnotationsAttribute) ctClass.getClassFile().getAttribute(AnnotationsAttribute.visibleTag);
+        return attribute != null && attribute.getAnnotation(CONVERTER_ANNOTATION_TYPE) != null;
     }
 
     public static boolean isJpaMappedSuperclass(CtClass ctClass) {

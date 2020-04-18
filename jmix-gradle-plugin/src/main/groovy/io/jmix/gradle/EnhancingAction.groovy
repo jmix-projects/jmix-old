@@ -48,6 +48,12 @@ class EnhancingAction implements Action<Task> {
         generateEntityClassesList(project, sourceSet, classNames, nonMappedClassNames)
         project.logger.lifecycle("Found JPA entities: $classNames, other model objects: $nonMappedClassNames")
 
+        project.entitiesEnhancing.jpaConverters.each {
+            if (!classNames.contains(it)) {
+                classNames.add(it)
+            }
+        }
+
         runEclipseLinkEnhancing(project, classNames, sourceSet)
 
         runJmixEnhancing(project, classNames + nonMappedClassNames, sourceSet)
@@ -72,7 +78,7 @@ class EnhancingAction implements Action<Task> {
                     }
 
                     if (ctClass != null) {
-                        if (isJpaEntity(ctClass) || isJpaMappedSuperclass(ctClass) || isJpaEmbeddable(ctClass)) {
+                        if (isJpaEntity(ctClass) || isJpaMappedSuperclass(ctClass) || isJpaEmbeddable(ctClass) || isJpaConverter(ctClass)) {
                             classNames.add(className)
                         } else if (isModelObject(ctClass)) {
                             nonMappedClassNames.add(className)
@@ -102,7 +108,7 @@ class EnhancingAction implements Action<Task> {
                 return
             }
 
-            File file = new File(project.buildDir, "dummy/enhancing/$sourceSetName/META-INF/persistence.xml")
+            File file = new File(project.buildDir, "tmp/entitiesEnhancing/$sourceSetName/META-INF/persistence.xml")
             file.parentFile.mkdirs()
             file.withWriter { writer ->
                 def xml = new MarkupBuilder(writer)
@@ -111,7 +117,7 @@ class EnhancingAction implements Action<Task> {
                         classNames.each { String name ->
                             'class'(name)
                         }
-                        'exclude-unlisted-classes'()
+                        //'exclude-unlisted-classes'()
                         'properties'() {
                             'property'(name: 'eclipselink.weaving', value: 'static')
                         }
@@ -131,7 +137,7 @@ class EnhancingAction implements Action<Task> {
                 args "-loglevel"
                 args "INFO"
                 args "-persistenceinfo"
-                args "${project.buildDir}/dummy/enhancing/$sourceSetName"
+                args "${project.buildDir}/tmp/entitiesEnhancing/$sourceSetName"
                 args sourceSet.java.outputDir.absolutePath
                 args sourceSet.java.outputDir.absolutePath
                 debug = project.hasProperty("debugEnhancing") ? Boolean.valueOf(project.getProperty("debugEnhancing")) : false

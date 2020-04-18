@@ -24,8 +24,7 @@ import org.gradle.api.logging.Logger;
 
 import java.io.IOException;
 
-import static io.jmix.gradle.MetaModelUtil.subtypeOfEntityInterface;
-import static io.jmix.gradle.MetaModelUtil.isEnhancingDisabled;
+import static io.jmix.gradle.MetaModelUtil.*;
 
 public abstract class BaseEnhancingStep implements EnhancingStep {
     protected ClassPool classPool;
@@ -49,6 +48,10 @@ public abstract class BaseEnhancingStep implements EnhancingStep {
 
             if (!subtypeOfEntityInterface(ctClass, classPool)) {
                 logger.info(String.format("[%s] %s is not an Entity and should not be enhanced", getEnhancingType(), className));
+                return;
+            }
+
+            if (isJpaConverter(ctClass)) {
                 return;
             }
 
