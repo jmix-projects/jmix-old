@@ -128,8 +128,11 @@ public class ScreenSettingsManager {
             }
 
             if (component instanceof HasPresentations) {
-                Presentations presentations = ((HasPresentations) component).getPresentations();
-                presentations.commit();
+                HasPresentations compWithPres = (HasPresentations) component;
+                if (compWithPres.isUsePresentations()) {
+                    Presentations presentations = compWithPres.getPresentations();
+                    presentations.commit();
+                }
             }
         }
 

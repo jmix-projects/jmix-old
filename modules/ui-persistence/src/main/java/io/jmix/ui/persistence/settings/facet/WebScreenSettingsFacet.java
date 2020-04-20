@@ -40,16 +40,15 @@ import java.util.stream.Collectors;
 
 public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSettingsFacet {
 
-    protected Set<String> includeIds;
-    protected Set<String> excludeIds;
+    protected Set<String> componentIds;
 
-    protected boolean includeAll = true;
+    protected boolean auto = true;
 
     protected ScreenSettings screenSettings;
 
-    protected Consumer<ScreenSettings> applySettingsProvider;
-    protected Consumer<ScreenSettings> applyDataLoadingSettingsProvider;
-    protected Consumer<ScreenSettings> saveSettingsProvider;
+    protected Consumer<ScreenSettings> onApplySettingsHandler;
+    protected Consumer<ScreenSettings> onApplyDataLoadingSettingsHandler;
+    protected Consumer<ScreenSettings> onSaveSettingsHandler;
 
     @Inject
     protected ScreenSettingsManager settingsCoordinator;
@@ -81,79 +80,74 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     }
 
     @Override
-    public boolean isIncludeAll() {
-        return includeAll;
+    public boolean isAuto() {
+        return auto;
     }
 
     @Override
-    public void setIncludeAll(boolean includeAll) {
-        this.includeAll = includeAll;
+    public void setAuto(boolean auto) {
+        this.auto = auto;
     }
 
     @Override
-    public void addExcludeComponentIds(String... ids) {
-        if (excludeIds == null) {
-            excludeIds = new HashSet<>();
+    public void addComponentIds(String... ids) {
+        if (componentIds == null) {
+            componentIds = new HashSet<>();
         }
 
-        excludeIds.addAll(Arrays.asList(ids));
+        componentIds.addAll(Arrays.asList(ids));
     }
 
     @Override
-    public Set<String> getExcludeIds() {
-        if (excludeIds == null) {
+    public void addComponents(Component... components) {
+        if (componentIds == null) {
+            componentIds = new HashSet<>();
+        }
+
+        Set<String> ids = Arrays.stream(components)
+                .map(Component::getId)
+                .collect(Collectors.toSet());
+
+        componentIds.addAll(ids);
+    }
+
+    @Override
+    public Set<String> getComponentIds() {
+        if (componentIds == null) {
             return Collections.emptySet();
         }
 
-        return excludeIds;
+        return componentIds;
     }
 
     @Override
-    public void addIncludeComponentIds(String... ids) {
-        if (includeIds == null) {
-            includeIds = new HashSet<>();
-        }
-
-        includeIds.addAll(Arrays.asList(ids));
+    public Consumer<ScreenSettings> getOnApplySettingsHandler() {
+        return onApplySettingsHandler;
     }
 
     @Override
-    public Set<String> getIncludeIds() {
-        if (includeIds == null) {
-            return Collections.emptySet();
-        }
-
-        return includeIds;
+    public void setOnApplySettingsHandler(Consumer<ScreenSettings> handler) {
+        this.onApplySettingsHandler = handler;
     }
 
     @Override
-    public Consumer<ScreenSettings> getApplySettingsProvider() {
-        return applySettingsProvider;
+    public Consumer<ScreenSettings> getOnApplyDataLoadingSettingsHandler() {
+        return onApplyDataLoadingSettingsHandler;
     }
 
     @Override
-    public void setApplySettingsProvider(Consumer<ScreenSettings> provider) {
-        this.applySettingsProvider = provider;
+    public void setOnApplyDataLoadingSettingsHandler(Consumer<ScreenSettings> handler) {
+        this.onApplyDataLoadingSettingsHandler = handler;
     }
 
     @Override
-    public Consumer<ScreenSettings> getApplyDataLoadingSettingsProvider() {
-        return applyDataLoadingSettingsProvider;
+    public Consumer<ScreenSettings> getOnSaveSettingsHandler() {
+        return onSaveSettingsHandler;
     }
 
     @Override
-    public void setApplyDataLoadingSettingsProvider(Consumer<ScreenSettings> provider) {
-        this.applyDataLoadingSettingsProvider = provider;
-    }
-
-    @Override
-    public Consumer<ScreenSettings> getSaveSettingsProvider() {
-        return saveSettingsProvider;
-    }
-
-    @Override
-    public void setSaveSettingsProvider(Consumer<ScreenSettings> provider) {
-        this.saveSettingsProvider = provider;
+    public void setOnSaveSettingsHandler(Consumer<ScreenSettings> handler) {
+        this.onSaveSettingsHandler = handler;
     }
 
     @Override
@@ -204,8 +198,8 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
         getEventHub().publish(BeforeApplyDataLoadSettingsEvent.class,
                 new BeforeApplyDataLoadSettingsEvent(getScreenOwner(), screenSettings));
 
-        if (applyDataLoadingSettingsProvider != null) {
-            applyDataLoadingSettingsProvider.accept(screenSettings);
+        if (onApplyDataLoadingSettingsHandler != null) {
+            onApplyDataLoadingSettingsHandler.accept(screenSettings);
         } else {
             applyDataLoadingSettings(screenSettings);
         }
@@ -215,8 +209,8 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
         getEventHub().publish(BeforeApplySettingsEvent.class,
                 new BeforeApplySettingsEvent(getScreenOwner(), screenSettings));
 
-        if (applySettingsProvider != null) {
-            applySettingsProvider.accept(screenSettings);
+        if (onApplySettingsHandler != null) {
+            onApplySettingsHandler.accept(screenSettings);
         } else {
             applySettings(screenSettings);
         }
@@ -226,32 +220,34 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
         getEventHub().publish(BeforeSaveSettingsEvent.class,
                 new BeforeSaveSettingsEvent(getScreenOwner(), screenSettings));
 
-        if (saveSettingsProvider != null) {
-            saveSettingsProvider.accept(screenSettings);
+        if (onSaveSettingsHandler != null) {
+            onSaveSettingsHandler.accept(screenSettings);
         } else {
             saveSettings(screenSettings);
         }
     }
 
     protected Collection<Component> getComponents() {
-        Frame frame = getOwner();
-        if (frame == null) {
-            throw new IllegalStateException("ScreenSettingsFacet is not attached to the screen");
+        checkAttachedFrame();
+        assert getOwner() != null;
+
+        if (auto) {
+            return getOwner().getComponents();
         }
 
-        if (includeAll) {
-            return CollectionUtils.isEmpty(excludeIds) ?
-                    frame.getComponents() :
-                    frame.getComponents().stream()
-                            .filter(component -> !excludeIds.contains(component.getId()))
-                            .collect(Collectors.toList());
-
-        } else if (CollectionUtils.isNotEmpty(includeIds)) {
-            return frame.getComponents().stream()
-                    .filter(component -> includeIds.contains(component.getId()))
+        if (CollectionUtils.isNotEmpty(componentIds)) {
+            return getOwner().getComponents().stream()
+                    .filter(component -> componentIds.contains(component.getId()))
                     .collect(Collectors.toList());
         }
 
         return Collections.emptyList();
+    }
+
+    protected void checkAttachedFrame() {
+        Frame frame = getOwner();
+        if (frame == null) {
+            throw new IllegalStateException("ScreenSettingsFacet is not attached to the screen");
+        }
     }
 }

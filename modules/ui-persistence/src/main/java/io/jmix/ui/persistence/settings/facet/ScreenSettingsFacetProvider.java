@@ -51,14 +51,11 @@ public class ScreenSettingsFacetProvider implements FacetProvider<ScreenSettings
     public void loadFromXml(ScreenSettingsFacet facet, Element element, ComponentLoader.ComponentContext context) {
         loadId(element).ifPresent(facet::setId);
 
-        loadIncludeAll(element).ifPresent(facet::setIncludeAll);
+        loadAuto(element).ifPresent(facet::setAuto);
 
-        if (facet.isIncludeAll()) {
-            List<String> excludes = loadIds(context, element, "exclude");
-            facet.addExcludeComponentIds(excludes.toArray(new String[0]));
-        } else {
-            List<String> includes = loadIds(context, element, "include");
-            facet.addIncludeComponentIds(includes.toArray(new String[0]));
+        if (!facet.isAuto()) {
+            List<String> ids = loadComponentIds(context, element);
+            facet.addComponentIds(ids.toArray(new String[0]));
         }
     }
 
@@ -68,25 +65,23 @@ public class ScreenSettingsFacetProvider implements FacetProvider<ScreenSettings
         return Optional.ofNullable(id);
     }
 
-    protected Optional<Boolean> loadIncludeAll(Element element) {
-        String includeAll = element.attributeValue("includeAll");
-        if (!Strings.isNullOrEmpty(includeAll)) {
-            return Optional.of(Boolean.parseBoolean(includeAll));
+    protected Optional<Boolean> loadAuto(Element element) {
+        String auto = element.attributeValue("auto");
+        if (!Strings.isNullOrEmpty(auto)) {
+            return Optional.of(Boolean.parseBoolean(auto));
         }
 
         return Optional.empty();
     }
 
-    @SuppressWarnings("ConstantConditions")
-    protected List<String> loadIds(ComponentLoader.ComponentContext context, Element root, String type) {
-        List<Element> components = root.elements(type);
+    protected List<String> loadComponentIds(ComponentLoader.ComponentContext context, Element root) {
+        List<Element> components = root.elements("component");
         List<String> result = new ArrayList<>(components.size());
 
         for (Element element : components) {
-            String id = element.attributeValue("componentId");
+            String id = element.attributeValue("id");
             if (id == null) {
-                throw new GuiDevelopmentException(
-                        String.format("ScreenSettings `%s` component does not define an id", type), context);
+                throw new GuiDevelopmentException("ScreenSettings component does not define an id", context);
             }
 
             result.add(id);

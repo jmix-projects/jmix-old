@@ -17,6 +17,7 @@
 package io.jmix.ui.settings.facet;
 
 import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Facet;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Screen.AfterDetachEvent;
@@ -34,38 +35,34 @@ public interface ScreenSettingsFacet extends Facet {
     /**
      * @return true if facet should apply and save settings for all supported component in the screen. True by default.
      */
-    boolean isIncludeAll();
+    boolean isAuto();
 
     /**
      * Set to true if facet should apply and save settings for all supported component in the screen. True by default.
      *
-     * @param includeAll whether facet should include all components
+     * @param auto whether facet should include all components for saving settings
      */
-    void setIncludeAll(boolean includeAll);
+    void setAuto(boolean auto);
 
     /**
-     * Adds excluded component ids. It will work if {@code includeAll} is set to true.
+     * Adds component ids that should be handled in applying and saving settings.
      *
      * @param ids component ids
      */
-    void addExcludeComponentIds(String... ids);
+    void addComponentIds(String... ids);
 
     /**
-     * @return excluded component ids
-     */
-    Set<String> getExcludeIds();
-
-    /**
-     * Adds included component ids. It will work if {@code includeAll} is set to false.
+     * Adds components that should be handled in applying and saving settings.
      *
-     * @param ids component ids
+     * @param components components to handle
      */
-    void addIncludeComponentIds(String... ids);
+    void addComponents(Component... components);
 
     /**
-     * @return included component ids
+     * @return list of component ids that were added by {@link #addComponents(Component...)} and
+     * {@link #addComponentIds(String...)}
      */
-    Set<String> getIncludeIds();
+    Set<String> getComponentIds();
 
     /**
      * @return screen settings or null if facet is not attached to the screen
@@ -95,19 +92,19 @@ public interface ScreenSettingsFacet extends Facet {
     void saveSettings(ScreenSettings settings);
 
     /**
-     * @return apply settings provider or null if not set
+     * @return apply settings handler or null if not set
      */
     @Nullable
-    Consumer<ScreenSettings> getApplySettingsProvider();
+    Consumer<ScreenSettings> getOnApplySettingsHandler();
 
     /**
-     * Sets apply settings provider. It will replace default behavior of facet and will be invoked on
+     * Sets apply settings handler. It will replace default behavior of facet and will be invoked on
      * {@link AfterShowEvent}.
      * <p>
      * For instance:
      * <pre>{@code
-     * @Install(to = "settingsFacet", subject = "applySettingsProvider")
-     * private void applySettingProvider(ScreenSettings settings) {
+     * @Install(to = "settingsFacet", subject = "onApplySettingsHandler")
+     * private void onApplySetting(ScreenSettings settings) {
      *
      *     // default behavior
      *     settingsFacet.applySettings(settings);
@@ -115,24 +112,24 @@ public interface ScreenSettingsFacet extends Facet {
      * }
      * </pre>
      *
-     * @param provider apply settings provider
+     * @param handler apply settings handler
      */
-    void setApplySettingsProvider(Consumer<ScreenSettings> provider);
+    void setOnApplySettingsHandler(Consumer<ScreenSettings> handler);
 
     /**
-     * @return apply data loading settings provider or null if not set
+     * @return apply data loading settings handler or null if not set
      */
     @Nullable
-    Consumer<ScreenSettings> getApplyDataLoadingSettingsProvider();
+    Consumer<ScreenSettings> getOnApplyDataLoadingSettingsHandler();
 
     /**
-     * Sets apply data loading settings provider. It will replace default behavior of facet and will be invoked on
+     * Sets apply data loading settings handler. It will replace default behavior of facet and will be invoked on
      * {@link BeforeShowEvent}.
      * <p>
      * For instance:
      * <pre>{@code
-     * @Install(to = "settingsFacet", subject = "applyDataLoadingSettingsProvider")
-     * private void applyDataLoadingSettingProvider(ScreenSettings settings) {
+     * @Install(to = "settingsFacet", subject = "onApplyDataLoadingSettingsHandler")
+     * private void onApplyDataLoadingSetting(ScreenSettings settings) {
      *
      *     // default behavior
      *     settingsFacet.applyDataLoadingSettings(settings);
@@ -140,24 +137,24 @@ public interface ScreenSettingsFacet extends Facet {
      * }
      * </pre>
      *
-     * @param provider apply settings provider
+     * @param handler apply settings handler
      */
-    void setApplyDataLoadingSettingsProvider(Consumer<ScreenSettings> provider);
+    void setOnApplyDataLoadingSettingsHandler(Consumer<ScreenSettings> handler);
 
     /**
-     * @return save settings provider or null if not set
+     * @return save settings handler or null if not set
      */
     @Nullable
-    Consumer<ScreenSettings> getSaveSettingsProvider();
+    Consumer<ScreenSettings> getOnSaveSettingsHandler();
 
     /**
-     * Set save settings provider. It will replace default behavior of facet and will be invoked on
+     * Set save settings handler. It will replace default behavior of facet and will be invoked on
      * {@link AfterDetachEvent}.
      * <p>
      * For instance:
      * <pre>{@code
-     * @Install(to = "settingsFacet", subject = "saveSettingsProvider")
-     * private void saveSettingProvider(ScreenSettings settings) {
+     * @Install(to = "settingsFacet", subject = "onSaveSettingsHandler")
+     * private void onSaveSetting(ScreenSettings settings) {
      *
      *     // default behavior
      *     settingsFacet.saveSettings(settings);
@@ -165,9 +162,9 @@ public interface ScreenSettingsFacet extends Facet {
      * }
      * </pre>
      *
-     * @param provider save settings provider
+     * @param handler save settings handler
      */
-    void setSaveSettingsProvider(Consumer<ScreenSettings> provider);
+    void setOnSaveSettingsHandler(Consumer<ScreenSettings> handler);
 
     /**
      * Adds before apply settings listener.
