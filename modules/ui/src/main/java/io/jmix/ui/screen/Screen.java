@@ -322,12 +322,9 @@ public abstract class Screen implements FrameOwner {
             return OperationResult.fail();
         }
 
-        // todo settings
         // support legacy screens with settings
-        if (isSaveSettingsOnClose(action)) {
-            if (this instanceof CubaLegacySettings) {
-                ((CubaLegacySettings) this).saveSettings();
-            }
+        if (this instanceof CubaLegacySettings) {
+            ((CubaLegacySettings) this).saveSettings();
         }
 
         // todo history
@@ -369,14 +366,6 @@ public abstract class Screen implements FrameOwner {
      */
     protected boolean isSaveScreenHistoryOnClose(@SuppressWarnings("unused") CloseAction action) {
         return true;
-    }
-
-    /**
-     * @param action close action
-     * @return true if UI settings should be saved
-     */
-    protected boolean isSaveSettingsOnClose(@SuppressWarnings("unused") CloseAction action) {
-        return !beanLocator.get(UiProperties.class).isManualScreenSettingsSaving();
     }
 
     /**

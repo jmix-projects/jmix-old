@@ -48,7 +48,6 @@ public class UiProperties {
     String appWindowMode;
     boolean useSaveConfirmation;
     boolean layoutAnalyzerEnabled;
-    boolean manualScreenSettingsSaving;
     int lookupFieldPageLength;
     String validationNotificationType;
     boolean reloadUnfetchedAttributesFromLookupScreens;
@@ -93,7 +92,6 @@ public class UiProperties {
             @DefaultValue("TABBED") String appWindowMode,
             @DefaultValue("true") boolean useSaveConfirmation,
             @DefaultValue("true") boolean layoutAnalyzerEnabled,
-            boolean manualScreenSettingsSaving,
             @DefaultValue("10") int lookupFieldPageLength,
             @DefaultValue("TRAY") String validationNotificationType,
             @DefaultValue("true") boolean reloadUnfetchedAttributesFromLookupScreens,
@@ -137,7 +135,6 @@ public class UiProperties {
         this.appWindowMode = appWindowMode;
         this.useSaveConfirmation = useSaveConfirmation;
         this.layoutAnalyzerEnabled = layoutAnalyzerEnabled;
-        this.manualScreenSettingsSaving = manualScreenSettingsSaving;
         this.lookupFieldPageLength = lookupFieldPageLength;
         this.validationNotificationType = validationNotificationType;
         this.reloadUnfetchedAttributesFromLookupScreens = reloadUnfetchedAttributesFromLookupScreens;
@@ -246,10 +243,6 @@ public class UiProperties {
 
     public boolean isLayoutAnalyzerEnabled() {
         return layoutAnalyzerEnabled;
-    }
-
-    public boolean isManualScreenSettingsSaving() {
-        return manualScreenSettingsSaving;
     }
 
     public int getLookupFieldPageLength() {

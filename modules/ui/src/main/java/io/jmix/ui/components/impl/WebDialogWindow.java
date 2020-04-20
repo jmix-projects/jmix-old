@@ -316,9 +316,6 @@ public class WebDialogWindow extends WebWindow implements DialogWindow, Initiali
 
     protected class DialogWindowActionHandler implements Action.Handler {
 
-        protected Action saveSettingsAction;
-        protected Action restoreToDefaultsAction;
-
         protected Action analyzeAction;
 
         protected boolean initialized = false;
@@ -331,8 +328,6 @@ public class WebDialogWindow extends WebWindow implements DialogWindow, Initiali
             if (!initialized) {
                 Messages messages = beanLocator.get(Messages.NAME);
 
-                saveSettingsAction = new Action(messages.getMessage("actions.saveSettings"));
-                restoreToDefaultsAction = new Action(messages.getMessage("actions.restoreToDefaults"));
                 analyzeAction = new Action(messages.getMessage("actions.analyzeLayout"));
 
                 initialized = true;
@@ -341,10 +336,6 @@ public class WebDialogWindow extends WebWindow implements DialogWindow, Initiali
             List<Action> actions = new ArrayList<>(3);
 
             UiProperties properties = getUiProperties();
-            if (properties.isManualScreenSettingsSaving()) {
-                actions.add(saveSettingsAction);
-                actions.add(restoreToDefaultsAction);
-            }
             if (properties.isLayoutAnalyzerEnabled()) {
                 actions.add(analyzeAction);
             }
@@ -355,15 +346,8 @@ public class WebDialogWindow extends WebWindow implements DialogWindow, Initiali
         @Override
         public void handleAction(Action action, Object sender, Object target) {
             // todo actions
-            // todo settings
             /*if (initialized) {
-                if (saveSettingsAction == action) {
-                    Screen screen = getFrameOwner();
-                    UiControllerUtils.saveSettings(screen);
-                } else if (restoreToDefaultsAction == action) {
-                    Screen screen = getFrameOwner();
-                    UiControllerUtils.deleteSettings(screen);
-                } else if (analyzeAction == action) {
+                if (analyzeAction == action) {
                     LayoutAnalyzer analyzer = new LayoutAnalyzer();
                     List<LayoutTip> tipsList = analyzer.analyze(WebDialogWindow.this);
 

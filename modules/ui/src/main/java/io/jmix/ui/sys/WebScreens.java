@@ -508,11 +508,6 @@ public class WebScreens implements Screens {
     protected void afterShowWindow(Screen screen) {
         WindowContext windowContext = screen.getWindow().getContext();
 
-        // TODO: legacy-ui
-        /*if (!WindowParams.DISABLE_APPLY_SETTINGS.getBool(windowContext)) {
-            applySettings(screen, getSettingsImpl(screen.getId()));
-        }*/
-
         if (screen instanceof CubaLegacySettings) {
             ((CubaLegacySettings) screen).applySettings(getSettingsImpl(screen.getId()));
         }
