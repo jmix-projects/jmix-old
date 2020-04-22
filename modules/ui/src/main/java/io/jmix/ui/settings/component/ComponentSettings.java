@@ -17,7 +17,7 @@
 package io.jmix.ui.settings.component;
 
 import io.jmix.ui.settings.ScreenSettings;
-import io.jmix.ui.settings.component.registration.SettingsRegistration;
+import io.jmix.ui.settings.component.registration.ComponentSettingsWorker;
 
 import java.util.UUID;
 
@@ -25,7 +25,7 @@ import java.util.UUID;
  * Base interface for component settings. See {@link TableSettings} as an example.
  *
  * @see ScreenSettings
- * @see SettingsRegistration
+ * @see ComponentSettingsWorker
  */
 public interface ComponentSettings {
 

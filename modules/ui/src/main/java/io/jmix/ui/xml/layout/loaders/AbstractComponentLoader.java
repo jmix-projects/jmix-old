@@ -42,6 +42,7 @@ import io.jmix.ui.icons.Icons;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.ScreenData;
+import io.jmix.ui.presentations.EmptyPresentationsImpl;
 import io.jmix.ui.presentations.Presentations;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.Screen;
@@ -505,7 +506,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         String presentations = element.attributeValue("presentations");
         if (StringUtils.isNotEmpty(presentations)) {
             Presentations presentationBean = beanLocator.getPrototype(Presentations.NAME, component);
-            if (presentationBean.isPresentationsAvailable()) {
+            if (!(presentationBean instanceof EmptyPresentationsImpl)) {
                 component.usePresentations(Boolean.parseBoolean(presentations));
                 getComponentContext().addPostInitTask(new LoadPresentationsPostInitTask(component));
             } else {

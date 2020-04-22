@@ -19,7 +19,6 @@ package io.jmix.ui.components.impl;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.components.ResizableTextArea;
-import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.widgets.CubaResizableTextAreaWrapper;
 import io.jmix.ui.widgets.CubaTextArea;
 import com.vaadin.server.ErrorMessage;
@@ -176,16 +175,6 @@ public class WebResizableTextArea<V> extends WebAbstractTextArea<CubaTextArea, V
         element.addAttribute("height", height);
 
         return true;
-    }
-
-    @Override
-    public void applySettings(SettingsWrapper settings) {
-
-    }
-
-    @Override
-    public boolean saveSettings(SettingsWrapper settings) {
-        return false;
     }
 
     @Override

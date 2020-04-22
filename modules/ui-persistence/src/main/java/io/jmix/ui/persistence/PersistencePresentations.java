@@ -283,11 +283,6 @@ public class PersistencePresentations implements Presentations {
         return metadata.create(io.jmix.ui.persistence.entity.Presentation.class);
     }
 
-    @Override
-    public boolean isPresentationsAvailable() {
-        return true;
-    }
-
     protected void fireCurrentPresentationChanged(Object oldPresentationId) {
         if (listeners != null) {
             for (final PresentationsChangeListener listener : listeners) {

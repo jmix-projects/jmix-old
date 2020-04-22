@@ -18,7 +18,6 @@ package io.jmix.ui.components.impl;
 import com.google.common.collect.Lists;
 import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.components.GroupTable;
 import io.jmix.ui.components.Table;
@@ -26,16 +25,13 @@ import io.jmix.ui.components.columnmanager.GroupColumnManager;
 import io.jmix.ui.components.data.GroupTableItems;
 import io.jmix.ui.components.data.TableItems;
 import io.jmix.ui.components.data.ValueConversionException;
-import io.jmix.ui.components.data.meta.EntityTableItems;
 import io.jmix.ui.components.table.GroupTableDataContainer;
 import io.jmix.ui.components.table.TableDataContainer;
 import io.jmix.ui.components.table.TableItemsEventsDelegate;
-import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
 import io.jmix.ui.gui.data.GroupInfo;
 import io.jmix.ui.settings.compatibility.converter.LegacyGroupTableSettingsConverter;
-import io.jmix.ui.settings.component.GroupTableSettings;
-import io.jmix.ui.settings.component.SettingsWrapper;
-import io.jmix.ui.settings.component.TableSettings;
+import io.jmix.ui.settings.component.registration.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.registration.GroupTableSettingsWorker;
 import io.jmix.ui.widgets.CubaEnhancedTable.AggregationInputValueChangeContext;
 import io.jmix.ui.widgets.CubaGroupTable;
 import io.jmix.ui.widgets.CubaGroupTable.GroupAggregationContext;
@@ -43,8 +39,6 @@ import io.jmix.ui.widgets.CubaGroupTable.GroupAggregationInputValueChangeContext
 import io.jmix.ui.widgets.data.AggregationContainer;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -197,112 +191,8 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
     }
 
     @Override
-    protected TableSettings createDefaultSettings() {
-        return new GroupTableSettings();
-    }
-
-    @Override
-    public boolean saveSettings(SettingsWrapper settings) {
-        if (!isSettingsEnabled()) {
-            return false;
-        }
-
-        GroupTableSettings groupTableSettings = settings.getSettings();
-
-        boolean commonTableSettingsChanged = super.saveSettings(settings);
-        boolean groupTableSettingsChanged = isGroupTableSettingsChanged(groupTableSettings);
-
-        if (!groupTableSettingsChanged && !commonTableSettingsChanged) {
-            return false;
-        }
-
-        if (groupTableSettingsChanged) {
-
-            // add "column" if there is no such element
-            if (groupTableSettings.getColumns() == null) {
-                groupTableSettings.setColumns(saveTableColumnSettings());
-            }
-
-            List<String> groupProperties = new ArrayList<>(component.getGroupProperties().size());
-
-            for (Object groupProperty : component.getGroupProperties()) {
-                Column<E> column = getColumn(groupProperty.toString());
-
-                if (getNotCollapsedColumns().contains(column)) {
-                    groupProperties.add(groupProperty.toString());
-                }
-            }
-
-            groupTableSettings.setGroupProperties(groupProperties);
-        }
-
-        return true;
-    }
-
-    protected boolean isGroupTableSettingsChanged(GroupTableSettings groupTableSettings) {
-        if (groupTableSettings.getGroupProperties() == null) {
-            if (defaultTableSettings != null) {
-                List<String> groupProperties = ((GroupTableSettings) defaultTableSettings).getGroupProperties();
-                if (groupProperties == null) {
-                    return true;
-                }
-                groupTableSettings.setGroupProperties(new ArrayList<>(groupProperties));
-            } else {
-                return false;
-            }
-        }
-
-        List<String> settingsProperties = groupTableSettings.getGroupProperties();
-        if (settingsProperties.size() != component.getGroupProperties().size()) {
-            return true;
-        }
-
-        List<Object> groupProperties = new ArrayList<>(component.getGroupProperties());
-
-        for (int i = 0; i < groupProperties.size(); i++) {
-            String columnId = groupProperties.get(i).toString();
-
-            String settingsColumnId = settingsProperties.get(i);
-
-            Column<E> column = getColumn(columnId);
-            if (getNotCollapsedColumns().contains(column)) {
-                if (!columnId.equals(settingsColumnId)) {
-                    return true;
-                }
-            } else if (columnId.equals(settingsColumnId)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    protected void applyColumnSettings(TableSettings tableSettings) {
-        super.applyColumnSettings(tableSettings);
-
-        GroupTableSettings groupTableSettings = (GroupTableSettings) tableSettings;
-        List<String> groupProperties = groupTableSettings.getGroupProperties();
-
-        if (groupProperties != null) {
-            MetaClass metaClass = ((EntityTableItems) getItems()).getEntityMetaClass();
-            List<MetaPropertyPath> properties = new ArrayList<>(groupProperties.size());
-
-            for (String id : groupProperties) {
-                MetaPropertyPath property = DynamicAttributesUtils.isDynamicAttribute(id)
-                        ? dynamicAttributesTools.getMetaPropertyPath(metaClass, id)
-                        : metaClass.getPropertyPath(id);
-
-                if (property != null) {
-                    properties.add(property);
-                } else {
-                    LoggerFactory.getLogger(WebGroupTable.class)
-                            .warn("Ignored group property '{}'", id);
-                }
-            }
-
-            groupBy(properties.toArray());
-        }
+    protected ComponentSettingsWorker getSettingsWorker() {
+        return beanLocator.get(GroupTableSettingsWorker.NAME);
     }
 
     @Override

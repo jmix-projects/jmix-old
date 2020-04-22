@@ -17,20 +17,14 @@
 package io.jmix.ui.settings.component.registration;
 
 import io.jmix.ui.components.Component;
-import io.jmix.ui.components.TreeDataGrid;
 import io.jmix.ui.components.impl.WebTreeDataGrid;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.TreeDataGridSettings;
 
-@org.springframework.stereotype.Component(TreeDataGridSettingsReg.NAME)
-public class TreeDataGridSettingsReg implements SettingsRegistration {
+@org.springframework.stereotype.Component(TreeDataGridSettingsWorker.NAME)
+public class TreeDataGridSettingsWorker extends DataGridSettingsWorker implements ComponentSettingsWorker {
 
-    public static final String NAME = "jmix_TreeDataGridSettingsReg";
-
-    @Override
-    public String getComponentName() {
-        return TreeDataGrid.NAME;
-    }
+    public static final String NAME = "jmix_TreeDataGridSettingsWorker";
 
     @Override
     public Class<? extends Component> getComponentClass() {

@@ -131,11 +131,4 @@ public interface Presentations {
     default Presentation create() {
         return new EmptyPresentation();
     }
-
-    /**
-     * @return true if "ui-persistence" add-on is added to the project
-     */
-    default boolean isPresentationsAvailable() {
-        return false;
-    }
 }

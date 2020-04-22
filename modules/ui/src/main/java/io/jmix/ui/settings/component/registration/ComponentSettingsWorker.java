@@ -17,20 +17,15 @@
 package io.jmix.ui.settings.component.registration;
 
 import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Table;
 import io.jmix.ui.components.impl.WebTable;
 import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.settings.component.TableSettings;
 
 /**
- * Base interface for component settings registration. As an example see {@link TableSettingsReg}.
+ * Base interface for component settings registration. As an example see {@link TableSettingsWorker}.
  */
-public interface SettingsRegistration {
-
-    /**
-     * @return component name, e.g. {@link Table#NAME}
-     */
-    String getComponentName();
+public interface ComponentSettingsWorker {
 
     /**
      * @return component class, e.g. {@link WebTable}
@@ -41,4 +36,17 @@ public interface SettingsRegistration {
      * @return component settings class, e.g. {@link TableSettings}
      */
     Class<? extends ComponentSettings> getSettingsClass();
+
+    void applySettings(Component component, SettingsWrapper wrapper);
+
+    void applyDataLoadingSettings(Component component, SettingsWrapper wrapper);
+
+    boolean saveSettings(Component component, SettingsWrapper wrapper);
+
+    /**
+     *
+     * @param component
+     * @return
+     */
+    ComponentSettings getSettings(Component component);
 }

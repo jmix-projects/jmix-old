@@ -2215,16 +2215,19 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
     @Override
     public void applySettings(Element element) {
         DataGridSettings dataGridSettings = settingsConverter.convertToComponentSettings(element);
-        applySettings(new SettingsWrapperImpl(dataGridSettings));
+//        todo settings
+//        applySettings(new SettingsWrapperImpl(dataGridSettings));
     }
 
     @Override
     public void applyDataLoadingSettings(Element element) {
         DataGridSettings dataGridSettings = settingsConverter.convertToComponentSettings(element);
-        applyDataLoadingSettings(new SettingsWrapperImpl(dataGridSettings));
+//        todo settings
+//        applyDataLoadingSettings(new SettingsWrapperImpl(dataGridSettings));
     }
 
-    @Override
+    // todo settings
+  /*  @Override
     public void applyDataLoadingSettings(SettingsWrapper settings) {
         if (!isSettingsEnabled()) {
             return;
@@ -2260,7 +2263,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
                 }
             }
         }
-    }
+    }*/
 
     protected boolean isApplyDataLoadingSettings() {
         DataGridItems<E> tableItems = getItems();
@@ -2275,15 +2278,20 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
     public boolean saveSettings(Element element) {
         DataGridSettings dataGridSettings = settingsConverter.convertToComponentSettings(element);
 
-        boolean modified = saveSettings(new SettingsWrapperImpl(dataGridSettings));
+//        todo settings
+      /*  boolean modified = saveSettings(new SettingsWrapperImpl(dataGridSettings));
 
         if (modified)
             settingsConverter.convertToElement(dataGridSettings, element);
 
         return modified;
+
+       */
+        return false;
     }
 
-    @Override
+    // todo settings
+  /*  @Override
     public void applySettings(SettingsWrapper settings) {
         if (!isSettingsEnabled()) {
             return;
@@ -2312,7 +2320,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
                 applyColumnSettings(dataGridSettings, modelColumns);
             }
         }
-    }
+    }*/
 
     protected void applyColumnSettings(DataGridSettings settings, Collection<Column<E>> oldColumns) {
         List<ColumnSettings> columnsSettings = settings.getColumns();
@@ -2384,7 +2392,8 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         return new DataGridSettings();
     }
 
-    @Override
+    // todo settings
+   /* @Override
     public boolean saveSettings(SettingsWrapper settings) {
         if (!isSettingsEnabled()) {
             return false;
@@ -2436,7 +2445,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         }
 
         return settingsChanged;
-    }
+    }*/
 
     protected boolean isCommonDataGridSettingsChanged(DataGridSettings settings) {
         if (settings.getColumns() == null) {

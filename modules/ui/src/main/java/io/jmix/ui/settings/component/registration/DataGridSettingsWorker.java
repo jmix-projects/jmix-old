@@ -17,20 +17,15 @@
 package io.jmix.ui.settings.component.registration;
 
 import io.jmix.ui.components.Component;
-import io.jmix.ui.components.DataGrid;
 import io.jmix.ui.components.impl.WebDataGrid;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.DataGridSettings;
+import io.jmix.ui.settings.component.SettingsWrapper;
 
-@org.springframework.stereotype.Component(DataGridSettingsReg.NAME)
-public class DataGridSettingsReg implements SettingsRegistration {
+@org.springframework.stereotype.Component(DataGridSettingsWorker.NAME)
+public class DataGridSettingsWorker implements ComponentSettingsWorker {
 
-    public static final String NAME = "jmix_DataGridSettingsReg";
-
-    @Override
-    public String getComponentName() {
-        return DataGrid.NAME;
-    }
+    public static final String NAME = "jmix_DataGridSettingsWorker";
 
     @Override
     public Class<? extends Component> getComponentClass() {
@@ -40,5 +35,25 @@ public class DataGridSettingsReg implements SettingsRegistration {
     @Override
     public Class<? extends ComponentSettings> getSettingsClass() {
         return DataGridSettings.class;
+    }
+
+    @Override
+    public void applySettings(Component component, SettingsWrapper wrapper) {
+
+    }
+
+    @Override
+    public void applyDataLoadingSettings(Component component, SettingsWrapper wrapper) {
+
+    }
+
+    @Override
+    public boolean saveSettings(Component component, SettingsWrapper wrapper) {
+        return false;
+    }
+
+    @Override
+    public ComponentSettings getSettings(Component component) {
+        return null;
     }
 }

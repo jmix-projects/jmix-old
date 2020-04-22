@@ -276,7 +276,8 @@ public class WebTreeDataGrid<E extends Entity> extends WebAbstractDataGrid<CubaT
         publish(CollapseEvent.class, event);
     }
 
-    @Override
+//   todo settings
+  /*  @Override
     public void applySettings(SettingsWrapper settings) {
         super.applySettings(settings);
 
@@ -311,7 +312,7 @@ public class WebTreeDataGrid<E extends Entity> extends WebAbstractDataGrid<CubaT
         }
 
         return settingsChanged;
-    }
+    }*/
 
     @Override
     protected DataGridSettings createDefaultDataGridSettings() {

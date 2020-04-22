@@ -17,6 +17,10 @@
 package io.jmix.ui.components;
 
 import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.SettingsWrapper;
+
+import javax.annotation.Nullable;
 
 /**
  * Component having presentations.
@@ -34,4 +38,9 @@ public interface HasPresentations extends HasSettings {
     void applyPresentationAsDefault(Object id);
 
     Object getDefaultPresentationId();
+
+    void setDefaultSettings(SettingsWrapper wrapper);
+
+    @Nullable
+    ComponentSettings getDefaultSettings();
 }

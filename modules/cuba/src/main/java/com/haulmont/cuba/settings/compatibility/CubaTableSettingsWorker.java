@@ -16,22 +16,17 @@
 
 package com.haulmont.cuba.settings.compatibility;
 
-import com.haulmont.cuba.gui.components.Table;
 import com.haulmont.cuba.web.gui.components.WebTable;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.settings.component.TableSettings;
-import io.jmix.ui.settings.component.registration.SettingsRegistration;
+import io.jmix.ui.settings.component.registration.ComponentSettingsWorker;
 
-@org.springframework.stereotype.Component(CubaTableSettingsReg.NAME)
-public class CubaTableSettingsReg implements SettingsRegistration {
+@org.springframework.stereotype.Component(CubaTableSettingsWorker.NAME)
+public class CubaTableSettingsWorker implements ComponentSettingsWorker {
 
     public static final String NAME = "jmix_CubaTableSettingsReg";
-
-    @Override
-    public String getComponentName() {
-        return Table.NAME;
-    }
 
     @Override
     public Class<? extends Component> getComponentClass() {
@@ -41,5 +36,25 @@ public class CubaTableSettingsReg implements SettingsRegistration {
     @Override
     public Class<? extends ComponentSettings> getSettingsClass() {
         return TableSettings.class;
+    }
+
+    @Override
+    public void applySettings(Component component, SettingsWrapper wrapper) {
+
+    }
+
+    @Override
+    public void applyDataLoadingSettings(Component component, SettingsWrapper wrapper) {
+
+    }
+
+    @Override
+    public boolean saveSettings(Component component, SettingsWrapper wrapper) {
+        return false;
+    }
+
+    @Override
+    public ComponentSettings getSettings(Component component) {
+        return null;
     }
 }

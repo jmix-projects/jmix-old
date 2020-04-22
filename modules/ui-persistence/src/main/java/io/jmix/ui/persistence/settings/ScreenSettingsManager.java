@@ -16,6 +16,7 @@
 
 package io.jmix.ui.persistence.settings;
 
+import io.jmix.core.BeanLocator;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.HasDataLoadingSettings;
 import io.jmix.ui.components.HasPresentations;
@@ -25,6 +26,7 @@ import io.jmix.ui.settings.component.ComponentSettings.HasSettingsPresentation;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.registration.ComponentSettingsWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +47,10 @@ public class ScreenSettingsManager {
     public static final String NAME = "jmix_ScreenSettingsManager";
 
     @Inject
-    protected ComponentSettingsRegistry settingsRegister;
+    protected ComponentSettingsRegistry settingsRegistry;
+
+    @Inject
+    protected BeanLocator beanLocator;
 
     /**
      * Applies settings for components which implement {@link HasSettings} interface.
@@ -61,11 +66,18 @@ public class ScreenSettingsManager {
 
             log.trace("Applying settings for {} : {} ", getComponentPath(component), component);
 
-            Class<? extends ComponentSettings> settingsClass = settingsRegister.getSettingsClass(component.getClass());
+            Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
 
             ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
 
-            ((HasSettings) component).applySettings(new SettingsWrapperImpl(settings));
+            ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
+
+            if (component instanceof HasPresentations) {
+                ComponentSettings defaultSettings = worker.getSettings(component);
+                ((HasPresentations) component).setDefaultSettings(new SettingsWrapperImpl(defaultSettings));
+            }
+
+            worker.applySettings(component, new SettingsWrapperImpl(settings));
 
             if (component instanceof HasPresentations
                     && settings instanceof HasSettingsPresentation) {
@@ -91,11 +103,13 @@ public class ScreenSettingsManager {
 
             log.trace("Applying settings for {} : {} ", getComponentPath(component), component);
 
-            Class<? extends ComponentSettings> settingsClass = settingsRegister.getSettingsClass(component.getClass());
+            Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
 
             ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
 
-            ((HasDataLoadingSettings) component).applyDataLoadingSettings(new SettingsWrapperImpl(settings));
+            ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
+
+            worker.applyDataLoadingSettings(component, new SettingsWrapperImpl(settings));
         }
     }
 
@@ -116,11 +130,13 @@ public class ScreenSettingsManager {
 
             log.trace("Saving settings for {} : {}", getComponentPath(component), component);
 
-            Class<? extends ComponentSettings> settingsClass = settingsRegister.getSettingsClass(component.getClass());
+            Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
 
             ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
 
-            boolean settingsChanged = ((HasSettings) component).saveSettings(new SettingsWrapperImpl(settings));
+            ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
+
+            boolean settingsChanged = worker.saveSettings(component, new SettingsWrapperImpl(settings));
             if (settingsChanged) {
                 isModified = true;
 

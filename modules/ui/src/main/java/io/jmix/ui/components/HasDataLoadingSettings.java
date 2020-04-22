@@ -16,12 +16,9 @@
 
 package io.jmix.ui.components;
 
-import io.jmix.ui.settings.component.SettingsWrapper;
 import org.dom4j.Element;
 
 public interface HasDataLoadingSettings {
-    //todo settings
-    void applyDataLoadingSettings(Element element);
 
-    void applyDataLoadingSettings(SettingsWrapper settings);
+    void applyDataLoadingSettings(Element element);
 }

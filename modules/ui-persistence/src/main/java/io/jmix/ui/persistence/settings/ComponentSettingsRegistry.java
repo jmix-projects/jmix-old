@@ -19,7 +19,7 @@ package io.jmix.ui.persistence.settings;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Table;
-import io.jmix.ui.settings.component.registration.SettingsRegistration;
+import io.jmix.ui.settings.component.registration.ComponentSettingsWorker;
 import io.jmix.ui.settings.component.ComponentSettings;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Collects {@link SettingsRegistration} and provides information for which component registered settings class.
+ * Collects {@link ComponentSettingsWorker} and provides information for which component registered settings class.
  */
 @org.springframework.stereotype.Component(ComponentSettingsRegistry.NAME)
 public class ComponentSettingsRegistry implements InitializingBean {
@@ -37,15 +37,15 @@ public class ComponentSettingsRegistry implements InitializingBean {
     public static final String NAME = "jmix_ComponentSettingsRegistry";
 
     @Inject
-    protected List<SettingsRegistration> settings;
+    protected List<ComponentSettingsWorker> settings;
 
-    protected Map<Class<? extends Component>, String> classes = new ConcurrentHashMap<>();
-    protected Map<String, Class<? extends ComponentSettings>> names = new ConcurrentHashMap<>();
+    protected Map<Class<? extends Component>, Class<? extends ComponentSettings>> classes = new ConcurrentHashMap<>();
+    protected Map<Class<? extends ComponentSettings>, Class<? extends ComponentSettingsWorker>> settingsBeans = new ConcurrentHashMap<>();
 
     @Override
     public void afterPropertiesSet() {
-        for (SettingsRegistration setting : settings) {
-            register(setting.getComponentName(), setting.getComponentClass(), setting.getSettingsClass());
+        for (ComponentSettingsWorker worker : settings) {
+            register(worker);
         }
     }
 
@@ -56,34 +56,31 @@ public class ComponentSettingsRegistry implements InitializingBean {
     public Class<? extends ComponentSettings> getSettingsClass(Class<? extends Component> componentClass) {
         Preconditions.checkNotNullArgument(componentClass);
 
-        String name = classes.get(componentClass);
-        if (name != null) {
-            return getSettingsClass(name);
+        Class<? extends ComponentSettings> settingClass = classes.get(componentClass);
+        if (settingClass != null) {
+            return settingClass;
         }
 
         throw new IllegalStateException(String.format("Can't find settings class for '%s'", componentClass));
     }
 
     /**
-     * @param componentName component name (e.g. {@link Table#NAME})
-     * @return component settings class
+     * @param settingsClass
+     * @return
      */
-    public Class<? extends ComponentSettings> getSettingsClass(String componentName) {
-        Preconditions.checkNotNullArgument(componentName);
+    public Class<? extends ComponentSettingsWorker> getWorkerClass(Class<? extends ComponentSettings> settingsClass) {
+        Preconditions.checkNotNullArgument(settingsClass);
 
-        Class<? extends ComponentSettings> settingsClass = names.get(componentName);
-
-        if (settingsClass == null) {
-            throw new IllegalStateException(String.format("Can't find component settings class for '%s'", componentName));
+        Class<? extends ComponentSettingsWorker> workerClass = settingsBeans.get(settingsClass);
+        if (workerClass != null) {
+            return workerClass;
         }
 
-        return settingsClass;
+        throw new IllegalStateException(String.format("Cannot find worker class for '%s'", settingsClass));
     }
 
-    protected void register(String componentName,
-                            Class<? extends Component> componentClass,
-                            Class<? extends ComponentSettings> settingsClass) {
-        names.put(componentName, settingsClass);
-        classes.put(componentClass, componentName);
+    protected void register(ComponentSettingsWorker worker) {
+        classes.put(worker.getComponentClass(), worker.getSettingsClass());
+        settingsBeans.put(worker.getSettingsClass(), worker.getClass());
     }
 }

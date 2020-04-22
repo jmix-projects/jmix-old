@@ -31,7 +31,6 @@ public interface HasSettings {
      * Applies user settings for object.
      *
      * @param element settings element
-     * @deprecated Use {@link #applySettings(SettingsWrapper)} instead.
      */
     @Deprecated
     void applySettings(Element element);
@@ -41,25 +40,9 @@ public interface HasSettings {
      *
      * @param element settings element
      * @return true if settings were modified
-     * @deprecated Use {@link #saveSettings(SettingsWrapper)} instead.
      */
     @Deprecated
     boolean saveSettings(Element element);
-
-    /**
-     * Applies user settings for object.
-     *
-     * @param settings wrapper that contains settings object
-     */
-    void applySettings(SettingsWrapper settings);
-
-    /**
-     * Saves object settings to the wrapped settings.
-     *
-     * @param settings wrapper that contains settings object
-     * @return true if settings were modified
-     */
-    boolean saveSettings(SettingsWrapper settings);
 
     /**
      * @return true if object allows to save and apply settings

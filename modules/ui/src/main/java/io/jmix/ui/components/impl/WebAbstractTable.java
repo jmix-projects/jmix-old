@@ -75,7 +75,8 @@ import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.component.TableSettings;
-import io.jmix.ui.settings.component.TableSettings.ColumnSettings;
+import io.jmix.ui.settings.component.registration.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.registration.TableSettingsWorker;
 import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.ui.sys.PersistenceManagerClient;
 import io.jmix.ui.sys.ShowInfoAction;
@@ -87,7 +88,6 @@ import io.jmix.ui.widgets.CubaEnhancedTable.AggregationInputValueChangeContext;
 import io.jmix.ui.widgets.ShortcutListenerDelegate;
 import io.jmix.ui.widgets.compatibility.CubaValueChangeEvent;
 import io.jmix.ui.widgets.data.AggregationContainer;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
@@ -2028,282 +2028,27 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     @Override
     public void applySettings(Element element) {
         TableSettings settings = settingsConverter.convertToComponentSettings(element);
-        applySettings(new SettingsWrapperImpl(settings));
+
+        ComponentSettingsWorker worker = getSettingsWorker();
+        if (defaultTableSettings == null) {
+            defaultTableSettings = (TableSettings) worker.getSettings(this);
+        }
+
+        worker.applySettings(this, new SettingsWrapperImpl(settings));
     }
 
     @Override
     public void applyDataLoadingSettings(Element element) {
         ComponentSettings settings = settingsConverter.convertToComponentSettings(element);
-        applyDataLoadingSettings(new SettingsWrapperImpl(settings));
-    }
 
-    @Override
-    public void applyDataLoadingSettings(SettingsWrapper settings) {
-        if (!isSettingsEnabled()) {
-            return;
-        }
-
-        if (isSortable() && isApplyDataLoadingSettings()) {
-            @SuppressWarnings("unchecked")
-            EntityTableItems<E> entityTableSource = (EntityTableItems) getItems();
-
-            TableSettings tableSettings = settings.getSettings();
-            List<ColumnSettings> columns = tableSettings.getColumns();
-
-            if (columns != null) {
-                String sortProp = tableSettings.getSortProperty();
-                if (sortProp != null) {
-                    List visibleColumns = Arrays.asList(component.getVisibleColumns());
-
-                    MetaPropertyPath sortProperty = entityTableSource.getEntityMetaClass().getPropertyPath(sortProp);
-                    if (visibleColumns.contains(sortProperty)) {
-                        boolean sortAscending = tableSettings.getSortAscending();
-
-                        if (getItems() instanceof TableItems.Sortable) {
-                            ((TableItems.Sortable<E>) getItems()).suppressSorting();
-                        }
-                        try {
-                            component.setSortContainerPropertyId(null);
-                            component.setSortAscending(sortAscending);
-                            component.setSortContainerPropertyId(sortProperty);
-                        } finally {
-                            if (getItems() instanceof TableItems.Sortable) {
-                                ((TableItems.Sortable<E>) getItems()).enableSorting();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public void applySettings(SettingsWrapper settings) {
-        if (!isSettingsEnabled()) {
-            return;
-        }
-
-        TableSettings tableSettings = settings.getSettings();
-
-        if (defaultTableSettings == null) {
-            defaultTableSettings = createDefaultSettings();
-            saveSettings(new SettingsWrapperImpl(defaultTableSettings));
-        }
-
-        if (tableSettings.getTextSelection() != null) {
-            component.setTextSelectionEnabled(tableSettings.getTextSelection());
-
-            if (component.getPresentations() != null) {
-                ((TablePresentations) component.getPresentations()).updateTextSelection();
-            }
-        }
-
-        List<ColumnSettings> columnSettings = tableSettings.getColumns();
-        if (columnSettings != null) {
-            boolean refreshWasEnabled = component.disableContentBufferRefreshing();
-
-            Collection<String> modelIds = new ArrayList<>();
-            for (Object column : component.getVisibleColumns()) {
-                modelIds.add(String.valueOf(column));
-            }
-
-            Collection<String> loadedIds = new ArrayList<>();
-            for (ColumnSettings column : columnSettings) {
-                loadedIds.add(column.getId());
-            }
-
-            if (CollectionUtils.isEqualCollection(modelIds, loadedIds)) {
-                applyColumnSettings(tableSettings);
-            }
-
-            component.enableContentBufferRefreshing(refreshWasEnabled);
-        }
-    }
-
-    protected void applyColumnSettings(TableSettings tableSettings) {
-        Object[] oldColumns = component.getVisibleColumns();
-        List<Object> newColumns = new ArrayList<>();
-
-        // add columns from saved settings
-        for (ColumnSettings columnSetting : tableSettings.getColumns()) {
-            for (Object column : oldColumns) {
-                if (column.toString().equals(columnSetting.getId())) {
-                    newColumns.add(column);
-
-                    Integer width = columnSetting.getWidth();
-                    if (width != null) {
-                        component.setColumnWidth(column, width);
-                    } else {
-                        component.setColumnWidth(column, -1);
-                    }
-
-                    Boolean visible = columnSetting.getVisible();
-                    if (visible != null) {
-                        if (component.isColumnCollapsingAllowed()) { // throws exception if not
-                            component.setColumnCollapsed(column, !visible);
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-        // add columns not saved in settings (perhaps new)
-        for (Object column : oldColumns) {
-            if (!newColumns.contains(column)) {
-                newColumns.add(column);
-            }
-        }
-        // if the table contains only one column, always show it
-        if (newColumns.size() == 1) {
-            if (component.isColumnCollapsingAllowed()) { // throws exception if not
-                component.setColumnCollapsed(newColumns.get(0), false);
-            }
-        }
-
-        component.setVisibleColumns(newColumns.toArray());
-
-        @SuppressWarnings("unchecked")
-        EntityTableItems<E> entityTableSource = (EntityTableItems) getItems();
-        if (isSortable() && !isApplyDataLoadingSettings()) {
-            String sortProp = tableSettings.getSortProperty();
-            if (!StringUtils.isEmpty(sortProp)) {
-                MetaPropertyPath sortProperty = entityTableSource.getEntityMetaClass().getPropertyPath(sortProp);
-                if (newColumns.contains(sortProperty)) {
-                    boolean sortAscending = tableSettings.getSortAscending();
-
-                    component.setSortContainerPropertyId(null);
-                    component.setSortAscending(sortAscending);
-                    component.setSortContainerPropertyId(sortProperty);
-                }
-            } else {
-                component.setSortContainerPropertyId(null);
-            }
-        }
-    }
-
-    @Override
-    public boolean saveSettings(SettingsWrapper settings) {
-        if (!isSettingsEnabled()) {
-            return false;
-        }
-
-        boolean settingsChanged = false;
-
-        TableSettings tableSettings = settings.getSettings();
-
-        if (isUsePresentations()) {
-            boolean textSelection = BooleanUtils.toBoolean(tableSettings.getTextSelection());
-            if (textSelection != component.isTextSelectionEnabled()) {
-                tableSettings.setTextSelection(component.isTextSelectionEnabled());
-
-                settingsChanged = true;
-            }
-        }
-
-        String settingsSortProperty = null;
-        Boolean settingsSortAscending = null;
-
-        if (tableSettings.getSortProperty() != null) {
-            settingsSortProperty = tableSettings.getSortProperty();
-            settingsSortAscending = tableSettings.getSortAscending();
-        }
-
-        boolean commonSettingsChanged = isCommonTableSettingsChanged(tableSettings);
-        boolean sortChanged = isSettingsSortPropertyChanged(settingsSortProperty, settingsSortAscending);
-
-        if (commonSettingsChanged || sortChanged) {
-            // save column settings
-            tableSettings.setColumns(saveTableColumnSettings());
-
-            // save sorting
-            MetaPropertyPath sortProperty = (MetaPropertyPath) component.getSortContainerPropertyId();
-            boolean sortAscending = component.isSortAscending();
-
-            tableSettings.setSortProperty(sortProperty == null ? null : sortProperty.toString());
-            tableSettings.setSortAscending(sortAscending);
-
-            settingsChanged = true;
-        }
-
-        // save presentation
-        UUID settingsDefaultPresId = tableSettings.getPresentationId();
-        String settingsDefaultPres = settingsDefaultPresId == null ? "" : tableSettings.getPresentationId().toString();
-        String defaultPres = getDefaultPresentationId() == null ? "" : String.valueOf(getDefaultPresentationId());
-
-        if (!Objects.equals(settingsDefaultPres, defaultPres)) {
-            tableSettings.setPresentationId(defaultPres.isEmpty() ? null : UuidProvider.fromString(defaultPres));
-
-            settingsChanged = true;
-        }
-
-        return settingsChanged;
-    }
-
-    protected boolean isCommonTableSettingsChanged(TableSettings tableSettings) {
-        if (tableSettings.getColumns() == null) {
-            // if columns null try to init it from defaults
-            if (defaultTableSettings != null) {
-                // if default columns null consider that we init default values
-                if (defaultTableSettings.getColumns() == null) {
-                    return true;
-                }
-                // if default columns not null we init it from default values
-                tableSettings.setColumns(new ArrayList<>(defaultTableSettings.getColumns()));
-            } else {
-                return false;
-            }
-        }
-
-        List<ColumnSettings> columnSettings = tableSettings.getColumns();
-        if (columnSettings.size() != component.getVisibleColumns().length) {
-            return true;
-        }
-
-        Object[] visibleColumns = component.getVisibleColumns();
-        for (int i = 0; i < visibleColumns.length; i++) {
-            Object columnId = visibleColumns[i];
-
-            ColumnSettings settingsColumn = columnSettings.get(i);
-            String settingsColumnId = settingsColumn.getId();
-
-            if (columnId.toString().equals(settingsColumnId)) {
-                int columnWidth = component.getColumnWidth(columnId);
-
-                Integer settingsColumnWidth = settingsColumn.getWidth();
-                int settingColumnWidth = settingsColumnWidth == null ? -1 : settingsColumnWidth;
-
-                if (columnWidth != settingColumnWidth) {
-                    return true;
-                }
-
-                boolean columnVisible = !component.isColumnCollapsed(columnId);
-                boolean settingsColumnVisible = settingsColumn.getVisible() == null ? true : settingsColumn.getVisible();
-
-                if (columnVisible != settingsColumnVisible) {
-                    return true;
-                }
-            } else {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    protected boolean isApplyDataLoadingSettings() {
-        TableItems<E> tableItems = getItems();
-        if (tableItems instanceof ContainerDataUnit) {
-            CollectionContainer container = ((ContainerDataUnit) tableItems).getContainer();
-            return container instanceof HasLoader && ((HasLoader) container).getLoader() instanceof CollectionLoader;
-        }
-        return false;
+        getSettingsWorker().applyDataLoadingSettings(this, new SettingsWrapperImpl(settings));
     }
 
     @Override
     public boolean saveSettings(Element element) {
         TableSettings tableSettings = settingsConverter.convertToComponentSettings(element);
 
-        boolean modified = saveSettings(new SettingsWrapperImpl(tableSettings));
+        boolean modified = getSettingsWorker().saveSettings(this, new SettingsWrapperImpl(tableSettings));
 
         if (modified)
             settingsConverter.convertToElement(tableSettings, element);
@@ -2311,49 +2056,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         return modified;
     }
 
-    protected TableSettings createDefaultSettings() {
-        return new TableSettings();
-    }
-
-    protected List<ColumnSettings> saveTableColumnSettings() {
-        Object[] visibleColumns = component.getVisibleColumns();
-        List<ColumnSettings> result = new ArrayList<>(visibleColumns.length);
-
-        for (Object column : visibleColumns) {
-            ColumnSettings columnSettings = new ColumnSettings();
-
-            columnSettings.setId(column.toString());
-
-            int width = component.getColumnWidth(column);
-            if (width > -1)
-                columnSettings.setWidth(width);
-
-            boolean visible = !component.isColumnCollapsed(column);
-            columnSettings.setVisible(visible);
-
-            result.add(columnSettings);
-        }
-
-        return result;
-    }
-
-    protected boolean isSettingsSortPropertyChanged(String settingsSortProperty, Boolean settingsSortAscending) {
-        MetaPropertyPath sortProperty = (MetaPropertyPath) component.getSortContainerPropertyId();
-        if (sortProperty == null) {
-            return !Strings.isNullOrEmpty(settingsSortProperty);
-        }
-
-        if (settingsSortProperty == null ||
-                !sortProperty.toString().equals(settingsSortProperty)) {
-            return true;
-        }
-
-        Boolean sortAscending = component.isSortAscending();
-        if (!sortAscending.equals(settingsSortAscending)) {
-            return true;
-        }
-
-        return false;
+    protected ComponentSettingsWorker getSettingsWorker() {
+        return beanLocator.get(TableSettingsWorker.NAME);
     }
 
     @Override
@@ -2957,7 +2661,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     @Override
     public void resetPresentation() {
         if (defaultTableSettings != null) {
-            applySettings(new SettingsWrapperImpl(defaultTableSettings));
+            getSettingsWorker().applySettings(this, new SettingsWrapperImpl(defaultTableSettings));
             if (presentations != null) {
                 presentations.setCurrent(null);
             }
@@ -3023,6 +2727,16 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         }
         Presentation def = presentations.getDefault();
         return def == null ? null : EntityValues.<UUID>getId(def);
+    }
+
+    @Override
+    public void setDefaultSettings(SettingsWrapper wrapper) {
+        this.defaultTableSettings = wrapper.getSettings();
+    }
+
+    @Override
+    public ComponentSettings getDefaultSettings() {
+        return defaultTableSettings;
     }
 
     @Override

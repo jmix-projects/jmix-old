@@ -21,7 +21,6 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.components.*;
-import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.widgets.CubaGroupBox;
 import io.jmix.ui.widgets.CubaHorizontalActionsLayout;
 import io.jmix.ui.widgets.CubaOrderedActionsLayout;
@@ -302,16 +301,6 @@ public class WebGroupBox extends WebAbstractComponent<CubaGroupBox> implements G
         groupBoxElement = element.addElement("groupBox");
         groupBoxElement.addAttribute("expanded", BooleanUtils.toStringTrueFalse(isExpanded()));
         return true;
-    }
-
-    @Override
-    public void applySettings(SettingsWrapper settings) {
-
-    }
-
-    @Override
-    public boolean saveSettings(SettingsWrapper settings) {
-        return false;
     }
 
     @Override

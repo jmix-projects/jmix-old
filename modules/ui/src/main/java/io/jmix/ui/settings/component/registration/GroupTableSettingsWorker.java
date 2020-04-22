@@ -1,0 +1,195 @@
+/*
+ * Copyright 2020 Haulmont.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.jmix.ui.settings.component.registration;
+
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaPropertyPath;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.components.GroupTable;
+import io.jmix.ui.components.Table;
+import io.jmix.ui.components.Table.Column;
+import io.jmix.ui.components.data.meta.EntityTableItems;
+import io.jmix.ui.components.impl.WebGroupTable;
+import io.jmix.ui.dynamicattributes.DynamicAttributesTools;
+import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
+import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.GroupTableSettings;
+import io.jmix.ui.settings.component.SettingsWrapper;
+import io.jmix.ui.settings.component.TableSettings;
+import io.jmix.ui.widgets.CubaGroupTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+@SuppressWarnings("rawtypes")
+@org.springframework.stereotype.Component(GroupTableSettingsWorker.NAME)
+public class GroupTableSettingsWorker extends TableSettingsWorker implements ComponentSettingsWorker {
+
+    private static final Logger log = LoggerFactory.getLogger(GroupTableSettingsWorker.class);
+
+    public static final String NAME = "jmix_GroupTableSettingsWorker";
+
+    protected DynamicAttributesTools dynamicAttributesTools;
+
+    @Inject
+    protected void setDynamicAttributesTools(DynamicAttributesTools dynamicAttributesTools) {
+        this.dynamicAttributesTools = dynamicAttributesTools;
+    }
+
+    @Override
+    public Class<? extends Component> getComponentClass() {
+        return WebGroupTable.class;
+    }
+
+    @Override
+    public Class<? extends ComponentSettings> getSettingsClass() {
+        return GroupTableSettings.class;
+    }
+
+    @Override
+    public boolean saveSettings(Component component, SettingsWrapper wrapper) {
+        GroupTable groupTable = (GroupTable) component;
+        GroupTableSettings groupTableSettings = wrapper.getSettings();
+
+        boolean commonTableSettingsChanged = super.saveSettings(component, wrapper);
+        boolean groupTableSettingsChanged = isGroupTableSettingsChanged(groupTable, groupTableSettings);
+
+        if (!groupTableSettingsChanged && !commonTableSettingsChanged) {
+            return false;
+        }
+
+        if (groupTableSettingsChanged) {
+            // save columns settings if they were not saved
+            if (groupTableSettings.getColumns() == null) {
+                groupTableSettings.setColumns(getTableColumnSettings(groupTable));
+            }
+
+            groupTableSettings.setGroupProperties(getGroupProperties(groupTable));
+        }
+
+        return true;
+    }
+
+    @Override
+    public ComponentSettings getSettings(Component component) {
+        GroupTable groupTable = (GroupTable) component;
+        GroupTableSettings groupTableSettings = (GroupTableSettings) super.getSettings(component);
+
+        List<String> groupProperties = getGroupProperties(groupTable);
+        if (!groupProperties.isEmpty()) {
+            groupTableSettings.setGroupProperties(groupProperties);
+        }
+
+        return groupTableSettings;
+    }
+
+    @Override
+    protected void applyColumnSettings(TableSettings tableSettings, Table table) {
+        super.applyColumnSettings(tableSettings, table);
+
+        GroupTableSettings groupTableSettings = (GroupTableSettings) tableSettings;
+        List<String> groupProperties = groupTableSettings.getGroupProperties();
+        if (groupProperties != null) {
+            MetaClass metaClass = ((EntityTableItems) table.getItems()).getEntityMetaClass();
+            List<MetaPropertyPath> properties = new ArrayList<>(groupProperties.size());
+
+            for (String id : groupProperties) {
+                MetaPropertyPath property = DynamicAttributesUtils.isDynamicAttribute(id)
+                        ? dynamicAttributesTools.getMetaPropertyPath(metaClass, id)
+                        : metaClass.getPropertyPath(id);
+
+                if (property != null) {
+                    properties.add(property);
+                } else {
+                    log.warn("Ignored group property '{}'", id);
+                }
+            }
+
+            ((GroupTable) table).groupBy(properties.toArray());
+        } else {
+            ((GroupTable) table).ungroup();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected boolean isGroupTableSettingsChanged(GroupTable groupTable, GroupTableSettings groupTableSettings) {
+        if (groupTableSettings.getGroupProperties() == null) {
+            if (groupTable.getDefaultSettings() != null) {
+                List<String> groupProperties = ((GroupTableSettings) groupTable.getDefaultSettings()).getGroupProperties();
+                if (groupProperties == null) {
+                    return true;
+                }
+                groupTableSettings.setGroupProperties(new ArrayList<>(groupProperties));
+            } else {
+                return false;
+            }
+        }
+
+        List<String> settingsProperties = groupTableSettings.getGroupProperties();
+        Collection<?> tableGroupProperties = getCubaGroupTable(groupTable).getGroupProperties();
+        if (settingsProperties.size() != tableGroupProperties.size()) {
+            return true;
+        }
+
+        List<Object> groupProperties = new ArrayList<>(tableGroupProperties);
+        List<Column> visibleColumns = groupTable.getNotCollapsedColumns();
+
+        for (int i = 0; i < groupProperties.size(); i++) {
+            String columnId = groupProperties.get(i).toString();
+            String settingsColumnId = settingsProperties.get(i);
+
+            Column column = groupTable.getColumn(columnId);
+            if (visibleColumns.contains(column)) {
+                if (!columnId.equals(settingsColumnId)) {
+                    return true;
+                }
+            } else if (columnId.equals(settingsColumnId)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    protected TableSettings createTableSettings() {
+        return new GroupTableSettings();
+    }
+
+    protected List<String> getGroupProperties(GroupTable groupTable) {
+        Collection<?> groupTableColumns = getCubaGroupTable(groupTable).getGroupProperties();
+        List<String> groupProperties = new ArrayList<>(groupTableColumns.size());
+
+        for (Object groupProperty : groupTableColumns) {
+            Column column = groupTable.getColumn(groupProperty.toString());
+
+            if (groupTable.getNotCollapsedColumns().contains(column)) {
+                groupProperties.add(groupProperty.toString());
+            }
+        }
+
+        return groupProperties;
+    }
+
+    protected CubaGroupTable getCubaGroupTable(GroupTable groupTable) {
+        return groupTable.unwrap(CubaGroupTable.class);
+    }
+}
