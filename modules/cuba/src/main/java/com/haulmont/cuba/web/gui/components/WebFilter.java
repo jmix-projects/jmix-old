@@ -187,21 +187,6 @@ public class WebFilter extends WebAbstractComponent<com.vaadin.ui.Component> imp
     }
 
     @Override
-    public void applyDataLoadingSettings(SettingsWrapper settings) {
-
-    }
-
-    @Override
-    public void applySettings(SettingsWrapper settings) {
-
-    }
-
-    @Override
-    public boolean saveSettings(SettingsWrapper settings) {
-        return false;
-    }
-
-    @Override
     public boolean saveSettings(Element element) {
         return isSettingsEnabled() && delegate.saveSettings(element);
     }
