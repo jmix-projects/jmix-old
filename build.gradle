@@ -66,6 +66,8 @@ allprojects {
 }
 
 subprojects {
+    ext.jmixFrameworkItself = true
+
     plugins.withType(JavaPlugin) {
         java {
             sourceCompatibility = JavaVersion.VERSION_1_8

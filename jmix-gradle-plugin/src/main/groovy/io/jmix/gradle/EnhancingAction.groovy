@@ -48,7 +48,7 @@ class EnhancingAction implements Action<Task> {
         generateEntityClassesList(project, sourceSet, classNames, nonMappedClassNames)
         project.logger.lifecycle("Found JPA entities: $classNames, other model objects: $nonMappedClassNames")
 
-        project.entitiesEnhancing.jpaConverters.each {
+        project.jmix.entitiesEnhancing.jpaConverters.each {
             if (!classNames.contains(it)) {
                 classNames.add(it)
             }
