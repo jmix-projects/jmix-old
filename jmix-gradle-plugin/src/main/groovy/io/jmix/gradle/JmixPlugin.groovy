@@ -21,6 +21,7 @@ import io.jmix.gradle.ui.WidgetsCompile
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Dependency
+import org.gradle.api.artifacts.DependencySet
 import org.gradle.api.artifacts.ProjectDependency
 
 class JmixPlugin implements Plugin<Project> {
@@ -74,7 +75,8 @@ class JmixPlugin implements Plugin<Project> {
         def compileThemes = project.tasks.create(COMPILE_THEMES_TASK_NAME, ThemeCompile.class)
         compileThemes.enabled = false
         project.afterEvaluate {
-            if (themesConfiguration.getDependencies().size() > 0) {
+            DependencySet deps = themesConfiguration.getDependencies()
+            if (!(deps.isEmpty() || (deps.size() == 1 && deps[0].group == 'io.jmix.bom'))) {
                 project.sourceSets.main.output.dir(compileThemes.outputDirectory, builtBy: compileThemes)
                 compileThemes.enabled = true
             }
