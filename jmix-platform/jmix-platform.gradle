@@ -29,7 +29,7 @@ dependencies {
     
     constraints {
         api "io.jmix.starter.standard:jmix-starter-standard:$version"
-        api "io.jmix.starter.ui-minimal:jmix-starter-ui-minimal:$version"
+        api "io.jmix.starter.standard-nowidgets:jmix-starter-standard-nowidgets:$version"
         api "io.jmix.starter.data:jmix-starter-data:$version"
         api "io.jmix.starter.cuba:jmix-starter-cuba:$version"
         api "io.jmix.core:jmix-core:$version"
