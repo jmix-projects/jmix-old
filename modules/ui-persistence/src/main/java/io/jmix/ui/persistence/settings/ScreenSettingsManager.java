@@ -60,17 +60,21 @@ public class ScreenSettingsManager {
      */
     public void applySettings(Collection<Component> components, ScreenSettings screenSettings) {
         for (Component component : components) {
-            if (!(component instanceof HasSettings)) {
-                continue;
-            }
-
             log.trace("Applying settings for {} : {} ", getComponentPath(component), component);
 
-            Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
+            ComponentSettings settings;
+            ComponentSettingsWorker worker;
 
-            ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
+            try {
+                Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
 
-            ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
+                settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
+
+                worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
+            } catch (IllegalStateException e) {
+                log.warn(e.getMessage());
+                continue;
+            }
 
             if (component instanceof HasPresentations) {
                 ComponentSettings defaultSettings = worker.getSettings(component);
@@ -97,19 +101,19 @@ public class ScreenSettingsManager {
      */
     public void applyDataLoadingSettings(Collection<Component> components, ScreenSettings screenSettings) {
         for (Component component : components) {
-            if (!(component instanceof HasDataLoadingSettings)) {
-                continue;
-            }
-
             log.trace("Applying settings for {} : {} ", getComponentPath(component), component);
 
-            Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
+            try {
+                Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
 
-            ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
+                ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
 
-            ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
+                ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
 
-            worker.applyDataLoadingSettings(component, new SettingsWrapperImpl(settings));
+                worker.applyDataLoadingSettings(component, new SettingsWrapperImpl(settings));
+            } catch (IllegalStateException e) {
+                log.warn(e.getMessage());
+            }
         }
     }
 
@@ -124,17 +128,21 @@ public class ScreenSettingsManager {
         boolean isModified = false;
 
         for (Component component : components) {
-            if (!(component instanceof HasSettings)) {
-                continue;
-            }
-
             log.trace("Saving settings for {} : {}", getComponentPath(component), component);
 
-            Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
+            ComponentSettings settings;
+            ComponentSettingsWorker worker;
 
-            ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
+            try {
+                Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
 
-            ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
+                settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
+
+                worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
+            } catch (IllegalStateException e) {
+                log.warn(e.getMessage());
+                continue;
+            }
 
             boolean settingsChanged = worker.saveSettings(component, new SettingsWrapperImpl(settings));
             if (settingsChanged) {

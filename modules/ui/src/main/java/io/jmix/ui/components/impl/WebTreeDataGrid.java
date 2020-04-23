@@ -16,7 +16,6 @@
 
 package io.jmix.ui.components.impl;
 
-import com.google.common.base.Strings;
 import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.TreeDataProvider;
@@ -32,9 +31,8 @@ import io.jmix.ui.components.data.TreeDataGridItems;
 import io.jmix.ui.components.datagrid.DataGridDataProvider;
 import io.jmix.ui.components.datagrid.HierarchicalDataGridDataProvider;
 import io.jmix.ui.settings.compatibility.converter.LegacyTreeDataGridSettingsConverter;
-import io.jmix.ui.settings.component.DataGridSettings;
-import io.jmix.ui.settings.component.SettingsWrapper;
-import io.jmix.ui.settings.component.TreeDataGridSettings;
+import io.jmix.ui.settings.component.registration.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.registration.TreeDataGridSettingsWorker;
 import io.jmix.ui.widgets.CubaTreeGrid;
 
 import javax.annotation.Nullable;
@@ -276,47 +274,9 @@ public class WebTreeDataGrid<E extends Entity> extends WebAbstractDataGrid<CubaT
         publish(CollapseEvent.class, event);
     }
 
-//   todo settings
-  /*  @Override
-    public void applySettings(SettingsWrapper settings) {
-        super.applySettings(settings);
-
-        if (!isSettingsEnabled()) {
-            return;
-        }
-
-        TreeDataGridSettings treeDataGridSettings = settings.getSettings();
-
-        String hierarchyColumn = treeDataGridSettings.getHierarchyColumn();
-        if (!Strings.isNullOrEmpty(hierarchyColumn)
-                && getColumn(hierarchyColumn) != null) {
-            setHierarchyColumn(hierarchyColumn);
-        }
-    }
-
     @Override
-    public boolean saveSettings(SettingsWrapper settings) {
-        boolean settingsChanged = super.saveSettings(settings);
-
-        if (!isSettingsEnabled()) {
-            return false;
-        }
-
-        TreeDataGridSettings treeDataGridSettings = settings.getSettings();
-
-        Column<E> hierarchyColumn = getHierarchyColumn();
-        if (hierarchyColumn != null
-                && !hierarchyColumn.getId().equals(treeDataGridSettings.getHierarchyColumn())) {
-            treeDataGridSettings.setHierarchyColumn(hierarchyColumn.getId());
-            settingsChanged = true;
-        }
-
-        return settingsChanged;
-    }*/
-
-    @Override
-    protected DataGridSettings createDefaultDataGridSettings() {
-        return new TreeDataGridSettings();
+    protected ComponentSettingsWorker getSettingsWorker() {
+        return beanLocator.get(TreeDataGridSettingsWorker.NAME);
     }
 
     @Override
