@@ -26,7 +26,7 @@ import io.jmix.ui.settings.component.ComponentSettings.HasSettingsPresentation;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.component.ComponentSettings;
-import io.jmix.ui.settings.component.registration.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,28 +53,24 @@ public class ScreenSettingsManager {
     protected BeanLocator beanLocator;
 
     /**
-     * Applies settings for components which implement {@link HasSettings} interface.
+     * Applies settings for components if they have own {@link ComponentSettingsWorker}.
      *
      * @param components     components to apply settings
      * @param screenSettings screen settings
      */
     public void applySettings(Collection<Component> components, ScreenSettings screenSettings) {
         for (Component component : components) {
-            log.trace("Applying settings for {} : {} ", getComponentPath(component), component);
-
-            ComponentSettings settings;
-            ComponentSettingsWorker worker;
-
-            try {
-                Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
-
-                settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
-
-                worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
-            } catch (IllegalStateException e) {
-                log.warn(e.getMessage());
+            if (!settingsRegistry.isSettingsRegisteredFor(component.getClass())) {
                 continue;
             }
+
+            log.trace("Applying settings for {} : {} ", getComponentPath(component), component);
+
+            Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
+
+            ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
+
+            ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
 
             if (component instanceof HasPresentations) {
                 ComponentSettings defaultSettings = worker.getSettings(component);
@@ -94,32 +90,32 @@ public class ScreenSettingsManager {
     }
 
     /**
-     * Applies data loading settings for components which implement {@link HasDataLoadingSettings} interface.
+     * Applies data loading settings for components if they have own {@link ComponentSettingsWorker}..
      *
      * @param components     components to apply settings
      * @param screenSettings screen settings
      */
     public void applyDataLoadingSettings(Collection<Component> components, ScreenSettings screenSettings) {
         for (Component component : components) {
+            if (!settingsRegistry.isSettingsRegisteredFor(component.getClass())) {
+                continue;
+            }
+
             log.trace("Applying settings for {} : {} ", getComponentPath(component), component);
 
-            try {
-                Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
+            Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
 
-                ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
+            ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
 
-                ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
+            ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
 
-                worker.applyDataLoadingSettings(component, new SettingsWrapperImpl(settings));
-            } catch (IllegalStateException e) {
-                log.warn(e.getMessage());
-            }
+            worker.applyDataLoadingSettings(component, new SettingsWrapperImpl(settings));
         }
     }
 
     /**
-     * Saves settings and persist if they are changed or screen settings is force modified. Components must
-     * implement {@link HasSettings}.
+     * Saves settings and persist if they are changed or screen settings is modified. Components must
+     * have {@link ComponentSettingsWorker}.
      *
      * @param components     components to save settings
      * @param screenSettings screen settings
@@ -128,21 +124,17 @@ public class ScreenSettingsManager {
         boolean isModified = false;
 
         for (Component component : components) {
-            log.trace("Saving settings for {} : {}", getComponentPath(component), component);
-
-            ComponentSettings settings;
-            ComponentSettingsWorker worker;
-
-            try {
-                Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
-
-                settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
-
-                worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
-            } catch (IllegalStateException e) {
-                log.warn(e.getMessage());
+            if (!settingsRegistry.isSettingsRegisteredFor(component.getClass())) {
                 continue;
             }
+
+            log.trace("Saving settings for {} : {}", getComponentPath(component), component);
+
+            Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
+
+            ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
+
+            ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
 
             boolean settingsChanged = worker.saveSettings(component, new SettingsWrapperImpl(settings));
             if (settingsChanged) {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.registration;
+package io.jmix.ui.settings.component.worker;
 
 import com.vaadin.data.provider.GridSortOrder;
 import com.vaadin.ui.Grid;
@@ -133,6 +133,8 @@ public class DataGridSettingsWorker implements ComponentSettingsWorker {
             settings.setColumns(getColumnsSettings(dataGrid));
 
             List<GridSortOrder> sortOrders = getGrid(dataGrid).getSortOrder();
+            // DataGrid does not allow to reset sorting if once it were set,
+            // so we don't save null sorting
             if (!sortOrders.isEmpty()) {
                 GridSortOrder sortOrder = sortOrders.get(0);
 
@@ -261,6 +263,9 @@ public class DataGridSettingsWorker implements ComponentSettingsWorker {
 
     protected boolean isCommonDataGridSettingsChanged(DataGrid dataGrid, DataGridSettings settings) {
         List<ColumnSettings> settingsColumnList = settings.getColumns();
+
+        // if columns null consider settings changed, because we cannot track changes
+        // without previous "state"
         if (settingsColumnList == null) {
             return true;
         }

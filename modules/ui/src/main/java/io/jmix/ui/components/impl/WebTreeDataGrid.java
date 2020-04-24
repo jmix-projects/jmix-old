@@ -31,8 +31,8 @@ import io.jmix.ui.components.data.TreeDataGridItems;
 import io.jmix.ui.components.datagrid.DataGridDataProvider;
 import io.jmix.ui.components.datagrid.HierarchicalDataGridDataProvider;
 import io.jmix.ui.settings.compatibility.converter.LegacyTreeDataGridSettingsConverter;
-import io.jmix.ui.settings.component.registration.ComponentSettingsWorker;
-import io.jmix.ui.settings.component.registration.TreeDataGridSettingsWorker;
+import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.worker.TreeDataGridSettingsWorker;
 import io.jmix.ui.widgets.CubaTreeGrid;
 
 import javax.annotation.Nullable;

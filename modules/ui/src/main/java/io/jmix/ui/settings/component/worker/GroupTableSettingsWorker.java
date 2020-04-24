@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.registration;
+package io.jmix.ui.settings.component.worker;
 
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;

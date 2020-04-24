@@ -39,8 +39,16 @@ public interface HasPresentations extends HasSettings {
 
     Object getDefaultPresentationId();
 
+    /**
+     * Sets default settings for a component. When the presentation is reset it will be applied for the component.
+     *
+     * @param wrapper settings wrapper
+     */
     void setDefaultSettings(SettingsWrapper wrapper);
 
+    /**
+     * @return default settings for a component or null if not set
+     */
     @Nullable
     ComponentSettings getDefaultSettings();
 }

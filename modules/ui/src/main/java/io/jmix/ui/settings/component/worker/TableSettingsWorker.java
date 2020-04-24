@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.registration;
+package io.jmix.ui.settings.component.worker;
 
 import com.google.common.base.Strings;
 import io.jmix.core.UuidProvider;
@@ -245,20 +245,12 @@ public class TableSettingsWorker implements ComponentSettingsWorker {
 
     @SuppressWarnings("unchecked")
     protected boolean isCommonTableSettingsChanged(TableSettings tableSettings, Table table) {
-        TableSettings defaultSettings = (TableSettings) table.getDefaultSettings();
         com.vaadin.v7.ui.Table vTable = getVTable(table);
 
+        // if columns null consider settings changed, because we cannot track changes
+        // without previous "state"
         if (tableSettings.getColumns() == null) {
-            // if columns null try to init it from defaults
-            if (defaultSettings != null) {
-                if (defaultSettings.getColumns() == null) {
-                    return true;
-                }
-                // if default columns not null we init it from default values
-                tableSettings.setColumns(new ArrayList<>(defaultSettings.getColumns()));
-            } else {
-                return false;
-            }
+            return true;
         }
 
         Object[] visibleColumns = vTable.getVisibleColumns();

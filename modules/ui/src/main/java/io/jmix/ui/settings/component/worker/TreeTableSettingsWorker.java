@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component;
+package io.jmix.ui.settings.component.worker;
 
-import io.jmix.ui.settings.ScreenSettings;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.components.impl.WebTreeTable;
+import org.springframework.stereotype.Component;
 
-import java.util.UUID;
+@Component(TreeTableSettingsWorker.NAME)
+public class TreeTableSettingsWorker extends TableSettingsWorker {
 
-/**
- * Base interface for component settings. See {@link TableSettings} as an example.
- *
- * @see ScreenSettings
- * @see ComponentSettingsWorker
- */
-public interface ComponentSettings {
+    public static final String NAME = "jmix_TreeTableSettingsWorker";
 
-    String getId();
-
-    void setId(String id);
-
-    interface HasSettingsPresentation {
-
-        UUID getPresentationId();
+    @Override
+    public Class<? extends io.jmix.ui.components.Component> getComponentClass() {
+        return WebTreeTable.class;
     }
 }

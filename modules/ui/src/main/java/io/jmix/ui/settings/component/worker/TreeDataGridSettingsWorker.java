@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.registration;
+package io.jmix.ui.settings.component.worker;
 
 import com.google.common.base.Strings;
 import io.jmix.ui.components.Component;

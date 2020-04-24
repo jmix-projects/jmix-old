@@ -18,8 +18,8 @@ package io.jmix.ui.persistence.settings;
 
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Table;
-import io.jmix.ui.settings.component.registration.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.TableSettings;
+import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
 import io.jmix.ui.settings.component.ComponentSettings;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -51,7 +51,7 @@ public class ComponentSettingsRegistry implements InitializingBean {
 
     /**
      * @param componentClass component class (e.g. WebTable)
-     * @return component settings class
+     * @return component settings class, otherwise it will throws an exception
      */
     public Class<? extends ComponentSettings> getSettingsClass(Class<? extends Component> componentClass) {
         Preconditions.checkNotNullArgument(componentClass);
@@ -65,8 +65,8 @@ public class ComponentSettingsRegistry implements InitializingBean {
     }
 
     /**
-     * @param settingsClass
-     * @return
+     * @param settingsClass settings class (e.g. {@link TableSettings})
+     * @return worker class if registered, otherwise in throws an exception
      */
     public Class<? extends ComponentSettingsWorker> getWorkerClass(Class<? extends ComponentSettings> settingsClass) {
         Preconditions.checkNotNullArgument(settingsClass);
@@ -79,7 +79,21 @@ public class ComponentSettingsRegistry implements InitializingBean {
         throw new IllegalStateException(String.format("Cannot find worker class for '%s'", settingsClass));
     }
 
+    /**
+     * @param componentClass component class (e.g. WebTable)
+     * @return true if settings is registered for component class
+     */
+    public boolean isSettingsRegisteredFor(Class<? extends Component> componentClass) {
+        Class<? extends ComponentSettings> settingsClass = classes.get(componentClass);
+        return settingsClass != null;
+    }
+
     protected void register(ComponentSettingsWorker worker) {
+        Preconditions.checkNotNullArgument(worker.getComponentClass(),
+                "Component class cannot be null in '%s'", worker.getClass());
+        Preconditions.checkNotNullArgument(worker.getSettingsClass(),
+                "Settings class cannot be null in '%s'", worker.getClass());
+
         classes.put(worker.getComponentClass(), worker.getSettingsClass());
         settingsBeans.put(worker.getSettingsClass(), worker.getClass());
     }

@@ -88,8 +88,8 @@ import io.jmix.ui.settings.compatibility.converter.LegacyDataGridSettingsConvert
 import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
 import io.jmix.ui.settings.component.DataGridSettings;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
-import io.jmix.ui.settings.component.registration.ComponentSettingsWorker;
-import io.jmix.ui.settings.component.registration.DataGridSettingsWorker;
+import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.worker.DataGridSettingsWorker;
 import io.jmix.ui.sys.PersistenceManagerClient;
 import io.jmix.ui.sys.ShortcutsDelegate;
 import io.jmix.ui.sys.ShowInfoAction;
