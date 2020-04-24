@@ -203,7 +203,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
     protected Consumer<EmptyStateClickEvent<E>> emptyStateClickLinkHandler;
 
-    protected LegacySettingsConverter settingsConverter = new LegacyTableSettingsConverter();
+    protected LegacySettingsConverter settingsConverter;
 
     protected WebAbstractTable() {
     }
@@ -1069,6 +1069,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
         setClientCaching();
         initEmptyState();
+
+        settingsConverter = createSettingsConverter();
     }
 
     protected void onAfterUnregisterComponent(Component component) {
@@ -2027,6 +2029,10 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
     @Override
     public void applySettings(Element element) {
+        if (!isSettingsEnabled()) {
+            return;
+        }
+
         TableSettings settings = settingsConverter.convertToComponentSettings(element);
 
         ComponentSettingsWorker worker = getSettingsWorker();
@@ -2039,6 +2045,10 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
     @Override
     public void applyDataLoadingSettings(Element element) {
+        if (!isSettingsEnabled()) {
+            return;
+        }
+
         ComponentSettings settings = settingsConverter.convertToComponentSettings(element);
 
         getSettingsWorker().applyDataLoadingSettings(this, new SettingsWrapperImpl(settings));
@@ -2046,18 +2056,26 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
     @Override
     public boolean saveSettings(Element element) {
+        if (!isSettingsEnabled()) {
+            return false;
+        }
+
         TableSettings tableSettings = settingsConverter.convertToComponentSettings(element);
 
         boolean modified = getSettingsWorker().saveSettings(this, new SettingsWrapperImpl(tableSettings));
 
         if (modified)
-            settingsConverter.convertToElement(tableSettings, element);
+            settingsConverter.copyToElement(tableSettings, element);
 
         return modified;
     }
 
     protected ComponentSettingsWorker getSettingsWorker() {
         return beanLocator.get(TableSettingsWorker.NAME);
+    }
+
+    protected LegacySettingsConverter createSettingsConverter() {
+        return new LegacyTableSettingsConverter();
     }
 
     @Override

@@ -31,17 +31,18 @@ import java.util.UUID;
 public class LegacyTableSettingsConverter implements LegacySettingsConverter {
 
     @Override
-    public void convertToElement(ComponentSettings settings, Element element) {
+    public void copyToElement(ComponentSettings settings, Element element) {
+        element.attributes().clear();
         element.clearContent();
 
-        copyPropertiesToElement((TableSettings) settings, element);
+        copySettingsToElement((TableSettings) settings, element);
     }
 
     @Override
     public Element convertToElement(ComponentSettings settings) {
         Element element = DocumentHelper.createElement("component");
 
-        copyPropertiesToElement((TableSettings) settings, element);
+        copySettingsToElement((TableSettings) settings, element);
 
         return element;
     }
@@ -98,7 +99,7 @@ public class LegacyTableSettingsConverter implements LegacySettingsConverter {
     }
 
 
-    protected void copyPropertiesToElement(TableSettings tableSettings, Element element) {
+    protected void copySettingsToElement(TableSettings tableSettings, Element element) {
         element.addAttribute("name", tableSettings.getId());
 
         Boolean textSelection = tableSettings.getTextSelection();

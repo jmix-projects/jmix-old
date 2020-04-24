@@ -18,6 +18,12 @@ package io.jmix.ui.components.impl;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.*;
+import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
+import io.jmix.ui.settings.compatibility.converter.LegacySplitPanelSettingsConverter;
+import io.jmix.ui.settings.component.SettingsWrapperImpl;
+import io.jmix.ui.settings.component.SplitPanelSettings;
+import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.worker.SplitPanelSettingsWorker;
 import io.jmix.ui.widgets.CubaHorizontalSplitPanel;
 import io.jmix.ui.widgets.client.split.SplitPanelDockMode;
 import com.vaadin.server.Sizeable.Unit;
@@ -40,10 +46,15 @@ public class WebSplitPanel extends WebAbstractComponent<AbstractSplitPanel> impl
 
     protected int orientation;
     protected boolean settingsEnabled = true;
-    protected boolean settingsChanged = false;
 
     protected float currentPosition = 0;
     protected boolean inverse = false;
+
+    protected LegacySettingsConverter settingsConverter;
+
+    public WebSplitPanel() {
+        settingsConverter = createSettingsConverter();
+    }
 
     @Override
     public void add(Component childComponent) {
@@ -102,10 +113,6 @@ public class WebSplitPanel extends WebAbstractComponent<AbstractSplitPanel> impl
         SplitPositionChangeEvent cubaEvent = new SplitPositionChangeEvent(this, currentPosition,
                 event.getSplitPosition(), event.isUserOriginated());
         publish(SplitPositionChangeEvent.class, cubaEvent);
-
-        if (event.isUserOriginated()) {
-            settingsChanged = true;
-        }
     }
 
     @Override
@@ -181,21 +188,8 @@ public class WebSplitPanel extends WebAbstractComponent<AbstractSplitPanel> impl
             return;
         }
 
-        Element e = element.element("position");
-        if (e != null) {
-            String value = e.attributeValue("value");
-            String unit = e.attributeValue("unit");
-
-            if (!StringUtils.isBlank(value) && !StringUtils.isBlank(unit)) {
-                Unit convertedUnit;
-                if (NumberUtils.isNumber(unit)) {
-                    convertedUnit = convertLegacyUnit(Integer.parseInt(unit));
-                } else {
-                    convertedUnit = Unit.getUnitFromSymbol(unit);
-                }
-                component.setSplitPosition(Float.parseFloat(value), convertedUnit, component.isSplitPositionReversed());
-            }
-        }
+        SplitPanelSettings settings = settingsConverter.convertToComponentSettings(element);
+        getSettingsWorker().applySettings(this, new SettingsWrapperImpl(settings));
     }
 
     @Override
@@ -204,17 +198,14 @@ public class WebSplitPanel extends WebAbstractComponent<AbstractSplitPanel> impl
             return false;
         }
 
-        if (!settingsChanged) {
-            return false;
+        SplitPanelSettings settings = settingsConverter.convertToComponentSettings(element);
+
+        boolean modified = getSettingsWorker().saveSettings(this, new SettingsWrapperImpl(settings));
+        if (modified) {
+            settingsConverter.copyToElement(settings, element);
         }
 
-        Element e = element.element("position");
-        if (e == null) {
-            e = element.addElement("position");
-        }
-        e.addAttribute("value", String.valueOf(component.getSplitPosition()));
-        e.addAttribute("unit", String.valueOf(component.getSplitPositionUnit()));
-        return true;
+        return modified;
     }
 
     @Override
@@ -407,5 +398,13 @@ public class WebSplitPanel extends WebAbstractComponent<AbstractSplitPanel> impl
         for (Component component : ownComponents) {
             ((AttachNotifier) component).detached();
         }
+    }
+
+    protected LegacySettingsConverter createSettingsConverter() {
+        return new LegacySplitPanelSettingsConverter();
+    }
+
+    protected ComponentSettingsWorker getSettingsWorker() {
+        return beanLocator.get(SplitPanelSettingsWorker.NAME);
     }
 }

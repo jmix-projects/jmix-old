@@ -39,7 +39,8 @@ public class LegacyDataGridSettingsConverter implements LegacySettingsConverter 
     }
 
     @Override
-    public void convertToElement(ComponentSettings settings, Element element) {
+    public void copyToElement(ComponentSettings settings, Element element) {
+        element.attributes().clear();
         element.clearContent();
 
         copySettingsToElement((DataGridSettings) settings, element);
@@ -80,12 +81,12 @@ public class LegacyDataGridSettingsConverter implements LegacySettingsConverter 
         Element columnElem = settings.element("columns");
         if (columnElem != null) {
             String sortColumnId = columnElem.attributeValue("sortColumnId");
-            if (StringUtils.isNotEmpty(sortColumnId)) {
+            if (StringUtils.isNotBlank(sortColumnId)) {
                 dataGridSettings.setSortColumnId(sortColumnId);
             }
 
             String sortDirection = columnElem.attributeValue("sortDirection");
-            if (StringUtils.isNotEmpty(sortDirection)) {
+            if (StringUtils.isNotBlank(sortDirection)) {
                 dataGridSettings.setSortDirection(DataGrid.SortDirection.valueOf(sortDirection));
             }
 
@@ -98,12 +99,12 @@ public class LegacyDataGridSettingsConverter implements LegacySettingsConverter 
                     columnSettings.setId(column.attributeValue("id"));
 
                     String width = column.attributeValue("width");
-                    if (StringUtils.isNotEmpty(width)) {
+                    if (StringUtils.isNotBlank(width)) {
                         columnSettings.setWidth(Double.parseDouble(width));
                     }
 
                     String collapsed = column.attributeValue("collapsed");
-                    if (StringUtils.isNotEmpty(collapsed)) {
+                    if (StringUtils.isNotBlank(collapsed)) {
                         columnSettings.setCollapsed(Boolean.parseBoolean(collapsed));
                     }
 

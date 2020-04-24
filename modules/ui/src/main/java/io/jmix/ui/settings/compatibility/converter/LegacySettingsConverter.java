@@ -40,7 +40,7 @@ public interface LegacySettingsConverter {
      * @param settings component settings
      * @param element  element to modify
      */
-    void convertToElement(ComponentSettings settings, Element element);
+    void copyToElement(ComponentSettings settings, Element element);
 
     /**
      * @param settings element that should be converted

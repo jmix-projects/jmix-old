@@ -21,6 +21,12 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.components.*;
+import io.jmix.ui.settings.compatibility.converter.LegacyGroupBoxSettingsConverter;
+import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
+import io.jmix.ui.settings.component.GroupBoxSettings;
+import io.jmix.ui.settings.component.SettingsWrapperImpl;
+import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.worker.GroupBoxSettingsWorker;
 import io.jmix.ui.widgets.CubaGroupBox;
 import io.jmix.ui.widgets.CubaHorizontalActionsLayout;
 import io.jmix.ui.widgets.CubaOrderedActionsLayout;
@@ -43,9 +49,10 @@ public class WebGroupBox extends WebAbstractComponent<CubaGroupBox> implements G
     protected Orientation orientation = Orientation.VERTICAL;
 
     protected boolean settingsEnabled = true;
-    protected boolean settingsChanged = false;
 
     protected Map<ShortcutAction, ShortcutListener> shortcuts;
+
+    protected LegacySettingsConverter settingsConverter;
 
     public WebGroupBox() {
         component = new CubaGroupBox();
@@ -55,6 +62,8 @@ public class WebGroupBox extends WebAbstractComponent<CubaGroupBox> implements G
         JmixVerticalActionsLayout container = new JmixVerticalActionsLayout();
         container.setStyleName("c-groupbox-inner");
         component.setContent(container);
+
+        settingsConverter = createSettingsConverter();
     }
 
     @Override
@@ -265,22 +274,13 @@ public class WebGroupBox extends WebAbstractComponent<CubaGroupBox> implements G
     protected void fireExpandStateChange(boolean expanded, boolean invokedByUser) {
         ExpandedStateChangeEvent event = new ExpandedStateChangeEvent(this, expanded, invokedByUser);
         publish(ExpandedStateChangeEvent.class, event);
-
-        if (invokedByUser) {
-            settingsChanged = true;
-        }
     }
 
     @Override
     public void applySettings(Element element) {
         if (isSettingsEnabled()) {
-            Element groupBoxElement = element.element("groupBox");
-            if (groupBoxElement != null) {
-                String expanded = groupBoxElement.attributeValue("expanded");
-                if (expanded != null) {
-                    setExpanded(Boolean.parseBoolean(expanded));
-                }
-            }
+            GroupBoxSettings settings = settingsConverter.convertToComponentSettings(element);
+            getSettingsWorker().applySettings(this, new SettingsWrapperImpl(settings));
         }
     }
 
@@ -290,17 +290,14 @@ public class WebGroupBox extends WebAbstractComponent<CubaGroupBox> implements G
             return false;
         }
 
-        if (!settingsChanged) {
-            return false;
+        GroupBoxSettings settings = settingsConverter.convertToComponentSettings(element);
+
+        boolean modified = getSettingsWorker().saveSettings(this, new SettingsWrapperImpl(settings));
+        if (modified) {
+            settingsConverter.copyToElement(settings, element);
         }
 
-        Element groupBoxElement = element.element("groupBox");
-        if (groupBoxElement != null) {
-            element.remove(groupBoxElement);
-        }
-        groupBoxElement = element.addElement("groupBox");
-        groupBoxElement.addAttribute("expanded", BooleanUtils.toStringTrueFalse(isExpanded()));
-        return true;
+        return modified;
     }
 
     @Override
@@ -447,5 +444,13 @@ public class WebGroupBox extends WebAbstractComponent<CubaGroupBox> implements G
         for (Component component : ownComponents) {
             ((AttachNotifier) component).detached();
         }
+    }
+
+    protected LegacySettingsConverter createSettingsConverter() {
+        return new LegacyGroupBoxSettingsConverter();
+    }
+
+    protected ComponentSettingsWorker getSettingsWorker() {
+        return beanLocator.get(GroupBoxSettingsWorker.NAME);
     }
 }

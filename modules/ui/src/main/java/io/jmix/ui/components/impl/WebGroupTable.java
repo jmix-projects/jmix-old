@@ -30,6 +30,7 @@ import io.jmix.ui.components.table.TableDataContainer;
 import io.jmix.ui.components.table.TableItemsEventsDelegate;
 import io.jmix.ui.gui.data.GroupInfo;
 import io.jmix.ui.settings.compatibility.converter.LegacyGroupTableSettingsConverter;
+import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
 import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
 import io.jmix.ui.settings.component.worker.GroupTableSettingsWorker;
 import io.jmix.ui.widgets.CubaEnhancedTable.AggregationInputValueChangeContext;
@@ -62,8 +63,6 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
 
     public WebGroupTable() {
         component = createComponent();
-
-        settingsConverter = new LegacyGroupTableSettingsConverter();
     }
 
     @Override
@@ -193,6 +192,11 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<CubaGroupT
     @Override
     protected ComponentSettingsWorker getSettingsWorker() {
         return beanLocator.get(GroupTableSettingsWorker.NAME);
+    }
+
+    @Override
+    protected LegacySettingsConverter createSettingsConverter() {
+        return new LegacyGroupTableSettingsConverter();
     }
 
     @Override

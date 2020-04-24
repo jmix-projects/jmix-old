@@ -207,7 +207,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
     protected Map<E, Object> itemDatasources; // lazily initialized WeakHashMap;
     protected Consumer<EmptyStateClickEvent<E>> emptyStateClickEventHandler;
 
-    protected LegacySettingsConverter settingsConverter = new LegacyDataGridSettingsConverter();
+    protected LegacySettingsConverter settingsConverter;
 
     static {
         ImmutableMap.Builder<Class<? extends Renderer>, Class<? extends Renderer>> builder =
@@ -234,6 +234,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
         component = createComponent();
         componentComposition = createComponentComposition();
         shortcutsDelegate = createShortcutsDelegate();
+        settingsConverter = createSettingsConverter();
     }
 
     protected GridComposition createComponentComposition() {
@@ -2217,6 +2218,10 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
 
     @Override
     public void applySettings(Element element) {
+        if (!isSettingsEnabled()) {
+            return;
+        }
+
         DataGridSettings dataGridSettings = settingsConverter.convertToComponentSettings(element);
 
         getSettingsWorker().applySettings(this, new SettingsWrapperImpl(dataGridSettings));
@@ -2224,6 +2229,10 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
 
     @Override
     public void applyDataLoadingSettings(Element element) {
+        if (!isSettingsEnabled()) {
+            return;
+        }
+
         DataGridSettings dataGridSettings = settingsConverter.convertToComponentSettings(element);
 
         getSettingsWorker().applyDataLoadingSettings(this, new SettingsWrapperImpl(dataGridSettings));
@@ -2231,17 +2240,25 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
 
     @Override
     public boolean saveSettings(Element element) {
+        if (!isSettingsEnabled()) {
+            return false;
+        }
+
         DataGridSettings dataGridSettings = settingsConverter.convertToComponentSettings(element);
 
         boolean modified = getSettingsWorker().saveSettings(this, new SettingsWrapperImpl(dataGridSettings));
         if (modified)
-            settingsConverter.convertToElement(dataGridSettings, element);
+            settingsConverter.copyToElement(dataGridSettings, element);
 
         return modified;
     }
 
     protected ComponentSettingsWorker getSettingsWorker() {
         return beanLocator.get(DataGridSettingsWorker.NAME);
+    }
+
+    protected LegacySettingsConverter createSettingsConverter() {
+        return new LegacyDataGridSettingsConverter();
     }
 
     @Nullable

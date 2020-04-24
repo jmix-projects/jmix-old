@@ -64,12 +64,15 @@ public class DataGridSettingsWorker implements ComponentSettingsWorker {
         List<ColumnSettings> columns = settings.getColumns();
         if (columns != null) {
             List<Column> modelColumns = dataGrid.getVisibleColumns();
+
             List<String> modelIds = modelColumns.stream()
                     .map(String::valueOf)
                     .collect(Collectors.toList());
+
             List<String> loadedIds = columns.stream()
                     .map(ColumnSettings::getId)
                     .collect(Collectors.toList());
+
             if (CollectionUtils.isEqualCollection(modelIds, loadedIds)) {
                 applyColumnSettings(dataGrid, settings, modelColumns);
             }
@@ -85,6 +88,7 @@ public class DataGridSettingsWorker implements ComponentSettingsWorker {
             if (dataGridSettings.getColumns() == null) {
                 return;
             }
+
             String sortColumnId = dataGridSettings.getSortColumnId();
             if (StringUtils.isNotEmpty(sortColumnId)) {
                 Grid grid = getGrid(dataGrid);

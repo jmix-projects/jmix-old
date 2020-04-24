@@ -48,8 +48,8 @@ public class LegacyGroupTableSettingsConverter extends LegacyTableSettingsConver
     }
 
     @Override
-    protected void copyPropertiesToElement(TableSettings tableSettings, Element element) {
-        super.copyPropertiesToElement(tableSettings, element);
+    protected void copySettingsToElement(TableSettings tableSettings, Element element) {
+        super.copySettingsToElement(tableSettings, element);
 
         GroupTableSettings settings = (GroupTableSettings) tableSettings;
 
