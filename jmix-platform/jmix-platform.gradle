@@ -18,6 +18,8 @@ plugins {
     id 'java-platform'
 }
 
+group = 'io.jmix.bom'
+
 def vaadinVersion = '8.9.2-4-cuba'
 
 javaPlatform {
@@ -80,9 +82,7 @@ dependencies {
 publishing {
     publications {
         javaPlatformMaven(MavenPublication) {
-            groupId = 'io.jmix.bom'
             artifactId = 'jmix-bom'
-
             from components.javaPlatform
         }
     }

@@ -97,6 +97,7 @@ subprojects {
 
 configure(subprojects.findAll { !it.name.startsWith('sample-') }) {
     apply plugin: 'maven-publish'
+    apply plugin: 'maven' // remove after https://youtrack.jetbrains.com/issue/IDEA-227215 is fixed
 
     publishing {
         if (rootProject.hasProperty('jmixUploadUrl')) {

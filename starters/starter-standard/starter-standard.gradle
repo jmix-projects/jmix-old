@@ -1,6 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'java-library'
 
+group = 'io.jmix.starter.standard'
+
 dependencies {
     api project(':starters:starter-standard-nowidgets')
 
@@ -8,12 +10,14 @@ dependencies {
     implementation project(':modules:ui-themes-compiled')
 }
 
+jar {
+    archivesBaseName = 'jmix-starter-standard'
+}
+
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            groupId = 'io.jmix.starter.standard'
             artifactId = 'jmix-starter-standard'
-
             from components.java
         }
     }
