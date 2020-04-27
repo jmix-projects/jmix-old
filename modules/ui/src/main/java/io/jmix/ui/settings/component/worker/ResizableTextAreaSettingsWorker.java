@@ -58,11 +58,6 @@ public class ResizableTextAreaSettingsWorker implements ComponentSettingsWorker 
     }
 
     @Override
-    public void applyDataLoadingSettings(Component component, SettingsWrapper wrapper) {
-        // does not have data loading settings
-    }
-
-    @Override
     public boolean saveSettings(Component component, SettingsWrapper wrapper) {
         ResizableTextArea textArea = (ResizableTextArea) component;
         ResizableTextAreaSettings settings = wrapper.getSettings();

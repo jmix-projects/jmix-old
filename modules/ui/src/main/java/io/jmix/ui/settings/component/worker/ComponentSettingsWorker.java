@@ -39,8 +39,6 @@ public interface ComponentSettingsWorker {
 
     void applySettings(Component component, SettingsWrapper wrapper);
 
-    void applyDataLoadingSettings(Component component, SettingsWrapper wrapper);
-
     boolean saveSettings(Component component, SettingsWrapper wrapper);
 
     /**

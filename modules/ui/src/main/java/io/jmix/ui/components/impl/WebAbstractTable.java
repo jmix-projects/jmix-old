@@ -76,6 +76,7 @@ import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.component.TableSettings;
 import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.worker.DataLoadingSettingsWorker;
 import io.jmix.ui.settings.component.worker.TableSettingsWorker;
 import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.ui.sys.PersistenceManagerClient;
@@ -2051,7 +2052,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
         ComponentSettings settings = settingsConverter.convertToComponentSettings(element);
 
-        getSettingsWorker().applyDataLoadingSettings(this, new SettingsWrapperImpl(settings));
+        DataLoadingSettingsWorker settingsWorker = (DataLoadingSettingsWorker) getSettingsWorker();
+        settingsWorker.applyDataLoadingSettings(this, new SettingsWrapperImpl(settings));
     }
 
     @Override

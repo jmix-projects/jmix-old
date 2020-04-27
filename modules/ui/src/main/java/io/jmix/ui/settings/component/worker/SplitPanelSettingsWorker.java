@@ -64,11 +64,6 @@ public class SplitPanelSettingsWorker implements ComponentSettingsWorker {
     }
 
     @Override
-    public void applyDataLoadingSettings(Component component, SettingsWrapper wrapper) {
-        // does not have data loading settings
-    }
-
-    @Override
     public boolean saveSettings(Component component, SettingsWrapper wrapper) {
         SplitPanel splitPanel = (SplitPanel) component;
         SplitPanelSettings settings = wrapper.getSettings();

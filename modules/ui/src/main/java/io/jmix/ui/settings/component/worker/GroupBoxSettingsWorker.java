@@ -49,11 +49,6 @@ public class GroupBoxSettingsWorker implements ComponentSettingsWorker {
     }
 
     @Override
-    public void applyDataLoadingSettings(Component component, SettingsWrapper wrapper) {
-        // does not have data loading settings
-    }
-
-    @Override
     public boolean saveSettings(Component component, SettingsWrapper wrapper) {
         GroupBoxLayout groupBox = (GroupBoxLayout) component;
         GroupBoxSettings settings = wrapper.getSettings();

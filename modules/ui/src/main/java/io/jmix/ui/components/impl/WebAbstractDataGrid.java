@@ -90,6 +90,7 @@ import io.jmix.ui.settings.component.DataGridSettings;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
 import io.jmix.ui.settings.component.worker.DataGridSettingsWorker;
+import io.jmix.ui.settings.component.worker.DataLoadingSettingsWorker;
 import io.jmix.ui.sys.PersistenceManagerClient;
 import io.jmix.ui.sys.ShortcutsDelegate;
 import io.jmix.ui.sys.ShowInfoAction;
@@ -2235,7 +2236,8 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
 
         DataGridSettings dataGridSettings = settingsConverter.convertToComponentSettings(element);
 
-        getSettingsWorker().applyDataLoadingSettings(this, new SettingsWrapperImpl(dataGridSettings));
+        DataLoadingSettingsWorker settingsWorker = (DataLoadingSettingsWorker) getSettingsWorker();
+        settingsWorker.applyDataLoadingSettings(this, new SettingsWrapperImpl(dataGridSettings));
     }
 
     @Override

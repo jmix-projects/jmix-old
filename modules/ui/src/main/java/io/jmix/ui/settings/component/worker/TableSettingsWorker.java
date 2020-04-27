@@ -42,7 +42,7 @@ import java.util.*;
 
 @SuppressWarnings("rawtypes")
 @org.springframework.stereotype.Component(TableSettingsWorker.NAME)
-public class TableSettingsWorker implements ComponentSettingsWorker {
+public class TableSettingsWorker implements DataLoadingSettingsWorker {
 
     public static final String NAME = "jmix_TableSettingsTableSettingsWorker";
 

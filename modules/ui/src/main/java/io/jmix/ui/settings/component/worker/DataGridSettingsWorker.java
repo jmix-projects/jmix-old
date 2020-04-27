@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("rawtypes")
 @org.springframework.stereotype.Component(DataGridSettingsWorker.NAME)
-public class DataGridSettingsWorker implements ComponentSettingsWorker {
+public class DataGridSettingsWorker implements DataLoadingSettingsWorker {
 
     public static final String NAME = "jmix_DataGridSettingsWorker";
 

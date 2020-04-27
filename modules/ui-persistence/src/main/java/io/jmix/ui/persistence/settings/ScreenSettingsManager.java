@@ -27,6 +27,7 @@ import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.worker.DataLoadingSettingsWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,11 +106,12 @@ public class ScreenSettingsManager {
 
             Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
 
-            ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
-
             ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
 
-            worker.applyDataLoadingSettings(component, new SettingsWrapperImpl(settings));
+            if (worker instanceof DataLoadingSettingsWorker) {
+                ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
+                ((DataLoadingSettingsWorker) worker).applyDataLoadingSettings(component, new SettingsWrapperImpl(settings));
+            }
         }
     }
 
