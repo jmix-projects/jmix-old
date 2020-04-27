@@ -51,7 +51,17 @@ public class EmptyPresentationsImpl implements Presentations {
     }
 
     @Override
+    public String getRawSettings(Presentation p) {
+        return null;
+    }
+
+    @Override
     public void setSettings(Presentation p, Element e) {
+        // do nothing
+    }
+
+    @Override
+    public void setSettings(Presentation p, String settings) {
         // do nothing
     }
 

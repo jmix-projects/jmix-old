@@ -36,9 +36,9 @@ public interface Presentation extends Entity<UUID> {
 
     void setName(String name);
 
-    String getXml();
+    String getSettings();
 
-    void setXml(String xml);
+    void setSettings(String settings);
 
     String getUserLogin();
 

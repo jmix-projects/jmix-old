@@ -239,7 +239,7 @@ public class UserSettingsPersistence implements UserSettingService {
                 newPresentation.setComponentId(presentation.getComponentId());
                 newPresentation.setAutoSave(presentation.getAutoSave());
                 newPresentation.setName(presentation.getName());
-                newPresentation.setXml(presentation.getXml());
+                newPresentation.setSettings(presentation.getSettings());
                 presentationMap.put(presentation.getId(), newPresentation);
                 entityManager.persist(newPresentation);
             }

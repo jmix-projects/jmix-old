@@ -45,12 +45,12 @@ public class EmptyPresentation implements Presentation {
     }
 
     @Override
-    public String getXml() {
+    public String getSettings() {
         return xml;
     }
 
     @Override
-    public void setXml(String xml) {
+    public void setSettings(String xml) {
         this.xml = xml;
     }
 

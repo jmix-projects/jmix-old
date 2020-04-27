@@ -19,7 +19,7 @@
     <view class="io.jmix.ui.persistence.entity.Presentation" name="app">
         <property name="componentId"/>
         <property name="name"/>
-        <property name="xml"/>
+        <property name="settings"/>
         <property name="userLogin"/>
         <property name="autoSave"/>
     </view>

@@ -19,6 +19,7 @@ import io.jmix.ui.presentations.model.EmptyPresentation;
 import io.jmix.ui.presentations.model.Presentation;
 import org.dom4j.Element;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
@@ -44,19 +45,39 @@ public interface Presentations {
     /**
      * Returns user settings for the selected presentation or <code>null</code>
      * if the presentation doesn't exist or if the presentation doesn't contain any settings
+     *
+     * @deprecated Use {@link #getRawSettings(Presentation) instead.}
      */
+    @Deprecated
     Element getSettings(Presentation p);
 
     /**
-     * Sets user settings for the selected presentation
+     * @param p presentation
+     * @return user settings for the selected presentation or <code>null</code> if the presentation doesn't exist or if
+     * the presentation doesn't contain any settings
      */
-    // todo settings
+    @Nullable
+    String getRawSettings(Presentation p);
+
+    /**
+     * Sets user settings for the selected presentation
+     *
+     * @deprecated Use {@link #setSettings(Presentation, String)} instead.
+     */
+    @Deprecated
     void setSettings(Presentation p, Element e);
+
+    /**
+     * Sets user settings for the selected presentation
+     *
+     * @param p        presentation
+     * @param settings user settings
+     */
+    void setSettings(Presentation p, String settings);
 
     /**
      * Returns presentation by its id or <code>null</code> if a presentation doesn't exist
      */
-    // todo settings
     Presentation getPresentation(Object id);
 
     /**

@@ -107,8 +107,8 @@ public class PersistencePresentations implements Presentations {
         p = getPresentation(EntityValues.<UUID>getId(p));
         if (p != null) {
             Document doc;
-            if (!StringUtils.isEmpty(p.getXml())) {
-                doc = dom4jTools.readDocument(p.getXml());
+            if (!StringUtils.isEmpty(p.getSettings())) {
+                doc = dom4jTools.readDocument(p.getSettings());
             } else {
                 doc = DocumentHelper.createDocument();
                 doc.setRootElement(doc.addElement("presentation"));
@@ -120,10 +120,30 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
+    public String getRawSettings(Presentation p) {
+        p = getPresentation(EntityValues.<UUID>getId(p));
+
+        if (p == null) {
+            return null;
+        }
+
+        return StringUtils.isBlank(p.getSettings()) ? null : p.getSettings();
+    }
+
+    @Override
     public void setSettings(Presentation p, Element e) {
         p = getPresentation(EntityValues.<UUID>getId(p));
         if (p != null) {
-            p.setXml(dom4jTools.writeDocument(e.getDocument(), false));
+            p.setSettings(dom4jTools.writeDocument(e.getDocument(), false));
+            modify(p);
+        }
+    }
+
+    @Override
+    public void setSettings(Presentation p, String settings) {
+        p = getPresentation(EntityValues.<UUID>getId(p));
+        if (p != null) {
+            p.setSettings(settings);
             modify(p);
         }
     }

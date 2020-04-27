@@ -177,7 +177,7 @@ public class PresentationEditor extends CubaWindow {
         component.saveSettings(doc.getRootElement());
 
         String xml = Dom4j.writeDocument(doc, false);
-        presentation.setXml(xml);
+        presentation.setSettings(xml);
 
         presentation.setName(nameField.getValue());
         presentation.setAutoSave(autoSaveField.getValue());

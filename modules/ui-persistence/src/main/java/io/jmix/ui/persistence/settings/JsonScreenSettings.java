@@ -245,7 +245,6 @@ public class JsonScreenSettings extends AbstractScreenSettings {
 
     protected void initGson() {
         gson = new GsonBuilder()
-                .setPrettyPrinting()
                 .create();
     }
 

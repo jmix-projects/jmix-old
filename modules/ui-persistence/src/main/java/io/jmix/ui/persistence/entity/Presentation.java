@@ -45,8 +45,8 @@ public class Presentation extends BaseUuidEntity implements Creatable, Updatable
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "XML", length = 4000)
-    private String xml;
+    @Column(name = "SETTINGS", length = 4000)
+    private String settings;
 
     @Column(name = "USER_LOGIN")
     private String userLogin;
@@ -114,13 +114,13 @@ public class Presentation extends BaseUuidEntity implements Creatable, Updatable
     }
 
     @Override
-    public String getXml() {
-        return xml;
+    public String getSettings() {
+        return settings;
     }
 
     @Override
-    public void setXml(String xml) {
-        this.xml = xml;
+    public void setSettings(String settings) {
+        this.settings = settings;
     }
 
     public String getUserLogin() {
