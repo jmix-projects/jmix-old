@@ -418,7 +418,7 @@ public class DynamicModelManagerImpl implements DynamicModelManager {
 
                         @Override
                         public boolean skip(MetaProperty property) {
-                            return metadataTools.isNotPersistent(property) || !property.getRange().isClass();
+                            return !metadataTools.isPersistent(property) || !property.getRange().isClass();
                         }
                     });
                 }
