@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.data.entity;
+package com.haulmont.cuba.core.entity;
 
 import io.jmix.core.entity.Creatable;
 import io.jmix.core.entity.Updatable;
 import io.jmix.core.entity.Versioned;
 import io.jmix.core.entity.annotation.SystemLevel;
+import io.jmix.data.entity.BaseUuidEntity;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -30,7 +31,7 @@ import java.util.Date;
 @Entity(name = "sys$Config")
 @Table(name = "SYS_CONFIG")
 @SystemLevel
-public class ConfigEntity extends BaseUuidEntity implements Versioned, Creatable, Updatable {
+public class Config extends BaseUuidEntity implements Versioned, Creatable, Updatable {
 
     private static final long serialVersionUID = -2103060811330948816L;
 
