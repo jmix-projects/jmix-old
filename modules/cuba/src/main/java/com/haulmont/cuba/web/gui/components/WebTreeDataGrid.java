@@ -17,9 +17,16 @@
 package com.haulmont.cuba.web.gui.components;
 
 import com.haulmont.cuba.gui.components.TreeDataGrid;
+import com.haulmont.cuba.settings.CubaTreeDataGridSettingsWorker;
 import io.jmix.core.Entity;
+import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
 
 @Deprecated
 public class WebTreeDataGrid<E extends Entity> extends io.jmix.ui.components.impl.WebTreeDataGrid<E>
         implements TreeDataGrid<E> {
+
+    @Override
+    protected ComponentSettingsWorker getSettingsWorker() {
+        return beanLocator.get(CubaTreeDataGridSettingsWorker.NAME);
+    }
 }

@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.gui.components;
+package com.haulmont.cuba.settings;
 
-import com.haulmont.cuba.gui.components.GroupTable;
-import com.haulmont.cuba.settings.CubaGroupTableSettingsWorker;
-import io.jmix.core.Entity;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import com.haulmont.cuba.web.gui.components.WebTreeDataGrid;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.settings.component.worker.TreeDataGridSettingsWorker;
 
-@Deprecated
-public class WebGroupTable<E extends Entity> extends io.jmix.ui.components.impl.WebGroupTable<E>
-        implements GroupTable<E> {
+@org.springframework.stereotype.Component(CubaTreeDataGridSettingsWorker.NAME)
+public class CubaTreeDataGridSettingsWorker extends TreeDataGridSettingsWorker {
+
+    public static final String NAME = "jmix_CubaTreeDataGridSettingsWorker";
 
     @Override
-    protected ComponentSettingsWorker getSettingsWorker() {
-        return beanLocator.get(CubaGroupTableSettingsWorker.NAME);
+    public Class<? extends Component> getComponentClass() {
+        return WebTreeDataGrid.class;
     }
 }

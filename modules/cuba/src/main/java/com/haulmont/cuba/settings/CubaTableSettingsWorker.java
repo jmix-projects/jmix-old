@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.gui.components;
+package com.haulmont.cuba.settings;
 
-import com.haulmont.cuba.gui.components.GroupTable;
-import com.haulmont.cuba.settings.CubaGroupTableSettingsWorker;
-import io.jmix.core.Entity;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import com.haulmont.cuba.web.gui.components.WebTable;
+import io.jmix.ui.settings.component.worker.TableSettingsWorker;
+import org.springframework.stereotype.Component;
 
-@Deprecated
-public class WebGroupTable<E extends Entity> extends io.jmix.ui.components.impl.WebGroupTable<E>
-        implements GroupTable<E> {
+@Component(CubaTableSettingsWorker.NAME)
+public class CubaTableSettingsWorker extends TableSettingsWorker {
+
+    public static final String NAME = "jmix_TableSettingsWorker";
 
     @Override
-    protected ComponentSettingsWorker getSettingsWorker() {
-        return beanLocator.get(CubaGroupTableSettingsWorker.NAME);
+    public Class<? extends io.jmix.ui.components.Component> getComponentClass() {
+        return WebTable.class;
     }
 }
