@@ -22,6 +22,7 @@ import io.jmix.core.security.Security;
 import io.jmix.ui.actions.AbstractAction;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,9 +46,12 @@ public class PresentationActionsBuilder {
 
     protected Collection actionTypes;
 
-    public PresentationActionsBuilder(Table component) {
+    protected ComponentSettingsWorker settingsWorker;
+
+    public PresentationActionsBuilder(Table component, ComponentSettingsWorker settingsWorker) {
         table = component;
         security = AppBeans.get(Security.NAME);
+        this.settingsWorker = settingsWorker;
     }
 
     public Collection<AbstractAction> build() {
@@ -99,17 +103,17 @@ public class PresentationActionsBuilder {
 
     protected AbstractAction buildSaveAction() {
         if (isGlobalPresentation())
-            return new SavePresentationAction(table);
+            return new SavePresentationAction(table, settingsWorker);
         return null;
     }
 
     protected AbstractAction buildSaveAsAction() {
-        return new SaveAsPresentationAction(table);
+        return new SaveAsPresentationAction(table, settingsWorker);
     }
 
     protected AbstractAction buildEditAction() {
         if (isGlobalPresentation())
-            return new EditPresentationAction(table);
+            return new EditPresentationAction(table, settingsWorker);
         return null;
     }
 

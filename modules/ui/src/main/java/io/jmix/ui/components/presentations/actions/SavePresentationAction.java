@@ -16,16 +16,24 @@
 
 package io.jmix.ui.components.presentations.actions;
 
+import io.jmix.core.AppBeans;
 import io.jmix.ui.presentations.model.Presentation;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.settings.ScreenSettings;
+import io.jmix.ui.settings.SettingsHelper;
+import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.SettingsWrapperImpl;
+import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
 import org.dom4j.Element;
+
+import java.util.Optional;
 
 public class SavePresentationAction extends AbstractPresentationAction {
 
-    public SavePresentationAction(Table table) {
-        super(table, "PresentationsPopup.save");
+    public SavePresentationAction(Table table, ComponentSettingsWorker settingsWorker) {
+        super(table, "PresentationsPopup.save", settingsWorker);
     }
 
     @Override
@@ -34,9 +42,28 @@ public class SavePresentationAction extends AbstractPresentationAction {
 
         Presentations presentations = table.getPresentations();
         Presentation current = presentations.getCurrent();
-        Element e = presentations.getSettings(current);
-        table.saveSettings(e);
-        presentations.setSettings(current, e);
+        if (settingsWorker == null) {
+            Element e = presentations.getSettings(current);
+            table.saveSettings(e);
+            presentations.setSettings(current, e);
+        } else {
+            ScreenSettings screenSettings = AppBeans.getPrototype(ScreenSettings.NAME, table.getFrame().getId());
+            String rawSettings = presentations.getRawSettings(current);
+            ComponentSettings componentSettings;
+
+            Optional<? extends ComponentSettings> optSettings =
+                    screenSettings.toComponentSettings(rawSettings, settingsWorker.getSettingsClass());
+            if (optSettings.isPresent()) {
+                componentSettings = optSettings.get();
+            } else {
+                componentSettings = SettingsHelper.createSettings(settingsWorker.getSettingsClass());
+                componentSettings.setId(table.getId());
+            }
+
+            settingsWorker.saveSettings(table, new SettingsWrapperImpl(componentSettings));
+            presentations.setSettings(current, screenSettings.toRawSettings(componentSettings));
+        }
+
         presentations.commit();
     }
 }

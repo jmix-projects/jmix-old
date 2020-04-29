@@ -24,7 +24,7 @@ import io.jmix.ui.presentations.Presentations;
 public class DeletePresentationAction extends AbstractPresentationAction {
 
     public DeletePresentationAction(Table table) {
-        super(table, "PresentationsPopup.delete");
+        super(table, "PresentationsPopup.delete", null);
     }
 
     @Override

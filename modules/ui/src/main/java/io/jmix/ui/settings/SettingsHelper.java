@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.components.presentations.actions;
+package io.jmix.ui.settings;
 
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Table;
+import io.jmix.core.commons.util.ReflectionHelper;
+import io.jmix.ui.settings.component.ComponentSettings;
 
-public class ResetPresentationAction extends AbstractPresentationAction {
+public final class SettingsHelper {
 
-    public ResetPresentationAction(Table table) {
-        super(table, "PresentationsPopup.reset", null);
+    private SettingsHelper() {
     }
 
-    @Override
-    public void actionPerform(Component component) {
-        table.resetPresentation();
+    public static <T extends ComponentSettings> T createSettings(Class<T> settingsClass) {
+        try {
+            return ReflectionHelper.newInstance(settingsClass);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(String.format("Cannot create settings '%s'", settingsClass), e);
+        }
     }
 }

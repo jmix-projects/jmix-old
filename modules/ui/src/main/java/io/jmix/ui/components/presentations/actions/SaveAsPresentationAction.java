@@ -20,11 +20,12 @@ import io.jmix.ui.presentations.model.Presentation;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.Table;
+import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
 
 public class SaveAsPresentationAction extends AbstractEditPresentationAction {
 
-    public SaveAsPresentationAction(Table table) {
-        super(table, "PresentationsPopup.saveAs");
+    public SaveAsPresentationAction(Table table, ComponentSettingsWorker settingsWorker) {
+        super(table, "PresentationsPopup.saveAs", settingsWorker);
     }
 
     @Override

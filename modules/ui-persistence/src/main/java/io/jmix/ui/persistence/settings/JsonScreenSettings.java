@@ -21,6 +21,8 @@ import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.SettingsClient;
 import io.jmix.ui.settings.component.ComponentSettings;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -35,6 +37,8 @@ import java.util.Optional;
 @Component(ScreenSettings.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class JsonScreenSettings extends AbstractScreenSettings {
+
+    private static final Logger log = LoggerFactory.getLogger(JsonScreenSettings.class);
 
     @Inject
     protected SettingsClient settingsClient;
@@ -197,6 +201,21 @@ public class JsonScreenSettings extends AbstractScreenSettings {
             json.addProperty("id", componentId);
             return settingsClass.cast(gson.fromJson(json, settingsClass));
         });
+    }
+
+    @Override
+    public <T extends ComponentSettings> Optional<T> toComponentSettings(String settings, Class<T> settingsClass) {
+        try {
+            return Optional.ofNullable(gson.fromJson(settings, settingsClass));
+        } catch (JsonSyntaxException e) {
+            log.error("Cannot map settings: {} to '{}'", settings, settingsClass, e);
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public String toRawSettings(ComponentSettings settings) {
+        return gson.toJson(settings);
     }
 
     @Override

@@ -27,11 +27,13 @@ import io.jmix.ui.components.impl.WebComponentsHelper;
 import io.jmix.ui.components.presentations.actions.PresentationActionsBuilder;
 import io.jmix.ui.presentations.Presentations;
 import io.jmix.ui.presentations.PresentationsChangeListener;
+import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
 import io.jmix.ui.sys.TestIdManager;
 import io.jmix.ui.widgets.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
@@ -52,6 +54,7 @@ public class TablePresentations extends VerticalLayout {
 
     protected Table table;
     protected CubaEnhancedTable tableImpl;
+    protected ComponentSettingsWorker settingsWorker;
 
     protected Map<Object, MenuBar.MenuItem> presentationsMenuMap;
 
@@ -59,11 +62,19 @@ public class TablePresentations extends VerticalLayout {
 
     protected PresentationActionsBuilder presentationActionsBuilder;
 
-    public TablePresentations(Table component) {
+    /**
+     * If settings worker is null table presentations will work with legacy XML settings.
+     *
+     * @param component      table
+     * @param settingsWorker component settings worker
+     */
+    public TablePresentations(Table component, ComponentSettingsWorker settingsWorker) {
         this.table = component;
         this.messages = AppBeans.get(Messages.NAME);
 
         this.tableImpl = table.unwrapOrNull(CubaEnhancedTable.class);
+
+        this.settingsWorker = settingsWorker;
 
         setMargin(false);
 
@@ -310,7 +321,7 @@ public class TablePresentations extends VerticalLayout {
 
     protected PresentationActionsBuilder getPresentationActionsBuilder() {
         if (presentationActionsBuilder == null)
-            presentationActionsBuilder = new PresentationActionsBuilder(table);
+            presentationActionsBuilder = new PresentationActionsBuilder(table, settingsWorker);
         return presentationActionsBuilder;
     }
 

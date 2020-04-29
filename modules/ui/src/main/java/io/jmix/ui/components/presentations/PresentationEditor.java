@@ -15,12 +15,18 @@
  */
 package io.jmix.ui.components.presentations;
 
+import com.vaadin.ui.*;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.security.Security;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.Notifications;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.settings.ScreenSettings;
+import io.jmix.ui.settings.SettingsHelper;
+import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.SettingsWrapperImpl;
+import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
 import io.jmix.ui.sys.PersistenceHelper;
-import com.vaadin.ui.*;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
 import io.jmix.core.commons.util.Dom4j;
@@ -61,6 +67,17 @@ public class PresentationEditor extends CubaWindow {
     protected Messages messages;
     protected UserSessionSource sessionSource;
     protected Security security;
+
+    protected ComponentSettingsWorker settingsWorker;
+    protected ScreenSettings screenSettings;
+
+    public PresentationEditor(Presentation presentation, HasPresentations component,
+                              ComponentSettingsWorker settingsWorker, ScreenSettings screenSettings) {
+        this(presentation, component);
+
+        this.settingsWorker = settingsWorker;
+        this.screenSettings = screenSettings;
+    }
 
     public PresentationEditor(Presentation presentation, HasPresentations component) {
         this.presentation = presentation;
@@ -171,13 +188,23 @@ public class PresentationEditor extends CubaWindow {
     protected void commit() {
         Presentations presentations = component.getPresentations();
 
-        Document doc = DocumentHelper.createDocument();
-        doc.setRootElement(doc.addElement("presentation"));
+        String rawSettings;
+        if (settingsWorker == null || screenSettings == null) {
+            Document doc = DocumentHelper.createDocument();
+            doc.setRootElement(doc.addElement("presentation"));
 
-        component.saveSettings(doc.getRootElement());
+            component.saveSettings(doc.getRootElement());
 
-        String xml = Dom4j.writeDocument(doc, false);
-        presentation.setSettings(xml);
+            rawSettings = Dom4j.writeDocument(doc, false);
+        } else {
+            ComponentSettings componentSettings = SettingsHelper.createSettings(settingsWorker.getSettingsClass());
+
+            settingsWorker.saveSettings((Component) component, new SettingsWrapperImpl(componentSettings));
+
+            rawSettings = screenSettings.toRawSettings(componentSettings);
+        }
+
+        presentation.setSettings(rawSettings);
 
         presentation.setName(nameField.getValue());
         presentation.setAutoSave(autoSaveField.getValue());
@@ -190,7 +217,7 @@ public class PresentationEditor extends CubaWindow {
         presentation.setUserLogin(userOnly ? user.getLogin() : null);
 
         if (log.isTraceEnabled()) {
-            log.trace(String.format("XML: %s", Dom4j.writeDocument(doc, true)));
+            log.trace(String.format("Presentation: %s", rawSettings));
         }
 
         if (isNew) {

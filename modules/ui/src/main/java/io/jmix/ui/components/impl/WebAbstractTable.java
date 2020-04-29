@@ -69,6 +69,9 @@ import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.InstallTargetHandler;
 import io.jmix.ui.screen.ScreenContext;
 import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.screen.compatibility.CubaLegacySettings;
+import io.jmix.ui.settings.ScreenSettings;
+import io.jmix.ui.settings.SettingsHelper;
 import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
 import io.jmix.ui.settings.compatibility.converter.LegacyTableSettingsConverter;
 import io.jmix.ui.settings.component.ComponentSettings;
@@ -2635,9 +2638,19 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
             Presentations p = getPresentations();
 
             if (p.getCurrent() != null && p.isAutoSave(p.getCurrent()) && needUpdatePresentation(variables)) {
-                Element e = p.getSettings(p.getCurrent());
-                saveSettings(e);
-                p.setSettings(p.getCurrent(), e);
+                if (getFrame().getFrameOwner() instanceof CubaLegacySettings) {
+                    Element e = p.getSettings(p.getCurrent());
+                    saveSettings(e);
+                    p.setSettings(p.getCurrent(), e);
+                } else {
+                    ComponentSettings settings = getSettingsFromPresentation(p.getCurrent());
+                    getSettingsWorker().saveSettings(this, new SettingsWrapperImpl(settings));
+
+                    ScreenSettings screenSettings = beanLocator.getPrototype(ScreenSettings.NAME, getFrame().getId());
+                    String rawSettings = screenSettings.toRawSettings(settings);
+
+                    p.setSettings(p.getCurrent(), rawSettings);
+                }
             }
         }
 
@@ -2693,7 +2706,9 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         if (isUsePresentations()) {
             presentations = beanLocator.getPrototype(Presentations.NAME, this);
 
-            setTablePresentations(new TablePresentations(this));
+            FrameOwner frameOwner = getFrame().getFrameOwner();
+            setTablePresentations(new TablePresentations(this,
+                    frameOwner instanceof CubaLegacySettings ? null : getSettingsWorker()));
         } else {
             throw new UnsupportedOperationException("Component doesn't use presentations");
         }
@@ -2733,11 +2748,34 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
     protected void applyPresentation(Presentation p) {
         if (presentations != null) {
-            Element settingsElement = presentations.getSettings(p);
-            applySettings(settingsElement);
+            if (getFrame().getFrameOwner() instanceof CubaLegacySettings) {
+                Element settingsElement = presentations.getSettings(p);
+                applySettings(settingsElement);
+            } else {
+                ComponentSettings settings = getSettingsFromPresentation(p);
+                getSettingsWorker().applySettings(this, new SettingsWrapperImpl(settings));
+            }
+
             presentations.setCurrent(p);
             component.markAsDirty();
         }
+    }
+
+    protected ComponentSettings getSettingsFromPresentation(Presentation p) {
+        String rawSettings = presentations.getRawSettings(p);
+        ScreenSettings screenSettings = beanLocator.getPrototype(ScreenSettings.NAME, getFrame().getId());
+
+        Class<? extends ComponentSettings> settingsClass = getSettingsWorker().getSettingsClass();
+
+        ComponentSettings settings = SettingsHelper.createSettings(settingsClass);
+        settings.setId(getId());
+
+        Optional<? extends ComponentSettings> optSettings =
+                screenSettings.toComponentSettings(rawSettings, settingsClass);
+        if (optSettings.isPresent()) {
+            settings = optSettings.get();
+        }
+        return settings;
     }
 
     @Override

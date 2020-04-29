@@ -166,4 +166,22 @@ public interface ScreenSettings {
      * @return component settings if exist otherwise return created settings with corresponding id
      */
     <T extends ComponentSettings> T getSettingsOrCreate(String componentId, Class<T> settingsClass);
+
+    /**
+     * Maps settings from string to provided settings class.
+     *
+     * @param settings      raw settings
+     * @param settingsClass settings class
+     * @param <T>           type of settings class
+     * @return component settings optional, empty if settings null or empty
+     */
+    <T extends ComponentSettings> Optional<T> toComponentSettings(String settings, Class<T> settingsClass);
+
+    /**
+     * Converts component settings to raw string
+     *
+     * @param settings component settings
+     * @return raw string
+     */
+    String toRawSettings(ComponentSettings settings);
 }
