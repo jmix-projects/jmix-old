@@ -45,14 +45,14 @@ public interface ScreenSettingsFacet extends Facet {
     void setAuto(boolean auto);
 
     /**
-     * Adds component ids that should be handled in applying and saving settings.
+     * Adds component ids that should be handled when settings are applied and saved.
      *
      * @param ids component ids
      */
     void addComponentIds(String... ids);
 
     /**
-     * Adds components that should be handled in applying and saving settings.
+     * Adds components that should be handled when settings are applied and saved settings.
      *
      * @param components components to handle
      */
@@ -85,7 +85,7 @@ public interface ScreenSettingsFacet extends Facet {
     void applyDataLoadingSettings(ScreenSettings settings);
 
     /**
-     * Saves and persist settings. By default facet saves settings of {@link AfterDetachEvent}.
+     * Saves and persist settings. By default facet saves settings on {@link AfterDetachEvent}.
      *
      * @param settings screen settings
      */
@@ -105,7 +105,6 @@ public interface ScreenSettingsFacet extends Facet {
      * <pre>{@code
      * @Install(to = "settingsFacet", subject = "onApplySettingsHandler")
      * private void onApplySetting(ScreenSettings settings) {
-     *
      *     // default behavior
      *     settingsFacet.applySettings(settings);
      * }
@@ -130,7 +129,6 @@ public interface ScreenSettingsFacet extends Facet {
      * <pre>{@code
      * @Install(to = "settingsFacet", subject = "onApplyDataLoadingSettingsHandler")
      * private void onApplyDataLoadingSetting(ScreenSettings settings) {
-     *
      *     // default behavior
      *     settingsFacet.applyDataLoadingSettings(settings);
      * }
@@ -155,7 +153,6 @@ public interface ScreenSettingsFacet extends Facet {
      * <pre>{@code
      * @Install(to = "settingsFacet", subject = "onSaveSettingsHandler")
      * private void onSaveSetting(ScreenSettings settings) {
-     *
      *     // default behavior
      *     settingsFacet.saveSettings(settings);
      * }

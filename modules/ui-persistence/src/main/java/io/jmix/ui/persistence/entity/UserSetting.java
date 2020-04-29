@@ -28,8 +28,8 @@ import java.util.Date;
  *
  * @see UserSettingsPersistence
  */
-@Entity(name = "sec$UserSetting")
-@Table(name = "SEC_USER_SETTING")
+@Entity(name = "ui_UserSetting")
+@Table(name = "UI_USER_SETTING")
 @SystemLevel
 public class UserSetting extends BaseUuidEntity implements Creatable {
 

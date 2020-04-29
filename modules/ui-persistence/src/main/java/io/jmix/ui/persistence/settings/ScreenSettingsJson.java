@@ -18,7 +18,7 @@ package io.jmix.ui.persistence.settings;
 
 import com.google.gson.*;
 import io.jmix.ui.settings.ScreenSettings;
-import io.jmix.ui.settings.SettingsClient;
+import io.jmix.ui.settings.WebSettingsClient;
 import io.jmix.ui.settings.component.ComponentSettings;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -36,25 +36,25 @@ import java.util.Optional;
  */
 @Component(ScreenSettings.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class JsonScreenSettings extends AbstractScreenSettings {
+public class ScreenSettingsJson extends AbstractScreenSettings {
 
-    private static final Logger log = LoggerFactory.getLogger(JsonScreenSettings.class);
+    private static final Logger log = LoggerFactory.getLogger(ScreenSettingsJson.class);
 
     @Inject
-    protected SettingsClient settingsClient;
+    protected WebSettingsClient settingsClient;
 
     protected JsonArray root;
 
     protected Gson gson;
 
-    public JsonScreenSettings(String screenId) {
+    public ScreenSettingsJson(String screenId) {
         super(screenId);
 
         initGson();
     }
 
     @Override
-    public JsonScreenSettings put(String componentId, String property, String value) {
+    public ScreenSettingsJson put(String componentId, String property, String value) {
         JsonObject component = getComponentOrCreate(componentId);
 
         component.addProperty(property, value);
@@ -109,7 +109,7 @@ public class JsonScreenSettings extends AbstractScreenSettings {
     }
 
     @Override
-    public JsonScreenSettings put(ComponentSettings settings) {
+    public ScreenSettingsJson put(ComponentSettings settings) {
         put(gson.toJsonTree(settings), settings.getId());
 
         return this;
@@ -119,7 +119,7 @@ public class JsonScreenSettings extends AbstractScreenSettings {
      * @param json json object that represents component settings
      * @return current instance of {@link ScreenSettings}
      */
-    public JsonScreenSettings put(JsonObject json) {
+    public ScreenSettingsJson put(JsonObject json) {
         if (!json.keySet().contains("id")) {
             throw new IllegalArgumentException("Cannot put settings, json must have an id property");
         }
@@ -248,7 +248,7 @@ public class JsonScreenSettings extends AbstractScreenSettings {
      * @param componentId component id
      * @return json object that represents component settings
      */
-    public Optional<JsonObject> getSettingsRaw(String componentId) {
+    public Optional<JsonObject> getJsonSettings(String componentId) {
         return Optional.ofNullable(getComponent(componentId));
     }
 

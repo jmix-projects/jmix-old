@@ -51,7 +51,7 @@ public interface ScreenSettings {
     ScreenSettings put(String componentId, String property, String value);
 
     /**
-     * Puts a Integer value. Will replace value if property already exist.
+     * Puts an Integer value. Will replace value if property already exist.
      *
      * @param componentId component id
      * @param property    component's property
@@ -119,35 +119,35 @@ public interface ScreenSettings {
     /**
      * @param componentId component id
      * @param property    component's property
-     * @return String value wrapped in {@code Optional} if it exists
+     * @return String value wrapped in {@code Optional}
      */
     Optional<String> getString(String componentId, String property);
 
     /**
      * @param componentId component id
      * @param property    component's property
-     * @return Integer value wrapped in {@code Optional} if it exists
+     * @return Integer value wrapped in {@code Optional}
      */
     Optional<Integer> getInteger(String componentId, String property);
 
     /**
      * @param componentId component id
      * @param property    component's property
-     * @return Long value wrapped in {@code Optional} if it exists
+     * @return Long value wrapped in {@code Optional}
      */
     Optional<Long> getLong(String componentId, String property);
 
     /**
      * @param componentId component id
      * @param property    component's property
-     * @return Double value wrapped in {@code Optional} if it exists
+     * @return Double value wrapped in {@code Optional}
      */
     Optional<Double> getDouble(String componentId, String property);
 
     /**
      * @param componentId component id
      * @param property    component's property
-     * @return Boolean value wrapped in {@code Optional} if it exists
+     * @return Boolean value wrapped in {@code Optional}
      */
     Optional<Boolean> getBoolean(String componentId, String property);
 
@@ -155,7 +155,7 @@ public interface ScreenSettings {
      * @param componentId   component id
      * @param settingsClass settings class
      * @param <T>           type of component settings class
-     * @return component settings wrapped in {@code Optional} if it exists
+     * @return component settings wrapped in {@code Optional}
      */
     <T extends ComponentSettings> Optional<T> getSettings(String componentId, Class<T> settingsClass);
 
@@ -168,7 +168,7 @@ public interface ScreenSettings {
     <T extends ComponentSettings> T getSettingsOrCreate(String componentId, Class<T> settingsClass);
 
     /**
-     * Maps settings from string to provided settings class.
+     * Maps settings from a string to provided settings class.
      *
      * @param settings      raw settings
      * @param settingsClass settings class

@@ -23,7 +23,7 @@
 
     <changeSet author="ui-persistence" id="1.0">
 
-        <createTable tableName="SEC_USER_SETTING">
+        <createTable tableName="UI_USER_SETTING">
             <column name="ID" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -35,7 +35,7 @@
             <column name="VALUE_" type="clob"/>
         </createTable>
 
-        <createTable tableName="SEC_PRESENTATION">
+        <createTable tableName="UI_PRESENTATION">
             <column name="ID" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

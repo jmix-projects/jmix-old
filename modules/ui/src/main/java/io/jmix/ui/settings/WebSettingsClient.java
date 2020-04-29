@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.impl;
+package io.jmix.ui.settings;
 
 import com.vaadin.server.VaadinSession;
 import io.jmix.core.ClientType;
 import io.jmix.ui.executors.IllegalConcurrentAccessException;
-import io.jmix.ui.settings.SettingsClient;
-import io.jmix.ui.settings.UserSettingService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -32,13 +30,14 @@ import java.util.Optional;
 /**
  * User settings provider for web application. Caches settings in HTTP session.
  */
-@Component(SettingsClient.NAME)
-public class WebSettingsClientImpl implements SettingsClient {
+@Component(WebSettingsClient.NAME)
+public class WebSettingsClient {
+
+    public static final String NAME = "cuba_SettingsClient";
 
     @Inject
     protected UserSettingService userSettingService;
 
-    @Override
     public String getSetting(String name) {
         Map<String, Optional<String>> settings = getCache();
         Optional<String> cached = settings.get(name);
@@ -52,13 +51,11 @@ public class WebSettingsClientImpl implements SettingsClient {
         return setting;
     }
 
-    @Override
     public void setSetting(String name, @Nullable String value) {
         getCache().put(name, Optional.ofNullable(value));
         userSettingService.saveSetting(ClientType.WEB, name, value);
     }
 
-    @Override
     public void deleteSettings(String name) {
         getCache().put(name, Optional.empty());
         userSettingService.deleteSettings(ClientType.WEB, name);
@@ -70,7 +67,7 @@ public class WebSettingsClientImpl implements SettingsClient {
             throw new IllegalConcurrentAccessException("Illegal access to settings client from background thread");
         }
 
-        session.setAttribute(SettingsClient.NAME, null);
+        session.setAttribute(NAME, null);
     }
 
     protected Map<String, Optional<String>> getCache() {
@@ -80,10 +77,10 @@ public class WebSettingsClientImpl implements SettingsClient {
         }
 
         @SuppressWarnings("unchecked")
-        Map<String, Optional<String>> settings = (Map<String, Optional<String>>) session.getAttribute(SettingsClient.NAME);
+        Map<String, Optional<String>> settings = (Map<String, Optional<String>>) session.getAttribute(NAME);
         if (settings == null) {
             settings = new HashMap<>();
-            session.setAttribute(SettingsClient.NAME, settings);
+            session.setAttribute(NAME, settings);
         }
         return settings;
     }

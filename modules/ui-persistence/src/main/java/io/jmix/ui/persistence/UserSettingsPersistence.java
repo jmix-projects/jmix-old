@@ -123,7 +123,7 @@ public class UserSettingsPersistence implements UserSettingService {
         }
 
         transaction.executeWithoutResult(status -> {
-            Query deleteSettingsQuery = entityManager.createQuery("delete from sec$UserSetting s where s.userLogin = ?1");
+            Query deleteSettingsQuery = entityManager.createQuery("delete from ui_UserSetting s where s.userLogin = ?1");
             deleteSettingsQuery.setParameter(1, toUser.getLogin());
             deleteSettingsQuery.executeUpdate();
         });
@@ -139,7 +139,7 @@ public class UserSettingsPersistence implements UserSettingService {
 
         transaction.executeWithoutResult(status -> {
             TypedQuery<UserSetting> q = entityManager.
-                    createQuery("select s from sec$UserSetting s where s.userLogin = ?1", UserSetting.class);
+                    createQuery("select s from ui_UserSetting s where s.userLogin = ?1", UserSetting.class);
             q.setParameter(1, fromUser.getLogin());
             List<UserSetting> fromUserSettings = q.getResultList();
 
@@ -189,7 +189,7 @@ public class UserSettingsPersistence implements UserSettingService {
     public void deleteScreenSettings(ClientType clientType, Set<String> screens) {
         transaction.executeWithoutResult(status -> {
             TypedQuery<UserSetting> selectQuery = entityManager.createQuery(
-                    "select e from sec$UserSetting e where e.user.id = ?1 and e.clientType=?2",
+                    "select e from ui_UserSetting e where e.user.id = ?1 and e.clientType=?2",
                     UserSetting.class);
             selectQuery.setParameter(1, userSessionSource.getUserSession().getUser().getId());
             selectQuery.setParameter(2, clientType.getName());
@@ -205,7 +205,7 @@ public class UserSettingsPersistence implements UserSettingService {
     @Nullable
     protected UserSetting findUserSettings(ClientType clientType, String name) {
         TypedQuery<UserSetting> q = entityManager.createQuery(
-                "select s from sec$UserSetting s where s.userLogin = ?1 and s.name =?2 and s.clientType = ?3",
+                "select s from ui_UserSetting s where s.userLogin = ?1 and s.name =?2 and s.clientType = ?3",
                 UserSetting.class);
         q.setParameter(1, userSessionSource.getUserSession().getUser().getLogin());
         q.setParameter(2, name);
@@ -222,13 +222,13 @@ public class UserSettingsPersistence implements UserSettingService {
     protected Map<UUID, Presentation> copyPresentations(User fromUser, User toUser) {
         Map<UUID, Presentation> resultMap = transaction.execute(status -> {
             // delete existing
-            Query delete = entityManager.createQuery("delete from sec$Presentation p where p.userLogin = ?1");
+            Query delete = entityManager.createQuery("delete from ui_Presentation p where p.userLogin = ?1");
             delete.setParameter(1, toUser.getLogin());
             delete.executeUpdate();
 
             // copy settings
             TypedQuery<Presentation> selectQuery = entityManager.createQuery(
-                    "select p from sec$Presentation p where p.userLogin = ?1", Presentation.class);
+                    "select p from ui_Presentation p where p.userLogin = ?1", Presentation.class);
             selectQuery.setParameter(1, fromUser.getLogin());
             List<Presentation> presentations = selectQuery.getResultList();
 

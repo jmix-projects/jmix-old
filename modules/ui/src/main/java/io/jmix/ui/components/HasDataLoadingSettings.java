@@ -16,19 +16,16 @@
 
 package io.jmix.ui.components;
 
-import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.worker.DataLoadingSettingsWorker;
 import org.dom4j.Element;
 
 /**
- * @see ComponentSettings
  * @deprecated for component settings use "ui-persistence" add-on and {@link DataLoadingSettingsWorker} instead.
  */
 @Deprecated
 public interface HasDataLoadingSettings {
 
     /**
-     * @see ComponentSettings
      * @deprecated for component settings use "ui-persistence" add-on and {@link DataLoadingSettingsWorker} instead.
      */
     @Deprecated

@@ -28,6 +28,7 @@ import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
 import io.jmix.ui.settings.component.worker.DataLoadingSettingsWorker;
+import io.jmix.ui.settings.component.worker.TableSettingsWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,8 @@ public class ScreenSettingsManager {
     protected BeanLocator beanLocator;
 
     /**
-     * Applies settings for components if they have own {@link ComponentSettingsWorker}.
+     * Applies settings for component if {@link ComponentSettingsWorker} is created for it. See
+     * {@link TableSettingsWorker} as an example.
      *
      * @param components     components to apply settings
      * @param screenSettings screen settings
@@ -91,7 +93,8 @@ public class ScreenSettingsManager {
     }
 
     /**
-     * Applies data loading settings for components if they have own {@link ComponentSettingsWorker}..
+     * Applies data loading settings for component if {@link ComponentSettingsWorker} is created for it. See
+     * {@link TableSettingsWorker} as an example.
      *
      * @param components     components to apply settings
      * @param screenSettings screen settings
@@ -116,8 +119,8 @@ public class ScreenSettingsManager {
     }
 
     /**
-     * Saves settings and persist if they are changed or screen settings is modified. Components must
-     * have {@link ComponentSettingsWorker}.
+     * Saves settings and persist if they are changed or screen settings is modified. {@link ComponentSettingsWorker}
+     * must be created for component. See {@link TableSettingsWorker} as an example.
      *
      * @param components     components to save settings
      * @param screenSettings screen settings

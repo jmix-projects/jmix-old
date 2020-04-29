@@ -17,6 +17,7 @@
 package io.jmix.ui.components.impl;
 
 import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.settings.component.worker.DataGridSettingsWorker;
 
 import java.util.List;
 
@@ -25,7 +26,13 @@ public final class DataGridSettingsUtils {
     private DataGridSettingsUtils() {
     }
 
-    // todo settings
+    /**
+     * INTERNAL API. Is used for DataGrid settings.
+     *
+     * @param dataGrid dataGrid
+     * @param columns  columns
+     * @see DataGridSettingsWorker
+     */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static void restoreColumnsOrder(DataGrid dataGrid, List<DataGrid.Column> columns) {
         ((WebAbstractDataGrid) dataGrid).restoreColumnsOrderAndUpdate(columns);

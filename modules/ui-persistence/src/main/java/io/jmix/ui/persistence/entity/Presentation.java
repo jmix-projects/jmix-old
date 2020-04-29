@@ -27,8 +27,8 @@ import java.util.Date;
 /**
  * A screen presentation settings.
  */
-@Entity(name = "sec$Presentation")
-@Table(name = "SEC_PRESENTATION")
+@Entity(name = "ui_Presentation")
+@Table(name = "UI_PRESENTATION")
 @SystemLevel
 public class Presentation extends BaseUuidEntity implements Creatable, Updatable,
         io.jmix.ui.presentations.model.Presentation {

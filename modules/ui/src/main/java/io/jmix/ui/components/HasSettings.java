@@ -26,6 +26,7 @@ import org.dom4j.Element;
  *
  * @see UserSettingService
  * @deprecated for components that should have settings use {@link ComponentSettingsWorker} and {@link ComponentSettings}
+ * instead.
  */
 @Deprecated
 public interface HasSettings {
@@ -35,7 +36,7 @@ public interface HasSettings {
      *
      * @param element settings element
      * @deprecated for components that should have settings use {@link ComponentSettingsWorker}
-     * and {@link ComponentSettings}
+     * and {@link ComponentSettings} instead.
      */
     @Deprecated
     void applySettings(Element element);
@@ -46,7 +47,7 @@ public interface HasSettings {
      * @param element settings element
      * @return true if settings were modified
      * @deprecated for components that should have settings use {@link ComponentSettingsWorker}
-     * and {@link ComponentSettings}
+     * and {@link ComponentSettings} instead.
      */
     @Deprecated
     boolean saveSettings(Element element);
@@ -54,7 +55,7 @@ public interface HasSettings {
     /**
      * @return true if object allows to save and apply settings
      * @deprecated for components that should have settings use {@link ComponentSettingsWorker}
-     * and {@link ComponentSettings}
+     * and {@link ComponentSettings} instead.
      */
     @Deprecated
     boolean isSettingsEnabled();
@@ -64,7 +65,7 @@ public interface HasSettings {
      *
      * @param settingsEnabled whether settings should be enabled for the object
      * @deprecated for components that should have settings use {@link ComponentSettingsWorker}
-     * and {@link ComponentSettings}
+     * and {@link ComponentSettings} instead.
      */
     @Deprecated
     void setSettingsEnabled(boolean settingsEnabled);

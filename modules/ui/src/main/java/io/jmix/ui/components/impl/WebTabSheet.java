@@ -658,6 +658,7 @@ public class WebTabSheet extends WebAbstractComponent<CubaTabSheet>
                             });
                         }
                     } else {
+                        // todo settings
                         window.getFacets().forEach(facet -> {
                             if (facet instanceof ScreenSettingsFacet) {
                                 ScreenSettingsFacet settingsFacet = (ScreenSettingsFacet) facet;

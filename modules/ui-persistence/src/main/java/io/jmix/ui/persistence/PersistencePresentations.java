@@ -339,7 +339,7 @@ public class PersistencePresentations implements Presentations {
             // todo user substitution
             User user = session.getUser();
 
-            ctx.setQueryString("select p from sec$Presentation p " +
+            ctx.setQueryString("select p from ui_Presentation p " +
                     "where p.componentId = :component and (p.userLogin is null or p.userLogin = :userLogin)")
                     .setParameter("component", name)
                     .setParameter("userLogin", user.getLogin());
