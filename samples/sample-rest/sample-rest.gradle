@@ -27,7 +27,6 @@ dependencies {
     implementation project(':modules:rest')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
     implementation 'org.apache.commons:commons-dbcp2'
 
@@ -41,7 +40,6 @@ dependencies {
 
     testImplementation 'com.squareup.retrofit2:converter-scalars:2.8.1'
 
-    testRuntimeOnly 'org.slf4j:slf4j-simple'
     testRuntimeOnly 'org.hsqldb:hsqldb'
 
     testImplementation 'io.rest-assured:rest-assured'
@@ -59,10 +57,4 @@ dependencies {
     }
 
     testImplementation 'org.jmockit:jmockit:1.39'
-}
-
-configurations {
-    all {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-    }
 }
