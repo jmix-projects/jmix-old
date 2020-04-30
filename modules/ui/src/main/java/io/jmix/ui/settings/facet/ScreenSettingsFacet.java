@@ -16,17 +16,18 @@
 
 package io.jmix.ui.settings.facet;
 
-import io.jmix.core.commons.events.Subscription;
+import io.jmix.ui.components.Accordion;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Facet;
-import io.jmix.ui.screen.Screen;
+import io.jmix.ui.components.Window;
+import io.jmix.ui.components.impl.WebTabSheet;
 import io.jmix.ui.screen.Screen.AfterDetachEvent;
 import io.jmix.ui.screen.Screen.AfterShowEvent;
 import io.jmix.ui.screen.Screen.BeforeShowEvent;
 import io.jmix.ui.settings.ScreenSettings;
 
 import javax.annotation.Nullable;
-import java.util.EventObject;
+import java.util.Collection;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -45,24 +46,24 @@ public interface ScreenSettingsFacet extends Facet {
     void setAuto(boolean auto);
 
     /**
-     * Adds component ids that should be handled when settings are applied and saved.
+     * Adds component ids that should be handled when {@link #isAuto()} returns false.
      *
      * @param ids component ids
      */
     void addComponentIds(String... ids);
 
     /**
-     * Adds components that should be handled when settings are applied and saved settings.
-     *
-     * @param components components to handle
-     */
-    void addComponents(Component... components);
-
-    /**
-     * @return list of component ids that were added by {@link #addComponents(Component...)} and
-     * {@link #addComponentIds(String...)}
+     * @return list of component ids that should be handled when {@link #isAuto()} returns false.
      */
     Set<String> getComponentIds();
+
+    /**
+     * Returned collection depends on {@link #isAuto()} property. If it returns true collection will be filled by {@link Window},
+     * otherwise collection will be filled by components were added by {@link #addComponentIds(String...)}.
+     *
+     * @return components collection that is used for applying and saving settings.
+     */
+    Collection<Component> getComponents();
 
     /**
      * @return screen settings or null if facet is not attached to the screen
@@ -95,7 +96,7 @@ public interface ScreenSettingsFacet extends Facet {
      * @return apply settings handler or null if not set
      */
     @Nullable
-    Consumer<ScreenSettings> getOnApplySettingsHandler();
+    Consumer<SettingsSet> getOnApplySettingsHandler();
 
     /**
      * Sets apply settings handler. It will replace default behavior of facet and will be invoked on
@@ -104,7 +105,7 @@ public interface ScreenSettingsFacet extends Facet {
      * For instance:
      * <pre>{@code
      * @Install(to = "settingsFacet", subject = "onApplySettingsHandler")
-     * private void onApplySetting(ScreenSettings settings) {
+     * private void onApplySetting(SettingsSet settings) {
      *     // default behavior
      *     settingsFacet.applySettings(settings);
      * }
@@ -113,13 +114,13 @@ public interface ScreenSettingsFacet extends Facet {
      *
      * @param handler apply settings handler
      */
-    void setOnApplySettingsHandler(Consumer<ScreenSettings> handler);
+    void setOnApplySettingsHandler(Consumer<SettingsSet> handler);
 
     /**
      * @return apply data loading settings handler or null if not set
      */
     @Nullable
-    Consumer<ScreenSettings> getOnApplyDataLoadingSettingsHandler();
+    Consumer<SettingsSet> getOnApplyDataLoadingSettingsHandler();
 
     /**
      * Sets apply data loading settings handler. It will replace default behavior of facet and will be invoked on
@@ -128,7 +129,7 @@ public interface ScreenSettingsFacet extends Facet {
      * For instance:
      * <pre>{@code
      * @Install(to = "settingsFacet", subject = "onApplyDataLoadingSettingsHandler")
-     * private void onApplyDataLoadingSetting(ScreenSettings settings) {
+     * private void onApplyDataLoadingSetting(SettingsSet settings) {
      *     // default behavior
      *     settingsFacet.applyDataLoadingSettings(settings);
      * }
@@ -137,13 +138,13 @@ public interface ScreenSettingsFacet extends Facet {
      *
      * @param handler apply settings handler
      */
-    void setOnApplyDataLoadingSettingsHandler(Consumer<ScreenSettings> handler);
+    void setOnApplyDataLoadingSettingsHandler(Consumer<SettingsSet> handler);
 
     /**
      * @return save settings handler or null if not set
      */
     @Nullable
-    Consumer<ScreenSettings> getOnSaveSettingsHandler();
+    Consumer<SettingsSet> getOnSaveSettingsHandler();
 
     /**
      * Set save settings handler. It will replace default behavior of facet and will be invoked on
@@ -152,7 +153,7 @@ public interface ScreenSettingsFacet extends Facet {
      * For instance:
      * <pre>{@code
      * @Install(to = "settingsFacet", subject = "onSaveSettingsHandler")
-     * private void onSaveSetting(ScreenSettings settings) {
+     * private void onSaveSetting(SettingsSet settings) {
      *     // default behavior
      *     settingsFacet.saveSettings(settings);
      * }
@@ -161,73 +162,44 @@ public interface ScreenSettingsFacet extends Facet {
      *
      * @param handler save settings handler
      */
-    void setOnSaveSettingsHandler(Consumer<ScreenSettings> handler);
+    void setOnSaveSettingsHandler(Consumer<SettingsSet> handler);
 
     /**
-     * Adds before apply settings listener.
-     *
-     * @param listener listener to add
-     * @return registration object for removing an event listener
+     * Provides information about source component due to settings apply is invoked and its child components.
      */
-    Subscription addBeforeApplySettingsListener(Consumer<BeforeApplySettingsEvent> listener);
+    class SettingsSet {
 
-    /**
-     * Adds before apply data loading settings listener.
-     *
-     * @param listener listener to add
-     * @return registration object for removing an event listener
-     */
-    Subscription addBeforeApplyDataLoadSettingsListener(Consumer<BeforeApplyDataLoadSettingsEvent> listener);
+        protected Component source;
+        protected Collection<Component> components;
+        protected ScreenSettings screenSettings;
 
-    /**
-     * Adds before save settings listener.
-     *
-     * @param listener listener to add
-     * @return registration object for removing an event listener
-     */
-    Subscription addBeforeSaveSettingsListener(Consumer<BeforeSaveSettingsEvent> listener);
-
-    /**
-     * Base class for screen settings facet events.
-     */
-    abstract class AbstractSettingsEvent extends EventObject {
-
-        protected ScreenSettings settings;
-
-        public AbstractSettingsEvent(Screen source, ScreenSettings settings) {
-            super(source);
-
-            this.settings = settings;
+        public SettingsSet(Component source, Collection<Component> components, ScreenSettings screenSettings) {
+            this.source = source;
+            this.components = components;
+            this.screenSettings = screenSettings;
         }
 
-        public ScreenSettings getSettings() {
-            return settings;
+        /**
+         * @return {@link Window} for first settings applying. Also can return {@link WebTabSheet} or {@link Accordion}
+         * if it has lazy tab.
+         */
+        public Component getSource() {
+            return source;
         }
 
-        @Override
-        public Screen getSource() {
-            return (Screen) super.getSource();
+        /**
+         * @return child component of source component. For  {@link WebTabSheet} and {@link Accordion} it will return
+         * components from lazy tab.
+         */
+        public Collection<Component> getComponents() {
+            return components;
         }
-    }
 
-    class BeforeApplySettingsEvent extends AbstractSettingsEvent {
-
-        public BeforeApplySettingsEvent(Screen source, ScreenSettings settings) {
-            super(source, settings);
-        }
-    }
-
-    class BeforeApplyDataLoadSettingsEvent extends AbstractSettingsEvent {
-
-        public BeforeApplyDataLoadSettingsEvent(Screen source, ScreenSettings settings) {
-            super(source, settings);
-        }
-    }
-
-    class BeforeSaveSettingsEvent extends AbstractSettingsEvent {
-
-        public BeforeSaveSettingsEvent(Screen source, ScreenSettings settings) {
-            super(source, settings);
+        /**
+         * @return screen settings
+         */
+        public ScreenSettings getScreenSettings() {
+            return screenSettings;
         }
     }
 }

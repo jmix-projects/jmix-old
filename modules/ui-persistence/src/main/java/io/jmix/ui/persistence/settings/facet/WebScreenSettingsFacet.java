@@ -46,9 +46,9 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
 
     protected ScreenSettings screenSettings;
 
-    protected Consumer<ScreenSettings> onApplySettingsHandler;
-    protected Consumer<ScreenSettings> onApplyDataLoadingSettingsHandler;
-    protected Consumer<ScreenSettings> onSaveSettingsHandler;
+    protected Consumer<SettingsSet> onApplySettingsHandler;
+    protected Consumer<SettingsSet> onApplyDataLoadingSettingsHandler;
+    protected Consumer<SettingsSet> onSaveSettingsHandler;
 
     @Inject
     protected ScreenSettingsManager settingsCoordinator;
@@ -99,19 +99,6 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     }
 
     @Override
-    public void addComponents(Component... components) {
-        if (componentIds == null) {
-            componentIds = new HashSet<>();
-        }
-
-        Set<String> ids = Arrays.stream(components)
-                .map(Component::getId)
-                .collect(Collectors.toSet());
-
-        componentIds.addAll(ids);
-    }
-
-    @Override
     public Set<String> getComponentIds() {
         if (componentIds == null) {
             return Collections.emptySet();
@@ -121,48 +108,51 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     }
 
     @Override
-    public Consumer<ScreenSettings> getOnApplySettingsHandler() {
+    public Collection<Component> getComponents() {
+        checkAttachedFrame();
+        assert getOwner() != null;
+
+        if (auto) {
+            return getOwner().getComponents();
+        }
+
+        if (CollectionUtils.isNotEmpty(componentIds)) {
+            return getOwner().getComponents().stream()
+                    .filter(component -> componentIds.contains(component.getId()))
+                    .collect(Collectors.toList());
+        }
+
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Consumer<SettingsSet> getOnApplySettingsHandler() {
         return onApplySettingsHandler;
     }
 
     @Override
-    public void setOnApplySettingsHandler(Consumer<ScreenSettings> handler) {
+    public void setOnApplySettingsHandler(Consumer<SettingsSet> handler) {
         this.onApplySettingsHandler = handler;
     }
 
     @Override
-    public Consumer<ScreenSettings> getOnApplyDataLoadingSettingsHandler() {
+    public Consumer<SettingsSet> getOnApplyDataLoadingSettingsHandler() {
         return onApplyDataLoadingSettingsHandler;
     }
 
     @Override
-    public void setOnApplyDataLoadingSettingsHandler(Consumer<ScreenSettings> handler) {
+    public void setOnApplyDataLoadingSettingsHandler(Consumer<SettingsSet> handler) {
         this.onApplyDataLoadingSettingsHandler = handler;
     }
 
     @Override
-    public Consumer<ScreenSettings> getOnSaveSettingsHandler() {
+    public Consumer<SettingsSet> getOnSaveSettingsHandler() {
         return onSaveSettingsHandler;
     }
 
     @Override
-    public void setOnSaveSettingsHandler(Consumer<ScreenSettings> handler) {
+    public void setOnSaveSettingsHandler(Consumer<SettingsSet> handler) {
         this.onSaveSettingsHandler = handler;
-    }
-
-    @Override
-    public Subscription addBeforeApplySettingsListener(Consumer<BeforeApplySettingsEvent> listener) {
-        return getEventHub().subscribe(BeforeApplySettingsEvent.class, listener);
-    }
-
-    @Override
-    public Subscription addBeforeApplyDataLoadSettingsListener(Consumer<BeforeApplyDataLoadSettingsEvent> listener) {
-        return getEventHub().subscribe(BeforeApplyDataLoadSettingsEvent.class, listener);
-    }
-
-    @Override
-    public Subscription addBeforeSaveSettingsListener(Consumer<BeforeSaveSettingsEvent> listener) {
-        return getEventHub().subscribe(BeforeSaveSettingsEvent.class, listener);
     }
 
     @Override
@@ -186,7 +176,6 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
         screenEvents.subscribe(BeforeShowEvent.class, this::onScreenBeforeShow);
         screenEvents.subscribe(AfterShowEvent.class, this::onScreenAfterShow);
         screenEvents.subscribe(AfterDetachEvent.class, this::onScreenAfterDetach);
-
     }
 
     @Nullable
@@ -195,53 +184,36 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     }
 
     protected void onScreenBeforeShow(BeforeShowEvent event) {
-        getEventHub().publish(BeforeApplyDataLoadSettingsEvent.class,
-                new BeforeApplyDataLoadSettingsEvent(getScreenOwner(), screenSettings));
-
         if (onApplyDataLoadingSettingsHandler != null) {
-            onApplyDataLoadingSettingsHandler.accept(screenSettings);
+            onApplyDataLoadingSettingsHandler.accept(new SettingsSet(
+                    getScreenOwner().getWindow(),
+                    getComponents(),
+                    screenSettings));
         } else {
             applyDataLoadingSettings(screenSettings);
         }
     }
 
     protected void onScreenAfterShow(AfterShowEvent event) {
-        getEventHub().publish(BeforeApplySettingsEvent.class,
-                new BeforeApplySettingsEvent(getScreenOwner(), screenSettings));
-
         if (onApplySettingsHandler != null) {
-            onApplySettingsHandler.accept(screenSettings);
+            onApplySettingsHandler.accept(new SettingsSet(
+                    getScreenOwner().getWindow(),
+                    getComponents(),
+                    screenSettings));
         } else {
             applySettings(screenSettings);
         }
     }
 
     protected void onScreenAfterDetach(AfterDetachEvent event) {
-        getEventHub().publish(BeforeSaveSettingsEvent.class,
-                new BeforeSaveSettingsEvent(getScreenOwner(), screenSettings));
-
         if (onSaveSettingsHandler != null) {
-            onSaveSettingsHandler.accept(screenSettings);
+            onSaveSettingsHandler.accept(new SettingsSet(
+                    getScreenOwner().getWindow(),
+                    getComponents(),
+                    screenSettings));
         } else {
             saveSettings(screenSettings);
         }
-    }
-
-    protected Collection<Component> getComponents() {
-        checkAttachedFrame();
-        assert getOwner() != null;
-
-        if (auto) {
-            return getOwner().getComponents();
-        }
-
-        if (CollectionUtils.isNotEmpty(componentIds)) {
-            return getOwner().getComponents().stream()
-                    .filter(component -> componentIds.contains(component.getId()))
-                    .collect(Collectors.toList());
-        }
-
-        return Collections.emptyList();
     }
 
     protected void checkAttachedFrame() {

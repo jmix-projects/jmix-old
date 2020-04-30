@@ -21,6 +21,7 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.commons.events.Subscription;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.AppUI;
+import io.jmix.ui.UiComponents;
 import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.*;
 import io.jmix.ui.icons.IconResolver;
@@ -33,7 +34,6 @@ import io.jmix.ui.settings.facet.ScreenSettingsFacet;
 import io.jmix.ui.sys.TestIdManager;
 import io.jmix.ui.widgets.CubaTabSheet;
 import io.jmix.ui.xml.layout.ComponentLoader;
-import io.jmix.ui.xml.layout.ComponentsFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 import org.slf4j.LoggerFactory;
@@ -370,8 +370,8 @@ public class WebTabSheet extends WebAbstractComponent<CubaTabSheet>
 
     @Override
     public TabSheet.Tab addLazyTab(String name, Element descriptor, ComponentLoader loader) {
-        ComponentsFactory cf = AppBeans.get(ComponentsFactory.NAME); // todo replace
-        CssLayout tabContent = cf.createComponent(CssLayout.NAME);
+        UiComponents uiComponents = AppBeans.get(UiComponents.NAME); // todo replace
+        CssLayout tabContent = uiComponents.create(CssLayout.NAME);
         tabContent.setStyleName("c-tabsheet-lazytab");
         tabContent.setSizeFull();
 
@@ -658,11 +658,18 @@ public class WebTabSheet extends WebAbstractComponent<CubaTabSheet>
                             });
                         }
                     } else {
-                        // todo settings
                         window.getFacets().forEach(facet -> {
                             if (facet instanceof ScreenSettingsFacet) {
                                 ScreenSettingsFacet settingsFacet = (ScreenSettingsFacet) facet;
-                                settingsFacet.applySettings(settingsFacet.getSettings());
+                                Consumer<ScreenSettingsFacet.SettingsSet> applyHandler = settingsFacet.getOnApplySettingsHandler();
+                                if (applyHandler != null) {
+                                    applyHandler.accept(new ScreenSettingsFacet.SettingsSet(
+                                            WebTabSheet.this,
+                                            tabContent.getComponents(),
+                                            settingsFacet.getSettings()));
+                                } else {
+                                    settingsFacet.applySettings(settingsFacet.getSettings());
+                                }
                             }
                         });
                     }
