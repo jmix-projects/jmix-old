@@ -41,7 +41,7 @@ import java.util.List;
 
 @SuppressWarnings("rawtypes")
 @org.springframework.stereotype.Component(GroupTableSettingsWorker.NAME)
-public class GroupTableSettingsWorker extends TableSettingsWorker implements ComponentSettingsWorker {
+public class GroupTableSettingsWorker extends TableSettingsWorker {
 
     private static final Logger log = LoggerFactory.getLogger(GroupTableSettingsWorker.class);
 
@@ -65,7 +65,7 @@ public class GroupTableSettingsWorker extends TableSettingsWorker implements Com
     }
 
     @Override
-    public boolean saveSettings(Component component, SettingsWrapper wrapper) {
+    public boolean saveSettings(Table component, SettingsWrapper wrapper) {
         GroupTable groupTable = (GroupTable) component;
         GroupTableSettings groupTableSettings = wrapper.getSettings();
 
@@ -89,7 +89,7 @@ public class GroupTableSettingsWorker extends TableSettingsWorker implements Com
     }
 
     @Override
-    public ComponentSettings getSettings(Component component) {
+    public GroupTableSettings getSettings(Table component) {
         GroupTable groupTable = (GroupTable) component;
         GroupTableSettings groupTableSettings = (GroupTableSettings) super.getSettings(component);
 

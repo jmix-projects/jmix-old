@@ -24,7 +24,7 @@ import io.jmix.ui.settings.component.GroupBoxSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
 
 @org.springframework.stereotype.Component(GroupBoxSettingsWorker.NAME)
-public class GroupBoxSettingsWorker implements ComponentSettingsWorker {
+public class GroupBoxSettingsWorker implements ComponentSettingsWorker<GroupBoxLayout, GroupBoxSettings> {
 
     public static final String NAME = "jmix_GroupBoxSettingsWorker";
 
@@ -39,8 +39,7 @@ public class GroupBoxSettingsWorker implements ComponentSettingsWorker {
     }
 
     @Override
-    public void applySettings(Component component, SettingsWrapper wrapper) {
-        GroupBoxLayout groupBox = (GroupBoxLayout) component;
+    public void applySettings(GroupBoxLayout groupBox, SettingsWrapper wrapper) {
         GroupBoxSettings settings = wrapper.getSettings();
 
         if (settings.getExpanded() != null) {
@@ -49,8 +48,7 @@ public class GroupBoxSettingsWorker implements ComponentSettingsWorker {
     }
 
     @Override
-    public boolean saveSettings(Component component, SettingsWrapper wrapper) {
-        GroupBoxLayout groupBox = (GroupBoxLayout) component;
+    public boolean saveSettings(GroupBoxLayout groupBox, SettingsWrapper wrapper) {
         GroupBoxSettings settings = wrapper.getSettings();
 
         if (settings.getExpanded() == null
@@ -64,9 +62,7 @@ public class GroupBoxSettingsWorker implements ComponentSettingsWorker {
     }
 
     @Override
-    public ComponentSettings getSettings(Component component) {
-        GroupBoxLayout groupBox = (GroupBoxLayout) component;
-
+    public GroupBoxSettings getSettings(GroupBoxLayout groupBox) {
         GroupBoxSettings settings = createSettings();
         settings.setExpanded(groupBox.isExpanded());
 

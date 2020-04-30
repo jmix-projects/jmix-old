@@ -25,7 +25,7 @@ import io.jmix.ui.settings.component.TableSettings;
 /**
  * Base interface for component settings registration. As an example see {@link TableSettingsWorker}.
  */
-public interface ComponentSettingsWorker {
+public interface ComponentSettingsWorker<V extends Component, S extends ComponentSettings> {
 
     /**
      * @return component class, e.g. {@link WebTable}
@@ -37,14 +37,25 @@ public interface ComponentSettingsWorker {
      */
     Class<? extends ComponentSettings> getSettingsClass();
 
-    void applySettings(Component component, SettingsWrapper wrapper);
-
-    boolean saveSettings(Component component, SettingsWrapper wrapper);
+    /**
+     * Applies settings to the component
+     *
+     * @param component component
+     * @param wrapper   settings wrapper contains settings for the component
+     */
+    void applySettings(V component, SettingsWrapper wrapper);
 
     /**
-     *
-     * @param component
-     * @return
+     * @param component component
+     * @param wrapper   settings wrapper contains settings for the component
+     * @return true if settings were modified
      */
-    ComponentSettings getSettings(Component component);
+    boolean saveSettings(V component, SettingsWrapper wrapper);
+
+    /**
+     * @param component component
+     * @return current component settings. It retrieves current property values from component and creates new settings
+     * instance.
+     */
+    S getSettings(V component);
 }

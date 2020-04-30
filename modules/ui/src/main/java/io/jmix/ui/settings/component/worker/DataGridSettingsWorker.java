@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("rawtypes")
 @org.springframework.stereotype.Component(DataGridSettingsWorker.NAME)
-public class DataGridSettingsWorker implements DataLoadingSettingsWorker {
+public class DataGridSettingsWorker implements DataLoadingSettingsWorker<DataGrid, DataGridSettings> {
 
     public static final String NAME = "jmix_DataGridSettingsWorker";
 
@@ -57,8 +57,7 @@ public class DataGridSettingsWorker implements DataLoadingSettingsWorker {
     }
 
     @Override
-    public void applySettings(Component component, SettingsWrapper wrapper) {
-        DataGrid dataGrid = (DataGrid) component;
+    public void applySettings(DataGrid dataGrid, SettingsWrapper wrapper) {
         DataGridSettings settings = wrapper.getSettings();
 
         List<ColumnSettings> columns = settings.getColumns();
@@ -80,8 +79,7 @@ public class DataGridSettingsWorker implements DataLoadingSettingsWorker {
     }
 
     @Override
-    public void applyDataLoadingSettings(Component component, SettingsWrapper wrapper) {
-        DataGrid dataGrid = (DataGrid) component;
+    public void applyDataLoadingSettings(DataGrid dataGrid, SettingsWrapper wrapper) {
         DataGridSettings dataGridSettings = wrapper.getSettings();
 
         if (dataGrid.isSortable() && isApplyDataLoadingSettings(dataGrid)) {
@@ -116,8 +114,7 @@ public class DataGridSettingsWorker implements DataLoadingSettingsWorker {
     }
 
     @Override
-    public boolean saveSettings(Component component, SettingsWrapper wrapper) {
-        DataGrid dataGrid = (DataGrid) component;
+    public boolean saveSettings(DataGrid dataGrid, SettingsWrapper wrapper) {
         DataGridSettings settings = wrapper.getSettings();
 
         String sortColumnId = null;
@@ -151,8 +148,7 @@ public class DataGridSettingsWorker implements DataLoadingSettingsWorker {
     }
 
     @Override
-    public ComponentSettings getSettings(Component component) {
-        DataGrid dataGrid = (DataGrid) component;
+    public DataGridSettings getSettings(DataGrid dataGrid) {
         DataGridSettings settings = createSettings();
 
         settings.setColumns(getColumnsSettings(dataGrid));

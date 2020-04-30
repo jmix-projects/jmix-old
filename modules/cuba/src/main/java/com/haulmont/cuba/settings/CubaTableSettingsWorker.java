@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component(CubaTableSettingsWorker.NAME)
 public class CubaTableSettingsWorker extends TableSettingsWorker {
 
-    public static final String NAME = "jmix_TableSettingsWorker";
+    public static final String NAME = "jmix_CubaTableSettingsWorker";
 
     @Override
     public Class<? extends io.jmix.ui.components.Component> getComponentClass() {

@@ -21,7 +21,7 @@ import io.jmix.ui.components.DataGrid;
 import java.io.Serializable;
 import java.util.List;
 
-public class DataGridSettings implements ComponentSettings, Serializable {
+public class DataGridSettings implements ComponentSettings {
 
     protected String id;
 

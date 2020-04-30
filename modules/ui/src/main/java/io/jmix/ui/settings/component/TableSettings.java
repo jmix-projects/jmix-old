@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
-public class TableSettings implements ComponentSettings, ComponentSettings.HasSettingsPresentation, Serializable {
+public class TableSettings implements ComponentSettings, ComponentSettings.HasSettingsPresentation {
 
     protected String id;
     protected Boolean textSelection;
@@ -84,7 +84,7 @@ public class TableSettings implements ComponentSettings, ComponentSettings.HasSe
         this.columns = columns;
     }
 
-    public static class ColumnSettings {
+    public static class ColumnSettings implements Serializable {
 
         protected String id;
         protected Integer width;

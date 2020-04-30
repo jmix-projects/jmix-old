@@ -27,7 +27,7 @@ import io.jmix.ui.widgets.CubaResizableTextAreaWrapper;
 
 @SuppressWarnings("rawtypes")
 @org.springframework.stereotype.Component(ResizableTextAreaSettingsWorker.NAME)
-public class ResizableTextAreaSettingsWorker implements ComponentSettingsWorker {
+public class ResizableTextAreaSettingsWorker implements ComponentSettingsWorker<ResizableTextArea, ResizableTextAreaSettings> {
 
     public static final String NAME = "jmix_ResizableTextAreaSettingsWorker";
 
@@ -42,8 +42,7 @@ public class ResizableTextAreaSettingsWorker implements ComponentSettingsWorker 
     }
 
     @Override
-    public void applySettings(Component component, SettingsWrapper wrapper) {
-        ResizableTextArea textArea = (ResizableTextArea) component;
+    public void applySettings(ResizableTextArea textArea, SettingsWrapper wrapper) {
         ResizableTextAreaSettings settings = wrapper.getSettings();
 
         if (textArea.getResizableDirection() == ResizeDirection.NONE) {
@@ -58,8 +57,7 @@ public class ResizableTextAreaSettingsWorker implements ComponentSettingsWorker 
     }
 
     @Override
-    public boolean saveSettings(Component component, SettingsWrapper wrapper) {
-        ResizableTextArea textArea = (ResizableTextArea) component;
+    public boolean saveSettings(ResizableTextArea textArea, SettingsWrapper wrapper) {
         ResizableTextAreaSettings settings = wrapper.getSettings();
 
         if (textArea.getResizableDirection() == ResizeDirection.NONE) {
@@ -78,8 +76,7 @@ public class ResizableTextAreaSettingsWorker implements ComponentSettingsWorker 
     }
 
     @Override
-    public ComponentSettings getSettings(Component component) {
-        ResizableTextArea textArea = (ResizableTextArea) component;
+    public ResizableTextAreaSettings getSettings(ResizableTextArea textArea) {
         ResizableTextAreaSettings settings = createSettings();
 
         settings.setWidth(getWidth(textArea));

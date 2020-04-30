@@ -18,6 +18,7 @@ package io.jmix.ui.settings.component.worker;
 
 import com.google.common.base.Strings;
 import io.jmix.ui.components.Component;
+import io.jmix.ui.components.DataGrid;
 import io.jmix.ui.components.DataGrid.Column;
 import io.jmix.ui.components.TreeDataGrid;
 import io.jmix.ui.components.impl.WebTreeDataGrid;
@@ -28,7 +29,7 @@ import io.jmix.ui.settings.component.TreeDataGridSettings;
 
 @SuppressWarnings("rawtypes")
 @org.springframework.stereotype.Component(TreeDataGridSettingsWorker.NAME)
-public class TreeDataGridSettingsWorker extends DataGridSettingsWorker implements ComponentSettingsWorker {
+public class TreeDataGridSettingsWorker extends DataGridSettingsWorker {
 
     public static final String NAME = "jmix_TreeDataGridSettingsWorker";
 
@@ -43,7 +44,7 @@ public class TreeDataGridSettingsWorker extends DataGridSettingsWorker implement
     }
 
     @Override
-    public void applySettings(Component component, SettingsWrapper wrapper) {
+    public void applySettings(DataGrid component, SettingsWrapper wrapper) {
         super.applySettings(component, wrapper);
 
         TreeDataGrid dataGrid = (TreeDataGrid) component;
@@ -57,7 +58,7 @@ public class TreeDataGridSettingsWorker extends DataGridSettingsWorker implement
     }
 
     @Override
-    public boolean saveSettings(Component component, SettingsWrapper wrapper) {
+    public boolean saveSettings(DataGrid component, SettingsWrapper wrapper) {
         boolean settingsChanged = super.saveSettings(component, wrapper);
 
         TreeDataGrid dataGrid = (TreeDataGrid) component;
@@ -74,7 +75,7 @@ public class TreeDataGridSettingsWorker extends DataGridSettingsWorker implement
     }
 
     @Override
-    public ComponentSettings getSettings(Component component) {
+    public TreeDataGridSettings getSettings(DataGrid component) {
         TreeDataGridSettings settings = (TreeDataGridSettings) super.getSettings(component);
         TreeDataGrid dataGrid = (TreeDataGrid) component;
 

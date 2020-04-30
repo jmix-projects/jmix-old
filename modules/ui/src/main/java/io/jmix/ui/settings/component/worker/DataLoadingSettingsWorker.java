@@ -17,12 +17,14 @@
 package io.jmix.ui.settings.component.worker;
 
 import io.jmix.ui.components.Component;
+import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
 
 /**
  * Settings worker for components which support data loading.
  */
-public interface DataLoadingSettingsWorker extends ComponentSettingsWorker {
+public interface DataLoadingSettingsWorker<V extends Component, S extends ComponentSettings>
+        extends ComponentSettingsWorker<V, S> {
 
     /**
      * Applies data loading settings.
@@ -30,5 +32,5 @@ public interface DataLoadingSettingsWorker extends ComponentSettingsWorker {
      * @param component component to apply
      * @param wrapper   settings wrapper
      */
-    void applyDataLoadingSettings(Component component, SettingsWrapper wrapper);
+    void applyDataLoadingSettings(V component, SettingsWrapper wrapper);
 }

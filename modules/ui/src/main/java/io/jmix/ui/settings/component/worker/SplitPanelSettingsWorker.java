@@ -27,7 +27,7 @@ import io.jmix.ui.settings.component.SplitPanelSettings;
 import org.apache.commons.lang3.math.NumberUtils;
 
 @org.springframework.stereotype.Component(SplitPanelSettingsWorker.NAME)
-public class SplitPanelSettingsWorker implements ComponentSettingsWorker {
+public class SplitPanelSettingsWorker implements ComponentSettingsWorker<SplitPanel, SplitPanelSettings> {
 
     public static final String NAME = "jmix_SplitPanelSettingsWorker";
 
@@ -42,8 +42,7 @@ public class SplitPanelSettingsWorker implements ComponentSettingsWorker {
     }
 
     @Override
-    public void applySettings(Component component, SettingsWrapper wrapper) {
-        SplitPanel splitPanel = (SplitPanel) component;
+    public void applySettings(SplitPanel splitPanel, SettingsWrapper wrapper) {
         SplitPanelSettings settings = wrapper.getSettings();
 
         if (settings.getPositionUnit() != null
@@ -64,8 +63,7 @@ public class SplitPanelSettingsWorker implements ComponentSettingsWorker {
     }
 
     @Override
-    public boolean saveSettings(Component component, SettingsWrapper wrapper) {
-        SplitPanel splitPanel = (SplitPanel) component;
+    public boolean saveSettings(SplitPanel splitPanel, SettingsWrapper wrapper) {
         SplitPanelSettings settings = wrapper.getSettings();
 
         if (isSettingsChanged(splitPanel, settings)) {
@@ -79,8 +77,7 @@ public class SplitPanelSettingsWorker implements ComponentSettingsWorker {
     }
 
     @Override
-    public ComponentSettings getSettings(Component component) {
-        SplitPanel splitPanel = (SplitPanel) component;
+    public SplitPanelSettings getSettings(SplitPanel splitPanel) {
         SplitPanelSettings settings = createSettings();
 
         AbstractSplitPanel vSplitPanel = getVaadinSplitPanel(splitPanel);

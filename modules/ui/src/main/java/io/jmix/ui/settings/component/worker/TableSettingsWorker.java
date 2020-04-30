@@ -42,7 +42,7 @@ import java.util.*;
 
 @SuppressWarnings("rawtypes")
 @org.springframework.stereotype.Component(TableSettingsWorker.NAME)
-public class TableSettingsWorker implements DataLoadingSettingsWorker {
+public class TableSettingsWorker implements DataLoadingSettingsWorker<Table, TableSettings> {
 
     public static final String NAME = "jmix_TableSettingsTableSettingsWorker";
 
@@ -57,8 +57,7 @@ public class TableSettingsWorker implements DataLoadingSettingsWorker {
     }
 
     @Override
-    public void applySettings(Component component, SettingsWrapper wrapper) {
-        Table table = (Table) component;
+    public void applySettings(Table table, SettingsWrapper wrapper) {
         TableSettings tableSettings = wrapper.getSettings();
 
         if (tableSettings.getTextSelection() != null) {
@@ -92,9 +91,7 @@ public class TableSettingsWorker implements DataLoadingSettingsWorker {
     }
 
     @Override
-    public void applyDataLoadingSettings(Component component, SettingsWrapper wrapper) {
-        Table table = (Table) component;
-
+    public void applyDataLoadingSettings(Table table, SettingsWrapper wrapper) {
         if (table.isSortable() && isApplyDataLoadingSettings(table)) {
             EntityTableItems entityTableSource = (EntityTableItems) table.getItems();
 
@@ -130,8 +127,7 @@ public class TableSettingsWorker implements DataLoadingSettingsWorker {
     }
 
     @Override
-    public boolean saveSettings(Component component, SettingsWrapper wrapper) {
-        Table table = (Table) component;
+    public boolean saveSettings(Table table, SettingsWrapper wrapper) {
         TableSettings tableSettings = wrapper.getSettings();
 
         boolean settingsChanged = false;
@@ -184,9 +180,7 @@ public class TableSettingsWorker implements DataLoadingSettingsWorker {
     }
 
     @Override
-    public ComponentSettings getSettings(Component component) {
-        Table table = (Table) component;
-
+    public TableSettings getSettings(Table table) {
         TableSettings tableSettings = createTableSettings();
         if (table.isUsePresentations()) {
             tableSettings.setTextSelection(table.isTextSelectionEnabled());

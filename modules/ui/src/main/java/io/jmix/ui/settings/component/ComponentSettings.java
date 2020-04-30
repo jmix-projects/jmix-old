@@ -19,6 +19,7 @@ package io.jmix.ui.settings.component;
 import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -27,7 +28,7 @@ import java.util.UUID;
  * @see ScreenSettings
  * @see ComponentSettingsWorker
  */
-public interface ComponentSettings {
+public interface ComponentSettings extends Serializable {
 
     String getId();
 
