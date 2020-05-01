@@ -17,7 +17,7 @@
 package com.haulmont.cuba.gui.screen;
 
 import io.jmix.ui.components.HasDataLoadingSettings;
-import io.jmix.ui.components.HasPresentations;
+import io.jmix.ui.components.TablePresentations;
 import io.jmix.ui.components.HasSettings;
 import io.jmix.ui.presentations.Presentations;
 import io.jmix.ui.screen.Screen;
@@ -59,12 +59,12 @@ public class ScreenSettings {
                         Element e = settings.get(name);
                         ((HasSettings) component).applySettings(e);
 
-                        if (component instanceof HasPresentations
+                        if (component instanceof TablePresentations
                                 && e.attributeValue("presentation") != null) {
                             String def = e.attributeValue("presentation");
                             if (!StringUtils.isEmpty(def)) {
                                 UUID defaultId = UUID.fromString(def);
-                                ((HasPresentations) component).applyPresentationAsDefault(defaultId);
+                                ((TablePresentations) component).applyPresentationAsDefault(defaultId);
                             }
                         }
                     }
@@ -117,11 +117,11 @@ public class ScreenSettings {
                         Element e = settings.get(name);
                         boolean modified = ((HasSettings) component).saveSettings(e);
 
-                        if (component instanceof HasPresentations
-                                && ((HasPresentations) component).isUsePresentations()) {
-                            Object def = ((HasPresentations) component).getDefaultPresentationId();
+                        if (component instanceof TablePresentations
+                                && ((TablePresentations) component).isUsePresentations()) {
+                            Object def = ((TablePresentations) component).getDefaultPresentationId();
                             e.addAttribute("presentation", def != null ? def.toString() : "");
-                            Presentations presentations = ((HasPresentations) component).getPresentations();
+                            Presentations presentations = ((TablePresentations) component).getPresentations();
                             if (presentations != null) {
                                 presentations.commit();
                             }

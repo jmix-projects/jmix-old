@@ -646,12 +646,12 @@ public class WebTabSheet extends WebAbstractComponent<CubaTabSheet>
                                     Element e = settings.get(name);
                                     ((HasSettings) settingsComponent).applySettings(e);
 
-                                    if (component instanceof HasPresentations
+                                    if (component instanceof TablePresentations
                                             && e.attributeValue("presentation") != null) {
                                         final String def = e.attributeValue("presentation");
                                         if (!StringUtils.isEmpty(def)) {
                                             UUID defaultId = UUID.fromString(def);
-                                            ((HasPresentations) component).applyPresentationAsDefault(defaultId);
+                                            ((TablePresentations) component).applyPresentationAsDefault(defaultId);
                                         }
                                     }
                                 }

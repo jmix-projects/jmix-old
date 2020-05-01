@@ -38,7 +38,7 @@ import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
-public class TablePresentations extends VerticalLayout {
+public class TablePresentationsBox extends VerticalLayout {
 
     public static final String CUSTOM_STYLE_NAME_PREFIX = "cs";
 
@@ -62,13 +62,7 @@ public class TablePresentations extends VerticalLayout {
 
     protected PresentationActionsBuilder presentationActionsBuilder;
 
-    /**
-     * If settings worker is null table presentations will work with legacy XML settings.
-     *
-     * @param component      table
-     * @param settingsWorker component settings worker
-     */
-    public TablePresentations(Table component, ComponentSettingsWorker settingsWorker) {
+    public TablePresentationsBox(Table component, ComponentSettingsWorker settingsWorker) {
         this.table = component;
         this.messages = AppBeans.get(Messages.NAME);
 

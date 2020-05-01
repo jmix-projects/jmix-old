@@ -56,7 +56,7 @@ import io.jmix.ui.components.data.aggregation.Aggregations;
 import io.jmix.ui.components.data.meta.ContainerDataUnit;
 import io.jmix.ui.components.data.meta.EmptyDataUnit;
 import io.jmix.ui.components.data.meta.EntityTableItems;
-import io.jmix.ui.components.presentations.TablePresentations;
+import io.jmix.ui.components.presentations.TablePresentationsBox;
 import io.jmix.ui.components.table.*;
 import io.jmix.ui.dynamicattributes.CategoryAttribute;
 import io.jmix.ui.dynamicattributes.DynamicAttributesTools;
@@ -966,8 +966,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         component.setTabIndex(tabIndex);
     }
 
-    protected void setTablePresentations(TablePresentations tablePresentations) {
-        component.setPresentations(tablePresentations);
+    protected void setTablePresentationsBox(TablePresentationsBox tablePresentations) {
+        component.setPresentationsBox(tablePresentations);
     }
 
     protected void initComponent(T component) {
@@ -2706,9 +2706,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         if (isUsePresentations()) {
             presentations = beanLocator.getPrototype(Presentations.NAME, this);
 
-            FrameOwner frameOwner = getFrame().getFrameOwner();
-            setTablePresentations(new TablePresentations(this,
-                    frameOwner instanceof CubaLegacySettings ? null : getSettingsWorker()));
+            setTablePresentationsBox(new TablePresentationsBox(this, getSettingsWorker()));
         } else {
             throw new UnsupportedOperationException("Component doesn't use presentations");
         }

@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 /**
  * Component having presentations.
  */
-public interface HasPresentations extends HasSettings {
+public interface TablePresentations {
     void usePresentations(boolean b);
     boolean isUsePresentations();
 

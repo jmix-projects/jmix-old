@@ -15,6 +15,7 @@
  */
 package io.jmix.ui.presentations;
 
+import io.jmix.ui.components.TablePresentations;
 import io.jmix.ui.presentations.model.EmptyPresentation;
 import io.jmix.ui.presentations.model.Presentation;
 import org.dom4j.Element;
@@ -24,7 +25,7 @@ import java.util.Collection;
 
 /**
  * Provide the workflow with presentations (visual settings of a component).
- * <br><br> A component must implement {@link io.jmix.ui.components.HasPresentations} interface
+ * <br><br> A component must implement {@link TablePresentations} interface
  *
  * @see Presentation
  */

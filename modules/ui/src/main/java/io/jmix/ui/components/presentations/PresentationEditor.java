@@ -21,6 +21,10 @@ import io.jmix.core.security.Security;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.components.Component;
+import io.jmix.ui.components.HasSettings;
+import io.jmix.ui.screen.FrameOwner;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.compatibility.CubaLegacySettings;
 import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.SettingsHelper;
 import io.jmix.ui.settings.component.ComponentSettings;
@@ -34,7 +38,7 @@ import io.jmix.ui.presentations.model.Presentation;
 import io.jmix.core.entity.User;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.App;
-import io.jmix.ui.components.HasPresentations;
+import io.jmix.ui.components.TablePresentations;
 import io.jmix.ui.presentations.Presentations;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.widgets.CubaButton;
@@ -54,7 +58,9 @@ public class PresentationEditor extends CubaWindow {
 
     protected Presentation presentation;
 
-    protected HasPresentations component;
+    protected FrameOwner frameOwner;
+
+    protected TablePresentations component;
     protected TextField nameField;
     protected CheckBox autoSaveField;
     protected CheckBox defaultField;
@@ -69,19 +75,13 @@ public class PresentationEditor extends CubaWindow {
     protected Security security;
 
     protected ComponentSettingsWorker settingsWorker;
-    protected ScreenSettings screenSettings;
 
-    public PresentationEditor(Presentation presentation, HasPresentations component,
-                              ComponentSettingsWorker settingsWorker, ScreenSettings screenSettings) {
-        this(presentation, component);
-
-        this.settingsWorker = settingsWorker;
-        this.screenSettings = screenSettings;
-    }
-
-    public PresentationEditor(Presentation presentation, HasPresentations component) {
+    public PresentationEditor(FrameOwner frameOwner, Presentation presentation, TablePresentations component,
+                              ComponentSettingsWorker settingsWorker) {
         this.presentation = presentation;
         this.component = component;
+        this.frameOwner = frameOwner;
+        this.settingsWorker = settingsWorker;
 
         messages = AppBeans.get(Messages.NAME);
         sessionSource = AppBeans.get(UserSessionSource.NAME);
@@ -189,18 +189,22 @@ public class PresentationEditor extends CubaWindow {
         Presentations presentations = component.getPresentations();
 
         String rawSettings;
-        if (settingsWorker == null || screenSettings == null) {
+        if (frameOwner instanceof CubaLegacySettings) {
             Document doc = DocumentHelper.createDocument();
             doc.setRootElement(doc.addElement("presentation"));
 
-            component.saveSettings(doc.getRootElement());
-
-            rawSettings = Dom4j.writeDocument(doc, false);
+            if (component instanceof HasSettings) {
+                ((HasSettings) component).saveSettings(doc.getRootElement());
+                rawSettings = Dom4j.writeDocument(doc, false);
+            } else {
+                throw new IllegalStateException(String.format("Cannot commit presentation." +
+                        " Component must implement '%s'", HasSettings.class));
+            }
         } else {
             ComponentSettings componentSettings = SettingsHelper.createSettings(settingsWorker.getSettingsClass());
-
             settingsWorker.saveSettings((Component) component, new SettingsWrapperImpl(componentSettings));
 
+            ScreenSettings screenSettings = AppBeans.getPrototype(ScreenSettings.NAME, ((Screen) frameOwner).getId());
             rawSettings = screenSettings.toRawSettings(componentSettings);
         }
 

@@ -21,6 +21,7 @@ import io.jmix.ui.presentations.model.Presentation;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.screen.compatibility.CubaLegacySettings;
 import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.SettingsHelper;
 import io.jmix.ui.settings.component.ComponentSettings;
@@ -42,7 +43,8 @@ public class SavePresentationAction extends AbstractPresentationAction {
 
         Presentations presentations = table.getPresentations();
         Presentation current = presentations.getCurrent();
-        if (settingsWorker == null) {
+
+        if (table.getFrame().getFrameOwner() instanceof CubaLegacySettings) {
             Element e = presentations.getSettings(current);
             table.saveSettings(e);
             presentations.setSettings(current, e);

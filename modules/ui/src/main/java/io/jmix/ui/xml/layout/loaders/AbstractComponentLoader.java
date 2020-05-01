@@ -502,7 +502,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         }
     }
 
-    protected void loadPresentations(HasPresentations component, Element element) {
+    protected void loadPresentations(TablePresentations component, Element element) {
         String presentations = element.attributeValue("presentations");
         if (StringUtils.isNotEmpty(presentations)) {
             Presentations presentationBean = beanLocator.getPrototype(Presentations.NAME, component);

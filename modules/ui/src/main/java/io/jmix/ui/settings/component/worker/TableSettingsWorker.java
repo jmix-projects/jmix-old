@@ -25,7 +25,7 @@ import io.jmix.ui.components.data.TableItems;
 import io.jmix.ui.components.data.meta.ContainerDataUnit;
 import io.jmix.ui.components.data.meta.EntityTableItems;
 import io.jmix.ui.components.impl.WebTable;
-import io.jmix.ui.components.presentations.TablePresentations;
+import io.jmix.ui.components.presentations.TablePresentationsBox;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.model.HasLoader;
@@ -64,7 +64,7 @@ public class TableSettingsWorker implements DataLoadingSettingsWorker<Table, Tab
             table.setTextSelectionEnabled(tableSettings.getTextSelection());
 
             if (table.getPresentations() != null) {
-                ((TablePresentations) getEnhancedTable(table).getPresentations()).updateTextSelection();
+                ((TablePresentationsBox) getEnhancedTable(table).getPresentationsBox()).updateTextSelection();
             }
         }
 

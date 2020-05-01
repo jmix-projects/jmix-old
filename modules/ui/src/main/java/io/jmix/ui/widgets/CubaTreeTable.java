@@ -213,12 +213,12 @@ public class CubaTreeTable extends com.vaadin.v7.ui.TreeTable implements TreeTab
     }
 
     @Override
-    public Component getPresentations() {
+    public Component getPresentationsBox() {
         return (Component) getState(false).presentations;
     }
 
     @Override
-    public void setPresentations(Component presentations) {
+    public void setPresentationsBox(Component presentations) {
         getState().presentations = presentations;
     }
 

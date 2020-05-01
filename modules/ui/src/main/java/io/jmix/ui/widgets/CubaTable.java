@@ -154,12 +154,12 @@ public class CubaTable extends com.vaadin.v7.ui.Table implements TableSortableCo
     }
 
     @Override
-    public Component getPresentations() {
+    public Component getPresentationsBox() {
         return (Component) getState(false).presentations;
     }
 
     @Override
-    public void setPresentations(Component presentations) {
+    public void setPresentationsBox(Component presentations) {
         getState(true).presentations = presentations;
     }
 

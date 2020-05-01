@@ -16,14 +16,13 @@
 
 package io.jmix.ui.components.presentations.actions;
 
-import io.jmix.core.AppBeans;
 import io.jmix.core.DevelopmentException;
 import io.jmix.ui.presentations.model.Presentation;
 import io.jmix.ui.AppUI;
-import io.jmix.ui.components.HasPresentations;
+import io.jmix.ui.components.TablePresentations;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.components.presentations.PresentationEditor;
-import io.jmix.ui.settings.ScreenSettings;
+import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
 
 import java.lang.reflect.Constructor;
@@ -38,8 +37,7 @@ public abstract class AbstractEditPresentationAction extends AbstractPresentatio
     }
 
     protected void openEditor(Presentation presentation) {
-        PresentationEditor window = settingsWorker == null ?
-                createEditor(presentation) : createEditor(presentation, settingsWorker);
+        PresentationEditor window = createEditor(presentation, settingsWorker);
         AppUI.getCurrent().addWindow(window);
         window.center();
     }
@@ -48,27 +46,15 @@ public abstract class AbstractEditPresentationAction extends AbstractPresentatio
         Class<? extends PresentationEditor> windowClass = getPresentationEditorClass();
         try {
             Constructor<? extends PresentationEditor> windowConstructor = windowClass.getConstructor(
-                    Presentation.class, HasPresentations.class, ComponentSettingsWorker.class, ScreenSettings.class);
+                    FrameOwner.class,
+                    Presentation.class,
+                    TablePresentations.class,
+                    ComponentSettingsWorker.class);
 
-            ScreenSettings screenSettings = AppBeans.getPrototype(ScreenSettings.NAME, table.getFrame().getId());
-
-            return windowConstructor.newInstance(presentation, table, settingsWorker, screenSettings);
+            return windowConstructor.newInstance(table.getFrame().getFrameOwner(), presentation, table, settingsWorker);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new DevelopmentException("Invalid presentation's screen");
         }
-    }
-
-    protected PresentationEditor createEditor(Presentation presentation) {
-        Class<? extends PresentationEditor> windowClass = getPresentationEditorClass();
-        PresentationEditor window;
-        try {
-            Constructor<? extends PresentationEditor> windowConstructor = windowClass
-                    .getConstructor(Presentation.class, HasPresentations.class);
-            window = windowConstructor.newInstance(presentation, table);
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new DevelopmentException("Invalid presentation's screen");
-        }
-        return window;
     }
 
     protected Class<? extends PresentationEditor> getPresentationEditorClass() {

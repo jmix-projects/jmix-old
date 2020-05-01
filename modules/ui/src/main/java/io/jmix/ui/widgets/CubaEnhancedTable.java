@@ -36,8 +36,8 @@ public interface CubaEnhancedTable extends AggregationContainer {
     void setContextMenuPopup(Layout contextMenu);
     void hideContextMenuPopup();
 
-    Component getPresentations();
-    void setPresentations(Component presentations);
+    Component getPresentationsBox();
+    void setPresentationsBox(Component presentations);
     void hidePresentationsPopup();
 
     Object[] getEditableColumns();
