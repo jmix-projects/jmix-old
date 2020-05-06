@@ -18,11 +18,10 @@ package io.jmix.gradle
 
 import io.jmix.gradle.ui.ThemeCompile
 import io.jmix.gradle.ui.WidgetsCompile
+import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Dependency
-import org.gradle.api.artifacts.DependencySet
-import org.gradle.api.artifacts.ProjectDependency
+import org.gradle.api.artifacts.*
 
 class JmixPlugin implements Plugin<Project> {
 
@@ -45,6 +44,7 @@ class JmixPlugin implements Plugin<Project> {
                 def platform = project.dependencies.platform("io.jmix.bom:jmix-bom:$jmixVersion")
                 project.dependencies.add('implementation', platform)
                 project.dependencies.add(THEMES_CONFIGURATION_NAME, platform)
+                project.dependencies.add(WIDGETS_CONFIGURATION_NAME, platform)
             }
 
             if (project.jmix.entitiesEnhancing.enabled) {
@@ -53,6 +53,18 @@ class JmixPlugin implements Plugin<Project> {
 
                 project.tasks.findByName('compileJava').doLast(new EnhancingAction('main'))
                 project.tasks.findByName('compileTestJava').doLast(new EnhancingAction('test'))
+            }
+
+            // Exclude client-side logger for each configuration except 'widgets'
+            project.configurations.collect {
+                if (it.getName() != 'widgets') {
+                    it.exclude(group: 'ru.finam', module: 'slf4j-gwt')
+                }
+            }
+
+            // Exclude second logger to prevent collisions with Logback
+            project.configurations.collect {
+                it.exclude(group: 'org.slf4j', module: 'slf4j-jdk14')
             }
         }
 
@@ -87,7 +99,14 @@ class JmixPlugin implements Plugin<Project> {
         project.ext.WidgetsCompile = WidgetsCompile.class
         def widgetsConfiguration = project.configurations.create(WIDGETS_CONFIGURATION_NAME)
 
-        project.dependencies.add('widgets', 'javax.validation:validation-api:1.0.0.GA')
+        ExternalDependency dependency = (ExternalDependency) project.dependencies
+                .add('widgets', 'javax.validation:validation-api:1.0.0.GA')
+        dependency.version(new Action<MutableVersionConstraint>() {
+            @Override
+            void execute(MutableVersionConstraint versionConstraint) {
+                versionConstraint.strictly('1.0.0.GA')
+            }
+        })
 
         widgetsConfiguration.exclude(group: 'org.hibernate.validator', module: 'hibernate-validator')
 
