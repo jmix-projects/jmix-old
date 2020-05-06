@@ -34,12 +34,14 @@ public interface UserSettingService {
     /**
      * Load settings for the current user and null client type. Returns null if no such setting found.
      */
+    @Nullable
     String loadSetting(String name);
 
     /**
      * Load settings for the current user. Returns null if no such setting found.
      */
-    String loadSetting(ClientType clientType, String name);
+    @Nullable
+    String loadSetting(@Nullable ClientType clientType, String name);
 
     /**
      * Save settings for the current user and null client type
@@ -49,12 +51,12 @@ public interface UserSettingService {
     /**
      * Save settings for the current user
      */
-    void saveSetting(ClientType clientType, String name, @Nullable String value);
+    void saveSetting(@Nullable ClientType clientType, String name, @Nullable String value);
 
     /**
      * Delete settings for the current user
      */
-    void deleteSettings(ClientType clientType, String name);
+    void deleteSettings(@Nullable ClientType clientType, String name);
 
     /**
      * Copy user settings to another user

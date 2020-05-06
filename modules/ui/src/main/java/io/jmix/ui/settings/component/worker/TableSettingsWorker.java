@@ -38,6 +38,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 @SuppressWarnings("rawtypes")
@@ -278,7 +279,9 @@ public class TableSettingsWorker implements DataLoadingSettingsWorker<Table, Tab
         return false;
     }
 
-    protected boolean isSettingsSortPropertyChanged(String settingsSortProperty, Boolean settingsSortAscending, Table.SortInfo sortInfo) {
+    protected boolean isSettingsSortPropertyChanged(@Nullable String settingsSortProperty,
+                                                    @Nullable Boolean settingsSortAscending,
+                                                    @Nullable Table.SortInfo sortInfo) {
         if (sortInfo == null) {
             return !Strings.isNullOrEmpty(settingsSortProperty);
         }

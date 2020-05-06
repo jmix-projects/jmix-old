@@ -84,6 +84,8 @@ public class ComponentSettingsRegistry implements InitializingBean {
      * @return true if settings is registered for component class
      */
     public boolean isSettingsRegisteredFor(Class<? extends Component> componentClass) {
+        Preconditions.checkNotNullArgument(componentClass);
+
         Class<? extends ComponentSettings> settingsClass = classes.get(componentClass);
         return settingsClass != null;
     }

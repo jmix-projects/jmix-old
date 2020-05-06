@@ -17,6 +17,7 @@
 package io.jmix.ui.persistence;
 
 import io.jmix.core.*;
+import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.User;
@@ -33,6 +34,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
@@ -68,6 +70,8 @@ public class PersistencePresentations implements Presentations {
 
     @Override
     public void add(Presentation p) {
+        Preconditions.checkNotNullArgument(p);
+
         checkLoad();
         presentations.put(EntityValues.<UUID>getId(p), p);
         if (entityStates.isNew(p)) {
@@ -87,7 +91,7 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public void setCurrent(Presentation p) {
+    public void setCurrent(@Nullable Presentation p) {
         checkLoad();
         if (p == null) {
             Object old = current;
@@ -104,6 +108,8 @@ public class PersistencePresentations implements Presentations {
 
     @Override
     public Element getSettings(Presentation p) {
+        Preconditions.checkNotNullArgument(p);
+
         p = getPresentation(EntityValues.<UUID>getId(p));
         if (p != null) {
             Document doc;
@@ -121,6 +127,8 @@ public class PersistencePresentations implements Presentations {
 
     @Override
     public String getRawSettings(Presentation p) {
+        Preconditions.checkNotNullArgument(p);
+
         p = getPresentation(EntityValues.<UUID>getId(p));
 
         if (p == null) {
@@ -132,6 +140,9 @@ public class PersistencePresentations implements Presentations {
 
     @Override
     public void setSettings(Presentation p, Element e) {
+        Preconditions.checkNotNullArgument(p);
+        Preconditions.checkNotNullArgument(e);
+
         p = getPresentation(EntityValues.<UUID>getId(p));
         if (p != null) {
             p.setSettings(dom4jTools.writeDocument(e.getDocument(), false));
@@ -140,7 +151,9 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public void setSettings(Presentation p, String settings) {
+    public void setSettings(Presentation p, @Nullable String settings) {
+        Preconditions.checkNotNullArgument(p);
+
         p = getPresentation(EntityValues.<UUID>getId(p));
         if (p != null) {
             p.setSettings(settings);
@@ -170,7 +183,7 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public void setDefault(Presentation p) {
+    public void setDefault(@Nullable Presentation p) {
         checkLoad();
         if (p == null) {
             Object old = def;
@@ -196,6 +209,8 @@ public class PersistencePresentations implements Presentations {
 
     @Override
     public void remove(Presentation p) {
+        Preconditions.checkNotNullArgument(p);
+
         checkLoad();
         if (presentations.remove(EntityValues.<UUID>getId(p)) != null) {
             if (entityStates.isNew(p)) {
@@ -219,6 +234,8 @@ public class PersistencePresentations implements Presentations {
 
     @Override
     public void modify(Presentation p) {
+        Preconditions.checkNotNullArgument(p);
+
         checkLoad();
         if (presentations.containsKey(EntityValues.<UUID>getId(p))) {
             needToUpdate.add(p);
@@ -234,12 +251,16 @@ public class PersistencePresentations implements Presentations {
 
     @Override
     public boolean isAutoSave(Presentation p) {
+        Preconditions.checkNotNullArgument(p);
+
         p = getPresentation(EntityValues.<UUID>getId(p));
         return p != null && BooleanUtils.isTrue(p.getAutoSave());
     }
 
     @Override
     public boolean isGlobal(Presentation p) {
+        Preconditions.checkNotNullArgument(p);
+
         p = getPresentation(EntityValues.<UUID>getId(p));
         return p != null && !entityStates.isNew(p) && p.getUserLogin() == null;
     }

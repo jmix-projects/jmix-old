@@ -178,10 +178,10 @@ public interface ScreenSettings {
     <T extends ComponentSettings> Optional<T> toComponentSettings(String settings, Class<T> settingsClass);
 
     /**
-     * Converts component settings to raw string
+     * Converts component settings to raw string.
      *
      * @param settings component settings
-     * @return raw string
+     * @return settings string
      */
     String toRawSettings(ComponentSettings settings);
 }

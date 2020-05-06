@@ -17,6 +17,7 @@
 package io.jmix.ui.persistence.settings;
 
 import io.jmix.core.BeanLocator;
+import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.TablePresentations;
 import io.jmix.ui.presentations.Presentations;
@@ -60,6 +61,9 @@ public class ScreenSettingsManager {
      * @param screenSettings screen settings
      */
     public void applySettings(Collection<Component> components, ScreenSettings screenSettings) {
+        Preconditions.checkNotNullArgument(components);
+        Preconditions.checkNotNullArgument(screenSettings);
+
         for (Component component : components) {
             if (!settingsRegistry.isSettingsRegisteredFor(component.getClass())) {
                 continue;
@@ -98,6 +102,9 @@ public class ScreenSettingsManager {
      * @param screenSettings screen settings
      */
     public void applyDataLoadingSettings(Collection<Component> components, ScreenSettings screenSettings) {
+        Preconditions.checkNotNullArgument(components);
+        Preconditions.checkNotNullArgument(screenSettings);
+
         for (Component component : components) {
             if (!settingsRegistry.isSettingsRegisteredFor(component.getClass())) {
                 continue;
@@ -124,6 +131,9 @@ public class ScreenSettingsManager {
      * @param screenSettings screen settings
      */
     public void saveSettings(Collection<Component> components, ScreenSettings screenSettings) {
+        Preconditions.checkNotNullArgument(components);
+        Preconditions.checkNotNullArgument(screenSettings);
+
         boolean isModified = false;
 
         for (Component component : components) {

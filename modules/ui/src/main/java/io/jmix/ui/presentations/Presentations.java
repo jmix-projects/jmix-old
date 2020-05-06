@@ -36,12 +36,13 @@ public interface Presentations {
     /**
      * Returns the current active presentation or <code>null</code> if a current presentation didn't set
      */
+    @Nullable
     Presentation getCurrent();
 
     /**
      * Sets current active presentation for a component
      */
-    void setCurrent(Presentation p);
+    void setCurrent(@Nullable Presentation p);
 
     /**
      * Returns user settings for the selected presentation or <code>null</code>
@@ -49,6 +50,7 @@ public interface Presentations {
      *
      * @deprecated Use {@link #getRawSettings(Presentation) instead.}
      */
+    @Nullable
     @Deprecated
     Element getSettings(Presentation p);
 
@@ -74,16 +76,18 @@ public interface Presentations {
      * @param p        presentation
      * @param settings user settings
      */
-    void setSettings(Presentation p, String settings);
+    void setSettings(Presentation p, @Nullable String settings);
 
     /**
      * Returns presentation by its id or <code>null</code> if a presentation doesn't exist
      */
+    @Nullable
     Presentation getPresentation(Object id);
 
     /**
      * Returns presentation caption by its id
      */
+    @Nullable
     String getCaption(Object id);
 
     /**
@@ -94,12 +98,13 @@ public interface Presentations {
     /**
      * Returns a default presentation or <code>null</code> if it didn't set
      */
+    @Nullable
     Presentation getDefault();
 
     /**
      * Sets a default presentation
      */
-    void setDefault(Presentation p);
+    void setDefault(@Nullable Presentation p);
 
     /**
      * Adds a new presentation
@@ -135,6 +140,7 @@ public interface Presentations {
      * Returns a presentation by its name with ignored case.
      * It returns <code>null</code> if a presentation with such name doesn't exist
      */
+    @Nullable
     Presentation getPresentationByName(String name);
 
     /**

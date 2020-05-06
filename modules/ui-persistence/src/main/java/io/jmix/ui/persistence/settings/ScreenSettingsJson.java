@@ -32,7 +32,7 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 /**
- * Base class for screen settings that use JSON structure for stored settings.
+ * Screen settings that use JSON structure for stored settings.
  */
 @Component(ScreenSettings.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)

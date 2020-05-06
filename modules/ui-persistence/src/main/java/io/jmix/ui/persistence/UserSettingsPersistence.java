@@ -19,6 +19,7 @@ package io.jmix.ui.persistence;
 import io.jmix.core.ClientType;
 import io.jmix.core.Metadata;
 import io.jmix.core.UuidProvider;
+import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
 import io.jmix.core.entity.User;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -68,11 +69,15 @@ public class UserSettingsPersistence implements UserSettingService {
 
     @Override
     public String loadSetting(String name) {
+        Preconditions.checkNotNullArgument(name);
+
         return loadSetting(null, name);
     }
 
     @Override
-    public String loadSetting(ClientType clientType, String name) {
+    public String loadSetting(@Nullable ClientType clientType, String name) {
+        Preconditions.checkNotNullArgument(name);
+
         String value = transaction.execute(status -> {
             UserSetting us = findUserSettings(clientType, name);
             return us == null ? null : us.getValue();
@@ -83,18 +88,23 @@ public class UserSettingsPersistence implements UserSettingService {
 
     @Override
     public void saveSetting(String name, String value) {
+        Preconditions.checkNotNullArgument(name);
+        Preconditions.checkNotNullArgument(value);
+
         saveSetting(null, name, value);
     }
 
     @Override
-    public void saveSetting(ClientType clientType, String name, String value) {
+    public void saveSetting(@Nullable ClientType clientType, String name, @Nullable String value) {
+        Preconditions.checkNotNullArgument(name);
+
         transaction.executeWithoutResult(status -> {
             UserSetting us = findUserSettings(clientType, name);
             if (us == null) {
                 us = metadata.create(UserSetting.class);
                 us.setUserLogin(userSessionSource.getUserSession().getUser().getLogin());
                 us.setName(name);
-                us.setClientType(clientType.getName());
+                us.setClientType(clientType == null ? null : clientType.getName());
                 us.setValue(value);
 
                 entityManager.persist(us);
@@ -105,7 +115,9 @@ public class UserSettingsPersistence implements UserSettingService {
     }
 
     @Override
-    public void deleteSettings(ClientType clientType, String name) {
+    public void deleteSettings(@Nullable ClientType clientType, String name) {
+        Preconditions.checkNotNullArgument(name);
+
         transaction.executeWithoutResult(status -> {
             UserSetting us = findUserSettings(clientType, name);
             if (us != null) {
@@ -116,6 +128,9 @@ public class UserSettingsPersistence implements UserSettingService {
 
     @Override
     public void copySettings(User fromUser, User toUser) {
+        Preconditions.checkNotNullArgument(fromUser);
+        Preconditions.checkNotNullArgument(toUser);
+
         MetaClass metaClass = metadata.getClass(UserSetting.class);
 
         if (!security.isEntityOpPermitted(metaClass, EntityOp.CREATE)) {
@@ -203,7 +218,7 @@ public class UserSettingsPersistence implements UserSettingService {
     }
 
     @Nullable
-    protected UserSetting findUserSettings(ClientType clientType, String name) {
+    protected UserSetting findUserSettings(@Nullable ClientType clientType, String name) {
         TypedQuery<UserSetting> q = entityManager.createQuery(
                 "select s from ui_UserSetting s where s.userLogin = ?1 and s.name =?2 and s.clientType = ?3",
                 UserSetting.class);

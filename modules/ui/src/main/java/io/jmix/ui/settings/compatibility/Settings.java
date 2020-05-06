@@ -18,8 +18,6 @@ package io.jmix.ui.settings.compatibility;
 import io.jmix.ui.screen.Screen;
 import org.dom4j.Element;
 
-import javax.annotation.Nonnull;
-
 /**
  * Interface defining methods for working with screen settings.
  * <p>Screen settings are saved in the database for the current user.
@@ -33,7 +31,6 @@ public interface Settings {
     /**
      * @return root element of the screen settings. Never null.
      */
-    @Nonnull
     Element get();
 
     /**
@@ -43,7 +40,6 @@ public interface Settings {
      *     getSettings().get(hintBox.getId()).addAttribute("visible", "false");
      * </pre>
      */
-    @Nonnull
     Element get(String componentId);
 
     /**

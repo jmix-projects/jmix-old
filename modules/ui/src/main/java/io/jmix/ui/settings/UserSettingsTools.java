@@ -18,11 +18,13 @@
 package io.jmix.ui.settings;
 
 import io.jmix.core.ClientType;
+import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.UiProperties;
 import io.jmix.ui.components.AppWorkArea;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 /**
@@ -66,10 +68,11 @@ public class UserSettingsTools {
     }
 
     public void saveAppWindowMode(AppWorkArea.Mode mode) {
+        Preconditions.checkNotNullArgument(mode);
+
         userSettingService.saveSetting(ClientType.WEB, "appWindowMode", mode.name());
     }
 
-    @Nonnull
     public String loadAppWindowTheme() {
         String s = userSettingService.loadSetting(ClientType.WEB, "appWindowTheme");
         if (s != null) {
@@ -82,6 +85,7 @@ public class UserSettingsTools {
         userSettingService.saveSetting(ClientType.WEB, "appWindowTheme", theme);
     }
 
+    @Nullable
     public FoldersState loadFoldersState() {
         String s = userSettingService.loadSetting(ClientType.WEB, "foldersState");
         if (s == null)

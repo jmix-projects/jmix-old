@@ -32,12 +32,12 @@ import java.util.Set;
 public class EmptyUserSettingServiceImpl implements UserSettingService {
 
     @Override
-    public String loadSetting(String name) {
+    public String loadSetting(@Nullable String name) {
         return null;
     }
 
     @Override
-    public String loadSetting(ClientType clientType, String name) {
+    public String loadSetting(@Nullable ClientType clientType, String name) {
         return null;
     }
 
@@ -47,12 +47,12 @@ public class EmptyUserSettingServiceImpl implements UserSettingService {
     }
 
     @Override
-    public void saveSetting(ClientType clientType, String name, @Nullable String value) {
+    public void saveSetting(@Nullable ClientType clientType, String name, @Nullable String value) {
         // do nothing
     }
 
     @Override
-    public void deleteSettings(ClientType clientType, String name) {
+    public void deleteSettings(@Nullable ClientType clientType, String name) {
         // do nothing
     }
 

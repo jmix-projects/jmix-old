@@ -18,6 +18,7 @@ package io.jmix.ui.settings;
 
 import com.vaadin.server.VaadinSession;
 import io.jmix.core.ClientType;
+import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.executors.IllegalConcurrentAccessException;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +39,10 @@ public class WebSettingsClient {
     @Inject
     protected UserSettingService userSettingService;
 
+    @Nullable
     public String getSetting(String name) {
+        Preconditions.checkNotNullArgument(name);
+
         Map<String, Optional<String>> settings = getCache();
         Optional<String> cached = settings.get(name);
         if (cached != null) {
@@ -52,11 +56,15 @@ public class WebSettingsClient {
     }
 
     public void setSetting(String name, @Nullable String value) {
+        Preconditions.checkNotNullArgument(name);
+
         getCache().put(name, Optional.ofNullable(value));
         userSettingService.saveSetting(ClientType.WEB, name, value);
     }
 
     public void deleteSettings(String name) {
+        Preconditions.checkNotNullArgument(name);
+
         getCache().put(name, Optional.empty());
         userSettingService.deleteSettings(ClientType.WEB, name);
     }

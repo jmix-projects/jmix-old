@@ -114,10 +114,9 @@ public class SplitPanelSettingsWorker implements ComponentSettingsWorker<SplitPa
 
     protected Sizeable.Unit convertLegacyUnit(int unit) {
         switch (unit) {
-            case 0:
-                return Sizeable.Unit.PIXELS;
             case 8:
                 return Sizeable.Unit.PERCENTAGE;
+            case 0:
             default:
                 return Sizeable.Unit.PIXELS;
         }
