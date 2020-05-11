@@ -41,34 +41,45 @@ public class QueriesControllerFT extends AbstractRestControllerFT {
         }
 
         UUID companyGroupId = dirtyData.createGroupUuid();
-        executePrepared("insert into sec_group(id, version, name) " +
+        executePrepared("insert into sample_rest_sec_group(id, version, name) " +
                         "values(?, ?, ?)",
                 companyGroupId,
                 1l,
                 "Company"
         );
 
-        String adminLogin = "admin";
-        UUID adminId = dirtyData.createUserUuid();
-        executePrepared("insert into sec_user(id, version, login, group_id, login_lc) " +
+        String bobLogin = "bob";
+        UUID bobId = dirtyData.createUserUuid();
+        executePrepared("insert into sample_rest_sec_user(id, version, login, group_id, login_lc) " +
                         "values(?, ?, ?, ?, ?)",
-                adminId,
+                bobId,
                 1l,
-                adminLogin,
+                bobLogin,
                 companyGroupId, //"Company" group
-                adminLogin.toLowerCase()
+                bobLogin.toLowerCase()
         );
 
-        String anonymousLogin = "anonymous";
-        UUID anonymousId = dirtyData.createUserUuid();
-        executePrepared("insert into sec_user(id, version, login, group_id, login_lc) " +
+        String johnLogin = "john";
+        UUID johnId = dirtyData.createUserUuid();
+        executePrepared("insert into sample_rest_sec_user(id, version, login, group_id, login_lc) " +
                         "values(?, ?, ?, ?, ?)",
-                anonymousId,
+                johnId,
                 1l,
-                anonymousLogin,
+                johnLogin,
                 companyGroupId, //"Company" group
-                anonymousLogin.toLowerCase()
+                johnLogin.toLowerCase()
         );
+
+//        String anonymousLogin = "anonymous";
+//        UUID anonymousId = dirtyData.createUserUuid();
+//        executePrepared("insert into sample_rest_sec_user(id, version, login, group_id, login_lc) " +
+//                        "values(?, ?, ?, ?, ?)",
+//                anonymousId,
+//                1l,
+//                anonymousLogin,
+//                companyGroupId, //"Company" group
+//                anonymousLogin.toLowerCase()
+//        );
 
         UUID modelId = dirtyData.createModelUuid();
         executePrepared("insert into ref_model(id, name, version, dtype) values (?, ?, 1, 'ref$ExtModel')",
@@ -86,7 +97,7 @@ public class QueriesControllerFT extends AbstractRestControllerFT {
     public void executeQuery() throws Exception {
         String url = baseUrl + "/queries/sec$User/userByLogin";
         Map<String, String> params = new HashMap<>();
-        params.put("login", "admin");
+        params.put("login", "bob");
         try (CloseableHttpResponse response = sendGet(url, oauthToken, params)) {
             assertEquals(HttpStatus.SC_OK, statusCode(response));
             assertEquals(MediaType.APPLICATION_JSON_UTF8_VALUE, responseContentType(response));
@@ -166,7 +177,7 @@ public class QueriesControllerFT extends AbstractRestControllerFT {
     public void executeQueryWithCountHeader() throws Exception {
         String url = baseUrl + "/queries/sec$User/userByLogin";
         Map<String, String> params = new HashMap<>();
-        params.put("login", "admin");
+        params.put("login", "bob");
         params.put("returnCount", "true");
         try (CloseableHttpResponse response = sendGet(url, oauthToken, params)) {
             assertEquals(HttpStatus.SC_OK, statusCode(response));
@@ -185,7 +196,7 @@ public class QueriesControllerFT extends AbstractRestControllerFT {
     public void executeQueryWithExplicitView() throws Exception {
         String url = baseUrl + "/queries/sec$User/userByLogin?view=_local";
         Map<String, String> params = new HashMap<>();
-        params.put("login", "admin");
+        params.put("login", "bob");
         try (CloseableHttpResponse response = sendGet(url, oauthToken, params)) {
             assertEquals(HttpStatus.SC_OK, statusCode(response));
             assertEquals(MediaType.APPLICATION_JSON_UTF8_VALUE, responseContentType(response));
@@ -202,7 +213,7 @@ public class QueriesControllerFT extends AbstractRestControllerFT {
         String missingViewName = "missingView";
         String url = baseUrl + "/queries/sec$User/userByLogin?view=" + missingViewName;
         Map<String, String> params = new HashMap<>();
-        params.put("login", "admin");
+        params.put("login", "bob");
         try (CloseableHttpResponse response = sendGet(url, oauthToken, params)) {
             assertEquals(HttpStatus.SC_BAD_REQUEST, statusCode(response));
             ReadContext ctx = parseResponse(response);
@@ -215,7 +226,7 @@ public class QueriesControllerFT extends AbstractRestControllerFT {
     public void executeQueryWithNullsSerialization() throws Exception {
         String url = baseUrl + "/queries/sec$User/userByLogin?returnNulls=true";
         Map<String, String> params = new HashMap<>();
-        params.put("login", "admin");
+        params.put("login", "bob");
         try (CloseableHttpResponse response = sendGet(url, oauthToken, params)) {
             assertEquals(HttpStatus.SC_OK, statusCode(response));
             assertEquals(MediaType.APPLICATION_JSON_UTF8_VALUE, responseContentType(response));
@@ -231,7 +242,7 @@ public class QueriesControllerFT extends AbstractRestControllerFT {
     public void getCountForQuery() throws Exception {
         String url = baseUrl + "/queries/sec$User/userByLogin/count";
         Map<String, String> params = new HashMap<>();
-        params.put("login", "admin");
+        params.put("login", "bob");
         try (CloseableHttpResponse response = sendGet(url, oauthToken, params)) {
             assertEquals(HttpStatus.SC_OK, statusCode(response));
             assertEquals("application/json;charset=UTF-8", responseContentType(response));
@@ -243,7 +254,7 @@ public class QueriesControllerFT extends AbstractRestControllerFT {
     public void getCountForQueryText() throws Exception {
         String url = baseUrl + "/queries/sec$User/userByLogin/count";
         Map<String, String> params = new HashMap<>();
-        params.put("login", "admin");
+        params.put("login", "bob");
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "text/plain");
         headers.put("Accept-Language", "en");
@@ -268,7 +279,7 @@ public class QueriesControllerFT extends AbstractRestControllerFT {
     public void executeQueryMissingName() throws Exception {
         String url = baseUrl + "/queries/sec$User/missingQueryName";
         Map<String, String> params = new HashMap<>();
-        params.put("login", "admin");
+        params.put("login", "bob");
         try (CloseableHttpResponse response = sendGet(url, oauthToken, params)) {
             assertEquals(HttpStatus.SC_NOT_FOUND, statusCode(response));
             ReadContext ctx = parseResponse(response);

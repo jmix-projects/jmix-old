@@ -40,12 +40,12 @@ public class UserBrowse extends AbstractLookup {
         System.out.println(">>> " + sampleConfig.getSampleProp());
 
         User user1 = new User();
-        user1.setActive(true);
+        user1.setEnabled(true);
         user1.setFirstName("John");
         user1.setLastName("Doe");
 
         User user2 = new User();
-        user2.setActive(true);
+        user2.setEnabled(true);
         user2.setFirstName("Katherine");
         user2.setLastName("Potter");
 

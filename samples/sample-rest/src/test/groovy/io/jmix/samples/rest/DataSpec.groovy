@@ -40,7 +40,7 @@ class DataSpec extends Specification {
     public String baseUrl
 
     void setup() {
-        baseUrl = "http://localhost:" + port + "/rest/v2"
+        baseUrl = "http://localhost:" + port + "/rest"
         userToken = getAuthToken(baseUrl, userLogin, userPassword)
 
         sql = getSql() as Sql

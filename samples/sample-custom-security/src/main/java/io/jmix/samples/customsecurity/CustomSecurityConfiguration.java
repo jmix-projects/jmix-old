@@ -16,6 +16,8 @@
 
 package io.jmix.samples.customsecurity;
 
+import io.jmix.core.security.UserAuthenticationProvider;
+import io.jmix.core.security.UserRepository;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,17 +26,26 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.inject.Inject;
 
 @Configuration
 @EnableWebSecurity
 public class CustomSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    @Inject
+    protected UserRepository userRepository;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        UserDetailsService userDetailsService = new CustomUserDetailsService();
-        auth.userDetailsService(userDetailsService);
-        auth.authenticationProvider(new SystemAuthenticationProvider(userDetailsService));
+        auth.authenticationProvider(new SystemAuthenticationProvider(userRepository));
 
+        UserAuthenticationProvider userAuthenticationProvider = new UserAuthenticationProvider();
+        userAuthenticationProvider.setUserDetailsService(userRepository);
+        userAuthenticationProvider.setPasswordEncoder(getPasswordEncoder());
+        auth.authenticationProvider(userAuthenticationProvider);
     }
 
     @Bean(name = "jmix_authenticationManager")
@@ -43,11 +54,14 @@ public class CustomSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-
-
-    @Bean(name = "jmix_userDetailsService")
-    @Override
-    public UserDetailsService userDetailsServiceBean() throws Exception {
-        return super.userDetailsServiceBean();
+    @Bean(name = "jmix_PasswordEncoder")
+    public PasswordEncoder getPasswordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
+//    @Bean(name = "jmix_userDetailsService")
+//    @Override
+//    public UserDetailsService userDetailsServiceBean() throws Exception {
+//        return super.userDetailsServiceBean();
+//    }
 }

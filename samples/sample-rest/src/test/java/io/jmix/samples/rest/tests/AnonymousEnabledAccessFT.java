@@ -39,7 +39,10 @@ import java.util.UUID;
 import static io.jmix.samples.rest.tools.RestTestUtils.*;
 import static org.junit.Assert.assertEquals;
 
-@TestPropertySource(properties = {"jmix.rest.anonymousEnabled = true"})
+@TestPropertySource(properties = {
+        "jmix.rest.anonymousEnabled = true",
+        "jmix.rest.anonymousUrlPatterns= /rest/services/jmix_RestTestService/sum"}
+    )
 public class AnonymousEnabledAccessFT extends AbstractRestControllerFT {
 
     protected Map<String, String> serviceParams = new HashMap<String, String>() {{
@@ -51,8 +54,8 @@ public class AnonymousEnabledAccessFT extends AbstractRestControllerFT {
     public void executeServiceMethodWithAnonymousEnabled() throws Exception {
         String url = baseUrl + "/services/" + RestTestService.NAME + "/sum";
         try (CloseableHttpResponse response = sendGet(url, serviceParams)) {
-            assertEquals("text/plain;charset=UTF-8", responseContentType(response));
             assertEquals(HttpStatus.SC_OK, statusCode(response));
+            assertEquals("text/plain;charset=UTF-8", responseContentType(response));
             assertEquals("5", responseToString(response));
         }
     }
@@ -110,7 +113,7 @@ public class AnonymousEnabledAccessFT extends AbstractRestControllerFT {
     @Override
     public void prepareDb() throws Exception {
         UUID companyGroupId = dirtyData.createGroupUuid();
-        executePrepared("insert into sec_group(id, version, name) " +
+        executePrepared("insert into sample_rest_sec_group(id, version, name) " +
                         "values(?, ?, ?)",
                 companyGroupId,
                 1l,
@@ -119,7 +122,7 @@ public class AnonymousEnabledAccessFT extends AbstractRestControllerFT {
 
         String adminLogin = "admin";
         UUID adminId = dirtyData.createUserUuid();
-        executePrepared("insert into sec_user(id, version, login, group_id, login_lc) " +
+        executePrepared("insert into sample_rest_sec_user(id, version, login, group_id, login_lc) " +
                         "values(?, ?, ?, ?, ?)",
                 adminId,
                 1l,
@@ -130,7 +133,7 @@ public class AnonymousEnabledAccessFT extends AbstractRestControllerFT {
 
         String anonymousLogin = "anonymous";
         UUID anonymousId = dirtyData.createUserUuid();
-        executePrepared("insert into sec_user(id, version, login, group_id, login_lc) " +
+        executePrepared("insert into sample_rest_sec_user(id, version, login, group_id, login_lc) " +
                         "values(?, ?, ?, ?, ?)",
                 anonymousId,
                 1l,

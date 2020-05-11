@@ -26,7 +26,7 @@ import javax.persistence.Table;
  * User role.
  */
 @Entity(name = "sec$Role")
-@Table(name = "SEC_ROLE")
+@Table(name = "SAMPLE_REST_SEC_ROLE")
 public class Role extends StandardEntity {
     private static final long serialVersionUID = -4889116218059626402L;
 

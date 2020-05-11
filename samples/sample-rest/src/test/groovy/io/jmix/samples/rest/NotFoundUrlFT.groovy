@@ -23,7 +23,7 @@ class NotFoundUrlFT extends Specification {
     private String baseUrl
 
     void setup() {
-        baseUrl = "http://localhost:" + port + "/rest/v2/"
+        baseUrl = "http://localhost:" + port + "/rest/"
     }
 
     def "REST-API returns 404 for incorrect URL"() {

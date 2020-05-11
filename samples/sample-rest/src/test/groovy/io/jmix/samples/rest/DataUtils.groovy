@@ -19,7 +19,7 @@ class DataUtils {
 
     static UUID createGroup(DataSet dataSet, Sql sql, String groupName) {
         def groupId = dataSet.createGroupUuid()
-        sql.dataSet('sec_group').add(
+        sql.dataSet('sample_rest_sec_group').add(
                 id: groupId,
                 version: 1,
                 name: groupName
@@ -49,7 +49,7 @@ class DataUtils {
 //                           String password,
                            UUID groupId) {
         def userId = dataSet.createUserUuid()
-        sql.dataSet('sec_user').add(
+        sql.dataSet('sample_rest_sec_user').add(
                 id: userId,
                 version: 1,
                 login: login,
@@ -63,7 +63,7 @@ class DataUtils {
 
     static UUID createRole(DataSet dataSet, Sql sql, String name, String securityScope) {
         def roleId = dataSet.createRoleUuid()
-        sql.dataSet('sec_role').add(
+        sql.dataSet('sample_rest_sec_role').add(
                 id: roleId,
                 version: 1,
                 name: name,
@@ -74,7 +74,7 @@ class DataUtils {
 
     static UUID createRole(DataSet dataSet, Sql sql, String name, RoleType roleType) {
         def roleId = dataSet.createRoleUuid()
-        sql.dataSet('sec_role').add(
+        sql.dataSet('sample_rest_sec_role').add(
                 id: roleId,
                 version: 1,
                 name: name,
@@ -85,7 +85,7 @@ class DataUtils {
 
     static UUID createUserRole(DataSet dataSet, Sql sql, UUID userId, UUID roleId) {
         UUID id = UUID.randomUUID();
-        sql.dataSet('sec_user_role').add(
+        sql.dataSet('sample_rest_sec_user_role').add(
                 id: id,
                 version: 1,
                 user_id: userId,
@@ -96,7 +96,7 @@ class DataUtils {
 
     static UUID createUserRole(DataSet dataSet, Sql sql, UUID userId, String roleName) {
         UUID id = UUID.randomUUID();
-        sql.dataSet('sec_user_role').add(
+        sql.dataSet('sample_rest_sec_user_role').add(
                 id: id,
                 version: 1,
                 user_id: userId,

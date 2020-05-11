@@ -36,7 +36,10 @@ import java.util.Map;
 import static io.jmix.samples.rest.tools.RestTestUtils.*;
 import static org.junit.Assert.assertEquals;
 
-@TestPropertySource(properties = {"jmix.rest.anonymousEnabled = false"})
+@TestPropertySource(properties = {
+        "jmix.rest.anonymousEnabled = false",
+        "jmix.rest.anonymousUrlPatterns=/rest/services/" + RestTestService.NAME + "/sum"
+})
 public class AnonymousDisabledAccessFT extends AbstractRestControllerFT {
 
     protected Map<String, String> serviceParams = new HashMap<String, String>() {{

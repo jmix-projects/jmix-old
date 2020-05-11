@@ -26,7 +26,7 @@ import javax.persistence.*;
  * Link between users and roles.
  */
 @Entity(name = "sec$UserRole")
-@Table(name = "SEC_USER_ROLE")
+@Table(name = "SAMPLE_REST_SEC_USER_ROLE")
 @SystemLevel
 public class UserRole extends StandardEntity {
     private static final long serialVersionUID = 8543853035155300992L;

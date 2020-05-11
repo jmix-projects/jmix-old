@@ -53,7 +53,7 @@ public class OAuthTokenFT {
 
     @Before
     public void setUp() {
-        baseUrl = "http://localhost:" + port + "/rest/v2";
+        baseUrl = "http://localhost:" + port + "/rest";
     }
 
     @Test
@@ -104,7 +104,7 @@ public class OAuthTokenFT {
             int statusCode = statusCode(response);
             assertEquals(SC_UNAUTHORIZED, statusCode);
             ReadContext ctx = parseResponse(response);
-            assertEquals("unauthorized", ctx.read("$.error"));
+            assertEquals("Unauthorized", ctx.read("$.error"));
 //            assertEquals("Bad credentials", ctx.read("$.error_description"));
         }
     }
@@ -129,7 +129,7 @@ public class OAuthTokenFT {
             int statusCode = statusCode(response);
             assertEquals(SC_UNAUTHORIZED, statusCode);
             ReadContext ctx = parseResponse(response);
-            assertEquals("unauthorized", ctx.read("$.error"));
+            assertEquals("Unauthorized", ctx.read("$.error"));
             //assertEquals("Bad credentials", ctx.read("$.error_description"));
         }
     }

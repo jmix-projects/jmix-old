@@ -29,7 +29,7 @@ import java.util.List;
  * User
  */
 @Entity(name = "sec$User")
-@Table(name = "SEC_USER")
+@Table(name = "SAMPLE_REST_SEC_USER")
 public class User extends StandardEntity {
     private static final long serialVersionUID = 5007187642916030394L;
 

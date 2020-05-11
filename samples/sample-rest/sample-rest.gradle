@@ -32,6 +32,8 @@ dependencies {
 
     runtimeOnly 'org.hsqldb:hsqldb'
 
+    testImplementation 'org.jmockit:jmockit:1.39'
+
     testImplementation 'org.spockframework:spock-core'
     testImplementation 'org.spockframework:spock-spring'
 
@@ -56,5 +58,4 @@ dependencies {
         exclude(group: 'org.codehaus.groovy', module: 'groovy-all')
     }
 
-    testImplementation 'org.jmockit:jmockit:1.39'
 }

@@ -17,6 +17,7 @@
 package io.jmix.samples.helloworld;
 
 import io.jmix.core.DataManager;
+import io.jmix.samples.helloworld.entity.Greeting;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

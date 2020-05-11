@@ -57,7 +57,7 @@ public abstract class AbstractRestControllerFT {
 
     @Before
     public void setUp() throws Exception {
-        baseUrl = "http://localhost:" + port + "/rest/v2";
+        baseUrl = "http://localhost:" + port + "/rest";
 
         oauthToken = getAuthToken(baseUrl, "admin", "admin123");
         Class.forName("org.hsqldb.jdbc.JDBCDriver");

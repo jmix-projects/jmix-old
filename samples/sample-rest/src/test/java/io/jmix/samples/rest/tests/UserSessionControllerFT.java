@@ -3,6 +3,7 @@ package io.jmix.samples.rest.tests;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.annotation.Nullable;
@@ -14,6 +15,8 @@ import static io.jmix.samples.rest.tools.RestTestUtils.sendPutWithHeaders;
 import static io.jmix.samples.rest.tools.RestTestUtils.statusCode;
 import static org.junit.Assert.*;
 
+//todo MG remove test
+@Ignore
 public class UserSessionControllerFT extends AbstractRestControllerFT {
 
     @Test

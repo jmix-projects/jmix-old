@@ -24,7 +24,7 @@ import javax.persistence.*;
  * User access group.
  */
 @Entity(name = "sec$Group")
-@Table(name = "SEC_GROUP")
+@Table(name = "SAMPLE_REST_SEC_GROUP")
 public class Group extends StandardEntity {
     private static final long serialVersionUID = -4581386806900761785L;
 

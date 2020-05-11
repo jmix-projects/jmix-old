@@ -15,6 +15,7 @@ import io.jmix.rest.api.transform.JsonTransformationDirection;
 import io.jmix.rest.api.transform.StandardEntityJsonTransformer;
 import mockit.Expectations;
 import mockit.Mocked;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -34,6 +35,7 @@ import static org.junit.Assert.assertEquals;
 /**
  *
  */
+@Ignore
 public class RestJsonTransformationTest {
 
     @Rule

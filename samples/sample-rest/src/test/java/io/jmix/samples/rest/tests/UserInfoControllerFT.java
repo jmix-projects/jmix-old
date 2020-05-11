@@ -7,6 +7,7 @@ package io.jmix.samples.rest.tests;
 
 import com.jayway.jsonpath.ReadContext;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static io.jmix.samples.rest.tools.RestTestUtils.parseResponse;
@@ -19,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 public class UserInfoControllerFT  extends AbstractRestControllerFT {
 
     @Test
+    @Ignore
     public void getUserInfo() throws Exception {
         String url = baseUrl + "/userInfo";
         try (CloseableHttpResponse response = sendGet(url, oauthToken, null)) {

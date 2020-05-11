@@ -173,7 +173,7 @@ public class DataSet {
 //        deleteInstances(conn, "SYS_CATEGORY_ATTR", categoryAttributeIds);
 //        deleteInstances(conn, "SYS_CATEGORY", categoryIds);
         deleteInstances(conn, "SEC_CONSTRAINT", constraintIds);
-        deleteInstances(conn, "SEC_GROUP", groupIds);
+        deleteInstances(conn, "SAMPLE_REST_SEC_GROUP", groupIds);
         deleteInstances(conn, "REF_PLANT", plantIds);
         deleteStringInstances(conn, "REF_CURRENCY", "CODE", currencyIds);
     }
@@ -262,7 +262,7 @@ public class DataSet {
 
     private void deleteUsers(Connection conn) throws SQLException {
         PreparedStatement stmt;
-        stmt = conn.prepareStatement("delete from sec_user where id = ?");
+        stmt = conn.prepareStatement("delete from sample_rest_sec_user where id = ?");
         try {
             for (UUID userId : userIds) {
                 stmt.setObject(1, userId);
@@ -275,7 +275,7 @@ public class DataSet {
 
     private void deleteRoles(Connection conn) throws SQLException {
         PreparedStatement stmt;
-        stmt = conn.prepareStatement("delete from sec_role where id = ?");
+        stmt = conn.prepareStatement("delete from sample_rest_sec_role where id = ?");
         try {
             for (UUID roleId : roleIds) {
                 stmt.setObject(1, roleId);
@@ -370,7 +370,7 @@ public class DataSet {
      */
     private void deleteUserRoles(Connection conn) throws SQLException {
         PreparedStatement stmt;
-        stmt = conn.prepareStatement("delete from sec_user_role where user_id = ?");
+        stmt = conn.prepareStatement("delete from sample_rest_sec_user_role where user_id = ?");
         try {
             for (UUID userId : userIds) {
                 stmt.setObject(1, userId);

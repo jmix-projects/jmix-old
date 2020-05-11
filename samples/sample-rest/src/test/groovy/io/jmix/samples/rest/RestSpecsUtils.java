@@ -31,6 +31,10 @@ public class RestSpecsUtils {
         return given().header("Authorization", "Bearer " + authToken);
     }
 
+    public static RequestSpecification createRequest() {
+        return given();
+    }
+
     public static String getAuthToken(String url, String login, String password) throws IOException {
         return RestTestUtils.getAuthToken(url, login, password);
     }
