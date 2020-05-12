@@ -47,7 +47,7 @@ import java.util.UUID;
 @SystemLevel
 @DisableEnhancing
 public class KeyValueEntity
-        implements HasInstanceMetaClass, Entity<Object> {
+        implements HasInstanceMetaClass, Entity{
 
     protected UUID uuid;
 
@@ -57,10 +57,10 @@ public class KeyValueEntity
 
     protected MetaClass metaClass;
 
-    protected EntityEntry<Object> entityEntry;
+    protected EntityEntry entityEntry;
 
-    protected static class KeyValueEntityEntry extends BaseEntityEntry<Object> {
-        public KeyValueEntityEntry(Entity<Object> source) {
+    protected static class KeyValueEntityEntry extends BaseEntityEntry {
+        public KeyValueEntityEntry(Entity source) {
             super(source);
         }
 
