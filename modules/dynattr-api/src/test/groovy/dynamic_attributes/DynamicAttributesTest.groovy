@@ -71,7 +71,7 @@ class DynamicAttributesTest extends Specification {
                 name: 'userAttribute',
                 code: 'userAttribute',
                 dataType: AttributeType.STRING,
-                categoryEntityType: 'test$User',
+                categoryEntityType: 'dynattr$User',
                 category: userCategory,
                 defaultEntity: new ReferenceToEntity()
         )
@@ -80,7 +80,7 @@ class DynamicAttributesTest extends Specification {
                 name: 'userRoleAttribute',
                 code: 'userRoleAttribute',
                 dataType: AttributeType.STRING,
-                categoryEntityType: 'test$UserRole',
+                categoryEntityType: 'dynattr$UserRole',
                 category: userRoleCategory,
                 defaultEntity: new ReferenceToEntity()
         )
@@ -89,7 +89,7 @@ class DynamicAttributesTest extends Specification {
                 name: 'roleAttribute',
                 code: 'roleAttribute',
                 dataType: AttributeType.STRING,
-                categoryEntityType: 'test$Role',
+                categoryEntityType: 'dynattr$Role',
                 category: roleCategory,
                 defaultEntity: new ReferenceToEntity()
         )

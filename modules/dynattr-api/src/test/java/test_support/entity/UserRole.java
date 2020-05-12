@@ -26,8 +26,8 @@ import javax.persistence.*;
 /**
  * Link between users and roles.
  */
-@Entity(name = "test$UserRole")
-@Table(name = "TEST_USER_ROLE")
+@Entity(name = "dynattr$UserRole")
+@Table(name = "DYNATTR_USER_ROLE")
 @SystemLevel
 public class UserRole extends StandardEntity {
 

@@ -27,8 +27,8 @@ import java.util.List;
 /**
  * User
  */
-@Entity(name = "test$User")
-@Table(name = "TEST_USER")
+@Entity(name = "dynattr$User")
+@Table(name = "DYNATTR_USER")
 @TrackEditScreenHistory
 public class User extends StandardEntity {
 

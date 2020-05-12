@@ -28,8 +28,8 @@ import javax.persistence.Transient;
 /**
  * User role.
  */
-@Entity(name = "test$Role")
-@Table(name = "TEST_ROLE")
+@Entity(name = "dynattr$Role")
+@Table(name = "DYNATTR_ROLE")
 @TrackEditScreenHistory
 public class Role extends StandardEntity {
 
