@@ -112,16 +112,4 @@ public class Category extends StandardEntity {
     public void setLocaleNames(String localeNames) {
         this.localeNames = localeNames;
     }
-
-    public String getLocaleName() {
-        //todo
-//        localeName = LocaleHelper.getLocalizedName(localeNames);
-//        if (localeName == null) {
-//            localeName = name;
-//        }
-//        return localeName;
-        return null;
-    }
-
-
 }

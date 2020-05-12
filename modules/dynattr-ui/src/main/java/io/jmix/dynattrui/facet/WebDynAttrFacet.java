@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package io.jmix.dynattr;
+package io.jmix.dynattrui.facet;
 
-public interface AttributeValue {
+import io.jmix.ui.components.impl.WebAbstractFacet;
+
+public class WebDynAttrFacet extends WebAbstractFacet implements DynAttrFacet {
 }

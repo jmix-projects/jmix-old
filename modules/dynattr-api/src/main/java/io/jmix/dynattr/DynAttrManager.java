@@ -17,21 +17,21 @@
 
 package io.jmix.dynattr;
 
-public final class DynamicModelUtils {
-    private DynamicModelUtils() {
-    }
+import io.jmix.core.Entity;
+import io.jmix.core.FetchPlan;
+
+import java.util.Collection;
+
+public interface DynAttrManager {
+    String NAME = "dynattr_DynamicModelManager";
 
     /**
-     * Remove dynamic attribute marker (+) from attribute code (if exists)
+     * Fetch dynamic attributes from dynamic attributes store for each entity
      */
-    public static String decodeAttributeCode(String attributeCode) {
-        return attributeCode.startsWith("+") ? attributeCode.substring(1) : attributeCode;
-    }
+    void loadValues(Collection<Entity> entities, FetchPlan fetchPlan);
 
     /**
-     * Add dynamic attribute marker (+) to attribute code (if does not exist)
+     * Store dynamic attributes from the entity to store
      */
-    public static String encodeAttributeCode(String attributeCode) {
-        return attributeCode.startsWith("+") ? attributeCode : "+" + attributeCode;
-    }
+    void storeValues(Collection<Entity> entities);
 }

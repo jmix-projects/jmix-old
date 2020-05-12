@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2016 Haulmont.
+ * Copyright (c) 2008-2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,26 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
-package io.jmix.dynattr;
+package io.jmix.dynattrui.impl;
 
 import io.jmix.core.Entity;
-import io.jmix.core.FetchPlan;
+import io.jmix.dynattr.AttributeDefinition;
 
-import java.util.Collection;
+import java.util.List;
 
-public interface DynamicModelManager {
-    String NAME = "jmix_DynamicModelManager";
+public interface AttributeOptionsLoader {
+    String NAME = "dynattrui_AttributeOptionsLoader";
 
-    /**
-     * Fetch dynamic attributes from dynamic attributes store for each entity
-     */
-    void loadValues(Collection<Entity> entities, FetchPlan fetchPlan);
-
-    /**
-     * Store dynamic attributes from the entity to store
-     */
-    void storeValues(Collection<Entity> entities);
+    List loadOptions(Entity entity, AttributeDefinition attribute);
 }

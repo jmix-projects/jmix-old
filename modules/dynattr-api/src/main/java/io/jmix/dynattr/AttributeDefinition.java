@@ -16,5 +16,115 @@
 
 package io.jmix.dynattr;
 
+import io.jmix.core.Entity;
+
+import javax.annotation.Nullable;
+import java.math.BigDecimal;
+import java.util.Set;
+
 public interface AttributeDefinition {
+    interface Configuration {
+        boolean isLookup();
+
+        @Nullable
+        Integer getRowsCount();
+
+        @Nullable
+        String getFormWidth();
+
+        Set<String> getScreens();
+
+        @Nullable
+        String getJoinClause();
+
+        @Nullable
+        String getWhereClause();
+
+        @Nullable
+        String getColumnName();
+
+        @Nullable
+        String getColumnAlignment();
+
+        @Nullable
+        String getNumberFormatPattern();
+
+        @Nullable
+        Integer getColumnWidth();
+
+        @Nullable
+        String getValidatorGroovyScript();
+
+        @Nullable
+        Integer getMinInt();
+
+        @Nullable
+        Integer getMaxInt();
+
+        @Nullable
+        Double getMinDouble();
+
+        @Nullable
+        Double getMaxDouble();
+
+        @Nullable
+        BigDecimal getMinDecimal();
+
+        @Nullable
+        BigDecimal getMaxDecimal();
+
+        @Nullable
+        String getOptionsLoaderScript();
+
+        @Nullable
+        OptionsLoaderType getOptionsLoaderType();
+
+        @Nullable
+        Integer getColumnNumber();
+
+        @Nullable
+        Integer getRowNumber();
+    }
+
+    String getId();
+
+    String getCode();
+
+    @Nullable
+    String getName();
+
+    @Nullable
+    String getDescription();
+
+    AttributeType getDataType();
+
+    @Nullable
+    Class<?> getJavaType();
+
+    boolean isCollection();
+
+    boolean isReadOnly();
+
+    boolean isRequired();
+
+    @Nullable
+    String getEnumeration();
+
+    @Nullable
+    Object getDefaultValue();
+
+    boolean isDefaultDateCurrent();
+
+    @Nullable
+    String getNameMsgBundle();
+
+    @Nullable
+    String getDescriptionsMsgBundle();
+
+    @Nullable
+    String getEnumerationMsgBundle();
+
+    Configuration getConfiguration();
+
+    Entity<?> getSource();
 }

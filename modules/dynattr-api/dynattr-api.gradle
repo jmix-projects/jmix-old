@@ -19,12 +19,13 @@ apply plugin: 'groovy'
 apply plugin: 'java-library'
 apply plugin: 'io.jmix'
 
-group = 'io.jmix.dynattr-api'
+group = 'io.jmix.dynattr'
 
 dependencies {
     api platform(project(':jmix-platform'))
     api project(':modules:data')
 
+    implementation 'com.google.code.gson:gson'
 
     testImplementation 'org.springframework:spring-test'
     testImplementation "org.spockframework:spock-core"

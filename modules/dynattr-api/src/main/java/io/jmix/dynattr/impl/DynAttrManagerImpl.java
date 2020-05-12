@@ -43,11 +43,12 @@ import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component(DynamicModelManager.NAME)
-public class DynamicModelManagerImpl implements DynamicModelManager {
+//TODO: take into account category
+@Component(DynAttrManager.NAME)
+public class DynAttrManagerImpl implements DynAttrManager {
     public static final int MAX_ENTITIES_FOR_ATTRIBUTE_VALUES_BATCH = 100;
 
-    private static final Logger log = LoggerFactory.getLogger(DynamicModelManagerImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(DynAttrManagerImpl.class);
 
     @Inject
     protected StoreAwareLocator storeAwareLocator;
@@ -64,7 +65,7 @@ public class DynamicModelManagerImpl implements DynamicModelManager {
     @Inject
     protected EntityStates entityStates;
     @Inject
-    protected DynamicModelMetadata dynamicModelConfiguration;
+    protected DynAttrMetadata dynAttrMetadata;
 
     protected String dynamicAttributesStore = Stores.MAIN;
 
@@ -94,10 +95,10 @@ public class DynamicModelManagerImpl implements DynamicModelManager {
     protected void doStoreValues(Entity<?> entity) {
         DynamicAttributesState<CategoryAttributeValue> state = (DynamicAttributesState<CategoryAttributeValue>)
                 entity.__getEntityEntry().getExtraState(DynamicAttributesState.class);
-        if (state != null && state.getDynamicModel() != null) {
+        if (state != null && state.getDynamicAttributes() != null) {
             EntityManager entityManager = storeAwareLocator.getEntityManager(dynamicAttributesStore);
 
-            DynamicAttributes dynamicModel = state.getDynamicModel();
+            DynamicAttributes dynamicModel = state.getDynamicAttributes();
             DynamicAttributes.Changes changes = dynamicModel.getChanges();
 
             if (changes.hasChanges()) {
@@ -121,18 +122,20 @@ public class DynamicModelManagerImpl implements DynamicModelManager {
 
                 for (String attributeName : changes.getCreated()) {
                     if (changes.isCreated(attributeName)) {
-                        CategoryAttributeValue attributeValue = metadata.create(CategoryAttributeValue.class);
-                        attributeValue.setValue(dynamicModel.getValue(attributeName));
-                        attributeValue.setObjectEntityId(referenceToEntitySupport.getReferenceId(entity));
-                        attributeValue.setCode(attributeName);
-                        attributeValue.setCategoryAttribute(
-                                (CategoryAttribute) dynamicModelConfiguration.findAttributeByCode(metaClass, attributeName));
+                        dynAttrMetadata.getAttributeByCode(metaClass, attributeName)
+                                .ifPresent(attribute -> {
+                                    CategoryAttributeValue attributeValue = metadata.create(CategoryAttributeValue.class);
+                                    attributeValue.setValue(dynamicModel.getValue(attributeName));
+                                    attributeValue.setObjectEntityId(referenceToEntitySupport.getReferenceId(entity));
+                                    attributeValue.setCode(attributeName);
+                                    attributeValue.setCategoryAttribute((CategoryAttribute) attribute.getSource());
 
-                        entityManager.persist(attributeValue);
+                                    entityManager.persist(attributeValue);
 
-                        if (BooleanUtils.isTrue(attributeValue.getCategoryAttribute().getIsCollection())) {
-                            doStoreCollectionValue(attributeValue);
-                        }
+                                    if (attribute.isCollection()) {
+                                        doStoreCollectionValue(attributeValue);
+                                    }
+                                });
                     }
                 }
             }
@@ -178,7 +181,7 @@ public class DynamicModelManagerImpl implements DynamicModelManager {
     }
 
     protected void doFetchValues(MetaClass metaClass, Collection<Entity<?>> entities) {
-        if (!dynamicModelConfiguration.hasAttributesForClass(metaClass) ||
+        if (dynAttrMetadata.getAttributes(metaClass).isEmpty() ||
                 metadataTools.hasCompositePrimaryKey(metaClass) && !HasUuid.class.isAssignableFrom(metaClass.getJavaClass())) {
             for (Entity<?> entity : entities) {
                 DynamicAttributesState<?> state = new DynamicAttributesState<>(entity.__getEntityEntry());
@@ -221,7 +224,7 @@ public class DynamicModelManagerImpl implements DynamicModelManager {
                         }
                     }
                 }
-                state.setDynamicModel(new DynamicAttributes(map));
+                state.setDynamicAttributes(new DynamicAttributes(map));
             }
         }
     }
@@ -388,7 +391,7 @@ public class DynamicModelManagerImpl implements DynamicModelManager {
         Multimap<MetaClass, Entity<?>> entitiesByType = HashMultimap.create();
         if (fetchPlan != null) {
             Set<Class> dependentClasses = collectEntityClasses(fetchPlan, new HashSet<>()).stream()
-                    .filter(aClass -> dynamicModelConfiguration.hasAttributesForClass(metadata.getClass(aClass)))
+                    .filter(aClass -> !dynAttrMetadata.getAttributes(metadata.getClass(aClass)).isEmpty())
                     .collect(Collectors.toSet());
             for (Entity<?> entity : entities) {
                 entitiesByType.put(extendedEntities.getOriginalOrThisMetaClass(metadata.getClass(entity.getClass())), entity);
@@ -427,7 +430,7 @@ public class DynamicModelManagerImpl implements DynamicModelManager {
         } else if (!entities.isEmpty()) {
             for (Entity entity : entities) {
                 MetaClass metaClass = metadata.getClass(entity.getClass());
-                if (dynamicModelConfiguration.hasAttributesForClass(metaClass)) {
+                if (!dynAttrMetadata.getAttributes(metaClass).isEmpty()) {
                     entitiesByType.put(extendedEntities.getOriginalOrThisMetaClass(metaClass), entity);
                 }
             }

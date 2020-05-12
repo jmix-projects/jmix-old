@@ -26,7 +26,6 @@ import io.jmix.core.entity.annotation.OnDelete;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.data.entity.ReferenceToEntity;
 import io.jmix.data.entity.StandardEntity;
-import io.jmix.dynattr.AttributeValue;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.*;
@@ -38,7 +37,7 @@ import java.util.List;
 @javax.persistence.Entity(name = "sys$CategoryAttributeValue")
 @Table(name = "SYS_ATTR_VALUE")
 @SystemLevel
-public class CategoryAttributeValue extends StandardEntity implements AttributeValue {
+public class CategoryAttributeValue extends StandardEntity {
 
     private static final long serialVersionUID = -2861790889151226985L;
 

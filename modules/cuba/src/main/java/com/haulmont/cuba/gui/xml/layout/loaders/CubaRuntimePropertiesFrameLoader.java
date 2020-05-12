@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright (c) 2008-2016 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,13 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
-package io.jmix.ui.xml.layout.loaders;
+package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.google.common.base.Preconditions;
 import io.jmix.ui.GuiDevelopmentException;
-import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowInfo;
 import io.jmix.ui.components.Fragment;
 import io.jmix.ui.components.Frame;
@@ -36,6 +36,8 @@ import io.jmix.ui.sys.ScreenContextImpl;
 import io.jmix.ui.sys.ScreenXmlLoader;
 import io.jmix.ui.xml.layout.ComponentLoader;
 import io.micrometer.core.instrument.Timer;
+import io.jmix.ui.xml.layout.loaders.ContainerLoader;
+import io.jmix.ui.xml.layout.loaders.LayoutLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -43,10 +45,8 @@ import java.util.Objects;
 
 import static io.jmix.ui.monitoring.UiMonitoring.createScreenTimer;
 import static io.jmix.ui.screen.UiControllerUtils.*;
-import static io.jmix.ui.sys.FragmentHelper.FragmentLoaderInitTask;
-import static io.jmix.ui.sys.FragmentHelper.NAME;
 
-public class RuntimePropertiesFrameLoader extends ContainerLoader<Frame> {
+public class CubaRuntimePropertiesFrameLoader extends ContainerLoader<Frame> {
 
     protected static final String DEFAULT_DESCRIPTOR =
             "/com/haulmont/cuba/gui/app/core/dynamicattributes/runtime-properties-frame.xml";
@@ -55,14 +55,14 @@ public class RuntimePropertiesFrameLoader extends ContainerLoader<Frame> {
     protected ComponentLoaderContext innerContext;
 
     @Override
-    public ComponentContext getContext() {
-        return (ComponentContext) super.getContext();
+    public ComponentLoader.ComponentContext getContext() {
+        return (ComponentLoader.ComponentContext) super.getContext();
     }
 
     @Override
-    public void setContext(Context context) {
+    public void setContext(ComponentLoader.Context context) {
         Preconditions.checkArgument(context instanceof ComponentContext,
-                "'context' must implement io.jmix.ui.xml.layout.ComponentLoader.ComponentContext");
+                "'context' must implement com.haulmont.cuba.gui.xml.layout.ComponentLoader.ComponentContext");
         super.setContext(context);
     }
 
@@ -140,7 +140,7 @@ public class RuntimePropertiesFrameLoader extends ContainerLoader<Frame> {
     }
 
     protected FragmentHelper getFragmentHelper() {
-        return beanLocator.get(NAME);
+        return beanLocator.get(FragmentHelper.NAME);
     }
 
     @Override
@@ -228,10 +228,6 @@ public class RuntimePropertiesFrameLoader extends ContainerLoader<Frame> {
 
         ScreenOptions options = parentContext.getOptions();
         parentContext.addInjectTask(new FragmentLoaderInjectTask((Fragment) resultComponent, options, beanLocator));
-        parentContext.addInitTask(new FragmentLoaderInitTask((Fragment) resultComponent, options, (ComponentLoaderContext) context, beanLocator));
-    }
-
-    protected WindowConfig getWindowConfig() {
-        return beanLocator.get(WindowConfig.NAME);
+        parentContext.addInitTask(new FragmentHelper.FragmentLoaderInitTask((Fragment) resultComponent, options, (ComponentLoaderContext) context, beanLocator));
     }
 }

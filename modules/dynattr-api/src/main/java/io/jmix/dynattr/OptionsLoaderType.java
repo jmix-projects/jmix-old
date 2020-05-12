@@ -16,18 +16,24 @@
 
 package io.jmix.dynattr;
 
-import io.jmix.core.metamodel.model.MetaClass;
 
-import java.util.Collection;
+import io.jmix.core.metamodel.datatypes.impl.EnumClass;
+import io.jmix.core.metamodel.datatypes.impl.EnumUtils;
 
-public interface DynamicModelMetadata {
-    String NAME = "jmix_DynamicModelMetadata";
+import javax.annotation.Nullable;
 
-    boolean hasAttributesForClass(MetaClass metaClass);
+public enum OptionsLoaderType implements EnumClass<String> {
+    JPQL,
+    SQL,
+    GROOVY;
 
-    Collection<AttributeDefinition> getAttributesByClass(MetaClass metaClass);
+    @Override
+    public String getId() {
+        return name();
+    }
 
-    AttributeDefinition findAttributeByCode(MetaClass metaClass, String code);
-
-    void reload();
+    @Nullable
+    public static OptionsLoaderType fromId(String id) {
+        return EnumUtils.fromIdSafe(OptionsLoaderType.class, id, null);
+    }
 }

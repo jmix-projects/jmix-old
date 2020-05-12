@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,22 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.dynamicattributes;
+package io.jmix.dynattr;
 
-// todo dummy component to observe the surface of dynamic attributes usage
+import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.metamodel.model.MetaProperty;
 
-public interface CategoryAttribute {
+import java.util.Collection;
+import java.util.Optional;
+
+public interface DynAttrMetadata {
+    String NAME = "dynattr_DynAttrMetadata";
+
+    Collection<AttributeDefinition> getAttributes(MetaClass metaClass);
+
+    Collection<CategoryDefinition> getCategories(MetaClass metaCLass);
+
+    Optional<AttributeDefinition> getAttributeByCode(MetaClass metaClass, String code);
+
+    void reload();
 }

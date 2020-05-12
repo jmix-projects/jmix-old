@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-//@NonNullApi
+@NonNullApi
 package io.jmix.dynattr;
 
-//import org.springframework.lang.NonNullApi;
+import org.springframework.lang.NonNullApi;

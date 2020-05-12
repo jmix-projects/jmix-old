@@ -101,6 +101,10 @@ public class DynamicAttributes {
         DELETED
     }
 
+    public DynamicAttributes() {
+        this.values = new HashMap<>();
+    }
+
     public DynamicAttributes(Map<String, Object> values) {
         this.values = values.entrySet().stream()
                 .collect(Collectors.toMap(

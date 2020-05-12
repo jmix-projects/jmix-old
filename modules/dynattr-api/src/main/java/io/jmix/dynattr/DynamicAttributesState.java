@@ -22,6 +22,7 @@ import io.jmix.core.EntityEntryExtraState;
 import io.jmix.core.EntityValuesProvider;
 import io.jmix.core.impl.EntityInternals;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class DynamicAttributesState<K> implements EntityEntryExtraState<K>, EntityValuesProvider {
@@ -32,11 +33,13 @@ public class DynamicAttributesState<K> implements EntityEntryExtraState<K>, Enti
         this.entityEntry = entityEntry;
     }
 
-    public DynamicAttributes getDynamicModel() {
+    @Nullable
+    public DynamicAttributes getDynamicAttributes() {
         return dynamicModel;
     }
 
-    public void setDynamicModel(DynamicAttributes dynamicModel) {
+    @Nullable
+    public void setDynamicAttributes(DynamicAttributes dynamicModel) {
         this.dynamicModel = dynamicModel;
     }
 
@@ -48,14 +51,14 @@ public class DynamicAttributesState<K> implements EntityEntryExtraState<K>, Enti
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getAttributeValue(String name) {
-        return (T) dynamicModel.getValue(DynamicModelUtils.decodeAttributeCode(name));
+        return (T) dynamicModel.getValue(DynAttrUtils.getAttributeCodeFromProperty(name));
     }
 
     @Override
-    public void setAttributeValue(String name, Object value, boolean checkEquals) {
+    public void setAttributeValue(String name, @Nullable Object value, boolean checkEquals) {
         Preconditions.checkState(dynamicModel != null, "Dynamic attributes should be loaded explicitly");
 
-        String code = DynamicModelUtils.decodeAttributeCode(name);
+        String code = DynAttrUtils.getAttributeCodeFromProperty(name);
         Object oldValue = dynamicModel.getValue(code);
         //todo: check sequence
         dynamicModel.setValue(code, value);

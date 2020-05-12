@@ -17,7 +17,8 @@
 
 package io.jmix.dynattr.impl.model;
 
-import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import com.google.gson.Gson;
 import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.entity.annotation.EmbeddedParameters;
@@ -26,11 +27,9 @@ import io.jmix.core.metamodel.annotations.InstanceName;
 import io.jmix.core.metamodel.annotations.ModelProperty;
 import io.jmix.data.entity.ReferenceToEntity;
 import io.jmix.data.entity.StandardEntity;
-import io.jmix.dynattr.AttributeDefinition;
 import io.jmix.dynattr.AttributeType;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -40,7 +39,7 @@ import java.util.*;
 @Entity(name = "sys$CategoryAttribute")
 @Table(name = "SYS_CATEGORY_ATTR")
 @SystemLevel
-public class CategoryAttribute extends StandardEntity implements AttributeDefinition {
+public class CategoryAttribute extends StandardEntity {
 
     private static final long serialVersionUID = -6959392628534815752L;
 
@@ -153,25 +152,16 @@ public class CategoryAttribute extends StandardEntity implements AttributeDefini
     protected String attributeConfigurationJson;
 
     @Transient
-    @ModelProperty(related = {"localeNames", "name"})
-    protected String localeName;
-
-    @Transient
-    @ModelProperty(related = {"localeDescriptions", "description"})
-    protected String localeDescription;
-
-    @Transient
-    @ModelProperty(related = "enumerationLocales")
-    protected String enumerationLocale;
+    protected CategoryAttributeConfiguration configuration;
 
     @PostConstruct
     public void init(Metadata metadata) {
         defaultEntity = metadata.create(ReferenceToEntity.class);
     }
 
-    @InstanceName(relatedProperties = {"localeName", "code"})
+    @InstanceName(relatedProperties = {"name", "code"})
     public String getCaption() {
-        return String.format("%s (%s)", getLocaleName(), getCode());
+        return String.format("%s (%s)", getName(), getCode());
     }
 
     public void setCategory(Category entityType) {
@@ -280,34 +270,6 @@ public class CategoryAttribute extends StandardEntity implements AttributeDefini
 
     public void setDefaultDateWithoutTime(LocalDate defaultDateTime) {
         this.defaultDateWithoutTime = defaultDateTime;
-    }
-
-    public Object getDefaultValue() {
-        if (dataType != null) {
-            switch (AttributeType.fromId(dataType)) {
-                case INTEGER:
-                    return defaultInt;
-                case DOUBLE:
-                    return defaultDouble;
-                case DECIMAL:
-                    return defaultDecimal;
-                case BOOLEAN:
-                    return defaultBoolean;
-                case DATE:
-                    return defaultDate;
-                case DATE_WITHOUT_TIME:
-                    return defaultDateWithoutTime;
-                case STRING:
-                    return defaultString;
-                case ENUMERATION:
-                    return defaultString;
-                case ENTITY:
-                    return getObjectDefaultEntityId();
-                default:
-                    return null;
-            }
-        }
-        return null;
     }
 
     public void setObjectDefaultEntityId(Object entity) {
@@ -430,20 +392,6 @@ public class CategoryAttribute extends StandardEntity implements AttributeDefini
         this.filterXml = filterXml;
     }
 
-    public Set<String> targetScreensSet() {
-        if (StringUtils.isNotBlank(targetScreens)) {
-            return new HashSet<>(Arrays.asList(targetScreens.split(",")));
-        } else {
-            return Collections.emptySet();
-        }
-    }
-
-    public List<String> getEnumerationOptions() {
-        Preconditions.checkState(getDataType() == AttributeType.ENUMERATION, "Only enumeration attributes have options");
-        String[] values = StringUtils.split(enumeration, ',');
-        return values != null ? Arrays.asList(values) : Collections.<String>emptyList();
-    }
-
     public String getEntityClass() {
         return entityClass;
     }
@@ -452,16 +400,19 @@ public class CategoryAttribute extends StandardEntity implements AttributeDefini
         this.entityClass = entityClass;
     }
 
-    @Nullable
-    public Class getJavaClassForEntity() {
-        if (StringUtils.isNotBlank(entityClass)) {
-            return ReflectionHelper.getClass(entityClass);
-        } else {
-            return null;
-        }
+    public String getLocaleNames() {
+        return localeNames;
     }
 
-    public String getLocaleNames() {
+    public String getLocaleDescriptions() {
+        return localeDescriptions;
+    }
+
+    public String getEnumerationLocales() {
+        return enumerationLocales;
+    }
+
+    public String getNameMsgBundle() {
         return localeNames;
     }
 
@@ -469,18 +420,7 @@ public class CategoryAttribute extends StandardEntity implements AttributeDefini
         this.localeNames = localeNames;
     }
 
-    public String getLocaleName() {
-        //todo:
-
-//        localeName = LocaleHelper.getLocalizedName(localeNames);
-//        if (localeName == null) {
-//            localeName = name;
-//        }
-//        return localeName;
-        return null;
-    }
-
-    public String getLocaleDescriptions() {
+    public String getDescriptionsMsgBundle() {
         return localeDescriptions;
     }
 
@@ -488,51 +428,33 @@ public class CategoryAttribute extends StandardEntity implements AttributeDefini
         this.localeDescriptions = localeDescriptions;
     }
 
-    public String getLocaleDescription() {
-        //todo:
-
-//        localeDescription = LocaleHelper.getLocalizedName(localeDescriptions);
-//        if (localeDescription == null) {
-//            localeDescription = description;
-//        }
-//        return localeDescription;
-        return null;
-    }
-
     public void setEnumerationLocales(String enumerationLocales) {
         this.enumerationLocales = enumerationLocales;
     }
 
-    public String getEnumerationLocales() {
+    public String getEnumerationMsgBundle() {
         return enumerationLocales;
     }
 
-    public String getEnumerationLocale() {
-        //todo:
-
-//        enumerationLocale = LocaleHelper.getLocalizedEnumeration(enumeration, enumerationLocales);
-//        if (enumerationLocale == null) {
-//            enumerationLocale = enumeration;
-//        }
-//        return enumerationLocale;
-        return null;
-    }
-
-    public Map<String, Object> getLocalizedEnumerationMap() {
-        //todo:
-
-//        String enumeration = getEnumeration();
-//        String[] values = StringUtils.split(enumeration, ',');
-//        Map<String, Object> map = new LinkedHashMap<>();
-//        for (String s : values) {
-//            map.put(LocaleHelper.getEnumLocalizedValue(s, enumerationLocales), s);
-//        }
-//        return map;
-        return null;
+    public void setAttributeConfigurationJson(String attributeConfigurationJson) {
+        this.attributeConfigurationJson = attributeConfigurationJson;
     }
 
     public String getAttributeConfigurationJson() {
         return attributeConfigurationJson;
+    }
+
+    @Transient
+    @ModelProperty
+    public CategoryAttributeConfiguration getConfiguration() {
+        if (configuration == null) {
+            if (!Strings.isNullOrEmpty(getAttributeConfigurationJson())) {
+                configuration = new Gson().fromJson(getAttributeConfigurationJson(), CategoryAttributeConfiguration.class);
+            } else {
+                configuration = new CategoryAttributeConfiguration();
+            }
+        }
+        return configuration;
     }
 
     @PrePersist
@@ -540,6 +462,21 @@ public class CategoryAttribute extends StandardEntity implements AttributeDefini
     protected void initCategoryEntityType() {
         if (getCategory() != null) {
             setCategoryEntityType(getCategory().getEntityType());
+        }
+    }
+
+    public Class<?> getJavaType() {
+        if (!Strings.isNullOrEmpty(getEntityClass())) {
+            return ReflectionHelper.getClass(getEntityClass());
+        }
+        return null;
+    }
+
+    public Set<String> getTargetScreensSet() {
+        if (StringUtils.isNotBlank(getTargetScreens())) {
+            return new HashSet<>(Arrays.asList(getTargetScreens().split(",")));
+        } else {
+            return Collections.emptySet();
         }
     }
 }

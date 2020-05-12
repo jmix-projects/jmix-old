@@ -24,22 +24,22 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import java.util.Collection;
 
-@Component(DynamicModelLifecycleListener.NAME)
-public class DynamicModelLifecycleListener implements OrmLifecycleListener {
-    public static final String NAME = "jmix_DynamicModelLifecycleListener";
+@Component(DynAttrLifecycleListener.NAME)
+public class DynAttrLifecycleListener implements OrmLifecycleListener {
+    public static final String NAME = "dynattr_DynAttrLifecycleListener";
 
     @Inject
-    protected DynamicModelManager dynamicModelManager;
+    protected DynAttrManager dynAttrManager;
 
     @Override
     public void onLoad(Collection<Entity> entities, LoadContext loadContext) {
         if (loadContext.isLoadDynamicAttributes()) {
-            dynamicModelManager.loadValues(entities, loadContext.getFetchPlan());
+            dynAttrManager.loadValues(entities, loadContext.getFetchPlan());
         }
     }
 
     @Override
     public void onSave(Collection<Entity> entities) {
-        dynamicModelManager.storeValues(entities);
+        dynAttrManager.storeValues(entities);
     }
 }
