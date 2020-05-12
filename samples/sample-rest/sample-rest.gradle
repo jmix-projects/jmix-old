@@ -24,7 +24,7 @@ group = 'io.jmix.sample.rest'
 
 dependencies {
     implementation project(':starters:starter-standard')
-    implementation project(':modules:rest')
+    implementation project(':starters:starter-rest')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 

@@ -43,6 +43,7 @@ include 'starters:starter-standard'
 include 'starters:starter-audit'
 include 'starters:starter-audit-ui'
 include 'starters:starter-cuba'
+include 'starters:starter-rest'
 
 include 'samples:sample-hello-world'
 include 'samples:sample-custom-security'
