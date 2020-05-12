@@ -54,17 +54,17 @@ class DynamicAttributesTest extends Specification {
     void setup() {
         userCategory = new io.jmix.dynattr.impl.model.Category(
                 name: 'user',
-                entityType: 'test$User'
+                entityType: 'dynattr$User'
         )
 
         userRoleCategory = new io.jmix.dynattr.impl.model.Category(
                 name: 'userRole',
-                entityType: 'test$UserRole'
+                entityType: 'dynattr$UserRole'
         )
 
         roleCategory = new io.jmix.dynattr.impl.model.Category(
                 name: 'role',
-                entityType: 'test$Role'
+                entityType: 'dynattr$Role'
         )
 
         userAttribute = new CategoryAttribute(
