@@ -35,5 +35,5 @@ public interface CategoryDefinition {
     @Nullable
     String getEntityType();
 
-    Entity<?> getSource();
+    Entity getSource();
 }

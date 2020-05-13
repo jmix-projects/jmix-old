@@ -25,11 +25,11 @@ import io.jmix.core.impl.EntityInternals;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-public class DynamicAttributesState<K> implements EntityEntryExtraState<K>, EntityValuesProvider {
-    protected EntityEntry<K> entityEntry;
+public class DynamicAttributesState<K> implements EntityEntryExtraState, EntityValuesProvider {
+    protected EntityEntry entityEntry;
     protected DynamicAttributes dynamicModel;
 
-    public DynamicAttributesState(EntityEntry<K> entityEntry) {
+    public DynamicAttributesState(EntityEntry entityEntry) {
         this.entityEntry = entityEntry;
     }
 
@@ -69,7 +69,7 @@ public class DynamicAttributesState<K> implements EntityEntryExtraState<K>, Enti
     }
 
     @Override
-    public EntityEntry<K> getEntityEntry() {
+    public EntityEntry getEntityEntry() {
         return entityEntry;
     }
 }

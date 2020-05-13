@@ -192,7 +192,7 @@ public abstract class BaseEntityEntry<K> implements EntityEntry<K>, Cloneable {
     }
 
     @Override
-    public void copy(@Nullable EntityEntry<?> entry) {
+    public void copy(@Nullable EntityEntry entry) {
         if (entry != null) {
             setNew(entry.isNew());
             setDetached(entry.isDetached());

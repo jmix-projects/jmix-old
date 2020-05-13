@@ -48,7 +48,7 @@ import org.springframework.core.ResolvableTypeProvider;
  * @param <E>   entity type
  * @param <K>   entity identifier type
  */
-public class EntityChangedEvent<E extends Entity<K>, K> extends ApplicationEvent implements ResolvableTypeProvider {
+public class EntityChangedEvent<E extends Entity> extends ApplicationEvent implements ResolvableTypeProvider {
 
     /**
      * Type of the event: {@link #CREATED}, {@link #UPDATED} or {@link #DELETED}.
@@ -59,14 +59,14 @@ public class EntityChangedEvent<E extends Entity<K>, K> extends ApplicationEvent
         DELETED
     }
 
-    private Id<E, K> entityId;
+    private Id<E> entityId;
     private Type type;
     private AttributeChanges changes;
 
     /**
      * INTERNAL.
      */
-    public EntityChangedEvent(Object source, Id<E, K> entityId, Type type, AttributeChanges changes) {
+    public EntityChangedEvent(Object source, Id<E> entityId, Type type, AttributeChanges changes) {
         super(source);
         this.entityId = entityId;
         this.type = type;
@@ -76,7 +76,7 @@ public class EntityChangedEvent<E extends Entity<K>, K> extends ApplicationEvent
     /**
      * Returns the entity id.
      */
-    public Id<E, K> getEntityId() {
+    public Id<E> getEntityId() {
         return entityId;
     }
 

@@ -40,12 +40,12 @@ public final class Ids<T extends Entity<K>, K> extends ArrayList<Id<T, K>> {
      * @param <T>      entity type
      * @return list of ids of the passed entities
      */
-    public static <T extends Entity<K>, K> Ids<T, K> of(Collection<T> entities) {
-        Ids<T, K> ids = new Ids<>();
+    public static <T extends Entity> Ids<T> of(Collection<T> entities) {
+        Ids<T> ids = new Ids<>();
 
         for (T entity : entities) {
             checkNotNullArgument(entity);
-            checkNotNullArgument(EntityValues.<K>getId(entity));
+            checkNotNullArgument(EntityValues.getId(entity));
 
             @SuppressWarnings("unchecked")
             Class<T> entityClass = (Class<T>) entity.getClass();

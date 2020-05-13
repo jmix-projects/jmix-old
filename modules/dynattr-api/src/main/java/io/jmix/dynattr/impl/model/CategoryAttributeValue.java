@@ -253,7 +253,7 @@ public class CategoryAttributeValue extends StandardEntity {
         } else if (value instanceof Boolean) {
             setBooleanValue((Boolean) value);
         } else if (value instanceof io.jmix.core.Entity) {
-            Object referenceId = referenceToEntitySupport.getReferenceId((io.jmix.core.Entity<?>) value);
+            Object referenceId = referenceToEntitySupport.getReferenceId((io.jmix.core.Entity) value);
             entityValue.setObjectEntityId(referenceId);
             setTransientEntityValue((io.jmix.core.Entity) value);
         } else if (value instanceof String) {

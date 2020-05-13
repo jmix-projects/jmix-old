@@ -155,7 +155,7 @@ public interface DataManager {
      * Removes the entity instance from the data store by its id.
      * @param entityId    entity id
      */
-    default <T extends Entity<K>, K> void remove(Id<T, K> entityId) {
+    default <T extends Entity<K>, K> void remove(Id<T> entityId) {
         remove(getReference(entityId));
     }
 

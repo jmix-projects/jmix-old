@@ -126,5 +126,5 @@ public interface AttributeDefinition {
 
     Configuration getConfiguration();
 
-    Entity<?> getSource();
+    Entity getSource();
 }
