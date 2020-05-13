@@ -6,7 +6,6 @@ version = rootProject.jmixVersion
 
 dependencies {
     api project(':starters:starter-standard')
-    api project(':starters:starter-ui-persistence')
     api project(':modules:cuba')
 
     api 'org.springframework.boot:spring-boot-autoconfigure'
