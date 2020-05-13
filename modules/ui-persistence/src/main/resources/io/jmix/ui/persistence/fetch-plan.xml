@@ -16,7 +16,7 @@
 
 <views xmlns="http://schemas.haulmont.com/jmix/views.xsd">
 
-    <view class="io.jmix.ui.persistence.entity.Presentation" name="app">
+    <view class="io.jmix.ui.persistence.entity.UiTablePresentation" name="app">
         <property name="componentId"/>
         <property name="name"/>
         <property name="settings"/>

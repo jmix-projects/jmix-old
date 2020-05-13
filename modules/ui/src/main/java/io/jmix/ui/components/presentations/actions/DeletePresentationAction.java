@@ -16,10 +16,10 @@
 
 package io.jmix.ui.components.presentations.actions;
 
-import io.jmix.ui.presentations.model.Presentation;
+import io.jmix.ui.presentations.model.TablePresentation;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Table;
-import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.presentations.TablePresentations;
 
 public class DeletePresentationAction extends AbstractPresentationAction {
 
@@ -31,8 +31,8 @@ public class DeletePresentationAction extends AbstractPresentationAction {
     public void actionPerform(Component component) {
         tableImpl.hidePresentationsPopup();
 
-        Presentations presentations = table.getPresentations();
-        Presentation current = presentations.getCurrent();
+        TablePresentations presentations = table.getPresentations();
+        TablePresentation current = presentations.getCurrent();
         presentations.remove(current);
         presentations.commit();
     }

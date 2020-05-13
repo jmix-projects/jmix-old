@@ -23,19 +23,18 @@
 
     <changeSet author="ui-persistence" id="1.0">
 
-        <createTable tableName="UI_USER_SETTING">
+        <createTable tableName="UI_SETTING">
             <column name="ID" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="CREATE_TS" type="datetime"/>
             <column name="CREATED_BY" type="varchar(50)"/>
             <column name="USER_LOGIN" type="varchar(255)"/>
-            <column name="CLIENT_TYPE" type="varchar(10)"/>
             <column name="NAME" type="varchar(255)"/>
             <column name="VALUE_" type="clob"/>
         </createTable>
 
-        <createTable tableName="UI_PRESENTATION">
+        <createTable tableName="UI_TABLE_PRESENTATION">
             <column name="ID" type="uuid">
                 <constraints primaryKey="true" nullable="false"/>
             </column>

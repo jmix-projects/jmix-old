@@ -15,9 +15,9 @@
  */
 package io.jmix.ui.presentations;
 
-import io.jmix.ui.components.TablePresentations;
-import io.jmix.ui.presentations.model.EmptyPresentation;
-import io.jmix.ui.presentations.model.Presentation;
+import io.jmix.ui.components.HasTablePresentations;
+import io.jmix.ui.presentations.model.EmptyTablePresentation;
+import io.jmix.ui.presentations.model.TablePresentation;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;
@@ -25,11 +25,11 @@ import java.util.Collection;
 
 /**
  * Provide the workflow with presentations (visual settings of a component).
- * <br><br> A component must implement {@link TablePresentations} interface
+ * <br><br> A component must implement {@link HasTablePresentations} interface
  *
- * @see Presentation
+ * @see TablePresentation
  */
-public interface Presentations {
+public interface TablePresentations {
 
     String NAME = "jmix_Presentations";
 
@@ -37,22 +37,22 @@ public interface Presentations {
      * Returns the current active presentation or <code>null</code> if a current presentation didn't set
      */
     @Nullable
-    Presentation getCurrent();
+    TablePresentation getCurrent();
 
     /**
      * Sets current active presentation for a component
      */
-    void setCurrent(@Nullable Presentation p);
+    void setCurrent(@Nullable TablePresentation p);
 
     /**
      * Returns user settings for the selected presentation or <code>null</code>
      * if the presentation doesn't exist or if the presentation doesn't contain any settings
      *
-     * @deprecated Use {@link #getRawSettings(Presentation) instead.}
+     * @deprecated Use {@link #getRawSettings(TablePresentation) instead.}
      */
     @Nullable
     @Deprecated
-    Element getSettings(Presentation p);
+    Element getSettings(TablePresentation p);
 
     /**
      * @param p presentation
@@ -60,15 +60,15 @@ public interface Presentations {
      * the presentation doesn't contain any settings
      */
     @Nullable
-    String getRawSettings(Presentation p);
+    String getRawSettings(TablePresentation p);
 
     /**
      * Sets user settings for the selected presentation
      *
-     * @deprecated Use {@link #setSettings(Presentation, String)} instead.
+     * @deprecated Use {@link #setSettings(TablePresentation, String)} instead.
      */
     @Deprecated
-    void setSettings(Presentation p, Element e);
+    void setSettings(TablePresentation p, Element e);
 
     /**
      * Sets user settings for the selected presentation
@@ -76,13 +76,13 @@ public interface Presentations {
      * @param p        presentation
      * @param settings user settings
      */
-    void setSettings(Presentation p, @Nullable String settings);
+    void setSettings(TablePresentation p, @Nullable String settings);
 
     /**
      * Returns presentation by its id or <code>null</code> if a presentation doesn't exist
      */
     @Nullable
-    Presentation getPresentation(Object id);
+    TablePresentation getPresentation(Object id);
 
     /**
      * Returns presentation caption by its id
@@ -99,37 +99,37 @@ public interface Presentations {
      * Returns a default presentation or <code>null</code> if it didn't set
      */
     @Nullable
-    Presentation getDefault();
+    TablePresentation getDefault();
 
     /**
      * Sets a default presentation
      */
-    void setDefault(@Nullable Presentation p);
+    void setDefault(@Nullable TablePresentation p);
 
     /**
      * Adds a new presentation
      */
-    void add(Presentation p);
+    void add(TablePresentation p);
 
     /**
      * Removes a presentation from the list of available presentations
      */
-    void remove(Presentation p);
+    void remove(TablePresentation p);
 
     /**
      * Modifies the selected presentation
      */
-    void modify(Presentation p);
+    void modify(TablePresentation p);
 
     /**
      * Returns <code>true</code> if the selected presentation has an <code>autoSave</code> settings else returns <code>false</code>
      */
-    boolean isAutoSave(Presentation p);
+    boolean isAutoSave(TablePresentation p);
 
     /**
      * Returns <code>true</code> if the selected presentation is marked as global else returns <code>false</code>
      */
-    boolean isGlobal(Presentation p);
+    boolean isGlobal(TablePresentation p);
 
     /**
      * Commits all changes into the database
@@ -141,7 +141,7 @@ public interface Presentations {
      * It returns <code>null</code> if a presentation with such name doesn't exist
      */
     @Nullable
-    Presentation getPresentationByName(String name);
+    TablePresentation getPresentationByName(String name);
 
     /**
      * Adds listener
@@ -154,9 +154,9 @@ public interface Presentations {
     void removeListener(PresentationsChangeListener listener);
 
     /**
-     * @return Presentation instance or stub if "ui-persistence" add-on is not added to the project
+     * @return presentation instance or stub if "ui-persistence" add-on is not added to the project
      */
-    default Presentation create() {
-        return new EmptyPresentation();
+    default TablePresentation create() {
+        return new EmptyTablePresentation();
     }
 }

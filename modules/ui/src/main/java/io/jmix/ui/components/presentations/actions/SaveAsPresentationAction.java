@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components.presentations.actions;
 
-import io.jmix.ui.presentations.model.Presentation;
+import io.jmix.ui.presentations.model.TablePresentation;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.ComponentsHelper;
 import io.jmix.ui.components.Table;
@@ -32,7 +32,7 @@ public class SaveAsPresentationAction extends AbstractEditPresentationAction {
     public void actionPerform(Component component) {
         tableImpl.hidePresentationsPopup();
 
-        Presentation presentation = table.getPresentations().create();
+        TablePresentation presentation = table.getPresentations().create();
         presentation.setComponentId(ComponentsHelper.getComponentPath(table));
 
         openEditor(presentation);

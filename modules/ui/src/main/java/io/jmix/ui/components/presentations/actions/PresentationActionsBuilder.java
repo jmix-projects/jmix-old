@@ -17,11 +17,11 @@
 package io.jmix.ui.components.presentations.actions;
 
 import io.jmix.core.AppBeans;
-import io.jmix.ui.presentations.model.Presentation;
+import io.jmix.ui.presentations.model.TablePresentation;
 import io.jmix.core.security.Security;
 import io.jmix.ui.actions.AbstractAction;
 import io.jmix.ui.components.Table;
-import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.presentations.TablePresentations;
 import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 import javax.annotation.Nonnull;
@@ -128,8 +128,8 @@ public class PresentationActionsBuilder {
     }
 
     protected boolean isGlobalPresentation() {
-        Presentations presentations = table.getPresentations();
-        Presentation presentation = presentations.getCurrent();
+        TablePresentations presentations = table.getPresentations();
+        TablePresentation presentation = presentations.getCurrent();
         return presentation != null && (!presentations.isGlobal(presentation) ||
                 security.isSpecificPermitted("cuba.gui.presentations.global"));
     }

@@ -18,7 +18,7 @@ package io.jmix.ui.persistence.entity;
 import io.jmix.core.entity.Creatable;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.data.entity.BaseUuidEntity;
-import io.jmix.ui.persistence.UserSettingsPersistence;
+import io.jmix.ui.persistence.UserSettingImpl;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -26,12 +26,12 @@ import java.util.Date;
 /**
  * Record for user setting.
  *
- * @see UserSettingsPersistence
+ * @see UserSettingImpl
  */
-@Entity(name = "ui_UserSetting")
-@Table(name = "UI_USER_SETTING")
+@Entity(name = "ui_Setting")
+@Table(name = "UI_SETTING")
 @SystemLevel
-public class UserSetting extends BaseUuidEntity implements Creatable {
+public class UiSetting extends BaseUuidEntity implements Creatable {
 
     private static final long serialVersionUID = -4324101071593066529L;
 
@@ -43,9 +43,6 @@ public class UserSetting extends BaseUuidEntity implements Creatable {
 
     @Column(name = "USER_LOGIN")
     private String userLogin;
-
-    @Column(name = "CLIENT_TYPE", length = 10)
-    private String clientType;
 
     @Column(name = "NAME")
     private String name;
@@ -80,14 +77,6 @@ public class UserSetting extends BaseUuidEntity implements Creatable {
 
     public void setUserLogin(String userLogin) {
         this.userLogin = userLogin;
-    }
-
-    public String getClientType() {
-        return clientType;
-    }
-
-    public void setClientType(String clientType) {
-        this.clientType = clientType;
     }
 
     public String getName() {

@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.presentations;
 
-import io.jmix.ui.presentations.model.Presentation;
+import io.jmix.ui.presentations.model.TablePresentation;
 import io.jmix.ui.components.Component;
 import org.dom4j.Element;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -27,46 +27,46 @@ import java.util.*;
  * Stub. By default, UI does not provide persistence functionality for presentations. To save/load presentations add
  * "ui-persistence" add-on.
  */
-@org.springframework.stereotype.Component(Presentations.NAME)
+@org.springframework.stereotype.Component(TablePresentations.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class EmptyPresentationsImpl implements Presentations {
+public class EmptyPresentationsImpl implements TablePresentations {
 
     public EmptyPresentationsImpl(Component c) {
         // do nothing
     }
 
     @Override
-    public Presentation getCurrent() {
+    public TablePresentation getCurrent() {
         return null;
     }
 
     @Override
-    public void setCurrent(Presentation p) {
+    public void setCurrent(TablePresentation p) {
         // do nothing
     }
 
     @Override
-    public Element getSettings(Presentation p) {
+    public Element getSettings(TablePresentation p) {
         return null;
     }
 
     @Override
-    public String getRawSettings(Presentation p) {
+    public String getRawSettings(TablePresentation p) {
         return null;
     }
 
     @Override
-    public void setSettings(Presentation p, Element e) {
+    public void setSettings(TablePresentation p, Element e) {
         // do nothing
     }
 
     @Override
-    public void setSettings(Presentation p, String settings) {
+    public void setSettings(TablePresentation p, String settings) {
         // do nothing
     }
 
     @Override
-    public Presentation getPresentation(Object id) {
+    public TablePresentation getPresentation(Object id) {
         return null;
     }
 
@@ -81,37 +81,37 @@ public class EmptyPresentationsImpl implements Presentations {
     }
 
     @Override
-    public Presentation getDefault() {
+    public TablePresentation getDefault() {
         return null;
     }
 
     @Override
-    public void setDefault(Presentation p) {
+    public void setDefault(TablePresentation p) {
         // do nothing
     }
 
     @Override
-    public void add(Presentation p) {
+    public void add(TablePresentation p) {
         // do nothing
     }
 
     @Override
-    public void remove(Presentation p) {
+    public void remove(TablePresentation p) {
         // do nothing
     }
 
     @Override
-    public void modify(Presentation p) {
+    public void modify(TablePresentation p) {
         // do nothing
     }
 
     @Override
-    public boolean isAutoSave(Presentation p) {
+    public boolean isAutoSave(TablePresentation p) {
         return false;
     }
 
     @Override
-    public boolean isGlobal(Presentation p) {
+    public boolean isGlobal(TablePresentation p) {
         return false;
     }
 
@@ -121,7 +121,7 @@ public class EmptyPresentationsImpl implements Presentations {
     }
 
     @Override
-    public Presentation getPresentationByName(String name) {
+    public TablePresentation getPresentationByName(String name) {
         return null;
     }
 

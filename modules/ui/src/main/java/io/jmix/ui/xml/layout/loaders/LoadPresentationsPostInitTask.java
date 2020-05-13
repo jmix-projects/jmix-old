@@ -16,14 +16,14 @@
 package io.jmix.ui.xml.layout.loaders;
 
 import io.jmix.ui.components.Frame;
-import io.jmix.ui.components.TablePresentations;
+import io.jmix.ui.components.HasTablePresentations;
 import io.jmix.ui.xml.layout.ComponentLoader;
 
 public class LoadPresentationsPostInitTask implements ComponentLoader.PostInitTask {
 
-    private TablePresentations component;
+    private HasTablePresentations component;
 
-    public LoadPresentationsPostInitTask(TablePresentations c) {
+    public LoadPresentationsPostInitTask(HasTablePresentations c) {
         component = c;
     }
 

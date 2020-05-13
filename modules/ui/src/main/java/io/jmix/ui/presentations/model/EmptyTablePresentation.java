@@ -20,11 +20,11 @@ package io.jmix.ui.presentations.model;
  * Stub. By default, UI does not provide persistence functionality for presentations. To save/load presentations add
  * "ui-persistence" add-on.
  */
-public class EmptyPresentation implements Presentation {
+public class EmptyTablePresentation implements TablePresentation {
 
     protected String name;
 
-    protected String xml;
+    protected String settings;
 
     protected String userLogin;
 
@@ -46,12 +46,12 @@ public class EmptyPresentation implements Presentation {
 
     @Override
     public String getSettings() {
-        return xml;
+        return settings;
     }
 
     @Override
-    public void setSettings(String xml) {
-        this.xml = xml;
+    public void setSettings(String settings) {
+        this.settings = settings;
     }
 
     @Override

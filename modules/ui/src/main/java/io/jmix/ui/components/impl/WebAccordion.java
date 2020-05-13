@@ -595,12 +595,12 @@ public class WebAccordion extends WebAbstractComponent<CubaAccordion>
                                     Element e = settings.get(name);
                                     ((HasSettings) settingsComponent).applySettings(e);
 
-                                    if (component instanceof TablePresentations
+                                    if (component instanceof HasTablePresentations
                                             && e.attributeValue("presentation") != null) {
                                         final String def = e.attributeValue("presentation");
                                         if (!StringUtils.isEmpty(def)) {
                                             UUID defaultId = UUID.fromString(def);
-                                            ((TablePresentations) component).applyPresentationAsDefault(defaultId);
+                                            ((HasTablePresentations) component).applyPresentationAsDefault(defaultId);
                                         }
                                     }
                                 }

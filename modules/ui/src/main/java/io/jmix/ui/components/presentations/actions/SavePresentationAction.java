@@ -17,10 +17,10 @@
 package io.jmix.ui.components.presentations.actions;
 
 import io.jmix.core.AppBeans;
-import io.jmix.ui.presentations.model.Presentation;
+import io.jmix.ui.presentations.model.TablePresentation;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Table;
-import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.presentations.TablePresentations;
 import io.jmix.ui.screen.compatibility.CubaLegacySettings;
 import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.SettingsHelper;
@@ -41,8 +41,8 @@ public class SavePresentationAction extends AbstractPresentationAction {
     public void actionPerform(Component component) {
         tableImpl.hidePresentationsPopup();
 
-        Presentations presentations = table.getPresentations();
-        Presentation current = presentations.getCurrent();
+        TablePresentations presentations = table.getPresentations();
+        TablePresentation current = presentations.getCurrent();
 
         if (table.getFrame().getFrameOwner() instanceof CubaLegacySettings) {
             Element e = presentations.getSettings(current);

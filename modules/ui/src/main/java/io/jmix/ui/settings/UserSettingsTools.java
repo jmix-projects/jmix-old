@@ -17,19 +17,16 @@
 
 package io.jmix.ui.settings;
 
-import io.jmix.core.ClientType;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.UiProperties;
 import io.jmix.ui.components.AppWorkArea;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 /**
  * Utility bean for work with user settings on web client tier.
- *
  */
 @Component(UserSettingsTools.NAME)
 public class UserSettingsTools {
@@ -56,7 +53,7 @@ public class UserSettingsTools {
     protected UiProperties uiProperties;
 
     public AppWorkArea.Mode loadAppWindowMode() {
-        String s = userSettingService.loadSetting(ClientType.WEB, "appWindowMode");
+        String s = userSettingService.loadSetting("appWindowMode");
         if (s != null) {
             if (AppWorkArea.Mode.SINGLE.name().equals(s)) {
                 return AppWorkArea.Mode.SINGLE;
@@ -70,11 +67,11 @@ public class UserSettingsTools {
     public void saveAppWindowMode(AppWorkArea.Mode mode) {
         Preconditions.checkNotNullArgument(mode);
 
-        userSettingService.saveSetting(ClientType.WEB, "appWindowMode", mode.name());
+        userSettingService.saveSetting("appWindowMode", mode.name());
     }
 
     public String loadAppWindowTheme() {
-        String s = userSettingService.loadSetting(ClientType.WEB, "appWindowTheme");
+        String s = userSettingService.loadSetting("appWindowTheme");
         if (s != null) {
             return s;
         }
@@ -82,12 +79,12 @@ public class UserSettingsTools {
     }
 
     public void saveAppWindowTheme(String theme) {
-        userSettingService.saveSetting(ClientType.WEB, "appWindowTheme", theme);
+        userSettingService.saveSetting("appWindowTheme", theme);
     }
 
     @Nullable
     public FoldersState loadFoldersState() {
-        String s = userSettingService.loadSetting(ClientType.WEB, "foldersState");
+        String s = userSettingService.loadSetting("foldersState");
         if (s == null)
             return null;
 

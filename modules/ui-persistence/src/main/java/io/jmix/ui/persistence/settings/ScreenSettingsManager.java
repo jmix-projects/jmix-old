@@ -19,8 +19,8 @@ package io.jmix.ui.persistence.settings;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.components.Component;
-import io.jmix.ui.components.TablePresentations;
-import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.components.HasTablePresentations;
+import io.jmix.ui.presentations.TablePresentations;
 import io.jmix.ui.settings.component.ComponentSettings.HasSettingsPresentation;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.ScreenSettings;
@@ -77,18 +77,18 @@ public class ScreenSettingsManager {
 
             ComponentSettingsBinder binder = beanLocator.get(settingsRegistry.getBinderClass(settingsClass));
 
-            if (component instanceof TablePresentations) {
+            if (component instanceof HasTablePresentations) {
                 ComponentSettings defaultSettings = binder.getSettings(component);
-                ((TablePresentations) component).setDefaultSettings(new SettingsWrapperImpl(defaultSettings));
+                ((HasTablePresentations) component).setDefaultSettings(new SettingsWrapperImpl(defaultSettings));
             }
 
             binder.applySettings(component, new SettingsWrapperImpl(settings));
 
-            if (component instanceof TablePresentations
+            if (component instanceof HasTablePresentations
                     && settings instanceof HasSettingsPresentation) {
                 UUID presentationId = ((HasSettingsPresentation) settings).getPresentationId();
                 if (presentationId != null) {
-                    ((TablePresentations) component).applyPresentationAsDefault(presentationId);
+                    ((HasTablePresentations) component).applyPresentationAsDefault(presentationId);
                 }
             }
         }
@@ -156,10 +156,10 @@ public class ScreenSettingsManager {
                 screenSettings.put(settings);
             }
 
-            if (component instanceof TablePresentations) {
-                TablePresentations compWithPres = (TablePresentations) component;
+            if (component instanceof HasTablePresentations) {
+                HasTablePresentations compWithPres = (HasTablePresentations) component;
                 if (compWithPres.isUsePresentations()) {
-                    Presentations presentations = compWithPres.getPresentations();
+                    TablePresentations presentations = compWithPres.getPresentations();
                     presentations.commit();
                 }
             }

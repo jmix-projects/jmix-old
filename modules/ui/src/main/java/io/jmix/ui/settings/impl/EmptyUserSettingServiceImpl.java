@@ -16,7 +16,6 @@
 
 package io.jmix.ui.settings.impl;
 
-import io.jmix.core.ClientType;
 import io.jmix.core.entity.User;
 import io.jmix.ui.settings.UserSettingService;
 import org.springframework.stereotype.Service;
@@ -31,13 +30,9 @@ import java.util.Set;
 @Service(UserSettingService.NAME)
 public class EmptyUserSettingServiceImpl implements UserSettingService {
 
+    @Nullable
     @Override
-    public String loadSetting(@Nullable String name) {
-        return null;
-    }
-
-    @Override
-    public String loadSetting(@Nullable ClientType clientType, String name) {
+    public String loadSetting(String name) {
         return null;
     }
 
@@ -47,22 +42,17 @@ public class EmptyUserSettingServiceImpl implements UserSettingService {
     }
 
     @Override
-    public void saveSetting(@Nullable ClientType clientType, String name, @Nullable String value) {
-        // do nothing
-    }
-
-    @Override
-    public void deleteSettings(@Nullable ClientType clientType, String name) {
-        // do nothing
-    }
-
-    @Override
-    public void deleteScreenSettings(ClientType clientType, Set<String> screens) {
+    public void deleteSettings(String name) {
         // do nothing
     }
 
     @Override
     public void copySettings(User fromUser, User toUser) {
+        // do nothing
+    }
+
+    @Override
+    public void deleteScreenSettings(Set<String> screens) {
         // do nothing
     }
 }

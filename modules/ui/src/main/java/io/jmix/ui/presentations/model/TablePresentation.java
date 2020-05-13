@@ -17,7 +17,7 @@
 package io.jmix.ui.presentations.model;
 
 import io.jmix.core.Entity;
-import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.presentations.TablePresentations;
 
 import java.util.UUID;
 
@@ -28,9 +28,9 @@ import java.util.UUID;
  * Note that by default, UI does not provide persistence functionality for presentations. To save/load presentations add
  * "ui-persistence" add-on.
  *
- * @see Presentations
+ * @see TablePresentations
  */
-public interface Presentation extends Entity<UUID> {
+public interface TablePresentation extends Entity<UUID> {
 
     String getName();
 

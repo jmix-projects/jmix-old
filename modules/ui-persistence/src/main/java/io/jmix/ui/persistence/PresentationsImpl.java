@@ -25,9 +25,10 @@ import io.jmix.core.security.UserSession;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.ComponentsHelper;
-import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.persistence.entity.UiTablePresentation;
+import io.jmix.ui.presentations.TablePresentations;
 import io.jmix.ui.presentations.PresentationsChangeListener;
-import io.jmix.ui.presentations.model.Presentation;
+import io.jmix.ui.presentations.model.TablePresentation;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
@@ -38,7 +39,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
-public class PersistencePresentations implements Presentations {
+public class PresentationsImpl implements TablePresentations {
 
     @Inject
     protected Metadata metadata;
@@ -54,22 +55,22 @@ public class PersistencePresentations implements Presentations {
     protected EntityStates entityStates;
 
     protected String name;
-    protected Map<Object, Presentation> presentations;
-    protected Presentation current;
-    protected Presentation def;
+    protected Map<Object, TablePresentation> presentations;
+    protected TablePresentation current;
+    protected TablePresentation def;
 
-    protected Set<Presentation> needToUpdate = new HashSet<>();
-    protected Set<Presentation> needToRemove = new HashSet<>();
+    protected Set<TablePresentation> needToUpdate = new HashSet<>();
+    protected Set<TablePresentation> needToRemove = new HashSet<>();
 
     protected List<PresentationsChangeListener> listeners;
 
 
-    public PersistencePresentations(Component c) {
+    public PresentationsImpl(Component c) {
         name = ComponentsHelper.getComponentPath(c);
     }
 
     @Override
-    public void add(Presentation p) {
+    public void add(TablePresentation p) {
         Preconditions.checkNotNullArgument(p);
 
         checkLoad();
@@ -85,13 +86,13 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public Presentation getCurrent() {
+    public TablePresentation getCurrent() {
         checkLoad();
         return current;
     }
 
     @Override
-    public void setCurrent(@Nullable Presentation p) {
+    public void setCurrent(@Nullable TablePresentation p) {
         checkLoad();
         if (p == null) {
             Object old = current;
@@ -107,7 +108,7 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public Element getSettings(Presentation p) {
+    public Element getSettings(TablePresentation p) {
         Preconditions.checkNotNullArgument(p);
 
         p = getPresentation(EntityValues.<UUID>getId(p));
@@ -126,7 +127,7 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public String getRawSettings(Presentation p) {
+    public String getRawSettings(TablePresentation p) {
         Preconditions.checkNotNullArgument(p);
 
         p = getPresentation(EntityValues.<UUID>getId(p));
@@ -139,7 +140,7 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public void setSettings(Presentation p, Element e) {
+    public void setSettings(TablePresentation p, Element e) {
         Preconditions.checkNotNullArgument(p);
         Preconditions.checkNotNullArgument(e);
 
@@ -151,7 +152,7 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public void setSettings(Presentation p, @Nullable String settings) {
+    public void setSettings(TablePresentation p, @Nullable String settings) {
         Preconditions.checkNotNullArgument(p);
 
         p = getPresentation(EntityValues.<UUID>getId(p));
@@ -162,14 +163,14 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public Presentation getPresentation(Object id) {
+    public TablePresentation getPresentation(Object id) {
         checkLoad();
         return presentations.get(id);
     }
 
     @Override
     public String getCaption(Object id) {
-        Presentation p = getPresentation(id);
+        TablePresentation p = getPresentation(id);
         if (p != null) {
             return p.getName();
         }
@@ -183,7 +184,7 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public void setDefault(@Nullable Presentation p) {
+    public void setDefault(@Nullable TablePresentation p) {
         checkLoad();
         if (p == null) {
             Object old = def;
@@ -203,12 +204,12 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public Presentation getDefault() {
+    public TablePresentation getDefault() {
         return def;
     }
 
     @Override
-    public void remove(Presentation p) {
+    public void remove(TablePresentation p) {
         Preconditions.checkNotNullArgument(p);
 
         checkLoad();
@@ -233,7 +234,7 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public void modify(Presentation p) {
+    public void modify(TablePresentation p) {
         Preconditions.checkNotNullArgument(p);
 
         checkLoad();
@@ -250,7 +251,7 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public boolean isAutoSave(Presentation p) {
+    public boolean isAutoSave(TablePresentation p) {
         Preconditions.checkNotNullArgument(p);
 
         p = getPresentation(EntityValues.<UUID>getId(p));
@@ -258,7 +259,7 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public boolean isGlobal(Presentation p) {
+    public boolean isGlobal(TablePresentation p) {
         Preconditions.checkNotNullArgument(p);
 
         p = getPresentation(EntityValues.<UUID>getId(p));
@@ -281,12 +282,12 @@ public class PersistencePresentations implements Presentations {
     public void commited(Set<Entity> entities) {
         for (Entity entity : entities) {
             if (entity.equals(def))
-                setDefault((Presentation) entity);
+                setDefault((TablePresentation) entity);
             else if (entity.equals(current))
-                current = (Presentation) entity;
+                current = (TablePresentation) entity;
 
             if (presentations.containsKey(EntityValues.getId(entity))) {
-                presentations.put(EntityValues.getId(entity), (Presentation) entity);
+                presentations.put(EntityValues.getId(entity), (TablePresentation) entity);
             }
         }
     }
@@ -310,8 +311,8 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public Presentation getPresentationByName(String name) {
-        for (Presentation p : presentations.values()) {
+    public TablePresentation getPresentationByName(String name) {
+        for (TablePresentation p : presentations.values()) {
             if (name.equalsIgnoreCase(p.getName())) {
                 return p;
             }
@@ -320,8 +321,8 @@ public class PersistencePresentations implements Presentations {
     }
 
     @Override
-    public Presentation create() {
-        return metadata.create(io.jmix.ui.persistence.entity.Presentation.class);
+    public TablePresentation create() {
+        return metadata.create(UiTablePresentation.class);
     }
 
     protected void fireCurrentPresentationChanged(Object oldPresentationId) {
@@ -350,25 +351,25 @@ public class PersistencePresentations implements Presentations {
 
     protected void checkLoad() {
         if (presentations == null) {
-            LoadContext<io.jmix.ui.persistence.entity.Presentation> ctx
-                    = new LoadContext<>(io.jmix.ui.persistence.entity.Presentation.class);
+            LoadContext<UiTablePresentation> ctx
+                    = new LoadContext<>(UiTablePresentation.class);
 
             ctx.setFetchPlan(fetchPlanRepository.getFetchPlan(
-                    io.jmix.ui.persistence.entity.Presentation.class, "app"));
+                    UiTablePresentation.class, "app"));
 
             UserSession session = sessionSource.getUserSession();
             // todo user substitution
             User user = session.getUser();
 
-            ctx.setQueryString("select p from ui_Presentation p " +
+            ctx.setQueryString("select p from ui_TablePresentation p " +
                     "where p.componentId = :component and (p.userLogin is null or p.userLogin = :userLogin)")
                     .setParameter("component", name)
                     .setParameter("userLogin", user.getLogin());
 
-            final List<io.jmix.ui.persistence.entity.Presentation> list = dataManager.loadList(ctx);
+            final List<UiTablePresentation> list = dataManager.loadList(ctx);
 
             presentations = new LinkedHashMap<>(list.size());
-            for (final Presentation p : list) {
+            for (final TablePresentation p : list) {
                 presentations.put(EntityValues.<UUID>getId(p), p);
             }
         }

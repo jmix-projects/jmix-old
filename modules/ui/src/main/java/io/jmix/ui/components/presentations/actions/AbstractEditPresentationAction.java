@@ -17,9 +17,9 @@
 package io.jmix.ui.components.presentations.actions;
 
 import io.jmix.core.DevelopmentException;
-import io.jmix.ui.presentations.model.Presentation;
+import io.jmix.ui.presentations.model.TablePresentation;
 import io.jmix.ui.AppUI;
-import io.jmix.ui.components.TablePresentations;
+import io.jmix.ui.components.HasTablePresentations;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.components.presentations.PresentationEditor;
 import io.jmix.ui.screen.FrameOwner;
@@ -36,19 +36,19 @@ public abstract class AbstractEditPresentationAction extends AbstractPresentatio
         super(table, id, settingsBinder);
     }
 
-    protected void openEditor(Presentation presentation) {
+    protected void openEditor(TablePresentation presentation) {
         PresentationEditor window = createEditor(presentation, settingsBinder);
         AppUI.getCurrent().addWindow(window);
         window.center();
     }
 
-    protected PresentationEditor createEditor(Presentation presentation, ComponentSettingsBinder settingsBinder) {
+    protected PresentationEditor createEditor(TablePresentation presentation, ComponentSettingsBinder settingsBinder) {
         Class<? extends PresentationEditor> windowClass = getPresentationEditorClass();
         try {
             Constructor<? extends PresentationEditor> windowConstructor = windowClass.getConstructor(
                     FrameOwner.class,
-                    Presentation.class,
-                    TablePresentations.class,
+                    TablePresentation.class,
+                    HasTablePresentations.class,
                     ComponentSettingsBinder.class);
 
             return windowConstructor.newInstance(table.getFrame().getFrameOwner(), presentation, table, settingsBinder);

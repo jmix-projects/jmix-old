@@ -34,12 +34,12 @@ import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
 import io.jmix.core.commons.util.Dom4j;
-import io.jmix.ui.presentations.model.Presentation;
+import io.jmix.ui.presentations.model.TablePresentation;
 import io.jmix.core.entity.User;
 import io.jmix.core.security.UserSessionSource;
 import io.jmix.ui.App;
-import io.jmix.ui.components.TablePresentations;
-import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.components.HasTablePresentations;
+import io.jmix.ui.presentations.TablePresentations;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.widgets.CubaButton;
 import io.jmix.ui.widgets.CubaWindow;
@@ -56,11 +56,11 @@ public class PresentationEditor extends CubaWindow {
 
     private static final Logger log = LoggerFactory.getLogger(PresentationEditor.class);
 
-    protected Presentation presentation;
+    protected TablePresentation presentation;
 
     protected FrameOwner frameOwner;
 
-    protected TablePresentations component;
+    protected HasTablePresentations component;
     protected TextField nameField;
     protected CheckBox autoSaveField;
     protected CheckBox defaultField;
@@ -76,7 +76,7 @@ public class PresentationEditor extends CubaWindow {
 
     protected ComponentSettingsBinder settingsBinder;
 
-    public PresentationEditor(FrameOwner frameOwner, Presentation presentation, TablePresentations component,
+    public PresentationEditor(FrameOwner frameOwner, TablePresentation presentation, HasTablePresentations component,
                               ComponentSettingsBinder settingsBinder) {
         this.presentation = presentation;
         this.component = component;
@@ -160,7 +160,7 @@ public class PresentationEditor extends CubaWindow {
     }
 
     protected boolean validate() {
-        Presentations presentations = component.getPresentations();
+        TablePresentations presentations = component.getPresentations();
 
         //check that name is empty
         if (StringUtils.isEmpty(nameField.getValue())) {
@@ -173,7 +173,7 @@ public class PresentationEditor extends CubaWindow {
         }
 
         //check that name is unique
-        final Presentation pres = presentations.getPresentationByName(nameField.getValue());
+        final TablePresentation pres = presentations.getPresentationByName(nameField.getValue());
         if (pres != null && !pres.equals(presentation)) {
             AppUI.getCurrent().getNotifications()
                     .create(Notifications.NotificationType.HUMANIZED)
@@ -186,7 +186,7 @@ public class PresentationEditor extends CubaWindow {
     }
 
     protected void commit() {
-        Presentations presentations = component.getPresentations();
+        TablePresentations presentations = component.getPresentations();
 
         String rawSettings;
         if (frameOwner instanceof CubaLegacySettings) {

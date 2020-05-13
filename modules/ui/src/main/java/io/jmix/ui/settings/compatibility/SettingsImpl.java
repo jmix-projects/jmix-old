@@ -18,7 +18,7 @@ package io.jmix.ui.settings.compatibility;
 import io.jmix.core.AppBeans;
 import io.jmix.core.commons.xmlparsing.Dom4jTools;
 import io.jmix.ui.screen.Screen;
-import io.jmix.ui.settings.WebSettingsClient;
+import io.jmix.ui.settings.UiSettingsCache;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
 public class SettingsImpl implements Settings {
 
     protected final String name;
-    protected transient WebSettingsClient settingsClient;
+    protected transient UiSettingsCache settingsClient;
     protected Element root;
     protected boolean modified;
 
@@ -40,9 +40,9 @@ public class SettingsImpl implements Settings {
         this.name = name;
     }
 
-    protected WebSettingsClient getSettingsClient() {
+    protected UiSettingsCache getSettingsClient() {
         if (settingsClient == null) {
-            settingsClient = AppBeans.get(WebSettingsClient.NAME);
+            settingsClient = AppBeans.get(UiSettingsCache.NAME);
         }
         return settingsClient;
     }

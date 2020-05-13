@@ -18,7 +18,7 @@ package io.jmix.ui.persistence.settings;
 
 import com.google.gson.*;
 import io.jmix.ui.settings.ScreenSettings;
-import io.jmix.ui.settings.WebSettingsClient;
+import io.jmix.ui.settings.UiSettingsCache;
 import io.jmix.ui.settings.component.ComponentSettings;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -41,7 +41,7 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
     private static final Logger log = LoggerFactory.getLogger(ScreenSettingsJson.class);
 
     @Inject
-    protected WebSettingsClient settingsClient;
+    protected UiSettingsCache settingsClient;
 
     protected JsonArray root;
 

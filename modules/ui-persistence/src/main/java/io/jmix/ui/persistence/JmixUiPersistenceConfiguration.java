@@ -22,7 +22,7 @@ import io.jmix.core.annotation.JmixProperty;
 import io.jmix.data.JmixDataConfiguration;
 import io.jmix.ui.JmixUiConfiguration;
 import io.jmix.ui.components.Component;
-import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.presentations.TablePresentations;
 import io.jmix.ui.settings.UserSettingService;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.*;
@@ -38,13 +38,13 @@ public class JmixUiPersistenceConfiguration {
 
     @Bean(UserSettingService.NAME)
     public UserSettingService userSettingService() {
-        return new UserSettingsPersistence();
+        return new UserSettingImpl();
     }
 
-    @Bean(Presentations.NAME)
+    @Bean(TablePresentations.NAME)
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-    public Presentations presentations(Component component) {
-        return new PersistencePresentations(component);
+    public TablePresentations presentations(Component component) {
+        return new PresentationsImpl(component);
     }
 }
 

@@ -16,7 +16,7 @@
 
 package io.jmix.ui.components;
 
-import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.presentations.TablePresentations;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
 
@@ -25,14 +25,14 @@ import javax.annotation.Nullable;
 /**
  * Component having presentations.
  */
-public interface TablePresentations {
+public interface HasTablePresentations {
     void usePresentations(boolean b);
     boolean isUsePresentations();
 
     void resetPresentation();
     void loadPresentations();
 
-    Presentations getPresentations();
+    TablePresentations getPresentations();
 
     void applyPresentation(Object id);
     void applyPresentationAsDefault(Object id);

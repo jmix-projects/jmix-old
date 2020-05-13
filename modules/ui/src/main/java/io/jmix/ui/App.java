@@ -37,7 +37,7 @@ import io.jmix.ui.logging.AppLog;
 import io.jmix.ui.screen.OpenMode;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiControllerUtils;
-import io.jmix.ui.settings.WebSettingsClient;
+import io.jmix.ui.settings.UiSettingsCache;
 import io.jmix.ui.sys.*;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsRepository;
@@ -99,7 +99,7 @@ public abstract class App {
     @Inject
     protected MessageTools messageTools;
     @Inject
-    protected WebSettingsClient settingsClient;
+    protected UiSettingsCache settingsCache;
 
     @Inject
     protected Events events;
@@ -536,7 +536,7 @@ public abstract class App {
     }
 
     protected void clearSettingsCache() {
-        settingsClient.clearCache();
+        settingsCache.clear();
     }
 
     /**

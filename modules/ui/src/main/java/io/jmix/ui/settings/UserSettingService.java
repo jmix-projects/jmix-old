@@ -15,7 +15,6 @@
  */
 package io.jmix.ui.settings;
 
-import io.jmix.core.ClientType;
 import io.jmix.core.entity.User;
 
 import javax.annotation.Nullable;
@@ -38,25 +37,14 @@ public interface UserSettingService {
     String loadSetting(String name);
 
     /**
-     * Load settings for the current user. Returns null if no such setting found.
-     */
-    @Nullable
-    String loadSetting(@Nullable ClientType clientType, String name);
-
-    /**
      * Save settings for the current user and null client type
      */
     void saveSetting(String name, String value);
 
     /**
-     * Save settings for the current user
-     */
-    void saveSetting(@Nullable ClientType clientType, String name, @Nullable String value);
-
-    /**
      * Delete settings for the current user
      */
-    void deleteSettings(@Nullable ClientType clientType, String name);
+    void deleteSettings(String name);
 
     /**
      * Copy user settings to another user
@@ -66,8 +54,7 @@ public interface UserSettingService {
     /**
      * Delete settings of screens (settings of tables, filters etc) for the current user.
      *
-     * @param clientType client type
      * @param screens    set of window ids, whose settings must be deleted
      */
-    void deleteScreenSettings(ClientType clientType, Set<String> screens);
+    void deleteScreenSettings(Set<String> screens);
 }

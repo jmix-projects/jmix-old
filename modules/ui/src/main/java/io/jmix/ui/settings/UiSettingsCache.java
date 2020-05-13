@@ -17,7 +17,6 @@
 package io.jmix.ui.settings;
 
 import com.vaadin.server.VaadinSession;
-import io.jmix.core.ClientType;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.executors.IllegalConcurrentAccessException;
 import org.springframework.stereotype.Component;
@@ -29,10 +28,10 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * User settings provider for web application. Caches settings in HTTP session.
+ * User settings provider. Caches settings in HTTP session.
  */
-@Component(WebSettingsClient.NAME)
-public class WebSettingsClient {
+@Component(UiSettingsCache.NAME)
+public class UiSettingsCache {
 
     public static final String NAME = "cuba_SettingsClient";
 
@@ -49,7 +48,7 @@ public class WebSettingsClient {
             return cached.orElse(null);
         }
 
-        String setting = userSettingService.loadSetting(ClientType.WEB, name);
+        String setting = userSettingService.loadSetting(name);
         settings.put(name, Optional.ofNullable(setting));
 
         return setting;
@@ -59,17 +58,20 @@ public class WebSettingsClient {
         Preconditions.checkNotNullArgument(name);
 
         getCache().put(name, Optional.ofNullable(value));
-        userSettingService.saveSetting(ClientType.WEB, name, value);
+        userSettingService.saveSetting(name, value);
     }
 
     public void deleteSettings(String name) {
         Preconditions.checkNotNullArgument(name);
 
         getCache().put(name, Optional.empty());
-        userSettingService.deleteSettings(ClientType.WEB, name);
+        userSettingService.deleteSettings(name);
     }
 
-    public void clearCache() {
+    /**
+     * Clears cache.
+     */
+    public void clear() {
         VaadinSession session = VaadinSession.getCurrent();
         if (session == null || !session.hasLock()) {
             throw new IllegalConcurrentAccessException("Illegal access to settings client from background thread");

@@ -98,7 +98,7 @@ public class ConnectionImpl implements Connection {
     protected void preprocessCredentials(Credentials credentials) {
         if (credentials instanceof AbstractClientCredentials) {
             AbstractClientCredentials clientCredentials = (AbstractClientCredentials) credentials;
-            clientCredentials.setClientType(ClientType.WEB);
+            clientCredentials.setClientType(new ClientType("WEB"));
             clientCredentials.setClientInfo(makeClientInfo());
             clientCredentials.setTimeZone(detectTimeZone());
 

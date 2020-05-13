@@ -20,6 +20,7 @@ import io.jmix.core.entity.Creatable;
 import io.jmix.core.entity.Updatable;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.data.entity.BaseUuidEntity;
+import io.jmix.ui.presentations.model.TablePresentation;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -27,11 +28,11 @@ import java.util.Date;
 /**
  * A screen presentation settings.
  */
-@Entity(name = "ui_Presentation")
-@Table(name = "UI_PRESENTATION")
+@Entity(name = "ui_TablePresentation")
+@Table(name = "UI_TABLE_PRESENTATION")
 @SystemLevel
-public class Presentation extends BaseUuidEntity implements Creatable, Updatable,
-        io.jmix.ui.presentations.model.Presentation {
+public class UiTablePresentation extends BaseUuidEntity implements Creatable, Updatable,
+        TablePresentation {
 
     @Column(name = "CREATE_TS")
     protected Date createTs;

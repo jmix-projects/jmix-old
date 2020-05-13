@@ -33,7 +33,7 @@ import io.jmix.core.commons.util.Preconditions;
 import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.ui.presentations.model.Presentation;
+import io.jmix.ui.presentations.model.TablePresentation;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
@@ -64,7 +64,7 @@ import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
 import io.jmix.ui.icons.IconResolver;
 import io.jmix.ui.model.*;
 import io.jmix.ui.model.impl.KeyValueContainerImpl;
-import io.jmix.ui.presentations.Presentations;
+import io.jmix.ui.presentations.TablePresentations;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.InstallTargetHandler;
 import io.jmix.ui.screen.ScreenContext;
@@ -185,7 +185,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     protected Map<Table.Column, String> aggregationCells = null;
 
     protected boolean usePresentations;
-    protected Presentations presentations;
+    protected TablePresentations presentations;
     protected TableSettings defaultTableSettings;
 
     protected com.vaadin.v7.ui.Table.ColumnCollapseListener columnCollapseListener;
@@ -2635,7 +2635,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
     protected boolean handleSpecificVariables(Map<String, Object> variables) {
         if (isUsePresentations() && presentations != null) {
-            Presentations p = getPresentations();
+            TablePresentations p = getPresentations();
 
             if (p.getCurrent() != null && p.isAutoSave(p.getCurrent()) && needUpdatePresentation(variables)) {
                 if (getFrame().getFrameOwner() instanceof CubaLegacySettings) {
@@ -2704,7 +2704,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     @Override
     public void loadPresentations() {
         if (isUsePresentations()) {
-            presentations = beanLocator.getPrototype(Presentations.NAME, this);
+            presentations = beanLocator.getPrototype(TablePresentations.NAME, this);
 
             setTablePresentationsBox(new TablePresentationsBox(this, getSettingsBinder()));
         } else {
@@ -2713,7 +2713,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     }
 
     @Override
-    public Presentations getPresentations() {
+    public TablePresentations getPresentations() {
         if (isUsePresentations()) {
             return presentations;
         } else {
@@ -2724,7 +2724,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     @Override
     public void applyPresentation(Object id) {
         if (isUsePresentations() && presentations != null) {
-            Presentation p = presentations.getPresentation(id);
+            TablePresentation p = presentations.getPresentation(id);
             applyPresentation(p);
         } else {
             throw new UnsupportedOperationException("Component doesn't use presentations");
@@ -2734,7 +2734,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     @Override
     public void applyPresentationAsDefault(Object id) {
         if (isUsePresentations() && presentations != null) {
-            Presentation p = presentations.getPresentation(id);
+            TablePresentation p = presentations.getPresentation(id);
             if (p != null) {
                 presentations.setDefault(p);
                 applyPresentation(p);
@@ -2744,7 +2744,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         }
     }
 
-    protected void applyPresentation(Presentation p) {
+    protected void applyPresentation(TablePresentation p) {
         if (presentations != null) {
             if (getFrame().getFrameOwner() instanceof CubaLegacySettings) {
                 Element settingsElement = presentations.getSettings(p);
@@ -2759,7 +2759,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         }
     }
 
-    protected ComponentSettings getSettingsFromPresentation(Presentation p) {
+    protected ComponentSettings getSettingsFromPresentation(TablePresentation p) {
         String rawSettings = presentations.getRawSettings(p);
         ScreenSettings screenSettings = beanLocator.getPrototype(ScreenSettings.NAME, getFrame().getId());
 
@@ -2781,7 +2781,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         if (presentations == null) {
             return null;
         }
-        Presentation def = presentations.getDefault();
+        TablePresentation def = presentations.getDefault();
         return def == null ? null : EntityValues.<UUID>getId(def);
     }
 

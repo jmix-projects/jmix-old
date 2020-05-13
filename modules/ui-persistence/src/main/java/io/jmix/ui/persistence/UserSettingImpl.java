@@ -16,7 +16,6 @@
 
 package io.jmix.ui.persistence;
 
-import io.jmix.core.ClientType;
 import io.jmix.core.Metadata;
 import io.jmix.core.UuidProvider;
 import io.jmix.core.commons.util.Preconditions;
@@ -24,8 +23,8 @@ import io.jmix.core.commons.xmlparsing.Dom4jTools;
 import io.jmix.core.entity.User;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.security.*;
-import io.jmix.ui.persistence.entity.Presentation;
-import io.jmix.ui.persistence.entity.UserSetting;
+import io.jmix.ui.persistence.entity.UiTablePresentation;
+import io.jmix.ui.persistence.entity.UiSetting;
 import io.jmix.ui.settings.UserSettingService;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
@@ -42,7 +41,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.*;
 
-public class UserSettingsPersistence implements UserSettingService {
+public class UserSettingImpl implements UserSettingService {
 
     @Inject
     protected UserSessionSource userSessionSource;
@@ -71,15 +70,8 @@ public class UserSettingsPersistence implements UserSettingService {
     public String loadSetting(String name) {
         Preconditions.checkNotNullArgument(name);
 
-        return loadSetting(null, name);
-    }
-
-    @Override
-    public String loadSetting(@Nullable ClientType clientType, String name) {
-        Preconditions.checkNotNullArgument(name);
-
         String value = transaction.execute(status -> {
-            UserSetting us = findUserSettings(clientType, name);
+            UiSetting us = findUserSettings(name);
             return us == null ? null : us.getValue();
         });
 
@@ -87,24 +79,15 @@ public class UserSettingsPersistence implements UserSettingService {
     }
 
     @Override
-    public void saveSetting(String name, String value) {
-        Preconditions.checkNotNullArgument(name);
-        Preconditions.checkNotNullArgument(value);
-
-        saveSetting(null, name, value);
-    }
-
-    @Override
-    public void saveSetting(@Nullable ClientType clientType, String name, @Nullable String value) {
+    public void saveSetting(String name, @Nullable String value) {
         Preconditions.checkNotNullArgument(name);
 
         transaction.executeWithoutResult(status -> {
-            UserSetting us = findUserSettings(clientType, name);
+            UiSetting us = findUserSettings(name);
             if (us == null) {
-                us = metadata.create(UserSetting.class);
+                us = metadata.create(UiSetting.class);
                 us.setUserLogin(userSessionSource.getUserSession().getUser().getLogin());
                 us.setName(name);
-                us.setClientType(clientType == null ? null : clientType.getName());
                 us.setValue(value);
 
                 entityManager.persist(us);
@@ -115,11 +98,11 @@ public class UserSettingsPersistence implements UserSettingService {
     }
 
     @Override
-    public void deleteSettings(@Nullable ClientType clientType, String name) {
+    public void deleteSettings(String name) {
         Preconditions.checkNotNullArgument(name);
 
         transaction.executeWithoutResult(status -> {
-            UserSetting us = findUserSettings(clientType, name);
+            UiSetting us = findUserSettings(name);
             if (us != null) {
                 entityManager.remove(us);
             }
@@ -131,19 +114,19 @@ public class UserSettingsPersistence implements UserSettingService {
         Preconditions.checkNotNullArgument(fromUser);
         Preconditions.checkNotNullArgument(toUser);
 
-        MetaClass metaClass = metadata.getClass(UserSetting.class);
+        MetaClass metaClass = metadata.getClass(UiSetting.class);
 
         if (!security.isEntityOpPermitted(metaClass, EntityOp.CREATE)) {
             throw new AccessDeniedException(PermissionType.ENTITY_OP, metaClass.getName());
         }
 
         transaction.executeWithoutResult(status -> {
-            Query deleteSettingsQuery = entityManager.createQuery("delete from ui_UserSetting s where s.userLogin = ?1");
+            Query deleteSettingsQuery = entityManager.createQuery("delete from ui_Setting s where s.userLogin = ?1");
             deleteSettingsQuery.setParameter(1, toUser.getLogin());
             deleteSettingsQuery.executeUpdate();
         });
 
-        Map<UUID, Presentation> presentationsMap = copyPresentations(fromUser, toUser);
+        Map<UUID, UiTablePresentation> presentationsMap = copyPresentations(fromUser, toUser);
 
         /* todo folders panel
         copyUserFolders(fromUser, toUser, presentationsMap);
@@ -153,15 +136,14 @@ public class UserSettingsPersistence implements UserSettingService {
         */
 
         transaction.executeWithoutResult(status -> {
-            TypedQuery<UserSetting> q = entityManager.
-                    createQuery("select s from ui_UserSetting s where s.userLogin = ?1", UserSetting.class);
+            TypedQuery<UiSetting> q = entityManager.
+                    createQuery("select s from ui_Setting s where s.userLogin = ?1", UiSetting.class);
             q.setParameter(1, fromUser.getLogin());
-            List<UserSetting> fromUserSettings = q.getResultList();
+            List<UiSetting> fromUserSettings = q.getResultList();
 
-            for (UserSetting currSetting : fromUserSettings) {
-                UserSetting newSetting = metadata.create(UserSetting.class);
+            for (UiSetting currSetting : fromUserSettings) {
+                UiSetting newSetting = metadata.create(UiSetting.class);
                 newSetting.setUserLogin(toUser.getLogin());
-                newSetting.setClientType(currSetting.getClientType());
                 newSetting.setName(currSetting.getName());
 
                 try {
@@ -172,7 +154,7 @@ public class UserSettingsPersistence implements UserSettingService {
                         Attribute presentationAttr = component.attribute("presentation");
                         if (presentationAttr != null) {
                             UUID presentationId = UuidProvider.fromString(presentationAttr.getValue());
-                            Presentation newPresentation = presentationsMap.get(presentationId);
+                            UiTablePresentation newPresentation = presentationsMap.get(presentationId);
                             if (newPresentation != null) {
                                 presentationAttr.setValue(newPresentation.getId().toString());
                             }
@@ -201,15 +183,16 @@ public class UserSettingsPersistence implements UserSettingService {
     }
 
     @Override
-    public void deleteScreenSettings(ClientType clientType, Set<String> screens) {
+    public void deleteScreenSettings(Set<String> screens) {
         transaction.executeWithoutResult(status -> {
-            TypedQuery<UserSetting> selectQuery = entityManager.createQuery(
-                    "select e from ui_UserSetting e where e.user.id = ?1 and e.clientType=?2",
-                    UserSetting.class);
+            TypedQuery<UiSetting> selectQuery = entityManager.createQuery(
+                    "select e from ui_Setting e where e.user.id = ?1",
+                    UiSetting.class);
             selectQuery.setParameter(1, userSessionSource.getUserSession().getUser().getId());
-            selectQuery.setParameter(2, clientType.getName());
-            List<UserSetting> userSettings = selectQuery.getResultList();
-            for (UserSetting userSetting : userSettings) {
+
+            List<UiSetting> userSettings = selectQuery.getResultList();
+
+            for (UiSetting userSetting : userSettings) {
                 if (screens.contains(userSetting.getName())) {
                     entityManager.remove(userSetting);
                 }
@@ -218,38 +201,37 @@ public class UserSettingsPersistence implements UserSettingService {
     }
 
     @Nullable
-    protected UserSetting findUserSettings(@Nullable ClientType clientType, String name) {
-        TypedQuery<UserSetting> q = entityManager.createQuery(
-                "select s from ui_UserSetting s where s.userLogin = ?1 and s.name =?2 and s.clientType = ?3",
-                UserSetting.class);
+    protected UiSetting findUserSettings(String name) {
+        TypedQuery<UiSetting> q = entityManager.createQuery(
+                "select s from ui_Setting s where s.userLogin = ?1 and s.name =?2",
+                UiSetting.class);
         q.setParameter(1, userSessionSource.getUserSession().getUser().getLogin());
         q.setParameter(2, name);
-        q.setParameter(3, clientType == null ? null : clientType.getName());
 
         List result = q.getResultList();
         if (result.isEmpty()) {
             return null;
         }
 
-        return (UserSetting) result.get(0);
+        return (UiSetting) result.get(0);
     }
 
-    protected Map<UUID, Presentation> copyPresentations(User fromUser, User toUser) {
-        Map<UUID, Presentation> resultMap = transaction.execute(status -> {
+    protected Map<UUID, UiTablePresentation> copyPresentations(User fromUser, User toUser) {
+        Map<UUID, UiTablePresentation> resultMap = transaction.execute(status -> {
             // delete existing
-            Query delete = entityManager.createQuery("delete from ui_Presentation p where p.userLogin = ?1");
+            Query delete = entityManager.createQuery("delete from ui_TablePresentation p where p.userLogin = ?1");
             delete.setParameter(1, toUser.getLogin());
             delete.executeUpdate();
 
             // copy settings
-            TypedQuery<Presentation> selectQuery = entityManager.createQuery(
-                    "select p from ui_Presentation p where p.userLogin = ?1", Presentation.class);
+            TypedQuery<UiTablePresentation> selectQuery = entityManager.createQuery(
+                    "select p from ui_TablePresentation p where p.userLogin = ?1", UiTablePresentation.class);
             selectQuery.setParameter(1, fromUser.getLogin());
-            List<Presentation> presentations = selectQuery.getResultList();
+            List<UiTablePresentation> presentations = selectQuery.getResultList();
 
-            Map<UUID, Presentation> presentationMap = new HashMap<>();
-            for (Presentation presentation : presentations) {
-                Presentation newPresentation = metadata.create(Presentation.class);
+            Map<UUID, UiTablePresentation> presentationMap = new HashMap<>();
+            for (UiTablePresentation presentation : presentations) {
+                UiTablePresentation newPresentation = metadata.create(UiTablePresentation.class);
                 newPresentation.setUserLogin(toUser.getLogin());
                 newPresentation.setComponentId(presentation.getComponentId());
                 newPresentation.setAutoSave(presentation.getAutoSave());

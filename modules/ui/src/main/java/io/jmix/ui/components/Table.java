@@ -52,7 +52,7 @@ import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 public interface Table<E extends Entity>
         extends
             ListComponent<E>, Component.Editable, HasSettings, HasDataLoadingSettings,
-            HasButtonsPanel, TablePresentations, Component.HasCaption, HasContextHelp,
+            HasButtonsPanel, HasTablePresentations, Component.HasCaption, HasContextHelp,
             Component.HasIcon, HasRowsCount, LookupComponent<E>, Component.Focusable,
             RowsCount.RowsCountTarget, HasSubParts, HasHtmlCaption, HasHtmlDescription {
 
