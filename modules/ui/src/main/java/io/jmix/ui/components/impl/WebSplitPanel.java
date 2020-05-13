@@ -22,15 +22,13 @@ import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
 import io.jmix.ui.settings.compatibility.converter.LegacySplitPanelSettingsConverter;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.component.SplitPanelSettings;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
-import io.jmix.ui.settings.component.worker.SplitPanelSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
+import io.jmix.ui.settings.component.binder.SplitPanelSettingsBinder;
 import io.jmix.ui.widgets.CubaHorizontalSplitPanel;
 import io.jmix.ui.widgets.client.split.SplitPanelDockMode;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.AbstractSplitPanel;
 import com.vaadin.ui.VerticalSplitPanel;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;
@@ -189,7 +187,7 @@ public class WebSplitPanel extends WebAbstractComponent<AbstractSplitPanel> impl
         }
 
         SplitPanelSettings settings = settingsConverter.convertToComponentSettings(element);
-        getSettingsWorker().applySettings(this, new SettingsWrapperImpl(settings));
+        getSettingsBinder().applySettings(this, new SettingsWrapperImpl(settings));
     }
 
     @Override
@@ -200,7 +198,7 @@ public class WebSplitPanel extends WebAbstractComponent<AbstractSplitPanel> impl
 
         SplitPanelSettings settings = settingsConverter.convertToComponentSettings(element);
 
-        boolean modified = getSettingsWorker().saveSettings(this, new SettingsWrapperImpl(settings));
+        boolean modified = getSettingsBinder().saveSettings(this, new SettingsWrapperImpl(settings));
         if (modified) {
             settingsConverter.copyToElement(settings, element);
         }
@@ -404,7 +402,7 @@ public class WebSplitPanel extends WebAbstractComponent<AbstractSplitPanel> impl
         return new LegacySplitPanelSettingsConverter();
     }
 
-    protected ComponentSettingsWorker getSettingsWorker() {
-        return beanLocator.get(SplitPanelSettingsWorker.NAME);
+    protected ComponentSettingsBinder getSettingsBinder() {
+        return beanLocator.get(SplitPanelSettingsBinder.NAME);
     }
 }

@@ -20,12 +20,12 @@ import io.jmix.ui.presentations.model.Presentation;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.presentations.Presentations;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 public class EditPresentationAction extends AbstractEditPresentationAction {
 
-    public EditPresentationAction(Table table, ComponentSettingsWorker settingsWorker) {
-        super(table, "PresentationsPopup.edit", settingsWorker);
+    public EditPresentationAction(Table table, ComponentSettingsBinder settingsBinder) {
+        super(table, "PresentationsPopup.edit", settingsBinder);
     }
 
     @Override

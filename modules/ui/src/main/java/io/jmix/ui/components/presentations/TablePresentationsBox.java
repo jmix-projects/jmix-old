@@ -27,13 +27,12 @@ import io.jmix.ui.components.impl.WebComponentsHelper;
 import io.jmix.ui.components.presentations.actions.PresentationActionsBuilder;
 import io.jmix.ui.presentations.Presentations;
 import io.jmix.ui.presentations.PresentationsChangeListener;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 import io.jmix.ui.sys.TestIdManager;
 import io.jmix.ui.widgets.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
@@ -54,7 +53,7 @@ public class TablePresentationsBox extends VerticalLayout {
 
     protected Table table;
     protected CubaEnhancedTable tableImpl;
-    protected ComponentSettingsWorker settingsWorker;
+    protected ComponentSettingsBinder settingsBinder;
 
     protected Map<Object, MenuBar.MenuItem> presentationsMenuMap;
 
@@ -62,13 +61,13 @@ public class TablePresentationsBox extends VerticalLayout {
 
     protected PresentationActionsBuilder presentationActionsBuilder;
 
-    public TablePresentationsBox(Table component, ComponentSettingsWorker settingsWorker) {
+    public TablePresentationsBox(Table component, ComponentSettingsBinder settingsBinder) {
         this.table = component;
         this.messages = AppBeans.get(Messages.NAME);
 
         this.tableImpl = table.unwrapOrNull(CubaEnhancedTable.class);
 
-        this.settingsWorker = settingsWorker;
+        this.settingsBinder = settingsBinder;
 
         setMargin(false);
 
@@ -315,7 +314,7 @@ public class TablePresentationsBox extends VerticalLayout {
 
     protected PresentationActionsBuilder getPresentationActionsBuilder() {
         if (presentationActionsBuilder == null)
-            presentationActionsBuilder = new PresentationActionsBuilder(table, settingsWorker);
+            presentationActionsBuilder = new PresentationActionsBuilder(table, settingsBinder);
         return presentationActionsBuilder;
     }
 

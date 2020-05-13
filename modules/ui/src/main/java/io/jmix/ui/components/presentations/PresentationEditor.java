@@ -29,7 +29,7 @@ import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.SettingsHelper;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
@@ -74,14 +74,14 @@ public class PresentationEditor extends CubaWindow {
     protected UserSessionSource sessionSource;
     protected Security security;
 
-    protected ComponentSettingsWorker settingsWorker;
+    protected ComponentSettingsBinder settingsBinder;
 
     public PresentationEditor(FrameOwner frameOwner, Presentation presentation, TablePresentations component,
-                              ComponentSettingsWorker settingsWorker) {
+                              ComponentSettingsBinder settingsBinder) {
         this.presentation = presentation;
         this.component = component;
         this.frameOwner = frameOwner;
-        this.settingsWorker = settingsWorker;
+        this.settingsBinder = settingsBinder;
 
         messages = AppBeans.get(Messages.NAME);
         sessionSource = AppBeans.get(UserSessionSource.NAME);
@@ -201,8 +201,8 @@ public class PresentationEditor extends CubaWindow {
                         " Component must implement '%s'", HasSettings.class));
             }
         } else {
-            ComponentSettings componentSettings = SettingsHelper.createSettings(settingsWorker.getSettingsClass());
-            settingsWorker.saveSettings((Component) component, new SettingsWrapperImpl(componentSettings));
+            ComponentSettings componentSettings = SettingsHelper.createSettings(settingsBinder.getSettingsClass());
+            settingsBinder.saveSettings((Component) component, new SettingsWrapperImpl(componentSettings));
 
             ScreenSettings screenSettings = AppBeans.getPrototype(ScreenSettings.NAME, ((Screen) frameOwner).getId());
             rawSettings = screenSettings.toRawSettings(componentSettings);

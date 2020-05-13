@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.worker;
+package io.jmix.ui.settings.component.binder;
 
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.GroupBoxLayout;
@@ -23,10 +23,10 @@ import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.GroupBoxSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
 
-@org.springframework.stereotype.Component(GroupBoxSettingsWorker.NAME)
-public class GroupBoxSettingsWorker implements ComponentSettingsWorker<GroupBoxLayout, GroupBoxSettings> {
+@org.springframework.stereotype.Component(GroupBoxSettingsBinder.NAME)
+public class GroupBoxSettingsBinder implements ComponentSettingsBinder<GroupBoxLayout, GroupBoxSettings> {
 
-    public static final String NAME = "jmix_GroupBoxSettingsWorker";
+    public static final String NAME = "jmix_GroupBoxSettingsBinder";
 
     @Override
     public Class<? extends Component> getComponentClass() {

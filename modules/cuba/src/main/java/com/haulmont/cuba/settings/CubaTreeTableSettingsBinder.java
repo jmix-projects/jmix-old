@@ -16,17 +16,17 @@
 
 package com.haulmont.cuba.settings;
 
-import com.haulmont.cuba.web.gui.components.WebResizableTextArea;
+import com.haulmont.cuba.web.gui.components.WebTreeTable;
 import io.jmix.ui.components.Component;
-import io.jmix.ui.settings.component.worker.ResizableTextAreaSettingsWorker;
+import io.jmix.ui.settings.component.binder.TreeTableSettingsBinder;
 
-@org.springframework.stereotype.Component(CubaResizableTextAreaSettingsWorker.NAME)
-public class CubaResizableTextAreaSettingsWorker extends ResizableTextAreaSettingsWorker {
+@org.springframework.stereotype.Component(CubaTreeTableSettingsBinder.NAME)
+public class CubaTreeTableSettingsBinder extends TreeTableSettingsBinder {
 
-    public static final String NAME = "jmix_CubaResizableTextAreaSettingsWorker";
+    public static final String NAME = "jmix_CubaTreeTableSettingsBinder";
 
     @Override
     public Class<? extends Component> getComponentClass() {
-        return WebResizableTextArea.class;
+        return WebTreeTable.class;
     }
 }

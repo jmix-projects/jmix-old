@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.worker;
+package io.jmix.ui.settings.component.binder;
 
 import io.jmix.ui.components.impl.WebTreeTable;
 import org.springframework.stereotype.Component;
 
-@Component(TreeTableSettingsWorker.NAME)
-public class TreeTableSettingsWorker extends TableSettingsWorker {
+@Component(TreeTableSettingsBinder.NAME)
+public class TreeTableSettingsBinder extends TableSettingsBinder {
 
-    public static final String NAME = "jmix_TreeTableSettingsWorker";
+    public static final String NAME = "jmix_TreeTableSettingsBinder";
 
     @Override
     public Class<? extends io.jmix.ui.components.Component> getComponentClass() {

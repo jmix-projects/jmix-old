@@ -19,7 +19,7 @@ package io.jmix.ui.persistence.settings;
 import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.settings.component.TableSettings;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 import io.jmix.ui.settings.component.ComponentSettings;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Collects {@link ComponentSettingsWorker} and provides information for which component registered settings class.
+ * Collects {@link ComponentSettingsBinder} and provides information for which component registered settings class.
  */
 @org.springframework.stereotype.Component(ComponentSettingsRegistry.NAME)
 public class ComponentSettingsRegistry implements InitializingBean {
@@ -37,15 +37,15 @@ public class ComponentSettingsRegistry implements InitializingBean {
     public static final String NAME = "jmix_ComponentSettingsRegistry";
 
     @Inject
-    protected List<ComponentSettingsWorker> settings;
+    protected List<ComponentSettingsBinder> settings;
 
-    protected Map<Class<? extends Component>, Class<? extends ComponentSettings>> classes = new ConcurrentHashMap<>();
-    protected Map<Class<? extends ComponentSettings>, Class<? extends ComponentSettingsWorker>> settingsBeans = new ConcurrentHashMap<>();
+    protected Map<Class<? extends Component>, Class<? extends ComponentSettings>> settingsClasses = new ConcurrentHashMap<>();
+    protected Map<Class<? extends ComponentSettings>, Class<? extends ComponentSettingsBinder>> binderClasses = new ConcurrentHashMap<>();
 
     @Override
     public void afterPropertiesSet() {
-        for (ComponentSettingsWorker worker : settings) {
-            register(worker);
+        for (ComponentSettingsBinder binder : settings) {
+            register(binder);
         }
     }
 
@@ -56,7 +56,7 @@ public class ComponentSettingsRegistry implements InitializingBean {
     public Class<? extends ComponentSettings> getSettingsClass(Class<? extends Component> componentClass) {
         Preconditions.checkNotNullArgument(componentClass);
 
-        Class<? extends ComponentSettings> settingClass = classes.get(componentClass);
+        Class<? extends ComponentSettings> settingClass = settingsClasses.get(componentClass);
         if (settingClass != null) {
             return settingClass;
         }
@@ -66,17 +66,17 @@ public class ComponentSettingsRegistry implements InitializingBean {
 
     /**
      * @param settingsClass settings class (e.g. {@link TableSettings})
-     * @return worker class if registered, otherwise in throws an exception
+     * @return binder class if registered, otherwise in throws an exception
      */
-    public Class<? extends ComponentSettingsWorker> getWorkerClass(Class<? extends ComponentSettings> settingsClass) {
+    public Class<? extends ComponentSettingsBinder> getBinderClass(Class<? extends ComponentSettings> settingsClass) {
         Preconditions.checkNotNullArgument(settingsClass);
 
-        Class<? extends ComponentSettingsWorker> workerClass = settingsBeans.get(settingsClass);
-        if (workerClass != null) {
-            return workerClass;
+        Class<? extends ComponentSettingsBinder> binderClass = binderClasses.get(settingsClass);
+        if (binderClass != null) {
+            return binderClass;
         }
 
-        throw new IllegalStateException(String.format("Cannot find worker class for '%s'", settingsClass));
+        throw new IllegalStateException(String.format("Cannot find binder class for '%s'", settingsClass));
     }
 
     /**
@@ -86,17 +86,17 @@ public class ComponentSettingsRegistry implements InitializingBean {
     public boolean isSettingsRegisteredFor(Class<? extends Component> componentClass) {
         Preconditions.checkNotNullArgument(componentClass);
 
-        Class<? extends ComponentSettings> settingsClass = classes.get(componentClass);
+        Class<? extends ComponentSettings> settingsClass = settingsClasses.get(componentClass);
         return settingsClass != null;
     }
 
-    protected void register(ComponentSettingsWorker worker) {
-        Preconditions.checkNotNullArgument(worker.getComponentClass(),
-                "Component class cannot be null in '%s'", worker.getClass());
-        Preconditions.checkNotNullArgument(worker.getSettingsClass(),
-                "Settings class cannot be null in '%s'", worker.getClass());
+    protected void register(ComponentSettingsBinder binder) {
+        Preconditions.checkNotNullArgument(binder.getComponentClass(),
+                "Component class cannot be null in '%s'", binder.getClass());
+        Preconditions.checkNotNullArgument(binder.getSettingsClass(),
+                "Settings class cannot be null in '%s'", binder.getClass());
 
-        classes.put(worker.getComponentClass(), worker.getSettingsClass());
-        settingsBeans.put(worker.getSettingsClass(), worker.getClass());
+        settingsClasses.put(binder.getComponentClass(), binder.getSettingsClass());
+        binderClasses.put(binder.getSettingsClass(), binder.getClass());
     }
 }

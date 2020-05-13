@@ -78,9 +78,9 @@ import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.component.TableSettings;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
-import io.jmix.ui.settings.component.worker.DataLoadingSettingsWorker;
-import io.jmix.ui.settings.component.worker.TableSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
+import io.jmix.ui.settings.component.binder.DataLoadingSettingsBinder;
+import io.jmix.ui.settings.component.binder.TableSettingsBinder;
 import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.ui.sys.PersistenceManagerClient;
 import io.jmix.ui.sys.ShowInfoAction;
@@ -2039,7 +2039,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
         TableSettings settings = settingsConverter.convertToComponentSettings(element);
 
-        ComponentSettingsWorker worker = getSettingsWorker();
+        ComponentSettingsBinder worker = getSettingsBinder();
         if (defaultTableSettings == null) {
             defaultTableSettings = (TableSettings) worker.getSettings(this);
         }
@@ -2055,8 +2055,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
         ComponentSettings settings = settingsConverter.convertToComponentSettings(element);
 
-        DataLoadingSettingsWorker settingsWorker = (DataLoadingSettingsWorker) getSettingsWorker();
-        settingsWorker.applyDataLoadingSettings(this, new SettingsWrapperImpl(settings));
+        DataLoadingSettingsBinder settingsBinder = (DataLoadingSettingsBinder) getSettingsBinder();
+        settingsBinder.applyDataLoadingSettings(this, new SettingsWrapperImpl(settings));
     }
 
     @Override
@@ -2067,7 +2067,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
 
         TableSettings tableSettings = settingsConverter.convertToComponentSettings(element);
 
-        boolean modified = getSettingsWorker().saveSettings(this, new SettingsWrapperImpl(tableSettings));
+        boolean modified = getSettingsBinder().saveSettings(this, new SettingsWrapperImpl(tableSettings));
 
         if (modified)
             settingsConverter.copyToElement(tableSettings, element);
@@ -2075,8 +2075,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         return modified;
     }
 
-    protected ComponentSettingsWorker getSettingsWorker() {
-        return beanLocator.get(TableSettingsWorker.NAME);
+    protected ComponentSettingsBinder getSettingsBinder() {
+        return beanLocator.get(TableSettingsBinder.NAME);
     }
 
     protected LegacySettingsConverter createSettingsConverter() {
@@ -2644,7 +2644,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                     p.setSettings(p.getCurrent(), e);
                 } else {
                     ComponentSettings settings = getSettingsFromPresentation(p.getCurrent());
-                    getSettingsWorker().saveSettings(this, new SettingsWrapperImpl(settings));
+                    getSettingsBinder().saveSettings(this, new SettingsWrapperImpl(settings));
 
                     ScreenSettings screenSettings = beanLocator.getPrototype(ScreenSettings.NAME, getFrame().getId());
                     String rawSettings = screenSettings.toRawSettings(settings);
@@ -2694,7 +2694,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     @Override
     public void resetPresentation() {
         if (defaultTableSettings != null) {
-            getSettingsWorker().applySettings(this, new SettingsWrapperImpl(defaultTableSettings));
+            getSettingsBinder().applySettings(this, new SettingsWrapperImpl(defaultTableSettings));
             if (presentations != null) {
                 presentations.setCurrent(null);
             }
@@ -2706,7 +2706,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         if (isUsePresentations()) {
             presentations = beanLocator.getPrototype(Presentations.NAME, this);
 
-            setTablePresentationsBox(new TablePresentationsBox(this, getSettingsWorker()));
+            setTablePresentationsBox(new TablePresentationsBox(this, getSettingsBinder()));
         } else {
             throw new UnsupportedOperationException("Component doesn't use presentations");
         }
@@ -2751,7 +2751,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                 applySettings(settingsElement);
             } else {
                 ComponentSettings settings = getSettingsFromPresentation(p);
-                getSettingsWorker().applySettings(this, new SettingsWrapperImpl(settings));
+                getSettingsBinder().applySettings(this, new SettingsWrapperImpl(settings));
             }
 
             presentations.setCurrent(p);
@@ -2763,7 +2763,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
         String rawSettings = presentations.getRawSettings(p);
         ScreenSettings screenSettings = beanLocator.getPrototype(ScreenSettings.NAME, getFrame().getId());
 
-        Class<? extends ComponentSettings> settingsClass = getSettingsWorker().getSettingsClass();
+        Class<? extends ComponentSettings> settingsClass = getSettingsBinder().getSettingsClass();
 
         ComponentSettings settings = SettingsHelper.createSettings(settingsClass);
         settings.setId(getId());

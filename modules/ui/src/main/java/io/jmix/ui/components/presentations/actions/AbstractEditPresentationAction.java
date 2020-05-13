@@ -23,7 +23,7 @@ import io.jmix.ui.components.TablePresentations;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.components.presentations.PresentationEditor;
 import io.jmix.ui.screen.FrameOwner;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -32,26 +32,26 @@ public abstract class AbstractEditPresentationAction extends AbstractPresentatio
 
     protected Class<? extends PresentationEditor> editorClass;
 
-    public AbstractEditPresentationAction(Table table, String id, ComponentSettingsWorker settingsWorker) {
-        super(table, id, settingsWorker);
+    public AbstractEditPresentationAction(Table table, String id, ComponentSettingsBinder settingsBinder) {
+        super(table, id, settingsBinder);
     }
 
     protected void openEditor(Presentation presentation) {
-        PresentationEditor window = createEditor(presentation, settingsWorker);
+        PresentationEditor window = createEditor(presentation, settingsBinder);
         AppUI.getCurrent().addWindow(window);
         window.center();
     }
 
-    protected PresentationEditor createEditor(Presentation presentation, ComponentSettingsWorker settingsWorker) {
+    protected PresentationEditor createEditor(Presentation presentation, ComponentSettingsBinder settingsBinder) {
         Class<? extends PresentationEditor> windowClass = getPresentationEditorClass();
         try {
             Constructor<? extends PresentationEditor> windowConstructor = windowClass.getConstructor(
                     FrameOwner.class,
                     Presentation.class,
                     TablePresentations.class,
-                    ComponentSettingsWorker.class);
+                    ComponentSettingsBinder.class);
 
-            return windowConstructor.newInstance(table.getFrame().getFrameOwner(), presentation, table, settingsWorker);
+            return windowConstructor.newInstance(table.getFrame().getFrameOwner(), presentation, table, settingsBinder);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new DevelopmentException("Invalid presentation's screen");
         }

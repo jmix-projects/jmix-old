@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.settings;
+package io.jmix.ui.settings.component.binder;
 
-
-import com.haulmont.cuba.web.gui.components.WebGroupTable;
 import io.jmix.ui.components.Component;
-import io.jmix.ui.settings.component.worker.GroupTableSettingsWorker;
+import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.SettingsWrapper;
 
-@org.springframework.stereotype.Component(CubaGroupTableSettingsWorker.NAME)
-public class CubaGroupTableSettingsWorker extends GroupTableSettingsWorker {
+/**
+ * Settings binder for components which support data loading.
+ */
+public interface DataLoadingSettingsBinder<V extends Component, S extends ComponentSettings>
+        extends ComponentSettingsBinder<V, S> {
 
-    public static final String NAME = "jmix_CubaGroupTableSettingsWorker";
-
-    @Override
-    public Class<? extends Component> getComponentClass() {
-        return WebGroupTable.class;
-    }
+    /**
+     * Applies data loading settings.
+     *
+     * @param component component to apply
+     * @param wrapper   settings wrapper
+     */
+    void applyDataLoadingSettings(V component, SettingsWrapper wrapper);
 }

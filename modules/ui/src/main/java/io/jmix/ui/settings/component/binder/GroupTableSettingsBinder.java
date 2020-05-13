@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.worker;
+package io.jmix.ui.settings.component.binder;
 
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
@@ -40,12 +40,12 @@ import java.util.Collection;
 import java.util.List;
 
 @SuppressWarnings("rawtypes")
-@org.springframework.stereotype.Component(GroupTableSettingsWorker.NAME)
-public class GroupTableSettingsWorker extends TableSettingsWorker {
+@org.springframework.stereotype.Component(GroupTableSettingsBinder.NAME)
+public class GroupTableSettingsBinder extends TableSettingsBinder {
 
-    private static final Logger log = LoggerFactory.getLogger(GroupTableSettingsWorker.class);
+    private static final Logger log = LoggerFactory.getLogger(GroupTableSettingsBinder.class);
 
-    public static final String NAME = "jmix_GroupTableSettingsWorker";
+    public static final String NAME = "jmix_GroupTableSettingsBinder";
 
     protected DynamicAttributesTools dynamicAttributesTools;
 

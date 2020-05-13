@@ -25,13 +25,12 @@ import io.jmix.ui.settings.compatibility.converter.LegacyGroupBoxSettingsConvert
 import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
 import io.jmix.ui.settings.component.GroupBoxSettings;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
-import io.jmix.ui.settings.component.worker.GroupBoxSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
+import io.jmix.ui.settings.component.binder.GroupBoxSettingsBinder;
 import io.jmix.ui.widgets.CubaGroupBox;
 import io.jmix.ui.widgets.CubaHorizontalActionsLayout;
 import io.jmix.ui.widgets.CubaOrderedActionsLayout;
 import io.jmix.ui.widgets.JmixVerticalActionsLayout;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -280,7 +279,7 @@ public class WebGroupBox extends WebAbstractComponent<CubaGroupBox> implements G
     public void applySettings(Element element) {
         if (isSettingsEnabled()) {
             GroupBoxSettings settings = settingsConverter.convertToComponentSettings(element);
-            getSettingsWorker().applySettings(this, new SettingsWrapperImpl(settings));
+            getSettingsBinder().applySettings(this, new SettingsWrapperImpl(settings));
         }
     }
 
@@ -292,7 +291,7 @@ public class WebGroupBox extends WebAbstractComponent<CubaGroupBox> implements G
 
         GroupBoxSettings settings = settingsConverter.convertToComponentSettings(element);
 
-        boolean modified = getSettingsWorker().saveSettings(this, new SettingsWrapperImpl(settings));
+        boolean modified = getSettingsBinder().saveSettings(this, new SettingsWrapperImpl(settings));
         if (modified) {
             settingsConverter.copyToElement(settings, element);
         }
@@ -450,7 +449,7 @@ public class WebGroupBox extends WebAbstractComponent<CubaGroupBox> implements G
         return new LegacyGroupBoxSettingsConverter();
     }
 
-    protected ComponentSettingsWorker getSettingsWorker() {
-        return beanLocator.get(GroupBoxSettingsWorker.NAME);
+    protected ComponentSettingsBinder getSettingsBinder() {
+        return beanLocator.get(GroupBoxSettingsBinder.NAME);
     }
 }

@@ -19,20 +19,20 @@ package io.jmix.ui.components.presentations.actions;
 import io.jmix.ui.actions.AbstractAction;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.components.impl.WebComponentsHelper;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 import io.jmix.ui.widgets.CubaEnhancedTable;
 
 public abstract class AbstractPresentationAction extends AbstractAction {
 
     protected Table table;
     protected CubaEnhancedTable tableImpl;
-    protected ComponentSettingsWorker settingsWorker;
+    protected ComponentSettingsBinder settingsBinder;
 
-    public AbstractPresentationAction(Table table, String id, ComponentSettingsWorker settingsWorker) {
+    public AbstractPresentationAction(Table table, String id, ComponentSettingsBinder settingsBinder) {
         super(id);
 
         this.table = table;
         this.tableImpl = (CubaEnhancedTable) WebComponentsHelper.unwrap(table);
-        this.settingsWorker = settingsWorker;
+        this.settingsBinder = settingsBinder;
     }
 }

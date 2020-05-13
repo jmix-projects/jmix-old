@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.worker;
+package io.jmix.ui.settings.component.binder;
 
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.ResizableTextArea;
@@ -26,10 +26,10 @@ import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.widgets.CubaResizableTextAreaWrapper;
 
 @SuppressWarnings("rawtypes")
-@org.springframework.stereotype.Component(ResizableTextAreaSettingsWorker.NAME)
-public class ResizableTextAreaSettingsWorker implements ComponentSettingsWorker<ResizableTextArea, ResizableTextAreaSettings> {
+@org.springframework.stereotype.Component(ResizableTextAreaSettingsBinder.NAME)
+public class ResizableTextAreaSettingsBinder implements ComponentSettingsBinder<ResizableTextArea, ResizableTextAreaSettings> {
 
-    public static final String NAME = "jmix_ResizableTextAreaSettingsWorker";
+    public static final String NAME = "jmix_ResizableTextAreaSettingsBinder";
 
     @Override
     public Class<? extends Component> getComponentClass() {

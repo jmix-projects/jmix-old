@@ -25,12 +25,20 @@ import io.jmix.ui.screen.Screen.AfterDetachEvent;
 import io.jmix.ui.screen.Screen.AfterShowEvent;
 import io.jmix.ui.screen.Screen.BeforeShowEvent;
 import io.jmix.ui.settings.ScreenSettings;
+import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Consumer;
 
+/**
+ * Provides ability to save and apply component settings.
+ *
+ * @see ComponentSettings
+ * @see ComponentSettingsBinder
+ */
 public interface ScreenSettingsFacet extends Facet {
 
     /**

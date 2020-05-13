@@ -15,6 +15,6 @@
  */
 
 @NonNullApi
-package io.jmix.ui.settings.component.worker;
+package io.jmix.ui.settings.component.binder;
 
 import org.springframework.lang.NonNullApi;

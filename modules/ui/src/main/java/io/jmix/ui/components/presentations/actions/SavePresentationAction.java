@@ -26,15 +26,15 @@ import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.SettingsHelper;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 import org.dom4j.Element;
 
 import java.util.Optional;
 
 public class SavePresentationAction extends AbstractPresentationAction {
 
-    public SavePresentationAction(Table table, ComponentSettingsWorker settingsWorker) {
-        super(table, "PresentationsPopup.save", settingsWorker);
+    public SavePresentationAction(Table table, ComponentSettingsBinder settingsBinder) {
+        super(table, "PresentationsPopup.save", settingsBinder);
     }
 
     @Override
@@ -54,15 +54,15 @@ public class SavePresentationAction extends AbstractPresentationAction {
             ComponentSettings componentSettings;
 
             Optional<? extends ComponentSettings> optSettings =
-                    screenSettings.toComponentSettings(rawSettings, settingsWorker.getSettingsClass());
+                    screenSettings.toComponentSettings(rawSettings, settingsBinder.getSettingsClass());
             if (optSettings.isPresent()) {
                 componentSettings = optSettings.get();
             } else {
-                componentSettings = SettingsHelper.createSettings(settingsWorker.getSettingsClass());
+                componentSettings = SettingsHelper.createSettings(settingsBinder.getSettingsClass());
                 componentSettings.setId(table.getId());
             }
 
-            settingsWorker.saveSettings(table, new SettingsWrapperImpl(componentSettings));
+            settingsBinder.saveSettings(table, new SettingsWrapperImpl(componentSettings));
             presentations.setSettings(current, screenSettings.toRawSettings(componentSettings));
         }
 

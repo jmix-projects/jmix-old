@@ -17,7 +17,7 @@
 package io.jmix.ui.settings.component;
 
 import io.jmix.ui.settings.ScreenSettings;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -26,7 +26,7 @@ import java.util.UUID;
  * Base interface for component settings. See {@link TableSettings} as an example.
  *
  * @see ScreenSettings
- * @see ComponentSettingsWorker
+ * @see ComponentSettingsBinder
  */
 public interface ComponentSettings extends Serializable {
 

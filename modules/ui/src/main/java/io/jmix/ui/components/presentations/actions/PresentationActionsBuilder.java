@@ -22,7 +22,7 @@ import io.jmix.core.security.Security;
 import io.jmix.ui.actions.AbstractAction;
 import io.jmix.ui.components.Table;
 import io.jmix.ui.presentations.Presentations;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,12 +46,12 @@ public class PresentationActionsBuilder {
 
     protected Collection actionTypes;
 
-    protected ComponentSettingsWorker settingsWorker;
+    protected ComponentSettingsBinder settingsBinder;
 
-    public PresentationActionsBuilder(Table component, ComponentSettingsWorker settingsWorker) {
+    public PresentationActionsBuilder(Table component, ComponentSettingsBinder settingsBinder) {
         table = component;
         security = AppBeans.get(Security.NAME);
-        this.settingsWorker = settingsWorker;
+        this.settingsBinder = settingsBinder;
     }
 
     public Collection<AbstractAction> build() {
@@ -103,17 +103,17 @@ public class PresentationActionsBuilder {
 
     protected AbstractAction buildSaveAction() {
         if (isGlobalPresentation())
-            return new SavePresentationAction(table, settingsWorker);
+            return new SavePresentationAction(table, settingsBinder);
         return null;
     }
 
     protected AbstractAction buildSaveAsAction() {
-        return new SaveAsPresentationAction(table, settingsWorker);
+        return new SaveAsPresentationAction(table, settingsBinder);
     }
 
     protected AbstractAction buildEditAction() {
         if (isGlobalPresentation())
-            return new EditPresentationAction(table, settingsWorker);
+            return new EditPresentationAction(table, settingsBinder);
         return null;
     }
 

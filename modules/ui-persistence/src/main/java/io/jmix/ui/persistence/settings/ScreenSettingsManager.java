@@ -25,9 +25,9 @@ import io.jmix.ui.settings.component.ComponentSettings.HasSettingsPresentation;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.component.ComponentSettings;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
-import io.jmix.ui.settings.component.worker.DataLoadingSettingsWorker;
-import io.jmix.ui.settings.component.worker.TableSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
+import io.jmix.ui.settings.component.binder.DataLoadingSettingsBinder;
+import io.jmix.ui.settings.component.binder.TableSettingsBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,8 +54,8 @@ public class ScreenSettingsManager {
     protected BeanLocator beanLocator;
 
     /**
-     * Applies settings for component if {@link ComponentSettingsWorker} is created for it. See
-     * {@link TableSettingsWorker} as an example.
+     * Applies settings for component if {@link ComponentSettingsBinder} is created for it. See
+     * {@link TableSettingsBinder} as an example.
      *
      * @param components     components to apply settings
      * @param screenSettings screen settings
@@ -75,14 +75,14 @@ public class ScreenSettingsManager {
 
             ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
 
-            ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
+            ComponentSettingsBinder binder = beanLocator.get(settingsRegistry.getBinderClass(settingsClass));
 
             if (component instanceof TablePresentations) {
-                ComponentSettings defaultSettings = worker.getSettings(component);
+                ComponentSettings defaultSettings = binder.getSettings(component);
                 ((TablePresentations) component).setDefaultSettings(new SettingsWrapperImpl(defaultSettings));
             }
 
-            worker.applySettings(component, new SettingsWrapperImpl(settings));
+            binder.applySettings(component, new SettingsWrapperImpl(settings));
 
             if (component instanceof TablePresentations
                     && settings instanceof HasSettingsPresentation) {
@@ -95,8 +95,8 @@ public class ScreenSettingsManager {
     }
 
     /**
-     * Applies data loading settings for component if {@link ComponentSettingsWorker} is created for it. See
-     * {@link TableSettingsWorker} as an example.
+     * Applies data loading settings for component if {@link ComponentSettingsBinder} is created for it. See
+     * {@link TableSettingsBinder} as an example.
      *
      * @param components     components to apply settings
      * @param screenSettings screen settings
@@ -114,18 +114,18 @@ public class ScreenSettingsManager {
 
             Class<? extends ComponentSettings> settingsClass = settingsRegistry.getSettingsClass(component.getClass());
 
-            ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
+            ComponentSettingsBinder binder = beanLocator.get(settingsRegistry.getBinderClass(settingsClass));
 
-            if (worker instanceof DataLoadingSettingsWorker) {
+            if (binder instanceof DataLoadingSettingsBinder) {
                 ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
-                ((DataLoadingSettingsWorker) worker).applyDataLoadingSettings(component, new SettingsWrapperImpl(settings));
+                ((DataLoadingSettingsBinder) binder).applyDataLoadingSettings(component, new SettingsWrapperImpl(settings));
             }
         }
     }
 
     /**
-     * Saves settings and persist if they are changed or screen settings is modified. {@link ComponentSettingsWorker}
-     * must be created for component. See {@link TableSettingsWorker} as an example.
+     * Saves settings and persist if they are changed or screen settings is modified. {@link ComponentSettingsBinder}
+     * must be created for component. See {@link TableSettingsBinder} as an example.
      *
      * @param components     components to save settings
      * @param screenSettings screen settings
@@ -147,9 +147,9 @@ public class ScreenSettingsManager {
 
             ComponentSettings settings = screenSettings.getSettingsOrCreate(component.getId(), settingsClass);
 
-            ComponentSettingsWorker worker = beanLocator.get(settingsRegistry.getWorkerClass(settingsClass));
+            ComponentSettingsBinder binder = beanLocator.get(settingsRegistry.getBinderClass(settingsClass));
 
-            boolean settingsChanged = worker.saveSettings(component, new SettingsWrapperImpl(settings));
+            boolean settingsChanged = binder.saveSettings(component, new SettingsWrapperImpl(settings));
             if (settingsChanged) {
                 isModified = true;
 

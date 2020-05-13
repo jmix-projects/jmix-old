@@ -17,15 +17,15 @@
 package com.haulmont.cuba.web.gui.components;
 
 import com.haulmont.cuba.gui.components.TreeTable;
-import com.haulmont.cuba.settings.CubaTreeTableSettingsWorker;
+import com.haulmont.cuba.settings.CubaTreeTableSettingsBinder;
 import io.jmix.core.Entity;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 @Deprecated
 public class WebTreeTable<E extends Entity> extends io.jmix.ui.components.impl.WebTreeTable<E> implements TreeTable<E> {
 
     @Override
-    protected ComponentSettingsWorker getSettingsWorker() {
-        return beanLocator.get(CubaTreeTableSettingsWorker.NAME);
+    protected ComponentSettingsBinder getSettingsBinder() {
+        return beanLocator.get(CubaTreeTableSettingsBinder.NAME);
     }
 }

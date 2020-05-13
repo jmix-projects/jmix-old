@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.worker;
+package io.jmix.ui.settings.component.binder;
 
 import com.google.common.base.Strings;
 import io.jmix.ui.components.Component;
@@ -28,10 +28,10 @@ import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.settings.component.TreeDataGridSettings;
 
 @SuppressWarnings("rawtypes")
-@org.springframework.stereotype.Component(TreeDataGridSettingsWorker.NAME)
-public class TreeDataGridSettingsWorker extends DataGridSettingsWorker {
+@org.springframework.stereotype.Component(TreeDataGridSettingsBinder.NAME)
+public class TreeDataGridSettingsBinder extends DataGridSettingsBinder {
 
-    public static final String NAME = "jmix_TreeDataGridSettingsWorker";
+    public static final String NAME = "jmix_TreeDataGridSettingsBinder";
 
     @Override
     public Class<? extends Component> getComponentClass() {

@@ -17,14 +17,14 @@
 package com.haulmont.cuba.web.gui.components;
 
 import com.haulmont.cuba.gui.components.ResizableTextArea;
-import com.haulmont.cuba.settings.CubaResizableTextAreaSettingsWorker;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import com.haulmont.cuba.settings.CubaResizableTextAreaSettingsBinder;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 @Deprecated
 public class WebResizableTextArea<V> extends io.jmix.ui.components.impl.WebResizableTextArea<V> implements ResizableTextArea<V> {
 
     @Override
-    protected ComponentSettingsWorker getSettingsWorker() {
-        return beanLocator.get(CubaResizableTextAreaSettingsWorker.NAME);
+    protected ComponentSettingsBinder getSettingsBinder() {
+        return beanLocator.get(CubaResizableTextAreaSettingsBinder.NAME);
     }
 }

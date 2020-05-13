@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.worker;
+package io.jmix.ui.settings.component.binder;
 
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.AbstractSplitPanel;
@@ -26,10 +26,10 @@ import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.settings.component.SplitPanelSettings;
 import org.apache.commons.lang3.math.NumberUtils;
 
-@org.springframework.stereotype.Component(SplitPanelSettingsWorker.NAME)
-public class SplitPanelSettingsWorker implements ComponentSettingsWorker<SplitPanel, SplitPanelSettings> {
+@org.springframework.stereotype.Component(SplitPanelSettingsBinder.NAME)
+public class SplitPanelSettingsBinder implements ComponentSettingsBinder<SplitPanel, SplitPanelSettings> {
 
-    public static final String NAME = "jmix_SplitPanelSettingsWorker";
+    public static final String NAME = "jmix_SplitPanelSettingsBinder";
 
     @Override
     public Class<? extends Component> getComponentClass() {

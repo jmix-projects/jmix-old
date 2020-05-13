@@ -18,12 +18,12 @@ package com.haulmont.cuba.settings;
 
 import com.haulmont.cuba.web.gui.components.WebDataGrid;
 import io.jmix.ui.components.Component;
-import io.jmix.ui.settings.component.worker.DataGridSettingsWorker;
+import io.jmix.ui.settings.component.binder.DataGridSettingsBinder;
 
-@org.springframework.stereotype.Component(CubaDataGridSettingsWorker.NAME)
-public class CubaDataGridSettingsWorker extends DataGridSettingsWorker {
+@org.springframework.stereotype.Component(CubaDataGridSettingsBinder.NAME)
+public class CubaDataGridSettingsBinder extends DataGridSettingsBinder {
 
-    public static final String NAME = "jmix_CubaDataGridSettingsWorker";
+    public static final String NAME = "jmix_CubaDataGridSettingsBinder";
 
     @Override
     public Class<? extends Component> getComponentClass() {

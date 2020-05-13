@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.worker;
+package io.jmix.ui.settings.component.binder;
 
 import com.google.common.base.Strings;
 import io.jmix.core.UuidProvider;
@@ -42,10 +42,10 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @SuppressWarnings("rawtypes")
-@org.springframework.stereotype.Component(TableSettingsWorker.NAME)
-public class TableSettingsWorker implements DataLoadingSettingsWorker<Table, TableSettings> {
+@org.springframework.stereotype.Component(TableSettingsBinder.NAME)
+public class TableSettingsBinder implements DataLoadingSettingsBinder<Table, TableSettings> {
 
-    public static final String NAME = "jmix_TableSettingsTableSettingsWorker";
+    public static final String NAME = "jmix_TableSettingsTableSettingsBinder";
 
     @Override
     public Class<? extends Component> getComponentClass() {

@@ -23,15 +23,14 @@ import io.jmix.ui.settings.compatibility.converter.LegacyResizableTextAreaSettin
 import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
 import io.jmix.ui.settings.component.ResizableTextAreaSettings;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
-import io.jmix.ui.settings.component.worker.ResizableTextAreaSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
+import io.jmix.ui.settings.component.binder.ResizableTextAreaSettingsBinder;
 import io.jmix.ui.widgets.CubaResizableTextAreaWrapper;
 import io.jmix.ui.widgets.CubaTextArea;
 import com.vaadin.server.ErrorMessage;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.Component;
-import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -159,7 +158,7 @@ public class WebResizableTextArea<V> extends WebAbstractTextArea<CubaTextArea, V
     public void applySettings(Element element) {
         if (isSettingsEnabled()) {
             ResizableTextAreaSettings settings = settingsConverter.convertToComponentSettings(element);
-            getSettingsWorker().applySettings(this, new SettingsWrapperImpl(settings));
+            getSettingsBinder().applySettings(this, new SettingsWrapperImpl(settings));
         }
     }
 
@@ -171,7 +170,7 @@ public class WebResizableTextArea<V> extends WebAbstractTextArea<CubaTextArea, V
 
         ResizableTextAreaSettings settings = settingsConverter.convertToComponentSettings(element);
 
-        boolean modified = getSettingsWorker().saveSettings(this, new SettingsWrapperImpl(settings));
+        boolean modified = getSettingsBinder().saveSettings(this, new SettingsWrapperImpl(settings));
         if (modified) {
             settingsConverter.copyToElement(settings, element);
         }
@@ -231,7 +230,7 @@ public class WebResizableTextArea<V> extends WebAbstractTextArea<CubaTextArea, V
         return new LegacyResizableTextAreaSettingsConverter();
     }
 
-    protected ComponentSettingsWorker getSettingsWorker() {
-        return beanLocator.get(ResizableTextAreaSettingsWorker.NAME);
+    protected ComponentSettingsBinder getSettingsBinder() {
+        return beanLocator.get(ResizableTextAreaSettingsBinder.NAME);
     }
 }

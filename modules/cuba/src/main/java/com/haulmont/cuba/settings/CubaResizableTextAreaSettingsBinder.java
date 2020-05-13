@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.worker;
+package com.haulmont.cuba.settings;
 
+import com.haulmont.cuba.web.gui.components.WebResizableTextArea;
 import io.jmix.ui.components.Component;
-import io.jmix.ui.settings.component.ComponentSettings;
-import io.jmix.ui.settings.component.SettingsWrapper;
+import io.jmix.ui.settings.component.binder.ResizableTextAreaSettingsBinder;
 
-/**
- * Settings worker for components which support data loading.
- */
-public interface DataLoadingSettingsWorker<V extends Component, S extends ComponentSettings>
-        extends ComponentSettingsWorker<V, S> {
+@org.springframework.stereotype.Component(CubaResizableTextAreaSettingsBinder.NAME)
+public class CubaResizableTextAreaSettingsBinder extends ResizableTextAreaSettingsBinder {
 
-    /**
-     * Applies data loading settings.
-     *
-     * @param component component to apply
-     * @param wrapper   settings wrapper
-     */
-    void applyDataLoadingSettings(V component, SettingsWrapper wrapper);
+    public static final String NAME = "jmix_CubaResizableTextAreaSettingsBinder";
+
+    @Override
+    public Class<? extends Component> getComponentClass() {
+        return WebResizableTextArea.class;
+    }
 }

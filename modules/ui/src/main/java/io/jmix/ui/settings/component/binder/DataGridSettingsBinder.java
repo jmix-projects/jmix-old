@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.worker;
+package io.jmix.ui.settings.component.binder;
 
 import com.vaadin.data.provider.GridSortOrder;
 import com.vaadin.ui.Grid;
@@ -41,10 +41,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("rawtypes")
-@org.springframework.stereotype.Component(DataGridSettingsWorker.NAME)
-public class DataGridSettingsWorker implements DataLoadingSettingsWorker<DataGrid, DataGridSettings> {
+@org.springframework.stereotype.Component(DataGridSettingsBinder.NAME)
+public class DataGridSettingsBinder implements DataLoadingSettingsBinder<DataGrid, DataGridSettings> {
 
-    public static final String NAME = "jmix_DataGridSettingsWorker";
+    public static final String NAME = "jmix_DataGridSettingsBinder";
 
     @Override
     public Class<? extends Component> getComponentClass() {

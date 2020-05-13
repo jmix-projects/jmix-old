@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.worker;
+package io.jmix.ui.settings.component.binder;
 
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.impl.WebTable;
@@ -23,9 +23,9 @@ import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.settings.component.TableSettings;
 
 /**
- * Base interface for component settings registration. As an example see {@link TableSettingsWorker}.
+ * Base interface for component settings registration. As an example see {@link TableSettingsBinder}.
  */
-public interface ComponentSettingsWorker<V extends Component, S extends ComponentSettings> {
+public interface ComponentSettingsBinder<V extends Component, S extends ComponentSettings> {
 
     /**
      * @return component class, e.g. {@link WebTable}

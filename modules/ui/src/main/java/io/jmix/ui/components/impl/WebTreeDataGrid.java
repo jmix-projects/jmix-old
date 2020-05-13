@@ -32,8 +32,8 @@ import io.jmix.ui.components.datagrid.DataGridDataProvider;
 import io.jmix.ui.components.datagrid.HierarchicalDataGridDataProvider;
 import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
 import io.jmix.ui.settings.compatibility.converter.LegacyTreeDataGridSettingsConverter;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
-import io.jmix.ui.settings.component.worker.TreeDataGridSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
+import io.jmix.ui.settings.component.binder.TreeDataGridSettingsBinder;
 import io.jmix.ui.widgets.CubaTreeGrid;
 
 import javax.annotation.Nullable;
@@ -270,8 +270,8 @@ public class WebTreeDataGrid<E extends Entity> extends WebAbstractDataGrid<CubaT
     }
 
     @Override
-    protected ComponentSettingsWorker getSettingsWorker() {
-        return beanLocator.get(TreeDataGridSettingsWorker.NAME);
+    protected ComponentSettingsBinder getSettingsBinder() {
+        return beanLocator.get(TreeDataGridSettingsBinder.NAME);
     }
 
     @Override

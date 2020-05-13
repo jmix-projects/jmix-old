@@ -17,15 +17,15 @@
 package com.haulmont.cuba.web.gui.components;
 
 import com.haulmont.cuba.gui.components.DataGrid;
-import com.haulmont.cuba.settings.CubaDataGridSettingsWorker;
+import com.haulmont.cuba.settings.CubaDataGridSettingsBinder;
 import io.jmix.core.Entity;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 @Deprecated
 public class WebDataGrid<E extends Entity> extends io.jmix.ui.components.impl.WebDataGrid<E> implements DataGrid<E> {
 
     @Override
-    protected ComponentSettingsWorker getSettingsWorker() {
-        return beanLocator.get(CubaDataGridSettingsWorker.NAME);
+    protected ComponentSettingsBinder getSettingsBinder() {
+        return beanLocator.get(CubaDataGridSettingsBinder.NAME);
     }
 }

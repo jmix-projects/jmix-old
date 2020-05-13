@@ -16,17 +16,17 @@
 
 package com.haulmont.cuba.settings;
 
-import com.haulmont.cuba.web.gui.components.WebTreeDataGrid;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.settings.component.worker.TreeDataGridSettingsWorker;
+import com.haulmont.cuba.web.gui.components.WebTable;
+import io.jmix.ui.settings.component.binder.TableSettingsBinder;
+import org.springframework.stereotype.Component;
 
-@org.springframework.stereotype.Component(CubaTreeDataGridSettingsWorker.NAME)
-public class CubaTreeDataGridSettingsWorker extends TreeDataGridSettingsWorker {
+@Component(CubaTableSettingsBinder.NAME)
+public class CubaTableSettingsBinder extends TableSettingsBinder {
 
-    public static final String NAME = "jmix_CubaTreeDataGridSettingsWorker";
+    public static final String NAME = "jmix_CubaTableSettingsBinder";
 
     @Override
-    public Class<? extends Component> getComponentClass() {
-        return WebTreeDataGrid.class;
+    public Class<? extends io.jmix.ui.components.Component> getComponentClass() {
+        return WebTable.class;
     }
 }

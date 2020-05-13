@@ -88,9 +88,9 @@ import io.jmix.ui.settings.compatibility.converter.LegacyDataGridSettingsConvert
 import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
 import io.jmix.ui.settings.component.DataGridSettings;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
-import io.jmix.ui.settings.component.worker.ComponentSettingsWorker;
-import io.jmix.ui.settings.component.worker.DataGridSettingsWorker;
-import io.jmix.ui.settings.component.worker.DataLoadingSettingsWorker;
+import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
+import io.jmix.ui.settings.component.binder.DataGridSettingsBinder;
+import io.jmix.ui.settings.component.binder.DataLoadingSettingsBinder;
 import io.jmix.ui.sys.PersistenceManagerClient;
 import io.jmix.ui.sys.ShortcutsDelegate;
 import io.jmix.ui.sys.ShowInfoAction;
@@ -2225,7 +2225,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
 
         DataGridSettings dataGridSettings = settingsConverter.convertToComponentSettings(element);
 
-        getSettingsWorker().applySettings(this, new SettingsWrapperImpl(dataGridSettings));
+        getSettingsBinder().applySettings(this, new SettingsWrapperImpl(dataGridSettings));
     }
 
     @Override
@@ -2236,8 +2236,8 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
 
         DataGridSettings dataGridSettings = settingsConverter.convertToComponentSettings(element);
 
-        DataLoadingSettingsWorker settingsWorker = (DataLoadingSettingsWorker) getSettingsWorker();
-        settingsWorker.applyDataLoadingSettings(this, new SettingsWrapperImpl(dataGridSettings));
+        DataLoadingSettingsBinder settingsBinder = (DataLoadingSettingsBinder) getSettingsBinder();
+        settingsBinder.applyDataLoadingSettings(this, new SettingsWrapperImpl(dataGridSettings));
     }
 
     @Override
@@ -2248,15 +2248,15 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & CubaEnhancedGrid<E
 
         DataGridSettings dataGridSettings = settingsConverter.convertToComponentSettings(element);
 
-        boolean modified = getSettingsWorker().saveSettings(this, new SettingsWrapperImpl(dataGridSettings));
+        boolean modified = getSettingsBinder().saveSettings(this, new SettingsWrapperImpl(dataGridSettings));
         if (modified)
             settingsConverter.copyToElement(dataGridSettings, element);
 
         return modified;
     }
 
-    protected ComponentSettingsWorker getSettingsWorker() {
-        return beanLocator.get(DataGridSettingsWorker.NAME);
+    protected ComponentSettingsBinder getSettingsBinder() {
+        return beanLocator.get(DataGridSettingsBinder.NAME);
     }
 
     protected LegacySettingsConverter createSettingsConverter() {

@@ -16,17 +16,18 @@
 
 package com.haulmont.cuba.settings;
 
-import com.haulmont.cuba.web.gui.components.WebTable;
-import io.jmix.ui.settings.component.worker.TableSettingsWorker;
-import org.springframework.stereotype.Component;
 
-@Component(CubaTableSettingsWorker.NAME)
-public class CubaTableSettingsWorker extends TableSettingsWorker {
+import com.haulmont.cuba.web.gui.components.WebGroupTable;
+import io.jmix.ui.components.Component;
+import io.jmix.ui.settings.component.binder.GroupTableSettingsBinder;
 
-    public static final String NAME = "jmix_CubaTableSettingsWorker";
+@org.springframework.stereotype.Component(CubaGroupTableSettingsBinder.NAME)
+public class CubaGroupTableSettingsBinder extends GroupTableSettingsBinder {
+
+    public static final String NAME = "jmix_CubaGroupTableSettingsBinder";
 
     @Override
-    public Class<? extends io.jmix.ui.components.Component> getComponentClass() {
-        return WebTable.class;
+    public Class<? extends Component> getComponentClass() {
+        return WebGroupTable.class;
     }
 }
