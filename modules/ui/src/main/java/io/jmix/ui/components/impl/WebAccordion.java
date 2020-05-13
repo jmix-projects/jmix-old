@@ -610,9 +610,9 @@ public class WebAccordion extends WebAbstractComponent<CubaAccordion>
                         window.getFacets().forEach(facet -> {
                             if (facet instanceof ScreenSettingsFacet) {
                                 ScreenSettingsFacet settingsFacet = (ScreenSettingsFacet) facet;
-                                Consumer<ScreenSettingsFacet.SettingsSet> applyHandler = settingsFacet.getOnApplySettingsHandler();
+                                Consumer<ScreenSettingsFacet.SettingsContext> applyHandler = settingsFacet.getApplySettingsDelegate();
                                 if (applyHandler != null) {
-                                    applyHandler.accept(new ScreenSettingsFacet.SettingsSet(
+                                    applyHandler.accept(new ScreenSettingsFacet.SettingsContext(
                                             WebAccordion.this,
                                             tabContent.getComponents(),
                                             settingsFacet.getSettings()));

@@ -34,12 +34,12 @@ import java.util.function.Consumer;
 public interface ScreenSettingsFacet extends Facet {
 
     /**
-     * @return true if facet should apply and save settings for all supported component in the screen. True by default.
+     * @return true if facet should apply and save settings for all supported component in the screen. False by default.
      */
     boolean isAuto();
 
     /**
-     * Set to true if facet should apply and save settings for all supported component in the screen. True by default.
+     * Set to true if facet should apply and save settings for all supported component in the screen. False by default.
      *
      * @param auto whether facet should include all components for saving settings
      */
@@ -47,6 +47,8 @@ public interface ScreenSettingsFacet extends Facet {
 
     /**
      * Adds component ids that should be handled when {@link #isAuto()} returns false.
+     * <p>
+     * Note, component must be attached to the Window, otherwise it will be skipped.
      *
      * @param ids component ids
      */
@@ -58,8 +60,9 @@ public interface ScreenSettingsFacet extends Facet {
     Set<String> getComponentIds();
 
     /**
-     * Returned collection depends on {@link #isAuto()} property. If it returns true collection will be filled by {@link Window},
-     * otherwise collection will be filled by components were added by {@link #addComponentIds(String...)}.
+     * Collection depends on {@link #isAuto()} property. If {@link #isAuto()} returns true collection will be
+     * filled by {@link Window}'s components, otherwise collection will be filled by components were added by
+     * {@link #addComponentIds(String...)}.
      *
      * @return components collection that is used for applying and saving settings.
      */
@@ -96,84 +99,81 @@ public interface ScreenSettingsFacet extends Facet {
      * @return apply settings handler or null if not set
      */
     @Nullable
-    Consumer<SettingsSet> getOnApplySettingsHandler();
+    Consumer<SettingsContext> getApplySettingsDelegate();
 
     /**
-     * Sets apply settings handler. It will replace default behavior of facet and will be invoked on
+     * Sets apply settings delegate. It will replace default behavior of facet and will be invoked on
      * {@link AfterShowEvent}.
      * <p>
      * For instance:
      * <pre>{@code
-     * @Install(to = "settingsFacet", subject = "onApplySettingsHandler")
+     * @Install(to = "settingsFacet", subject = "applySettingsDelegate")
      * private void onApplySetting(SettingsSet settings) {
-     *     // default behavior
      *     settingsFacet.applySettings(settings);
      * }
      * }
      * </pre>
      *
-     * @param handler apply settings handler
+     * @param delegate apply settings handler
      */
-    void setOnApplySettingsHandler(Consumer<SettingsSet> handler);
+    void setApplySettingsDelegate(Consumer<SettingsContext> delegate);
 
     /**
      * @return apply data loading settings handler or null if not set
      */
     @Nullable
-    Consumer<SettingsSet> getOnApplyDataLoadingSettingsHandler();
+    Consumer<SettingsContext> getApplyDataLoadingSettingsDelegate();
 
     /**
-     * Sets apply data loading settings handler. It will replace default behavior of facet and will be invoked on
+     * Sets apply data loading settings delegate. It will replace default behavior of facet and will be invoked on
      * {@link BeforeShowEvent}.
      * <p>
      * For instance:
      * <pre>{@code
-     * @Install(to = "settingsFacet", subject = "onApplyDataLoadingSettingsHandler")
+     * @Install(to = "settingsFacet", subject = "applyDataLoadingSettingsDelegate")
      * private void onApplyDataLoadingSetting(SettingsSet settings) {
-     *     // default behavior
      *     settingsFacet.applyDataLoadingSettings(settings);
      * }
      * }
      * </pre>
      *
-     * @param handler apply settings handler
+     * @param delegate apply settings handler
      */
-    void setOnApplyDataLoadingSettingsHandler(Consumer<SettingsSet> handler);
+    void setApplyDataLoadingSettingsDelegate(Consumer<SettingsContext> delegate);
 
     /**
-     * @return save settings handler or null if not set
+     * @return save settings delegate or null if not set
      */
     @Nullable
-    Consumer<SettingsSet> getOnSaveSettingsHandler();
+    Consumer<SettingsContext> getSaveSettingsDelegate();
 
     /**
-     * Set save settings handler. It will replace default behavior of facet and will be invoked on
+     * Set save settings delegate. It will replace default behavior of facet and will be invoked on
      * {@link AfterDetachEvent}.
      * <p>
      * For instance:
      * <pre>{@code
-     * @Install(to = "settingsFacet", subject = "onSaveSettingsHandler")
+     * @Install(to = "settingsFacet", subject = "saveSettingsDelegate")
      * private void onSaveSetting(SettingsSet settings) {
-     *     // default behavior
      *     settingsFacet.saveSettings(settings);
      * }
      * }
      * </pre>
      *
-     * @param handler save settings handler
+     * @param delegate save settings handler
      */
-    void setOnSaveSettingsHandler(Consumer<SettingsSet> handler);
+    void setSaveSettingsDelegate(Consumer<SettingsContext> delegate);
 
     /**
-     * Provides information about source component due to settings apply is invoked and its child components.
+     * Provides information about source component and its child components.
      */
-    class SettingsSet {
+    class SettingsContext {
 
         protected Component source;
         protected Collection<Component> components;
         protected ScreenSettings screenSettings;
 
-        public SettingsSet(Component source, Collection<Component> components, ScreenSettings screenSettings) {
+        public SettingsContext(Component source, Collection<Component> components, ScreenSettings screenSettings) {
             this.source = source;
             this.components = components;
             this.screenSettings = screenSettings;

@@ -18,7 +18,6 @@ package io.jmix.ui.persistence.settings.facet;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.commons.events.EventHub;
-import io.jmix.core.commons.events.Subscription;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.impl.WebAbstractFacet;
@@ -42,13 +41,13 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
 
     protected Set<String> componentIds;
 
-    protected boolean auto = true;
+    protected boolean auto = false;
 
     protected ScreenSettings screenSettings;
 
-    protected Consumer<SettingsSet> onApplySettingsHandler;
-    protected Consumer<SettingsSet> onApplyDataLoadingSettingsHandler;
-    protected Consumer<SettingsSet> onSaveSettingsHandler;
+    protected Consumer<SettingsContext> applySettingsDelegate;
+    protected Consumer<SettingsContext> applyDataLoadingSettingsDelegate;
+    protected Consumer<SettingsContext> saveSettingsDelegate;
 
     @Inject
     protected ScreenSettingsManager settingsCoordinator;
@@ -126,33 +125,33 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     }
 
     @Override
-    public Consumer<SettingsSet> getOnApplySettingsHandler() {
-        return onApplySettingsHandler;
+    public Consumer<SettingsContext> getApplySettingsDelegate() {
+        return applySettingsDelegate;
     }
 
     @Override
-    public void setOnApplySettingsHandler(Consumer<SettingsSet> handler) {
-        this.onApplySettingsHandler = handler;
+    public void setApplySettingsDelegate(Consumer<SettingsContext> delegate) {
+        this.applySettingsDelegate = delegate;
     }
 
     @Override
-    public Consumer<SettingsSet> getOnApplyDataLoadingSettingsHandler() {
-        return onApplyDataLoadingSettingsHandler;
+    public Consumer<SettingsContext> getApplyDataLoadingSettingsDelegate() {
+        return applyDataLoadingSettingsDelegate;
     }
 
     @Override
-    public void setOnApplyDataLoadingSettingsHandler(Consumer<SettingsSet> handler) {
-        this.onApplyDataLoadingSettingsHandler = handler;
+    public void setApplyDataLoadingSettingsDelegate(Consumer<SettingsContext> delegate) {
+        this.applyDataLoadingSettingsDelegate = delegate;
     }
 
     @Override
-    public Consumer<SettingsSet> getOnSaveSettingsHandler() {
-        return onSaveSettingsHandler;
+    public Consumer<SettingsContext> getSaveSettingsDelegate() {
+        return saveSettingsDelegate;
     }
 
     @Override
-    public void setOnSaveSettingsHandler(Consumer<SettingsSet> handler) {
-        this.onSaveSettingsHandler = handler;
+    public void setSaveSettingsDelegate(Consumer<SettingsContext> delegate) {
+        this.saveSettingsDelegate = delegate;
     }
 
     @Override
@@ -184,8 +183,8 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     }
 
     protected void onScreenBeforeShow(BeforeShowEvent event) {
-        if (onApplyDataLoadingSettingsHandler != null) {
-            onApplyDataLoadingSettingsHandler.accept(new SettingsSet(
+        if (applyDataLoadingSettingsDelegate != null) {
+            applyDataLoadingSettingsDelegate.accept(new SettingsContext(
                     getScreenOwner().getWindow(),
                     getComponents(),
                     screenSettings));
@@ -195,8 +194,8 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     }
 
     protected void onScreenAfterShow(AfterShowEvent event) {
-        if (onApplySettingsHandler != null) {
-            onApplySettingsHandler.accept(new SettingsSet(
+        if (applySettingsDelegate != null) {
+            applySettingsDelegate.accept(new SettingsContext(
                     getScreenOwner().getWindow(),
                     getComponents(),
                     screenSettings));
@@ -206,8 +205,8 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     }
 
     protected void onScreenAfterDetach(AfterDetachEvent event) {
-        if (onSaveSettingsHandler != null) {
-            onSaveSettingsHandler.accept(new SettingsSet(
+        if (saveSettingsDelegate != null) {
+            saveSettingsDelegate.accept(new SettingsContext(
                     getScreenOwner().getWindow(),
                     getComponents(),
                     screenSettings));
