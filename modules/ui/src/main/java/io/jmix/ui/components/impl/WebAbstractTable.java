@@ -2647,7 +2647,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
                     getSettingsBinder().saveSettings(this, new SettingsWrapperImpl(settings));
 
                     ScreenSettings screenSettings = beanLocator.getPrototype(ScreenSettings.NAME, getFrame().getId());
-                    String rawSettings = screenSettings.toRawSettings(settings);
+                    String rawSettings = screenSettings.toSettingsString(settings);
 
                     p.setSettings(p.getCurrent(), rawSettings);
                 }
@@ -2760,18 +2760,17 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & CubaEn
     }
 
     protected ComponentSettings getSettingsFromPresentation(TablePresentation p) {
-        String rawSettings = presentations.getRawSettings(p);
-        ScreenSettings screenSettings = beanLocator.getPrototype(ScreenSettings.NAME, getFrame().getId());
-
         Class<? extends ComponentSettings> settingsClass = getSettingsBinder().getSettingsClass();
-
         ComponentSettings settings = SettingsHelper.createSettings(settingsClass);
         settings.setId(getId());
 
-        Optional<? extends ComponentSettings> optSettings =
-                screenSettings.toComponentSettings(rawSettings, settingsClass);
-        if (optSettings.isPresent()) {
-            settings = optSettings.get();
+        String settingsString = presentations.getSettingsString(p);
+        if (settingsString != null) {
+            ScreenSettings screenSettings = beanLocator.getPrototype(ScreenSettings.NAME, getFrame().getId());
+            ComponentSettings convertedSettings = screenSettings.toComponentSettings(settingsString, settingsClass);
+            if (convertedSettings != null) {
+                settings = convertedSettings;
+            }
         }
         return settings;
     }

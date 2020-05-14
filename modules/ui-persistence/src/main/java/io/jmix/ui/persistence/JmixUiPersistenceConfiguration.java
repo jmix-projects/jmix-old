@@ -44,7 +44,7 @@ public class JmixUiPersistenceConfiguration {
     @Bean(TablePresentations.NAME)
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public TablePresentations presentations(Component component) {
-        return new PresentationsImpl(component);
+        return new TablePresentationsImpl(component);
     }
 }
 

@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.util.*;
 
-public class PresentationsImpl implements TablePresentations {
+public class TablePresentationsImpl implements TablePresentations {
 
     @Inject
     protected Metadata metadata;
@@ -65,7 +65,7 @@ public class PresentationsImpl implements TablePresentations {
     protected List<PresentationsChangeListener> listeners;
 
 
-    public PresentationsImpl(Component c) {
+    public TablePresentationsImpl(Component c) {
         name = ComponentsHelper.getComponentPath(c);
     }
 
@@ -127,7 +127,7 @@ public class PresentationsImpl implements TablePresentations {
     }
 
     @Override
-    public String getRawSettings(TablePresentation p) {
+    public String getSettingsString(TablePresentation p) {
         Preconditions.checkNotNullArgument(p);
 
         p = getPresentation(EntityValues.<UUID>getId(p));

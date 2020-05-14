@@ -48,7 +48,7 @@ public interface TablePresentations {
      * Returns user settings for the selected presentation or <code>null</code>
      * if the presentation doesn't exist or if the presentation doesn't contain any settings
      *
-     * @deprecated Use {@link #getRawSettings(TablePresentation) instead.}
+     * @deprecated Use {@link #getSettingsString(TablePresentation) instead.}
      */
     @Nullable
     @Deprecated
@@ -60,7 +60,7 @@ public interface TablePresentations {
      * the presentation doesn't contain any settings
      */
     @Nullable
-    String getRawSettings(TablePresentation p);
+    String getSettingsString(TablePresentation p);
 
     /**
      * Sets user settings for the selected presentation

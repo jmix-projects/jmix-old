@@ -17,6 +17,7 @@
 package io.jmix.ui.persistence.settings;
 
 import com.google.gson.*;
+import io.jmix.core.commons.util.Preconditions;
 import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.UiSettingsCache;
 import io.jmix.ui.settings.component.ComponentSettings;
@@ -54,7 +55,9 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
     }
 
     @Override
-    public ScreenSettingsJson put(String componentId, String property, String value) {
+    public ScreenSettingsJson put(String componentId, String property, @Nullable String value) {
+        checkNotNullPutConditions(componentId, property);
+
         JsonObject component = getComponentOrCreate(componentId);
 
         component.addProperty(property, value);
@@ -65,7 +68,9 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
     }
 
     @Override
-    public ScreenSettings put(String componentId, String property, Integer value) {
+    public ScreenSettings put(String componentId, String property, @Nullable Integer value) {
+        checkNotNullPutConditions(componentId, property);
+
         JsonObject component = getComponentOrCreate(componentId);
 
         component.addProperty(property, value);
@@ -76,7 +81,9 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
     }
 
     @Override
-    public ScreenSettings put(String componentId, String property, Long value) {
+    public ScreenSettings put(String componentId, String property, @Nullable Long value) {
+        checkNotNullPutConditions(componentId, property);
+
         JsonObject component = getComponentOrCreate(componentId);
 
         component.addProperty(property, value);
@@ -87,7 +94,9 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
     }
 
     @Override
-    public ScreenSettings put(String componentId, String property, Double value) {
+    public ScreenSettings put(String componentId, String property, @Nullable Double value) {
+        checkNotNullPutConditions(componentId, property);
+
         JsonObject component = getComponentOrCreate(componentId);
 
         component.addProperty(property, value);
@@ -98,7 +107,9 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
     }
 
     @Override
-    public ScreenSettings put(String componentId, String property, Boolean value) {
+    public ScreenSettings put(String componentId, String property, @Nullable Boolean value) {
+        checkNotNullPutConditions(componentId, property);
+
         JsonObject component = getComponentOrCreate(componentId);
 
         component.addProperty(property, value);
@@ -110,6 +121,12 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
 
     @Override
     public ScreenSettingsJson put(ComponentSettings settings) {
+        Preconditions.checkNotNullArgument(settings);
+
+        if (settings.getId() == null) {
+            throw new IllegalArgumentException("Cannot put settings with null id");
+        }
+
         put(gson.toJsonTree(settings), settings.getId());
 
         return this;
@@ -120,8 +137,10 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
      * @return current instance of {@link ScreenSettings}
      */
     public ScreenSettingsJson put(JsonObject json) {
-        if (!json.keySet().contains("id")) {
-            throw new IllegalArgumentException("Cannot put settings, json must have an id property");
+        Preconditions.checkNotNullArgument(json);
+
+        if (isValueNull(json, "id")) {
+            throw new IllegalArgumentException("Cannot put settings, json must have not null id");
         }
 
         String componentId = json.getAsJsonPrimitive("id").getAsString();
@@ -132,6 +151,8 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
 
     @Override
     public Optional<String> getString(String componentId, String property) {
+        checkNotNullGetConditions(componentId, property);
+
         JsonObject component = getComponent(componentId);
 
         if (component == null || isValueNull(component, property))
@@ -143,6 +164,8 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
 
     @Override
     public Optional<Integer> getInteger(String componentId, String property) {
+        checkNotNullGetConditions(componentId, property);
+
         JsonObject component = getComponent(componentId);
 
         if (component == null || isValueNull(component, property))
@@ -154,6 +177,8 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
 
     @Override
     public Optional<Long> getLong(String componentId, String property) {
+        checkNotNullGetConditions(componentId, property);
+
         JsonObject component = getComponent(componentId);
 
         if (component == null || isValueNull(component, property))
@@ -165,6 +190,8 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
 
     @Override
     public Optional<Double> getDouble(String componentId, String property) {
+        checkNotNullGetConditions(componentId, property);
+
         JsonObject component = getComponent(componentId);
 
         if (component == null || isValueNull(component, property))
@@ -176,6 +203,8 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
 
     @Override
     public Optional<Boolean> getBoolean(String componentId, String property) {
+        checkNotNullGetConditions(componentId, property);
+
         JsonObject component = getComponent(componentId);
 
         if (component == null || isValueNull(component, property))
@@ -187,6 +216,9 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
 
     @Override
     public <T extends ComponentSettings> Optional<T> getSettings(String componentId, Class<T> settingsClass) {
+        Preconditions.checkNotNullArgument(componentId);
+        Preconditions.checkNotNullArgument(settingsClass);
+
         JsonObject json = getComponent(componentId);
         if (json == null)
             return Optional.empty();
@@ -196,6 +228,9 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
 
     @Override
     public <T extends ComponentSettings> T getSettingsOrCreate(String componentId, Class<T> settingsClass) {
+        Preconditions.checkNotNullArgument(componentId);
+        Preconditions.checkNotNullArgument(settingsClass);
+
         return getSettings(componentId, settingsClass).orElseGet(() -> {
             JsonObject json = new JsonObject();
             json.addProperty("id", componentId);
@@ -204,22 +239,29 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
     }
 
     @Override
-    public <T extends ComponentSettings> Optional<T> toComponentSettings(String settings, Class<T> settingsClass) {
+    public <T extends ComponentSettings> T toComponentSettings(String settings, Class<T> settingsClass) {
+        Preconditions.checkNotNullArgument(settings);
+        Preconditions.checkNotNullArgument(settingsClass);
+
         try {
-            return Optional.ofNullable(gson.fromJson(settings, settingsClass));
+            return gson.fromJson(settings, settingsClass);
         } catch (JsonSyntaxException e) {
             log.error("Cannot map settings: {} to '{}'", settings, settingsClass, e);
-            return Optional.empty();
+            return null;
         }
     }
 
     @Override
-    public String toRawSettings(ComponentSettings settings) {
+    public String toSettingsString(ComponentSettings settings) {
+        Preconditions.checkNotNullArgument(settings);
+
         return gson.toJson(settings);
     }
 
     @Override
     public ScreenSettings remove(String componentId) {
+        Preconditions.checkNotNullArgument(componentId);
+
         JsonObject component = getComponent(componentId);
 
         if (component != null) {
@@ -233,6 +275,9 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
 
     @Override
     public ScreenSettings remove(String componentId, String property) {
+        Preconditions.checkNotNullArgument(componentId);
+        Preconditions.checkNotNullArgument(property);
+
         JsonObject component = getComponent(componentId);
 
         if (component != null) {
@@ -249,6 +294,8 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
      * @return json object that represents component settings
      */
     public Optional<JsonObject> getJsonSettings(String componentId) {
+        Preconditions.checkNotNullArgument(componentId);
+
         return Optional.ofNullable(getComponent(componentId));
     }
 
@@ -311,6 +358,16 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
         }
 
         return null;
+    }
+
+    protected void checkNotNullPutConditions(String id, String property) {
+        Preconditions.checkNotNullArgument(id, "Cannot put settings when component id is null");
+        Preconditions.checkNotNullArgument(property, "Cannot put settings when property is null");
+    }
+
+    protected void checkNotNullGetConditions(String id, String property) {
+        Preconditions.checkNotNullArgument(id, "Cannot get settings when component id is null");
+        Preconditions.checkNotNullArgument(property, "Cannot get settings when property is null");
     }
 
     protected boolean isValueNull(JsonObject json, String property) {

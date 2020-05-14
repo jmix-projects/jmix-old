@@ -188,14 +188,14 @@ public class PresentationEditor extends CubaWindow {
     protected void commit() {
         TablePresentations presentations = component.getPresentations();
 
-        String rawSettings;
+        String stringSettings;
         if (frameOwner instanceof CubaLegacySettings) {
             Document doc = DocumentHelper.createDocument();
             doc.setRootElement(doc.addElement("presentation"));
 
             if (component instanceof HasSettings) {
                 ((HasSettings) component).saveSettings(doc.getRootElement());
-                rawSettings = Dom4j.writeDocument(doc, false);
+                stringSettings = Dom4j.writeDocument(doc, false);
             } else {
                 throw new IllegalStateException(String.format("Cannot commit presentation." +
                         " Component must implement '%s'", HasSettings.class));
@@ -205,10 +205,10 @@ public class PresentationEditor extends CubaWindow {
             settingsBinder.saveSettings((Component) component, new SettingsWrapperImpl(componentSettings));
 
             ScreenSettings screenSettings = AppBeans.getPrototype(ScreenSettings.NAME, ((Screen) frameOwner).getId());
-            rawSettings = screenSettings.toRawSettings(componentSettings);
+            stringSettings = screenSettings.toSettingsString(componentSettings);
         }
 
-        presentation.setSettings(rawSettings);
+        presentation.setSettings(stringSettings);
 
         presentation.setName(nameField.getValue());
         presentation.setAutoSave(autoSaveField.getValue());
@@ -221,7 +221,7 @@ public class PresentationEditor extends CubaWindow {
         presentation.setUserLogin(userOnly ? user.getLogin() : null);
 
         if (log.isTraceEnabled()) {
-            log.trace(String.format("Presentation: %s", rawSettings));
+            log.trace(String.format("Presentation: %s", stringSettings));
         }
 
         if (isNew) {

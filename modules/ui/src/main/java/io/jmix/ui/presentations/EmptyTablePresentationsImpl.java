@@ -29,9 +29,9 @@ import java.util.*;
  */
 @org.springframework.stereotype.Component(TablePresentations.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class EmptyPresentationsImpl implements TablePresentations {
+public class EmptyTablePresentationsImpl implements TablePresentations {
 
-    public EmptyPresentationsImpl(Component c) {
+    public EmptyTablePresentationsImpl(Component c) {
         // do nothing
     }
 
@@ -51,7 +51,7 @@ public class EmptyPresentationsImpl implements TablePresentations {
     }
 
     @Override
-    public String getRawSettings(TablePresentation p) {
+    public String getSettingsString(TablePresentation p) {
         return null;
     }
 

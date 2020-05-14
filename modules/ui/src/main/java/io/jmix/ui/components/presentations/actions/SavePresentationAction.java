@@ -50,20 +50,19 @@ public class SavePresentationAction extends AbstractPresentationAction {
             presentations.setSettings(current, e);
         } else {
             ScreenSettings screenSettings = AppBeans.getPrototype(ScreenSettings.NAME, table.getFrame().getId());
-            String rawSettings = presentations.getRawSettings(current);
-            ComponentSettings componentSettings;
+            ComponentSettings settings = SettingsHelper.createSettings(settingsBinder.getSettingsClass());
+            settings.setId(table.getId());
 
-            Optional<? extends ComponentSettings> optSettings =
-                    screenSettings.toComponentSettings(rawSettings, settingsBinder.getSettingsClass());
-            if (optSettings.isPresent()) {
-                componentSettings = optSettings.get();
-            } else {
-                componentSettings = SettingsHelper.createSettings(settingsBinder.getSettingsClass());
-                componentSettings.setId(table.getId());
+            String settingsString = presentations.getSettingsString(current);
+            if (settingsString != null) {
+                ComponentSettings convertedSettings = screenSettings.toComponentSettings(settingsString, settingsBinder.getSettingsClass());
+                if (convertedSettings != null) {
+                    settings = convertedSettings;
+                }
             }
 
-            settingsBinder.saveSettings(table, new SettingsWrapperImpl(componentSettings));
-            presentations.setSettings(current, screenSettings.toRawSettings(componentSettings));
+            settingsBinder.saveSettings(table, new SettingsWrapperImpl(settings));
+            presentations.setSettings(current, screenSettings.toSettingsString(settings));
         }
 
         presentations.commit();

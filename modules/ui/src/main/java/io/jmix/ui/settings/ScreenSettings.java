@@ -19,6 +19,7 @@ package io.jmix.ui.settings;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.TableSettings;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 /**
@@ -48,7 +49,7 @@ public interface ScreenSettings {
      * @param value       String value
      * @return current instance of screen settings
      */
-    ScreenSettings put(String componentId, String property, String value);
+    ScreenSettings put(String componentId, String property, @Nullable String value);
 
     /**
      * Puts an Integer value. Will replace value if property already exist.
@@ -58,7 +59,7 @@ public interface ScreenSettings {
      * @param value       Integer value
      * @return current instance of screen settings
      */
-    ScreenSettings put(String componentId, String property, Integer value);
+    ScreenSettings put(String componentId, String property, @Nullable Integer value);
 
     /**
      * Puts a Long value. Will replace value if property already exist.
@@ -68,7 +69,7 @@ public interface ScreenSettings {
      * @param value       Long value
      * @return current instance of screen settings
      */
-    ScreenSettings put(String componentId, String property, Long value);
+    ScreenSettings put(String componentId, String property, @Nullable Long value);
 
     /**
      * Puts a Double value. Will replace value if property already exist.
@@ -78,7 +79,7 @@ public interface ScreenSettings {
      * @param value       Double value
      * @return current instance of screen settings
      */
-    ScreenSettings put(String componentId, String property, Double value);
+    ScreenSettings put(String componentId, String property, @Nullable Double value);
 
     /**
      * Puts a Boolean value. Will replace value if property already exist.
@@ -88,7 +89,7 @@ public interface ScreenSettings {
      * @param value       Boolean value
      * @return current instance of screen settings
      */
-    ScreenSettings put(String componentId, String property, Boolean value);
+    ScreenSettings put(String componentId, String property, @Nullable Boolean value);
 
     /**
      * Puts component's settings, e.g {@link TableSettings}. If settings with provided id already exist they will be
@@ -170,12 +171,13 @@ public interface ScreenSettings {
     /**
      * Maps settings from a string to provided settings class.
      *
-     * @param settings      raw settings
+     * @param settings      settings string
      * @param settingsClass settings class
      * @param <T>           type of settings class
-     * @return component settings optional, empty if settings null or empty
+     * @return component settings or null if an exception occurs during the conversion process
      */
-    <T extends ComponentSettings> Optional<T> toComponentSettings(String settings, Class<T> settingsClass);
+    @Nullable
+    <T extends ComponentSettings> T toComponentSettings(String settings, Class<T> settingsClass);
 
     /**
      * Converts component settings to raw string.
@@ -183,5 +185,5 @@ public interface ScreenSettings {
      * @param settings component settings
      * @return settings string
      */
-    String toRawSettings(ComponentSettings settings);
+    String toSettingsString(ComponentSettings settings);
 }

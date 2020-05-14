@@ -65,7 +65,8 @@ public class ScreenSettingsManager {
         Preconditions.checkNotNullArgument(screenSettings);
 
         for (Component component : components) {
-            if (!settingsRegistry.isSettingsRegisteredFor(component.getClass())) {
+            if (!settingsRegistry.isSettingsRegisteredFor(component.getClass())
+                    || component.getId() == null) {
                 continue;
             }
 
@@ -106,7 +107,8 @@ public class ScreenSettingsManager {
         Preconditions.checkNotNullArgument(screenSettings);
 
         for (Component component : components) {
-            if (!settingsRegistry.isSettingsRegisteredFor(component.getClass())) {
+            if (!settingsRegistry.isSettingsRegisteredFor(component.getClass())
+                    || component.getId() == null) {
                 continue;
             }
 
@@ -137,7 +139,8 @@ public class ScreenSettingsManager {
         boolean isModified = false;
 
         for (Component component : components) {
-            if (!settingsRegistry.isSettingsRegisteredFor(component.getClass())) {
+            if (!settingsRegistry.isSettingsRegisteredFor(component.getClass())
+                    || component.getId() == null) {
                 continue;
             }
 

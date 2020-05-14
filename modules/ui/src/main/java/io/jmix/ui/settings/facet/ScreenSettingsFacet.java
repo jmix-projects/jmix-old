@@ -19,8 +19,8 @@ package io.jmix.ui.settings.facet;
 import io.jmix.ui.components.Accordion;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Facet;
+import io.jmix.ui.components.TabSheet;
 import io.jmix.ui.components.Window;
-import io.jmix.ui.components.impl.WebTabSheet;
 import io.jmix.ui.screen.Screen.AfterDetachEvent;
 import io.jmix.ui.screen.Screen.AfterShowEvent;
 import io.jmix.ui.screen.Screen.BeforeShowEvent;
@@ -56,7 +56,7 @@ public interface ScreenSettingsFacet extends Facet {
     /**
      * Adds component ids that should be handled when {@link #isAuto()} returns false.
      * <p>
-     * Note, component must be attached to the Window, otherwise it will be skipped.
+     * Note, component must be attached to the Window, otherwise it will be ignored.
      *
      * @param ids component ids
      */
@@ -90,11 +90,29 @@ public interface ScreenSettingsFacet extends Facet {
     void applySettings(ScreenSettings settings);
 
     /**
+     * Applies screen settings for the components collection. Window must contains these components, otherwise they
+     * will be ignored.
+     *
+     * @param components components to apply
+     * @param settings   screen settings
+     */
+    void applySettings(Collection<Component> components, ScreenSettings settings);
+
+    /**
      * Applies data loading settings. By default facet applies data loading settings on {@link BeforeShowEvent}.
      *
      * @param settings screen settings
      */
     void applyDataLoadingSettings(ScreenSettings settings);
+
+    /**
+     * Applies data loading settings for the components collection. Window must contains these components, otherwise
+     * they will be ignored.
+     *
+     * @param components components to apply
+     * @param settings   screen settings
+     */
+    void applyDataLoadingSettings(Collection<Component> components, ScreenSettings settings);
 
     /**
      * Saves and persist settings. By default facet saves settings on {@link AfterDetachEvent}.
@@ -104,7 +122,16 @@ public interface ScreenSettingsFacet extends Facet {
     void saveSettings(ScreenSettings settings);
 
     /**
-     * @return apply settings handler or null if not set
+     * Saves and persist settings for the components collection. Window must contains these components, otherwise
+     * they will be ignored.
+     *
+     * @param components components to save
+     * @param settings   screen settings
+     */
+    void saveSettings(Collection<Component> components, ScreenSettings settings);
+
+    /**
+     * @return apply settings delegate or null if not set
      */
     @Nullable
     Consumer<SettingsContext> getApplySettingsDelegate();
@@ -112,6 +139,8 @@ public interface ScreenSettingsFacet extends Facet {
     /**
      * Sets apply settings delegate. It will replace default behavior of facet and will be invoked on
      * {@link AfterShowEvent}.
+     * <p>
+     * Note, it also will be invoked when lazy tab from {@link TabSheet} or {@link Accordion} is opened.
      * <p>
      * For instance:
      * <pre>{@code
@@ -122,12 +151,12 @@ public interface ScreenSettingsFacet extends Facet {
      * }
      * </pre>
      *
-     * @param delegate apply settings handler
+     * @param delegate apply settings delegate
      */
     void setApplySettingsDelegate(Consumer<SettingsContext> delegate);
 
     /**
-     * @return apply data loading settings handler or null if not set
+     * @return apply data loading settings delegate or null if not set
      */
     @Nullable
     Consumer<SettingsContext> getApplyDataLoadingSettingsDelegate();
@@ -145,7 +174,7 @@ public interface ScreenSettingsFacet extends Facet {
      * }
      * </pre>
      *
-     * @param delegate apply settings handler
+     * @param delegate apply settings delegate
      */
     void setApplyDataLoadingSettingsDelegate(Consumer<SettingsContext> delegate);
 
@@ -168,7 +197,7 @@ public interface ScreenSettingsFacet extends Facet {
      * }
      * </pre>
      *
-     * @param delegate save settings handler
+     * @param delegate save settings delegate
      */
     void setSaveSettingsDelegate(Consumer<SettingsContext> delegate);
 
@@ -188,15 +217,15 @@ public interface ScreenSettingsFacet extends Facet {
         }
 
         /**
-         * @return {@link Window} for first settings applying. Also can return {@link WebTabSheet} or {@link Accordion}
-         * if it has lazy tab.
+         * @return {@link Window} on opening/closing screen. Return {@link TabSheet} or {@link Accordion}
+         * if window has lazy tab and it is opened.
          */
         public Component getSource() {
             return source;
         }
 
         /**
-         * @return child component of source component. For  {@link WebTabSheet} and {@link Accordion} it will return
+         * @return child components of source component. For  {@link TabSheet} and {@link Accordion} it will return
          * components from lazy tab.
          */
         public Collection<Component> getComponents() {

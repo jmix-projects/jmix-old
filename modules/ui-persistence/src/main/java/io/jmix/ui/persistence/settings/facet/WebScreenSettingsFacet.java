@@ -50,7 +50,7 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     protected Consumer<SettingsContext> saveSettingsDelegate;
 
     @Inject
-    protected ScreenSettingsManager settingsCoordinator;
+    protected ScreenSettingsManager settingsManager;
 
     @Override
     public ScreenSettings getSettings() {
@@ -61,21 +61,42 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     public void applySettings(ScreenSettings settings) {
         Collection<Component> components = getComponents();
 
-        settingsCoordinator.applySettings(components, settings);
+        settingsManager.applySettings(components, settings);
+    }
+
+    @Override
+    public void applySettings(Collection<Component> components, ScreenSettings settings) {
+        Collection<Component> componentsToApply = filterByManagedComponents(components);
+
+        settingsManager.applySettings(componentsToApply, settings);
     }
 
     @Override
     public void applyDataLoadingSettings(ScreenSettings settings) {
         Collection<Component> components = getComponents();
 
-        settingsCoordinator.applyDataLoadingSettings(components, settings);
+        settingsManager.applyDataLoadingSettings(components, settings);
+    }
+
+    @Override
+    public void applyDataLoadingSettings(Collection<Component> components, ScreenSettings settings) {
+        Collection<Component> componentsToApply = filterByManagedComponents(components);
+
+        settingsManager.applyDataLoadingSettings(componentsToApply, settings);
     }
 
     @Override
     public void saveSettings(ScreenSettings settings) {
         Collection<Component> components = getComponents();
 
-        settingsCoordinator.saveSettings(components, screenSettings);
+        settingsManager.saveSettings(components, screenSettings);
+    }
+
+    @Override
+    public void saveSettings(Collection<Component> components, ScreenSettings settings) {
+        Collection<Component> componentsToSave = filterByManagedComponents(components);
+
+        settingsManager.saveSettings(componentsToSave, screenSettings);
     }
 
     @Override
@@ -167,7 +188,7 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
     protected void subscribe() {
         Frame frame = getOwner();
         if (frame == null) {
-            throw new IllegalStateException("ScreenSettings facet is not attached to Frame");
+            throw new IllegalStateException("ScreenSettingsFacet is not attached to Frame");
         }
 
         EventHub screenEvents = UiControllerUtils.getEventHub(frame.getFrameOwner());
@@ -213,6 +234,13 @@ public class WebScreenSettingsFacet extends WebAbstractFacet implements ScreenSe
         } else {
             saveSettings(screenSettings);
         }
+    }
+
+    protected Collection<Component> filterByManagedComponents(Collection<Component> components) {
+        Collection<Component> attachedComponents = getComponents();
+        return components.stream()
+                .filter(attachedComponents::contains)
+                .collect(Collectors.toList());
     }
 
     protected void checkAttachedFrame() {
