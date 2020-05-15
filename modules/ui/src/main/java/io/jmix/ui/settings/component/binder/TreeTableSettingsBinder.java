@@ -20,7 +20,7 @@ import io.jmix.ui.components.impl.WebTreeTable;
 import org.springframework.stereotype.Component;
 
 @Component(TreeTableSettingsBinder.NAME)
-public class TreeTableSettingsBinder extends TableSettingsBinder {
+public class TreeTableSettingsBinder extends AbstractTableSettingsBinder {
 
     public static final String NAME = "jmix_TreeTableSettingsBinder";
 

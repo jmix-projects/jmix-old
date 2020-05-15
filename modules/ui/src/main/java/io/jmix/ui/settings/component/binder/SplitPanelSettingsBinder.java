@@ -79,6 +79,7 @@ public class SplitPanelSettingsBinder implements ComponentSettingsBinder<SplitPa
     @Override
     public SplitPanelSettings getSettings(SplitPanel splitPanel) {
         SplitPanelSettings settings = createSettings();
+        settings.setId(splitPanel.getId());
 
         AbstractSplitPanel vSplitPanel = getVaadinSplitPanel(splitPanel);
 

@@ -18,7 +18,7 @@ package io.jmix.ui.persistence.entity;
 import io.jmix.core.entity.Creatable;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.data.entity.BaseUuidEntity;
-import io.jmix.ui.persistence.UserSettingImpl;
+import io.jmix.ui.persistence.UserSettingServiceImpl;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -26,7 +26,7 @@ import java.util.Date;
 /**
  * Record for user setting.
  *
- * @see UserSettingImpl
+ * @see UserSettingServiceImpl
  */
 @Entity(name = "ui_Setting")
 @Table(name = "UI_SETTING")

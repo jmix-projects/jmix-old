@@ -64,6 +64,7 @@ public class GroupBoxSettingsBinder implements ComponentSettingsBinder<GroupBoxL
     @Override
     public GroupBoxSettings getSettings(GroupBoxLayout groupBox) {
         GroupBoxSettings settings = createSettings();
+        settings.setId(groupBox.getId());
         settings.setExpanded(groupBox.isExpanded());
 
         return settings;

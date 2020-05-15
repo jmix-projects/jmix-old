@@ -38,7 +38,7 @@ public class JmixUiPersistenceConfiguration {
 
     @Bean(UserSettingService.NAME)
     public UserSettingService userSettingService() {
-        return new UserSettingImpl();
+        return new UserSettingServiceImpl();
     }
 
     @Bean(TablePresentations.NAME)

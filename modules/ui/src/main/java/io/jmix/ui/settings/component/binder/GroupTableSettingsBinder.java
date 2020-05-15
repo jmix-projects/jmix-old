@@ -41,7 +41,7 @@ import java.util.List;
 
 @SuppressWarnings("rawtypes")
 @org.springframework.stereotype.Component(GroupTableSettingsBinder.NAME)
-public class GroupTableSettingsBinder extends TableSettingsBinder {
+public class GroupTableSettingsBinder extends AbstractTableSettingsBinder {
 
     private static final Logger log = LoggerFactory.getLogger(GroupTableSettingsBinder.class);
 

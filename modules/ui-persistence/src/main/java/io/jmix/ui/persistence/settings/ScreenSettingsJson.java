@@ -42,7 +42,7 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
     private static final Logger log = LoggerFactory.getLogger(ScreenSettingsJson.class);
 
     @Inject
-    protected UiSettingsCache settingsClient;
+    protected UiSettingsCache settingsCache;
 
     protected JsonArray root;
 
@@ -316,7 +316,7 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
 
     protected void loadSettings() {
         if (root == null) {
-            String jsonArray = settingsClient.getSetting(screenId);
+            String jsonArray = settingsCache.getSetting(screenId);
 
             root = StringUtils.isNotBlank(jsonArray) ?
                     gson.fromJson(jsonArray, JsonArray.class) : new JsonArray();
@@ -325,7 +325,7 @@ public class ScreenSettingsJson extends AbstractScreenSettings {
 
     protected void commit() {
         if (isModified() && root != null) {
-            settingsClient.setSetting(screenId, gson.toJson(root));
+            settingsCache.setSetting(screenId, gson.toJson(root));
 
             setModified(false);
         }

@@ -41,7 +41,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.*;
 
-public class UserSettingImpl implements UserSettingService {
+public class UserSettingServiceImpl implements UserSettingService {
 
     @Inject
     protected UserSessionSource userSessionSource;

@@ -78,6 +78,7 @@ public class ResizableTextAreaSettingsBinder implements ComponentSettingsBinder<
     @Override
     public ResizableTextAreaSettings getSettings(ResizableTextArea textArea) {
         ResizableTextAreaSettings settings = createSettings();
+        settings.setId(textArea.getId());
 
         settings.setWidth(getWidth(textArea));
         settings.setHeight(getHeight(textArea));

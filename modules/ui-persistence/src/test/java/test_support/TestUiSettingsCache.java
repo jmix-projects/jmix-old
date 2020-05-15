@@ -14,10 +14,25 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.settings.component.binder;
+package test_support;
 
-@org.springframework.stereotype.Component(DataGridSettingsBinder.NAME)
-public class DataGridSettingsBinder extends AbstractDataGridSettingsBinder {
+import io.jmix.ui.settings.UiSettingsCache;
 
-    public static final String NAME = "jmix_DataGridSettingsBinder";
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class TestUiSettingsCache extends UiSettingsCache {
+
+    protected Map<String, Optional<String>> cache = new ConcurrentHashMap<>();
+
+    @Override
+    protected Map<String, Optional<String>> getCache() {
+        return cache;
+    }
+
+    @Override
+    public void clear() {
+        cache.clear();
+    }
 }
