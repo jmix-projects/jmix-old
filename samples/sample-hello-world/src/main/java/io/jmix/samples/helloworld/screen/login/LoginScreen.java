@@ -17,7 +17,7 @@
 package io.jmix.samples.helloworld.screen.login;
 
 
-import com.google.common.base.Strings;
+import io.jmix.core.CoreProperties;
 import io.jmix.core.Messages;
 import io.jmix.core.security.ClientDetails;
 import io.jmix.core.security.SecurityContextHelper;
@@ -39,9 +39,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 @Route(path = "login", root = true)
 @UiDescriptor("login-screen.xml")
@@ -69,6 +67,9 @@ public class LoginScreen extends Screen {
     protected AuthenticationManager authenticationManager;
 
     @Inject
+    protected CoreProperties coreProperties;
+
+    @Inject
     protected UiProperties uiProperties;
 
     @Inject
@@ -87,23 +88,13 @@ public class LoginScreen extends Screen {
     }
 
     protected void initLocalesField() {
-        Map<String, Locale> localesMap = new HashMap<>();
-        localesMap.put("English", Locale.US);
-        localesMap.put("Russian", new Locale("ru"));
-        localesField.setOptionsMap(localesMap);
-        localesField.setValue(Locale.US);
+        localesField.setOptionsMap(coreProperties.getAvailableLocales());
+        localesField.setValue(coreProperties.getAvailableLocales().values().iterator().next());
     }
 
     protected void initDefaultCredentials() {
-        //todo MG take values from config
-        String username = "admin";
-        if (!Strings.isNullOrEmpty(username)) {
-            usernameField.setValue(username);
-        }
-        String password = "admin";
-        if (!Strings.isNullOrEmpty(password)) {
-            passwordField.setValue(password);
-        }
+        usernameField.setValue("admin");
+        passwordField.setValue("admin");
     }
 
     protected void login() {
