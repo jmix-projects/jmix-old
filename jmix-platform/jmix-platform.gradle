@@ -38,6 +38,7 @@ dependencies {
         api "io.jmix.starter.audit:jmix-starter-audit:$version"
         api "io.jmix.starter.auditui:jmix-starter-audit-ui:$version"
         api "io.jmix.starter.security:jmix-starter-security:$version"
+        api "io.jmix.starter.securityui:jmix-starter-security-ui:$version"
 
         api "io.jmix.core:jmix-core:$version"
         api "io.jmix.cuba:jmix-cuba:$version"
@@ -47,7 +48,7 @@ dependencies {
         api "io.jmix.audit:jmix-audit:$version"
         api "io.jmix.audit:jmix-audit-ui:$version"
         api "io.jmix.security:jmix-security:$version"
-        api "io.jmix.security:jmix-security-ui:$version"
+        api "io.jmix.securityui:jmix-security-ui:$version"
         api "io.jmix.ui:jmx-ui:$version"
         api "io.jmix.ui-themes:jmix-ui-themes:$version"
         api "io.jmix.ui-themes-compiled:jmix-ui-themes-compiled:$version"
