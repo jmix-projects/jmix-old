@@ -1,4 +1,4 @@
-<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+<window xmlns="http://jmix.io/schema/ui/window"
         caption="msg://application.caption">
 
     <layout>
@@ -32,6 +32,8 @@
                                 caption="msg://menuCollapseGlyph"
                                 description="msg://sideMenuCollapse"
                                 stylename="c-sidemenu-collapse-button"/>
+                        <userIndicator id="userIndicator"
+                                       align="MIDDLE_CENTER"/>
                         <logoutButton id="logoutButton"
                                       icon="SIGN_OUT"
                                       description="msg://logoutBtnDescription"/>
