@@ -17,13 +17,16 @@
 
 package com.haulmont.cuba.gui.components.filter.descriptor;
 
+import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.gui.components.filter.condition.AbstractCondition;
-import io.jmix.core.metamodel.annotations.ModelObject;
-import io.jmix.data.entity.BaseUuidEntity;
 import io.jmix.core.entity.annotation.SystemLevel;
+import io.jmix.core.metamodel.annotations.ModelObject;
 import io.jmix.core.metamodel.annotations.ModelProperty;
 import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.data.entity.BaseUuidEntity;
 import org.dom4j.Element;
+
+import java.util.UUID;
 
 /**
  * Class that encapsulates common filter condition descriptor behaviour. Condition descriptors are used for
@@ -31,7 +34,7 @@ import org.dom4j.Element;
  */
 @ModelObject(name = "sec$AbstractConditionDescriptor")
 @SystemLevel
-public abstract class AbstractConditionDescriptor extends BaseUuidEntity {
+public abstract class AbstractConditionDescriptor extends BaseUuidEntity implements Entity<UUID> {
 
     private static final long serialVersionUID = 7975507640064754778L;
 

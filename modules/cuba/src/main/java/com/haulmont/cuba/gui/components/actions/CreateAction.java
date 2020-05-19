@@ -23,7 +23,7 @@ import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
 import io.jmix.core.AppBeans;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.Messages;
-import io.jmix.core.Entity;
+import com.haulmont.cuba.core.entity.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -322,7 +322,7 @@ public class CreateAction extends ListAction
                     Entity editedItem = window.getItem();
                     if (editedItem != null) {
                         if (parentDs == null) {
-                            editedItem = AppBeans.get(GuiActionSupport.class).reloadEntityIfNeeded(editedItem, datasource);
+                            editedItem = (Entity) AppBeans.get(GuiActionSupport.class).reloadEntityIfNeeded(editedItem, datasource);
                             if (addFirst && datasource instanceof CollectionDatasource.Ordered)
                                 ((CollectionDatasource.Ordered) datasource).includeItemFirst(editedItem);
                             else

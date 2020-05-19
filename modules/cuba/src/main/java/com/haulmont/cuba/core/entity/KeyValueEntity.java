@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package com.haulmont.cuba.core.entity;
 
-import io.jmix.core.Entity;
 import io.jmix.core.EntityEntry;
 import io.jmix.core.UuidProvider;
+import io.jmix.core.entity.BaseEntityEntry;
+import io.jmix.core.entity.EntityValues;
+import io.jmix.core.entity.HasInstanceMetaClass;
 import io.jmix.core.entity.annotation.DisableEnhancing;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.annotations.ModelObject;
@@ -43,11 +45,11 @@ import java.util.UUID;
  * person.setValue("lastName", "Simpson");
  * </pre>
  */
-@ModelObject(name = "sys_KeyValueEntity")
+@ModelObject(name = "sys$KeyValueEntity")
 @SystemLevel
 @DisableEnhancing
 public class KeyValueEntity
-        implements HasInstanceMetaClass, Entity {
+        implements HasInstanceMetaClass, Entity<Object> {
 
     protected UUID uuid;
 

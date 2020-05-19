@@ -16,11 +16,11 @@
 
 package com.haulmont.cuba.gui.data.impl;
 
+import com.haulmont.cuba.gui.data.HierarchicalDatasource;
+import com.haulmont.cuba.core.entity.Entity;
 import io.jmix.core.commons.datastruct.Node;
-import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 import io.jmix.ui.model.impl.EntityValuesComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +46,7 @@ public abstract class AbstractTreeTableDatasource<T extends Entity<K>, K>
         data.clear();
         for (Node<T> node : tree.toList()) {
             T entity = node.getData();
-            K id = EntityValues.getId(entity);
+            K id = (K) EntityValues.getId(entity);
 
             data.put(id, entity);
         }
@@ -54,7 +54,7 @@ public abstract class AbstractTreeTableDatasource<T extends Entity<K>, K>
 
     protected void sort(List<Node<T>> nodesList) {
         nodesList.sort(createEntityNodeComparator());
-        for (Node<T> n :nodesList) {
+        for (Node<T> n : nodesList) {
             if (n.getNumberOfChildren() > 0) {
                 sort(n.getChildren());
             }

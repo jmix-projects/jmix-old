@@ -20,7 +20,7 @@ import io.jmix.core.DevelopmentException;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlanProperty;
 import io.jmix.core.commons.util.ParamsMap;
-import io.jmix.core.Entity;
+import com.haulmont.cuba.core.entity.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;

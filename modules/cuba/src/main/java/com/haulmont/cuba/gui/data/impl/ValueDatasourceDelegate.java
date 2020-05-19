@@ -17,7 +17,7 @@
 package com.haulmont.cuba.gui.data.impl;
 
 import io.jmix.core.ValueLoadContext;
-import io.jmix.core.entity.KeyValueEntity;
+import com.haulmont.cuba.core.entity.KeyValueEntity;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
 import io.jmix.core.impl.keyvalue.KeyValueMetaProperty;
 import io.jmix.core.metamodel.datatypes.Datatype;

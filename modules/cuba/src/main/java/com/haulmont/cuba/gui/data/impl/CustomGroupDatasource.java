@@ -15,7 +15,7 @@
  */
 package com.haulmont.cuba.gui.data.impl;
 
-import io.jmix.core.Entity;
+import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.GroupDatasource;
 import io.jmix.core.entity.EntityValues;
@@ -50,7 +50,7 @@ public abstract class CustomGroupDatasource<T extends Entity<K>, K>
 
         if (entities != null) {
             for (T entity : entities) {
-                data.put(EntityValues.<K>getId(entity), entity);
+                data.put(EntityValues.getId(entity), entity);
                 attachListener(entity);
             }
         }

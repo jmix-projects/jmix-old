@@ -16,15 +16,16 @@
 
 package com.haulmont.cuba.core.sys;
 
-import com.haulmont.cuba.core.global.CommitContext;
-import com.haulmont.cuba.core.global.DataManager;
-import com.haulmont.cuba.core.global.LoadContext;
-import io.jmix.core.*;
-import io.jmix.core.Entity;
-import io.jmix.core.entity.EntityValues;
-import io.jmix.core.entity.KeyValueEntity;
 import com.haulmont.cuba.core.TransactionalDataManager;
 import com.haulmont.cuba.core.Transactions;
+import com.haulmont.cuba.core.entity.Entity;
+import com.haulmont.cuba.core.entity.KeyValueEntity;
+import com.haulmont.cuba.core.global.CommitContext;
+import com.haulmont.cuba.core.global.DataManager;
+import com.haulmont.cuba.core.global.EntitySet;
+import com.haulmont.cuba.core.global.LoadContext;
+import io.jmix.core.*;
+import io.jmix.core.entity.EntityValues;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -47,12 +48,12 @@ public class TransactionalDataManagerBean implements TransactionalDataManager {
     private EntityStates entityStates;
 
     @Override
-    public <E extends Entity<K>, K> FluentLoader<E, K> load(Class<E> entityClass) {
+    public <E extends Entity<K>, K> FluentLoader<E> load(Class<E> entityClass) {
         return new FluentLoader<>(entityClass, dataManager.getDelegate());
     }
 
     @Override
-    public <E extends Entity<K>, K> FluentLoader.ById<E, K> load(Id<E, K> entityId) {
+    public <E extends Entity<K>, K> FluentLoader.ById<E> load(Id<E> entityId) {
         return new FluentLoader<>(entityId.getEntityClass(), dataManager.getDelegate()).id(entityId.getValue());
     }
 

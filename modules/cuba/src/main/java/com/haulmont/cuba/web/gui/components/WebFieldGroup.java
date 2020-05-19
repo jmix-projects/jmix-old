@@ -67,7 +67,7 @@ public class WebFieldGroup extends WebAbstractComponent<CubaFieldGroupLayout> im
         columnFieldMapping.add(new ArrayList<>());
     }
 
-    protected Datasource<Entity> datasource;
+    protected Datasource<?> datasource;
 
     protected FieldGroupFieldFactory fieldFactory;
 

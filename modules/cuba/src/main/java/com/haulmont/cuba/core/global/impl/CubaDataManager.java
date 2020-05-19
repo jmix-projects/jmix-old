@@ -17,19 +17,19 @@
 package com.haulmont.cuba.core.global.impl;
 
 import com.haulmont.cuba.CubaProperties;
+import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.global.CommitContext;
 import com.haulmont.cuba.core.global.DataManager;
+import com.haulmont.cuba.core.global.EntitySet;
+import com.haulmont.cuba.core.entity.KeyValueEntity;
 import com.haulmont.cuba.core.global.LoadContext;
 import io.jmix.core.*;
 import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.entity.KeyValueEntity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.validation.EntityValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -37,6 +37,7 @@ import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component(DataManager.NAME)
 public class CubaDataManager implements DataManager {
@@ -63,12 +64,6 @@ public class CubaDataManager implements DataManager {
 
     @Inject
     protected BeanValidation beanValidation;
-
-    protected Map<String, DataStore> dataStores = new HashMap<>();
-
-    // todo entity log
-//    @Inject
-//    protected EntityLogAPI entityLog;
 
     @Nullable
     @Override
@@ -130,7 +125,10 @@ public class CubaDataManager implements DataManager {
     @Override
     public EntitySet commit(CommitContext context) {
         validate(context);
-        return delegate.save(context);
+        io.jmix.core.EntitySet jmixEntitySet = delegate.save(context);
+        return new EntitySet(jmixEntitySet.stream()
+                .map(e -> (Entity<?>) e)
+                .collect(Collectors.toList()));
     }
 
     @Override
@@ -168,7 +166,8 @@ public class CubaDataManager implements DataManager {
 
     @Override
     public List<KeyValueEntity> loadValues(ValueLoadContext context) {
-        return delegate.loadValues(context);
+        List<io.jmix.core.entity.KeyValueEntity> jmixKeyValueEntities = delegate.loadValues(context);
+        return null;
     }
 
     @Override
@@ -204,15 +203,15 @@ public class CubaDataManager implements DataManager {
     protected void validate(CommitContext context) {
         if (CommitContext.ValidationMode.DEFAULT == context.getValidationMode() && properties.isDataManagerBeanValidation()
                 || CommitContext.ValidationMode.ALWAYS_VALIDATE == context.getValidationMode()) {
-            for (Entity entity : context.getCommitInstances()) {
+            for (io.jmix.core.Entity entity : context.getCommitInstances()) {
                 validateEntity(entity, context.getValidationGroups());
             }
         }
     }
 
-    protected void validateEntity(Entity entity, List<Class> validationGroups) {
+    protected void validateEntity(io.jmix.core.Entity entity, List<Class> validationGroups) {
         Validator validator = beanValidation.getValidator();
-        Set<ConstraintViolation<Entity>> violations;
+        Set<ConstraintViolation<io.jmix.core.Entity>> violations;
         if (validationGroups == null || validationGroups.isEmpty()) {
             violations = validator.validate(entity);
         } else {

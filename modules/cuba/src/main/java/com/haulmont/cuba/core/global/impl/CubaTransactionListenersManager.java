@@ -16,10 +16,10 @@
 
 package com.haulmont.cuba.core.global.impl;
 
+import com.haulmont.cuba.core.Persistence;
+import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.listener.AfterCompleteTransactionListener;
 import com.haulmont.cuba.core.listener.BeforeCommitTransactionListener;
-import io.jmix.core.Entity;
-import com.haulmont.cuba.core.Persistence;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -31,12 +31,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component("jmix_CubaTransactionListenersManager")
 public class CubaTransactionListenersManager implements
-            ApplicationContextAware,
-            io.jmix.data.listener.BeforeCommitTransactionListener,
-            io.jmix.data.listener.AfterCompleteTransactionListener {
+        ApplicationContextAware,
+        io.jmix.data.listener.BeforeCommitTransactionListener,
+        io.jmix.data.listener.AfterCompleteTransactionListener {
 
     protected List<BeforeCommitTransactionListener> beforeCommitTxListeners;
 
@@ -57,16 +58,28 @@ public class CubaTransactionListenersManager implements
     }
 
     @Override
-    public void beforeCommit(String storeName, Collection<Entity> managedEntities) {
-        for (BeforeCommitTransactionListener listener : beforeCommitTxListeners) {
-            listener.beforeCommit(persistence.getEntityManager(storeName), managedEntities);
+    public void beforeCommit(String storeName, Collection<io.jmix.core.Entity> managedEntities) {
+        Collection<Entity> cubaEntities = managedEntities.stream()
+                .filter(entity -> entity instanceof Entity)
+                .map(entity -> (Entity<?>) entity)
+                .collect(Collectors.toList());
+        if (!cubaEntities.isEmpty()) {
+            for (BeforeCommitTransactionListener listener : beforeCommitTxListeners) {
+                listener.beforeCommit(persistence.getEntityManager(storeName), cubaEntities);
+            }
         }
     }
 
     @Override
-    public void afterComplete(boolean committed, Collection<Entity> detachedEntities) {
-        for (AfterCompleteTransactionListener listener : afterCompleteTxListeners) {
-            listener.afterComplete(committed, detachedEntities);
+    public void afterComplete(boolean committed, Collection<io.jmix.core.Entity> detachedEntities) {
+        Collection<Entity> cubaEntities = detachedEntities.stream()
+                .filter(entity -> entity instanceof Entity)
+                .map(entity -> (Entity<?>) entity)
+                .collect(Collectors.toList());
+        if (!cubaEntities.isEmpty()) {
+            for (AfterCompleteTransactionListener listener : afterCompleteTxListeners) {
+                listener.afterComplete(committed, cubaEntities);
+            }
         }
     }
 }

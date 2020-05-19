@@ -20,7 +20,7 @@ import com.haulmont.cuba.gui.data.DataSupplier;
 import com.haulmont.cuba.gui.data.DsContext;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 import io.jmix.core.FetchPlan;
-import io.jmix.core.entity.KeyValueEntity;
+import com.haulmont.cuba.core.entity.KeyValueEntity;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
 import io.jmix.core.metamodel.datatypes.Datatype;
 import io.jmix.core.metamodel.model.MetaClass;

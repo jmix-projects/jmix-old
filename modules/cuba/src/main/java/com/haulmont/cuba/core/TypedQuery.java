@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.core;
 
-import io.jmix.core.Entity;
+import com.haulmont.cuba.core.entity.Entity;
 import io.jmix.core.FetchPlan;
 
 import javax.annotation.Nullable;

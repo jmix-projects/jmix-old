@@ -17,7 +17,7 @@
 package com.haulmont.cuba.gui.screen.compatibility;
 
 import com.haulmont.cuba.gui.components.AbstractEditor;
-import io.jmix.core.Entity;
+import com.haulmont.cuba.core.entity.Entity;
 import io.jmix.ui.components.Component;
 import io.jmix.ui.components.Frame;
 import io.jmix.ui.components.compatibility.AfterCloseListenerAdapter;
@@ -60,7 +60,7 @@ public class ScreenEditorWrapper extends AbstractEditor {
 
     @Override
     public Entity getItem() {
-        return ((EditorScreen) screen).getEditedEntity();
+        return (Entity) ((EditorScreen) screen).getEditedEntity();
     }
 
     @Nullable

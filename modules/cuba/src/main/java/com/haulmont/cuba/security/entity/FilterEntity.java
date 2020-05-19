@@ -25,6 +25,7 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.util.UUID;
 
 /**
  * A filter component settings.
@@ -33,7 +34,7 @@ import javax.persistence.Transient;
 @Table(name = "SEC_FILTER")
 @NamePattern("%s|name")
 @SystemLevel
-public class FilterEntity extends StandardEntity {
+public class FilterEntity extends StandardEntity implements com.haulmont.cuba.core.entity.Entity<UUID> {
 
     @Column(name = "COMPONENT")
     protected String componentId;

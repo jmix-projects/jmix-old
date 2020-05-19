@@ -17,7 +17,7 @@ package com.haulmont.cuba.core;
 
 import io.jmix.core.EntityStates;
 import io.jmix.core.FetchPlan;
-import io.jmix.core.Entity;
+import com.haulmont.cuba.core.entity.Entity;
 
 import javax.annotation.Nullable;
 import java.sql.Connection;
@@ -51,7 +51,7 @@ public interface EntityManager {
      * @return the instance that the state was merged to
      * @throws IllegalArgumentException if instance is not an entity or is a removed entity
      * @see EntityStates#isNew(Object)
-     * @see EntityStates#makePatch(Entity)
+     * @see EntityStates#makePatch(io.jmix.core.Entity)
      */
     <T extends Entity> T merge(T entity);
 

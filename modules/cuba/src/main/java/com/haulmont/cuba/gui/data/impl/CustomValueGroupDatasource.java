@@ -16,7 +16,7 @@
 
 package com.haulmont.cuba.gui.data.impl;
 
-import io.jmix.core.entity.KeyValueEntity;
+import com.haulmont.cuba.core.entity.KeyValueEntity;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 
 import java.util.Collection;

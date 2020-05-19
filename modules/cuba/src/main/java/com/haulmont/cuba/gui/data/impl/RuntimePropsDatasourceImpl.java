@@ -23,7 +23,7 @@ import com.haulmont.cuba.gui.data.*;
 import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributesGuiTools;
 import io.jmix.core.AppBeans;
 import io.jmix.core.DevelopmentException;
-import io.jmix.core.Entity;
+import com.haulmont.cuba.core.entity.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;

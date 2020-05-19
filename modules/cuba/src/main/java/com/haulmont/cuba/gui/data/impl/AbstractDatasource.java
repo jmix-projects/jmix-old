@@ -23,7 +23,7 @@ import com.haulmont.cuba.gui.data.NestedDatasource;
 import io.jmix.core.AppBeans;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.commons.events.EventRouter;
-import io.jmix.core.Entity;
+import com.haulmont.cuba.core.entity.Entity;
 import io.jmix.core.entity.EntityPropertyChangeEvent;
 import io.jmix.core.entity.EntityPropertyChangeListener;
 import io.jmix.core.metamodel.model.MetaClass;

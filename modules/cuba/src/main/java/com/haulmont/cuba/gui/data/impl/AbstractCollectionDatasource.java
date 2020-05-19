@@ -22,7 +22,7 @@ import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.DataSupplier;
 import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.core.*;
-import io.jmix.core.Entity;
+import com.haulmont.cuba.core.entity.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.annotations.ModelProperty;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -304,7 +304,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
                         if (pathElements.length > 1) {
                             Object entity = params.get(pathElements[0]);
                             if (entity instanceof Entity) {
-                                value = EntityValues.getValueEx((Entity<?>) entity, Arrays.copyOfRange(pathElements, 1, pathElements.length));
+                                value = EntityValues.getValueEx((Entity) entity, Arrays.copyOfRange(pathElements, 1, pathElements.length));
                             }
                         }
                     }

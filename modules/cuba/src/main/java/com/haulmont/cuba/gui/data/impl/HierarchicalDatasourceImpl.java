@@ -16,9 +16,9 @@
 
 package com.haulmont.cuba.gui.data.impl;
 
-import io.jmix.core.Entity;
-import io.jmix.core.entity.EntityValues;
+import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
+import io.jmix.core.entity.EntityValues;
 
 import java.util.*;
 
@@ -51,8 +51,8 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
             for (K id : ids) {
                 Entity<K> item = getItemNN(id);
                 Entity<K> parentItem = EntityValues.getValue(item, hierarchyPropertyName);
-                if (parentItem != null && EntityValues.<K>getId(parentItem).equals(itemId))
-                    res.add(EntityValues.getId(item));
+                if (parentItem != null && EntityValues.getId(parentItem).equals(itemId))
+                    res.add((K) EntityValues.getId(item));
             }
 
             return res;
@@ -68,7 +68,7 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
                 return null;
             else {
                 Entity<K> parentItem = EntityValues.getValue(item, hierarchyPropertyName);
-                return parentItem == null ? null : EntityValues.getId(parentItem);
+                return parentItem == null ? null : (K) EntityValues.getId(parentItem);
             }
         }
         return null;
@@ -83,8 +83,8 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
             for (K id : ids) {
                 Entity<K> item = getItemNN(id);
                 Entity<K> parentItem = EntityValues.getValue(item, hierarchyPropertyName);
-                if (parentItem == null || !containsItem(EntityValues.getId(parentItem)))
-                    result.add(EntityValues.getId(item));
+                if (parentItem == null || !containsItem((K) EntityValues.getId(parentItem)))
+                    result.add((K) EntityValues.getId(item));
             }
             return result;
         } else {
@@ -99,7 +99,7 @@ public class HierarchicalDatasourceImpl<T extends Entity<K>, K>
 
         if (hierarchyPropertyName != null) {
             Entity<K> parentItem = EntityValues.getValue(item, hierarchyPropertyName);
-            return (parentItem == null || !containsItem(EntityValues.getId(parentItem)));
+            return (parentItem == null || !containsItem((K) EntityValues.getId(parentItem)));
         } else {
             return true;
         }

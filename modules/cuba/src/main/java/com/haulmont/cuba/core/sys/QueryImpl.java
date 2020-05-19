@@ -17,7 +17,7 @@ package com.haulmont.cuba.core.sys;
 
 import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlanRepository;
-import io.jmix.core.Entity;
+import com.haulmont.cuba.core.entity.Entity;
 import io.jmix.data.PersistenceHints;
 import com.haulmont.cuba.core.Query;
 import com.haulmont.cuba.core.TypedQuery;

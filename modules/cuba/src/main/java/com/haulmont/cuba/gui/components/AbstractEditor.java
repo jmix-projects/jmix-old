@@ -16,6 +16,7 @@
 package com.haulmont.cuba.gui.components;
 
 import com.google.common.collect.Iterables;
+import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.gui.WindowParams;
 import com.haulmont.cuba.gui.data.*;
@@ -24,8 +25,10 @@ import com.haulmont.cuba.gui.data.impl.DatasourceImplementation;
 import com.haulmont.cuba.gui.data.impl.DsContextImplementation;
 import com.haulmont.cuba.gui.data.impl.EntityCopyUtils;
 import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributesGuiTools;
-import io.jmix.core.*;
-import io.jmix.core.Entity;
+import io.jmix.core.BeanValidation;
+import io.jmix.core.EntityAccessException;
+import io.jmix.core.EntityStates;
+import io.jmix.core.MetadataTools;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -157,6 +160,19 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
      */
     @SuppressWarnings("unchecked")
     @Override
+    public void setItem(io.jmix.core.Entity item) {
+        setItem((Entity) item);
+    }
+
+    /**
+     * Called by the framework to set an edited entity after creation of all components and datasources, and after
+     * {@link #init(java.util.Map)}.
+     * <p>Don't override this method in subclasses, use hooks {@link #initNewItem(Entity)}
+     * and {@link #postInit()} instead.</p>
+     *
+     * @param item entity instance
+     */
+    @SuppressWarnings("unchecked")
     public void setItem(Entity item) {
         if (PersistenceHelper.isNew(item)) {
             DatasourceImplementation parentDs = (DatasourceImplementation) getParentDs();

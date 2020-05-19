@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright (c) 2008-2016 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,21 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-package com.haulmont.cuba.core.listener;
-
-import com.haulmont.cuba.core.entity.Entity;
-
-/**
- * Defines the contract for handling entities right before they are attached to an EntityManager on merge operation.
  *
  */
-public interface BeforeAttachEntityListener<T extends Entity> extends io.jmix.data.listener.BeforeAttachEntityListener<T> {
+package com.haulmont.cuba.core.entity;
 
-    /**
-     * Executes before the object is attached to an EntityManager on merge operation.
-     *
-     * @param entity        detached entity
-     */
-    void onBeforeAttach(T entity);
+/**
+ * Interface to be implemented by domain model objects with identifiers.
+ *
+ * @param <K> identifier type
+ */
+public interface Entity<K> extends io.jmix.core.Entity {
 }

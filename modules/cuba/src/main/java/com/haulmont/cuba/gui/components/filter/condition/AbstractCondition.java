@@ -18,6 +18,7 @@
 package com.haulmont.cuba.gui.components.filter.condition;
 
 import com.google.common.base.Strings;
+import com.haulmont.cuba.core.entity.Entity;
 import com.haulmont.cuba.gui.components.filter.ConditionParamBuilder;
 import com.haulmont.cuba.gui.components.filter.Param;
 import com.haulmont.cuba.gui.components.filter.descriptor.AbstractConditionDescriptor;
@@ -38,6 +39,7 @@ import org.dom4j.Element;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -46,7 +48,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  */
 @ModelObject(name = "sec$AbstractCondition")
 @SystemLevel
-public abstract class AbstractCondition extends BaseUuidEntity {
+public abstract class AbstractCondition extends BaseUuidEntity implements Entity<UUID> {
 
     private static final long serialVersionUID = -8405022004399309798L;
 

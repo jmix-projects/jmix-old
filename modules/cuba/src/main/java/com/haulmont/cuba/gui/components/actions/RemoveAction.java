@@ -21,7 +21,7 @@ import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.data.PropertyDatasource;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Messages;
-import io.jmix.core.Entity;
+import com.haulmont.cuba.core.entity.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Range;
