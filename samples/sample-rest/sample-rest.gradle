@@ -39,6 +39,7 @@ dependencies {
 
     testImplementation 'org.springframework:spring-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     testImplementation 'com.squareup.retrofit2:converter-scalars:2.8.1'
 
