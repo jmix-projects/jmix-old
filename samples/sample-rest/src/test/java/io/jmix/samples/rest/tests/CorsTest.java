@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = SampleRestApplication.class)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
-        "jmix.rest.allowedOrigins = http://www.allowed.com"
+        "jmix.rest.allowedOrigins = http://www.allowed1.com, http://www.allowed2.com"
 })
 public class CorsTest {
 
@@ -46,11 +46,20 @@ public class CorsTest {
     private MockMvc mockMvc;
 
     @Test
-    public void testCorsAllowed() throws Exception {
+    public void testCorsAllowed1() throws Exception {
         String accessToken = obtainAccessToken("admin", "admin123", this.mockMvc);
         this.mockMvc.perform(options("/rest/entities/ref_Car")
                 .header("Authorization", "Bearer " + accessToken)
-                .header("Origin", "http://www.allowed.com"))
+                .header("Origin", "http://www.allowed1.com"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testCorsAllowed2() throws Exception {
+        String accessToken = obtainAccessToken("admin", "admin123", this.mockMvc);
+        this.mockMvc.perform(options("/rest/entities/ref_Car")
+                .header("Authorization", "Bearer " + accessToken)
+                .header("Origin", "http://www.allowed2.com"))
                 .andExpect(status().isOk());
     }
 
