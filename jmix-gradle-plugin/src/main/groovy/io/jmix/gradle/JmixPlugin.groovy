@@ -63,8 +63,10 @@ class JmixPlugin implements Plugin<Project> {
             }
 
             // Exclude second logger to prevent collisions with Logback
-            project.configurations.collect {
-                it.exclude(group: 'org.slf4j', module: 'slf4j-jdk14')
+            if (!project.hasProperty('jmixFrameworkItself')) {
+                project.configurations.collect {
+                    it.exclude(group: 'org.slf4j', module: 'slf4j-jdk14')
+                }
             }
         }
 
