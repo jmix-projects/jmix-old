@@ -36,6 +36,7 @@ import static org.junit.Assert.assertTrue;
 public class BeanValidationFT extends AbstractRestControllerFT {
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat dateFormatResponse = new SimpleDateFormat("dd/MM/yyyy");
 
     @Override
     public void setUp() throws Exception {
@@ -235,7 +236,7 @@ public class BeanValidationFT extends AbstractRestControllerFT {
             assertEquals(1, (int) ctx.read("$.length()"));
             assertEquals("Must be in the past", ctx.read("$[0].message"));
             assertEquals("contractStartDate", ctx.read("$[0].path"));
-            assertEquals(dateFormat.format(futureDate), ctx.read("$[0].invalidValue"));
+            assertEquals(dateFormatResponse.format(futureDate), ctx.read("$[0].invalidValue"));
         }
     }
 
@@ -258,7 +259,7 @@ public class BeanValidationFT extends AbstractRestControllerFT {
             assertEquals(1, (int) ctx.read("$.length()"));
             assertEquals("Must be in the future", ctx.read("$[0].message"));
             assertEquals("contractEndDate", ctx.read("$[0].path"));
-            assertEquals(dateFormat.format(pastDate), ctx.read("$[0].invalidValue"));
+            assertEquals(dateFormatResponse.format(pastDate), ctx.read("$[0].invalidValue"));
         }
     }
 
