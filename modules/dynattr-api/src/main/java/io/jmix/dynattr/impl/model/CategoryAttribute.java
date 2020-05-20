@@ -19,6 +19,7 @@ package io.jmix.dynattr.impl.model;
 
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.jmix.core.Metadata;
 import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.core.entity.annotation.EmbeddedParameters;
@@ -28,6 +29,7 @@ import io.jmix.core.metamodel.annotations.ModelProperty;
 import io.jmix.data.entity.ReferenceToEntity;
 import io.jmix.data.entity.StandardEntity;
 import io.jmix.dynattr.AttributeType;
+import io.jmix.dynattr.ConfigurationExclusionStrategy;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.PostConstruct;
@@ -449,7 +451,8 @@ public class CategoryAttribute extends StandardEntity {
     public CategoryAttributeConfiguration getConfiguration() {
         if (configuration == null) {
             if (!Strings.isNullOrEmpty(getAttributeConfigurationJson())) {
-                configuration = new Gson().fromJson(getAttributeConfigurationJson(), CategoryAttributeConfiguration.class);
+                Gson gson = new GsonBuilder().setExclusionStrategies(new ConfigurationExclusionStrategy()).create();
+                configuration = gson.fromJson(getAttributeConfigurationJson(), CategoryAttributeConfiguration.class);
             } else {
                 configuration = new CategoryAttributeConfiguration();
             }

@@ -27,6 +27,7 @@ import io.jmix.dynattr.impl.model.CategoryAttribute;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 public class CommonAttributeDefinition implements AttributeDefinition {
@@ -147,6 +148,11 @@ public class CommonAttributeDefinition implements AttributeDefinition {
         @Override
         public Integer getRowNumber() {
             return attribute.getConfiguration().getRowNumber();
+        }
+
+        @Override
+        public List<CategoryAttribute> getDependsOnAttributes() {
+            return attribute.getConfiguration().getDependsOnAttributes();
         }
     }
 

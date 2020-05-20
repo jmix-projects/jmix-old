@@ -25,7 +25,9 @@ import io.jmix.dynattr.OptionsLoaderType;
 
 import javax.annotation.Nullable;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -86,16 +88,16 @@ public class CategoryAttributeConfiguration implements Entity {
     @ModelProperty
     protected Integer rowNumber;
 
-//    TODO:
+//    todo
 //    @Transient
 //    protected transient Collection<CategoryAttribute> dependentAttributes;
 //
 //    @Transient
 //    protected List<UUID> dependsOnCategoryAttributesIds;
-//
-//    @ModelProperty
-//    @Transient
-//    protected transient List<CategoryAttribute> dependsOnAttributes;
+
+    @ModelProperty
+    @Transient
+    protected transient List<CategoryAttribute> dependsOnAttributes;
 
     public CategoryAttributeConfiguration() {
         id = UUID.randomUUID().toString();
@@ -205,6 +207,14 @@ public class CategoryAttributeConfiguration implements Entity {
         this.recalculationScript = recalculationScript;
     }
 
+    public List<CategoryAttribute> getDependsOnAttributes() {
+        return dependsOnAttributes;
+    }
+
+    public void setDependsOnAttributes(List<CategoryAttribute> dependsOnAttributes) {
+        this.dependsOnAttributes = dependsOnAttributes;
+    }
+
 //    TODO:
 //    public Collection<CategoryAttribute> getDependentAttributes() {
 //        if (dependentAttributes == null) {
@@ -213,35 +223,6 @@ public class CategoryAttributeConfiguration implements Entity {
 //        }
 //
 //        return dependentAttributes;
-//    }
-//
-//    public List<CategoryAttribute> getDependsOnAttributes() {
-//        if (dependsOnCategoryAttributesIds == null || dependsOnCategoryAttributesIds.isEmpty()) {
-//            return Collections.emptyList();
-//        }
-//
-//        if (dependsOnAttributes == null) {
-//            DataManager dataManager = AppBeans.get(DataManager.class);
-//            dependsOnAttributes = dataManager.load(CategoryAttribute.class)
-//                    .ids(dependsOnCategoryAttributesIds)
-//                    .list();
-//        }
-//
-//        return dependsOnAttributes;
-//    }
-//
-//    public void setDependsOnAttributes(List<CategoryAttribute> dependsOnAttributes) {
-//        if (dependsOnAttributes == null) {
-//            this.dependsOnCategoryAttributesIds = null;
-//            this.dependsOnAttributes = null;
-//            return;
-//        }
-//
-//        this.dependsOnCategoryAttributesIds = dependsOnAttributes.stream()
-//                .map(BaseUuidEntity::getId)
-//                .collect(Collectors.toList());
-//
-//        this.dependsOnAttributes = dependsOnAttributes;
 //    }
 
     public Boolean isReadOnly() {

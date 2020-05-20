@@ -17,9 +17,11 @@
 package io.jmix.dynattr;
 
 import io.jmix.core.Entity;
+import io.jmix.dynattr.impl.model.CategoryAttribute;
 
 import javax.annotation.Nullable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 public interface AttributeDefinition {
@@ -84,6 +86,9 @@ public interface AttributeDefinition {
 
         @Nullable
         Integer getRowNumber();
+
+        @Nullable
+        List<CategoryAttribute> getDependsOnAttributes();
     }
 
     String getId();
