@@ -16,7 +16,7 @@
 
 buildscript {
     ext {
-        springBootVersion = '2.2.4.RELEASE'
+        springBootVersion = '2.3.0.RELEASE'
         jmixPluginVersion = '1.0-SNAPSHOT'
     }
     repositories {
