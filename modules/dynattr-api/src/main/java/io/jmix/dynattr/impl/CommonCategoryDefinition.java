@@ -69,7 +69,7 @@ public class CommonCategoryDefinition implements CategoryDefinition {
     }
 
     @Override
-    public Entity<?> getSource() {
+    public Entity getSource() {
         return category;
     }
 }

@@ -31,7 +31,7 @@ import java.util.UUID;
 
 @ModelObject(name = "sys$CategoryAttributeConfiguration")
 @SystemLevel
-public class CategoryAttributeConfiguration implements Entity<String> {
+public class CategoryAttributeConfiguration implements Entity {
     private static final long serialVersionUID = 2670605418267938507L;
 
     @Id

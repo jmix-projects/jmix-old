@@ -31,7 +31,7 @@ import java.util.UUID;
 @TestCurrencyClassConstraint(groups = RestApiChecks.class)
 @Entity(name = "ref$Currency")
 @Table(name = "REF_CURRENCY")
-public class Currency implements io.jmix.core.Entity<String>, Versioned, Creatable, Updatable, SoftDelete, HasUuid {
+public class Currency implements io.jmix.core.Entity, Versioned, Creatable, Updatable, SoftDelete, HasUuid {
     private static final long serialVersionUID = 6912352294666689769L;
 
     @Id

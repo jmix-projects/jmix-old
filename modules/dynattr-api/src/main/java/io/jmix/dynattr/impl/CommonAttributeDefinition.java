@@ -248,7 +248,7 @@ public class CommonAttributeDefinition implements AttributeDefinition {
     }
 
     @Override
-    public Entity<?> getSource() {
+    public Entity getSource() {
         return attribute;
     }
 
