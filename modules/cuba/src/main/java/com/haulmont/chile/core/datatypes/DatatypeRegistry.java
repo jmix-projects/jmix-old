@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package io.jmix.core.metamodel.datatype;
+package com.haulmont.chile.core.datatypes;
+
+import io.jmix.core.metamodel.datatype.Datatype;
 
 import javax.annotation.Nullable;
 import java.util.Set;
@@ -24,7 +26,7 @@ import java.util.Set;
  */
 public interface DatatypeRegistry {
 
-    String NAME = "jmix_DatatypeRegistry";
+    String NAME = "cuba_DatatypeRegistry";
 
     /**
      * Get Datatype instance by its unique id
@@ -38,14 +40,14 @@ public interface DatatypeRegistry {
      * @return Datatype instance or null if not found
      */
     @Nullable
-    <T> Datatype<T> find(Class<T> javaClass);
+    <T> Datatype<T> get(Class<T> javaClass);
 
     /**
      * Get Datatype instance by the corresponding Java class. This method tries to find matching supertype too.
      * @return Datatype instance
      * @throws IllegalArgumentException if no datatype suitable for the given type found
      */
-    <T> Datatype<T> get(Class<T> javaClass);
+    <T> Datatype<T> getNN(Class<T> javaClass);
 
     /**
      * Returns an ID of the given datatype in the registry.
