@@ -54,7 +54,7 @@
                           align="MIDDLE_RIGHT"
                           spacing="true">
                         <newWindowButton id="newWindowButton"
-                                         description="msg://io.jmix.ui.components.mainwindow.impl/newWindowBtnDescription"
+                                         description="msg://io.jmix.ui.component.mainwindow.impl/newWindowBtnDescription"
                                          icon="app/images/new-window.png"/>
                         <userActionsButton id="userActionsButton"/>
                     </hbox>

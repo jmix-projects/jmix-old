@@ -20,7 +20,7 @@ package io.jmix.dynattr.impl;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import io.jmix.core.*;
-import io.jmix.core.commons.util.ReflectionHelper;
+import io.jmix.core.common.util.ReflectionHelper;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.HasUuid;
 import io.jmix.core.metamodel.model.MetaClass;

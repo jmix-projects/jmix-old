@@ -16,8 +16,8 @@
 
 package io.jmix.dynattr;
 
-import io.jmix.core.metamodel.datatypes.impl.EnumClass;
-import io.jmix.core.metamodel.datatypes.impl.EnumUtils;
+import io.jmix.core.metamodel.datatype.impl.EnumClass;
+import io.jmix.core.metamodel.datatype.impl.EnumUtils;
 
 public enum AttributeType implements EnumClass<String> {
     STRING,

@@ -130,7 +130,7 @@
 
     <Match>
         <Bug pattern="NP_BOOLEAN_RETURN_NULL"/>
-        <Class name="io.jmix.core.metamodel.datatypes.impl.BooleanDatatype"/>
+        <Class name="io.jmix.core.metamodel.datatype.impl.BooleanDatatype"/>
         <Method name="parse"/>
     </Match>
 
@@ -176,12 +176,12 @@
 
     <Match>
         <Bug pattern="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT"/> <!-- false positive -->
-        <Class name="io.jmix.ui.components.impl.WebEditorScreenFacet"/>
+        <Class name="io.jmix.ui.component.impl.WebEditorScreenFacet"/>
     </Match>
 
     <Match>
         <Bug pattern="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT"/> <!-- false positive -->
-        <Class name="io.jmix.ui.components.impl.WebLookupScreenFacet"/>
+        <Class name="io.jmix.ui.component.impl.WebLookupScreenFacet"/>
     </Match>
 
 </FindBugsFilter>

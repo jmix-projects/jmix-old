@@ -2,7 +2,7 @@ package io.jmix.samples.helloworld.screen.demo;
 
 import io.jmix.core.entity.BaseUser;
 import io.jmix.core.security.CurrentAuthentication;
-import io.jmix.ui.components.TextField;
+import io.jmix.ui.component.TextField;
 import io.jmix.ui.navigation.Route;
 import io.jmix.ui.screen.*;
 

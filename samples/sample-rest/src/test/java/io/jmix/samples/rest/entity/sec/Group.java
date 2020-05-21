@@ -15,7 +15,7 @@
  */
 package io.jmix.samples.rest.entity.sec;
 
-import io.jmix.core.metamodel.annotations.InstanceName;
+import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.data.entity.StandardEntity;
 
 import javax.persistence.*;

@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@ControllerAdvice("io.jmix.rest.api.controllers")
+@ControllerAdvice("io.jmix.rest.api.controller")
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CustomRestControllerExceptionHandler {
 

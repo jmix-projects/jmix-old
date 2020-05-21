@@ -18,9 +18,9 @@ package io.jmix.samples.rest.entity.driver;
 
 import io.jmix.core.DeletePolicy;
 import io.jmix.core.entity.annotation.*;
-import io.jmix.core.metamodel.annotations.Composition;
-import io.jmix.core.metamodel.annotations.InstanceName;
-import io.jmix.core.metamodel.annotations.ModelProperty;
+import io.jmix.core.metamodel.annotation.Composition;
+import io.jmix.core.metamodel.annotation.InstanceName;
+import io.jmix.core.metamodel.annotation.ModelProperty;
 import io.jmix.data.entity.StandardEntity;
 
 import javax.persistence.*;

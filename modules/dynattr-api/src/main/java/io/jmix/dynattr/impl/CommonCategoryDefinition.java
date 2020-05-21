@@ -16,9 +16,7 @@
 
 package io.jmix.dynattr.impl;
 
-import com.google.common.base.Strings;
 import io.jmix.core.Entity;
-import io.jmix.core.commons.util.ReflectionHelper;
 import io.jmix.dynattr.AttributeDefinition;
 import io.jmix.dynattr.CategoryDefinition;
 import io.jmix.dynattr.impl.model.Category;

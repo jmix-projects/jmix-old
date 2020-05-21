@@ -18,9 +18,9 @@ package io.jmix.samples.rest.entity.driver;
 
 
 import io.jmix.core.Entity;
-import io.jmix.core.metamodel.annotations.InstanceName;
-import io.jmix.core.metamodel.annotations.ModelObject;
-import io.jmix.core.metamodel.annotations.ModelProperty;
+import io.jmix.core.metamodel.annotation.InstanceName;
+import io.jmix.core.metamodel.annotation.ModelObject;
+import io.jmix.core.metamodel.annotation.ModelProperty;
 
 import javax.persistence.Id;
 

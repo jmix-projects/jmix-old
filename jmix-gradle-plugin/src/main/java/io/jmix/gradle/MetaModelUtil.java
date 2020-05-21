@@ -33,9 +33,9 @@ public class MetaModelUtil {
     public static final String ENTITY_ENTRY_ENHANCED_TYPE = "io.jmix.core.entity.JmixEntityEntryEnhanced";
 
     public static final String TRANSIENT_ANNOTATION_TYPE = "javax.persistence.Transient";
-    public static final String MODEL_PROPERTY_ANNOTATION_TYPE = "io.jmix.core.metamodel.annotations.ModelProperty";
+    public static final String MODEL_PROPERTY_ANNOTATION_TYPE = "io.jmix.core.metamodel.annotation.ModelProperty";
     public static final String DISABLE_ENHANCING_ANNOTATION_TYPE = "io.jmix.core.entity.annotations.DisableEnhancing";
-    public static final String MODEL_OBJECT_ANNOTATION_TYPE = "io.jmix.core.metamodel.annotations.ModelObject";
+    public static final String MODEL_OBJECT_ANNOTATION_TYPE = "io.jmix.core.metamodel.annotation.ModelObject";
     public static final String ENTITY_ANNOTATION_TYPE = "javax.persistence.Entity";
     public static final String EMBEDDABLE_ANNOTATION_TYPE = "javax.persistence.Embeddable";
     public static final String CONVERTER_ANNOTATION_TYPE = "javax.persistence.Converter";

@@ -18,7 +18,7 @@ package io.jmix.samples.rest.entity.driver;
 
 import io.jmix.core.UuidProvider;
 import io.jmix.core.entity.*;
-import io.jmix.core.metamodel.annotations.InstanceName;
+import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.data.entity.BaseLongIdEntity;
 
 import javax.persistence.*;

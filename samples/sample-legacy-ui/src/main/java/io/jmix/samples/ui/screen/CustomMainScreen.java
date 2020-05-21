@@ -18,11 +18,11 @@ package io.jmix.samples.ui.screen;
 
 import io.jmix.ui.Screens;
 import io.jmix.ui.UiComponents;
-import io.jmix.ui.actions.BaseAction;
-import io.jmix.ui.components.AppWorkArea;
-import io.jmix.ui.components.Button;
-import io.jmix.ui.components.VBoxLayout;
-import io.jmix.ui.components.Window;
+import io.jmix.ui.action.BaseAction;
+import io.jmix.ui.component.AppWorkArea;
+import io.jmix.ui.component.Button;
+import io.jmix.ui.component.VBoxLayout;
+import io.jmix.ui.component.Window;
 import io.jmix.ui.screen.OpenMode;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Subscribe;

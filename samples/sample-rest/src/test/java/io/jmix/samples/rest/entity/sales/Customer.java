@@ -18,8 +18,8 @@ package io.jmix.samples.rest.entity.sales;
 
 
 import io.jmix.core.entity.annotation.PublishEntityChangedEvents;
-import io.jmix.core.metamodel.annotations.InstanceName;
-import io.jmix.core.metamodel.datatypes.impl.EnumUtils;
+import io.jmix.core.metamodel.annotation.InstanceName;
+import io.jmix.core.metamodel.datatype.impl.EnumUtils;
 import io.jmix.data.entity.StandardEntity;
 
 import javax.persistence.Column;

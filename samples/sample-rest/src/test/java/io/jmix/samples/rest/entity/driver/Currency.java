@@ -18,8 +18,8 @@ package io.jmix.samples.rest.entity.driver;
 
 import io.jmix.core.UuidProvider;
 import io.jmix.core.entity.*;
-import io.jmix.core.metamodel.annotations.InstanceName;
-import io.jmix.core.validation.groups.RestApiChecks;
+import io.jmix.core.metamodel.annotation.InstanceName;
+import io.jmix.core.validation.group.RestApiChecks;
 import io.jmix.samples.rest.validation.TestCurrencyClassConstraint;
 
 import javax.persistence.*;

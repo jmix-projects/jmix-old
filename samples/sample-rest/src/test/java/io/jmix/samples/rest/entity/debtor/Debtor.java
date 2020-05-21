@@ -18,7 +18,7 @@ package io.jmix.samples.rest.entity.debtor;
 
 import io.jmix.core.DeletePolicy;
 import io.jmix.core.entity.annotation.OnDelete;
-import io.jmix.core.metamodel.annotations.Composition;
+import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.data.entity.StandardEntity;
 
 import javax.persistence.Column;

@@ -19,8 +19,8 @@ package io.jmix.dynattr.impl.model;
 import com.google.common.base.Strings;
 import io.jmix.core.Entity;
 import io.jmix.core.entity.annotation.SystemLevel;
-import io.jmix.core.metamodel.annotations.ModelObject;
-import io.jmix.core.metamodel.annotations.ModelProperty;
+import io.jmix.core.metamodel.annotation.ModelObject;
+import io.jmix.core.metamodel.annotation.ModelProperty;
 import io.jmix.dynattr.OptionsLoaderType;
 
 import javax.annotation.Nullable;
