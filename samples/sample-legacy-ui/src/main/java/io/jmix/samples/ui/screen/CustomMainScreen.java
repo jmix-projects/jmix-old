@@ -30,7 +30,7 @@ import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Base class for a controller of application Main screen.
@@ -39,9 +39,9 @@ import javax.inject.Inject;
 @UiController("custom-main")
 public class CustomMainScreen extends Screen implements Window.HasWorkArea {
 
-    @Inject
+    @Autowired
     protected UiComponents uiComponents;
-    @Inject
+    @Autowired
     protected Screens screens;
 
     @Subscribe

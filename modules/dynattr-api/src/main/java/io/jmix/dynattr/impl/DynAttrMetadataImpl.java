@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,11 +39,11 @@ import java.util.stream.Collectors;
 @Component(DynAttrMetadata.NAME)
 public class DynAttrMetadataImpl implements DynAttrMetadata {
 
-    @Inject
+    @Autowired
     protected StoreAwareLocator storeAwareLocator;
-    @Inject
+    @Autowired
     protected ExtendedEntities extendedEntities;
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
     protected volatile Cache cache;

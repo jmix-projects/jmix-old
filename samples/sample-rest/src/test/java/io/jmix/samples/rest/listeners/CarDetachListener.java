@@ -14,18 +14,18 @@ import io.jmix.samples.rest.entity.driver.Car;
 import io.jmix.samples.rest.entity.driver.Currency;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Component("jmix_CarDetachListener")
 public class CarDetachListener implements BeforeDetachEntityListener<Car>, BeforeAttachEntityListener<Car> {
 
-    @Inject
+    @Autowired
     private PersistenceTools persistenceTools;
 
-    @Inject
+    @Autowired
     private EntityStates entityStates;
 
-    @Inject
+    @Autowired
     private DataManager dataManager;
 
     @Override

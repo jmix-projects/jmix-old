@@ -30,7 +30,7 @@ import io.jmix.ui.screen.Subscribe;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,29 +39,29 @@ import java.util.List;
 @LoadDataBeforeShow
 public class ComponentSamples extends Screen {
 
-    @Inject
+    @Autowired
     private CheckBoxGroup<String> checkBoxGroup;
 
-    @Inject
+    @Autowired
     private TwinColumn<String> twinColumn;
 
-    @Inject
+    @Autowired
     private OptionsList<List, String> optionsList;
 
-    @Inject
+    @Autowired
     private OptionsGroup<List, String> optionsGroup;
 
-    @Inject
+    @Autowired
     private VBoxLayout othersVBox;
 
-    @Inject
+    @Autowired
     private UiComponents uiComponents;
 
-    @Inject
+    @Autowired
     private Dialogs dialogs;
-    @Inject
+    @Autowired
     private Notifications notifications;
-    @Inject
+    @Autowired
     private MetadataTools metadataTools;
 
 //    private ListEditor<String> listEditor;

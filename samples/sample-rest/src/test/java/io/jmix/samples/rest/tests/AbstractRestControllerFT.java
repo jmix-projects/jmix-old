@@ -23,7 +23,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -44,7 +44,7 @@ public abstract class AbstractRestControllerFT {
     @LocalServerPort
     protected int port;
 
-    @Inject
+    @Autowired
     protected JdbcTemplate jdbcTemplate = new JdbcTemplate();
 
     @Rule

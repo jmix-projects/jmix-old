@@ -38,7 +38,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Locale;
 
 @Route(path = "login", root = true)
@@ -48,31 +48,31 @@ public class LoginScreen extends Screen {
 
     private static final Logger log = LoggerFactory.getLogger(LoginScreen.class);
 
-    @Inject
+    @Autowired
     protected TextField<String> usernameField;
 
-    @Inject
+    @Autowired
     protected PasswordField passwordField;
 
-    @Inject
+    @Autowired
     protected LookupField<Locale> localesField;
 
-    @Inject
+    @Autowired
     protected Notifications notifications;
 
-    @Inject
+    @Autowired
     protected Messages messages;
 
-    @Inject
+    @Autowired
     protected AuthenticationManager authenticationManager;
 
-    @Inject
+    @Autowired
     protected CoreProperties coreProperties;
 
-    @Inject
+    @Autowired
     protected UiProperties uiProperties;
 
-    @Inject
+    @Autowired
     protected ScreenBuilders screenBuilders;
 
     @Subscribe

@@ -21,14 +21,14 @@ import io.jmix.core.LoadContext;
 import io.jmix.data.impl.OrmLifecycleListener;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 
 @Component(DynAttrLifecycleListener.NAME)
 public class DynAttrLifecycleListener implements OrmLifecycleListener {
     public static final String NAME = "dynattr_DynAttrLifecycleListener";
 
-    @Inject
+    @Autowired
     protected DynAttrManager dynAttrManager;
 
     @Override

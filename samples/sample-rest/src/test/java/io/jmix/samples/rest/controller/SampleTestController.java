@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 @RequestMapping(value = "/myapi/sample")
 public class SampleTestController {
 
-    @Inject
+    @Autowired
     protected CurrentAuthentication currentAuthentication;
 
     @GetMapping(value = "/protectedMethod")

@@ -32,13 +32,13 @@ import test_support.entity.Role
 import test_support.entity.User
 import test_support.entity.UserRole
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 @ContextConfiguration(classes = [JmixCoreConfiguration, JmixDataConfiguration, JmixDynAttrConfiguration, JmixDynAttrTestConfiguration])
 class DynamicAttributesTest extends Specification {
-    @Inject
+    @Autowired
     protected DataManager dataManager
-    @Inject
+    @Autowired
     protected DynAttrMetadata dynamicModelConfiguration
 
     protected io.jmix.dynattr.impl.model.Category userCategory, userRoleCategory, roleCategory

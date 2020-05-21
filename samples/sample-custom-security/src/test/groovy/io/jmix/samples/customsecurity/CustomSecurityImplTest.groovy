@@ -24,18 +24,18 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import spock.lang.Specification
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class CustomSecurityImplTest extends Specification {
 
-    @Inject
+    @Autowired
     Security security
 
-    @Inject
+    @Autowired
     UserRepository userRepository
 
-    @Inject
+    @Autowired
     AuthenticationManager authenticationManager
 
     def "custom implementations are in use"() {

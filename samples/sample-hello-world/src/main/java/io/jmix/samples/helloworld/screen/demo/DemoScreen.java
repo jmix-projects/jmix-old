@@ -6,7 +6,7 @@ import io.jmix.ui.component.TextField;
 import io.jmix.ui.navigation.Route;
 import io.jmix.ui.screen.*;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Locale;
 
 @UiController("demoScreen")
@@ -15,13 +15,13 @@ import java.util.Locale;
 @LoadDataBeforeShow
 public class DemoScreen extends Screen {
 
-    @Inject
+    @Autowired
     private TextField<String> userField;
 
-    @Inject
+    @Autowired
     private TextField<String> localeField;
 
-    @Inject
+    @Autowired
     private CurrentAuthentication currentAuthentication;
 
     @Subscribe

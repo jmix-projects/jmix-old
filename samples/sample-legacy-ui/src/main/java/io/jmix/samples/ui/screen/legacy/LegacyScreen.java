@@ -20,11 +20,11 @@ import com.haulmont.cuba.gui.components.AbstractWindow;
 import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.security.entity.User;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LegacyScreen extends AbstractWindow {
 
-    @Inject
+    @Autowired
     protected Datasource<User> userDs;
 
     @Override

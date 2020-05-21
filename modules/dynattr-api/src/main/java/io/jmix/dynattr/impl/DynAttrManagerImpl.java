@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -51,21 +51,21 @@ public class DynAttrManagerImpl implements DynAttrManager {
 
     private static final Logger log = LoggerFactory.getLogger(DynAttrManagerImpl.class);
 
-    @Inject
+    @Autowired
     protected StoreAwareLocator storeAwareLocator;
-    @Inject
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
-    @Inject
+    @Autowired
     protected ExtendedEntities extendedEntities;
-    @Inject
+    @Autowired
     protected Security security;
-    @Inject
+    @Autowired
     protected ReferenceToEntitySupport referenceToEntitySupport;
-    @Inject
+    @Autowired
     protected EntityStates entityStates;
-    @Inject
+    @Autowired
     protected DynAttrMetadata dynAttrMetadata;
 
     protected String dynamicAttributesStore = Stores.MAIN;

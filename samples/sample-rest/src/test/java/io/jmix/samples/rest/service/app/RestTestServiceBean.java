@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -26,16 +26,16 @@ import java.util.stream.Collectors;
 @Service(RestTestService.NAME)
 public class RestTestServiceBean implements RestTestService {
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-//    @Inject
+//    @Autowired
 //    protected Persistence persistence;
 
-    @Inject
+    @Autowired
     protected DataManager dataManager;
 
-    @Inject
+    @Autowired
     protected FetchPlanRepository fetchPlanRepository;
 
     @Override
