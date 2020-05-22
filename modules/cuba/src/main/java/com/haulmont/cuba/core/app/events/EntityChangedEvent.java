@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright (c) 2008-2018 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-package io.jmix.data.event;
+package com.haulmont.cuba.core.app.events;
 
-import io.jmix.core.*;
+import com.haulmont.cuba.core.entity.contracts.Id;
+import com.haulmont.cuba.core.global.Metadata;
+import io.jmix.core.AppBeans;
+import io.jmix.core.Entity;
+import io.jmix.core.ExtendedEntities;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.springframework.context.ApplicationEvent;
@@ -37,16 +41,17 @@ import org.springframework.core.ResolvableTypeProvider;
  * public class OrderLineChangedListener {
  *
  *     {@literal @}EventListener
- *     protected void orderLineChanged(EntityChangedEvent&lt;OrderLine&gt; event) {
+ *     protected void orderLineChanged(EntityChangedEvent&lt;OrderLine, UUID&gt; event) {
  *         AttributeChanges changes = event.getChanges();
  *         //...
  *     }
  * }
  * </pre>
  *
- * @param <E> entity type
+ * @param <E>   entity type
+ * @param <K>   entity identifier type
  */
-public class EntityChangedEvent<E extends Entity> extends ApplicationEvent implements ResolvableTypeProvider {
+public class EntityChangedEvent<E extends Entity, K> extends ApplicationEvent implements ResolvableTypeProvider {
 
     /**
      * Type of the event: {@link #CREATED}, {@link #UPDATED} or {@link #DELETED}.
@@ -57,14 +62,14 @@ public class EntityChangedEvent<E extends Entity> extends ApplicationEvent imple
         DELETED
     }
 
-    private Id<E> entityId;
+    private Id<E, K> entityId;
     private Type type;
     private AttributeChanges changes;
 
     /**
      * INTERNAL.
      */
-    public EntityChangedEvent(Object source, Id<E> entityId, Type type, AttributeChanges changes) {
+    public EntityChangedEvent(Object source, Id<E, K> entityId, Type type, AttributeChanges changes) {
         super(source);
         this.entityId = entityId;
         this.type = type;
@@ -74,7 +79,7 @@ public class EntityChangedEvent<E extends Entity> extends ApplicationEvent imple
     /**
      * Returns the entity id.
      */
-    public Id<E> getEntityId() {
+    public Id<E, K> getEntityId() {
         return entityId;
     }
 
@@ -105,15 +110,15 @@ public class EntityChangedEvent<E extends Entity> extends ApplicationEvent imple
     @Override
     public ResolvableType getResolvableType() {
         Metadata metadata = AppBeans.get(Metadata.NAME);
-        ExtendedEntities extendedEntities = AppBeans.get(ExtendedEntities.NAME);
-        MetadataTools metadataTools = AppBeans.get(MetadataTools.NAME);
-        MetaClass metaClass = extendedEntities.getOriginalOrThisMetaClass(metadata.getClass(entityId.getEntityClass()));
-        MetaProperty pkProperty = metadataTools.getPrimaryKeyProperty(metaClass);
+        ExtendedEntities extendedEntities = metadata.getExtendedEntities();
+        MetaClass metaClass = extendedEntities.getOriginalOrThisMetaClass(metadata.getClassNN(entityId.getEntityClass()));
+        MetaProperty pkProperty = metadata.getTools().getPrimaryKeyProperty(metaClass);
         if (pkProperty == null) {
             throw new IllegalStateException("Unable to send EntityChangedEvent for " + metaClass + " because it has no primary key");
         }
         return ResolvableType.forClassWithGenerics(getClass(),
-                ResolvableType.forClass(metaClass.getJavaClass()));
+                ResolvableType.forClass(metaClass.getJavaClass()),
+                ResolvableType.forClass(pkProperty.getJavaType()));
     }
 
     @Override
