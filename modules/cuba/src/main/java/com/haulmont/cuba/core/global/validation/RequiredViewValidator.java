@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.core.validation;
+package com.haulmont.cuba.core.global.validation;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.EntityStates;
