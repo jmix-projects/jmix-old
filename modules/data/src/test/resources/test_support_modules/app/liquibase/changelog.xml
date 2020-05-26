@@ -14,6 +14,78 @@
             <column name="NAME" type="varchar(255)"/>
         </createTable>
 
+        <createTable tableName="ELT_MAIN_ENTITY">
+            <column name="ID" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="VERSION" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATE_TS" type="datetime"/>
+            <column name="CREATED_BY" type="varchar(50)"/>
+            <column name="UPDATE_TS" type="datetime"/>
+            <column name="UPDATED_BY" type="varchar(50)"/>
+            <column name="DELETE_TS" type="datetime"/>
+            <column name="DELETED_BY" type="varchar(50)"/>
+            <column name="NAME" type="varchar(255)"/>
+        </createTable>
+
+        <createTable tableName="ELT_MANY_ENTITY">
+            <column name="ID" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="VERSION" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATE_TS" type="datetime"/>
+            <column name="CREATED_BY" type="varchar(50)"/>
+            <column name="UPDATE_TS" type="datetime"/>
+            <column name="UPDATED_BY" type="varchar(50)"/>
+            <column name="DELETE_TS" type="datetime"/>
+            <column name="DELETED_BY" type="varchar(50)"/>
+            <column name="NAME" type="varchar(255)"/>
+            <column name="MAIN_ENTITY_ID" type="uuid">
+                <constraints foreignKeyName="ELT_MAIN_ENTITY" references="ELT_MAIN_ENTITY(ID)"/>
+            </column>
+        </createTable>
+
+
+        <createTable tableName="FP_MAIN_ENTITY">
+            <column name="ID" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="VERSION" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATE_TS" type="datetime"/>
+            <column name="CREATED_BY" type="varchar(50)"/>
+            <column name="UPDATE_TS" type="datetime"/>
+            <column name="UPDATED_BY" type="varchar(50)"/>
+            <column name="DELETE_TS" type="datetime"/>
+            <column name="DELETED_BY" type="varchar(50)"/>
+            <column name="NAME" type="varchar(255)"/>
+        </createTable>
+
+        <createTable tableName="FP_MANY_ENTITY">
+            <column name="ID" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="VERSION" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATE_TS" type="datetime"/>
+            <column name="CREATED_BY" type="varchar(50)"/>
+            <column name="UPDATE_TS" type="datetime"/>
+            <column name="UPDATED_BY" type="varchar(50)"/>
+            <column name="DELETE_TS" type="datetime"/>
+            <column name="DELETED_BY" type="varchar(50)"/>
+            <column name="NAME" type="varchar(255)"/>
+            <column name="SECOND_NAME" type="varchar(255)"/>
+            <column name="MAIN_ENTITY_ID" type="uuid">
+                <constraints foreignKeyName="FP_MAIN_ENTITY" references="FP_MAIN_ENTITY(ID)"/>
+            </column>
+        </createTable>
+
     </changeSet>
 
 </databaseChangeLog>

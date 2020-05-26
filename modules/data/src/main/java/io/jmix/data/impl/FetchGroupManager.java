@@ -63,10 +63,10 @@ public class FetchGroupManager {
     public void setFetchPlan(JpaQuery query, String queryString, @Nullable FetchPlan fetchPlan, boolean singleResultExpected) {
         Preconditions.checkNotNullArgument(query, "query is null");
         if (fetchPlan != null) {
-            AttributeGroup ag = fetchPlan.loadPartialEntities() ? new FetchGroup() : new LoadGroup();
+            AttributeGroup ag = /*fetchPlan.loadPartialEntities() ? new FetchGroup() :*/ new LoadGroup();
             applyFetchPlan(query, queryString, ag, fetchPlan, singleResultExpected);
         } else {
-            query.setHint(QueryHints.FETCH_GROUP, null);
+            query.setHint(QueryHints.LOAD_GROUP, null);
         }
     }
 
@@ -76,12 +76,12 @@ public class FetchGroupManager {
 
         Map<String, Object> hints = query.getHints();
         AttributeGroup ag = null;
-        if (fetchPlan.loadPartialEntities()) {
+        /*if (fetchPlan.loadPartialEntities()) {
             if (hints != null)
                 ag = (FetchGroup) hints.get(QueryHints.FETCH_GROUP);
             if (ag == null)
                 ag = new FetchGroup();
-        } else {
+        } else*/ {
             if (hints != null)
                 ag = (LoadGroup) hints.get(QueryHints.LOAD_GROUP);
             if (ag == null)
@@ -94,7 +94,7 @@ public class FetchGroupManager {
     private void applyFetchPlan(JpaQuery query, String queryString, AttributeGroup attrGroup, FetchPlan fetchPlan,
                                 boolean singleResultExpected) {
 
-        boolean useFetchGroup = attrGroup instanceof FetchGroup;
+        boolean useFetchGroup = true; //attrGroup instanceof FetchGroup;
 
         FetchGroupDescription description = calculateFetchGroup(queryString, fetchPlan, singleResultExpected, useFetchGroup);
 
@@ -109,7 +109,7 @@ public class FetchGroupManager {
 
         MetaClass metaClass = metadata.getClass(fetchPlan.getEntityClass());
         if (!metadataTools.isCacheable(metaClass)) {
-            query.setHint(useFetchGroup ? QueryHints.FETCH_GROUP : QueryHints.LOAD_GROUP, attrGroup);
+            query.setHint(/*useFetchGroup ? QueryHints.FETCH_GROUP :*/ QueryHints.LOAD_GROUP, attrGroup);
         }
 
         if (log.isDebugEnabled()) {

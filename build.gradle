@@ -20,6 +20,7 @@ buildscript {
         jmixPluginVersion = '1.0-SNAPSHOT'
     }
     repositories {
+        mavenLocal()
         if (rootProject.hasProperty('jmixRepoUrl')) {
             maven {
                 url rootProject['jmixRepoUrl']
@@ -47,6 +48,7 @@ buildscript {
 
 allprojects {
     repositories {
+        mavenLocal()
         if (rootProject.hasProperty('jmixRepoUrl')) {
             maven {
                 url rootProject['jmixRepoUrl']
