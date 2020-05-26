@@ -16,26 +16,15 @@
 
 package com.haulmont.cuba.web.app.loginwindow;
 
-import com.haulmont.cuba.gui.components.AbstractWindow;
+import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.web.app.login.LoginScreen;
-import com.vaadin.server.ErrorEvent;
-import io.jmix.core.CoreProperties;
-import io.jmix.core.security.Credentials;
-import io.jmix.core.security.LoginException;
-import io.jmix.core.security.LoginPasswordCredentials;
-import io.jmix.ui.App;
-import io.jmix.ui.Connection;
-import io.jmix.ui.components.*;
-import io.jmix.ui.exception.ExceptionHandlers;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.Window;
 import io.jmix.ui.navigation.UrlRouting;
-import io.jmix.ui.security.LoginScreenAuthDelegate;
-import io.jmix.ui.security.UiLoginProperties;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -48,22 +37,25 @@ public class AppLoginWindow extends AbstractWindow implements Window.TopLevelWin
 
     private static final Logger log = LoggerFactory.getLogger(AppLoginWindow.class);
 
-    protected static final ThreadLocal<LoginScreenAuthDelegate.AuthInfo> authInfoThreadLocal = new ThreadLocal<>();
+//    protected static final ThreadLocal<LoginScreenAuthDelegate.AuthInfo> authInfoThreadLocal = new ThreadLocal<>();
+
+    /*@Inject
+    protected GlobalConfig globalConfig;
 
     @Inject
-    protected CoreProperties coreProperties;
+    protected WebConfig webConfig;
 
     @Inject
-    protected UiLoginProperties uiLoginProperties;
+    protected WebAuthConfig webAuthConfig;*/
 
-    @Inject
+    /*@Inject
     protected App app;
 
     @Inject
     protected Connection connection;
 
     @Inject
-    protected LoginScreenAuthDelegate authDelegate;
+    protected LoginScreenAuthDelegate authDelegate;*/
 
     @Inject
     protected Image logoImage;
@@ -102,25 +94,25 @@ public class AppLoginWindow extends AbstractWindow implements Window.TopLevelWin
         initRememberMeLocalesBox();
     }
 
-    @Override
+    /*@Override
     protected void afterShow(AfterShowEvent event) {
         super.afterShow(event);
 
         doRememberMeLogin();
-    }
+    }*/
 
     protected void initPoweredByLink() {
         Component poweredByLink = getComponent("poweredByLink");
         if (poweredByLink != null) {
-            poweredByLink.setVisible(uiLoginProperties.isPoweredByLinkVisible());
+//            poweredByLink.setVisible(webConfig.getLoginDialogPoweredByLinkVisible());
         }
     }
 
     protected void initLocales() {
-        localesSelect.setOptionsMap(coreProperties.getAvailableLocales());
+        /*localesSelect.setOptionsMap(globalConfig.getAvailableLocales());
         localesSelect.setValue(app.getLocale());
 
-        boolean localeSelectVisible = coreProperties.isLocaleSelectVisible();
+        boolean localeSelectVisible = globalConfig.getLocaleSelectVisible();
         localesSelect.setVisible(localeSelectVisible);
 
         // if old layout is used
@@ -141,23 +133,23 @@ public class AppLoginWindow extends AbstractWindow implements Window.TopLevelWin
             } finally {
                 authInfoThreadLocal.set(null);
             }
-        });
+        });*/
     }
 
     protected void initLogoImage() {
-        String loginLogoImagePath = messages.getMainMessage("loginWindow.logoImage", app.getLocale());
+       /* String loginLogoImagePath = messages.getMainMessage("loginWindow.logoImage", app.getLocale());
         if (StringUtils.isBlank(loginLogoImagePath) || "loginWindow.logoImage".equals(loginLogoImagePath)) {
             logoImage.setVisible(false);
         } else {
             logoImage.setSource(ThemeResource.class).setPath(loginLogoImagePath);
-        }
+        }*/
     }
 
     protected void initRememberMe() {
-        if (!uiLoginProperties.isRememberMeEnabled()) {
+        /*if (!webConfig.getRememberMeEnabled()) {
             rememberMeCheckBox.setValue(false);
             rememberMeCheckBox.setVisible(false);
-        }
+        }*/
     }
 
     protected void initRememberMeLocalesBox() {
@@ -168,7 +160,7 @@ public class AppLoginWindow extends AbstractWindow implements Window.TopLevelWin
     }
 
     protected void initDefaultCredentials() {
-        LoginScreenAuthDelegate.AuthInfo authInfo = authInfoThreadLocal.get();
+        /*LoginScreenAuthDelegate.AuthInfo authInfo = authInfoThreadLocal.get();
         if (authInfo != null) {
             loginField.setValue(authInfo.getLogin());
             passwordField.setValue(authInfo.getPassword());
@@ -181,49 +173,49 @@ public class AppLoginWindow extends AbstractWindow implements Window.TopLevelWin
             return;
         }
 
-        String defaultUser = uiLoginProperties.getDefaultUser();
+        String defaultUser = webConfig.getLoginDialogDefaultUser();
         if (!StringUtils.isBlank(defaultUser) && !"<disabled>".equals(defaultUser)) {
             loginField.setValue(defaultUser);
         } else {
             loginField.setValue("");
         }
 
-        String defaultPassw = uiLoginProperties.getDefaultPassword();
+        String defaultPassw = webConfig.getLoginDialogDefaultPassword();
         if (!StringUtils.isBlank(defaultPassw) && !"<disabled>".equals(defaultPassw)) {
             passwordField.setValue(defaultPassw);
         } else {
             passwordField.setValue("");
-        }
+        }*/
     }
 
-    protected void showUnhandledExceptionOnLogin(@SuppressWarnings("unused") Exception e) {
+  /*  protected void showUnhandledExceptionOnLogin(@SuppressWarnings("unused") Exception e) {
         String title = messages.getMainMessage("loginWindow.loginFailed", app.getLocale());
         String message = messages.getMainMessage("loginWindow.pleaseContactAdministrator", app.getLocale());
 
         showNotification(title, message, NotificationType.ERROR);
-    }
+    }*/
 
-    protected void showLoginException(String message) {
+    /*protected void showLoginException(String message) {
         String title = messages.getMainMessage("loginWindow.loginFailed", app.getLocale());
 
         showNotification(title, message, NotificationType.ERROR);
-    }
+    }*/
 
     public void login() {
-        doLogin();
+//        doLogin();
 
-        setRememberMeCookies();
+//        setRememberMeCookies();
     }
 
-    protected void setRememberMeCookies() {
+    /*protected void setRememberMeCookies() {
         if (Boolean.TRUE.equals(rememberMeCheckBox.getValue())) {
             authDelegate.setRememberMeCookies(loginField.getValue());
         } else {
             authDelegate.resetRememberCookies();
         }
-    }
+    }*/
 
-    protected void doLogin() {
+    /*protected void doLogin() {
         String login = loginField.getValue();
         String password = passwordField.getValue() != null ? passwordField.getValue() : "";
 
@@ -244,16 +236,15 @@ public class AppLoginWindow extends AbstractWindow implements Window.TopLevelWin
             if (connection.getSession() != null) {
                 Locale loggedInLocale = connection.getSession().getLocale();
 
-                if (coreProperties.isLocaleSelectVisible()) {
+                if (globalConfig.getLocaleSelectVisible()) {
                     app.addCookie(App.COOKIE_LOCALE, loggedInLocale.toLanguageTag());
                 }
             }
-            // todo see ConnectionImpl#loginInternal
-        /*} catch (InternalAuthenticationException e) {
+        } catch (InternalAuthenticationException e) {
             log.error("Internal error during login", e);
 
             showUnhandledExceptionOnLogin(e);
-        */} catch (LoginException e) {
+        } catch (LoginException e) {
             log.info("Login failed: {}", e.toString());
 
             String message = StringUtils.abbreviate(e.getMessage(), 1000);
@@ -268,13 +259,13 @@ public class AppLoginWindow extends AbstractWindow implements Window.TopLevelWin
                 showUnhandledExceptionOnLogin(e);
             }
         }
-    }
+    }*/
 
-    protected void doLogin(Credentials credentials) throws LoginException {
+    /*protected void doLogin(Credentials credentials) throws LoginException {
         authDelegate.doLogin(credentials, localesSelect.isVisibleRecursive());
-    }
+    }*/
 
-    protected void doRememberMeLogin() {
+    /*protected void doRememberMeLogin() {
         authDelegate.doRememberMeLogin(localesSelect.isVisibleRecursive());
-    }
+    }*/
 }

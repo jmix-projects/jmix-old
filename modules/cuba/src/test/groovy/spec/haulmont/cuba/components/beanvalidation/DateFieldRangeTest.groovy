@@ -17,18 +17,18 @@
 package spec.haulmont.cuba.components.beanvalidation
 
 import io.jmix.core.DateTimeTransformations
-import io.jmix.ui.components.DateField
+import io.jmix.ui.component.DateField
 import spec.haulmont.cuba.components.beanvalidation.screens.DateValidationScreen
 import spec.haulmont.cuba.web.UiScreenSpec
 import spock.lang.Ignore
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import java.time.*
 
 @Ignore
 class DateFieldRangeTest extends UiScreenSpec {
 
-    @Inject
+    @Autowired
     DateTimeTransformations dateTimeTransformations
 
     void setup() {

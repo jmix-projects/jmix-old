@@ -23,11 +23,11 @@ import com.haulmont.cuba.gui.components.AbstractWindow;
 import com.haulmont.cuba.security.entity.FilterEntity;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.WindowParam;
-import io.jmix.ui.components.TextField;
-import io.jmix.ui.components.Window;
+import io.jmix.ui.component.TextField;
+import io.jmix.ui.component.Window;
 import io.jmix.ui.theme.ThemeConstants;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
 
@@ -35,13 +35,13 @@ import java.util.Map;
  * Window for editing new filter name
  */
 public class SaveFilterWindow extends AbstractWindow {
-    @Inject
+    @Autowired
     protected TextField<String> filterName;
 
-    @Inject
+    @Autowired
     protected ThemeConstants theme;
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
     @WindowParam(name = "existingNames")

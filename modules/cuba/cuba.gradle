@@ -19,7 +19,7 @@ apply plugin: 'groovy'
 apply plugin: 'java-library'
 apply plugin: 'io.jmix'
 
-version = rootProject.jmixVersion
+group = 'io.jmix.cuba'
 
 dependencies {
     api platform(project(':jmix-platform'))
@@ -28,6 +28,8 @@ dependencies {
     api project(':modules:data')
     api project(':modules:ui')
     api project(':modules:security')
+    api project(':modules:dynattr')
+    api project(':modules:dynattr-ui')
 
     testImplementation 'org.springframework:spring-test'
     testImplementation "org.spockframework:spock-core"
@@ -44,32 +46,27 @@ dependencies {
     testRuntimeOnly 'org.hsqldb:hsqldb'
 }
 
-entitiesEnhancing {
-    enabled = true
-}
-
 jar {
     archivesBaseName = 'jmix-cuba'
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier = 'sources'
+java {
+    withSourcesJar()
+}
+
+artifacts {
+    archives sourcesJar
 }
 
 test {
     useJUnitPlatform()
-    systemProperty("org.slf4j.simpleLogger.log.eclipselink.sql", "debug")
 }
 
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            groupId = 'io.jmix.cuba'
             artifactId = 'jmix-cuba'
-
             from components.java
-            artifact sourcesJar
         }
     }
 }

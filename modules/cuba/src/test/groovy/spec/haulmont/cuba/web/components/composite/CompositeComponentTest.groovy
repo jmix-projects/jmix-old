@@ -18,7 +18,7 @@ package spec.haulmont.cuba.web.components.composite
 
 import com.haulmont.cuba.core.model.sales.OrderLine
 import io.jmix.ui.ScreenBuilders
-import io.jmix.ui.components.Button
+import io.jmix.ui.component.Button
 import io.jmix.ui.model.InstanceContainer
 import io.jmix.ui.screen.OpenMode
 import io.jmix.ui.screen.UiControllerUtils
@@ -34,15 +34,15 @@ import spec.haulmont.cuba.web.components.composite.screens.CommentScreen
 import spec.haulmont.cuba.web.components.composite.screens.CompositeFieldScreen
 import spock.lang.Ignore
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 @SuppressWarnings("GroovyAssignabilityCheck")
 class CompositeComponentTest extends UiScreenSpec {
 
-    @Inject
+    @Autowired
     LayoutLoaderConfig layoutLoaderConfig
 
-    @Inject
+    @Autowired
     ScreenBuilders screenBuilders
 
     void setup() {

@@ -22,7 +22,7 @@ import io.jmix.core.Entity;
 import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 @Deprecated
-public class WebGroupTable<E extends Entity> extends io.jmix.ui.components.impl.WebGroupTable<E>
+public class WebGroupTable<E extends Entity> extends io.jmix.ui.component.impl.WebGroupTable<E>
         implements GroupTable<E> {
 
     @Override

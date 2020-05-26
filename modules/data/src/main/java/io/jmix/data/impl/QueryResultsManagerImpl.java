@@ -18,10 +18,7 @@ package io.jmix.data.impl;
 
 import io.jmix.core.*;
 import io.jmix.core.cluster.ClusterManager;
-import io.jmix.core.compatibility.AppContext;
-import io.jmix.core.security.UserSession;
-import io.jmix.core.security.UserSessionSource;
-import io.jmix.core.security.UserSessions;
+import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.data.PersistenceHints;
 import io.jmix.data.persistence.DbTypeConverter;
 import io.jmix.data.persistence.DbmsSpecifics;
@@ -34,7 +31,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -51,22 +48,19 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
 
     private final Logger log = LoggerFactory.getLogger(QueryResultsManagerImpl.class);
 
-    @Inject
+    @Autowired
     protected DbmsSpecifics dbmsSpecifics;
 
-    @Inject
-    protected UserSessionSource userSessionSource;
+    @Autowired
+    protected CurrentAuthentication currentAuthentication;
 
-    @Inject
-    protected UserSessions userSessions;
-
-    @Inject
+    @Autowired
     protected ClusterManager clusterManager;
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
+    @Autowired
     private MetadataTools metadataTools;
 
     @PersistenceContext
@@ -82,12 +76,12 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
 
     protected static final int INACTIVE_DELETION_MAX = 100000;
 
-    @Inject
+    @Autowired
     protected void setDataSource(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Inject
+    @Autowired
     protected void setTransactionManager(PlatformTransactionManager transactionManager) {
         transaction = new TransactionTemplate(transactionManager);
         transaction.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
@@ -131,7 +125,8 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
                     .setQueryParameters(contextQuery.getParameters());
 
             if (prevQueries.size() > 1) {
-                queryBuilder.setPreviousResults(userSessionSource.getUserSession().getId(), loadContext.getQueryKey());
+                //todo MG
+//                queryBuilder.setPreviousResults(userSessionSource.getUserSession().getId(), loadContext.getQueryKey());
             }
 
             Query query = queryBuilder.getQuery(entityManager);
@@ -151,8 +146,10 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
     }
 
     protected boolean resultsAlreadySaved(Integer queryKey, LoadContext.Query query) {
-        LinkedHashMap<Integer, QueryHolder> recentQueries =
-                userSessionSource.getUserSession().getAttribute("_recentQueries");
+        //todo MG
+//        LinkedHashMap<Integer, QueryHolder> recentQueries =
+//                userSessionSource.getUserSession().getAttribute("_recentQueries");
+        LinkedHashMap<Integer, QueryHolder> recentQueries = null;
         if (recentQueries == null) {
             recentQueries = new LinkedHashMap<Integer, QueryHolder>() {
                 private static final long serialVersionUID = -901296839279897248L;
@@ -169,7 +166,8 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
 
         // do not set to session attribute recentQueries directly, it contains reference to QueryResultsManager class
         // copy data to new LinkedHashMap
-        userSessionSource.getUserSession().setAttribute("_recentQueries", new LinkedHashMap<>(recentQueries));
+        //todo MG
+//        userSessionSource.getUserSession().setAttribute("_recentQueries", new LinkedHashMap<>(recentQueries));
 
         return queryHolder.equals(oldQueryHolder);
     }
@@ -179,7 +177,9 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
         if (idList.isEmpty())
             return;
 
-        UUID userSessionId = userSessionSource.getUserSession().getId();
+        //todo MG
+//        UUID userSessionId = userSessionSource.getUserSession().getId();
+        UUID userSessionId = UUID.randomUUID();
         long start = System.currentTimeMillis();
         String logMsg = "Insert " + idList.size() + " query results for " + userSessionId + " / " + queryKey;
         log.debug(logMsg);
@@ -220,7 +220,9 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
     @Override
     public void delete(int queryKey) {
         DbTypeConverter converter = dbmsSpecifics.getDbTypeConverter();
-        UUID userSessionId = userSessionSource.getUserSession().getId();
+        //todo MG
+//        UUID userSessionId = userSessionSource.getUserSession().getId();
+        UUID userSessionId = UUID.randomUUID();
         String userSessionIdStr = converter.getSqlObject(userSessionId).toString();
         long start = System.currentTimeMillis();
         String logMsg = "Delete query results for " + userSessionId + " / " + queryKey;
@@ -237,7 +239,9 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
     @Override
     public void deleteForCurrentSession() {
         DbTypeConverter converter = dbmsSpecifics.getDbTypeConverter();
-        UUID userSessionId = userSessionSource.getUserSession().getId();
+        //todo MG
+//        UUID userSessionId = userSessionSource.getUserSession().getId();
+        UUID userSessionId = UUID.randomUUID();
         String userSessionIdStr = converter.getSqlObject(userSessionId).toString();
         jdbcTemplate.update("delete from SYS_QUERY_RESULT where SESSION_ID = '"
                 + userSessionIdStr + "'");
@@ -245,7 +249,7 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
 
     @Override
     public void deleteForInactiveSessions() {
-        if (!AppContext.isStarted() || !clusterManager.isMaster())
+        if (!clusterManager.isMaster())
             return;
 
         internalDeleteForInactiveSessions();
@@ -265,7 +269,9 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
             log.debug("Processing " + INACTIVE_DELETION_MAX + " records, run again for the rest");
         }
 
-        Set<UUID> sessionIds = userSessions.getUserSessionsStream().map(UserSession::getId).collect(Collectors.toSet());
+        //todo MG
+//        Set<UUID> sessionIds = userSessions.getUserSessionsStream().map(UserSession::getId).collect(Collectors.toSet());
+        Set<UUID> sessionIds = new HashSet<>();
 
         List<Long> ids = new ArrayList<>();
         int i = 0;

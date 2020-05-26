@@ -16,7 +16,7 @@
 
 package io.jmix.ui.meta;
 
-import io.jmix.ui.components.Component;
+import io.jmix.ui.component.Component;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -28,7 +28,7 @@ import java.lang.annotation.RetentionPolicy;
  * indirect subclass of {@link Component}.
  */
 @Documented
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 public @interface StudioComponent {
     /**
      * @return caption in Studio Screen Designer Palette

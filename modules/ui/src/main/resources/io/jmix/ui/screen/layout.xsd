@@ -15,9 +15,9 @@
   ~ limitations under the License.
   -->
 
-<xs:schema targetNamespace="http://schemas.haulmont.com/cuba/screen/layout.xsd"
+<xs:schema targetNamespace="http://jmix.io/schema/ui/layout"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://schemas.haulmont.com/cuba/screen/layout.xsd"
+           xmlns="http://jmix.io/schema/ui/layout"
            elementFormDefault="qualified">
 
     <!-- Enums -->
@@ -26,6 +26,8 @@
         <xs:restriction base="xs:string">
             <xs:enumeration value="LEFT"/>
             <xs:enumeration value="RIGHT"/>
+            <xs:enumeration value="TOP"/>
+            <xs:enumeration value="BOTTOM"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -240,7 +242,6 @@
             <xs:simpleType>
                 <xs:restriction base="xs:string">
                     <xs:enumeration value="msg://"/>
-                    <xs:enumeration value="mainMsg://"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:union>
@@ -395,13 +396,13 @@
             </xs:simpleType>
             <xs:simpleType>
                 <xs:restriction base="xs:string">
-                    <xs:enumeration value="io.jmix.ui.components.validators.DateValidator"/>
-                    <xs:enumeration value="io.jmix.ui.components.validators.DoubleValidator"/>
-                    <xs:enumeration value="io.jmix.ui.components.validators.EmailValidator"/>
-                    <xs:enumeration value="io.jmix.ui.components.validators.IntegerValidator"/>
-                    <xs:enumeration value="io.jmix.ui.components.validators.LongValidator"/>
-                    <xs:enumeration value="io.jmix.ui.components.validators.PatternValidator"/>
-                    <xs:enumeration value="io.jmix.ui.components.validators.ScriptValidator"/>
+                    <xs:enumeration value="io.jmix.ui.component.validator.DateValidator"/>
+                    <xs:enumeration value="io.jmix.ui.component.validator.DoubleValidator"/>
+                    <xs:enumeration value="io.jmix.ui.component.validator.EmailValidator"/>
+                    <xs:enumeration value="io.jmix.ui.component.validator.IntegerValidator"/>
+                    <xs:enumeration value="io.jmix.ui.component.validator.LongValidator"/>
+                    <xs:enumeration value="io.jmix.ui.component.validator.PatternValidator"/>
+                    <xs:enumeration value="io.jmix.ui.component.validator.ScriptValidator"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:union>
@@ -490,8 +491,8 @@
             <xs:enumeration value="java.util.Date"/>
             <xs:enumeration value="java.time.LocalDate"/>
             <xs:enumeration value="java.time.LocalDateTime"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.icons.Icons$Icon"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.components.Component"/>
+            <xs:enumeration value="io.jmix.ui.icon.Icons$Icon"/>
+            <xs:enumeration value="io.jmix.ui.component.Component"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -1191,6 +1192,10 @@
         <xs:attribute name="referrerpolicy" type="referrerpolicy"/>
     </xs:attributeGroup>
 
+    <xs:attributeGroup name="hasHtmlSanitizer">
+        <xs:attribute name="htmlSanitizerEnabled" type="xs:boolean"/>
+    </xs:attributeGroup>
+
     <xs:attributeGroup name="isTableComponent">
         <xs:attribute name="dataContainer" type="xs:string"/>
         <xs:attribute name="rowHeaderMode" type="rowHeaderMode"/>
@@ -1282,26 +1287,49 @@
     </xs:complexType>
 
     <xs:complexType name="rendererType">
-        <xs:attribute name="type" type="rendererTypes" use="required"/>
+        <xs:attribute name="nullRepresentation" type="xs:string"/>
     </xs:complexType>
 
-    <xs:simpleType name="rendererTypes">
+    <xs:complexType name="formattableRendererType">
+        <xs:complexContent>
+            <xs:extension base="rendererType">
+                <xs:attribute name="format" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="rendererListType">
+        <xs:attribute name="type" type="rendererList" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="rendererList">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="com.haulmont.cuba.gui.components.DataGrid$ButtonRenderer"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.components.DataGrid$CheckBoxRenderer"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.components.DataGrid$ComponentRenderer"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.components.DataGrid$IconRenderer"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.components.DataGrid$ImageRenderer"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.components.DataGrid$DateRenderer"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.components.DataGrid$HtmlRenderer"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.components.DataGrid$TextRenderer"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.components.DataGrid$ClickableTextRenderer"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.components.DataGrid$LocalDateRenderer"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.components.DataGrid$LocalDateTimeRenderer"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.components.DataGrid$NumberRenderer"/>
-            <xs:enumeration value="com.haulmont.cuba.gui.components.DataGrid$ProgressBarRenderer"/>
+            <xs:enumeration value="io.jmix.ui.component.DataGrid$CheckBoxRenderer"/>
+            <xs:enumeration value="io.jmix.ui.component.DataGrid$ComponentRenderer"/>
+            <xs:enumeration value="io.jmix.ui.component.DataGrid$IconRenderer"/>
+            <xs:enumeration value="io.jmix.ui.component.DataGrid$HtmlRenderer"/>
+            <xs:enumeration value="io.jmix.ui.component.DataGrid$TextRenderer"/>
+            <xs:enumeration value="io.jmix.ui.component.DataGrid$ProgressBarRenderer"/>
         </xs:restriction>
     </xs:simpleType>
+
+    <xs:group name="renderers">
+        <xs:sequence>
+            <xs:choice maxOccurs="1">
+                <xs:element name="checkBoxRenderer" minOccurs="0"/>
+                <xs:element name="componentRenderer" minOccurs="0"/>
+                <xs:element name="iconRenderer" minOccurs="0"/>
+                <xs:element name="progressBarRenderer" minOccurs="0"/>
+                <xs:element name="htmlRenderer" minOccurs="0" type="rendererType"/>
+                <xs:element name="textRenderer" minOccurs="0" type="rendererType"/>
+                <xs:element name="dateRenderer" minOccurs="0" type="formattableRendererType"/>
+                <xs:element name="localDateRenderer" minOccurs="0" type="formattableRendererType"/>
+                <xs:element name="localDateTimeRenderer" minOccurs="0" type="formattableRendererType"/>
+                <xs:element name="numberRenderer" minOccurs="0" type="formattableRendererType"/>
+                <xs:element name="renderer" minOccurs="0" type="rendererListType"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:group>
 
     <xs:complexType name="baseValidatorType">
         <xs:all>
@@ -1563,6 +1591,8 @@
         <xs:attributeGroup ref="hasContextHelp"/>
         <xs:attributeGroup ref="hasHtmlDescription"/>
 
+        <xs:attributeGroup ref="hasHtmlSanitizer"/>
+
         <xs:attributeGroup ref="hasCss"/>
 
         <xs:attribute name="stylename" type="labelStylename"/>
@@ -1653,6 +1683,7 @@
         <xs:attributeGroup ref="hasResponsiveProp"/>
 
         <xs:attributeGroup ref="hasCss"/>
+        <xs:attributeGroup ref="hasHtmlSanitizer"/>
     </xs:complexType>
 
     <!-- BaseField -->
@@ -2595,7 +2626,6 @@
     <xs:complexType name="dataGridColumnComponent">
         <xs:sequence>
             <xs:element name="formatter" minOccurs="0" type="formatterType"/>
-            <xs:element name="renderer" minOccurs="0" type="rendererType"/>
             <xs:element name="aggregation" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
@@ -2606,6 +2636,7 @@
                     <xs:attribute name="valueDescription" type="resourceString"/>
                 </xs:complexType>
             </xs:element>
+            <xs:group ref="renderers" minOccurs="0"/>
         </xs:sequence>
 
         <xs:attributeGroup ref="hasId"/>
@@ -2768,6 +2799,7 @@
         <xs:attributeGroup ref="hasVisibility"/>
         <xs:attributeGroup ref="hasTabIndex"/>
         <xs:attributeGroup ref="hasContextHelp"/>
+        <xs:attributeGroup ref="hasHtmlSanitizer"/>
 
         <xs:attribute name="width" type="componentSize"/>
 
@@ -3397,6 +3429,8 @@
         <xs:attribute name="position" type="align"/>
 
         <xs:attributeGroup ref="facetTriggerType"/>
+
+        <xs:attributeGroup ref="hasHtmlSanitizer"/>
     </xs:complexType>
 
     <xs:simpleType name="notificationTypeEnum">
@@ -3431,6 +3465,7 @@
             <xs:extension base="dialogType">
                 <xs:attribute name="closeOnClickOutside" type="xs:boolean"/>
                 <xs:attribute name="modal" type="xs:boolean"/>
+                <xs:attributeGroup ref="hasHtmlSanitizer"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -3442,6 +3477,7 @@
                 <xs:sequence>
                     <xs:element name="actions" type="dialogActionsType" minOccurs="0"/>
                 </xs:sequence>
+                <xs:attributeGroup ref="hasHtmlSanitizer"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>

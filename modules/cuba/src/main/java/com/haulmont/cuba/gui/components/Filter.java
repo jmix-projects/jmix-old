@@ -20,7 +20,7 @@ import com.haulmont.cuba.gui.components.filter.FilterDelegate;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.security.entity.FilterEntity;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.ui.components.*;
+import io.jmix.ui.component.*;
 import io.jmix.ui.model.BaseCollectionLoader;
 import io.jmix.ui.model.DataLoader;
 
@@ -30,7 +30,7 @@ import java.util.List;
  * Generic filter component.
  */
 public interface Filter extends HasMargin, Component.BelongToFrame, HasNamedComponents, HasSettings, HasDataLoadingSettings, Component.HasCaption, HasContextHelp,
-        Component.HasIcon, Collapsable, Component.Focusable, HasHtmlCaption, HasHtmlDescription {
+        Component.HasIcon, Collapsable, Component.Focusable, HasHtmlCaption, HasHtmlDescription, HasHtmlSanitizer {
 
     String NAME = "filter";
 

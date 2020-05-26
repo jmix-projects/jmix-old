@@ -81,7 +81,7 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
                 nestedCtClass.setSuperclass(classPool.get(BASE_DB_GENERATED_ID_ENTITY_ENTRY_TYPE));
                 getterName = "getDbGeneratedId";
                 setterName = "setDbGeneratedId";
-                idType = classPool.get(Number.class.getName());
+                idType = classPool.get(Object.class.getName());
             } else {
                 nestedCtClass.setSuperclass(classPool.get(BASE_ENTITY_ENTRY_TYPE));
                 getterName = "getEntityId";

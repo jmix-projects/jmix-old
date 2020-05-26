@@ -19,8 +19,10 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import io.jmix.core.*;
-import io.jmix.core.entity.*;
-import io.jmix.core.event.AppContextInitializedEvent;
+import io.jmix.core.entity.EntityValues;
+import io.jmix.core.entity.HasUuid;
+import io.jmix.core.entity.IdProxy;
+import io.jmix.core.entity.SecurityState;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.security.SecurityProperties;
@@ -29,12 +31,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -43,15 +46,15 @@ import static org.apache.commons.lang3.StringUtils.substring;
 
 @Component(SecurityTokenManager.NAME)
 public class SecurityTokenManager {
-    public static final String NAME = "cuba_SecurityTokenManager";
+    public static final String NAME = "jmix_SecurityTokenManager";
 
     private static final Logger log = LoggerFactory.getLogger(SecurityTokenManager.class);
 
-    @Inject
+    @Autowired
     protected SecurityProperties properties;
-    @Inject
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
 
     protected static final String ENTITY_NAME_KEY = "__entityName";
@@ -210,7 +213,7 @@ public class SecurityTokenManager {
     /**
      * INTERNAL.
      */
-    public void addFiltered(Entity<?> entity, String property, Object id) {
+    public void addFiltered(Entity entity, String property, Object id) {
         EntityEntry entityEntry = entity.__getEntityEntry();
         Multimap<String, Object> filteredData = entityEntry.getSecurityState().getFilteredData();
         if (filteredData == null) {
@@ -223,7 +226,7 @@ public class SecurityTokenManager {
     /**
      * INTERNAL.
      */
-    public void addFiltered(Entity<?> entity, String property, Collection ids) {
+    public void addFiltered(Entity entity, String property, Collection ids) {
         EntityEntry entityEntry = entity.__getEntityEntry();
         Multimap<String, Object> filteredData = entityEntry.getSecurityState().getFilteredData();
         if (filteredData == null) {
@@ -233,7 +236,7 @@ public class SecurityTokenManager {
         filteredData.putAll(property, ids);
     }
 
-    @EventListener(AppContextInitializedEvent.class)
+    @EventListener(ContextRefreshedEvent.class)
     protected void applicationInitialized() {
         if ("CUBA.Platform".equals(properties.getKeyForSecurityTokenEncryption())) {
             log.warn("\nWARNING:\n" +

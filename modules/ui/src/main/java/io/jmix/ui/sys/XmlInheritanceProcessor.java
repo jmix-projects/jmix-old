@@ -18,8 +18,8 @@ package io.jmix.ui.sys;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.DevelopmentException;
 import io.jmix.core.Resources;
-import io.jmix.core.commons.util.Dom4j;
-import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.common.util.Dom4j;
+import io.jmix.core.common.util.ParamsMap;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.*;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -51,11 +51,11 @@ public class XmlInheritanceProcessor {
 
     private List<ElementTargetLocator> targetLocators;
 
-    @Inject
+    @Autowired
     protected Resources resources;
-    @Inject
+    @Autowired
     protected ScreenXmlParser screenXmlParser;
-    @Inject
+    @Autowired
     protected BeanLocator beanLocator;
 
     public XmlInheritanceProcessor(Document document, Map<String, Object> params) {

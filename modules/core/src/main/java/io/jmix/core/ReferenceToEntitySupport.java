@@ -25,7 +25,7 @@ import io.jmix.core.metamodel.model.MetaProperty;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.UUID;
 
 /**
@@ -34,11 +34,11 @@ import java.util.UUID;
 @Component(ReferenceToEntitySupport.NAME)
 public class ReferenceToEntitySupport {
 
-    public static final String NAME = "cuba_ReferenceToEntitySupport";
+    public static final String NAME = "jmix_ReferenceToEntitySupport";
 
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
     /**

@@ -17,6 +17,9 @@
 package io.jmix.ui;
 
 import io.jmix.ui.navigation.UrlHandlingMode;
+import io.jmix.ui.sanitizer.HtmlSanitizer;
+import io.jmix.ui.widget.JmixMainTabSheet;
+import io.jmix.ui.widget.JmixManagedTabSheet;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
@@ -56,7 +59,7 @@ public class UiProperties {
     boolean showBreadCrumbs;
     int mainTabCaptionLength;
     UrlHandlingMode urlHandlingMode;
-    String appWindowTheme;
+    String theme;
     String embeddedResourcesRoot;
     List<String> linkHandlerActions;
     int tablePageLength;
@@ -69,6 +72,9 @@ public class UiProperties {
     String initialScreenId;
     boolean forceRefreshAuthenticatedTabs;
     boolean allowAnonymousAccess;
+    boolean htmlSanitizerEnabled;
+    String iconsConfig;
+    private boolean compositeMenu;
 
     public UiProperties(
             boolean testMode,
@@ -100,7 +106,7 @@ public class UiProperties {
             @DefaultValue("true") boolean showBreadCrumbs,
             @DefaultValue("25") int mainTabCaptionLength,
             @DefaultValue("URL_ROUTES") UrlHandlingMode urlHandlingMode,
-            @DefaultValue("halo") String appWindowTheme,
+            @DefaultValue("helium") String theme,
             String embeddedResourcesRoot,
             @DefaultValue("open,o") List<String> linkHandlerActions,
             @DefaultValue("15") int tablePageLength,
@@ -112,7 +118,11 @@ public class UiProperties {
             @DefaultValue("main") String mainScreenId,
             String initialScreenId,
             @DefaultValue("false") boolean forceRefreshAuthenticatedTabs,
-            @DefaultValue("false") boolean allowAnonymousAccess
+            @DefaultValue("false") boolean allowAnonymousAccess,
+            @DefaultValue("true") boolean htmlSanitizerEnabled,
+            @DefaultValue("io.jmix.ui.icon.JmixIcon") String iconsConfig,
+            @DefaultValue("true") boolean compositeMenu
+
     ) {
         this.testMode = testMode;
         this.performanceTestMode = performanceTestMode;
@@ -143,7 +153,7 @@ public class UiProperties {
         this.showBreadCrumbs = showBreadCrumbs;
         this.mainTabCaptionLength = mainTabCaptionLength;
         this.urlHandlingMode = urlHandlingMode;
-        this.appWindowTheme = appWindowTheme;
+        this.theme = theme;
         this.embeddedResourcesRoot = embeddedResourcesRoot;
         this.linkHandlerActions = linkHandlerActions;
         this.tablePageLength = tablePageLength;
@@ -156,6 +166,9 @@ public class UiProperties {
         this.initialScreenId = initialScreenId;
         this.forceRefreshAuthenticatedTabs = forceRefreshAuthenticatedTabs;
         this.allowAnonymousAccess = allowAnonymousAccess;
+        this.htmlSanitizerEnabled = htmlSanitizerEnabled;
+        this.iconsConfig = iconsConfig;
+        this.compositeMenu = compositeMenu;
     }
 
     public boolean isCreateActionAddsFirst() {
@@ -294,8 +307,8 @@ public class UiProperties {
         return urlHandlingMode;
     }
 
-    public String getAppWindowTheme() {
-        return appWindowTheme;
+    public String getTheme() {
+        return theme;
     }
 
     public String getEmbeddedResourcesRoot() {
@@ -333,8 +346,8 @@ public class UiProperties {
     }
 
     /**
-     * Sets whether default {@link io.jmix.ui.widgets.CubaMainTabSheet} or
-     * {@link io.jmix.ui.widgets.CubaManagedTabSheet} will be used in AppWorkArea.
+     * Sets whether default {@link JmixMainTabSheet} or
+     * {@link JmixManagedTabSheet} will be used in AppWorkArea.
      */
     public MainTabSheetMode getMainTabSheetMode() {
         return mainTabSheetMode;
@@ -372,5 +385,21 @@ public class UiProperties {
 
     public boolean isAllowAnonymousAccess() {
         return allowAnonymousAccess;
+    }
+
+    /**
+     * Defines whether to sanitize the value of components using {@link HtmlSanitizer}
+     * to prevent Cross-site Scripting (XSS) in HTML context.
+     */
+    public boolean isHtmlSanitizerEnabled() {
+        return htmlSanitizerEnabled;
+    }
+
+    public String getIconsConfig() {
+        return iconsConfig;
+    }
+
+    public boolean isCompositeMenu() {
+        return compositeMenu;
     }
 }

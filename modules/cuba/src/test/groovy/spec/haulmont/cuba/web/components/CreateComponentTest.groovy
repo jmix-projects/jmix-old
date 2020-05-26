@@ -19,19 +19,19 @@ package spec.haulmont.cuba.web.components
 import com.haulmont.cuba.gui.components.BulkEditor
 import com.haulmont.cuba.gui.components.FieldGroup
 import io.jmix.ui.Facets
-import io.jmix.ui.components.*
-import io.jmix.ui.components.impl.JavaScriptComponent
-import io.jmix.ui.components.mainwindow.*
+import io.jmix.ui.component.*
+import io.jmix.ui.component.impl.JavaScriptComponent
+import io.jmix.ui.component.mainwindow.*
 import spec.haulmont.cuba.web.WebSpec
 import spock.lang.Ignore
 import spock.lang.Unroll
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 @SuppressWarnings("GroovyAccessibility")
 class CreateComponentTest extends WebSpec {
 
-    @Inject
+    @Autowired
     Facets facets
 
     @Ignore

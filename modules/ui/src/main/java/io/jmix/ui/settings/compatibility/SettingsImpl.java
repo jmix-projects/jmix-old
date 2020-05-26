@@ -16,7 +16,7 @@
 package io.jmix.ui.settings.compatibility;
 
 import io.jmix.core.AppBeans;
-import io.jmix.core.commons.xmlparsing.Dom4jTools;
+import io.jmix.core.common.xmlparsing.Dom4jTools;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.settings.UiSettingsCache;
 import org.apache.commons.lang3.StringUtils;

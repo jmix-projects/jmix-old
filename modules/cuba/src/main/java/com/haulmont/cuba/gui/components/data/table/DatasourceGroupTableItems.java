@@ -19,14 +19,14 @@ package com.haulmont.cuba.gui.components.data.table;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.GroupDatasource;
 import io.jmix.core.Entity;
-import io.jmix.ui.components.data.GroupTableItems;
+import io.jmix.ui.component.data.GroupTableItems;
 import io.jmix.ui.gui.data.GroupInfo;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
-public class DatasourceGroupTableItems<E extends Entity<K>, K>
+public class DatasourceGroupTableItems<E extends Entity, K>
         extends SortableDatasourceTableItems<E, K>
         implements GroupTableItems<E> {
 

@@ -17,7 +17,7 @@ package io.jmix.data.entity;
 
 import io.jmix.core.Entity;
 import io.jmix.core.entity.annotation.UnavailableInSecurityConstraints;
-import io.jmix.core.metamodel.annotations.ModelObject;
+import io.jmix.core.metamodel.annotation.ModelObject;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -29,7 +29,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 @ModelObject(name = "sys$BaseIntegerIdEntity")
 @UnavailableInSecurityConstraints
-public abstract class BaseIntegerIdEntity implements Entity<Integer> {
+public abstract class BaseIntegerIdEntity implements Entity {
 
     private static final long serialVersionUID = 1748237513475338490L;
 

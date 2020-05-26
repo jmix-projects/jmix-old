@@ -16,9 +16,9 @@
 
 package io.jmix.ui.sys;
 
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.ScreenFacet;
-import io.jmix.ui.components.Window;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.ScreenFacet;
+import io.jmix.ui.component.Window;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.Screen;
@@ -31,12 +31,12 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 @SuppressWarnings("unused")
 @org.springframework.stereotype.Component(UiControllerPropertyInjector.NAME)
@@ -84,7 +84,7 @@ public class UiControllerPropertyInjector {
         this.properties = properties;
     }
 
-    @Inject
+    @Autowired
     public void setReflectionInspector(UiControllerReflectionInspector reflectionInspector) {
         this.reflectionInspector = reflectionInspector;
     }

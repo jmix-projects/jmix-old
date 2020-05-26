@@ -1,8 +1,8 @@
-<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd">
+<window xmlns="http://jmix.io/schema/ui/window">
     <data>
         <instance id="lineDc"
                   class="com.haulmont.cuba.web.testmodel.sales.OrderLine"
-                  view="_local">
+                  fetchPlan="_local">
             <loader/>
             <collection id="paramsDc" property="params"/>
         </instance>

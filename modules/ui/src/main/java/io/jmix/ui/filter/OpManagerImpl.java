@@ -24,7 +24,7 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.time.*;
 import java.util.Date;
 import java.util.EnumSet;
@@ -36,10 +36,10 @@ import static io.jmix.ui.filter.Op.*;
 @Component(OpManager.NAME)
 public class OpManagerImpl implements OpManager {
 
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
-    @Inject
-    protected Metadata metadata;
+    @Autowired
+    protected MetadataTools metadata;
 
     protected static final List<Class> dateTimeClasses = ImmutableList.of(Date.class, LocalDate.class, LocalDateTime.class,
             OffsetDateTime.class);
@@ -72,14 +72,8 @@ public class OpManagerImpl implements OpManager {
     }
 
     @Override
-    public EnumSet<Op> availableOpsForCollectionDynamicAttribute() {
-        return EnumSet.of(CONTAINS, DOES_NOT_CONTAIN, NOT_EMPTY);
-    }
-
-    @Override
     public EnumSet<Op> availableOps(MetaClass metaClass, MetaProperty metaProperty) {
         Class javaClass = metaProperty.getJavaType();
-        //todo PersistenceManagerService
 //        if (String.class.equals(javaClass) && metadataTools.isLob(metaProperty)) {
 //            String storeName = metadata.getTools().getStoreName(metaClass);
 //            PersistenceManagerService persistenceManagerService = AppBeans.get(PersistenceManagerService.class);

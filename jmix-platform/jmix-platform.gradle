@@ -18,7 +18,9 @@ plugins {
     id 'java-platform'
 }
 
-def vaadinVersion = '8.9.2-4-cuba'
+group = 'io.jmix.bom'
+
+def vaadinVersion = '8.9.2-6-cuba'
 
 javaPlatform {
     allowDependencies()
@@ -28,38 +30,49 @@ dependencies {
     api platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
     
     constraints {
-        api "io.jmix.starter.standard:jmix-starter-standard:$jmixVersion"
-        api "io.jmix.starter.ui-minimal:jmix-starter-ui-minimal:$jmixVersion"
-        api "io.jmix.starter.data:jmix-starter-data:$jmixVersion"
-        api "io.jmix.starter.cuba:jmix-starter-cuba:$jmixVersion"
-        api "io.jmix.core:jmix-core:$jmixVersion"
-        api "io.jmix.cuba:jmix-cuba:$jmixVersion"
-        api "io.jmix.data:jmix-data:$jmixVersion"
-        api "io.jmix.audit:jmix-audit:$jmixVersion"
-        api "io.jmix.audit.ui:jmix-audit-ui:$jmixVersion"
-        api "io.jmix.remoting:jmix-remoting:$jmixVersion"
-        api "io.jmix.security:jmix-security:$jmixVersion"
-        api "io.jmix.ui:jmx-ui:$jmixVersion"
-        api "io.jmix.ui:jmx-ui-persistence:$jmixVersion"
-        api "io.jmix.ui-themes:jmix-ui-themes:$jmixVersion"
-        api "io.jmix.ui-themes-compiled:jmix-ui-themes-compiled:$jmixVersion"
-        api "io.jmix.ui-widgets:jmix-ui-widgets:$jmixVersion"
-        api "io.jmix.ui-widgets-compiled:jmix-ui-widgets-compiled:$jmixVersion"
+        api "io.jmix.starter.standard:jmix-starter-standard:$version"
+        api "io.jmix.starter.standard-nowidgets:jmix-starter-standard-nowidgets:$version"
+        api "io.jmix.starter.data:jmix-starter-data:$version"
+        api "io.jmix.starter.ui:jmix-starter-ui:$version"
+        api "io.jmix.starter.cuba:jmix-starter-cuba:$version"
+        api "io.jmix.starter.audit:jmix-starter-audit:$version"
+        api "io.jmix.starter.auditui:jmix-starter-audit-ui:$version"
+        api "io.jmix.starter.security:jmix-starter-security:$version"
+        api "io.jmix.starter.securityui:jmix-starter-security-ui:$version"
+        api "io.jmix.starter.dynattr:jmix-starter-dynattr:$version"
+        api "io.jmix.starter.dynattrui:jmix-starter-dynattr-ui:$version"
+
+        api "io.jmix.core:jmix-core:$version"
+        api "io.jmix.cuba:jmix-cuba:$version"
+        api "io.jmix.data:jmix-data:$version"
+        api "io.jmix.dynattr:jmix-dynattr:$version"
+        api "io.jmix.dynattr:jmix-dynattr-ui:$version"
+        api "io.jmix.audit:jmix-audit:$version"
+        api "io.jmix.audit:jmix-audit-ui:$version"
+        api "io.jmix.security:jmix-security:$version"
+        api "io.jmix.securityui:jmix-security-ui:$version"
+        api "io.jmix.ui:jmx-ui:$version"
+        api "io.jmix.ui:jmx-ui-persistence:$version"
+        api "io.jmix.ui-themes:jmix-ui-themes:$version"
+        api "io.jmix.ui-themes-compiled:jmix-ui-themes-compiled:$version"
+        api "io.jmix.ui-widgets:jmix-ui-widgets:$version"
+        api "io.jmix.ui-widgets-compiled:jmix-ui-widgets-compiled:$version"
         
         api 'com.google.guava:guava:27.0.1-jre'
         api 'commons-io:commons-io:2.6'
+        api 'commons-fileupload:commons-fileupload:1.4'
         api 'javax.annotation:javax.annotation-api:1.3.2'
         api 'javax.inject:javax.inject:1'
         api 'org.antlr:antlr-runtime:3.5.2'
         api 'org.apache.commons:commons-collections4:4.2'
         api 'org.apache.commons:commons-text:1.6'
+        api 'org.apache.commons:commons-compress:1.20'
         api 'org.dom4j:dom4j:2.1.1'
         api 'org.eclipse.persistence:jakarta.persistence:2.2.3'
-        api 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.5-2-cuba'
-        api 'org.eclipse.persistence:org.eclipse.persistence.extension:2.7.5'
+        api 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.7-1-jmix'
+        api 'org.eclipse.persistence:org.eclipse.persistence.extension:2.7.7'
         api 'org.glassfish:javax.el:3.0.1-b10'
         api 'org.json:json:20180813'
-        api 'org.perf4j:perf4j:0.9.16'
 
         api "com.vaadin:vaadin-server:$vaadinVersion"
         api "com.vaadin:vaadin-compatibility-server:$vaadinVersion"
@@ -73,6 +86,10 @@ dependencies {
         api 'org.spockframework:spock-core:1.2-groovy-2.5'
         api 'org.spockframework:spock-spring:1.2-groovy-2.5'
 
+        api 'io.swagger:swagger-models:1.6.1'
+
+        api 'org.springframework.security.oauth:spring-security-oauth2:2.4.1.RELEASE'
+
         runtime 'org.hsqldb:hsqldb:2.4.1'
     }
 }
@@ -80,10 +97,7 @@ dependencies {
 publishing {
     publications {
         javaPlatformMaven(MavenPublication) {
-            groupId = 'io.jmix.bom'
             artifactId = 'jmix-bom'
-            version = jmixVersion
-
             from components.javaPlatform
         }
     }

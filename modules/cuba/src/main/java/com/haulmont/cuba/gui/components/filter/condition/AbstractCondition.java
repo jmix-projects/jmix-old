@@ -24,11 +24,11 @@ import com.haulmont.cuba.gui.components.filter.descriptor.AbstractConditionDescr
 import com.haulmont.cuba.gui.components.filter.operationedit.AbstractOperationEditor;
 import io.jmix.core.AppBeans;
 import io.jmix.core.MessageTools;
-import io.jmix.core.Scripting;
+import com.haulmont.cuba.core.global.Scripting;
 import io.jmix.data.entity.BaseUuidEntity;
 import io.jmix.core.entity.annotation.SystemLevel;
-import io.jmix.core.metamodel.annotations.ModelObject;
-import io.jmix.core.metamodel.annotations.ModelProperty;
+import io.jmix.core.metamodel.annotation.ModelObject;
+import io.jmix.core.metamodel.annotation.ModelProperty;
 import io.jmix.ui.filter.Op;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;

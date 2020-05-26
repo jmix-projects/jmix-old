@@ -17,15 +17,17 @@
 package com.haulmont.cuba.core.testsupport;
 
 import com.haulmont.cuba.JmixCubaConfiguration;
+import com.haulmont.cuba.core.global.UserSessionSource;
 import com.haulmont.cuba.core.model.common.UserEntityListener;
 import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.core.Stores;
-import io.jmix.core.security.UserSessionSource;
 import io.jmix.data.JmixDataConfiguration;
 import io.jmix.data.impl.JmixEntityManagerFactoryBean;
 import io.jmix.data.impl.JmixTransactionManager;
 import io.jmix.data.impl.PersistenceConfigProcessor;
 import io.jmix.data.persistence.JpqlSortExpressionProvider;
+import io.jmix.dynattr.JmixDynAttrConfiguration;
+import io.jmix.dynattrui.JmixDynAttrUiConfiguration;
 import io.jmix.ui.JmixUiConfiguration;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -38,7 +40,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
-@Import({JmixCoreConfiguration.class, JmixCubaConfiguration.class, JmixDataConfiguration.class, JmixUiConfiguration.class})
+@Import({JmixCoreConfiguration.class, JmixCubaConfiguration.class, JmixDataConfiguration.class, JmixUiConfiguration.class,
+        JmixDynAttrConfiguration.class, JmixDynAttrUiConfiguration.class})
 @PropertySource("classpath:/com/haulmont/cuba/core/test-app.properties")
 public class CoreTestConfiguration {
 
@@ -68,12 +71,12 @@ public class CoreTestConfiguration {
         return new UserEntityListener();
     }
 
-    @Bean(name = "cuba_UserSessionSource")
+    @Bean(name = UserSessionSource.NAME)
     UserSessionSource userSessionSource() {
         return new TestUserSessionSource();
     }
 
-    @Bean(name = "cuba_JpqlSortExpressionProvider")
+    @Bean(name = JpqlSortExpressionProvider.NAME)
     JpqlSortExpressionProvider jpqlSortExpressionProvider() {
         return new TestJpqlSortExpressionProvider();
     }
@@ -81,5 +84,10 @@ public class CoreTestConfiguration {
     @Bean
     TestEventsListener testEventsListener() {
         return new TestEventsListener();
+    }
+
+    @Bean
+    TestAppContextLifecycleListener testAppContextLifecycleListener() {
+        return new TestAppContextLifecycleListener();
     }
 }

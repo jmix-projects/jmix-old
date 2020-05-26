@@ -16,14 +16,14 @@
 
 package io.jmix.ui;
 
-import io.jmix.ui.actions.Action;
+import io.jmix.ui.action.Action;
 import io.jmix.ui.app.inputdialog.DialogActions;
 import io.jmix.ui.app.inputdialog.InputDialog;
 import io.jmix.ui.app.inputdialog.InputParameter;
-import io.jmix.ui.components.ContentMode;
-import io.jmix.ui.components.SizeUnit;
-import io.jmix.ui.components.ValidationErrors;
-import io.jmix.ui.components.inputdialog.InputDialogAction;
+import io.jmix.ui.component.ContentMode;
+import io.jmix.ui.component.SizeUnit;
+import io.jmix.ui.component.ValidationErrors;
+import io.jmix.ui.component.inputdialog.InputDialogAction;
 import io.jmix.ui.screen.FrameOwner;
 
 import java.util.function.Consumer;
@@ -165,7 +165,8 @@ public interface Dialogs {
             HasMessage<OptionDialogBuilder>,
             HasContentMode<OptionDialogBuilder>,
             HasMaximized<OptionDialogBuilder>,
-            HasStyleName<OptionDialogBuilder> {
+            HasStyleName<OptionDialogBuilder>,
+            HasHtmlSanitizer<OptionDialogBuilder> {
         /**
          * Sets dialog actions.
          *
@@ -195,7 +196,8 @@ public interface Dialogs {
             HasContentMode<MessageDialogBuilder>,
             HasModal<MessageDialogBuilder>,
             HasMaximized<MessageDialogBuilder>,
-            HasStyleName<MessageDialogBuilder> {
+            HasStyleName<MessageDialogBuilder>,
+            HasHtmlSanitizer<MessageDialogBuilder> {
         /**
          * @return true if window can be closed by click outside of window content (by modality curtain)
          */
@@ -318,7 +320,7 @@ public interface Dialogs {
          *         .withActions(
          *                 action("okAction")
          *                         .withCaption("OK")
-         *                         .withIcon(CubaIcon.DIALOG_OK)
+         *                         .withIcon(JmixIcon.DIALOG_OK)
          *                         .withHandler(event -> {
          *                             InputDialog inputDialog = event.getInputDialog();
          *                             String name = inputDialog.getValue("nameField");
@@ -327,7 +329,7 @@ public interface Dialogs {
          *                         }),
          *                 action("cancelAction")
          *                         .withCaption("Cancel")
-         *                         .withIcon(CubaIcon.DIALOG_CANCEL)
+         *                         .withIcon(JmixIcon.DIALOG_CANCEL)
          *                         .withValidationRequired(false)
          *                         .withHandler(event -> {
          *                             InputDialog inputDialog = event.getInputDialog();
@@ -606,6 +608,26 @@ public interface Dialogs {
          * @return true if dialog will be maximized
          */
         boolean isMaximized();
+    }
+
+    /**
+     * Marker interface for Dialog Builders that have html sanitizer for dialog content.
+     *
+     * @param <T> return type of fluent API methods
+     */
+    interface HasHtmlSanitizer<T> {
+        /**
+         * Sets whether html sanitizer is enabled or not for dialog content.
+         *
+         * @param htmlSanitizerEnabled specifies whether html sanitizer is enabled
+         * @return builder
+         */
+        T withHtmlSanitizer(boolean htmlSanitizerEnabled);
+
+        /**
+         * @return html sanitizer is enabled for dialog content
+         */
+        boolean isHtmlSanitizerEnabled();
     }
 
     /**

@@ -30,7 +30,7 @@ import java.util.UUID;
  *
  * @see TablePresentations
  */
-public interface TablePresentation extends Entity<UUID> {
+public interface TablePresentation extends Entity {
 
     String getName();
 

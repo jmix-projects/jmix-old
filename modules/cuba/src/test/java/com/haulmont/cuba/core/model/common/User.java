@@ -15,20 +15,22 @@
  */
 package com.haulmont.cuba.core.model.common;
 
-import com.haulmont.cuba.core.model.Address;
+import com.haulmont.chile.core.annotations.NamePattern;
 import io.jmix.core.DeletePolicy;
-import io.jmix.core.compatibility.AppContext;
-import io.jmix.data.entity.StandardEntity;
+import io.jmix.core.entity.BaseUser;
 import io.jmix.core.entity.annotation.Listeners;
 import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.entity.annotation.TrackEditScreenHistory;
-import io.jmix.core.metamodel.annotations.Composition;
-import io.jmix.core.metamodel.annotations.NamePattern;
+import io.jmix.core.metamodel.annotation.Composition;
+import io.jmix.data.entity.StandardEntity;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,7 +41,7 @@ import java.util.List;
 @NamePattern("#getCaption|login,name")
 @TrackEditScreenHistory
 @Listeners("test_UserEntityListener")
-public class User extends StandardEntity {
+public class User extends StandardEntity implements BaseUser {
 
     private static final long serialVersionUID = 5007187642916030394L;
 
@@ -287,10 +289,11 @@ public class User extends StandardEntity {
     }
 
     public String getCaption() {
-        String pattern = AppContext.getProperty("cuba.user.namePattern");
+        // todo rework when new instance name is ready
+        String pattern = /*AppContext.getProperty("cuba.user.namePattern");
         if (StringUtils.isBlank(pattern)) {
-            pattern = "{1} [{0}]";
-        }
+            pattern =*/ "{1} [{0}]";
+        /*}*/
         MessageFormat fmt = new MessageFormat(pattern);
         return StringUtils.trimToEmpty(fmt.format(new Object[]{
                 StringUtils.trimToEmpty(login),
@@ -310,5 +313,44 @@ public class User extends StandardEntity {
     @Deprecated
     public String getSalt() {
         return id != null ? id.toString() : "";
+    }
+
+    //    BaseUser methods
+
+    @Override
+    public String getKey() {
+        return id.toString();
+    }
+
+    //    UserDetails methods
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return Boolean.TRUE.equals(active);
     }
 }

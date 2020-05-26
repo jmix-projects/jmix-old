@@ -14,11 +14,11 @@
   ~ limitations under the License.
   -->
 
-<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd">
+<window xmlns="http://jmix.io/schema/ui/window">
     <data>
         <collection id="userDc"
                     class="com.haulmont.cuba.core.model.common.User"
-                    view="_local">
+                    fetchPlan="_local">
             <loader>
                 <query>
                     <![CDATA[

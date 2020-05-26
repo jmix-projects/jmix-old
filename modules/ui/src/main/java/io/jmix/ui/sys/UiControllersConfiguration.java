@@ -30,7 +30,7 @@ import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 /**
  * Configuration that performs ClassPath scanning of {@link UiController}s and provides {@link UiControllerDefinition}.
@@ -53,7 +53,7 @@ public class UiControllersConfiguration extends AbstractScanConfiguration {
     protected List<String> basePackages = Collections.emptyList();
     protected List<UiControllerDefinition> explicitDefinitions = Collections.emptyList();
 
-    @Inject
+    @Autowired
     public UiControllersConfiguration(ApplicationContext applicationContext,
                                       AnnotationScanMetadataReaderFactory metadataReaderFactory) {
         this.applicationContext = applicationContext;

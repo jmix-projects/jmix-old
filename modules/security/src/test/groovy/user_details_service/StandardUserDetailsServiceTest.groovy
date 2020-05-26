@@ -29,24 +29,24 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestPropertySource
 import spock.lang.Specification
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 @ContextConfiguration(classes = [JmixCoreConfiguration, JmixDataConfiguration, JmixSecurityConfiguration, JmixSecurityTestConfiguration])
 @TestPropertySource(properties = ["jmix.securityImplementation = standard"])
 class StandardUserDetailsServiceTest extends Specification {
 
-    @Inject
+    @Autowired
     UserDetailsService userDetailsService
 
-    @Inject
+    @Autowired
     DataManager dataManager
 
-    @Inject
+    @Autowired
     PersistenceTools persistenceTools
 
     def "load user"() {
 
-        def user = new User(login: 'user1', password: '123')
+        def user = new User(username: 'user1', password: '123')
         dataManager.save(user)
 
         when:

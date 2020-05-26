@@ -16,10 +16,10 @@
 
 package com.haulmont.cuba.gui.screen;
 
-import io.jmix.ui.components.HasDataLoadingSettings;
-import io.jmix.ui.components.HasTablePresentations;
-import io.jmix.ui.components.HasSettings;
-import io.jmix.ui.presentations.TablePresentations;
+import io.jmix.ui.component.HasDataLoadingSettings;
+import io.jmix.ui.component.HasTablePresentations;
+import io.jmix.ui.component.HasSettings;
+import io.jmix.ui.presentation.TablePresentations;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.settings.compatibility.Settings;
 import org.apache.commons.lang3.StringUtils;
@@ -30,8 +30,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
-import static io.jmix.ui.components.ComponentsHelper.walkComponents;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.component.ComponentsHelper.walkComponents;
 
 @Component(ScreenSettings.NAME)
 public class ScreenSettings {

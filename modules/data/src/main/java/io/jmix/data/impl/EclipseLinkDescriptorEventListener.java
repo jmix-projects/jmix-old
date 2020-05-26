@@ -28,7 +28,7 @@ import org.eclipse.persistence.queries.FetchGroup;
 import org.eclipse.persistence.queries.FetchGroupTracker;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
 import java.util.List;
 
@@ -37,19 +37,19 @@ public class EclipseLinkDescriptorEventListener implements DescriptorEventListen
 
     public static final String NAME = "jmix_EclipseLinkDescriptorEventListener";
 
-    @Inject
+    @Autowired
     protected EntityListenerManager manager;
 
-    @Inject
+    @Autowired
     protected PersistenceTools persistenceTools;
 
-    @Inject
+    @Autowired
     protected AuditInfoProvider auditInfoProvider;
 
-    @Inject
+    @Autowired
     protected TimeSource timeSource;
 
-    @Inject
+    @Autowired
     protected PersistenceSupport support;
 
     protected boolean justDeleted(SoftDelete entity) {
@@ -76,7 +76,7 @@ public class EclipseLinkDescriptorEventListener implements DescriptorEventListen
     @Override
     public void postBuild(DescriptorEvent event) {
         if (event.getObject() instanceof Entity) {
-            ((Entity<?>) event.getObject()).__getEntityEntry().setNew(false);
+            ((Entity) event.getObject()).__getEntityEntry().setNew(false);
         }
         if (event.getObject() instanceof FetchGroupTracker) {
             FetchGroupTracker entity = (FetchGroupTracker) event.getObject();
@@ -90,8 +90,8 @@ public class EclipseLinkDescriptorEventListener implements DescriptorEventListen
     public void postClone(DescriptorEvent event) {
         // in shared cache mode, postBuild event is missed, so we repeat it here
         if (event.getObject() instanceof Entity) {
-            ((Entity<?>) event.getObject()).__copyEntityEntry();
-            ((Entity<?>) event.getObject()).__getEntityEntry().setNew(false);
+            ((Entity) event.getObject()).__copyEntityEntry();
+            ((Entity) event.getObject()).__getEntityEntry().setNew(false);
         }
         if (event.getObject() instanceof FetchGroupTracker) {
             FetchGroupTracker entity = (FetchGroupTracker) event.getObject();
@@ -161,7 +161,7 @@ public class EclipseLinkDescriptorEventListener implements DescriptorEventListen
         Date ts = timeSource.currentTimestamp();
 
         if (entity instanceof Creatable) {
-            ((Creatable) entity).setCreatedBy(auditInfoProvider.getCurrentUserLogin());
+            ((Creatable) entity).setCreatedBy(auditInfoProvider.getCurrentUserUsername());
             ((Creatable) entity).setCreateTs(ts);
         }
         if (entity instanceof Updatable) {
@@ -178,7 +178,7 @@ public class EclipseLinkDescriptorEventListener implements DescriptorEventListen
         Entity entity = (Entity) event.getObject();
         if (!((entity instanceof SoftDelete) && justDeleted((SoftDelete) entity)) && (entity instanceof Updatable)) {
             Updatable updatable = (Updatable) event.getObject();
-            updatable.setUpdatedBy(auditInfoProvider.getCurrentUserLogin());
+            updatable.setUpdatedBy(auditInfoProvider.getCurrentUserUsername());
             updatable.setUpdateTs(timeSource.currentTimestamp());
         }
     }

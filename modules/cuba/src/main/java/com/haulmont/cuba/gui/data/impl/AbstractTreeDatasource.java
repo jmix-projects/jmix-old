@@ -16,30 +16,20 @@
 
 package com.haulmont.cuba.gui.data.impl;
 
-import com.haulmont.cuba.gui.data.HierarchicalDatasource;
-import io.jmix.core.commons.datastruct.Node;
-import io.jmix.core.commons.datastruct.Tree;
 import io.jmix.core.Entity;
+import com.haulmont.cuba.gui.data.HierarchicalDatasource;
+import io.jmix.core.common.datastruct.Node;
+import io.jmix.core.common.datastruct.Tree;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.ui.logging.UIPerformanceLogger;
-import org.perf4j.StopWatch;
-import org.perf4j.slf4j.Slf4JStopWatch;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @param <T> Entity
  * @param <K> Key
  */
 @Deprecated
-public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
+public abstract class AbstractTreeDatasource<T extends Entity, K>
         extends CollectionDatasourceImpl<T, K>
         implements HierarchicalDatasource<T, K> {
 
@@ -48,9 +38,6 @@ public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
 
     @Override
     protected void loadData(Map<String, Object> params) {
-        String tag = getLoggingTag("TDS");
-        StopWatch sw = new Slf4JStopWatch(tag, LoggerFactory.getLogger(UIPerformanceLogger.class));
-
         clear();
 
         this.tree = loadTree(params);
@@ -59,7 +46,7 @@ public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
         if (tree != null) {
             for (Node<T> node : tree.toList()) {
                 final T entity = node.getData();
-                final K id = EntityValues.getId(entity);
+                final K id = (K) EntityValues.getId(entity);
 
                 data.put(id, entity);
                 attachListener(entity);
@@ -69,8 +56,6 @@ public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
         }
 
         this.nodes = targetNodes;
-
-        sw.stop();
     }
 
     protected abstract Tree<T> loadTree(Map<String, Object> params);
@@ -109,7 +94,7 @@ public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
         }
 
         final Node<T> node = nodes.get(itemId);
-        return node == null ? null : node.getParent() == null ? null : EntityValues.getId(node.getParent().getData());
+        return node == null ? null : node.getParent() == null ? null : (K) EntityValues.getId(node.getParent().getData());
     }
 
     @Override
@@ -126,7 +111,7 @@ public abstract class AbstractTreeDatasource<T extends Entity<K>, K>
 
             final List<K> ids = new ArrayList<>();
             for (Node<T> targetNode : children) {
-                ids.add(EntityValues.getId(targetNode.getData()));
+                ids.add((K) EntityValues.getId(targetNode.getData()));
             }
 
             return ids;

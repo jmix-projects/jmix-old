@@ -19,31 +19,33 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Layout;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.Messages;
-import io.jmix.core.UuidSource;
+import io.jmix.core.UuidProvider;
 import io.jmix.core.security.AccessDeniedException;
 import io.jmix.core.security.PermissionType;
 import io.jmix.core.security.Security;
 import io.jmix.ui.*;
 import io.jmix.ui.Notifications.NotificationType;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.BaseAction;
-import io.jmix.ui.actions.DialogAction;
-import io.jmix.ui.components.*;
-import io.jmix.ui.components.DialogWindow.WindowMode;
-import io.jmix.ui.components.Window.HasWorkArea;
-import io.jmix.ui.components.impl.WebAppWorkArea;
-import io.jmix.ui.components.impl.WebDialogWindow.GuiDialogWindow;
-import io.jmix.ui.components.impl.WebTabWindow;
-import io.jmix.ui.components.impl.WebWindow;
-import io.jmix.ui.components.impl.WindowImplementation;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.action.BaseAction;
+import io.jmix.ui.action.DialogAction;
+import io.jmix.ui.component.*;
+import io.jmix.ui.component.DialogWindow.WindowMode;
+import io.jmix.ui.component.Window.HasWorkArea;
+import io.jmix.ui.component.impl.WebAppWorkArea;
+import io.jmix.ui.component.impl.WebDialogWindow.GuiDialogWindow;
+import io.jmix.ui.component.impl.WebTabWindow;
+import io.jmix.ui.component.impl.WebWindow;
+import io.jmix.ui.component.impl.WindowImplementation;
 import io.jmix.ui.gui.OpenType;
 import io.jmix.ui.gui.data.compatibility.DsSupport;
-import io.jmix.ui.icons.CubaIcon;
-import io.jmix.ui.icons.IconResolver;
-import io.jmix.ui.icons.Icons;
-import io.jmix.ui.logging.ScreenLifeCycle;
+import io.jmix.ui.icon.JmixIcon;
+import io.jmix.ui.icon.IconResolver;
+import io.jmix.ui.icon.Icons;
+import io.jmix.ui.monitoring.ScreenLifeCycle;
 import io.jmix.ui.logging.UserActionsLogger;
 import io.jmix.ui.model.impl.ScreenDataImpl;
+import io.jmix.ui.navigation.NavigationState;
+import io.jmix.ui.navigation.UrlTools;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.screen.Screen.*;
 import io.jmix.ui.screen.compatibility.CubaLegacyFrame;
@@ -53,29 +55,30 @@ import io.jmix.ui.settings.compatibility.SettingsImpl;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.util.OperationResult;
 import io.jmix.ui.util.UnknownOperationResult;
-import io.jmix.ui.widgets.*;
+import io.jmix.ui.widget.*;
 import io.jmix.ui.xml.layout.ComponentLoader;
-import io.jmix.ui.xml.layout.loaders.ComponentLoaderContext;
-import io.jmix.ui.xml.layout.loaders.LayoutLoader;
+import io.jmix.ui.xml.layout.loader.ComponentLoaderContext;
+import io.jmix.ui.xml.layout.loader.LayoutLoader;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
-import org.perf4j.StopWatch;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
-import static io.jmix.ui.components.AppWorkArea.Mode;
-import static io.jmix.ui.components.AppWorkArea.State;
-import static io.jmix.ui.logging.UIPerformanceLogger.createStopWatch;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
+import static io.jmix.ui.component.AppWorkArea.Mode;
+import static io.jmix.ui.component.AppWorkArea.State;
+import static io.jmix.ui.monitoring.UiMonitoring.createScreenTimer;
 import static io.jmix.ui.screen.FrameOwner.WINDOW_CLOSE_ACTION;
 import static io.jmix.ui.screen.UiControllerUtils.*;
 import static org.apache.commons.lang3.reflect.ConstructorUtils.invokeConstructor;
@@ -85,37 +88,39 @@ public class WebScreens implements Screens {
 
     private static final org.slf4j.Logger userActionsLog = LoggerFactory.getLogger(UserActionsLogger.class);
 
-    @Inject
+    @Autowired
     protected BeanLocator beanLocator;
 
-    @Inject
+    @Autowired
     protected WindowConfig windowConfig;
-    @Inject
+    @Autowired
     protected Security security;
-    @Inject
-    protected UuidSource uuidSource;
-    @Inject
+    @Autowired
     protected UiComponents uiComponents;
-    @Inject
+    @Autowired
     protected ScreenXmlLoader screenXmlLoader;
-    @Inject
+    @Autowired
     protected IconResolver iconResolver;
-    @Inject
+    @Autowired
     protected Messages messages;
-    @Inject
+    @Autowired
     protected Icons icons;
-    @Inject
+    @Autowired
+    protected UrlTools urlTools;
+    @Autowired
     protected WindowCreationHelper windowCreationHelper;
-    @Inject
+    @Autowired
     protected ScreenViewsLoader screenViewsLoader;
+    @Autowired
+    protected MeterRegistry meterRegistry;
 
     // todo implement
-    /*@Inject
+    /*@Autowired
     protected AttributeAccessSupport attributeAccessSupport;
-    @Inject
+    @Autowired
     protected ScreenHistorySupport screenHistorySupport;*/
 
-    @Inject
+    @Autowired
     protected UiProperties uiProperties;
 
     protected AppUI ui;
@@ -164,7 +169,7 @@ public class WebScreens implements Screens {
 
         checkPermissions(openDetails.getOpenMode(), windowInfo);
 
-        StopWatch createStopWatch = createStopWatch(ScreenLifeCycle.CREATE, windowInfo.getId());
+        Timer.Sample createSample = Timer.start(meterRegistry);
 
         Window window = createWindow(windowInfo, resolvedScreenClass, openDetails);
 
@@ -189,11 +194,11 @@ public class WebScreens implements Screens {
         windowImpl.setFrameOwner(controller);
         windowImpl.setId(controller.getId());
 
-        createStopWatch.stop();
+        createSample.stop(createScreenTimer(meterRegistry, ScreenLifeCycle.CREATE, windowInfo.getId()));
 
         // load UI from XML
 
-        StopWatch loadStopWatch = createStopWatch(ScreenLifeCycle.LOAD, windowInfo.getId());
+        Timer.Sample loadSample = Timer.start(meterRegistry);
 
         ComponentLoaderContext componentLoaderContext = !(controller instanceof CubaLegacyFrame)
                 ? new ComponentLoaderContext(options)
@@ -208,27 +213,27 @@ public class WebScreens implements Screens {
             loadWindowFromXml(element, windowInfo, window, controller, componentLoaderContext);
         }
 
-        loadStopWatch.stop();
+        loadSample.stop(createScreenTimer(meterRegistry, ScreenLifeCycle.LOAD, windowInfo.getId()));
 
         // inject top level screen dependencies
-        StopWatch injectStopWatch = createStopWatch(ScreenLifeCycle.INJECTION, windowInfo.getId());
+        Timer.Sample injectSample = Timer.start(meterRegistry);
 
         UiControllerDependencyInjector dependencyInjector =
                 beanLocator.getPrototype(UiControllerDependencyInjector.NAME, controller, options);
         dependencyInjector.inject();
 
-        injectStopWatch.stop();
+        injectSample.stop(createScreenTimer(meterRegistry, ScreenLifeCycle.INJECTION, windowInfo.getId()));
 
         // perform injection in nested fragments
         componentLoaderContext.executeInjectTasks();
 
         // run init
 
-        StopWatch initStopWatch = createStopWatch(ScreenLifeCycle.INIT, windowInfo.getId());
+        Timer.Sample initSample = Timer.start(meterRegistry);
 
         fireEvent(controller, InitEvent.class, new InitEvent(controller, options));
 
-        initStopWatch.stop();
+        initSample.stop(createScreenTimer(meterRegistry, ScreenLifeCycle.INIT, windowInfo.getId()));
 
         componentLoaderContext.executeInitTasks();
         componentLoaderContext.executePostInitTasks();
@@ -353,19 +358,19 @@ public class WebScreens implements Screens {
         checkNotNullArgument(screen);
         checkNotYetOpened(screen);
 
-        StopWatch uiPermissionsWatch = createStopWatch(ScreenLifeCycle.UI_PERMISSIONS, screen.getId());
+        Timer.Sample uiPermissionsSample = Timer.start(meterRegistry);
 
         windowCreationHelper.applyUiPermissions(screen.getWindow());
 
-        uiPermissionsWatch.stop();
+        uiPermissionsSample.stop(createScreenTimer(meterRegistry, ScreenLifeCycle.UI_PERMISSIONS, screen.getId()));
 
-        StopWatch beforeShowWatch = createStopWatch(ScreenLifeCycle.BEFORE_SHOW, screen.getId());
+        Timer.Sample beforeShowSample = Timer.start(meterRegistry);
 
         fireEvent(screen, BeforeShowEvent.class, new BeforeShowEvent(screen));
 
         loadDataBeforeShow(screen);
 
-        beforeShowWatch.stop();
+        beforeShowSample.stop(createScreenTimer(meterRegistry, ScreenLifeCycle.BEFORE_SHOW, screen.getId()));
 
         LaunchMode launchMode = screen.getWindow().getContext().getLaunchMode();
 
@@ -401,11 +406,11 @@ public class WebScreens implements Screens {
 
         changeUrl(screen);
 
-        StopWatch afterShowWatch = createStopWatch(ScreenLifeCycle.AFTER_SHOW, screen.getId());
+        Timer.Sample afterShowSample = Timer.start(meterRegistry);
 
         fireEvent(screen, AfterShowEvent.class, new AfterShowEvent(screen));
 
-        afterShowWatch.stop();
+        afterShowSample.stop(createScreenTimer(meterRegistry, ScreenLifeCycle.AFTER_SHOW, screen.getId()));
     }
 
     @Override
@@ -413,7 +418,7 @@ public class WebScreens implements Screens {
         LaunchMode launchMode = screen.getWindow().getContext().getLaunchMode();
 
         if (launchMode == OpenMode.NEW_TAB
-            || launchMode == OpenMode.NEW_WINDOW) {
+                || launchMode == OpenMode.NEW_WINDOW) {
             WebAppWorkArea workArea = getConfiguredWorkArea();
 
             if (workArea.getMode() == Mode.SINGLE) {
@@ -442,7 +447,7 @@ public class WebScreens implements Screens {
                         && workArea.getOpenedTabCount() + 1 > maxTabCount) {
                     ui.getNotifications()
                             .create(NotificationType.WARNING)
-                            .withCaption(messages.formatMessage("tooManyOpenTabs.message", maxTabCount))
+                            .withCaption(messages.formatMessage("", "tooManyOpenTabs.message", maxTabCount))
                             .show();
 
                     return OperationResult.fail();
@@ -480,13 +485,12 @@ public class WebScreens implements Screens {
     }
 
     protected void changeUrl(Screen screen) {
-        // todo navigation
-        /*WebWindow webWindow = (WebWindow) screen.getWindow();
+        WebWindow webWindow = (WebWindow) screen.getWindow();
         Map<String, String> params = webWindow.getResolvedState() != null
                 ? webWindow.getResolvedState().getParams()
                 : Collections.emptyMap();
 
-        ui.getUrlRouting().pushState(screen, params);*/
+        ui.getUrlRouting().pushState(screen, params);
     }
 
     protected void checkNotYetOpened(Screen screen) {
@@ -523,11 +527,6 @@ public class WebScreens implements Screens {
             }
         }*/
 
-        // todo attributeAccessSupport
-        /*DisableAttributeAccessControl annotation = screen.getClass().getAnnotation(DisableAttributeAccessControl.class);
-        if (annotation == null || !annotation.value()) {
-            attributeAccessSupport.applyAttributeAccess(screen, false);
-        }*/
     }
 
     protected Settings getSettingsImpl(String id) {
@@ -578,15 +577,14 @@ public class WebScreens implements Screens {
             return;
         }
 
-        // todo navigation
-        /*Screen currentScreen = getAnyCurrentScreen();
+        Screen currentScreen = getAnyCurrentScreen();
         if (currentScreen != null) {
             NavigationState resolvedState = ((WebWindow) currentScreen.getWindow()).getResolvedState();
             if (resolvedState != null) {
                 String currentScreenRoute = resolvedState.asRoute();
-                UrlTools.replaceState(currentScreenRoute);
+                urlTools.replaceState(currentScreenRoute, ui);
             }
-        }*/
+        }
     }
 
     protected Screen getAnyCurrentScreen() {
@@ -690,8 +688,7 @@ public class WebScreens implements Screens {
     protected void removeDialogWindow(Screen screen) {
         Window window = screen.getWindow();
 
-        JmixWindow cubaDialogWindow = window.unwrapComposition(JmixWindow.class);
-        cubaDialogWindow.forceClose();
+        window.withUnwrappedComposition(JmixWindow.class, JmixWindow::forceClose);
     }
 
     @Override
@@ -728,7 +725,7 @@ public class WebScreens implements Screens {
 
         Predicate<Screen> hasUnsavedChanges = screen ->
                 screen instanceof ChangeTracker
-                && ((ChangeTracker) screen).hasUnsavedChanges();
+                        && ((ChangeTracker) screen).hasUnsavedChanges();
 
         return getDialogScreensStream().anyMatch(hasUnsavedChanges)
                 || getOpenedWorkAreaScreensStream().anyMatch(hasUnsavedChanges);
@@ -1036,7 +1033,7 @@ public class WebScreens implements Screens {
                     .withActions(
                             new BaseAction("closeApplication")
                                     .withCaption(messages.getMessage("closeApplication"))
-                                    .withIcon(icons.get(CubaIcon.DIALOG_OK))
+                                    .withIcon(icons.get(JmixIcon.DIALOG_OK))
                                     .withHandler(event -> {
                                         closeWindowsInternal();
 
@@ -1152,8 +1149,10 @@ public class WebScreens implements Screens {
         breadCrumbs.setWindowNavigateHandler(this::handleWindowBreadCrumbsNavigate);
         breadCrumbs.addWindow(screen.getWindow());
 
-        // todo navigation
-        // ((WebWindow) screen.getWindow()).setUrlStateMark(getConfiguredWorkArea().generateUrlStateMark());
+        WebWindow webWindow = (WebWindow) screen.getWindow();
+        webWindow.setResolvedState(createOrUpdateState(
+                webWindow.getResolvedState(),
+                getConfiguredWorkArea().generateUrlStateMark()));
 
         TabWindowContainer windowContainer = new TabWindowContainerImpl();
         windowContainer.setPrimaryStyleName("c-app-window-wrap");
@@ -1174,7 +1173,7 @@ public class WebScreens implements Screens {
 
             TabSheetBehaviour tabSheet = workArea.getTabbedWindowContainer().getTabSheetBehaviour();
 
-            String tabId = "tab_" + uuidSource.createUuid();
+            String tabId = "tab_" + UuidProvider.createUuid();
 
             tabSheet.addTab(windowContainer, tabId);
 
@@ -1257,8 +1256,11 @@ public class WebScreens implements Screens {
         windowContainer.addComponent(newWindowComposition);
 
         breadCrumbs.addWindow(newWindow);
-        // todo navigation
-        // ((WebWindow) newWindow).setUrlStateMark(workArea.generateUrlStateMark());
+
+        WebWindow webWindow = (WebWindow) screen.getWindow();
+        webWindow.setResolvedState(createOrUpdateState(
+                webWindow.getResolvedState(),
+                getConfiguredWorkArea().generateUrlStateMark()));
 
         if (workArea.getMode() == Mode.TABBED) {
             TabSheetBehaviour tabSheet = workArea.getTabbedWindowContainer().getTabSheetBehaviour();
@@ -1291,27 +1293,41 @@ public class WebScreens implements Screens {
 
         WebAppWorkArea workArea = getConfiguredWorkAreaOrNull();
         if (workArea != null) {
-            // todo navigation
-            // ((WebWindow) window).setUrlStateMark(workArea.generateUrlStateMark());
+            WebWindow webWindow = (WebWindow) screen.getWindow();
+            webWindow.setResolvedState(createOrUpdateState(
+                    webWindow.getResolvedState(),
+                    getConfiguredWorkArea().generateUrlStateMark()));
         }
 
-        JmixWindow vWindow = window.unwrapComposition(JmixWindow.class);
-        vWindow.setErrorHandler(ui);
+        window.withUnwrappedComposition(JmixWindow.class, vWindow -> {
+            vWindow.setErrorHandler(ui);
 
-        String cubaId = "dialog_" + window.getId();
-        if (ui.isTestMode()) {
-            vWindow.setCubaId(cubaId);
-        }
-        if (ui.isPerformanceTestMode()) {
-            vWindow.setId(ui.getTestIdManager().getTestId(cubaId));
-        }
+            String cubaId = "dialog_" + window.getId();
+            if (ui.isTestMode()) {
+                vWindow.setCubaId(cubaId);
+            }
+            if (ui.isPerformanceTestMode()) {
+                vWindow.setId(ui.getTestIdManager().getTestId(cubaId));
+            }
 
-        if (hasModalWindow()) {
-            // force modal
-            window.setModal(true);
-        }
+            if (hasModalWindow()) {
+                // force modal
+                window.setModal(true);
+            }
 
-        ui.addWindow(vWindow);
+            ui.addWindow(vWindow);
+        });
+    }
+
+    protected NavigationState createOrUpdateState(@Nullable NavigationState state, int stateMark) {
+        if (state == null) {
+            return new NavigationState("", String.valueOf(stateMark), "", Collections.emptyMap());
+        }
+        return new NavigationState(
+                state.getRoot(),
+                String.valueOf(stateMark),
+                state.getNestedRoute(),
+                state.getParams());
     }
 
     protected void handleWindowBreadCrumbsNavigate(WindowBreadCrumbs breadCrumbs, Window window) {

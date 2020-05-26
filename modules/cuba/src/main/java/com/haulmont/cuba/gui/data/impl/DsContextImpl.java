@@ -26,16 +26,16 @@ import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Frame;
-import io.jmix.ui.components.FrameContext;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.Frame;
+import io.jmix.ui.component.FrameContext;
 import io.jmix.ui.filter.ParameterInfo;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.sys.PersistenceHelper;
 
 import java.util.*;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 public class DsContextImpl implements DsContextImplementation {
 
@@ -269,8 +269,8 @@ public class DsContextImpl implements DsContextImplementation {
 
 
     protected void repairReferences(CommitContext context) {
-        for (Entity entity : context.getCommitInstances()) {
-            for (Entity otherEntity : context.getCommitInstances()) {
+        for (io.jmix.core.Entity entity : context.getCommitInstances()) {
+            for (io.jmix.core.Entity otherEntity : context.getCommitInstances()) {
                 if (!entity.equals(otherEntity)) {
                     repairReferences(otherEntity, entity);
                 }
@@ -279,7 +279,7 @@ public class DsContextImpl implements DsContextImplementation {
     }
 
     @SuppressWarnings("unchecked")
-    protected void repairReferences(Entity entity, Entity contextEntity) {
+    protected void repairReferences(io.jmix.core.Entity entity, io.jmix.core.Entity contextEntity) {
         MetaClass metaClass = metadata.getClass(entity.getClass());
         MetaClass contextEntityMetaClass = metadata.getClass(contextEntity.getClass());
 
@@ -314,7 +314,7 @@ public class DsContextImpl implements DsContextImplementation {
     }
 
     protected void addToContext(Entity entity, Datasource<Entity> datasource,
-                                Collection<Entity> entities, Map<Object, FetchPlan> views) {
+                                Collection<io.jmix.core.Entity> entities, Map<Object, FetchPlan> views) {
         if (datasource instanceof NestedDatasource) {
             replaceMasterCopies(entity, ((NestedDatasource) datasource));
         }

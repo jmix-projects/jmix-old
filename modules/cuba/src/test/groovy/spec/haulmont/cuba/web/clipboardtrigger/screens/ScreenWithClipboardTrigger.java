@@ -16,18 +16,18 @@
 
 package spec.haulmont.cuba.web.clipboardtrigger.screens;
 
-import io.jmix.ui.components.ClipboardTrigger;
+import io.jmix.ui.component.ClipboardTrigger;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Subscribe;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @UiController
 @UiDescriptor("screen-with-clipboardtrigger.xml")
 public class ScreenWithClipboardTrigger extends Screen {
-    @Inject
+    @Autowired
     private ClipboardTrigger copyTrigger;
 
     @Subscribe("copyTrigger")

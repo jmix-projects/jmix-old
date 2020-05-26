@@ -19,8 +19,8 @@ package io.jmix.ui.navigation;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.Screens;
 import io.jmix.ui.WindowInfo;
-import io.jmix.ui.components.RootWindow;
-import io.jmix.ui.components.Window;
+import io.jmix.ui.component.RootWindow;
+import io.jmix.ui.component.Window;
 import io.jmix.ui.navigation.accessfilter.NavigationFilter;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.Screen;
@@ -32,7 +32,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Objects;
 
 /**
@@ -42,11 +42,11 @@ import java.util.Objects;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class HistoryNavigator {
 
-    public static final String NAME = "cuba_HistoryNavigator";
+    public static final String NAME = "jmix_HistoryNavigator";
 
     private static final Logger log = LoggerFactory.getLogger(HistoryNavigator.class);
 
-    @Inject
+    @Autowired
     protected UrlTools urlTools;
 
     protected final AppUI ui;

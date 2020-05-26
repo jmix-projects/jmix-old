@@ -23,20 +23,20 @@ import com.haulmont.cuba.gui.components.Filter;
 import com.haulmont.cuba.gui.components.filter.FilterHelper;
 import com.haulmont.cuba.gui.components.filter.condition.AbstractCondition;
 import io.jmix.core.AppBeans;
-import io.jmix.ui.components.*;
+import io.jmix.ui.component.*;
 import io.jmix.ui.theme.ThemeConstants;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public abstract class ConditionFrame<T extends AbstractCondition> extends AbstractFrame {
 
-    @Inject
+    @Autowired
     protected CubaProperties properties;
 
-    @Inject
+    @Autowired
     protected ThemeConstants theme;
 
     protected T condition;

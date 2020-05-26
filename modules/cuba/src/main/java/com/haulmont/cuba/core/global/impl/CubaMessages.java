@@ -19,7 +19,7 @@ package com.haulmont.cuba.core.global.impl;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import io.jmix.core.LocaleResolver;
-import io.jmix.core.security.UserSessionSource;
+import com.haulmont.cuba.core.global.UserSessionSource;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -42,7 +42,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 /**
  * <code>Messages</code> implementation common for all tiers.
@@ -71,7 +71,7 @@ public class CubaMessages {
 
     protected final static Properties PROPERTIES_NOT_FOUND = new Properties();
 
-    @Inject
+    @Autowired
     protected UserSessionSource userSessionSource;
 
     protected Locale getUserLocale() {

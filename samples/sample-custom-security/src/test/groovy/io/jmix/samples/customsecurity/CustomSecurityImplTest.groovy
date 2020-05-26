@@ -17,47 +17,46 @@
 package io.jmix.samples.customsecurity
 
 import io.jmix.core.security.Security
-import io.jmix.core.security.UserSessionManager
+import io.jmix.core.security.UserAuthentication
+import io.jmix.core.security.UserRepository
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.userdetails.UserDetailsService
 import spock.lang.Specification
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class CustomSecurityImplTest extends Specification {
 
-    @Inject
+    @Autowired
     Security security
 
-    @Inject
-    UserDetailsService userDetailsService
+    @Autowired
+    UserRepository userRepository
 
-    @Inject
-    UserSessionManager userSessionManager
+    @Autowired
+    AuthenticationManager authenticationManager
 
     def "custom implementations are in use"() {
         expect:
 
         security instanceof CustomSecurityImpl
-        userDetailsService.loadUserByUsername('admin') instanceof CustomUser
+        userRepository instanceof CustomUserRepository
+        userRepository.loadUserByUsername('admin') instanceof CustomUser
     }
 
     def "authentication yields custom session and user"() {
 
         when:
 
-        def session = userSessionManager.createSession(new UsernamePasswordAuthenticationToken('admin', 'admin123'))
+        def token = new UsernamePasswordAuthenticationToken('admin', 'admin123')
+        def authentication = authenticationManager.authenticate(token)
 
         then:
 
-        session instanceof CustomUserSession
-        session.user instanceof CustomUser
-        session.authentication.principal.is(session.user)
-
-        cleanup:
-
-        userSessionManager.removeSession()
+        authentication instanceof UserAuthentication
+        authentication.user instanceof CustomUser
+        authentication.user == userRepository.loadUserByUsername('admin')
     }
 }

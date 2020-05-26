@@ -232,6 +232,11 @@ $cuba-sidemenu-title-font-weight: $v-font-weight !default;
  */
 $cuba-sidemenu-title-gradient: true !default;
 /**
+ * Defines sidemenu title background color if $cuba-sidemenu-title-gradient is false
+ * @group sidemenu
+ */
+$cuba-sidemenu-title-background-color: if(is-dark-color($cuba-sidemenu-background-color), lighten($cuba-sidemenu-background-color, 5%), darken($cuba-sidemenu-background-color, 5%)) !default;
+/**
  * The top offset of mobile buttons and show/hide toggle button.
  * @group sidemenu
  */
@@ -274,12 +279,15 @@ $cuba-sidemenu-userindicator-font-weight: $v-font-weight !default;
   }
 
   .#{$primary-stylename}-title {
-    $font-color: valo-font-color($cuba-sidemenu-background-color, 0.9);
+    $font-color: valo-font-color($cuba-sidemenu-title-background-color, 0.9);
     @if $cuba-sidemenu-title-gradient {
       @include valo-gradient($color: $v-selection-color);
       border-bottom: valo-border($color: $v-selection-color);
       $font-color: valo-font-color($v-selection-color, 0.9);
+    } @else {
+      background: $cuba-sidemenu-title-background-color;
     }
+
     color: $font-color;
     font-size: $cuba-sidemenu-title-font-size;
     line-height: $cuba-sidemenu-title-font-size * 1.4;
@@ -352,6 +360,7 @@ $cuba-sidemenu-userindicator-font-weight: $v-font-weight !default;
   .#{$primary-stylename}-item-thumbnail-icon {
     font-family: FontAwesome;
     font-size: 1.2em;
+    font-weight: 400;
   }
 
   .#{$primary-stylename}-item-header {
@@ -539,7 +548,7 @@ $cuba-sidemenu-userindicator-font-weight: $v-font-weight !default;
         }
 
         @if ($cuba-sidemenu-title-gradient == false) {
-          background: if(is-dark-color($cuba-sidemenu-background-color), lighten($cuba-sidemenu-background-color, 5%), darken($cuba-sidemenu-background-color, 5%));
+          background: $cuba-sidemenu-title-background-color;
         }
       }
 
@@ -585,7 +594,7 @@ $cuba-sidemenu-userindicator-font-weight: $v-font-weight !default;
         width: $cuba-responsive-sidemenu-width;
 
         .#{$primary-stylename}-item [class*="caption"] {
-            max-width: initial;
+          max-width: initial;
         }
       }
     }

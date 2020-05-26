@@ -14,35 +14,35 @@
   ~ limitations under the License.
   -->
 
-<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
-        xmlns:c="http://schemas.haulmont.com/cuba/screen/jpql_condition.xsd"
+<window xmlns="http://jmix.io/schema/ui/window"
+        xmlns:c="http://jmix.io/schema/ui/jpql-condition"
         caption="msg://browserCaption"
         messagesPack="">
     <data>
         <collection id="loggedEntityDc"
                     class="io.jmix.audit.entity.LoggedEntity"
-                    view="loggedAttrs">
+                    fetchPlan="loggedAttrs">
             <loader id="loggedEntityDl">
                 <query>select e from sec$LoggedEntity e order by e.name</query>
             </loader>
         </collection>
         <collection id="loggedAttrDc"
                     class="io.jmix.audit.entity.LoggedAttribute"
-                    view="_local">
+                    fetchPlan="_local">
             <loader id="loggedAttrDl">
                 <query>select a from sec$LoggedAttribute a where a.entity.id = :entityId</query>
             </loader>
         </collection>
         <collection id="usersDc"
                     class="io.jmix.security.entity.User"
-                    view="_local">
+                    fetchPlan="_local">
             <loader id="usersDl">
                 <query>select u from sec_User u order by u.name</query>
             </loader>
         </collection>
         <collection id="entityLogDc"
                     class="io.jmix.audit.entity.EntityLogItem"
-                    view="logView">
+                    fetchPlan="logView">
             <loader id="entityLogDl">
                 <query>
                     select e from sec$EntityLog e order by e.eventTs

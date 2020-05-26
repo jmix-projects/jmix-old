@@ -18,59 +18,86 @@ package authentication
 
 import io.jmix.core.DataManager
 import io.jmix.core.JmixCoreConfiguration
-import io.jmix.core.security.CurrentUserSession
-import io.jmix.core.security.UserSessionManager
+import io.jmix.core.security.SystemAuthenticationToken
+import io.jmix.core.security.UserAuthentication
+import io.jmix.core.security.UserRepository
 import io.jmix.data.JmixDataConfiguration
 import io.jmix.data.PersistenceTools
 import io.jmix.security.JmixSecurityConfiguration
 import io.jmix.security.entity.User
-import test_support.JmixSecurityTestConfiguration
+import io.jmix.security.impl.StandardUserRepository
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.Authentication
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestPropertySource
 import spock.lang.Specification
+import test_support.JmixSecurityTestConfiguration
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 @ContextConfiguration(classes = [JmixCoreConfiguration, JmixDataConfiguration, JmixSecurityConfiguration, JmixSecurityTestConfiguration])
 @TestPropertySource(properties = ["jmix.securityImplementation = standard"])
 class AuthenticationTest extends Specification {
 
-    @Inject
+    @Autowired
     DataManager dataManager
 
-    @Inject
+    @Autowired
     PersistenceTools persistenceTools
 
-    @Inject
-    UserSessionManager userSessionManager
+    @Autowired
+    AuthenticationManager authenticationManager
 
-    def "create and remove session"() {
+    @Autowired
+    UserRepository userRepository
 
-        def user = new User(login: 'user1', password: '{noop}123')
+    def "standard implementations are in use"() {
+        expect:
+
+        userRepository instanceof StandardUserRepository
+        userRepository.loadUserByUsername('admin') instanceof User
+    }
+
+    def "authenticate with UsernamePasswordAuthenticationToken"() {
+
+        def user = new User(username: 'user1', password: '{noop}123')
         dataManager.save(user)
 
         when:
 
         def token = new UsernamePasswordAuthenticationToken('user1', '123')
-        def session = userSessionManager.createSession(token)
+        Authentication authentication = authenticationManager.authenticate(token)
 
         then:
 
-        CurrentUserSession.get() == session
-        session.user == user
-
-        when:
-
-        userSessionManager.removeSession()
-
-        then:
-
-        CurrentUserSession.get() == null
+        authentication instanceof UserAuthentication
+        authentication.user instanceof User
+        authentication.user.username == 'user1'
 
         cleanup:
 
         persistenceTools.deleteRecord(user)
     }
 
+    def "authenticate with SystemAuthenticationToken"() {
+
+        def user = new User(username: 'user1', password: '{noop}123')
+        dataManager.save(user)
+
+        when:
+
+        def token = new SystemAuthenticationToken('user1')
+        Authentication authentication = authenticationManager.authenticate(token)
+
+        then:
+
+        authentication instanceof SystemAuthenticationToken
+        authentication.isAuthenticated()
+        authentication.principal == user
+
+        cleanup:
+
+        persistenceTools.deleteRecord(user)
+    }
 }

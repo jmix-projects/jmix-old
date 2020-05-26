@@ -27,7 +27,7 @@ import org.eclipse.persistence.queries.FetchGroup;
 import org.eclipse.persistence.queries.FetchGroupTracker;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,13 +35,13 @@ import java.util.stream.Collectors;
 
 public class DataEntitySystemStateSupport extends EntitySystemStateSupport {
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
+    @Autowired
     protected EntityStates entityStates;
 
-    public void copySystemState(Entity<?> src, Entity<?> dst) {
+    public void copySystemState(Entity src, Entity dst) {
         super.copySystemState(src, dst);
 
         if (src instanceof FetchGroupTracker && dst instanceof FetchGroupTracker) {
@@ -51,7 +51,7 @@ public class DataEntitySystemStateSupport extends EntitySystemStateSupport {
 
     }
 
-    public void mergeSystemState(Entity<?> src, Entity<?> dst) {
+    public void mergeSystemState(Entity src, Entity dst) {
         super.copySystemState(src, dst);
 
         if (src instanceof FetchGroupTracker && dst instanceof FetchGroupTracker) {
@@ -70,7 +70,7 @@ public class DataEntitySystemStateSupport extends EntitySystemStateSupport {
         }
     }
 
-    protected FetchGroup suggestFetchGroup(Entity<?> entity) {
+    protected FetchGroup suggestFetchGroup(Entity entity) {
         Set<String> attributes = metadata.getClass(entity.getClass()).getProperties().stream()
                 .filter(metaProperty ->
                         !metaProperty.getRange().isClass() || entityStates.isLoaded(entity, metaProperty.getName()))

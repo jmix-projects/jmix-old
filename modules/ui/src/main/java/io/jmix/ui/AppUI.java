@@ -27,25 +27,23 @@ import io.jmix.core.AppBeans;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.Events;
 import io.jmix.core.Messages;
+import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.core.security.LoginException;
-import io.jmix.core.security.NoUserSessionException;
-import io.jmix.core.security.UserSession;
-import io.jmix.core.security.UserSessionSource;
-import io.jmix.ui.components.RootWindow;
-import io.jmix.ui.events.AppInitializedEvent;
-import io.jmix.ui.events.SessionHeartbeatEvent;
-import io.jmix.ui.events.UIRefreshEvent;
+import io.jmix.ui.component.RootWindow;
+import io.jmix.ui.event.AppInitializedEvent;
+import io.jmix.ui.event.UIRefreshEvent;
 import io.jmix.ui.exception.UiExceptionHandler;
-import io.jmix.ui.icons.IconResolver;
+import io.jmix.ui.icon.IconResolver;
 import io.jmix.ui.navigation.*;
 import io.jmix.ui.settings.UserSettingsTools;
 import io.jmix.ui.sys.*;
-import io.jmix.ui.sys.events.UiEventsMulticaster;
+import io.jmix.ui.sys.event.UiEventsMulticaster;
 import io.jmix.ui.theme.ThemeConstantsRepository;
-import io.jmix.ui.widgets.AppUIUtils;
-import io.jmix.ui.widgets.CubaTimer;
-import io.jmix.ui.widgets.JmixFileDownloader;
-import io.jmix.ui.widgets.client.ui.AppUIClientRpc;
+import io.jmix.ui.widget.AppUIUtils;
+import io.jmix.ui.widget.JmixFileDownloader;
+import io.jmix.ui.widget.JmixTimer;
+import io.jmix.ui.widget.client.ui.AppUIClientRpc;
+import io.jmix.ui.widget.client.ui.AppUIConstants;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,12 +54,12 @@ import org.springframework.context.ApplicationContextAware;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Widgetset("${cuba.web.widgetSet:io.jmix.ui.widgets.WidgetSet}")
-@Theme("${cuba.web.theme:halo}")
+@Widgetset("${jmix.ui.widgetSet:io.jmix.ui.widget.WidgetSet}")
+@Theme("${jmix.ui.theme:helium}")
 @Push(transport = Transport.WEBSOCKET_XHR)
 @SpringUI
 public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiContext {
@@ -73,32 +71,32 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     public static final String LAST_REQUEST_ACTION_ATTR = "lastRequestAction";
     public static final String LAST_REQUEST_PARAMS_ATTR = "lastRequestParams";
 
-    @Inject
+    @Autowired
     protected Messages messages;
-    @Inject
+    @Autowired
     protected Events events;
-    @Inject
+    @Autowired
     protected UiProperties properties;
 
-    @Inject
+    @Autowired
     protected UserSettingsTools userSettingsTools;
-    @Inject
+    @Autowired
     protected ThemeConstantsRepository themeConstantsRepository;
 
-    @Inject
-    protected UserSessionSource userSessionSource;
-//    @Inject
+    @Autowired
+    protected CurrentAuthentication currentAuthentication;
+//    @Autowired
 //    protected UserSessionService userSessionService; todo ping session ?
 
-    @Inject
+    @Autowired
     protected UiEventsMulticaster uiEventsMulticaster;
 
-    @Inject
+    @Autowired
     protected IconResolver iconResolver;
-    @Inject
+    @Autowired
     protected WebJarResourceResolver webJarResourceResolver;
 
-    @Inject
+    @Autowired
     protected BeanLocator beanLocator;
 
     protected TestIdManager testIdManager = new TestIdManager();
@@ -117,16 +115,6 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     protected UrlChangeHandler urlChangeHandler;
     protected UrlRouting urlRouting;
     protected History history;
-
-    protected UserSession userSession;
-
-    public UserSession getUserSession() {
-        return userSession;
-    }
-
-    public void setUserSession(UserSession userSession) {
-        this.userSession = userSession;
-    }
 
     /**
      * Dynamically init external JS libraries.
@@ -269,19 +257,19 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
                 this.app = App.getInstance();
             }
 
-            Connection connection = app.getConnection();
-            if (connection != null && !isUserSessionAlive(connection)) {
-                connection.logout();
-
-                Notification.show(
-                        messages.getMessage("app.sessionExpiredCaption"),
-                        messages.getMessage("app.sessionExpiredMessage"),
-                        Notification.Type.HUMANIZED_MESSAGE);
-            }
-
-            if (connection != null) {
-                setUserSession(connection.getSession());
-            }
+//            Connection connection = app.getConnection();
+//            if (connection != null && !isUserSessionAlive(connection)) {
+//                connection.logout();
+//
+//                Notification.show(
+//                        messages.getMessage("app.sessionExpiredCaption"),
+//                        messages.getMessage("app.sessionExpiredMessage"),
+//                        Notification.Type.HUMANIZED_MESSAGE);
+//            }
+//
+//            if (connection != null) {
+//                setUserSession(connection.getSession());
+//            }
 
             setupUI();
         } catch (Exception e) {
@@ -296,7 +284,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
         processExternalLink(request, requestedState);
     }
 
-    @Inject
+    @Autowired
     protected void setApplicationContext(ApplicationContext applicationContext) {
         Dialogs dialogs = new WebDialogs(this);
         autowireContext(dialogs, applicationContext);
@@ -353,22 +341,23 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
         }
     }
 
-    protected boolean isUserSessionAlive(Connection connection) {
-        try {
-            UserSession session = connection.getSession();
+//    protected boolean isUserSessionAlive(Connection connection) {
+//        try {
+//            UserSession session = connection.getSession();
+//
+//            // todo do we need this ?
+//            /*if (session.isAuthenticated()) {
+//                userSessionService.getUserSession(session.getId());
+//            }*/
+//            return true;
+//        } catch (NoUserSessionException e) {
+//            return false;
+//        }
+//    }
 
-            // todo do we need this ?
-            /*if (session.isAuthenticated()) {
-                userSessionService.getUserSession(session.getId());
-            }*/
-            return true;
-        } catch (NoUserSessionException e) {
-            return false;
-        }
-    }
-
+    //todo MG remove
     public boolean hasAuthenticatedSession() {
-        return userSession.isAuthenticated();
+        return currentAuthentication.isSet();
     }
 
     protected void publishAppInitializedEvent(App app) {
@@ -424,11 +413,12 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     }
 
     protected void setupUI() throws LoginException {
-        if (!app.getConnection().isConnected()) {
-            app.loginOnStart();
-        } else {
-            app.createTopLevelWindow(this);
-        }
+//        if (!app.getConnection().isConnected()) {
+//            app.loginOnStart();
+//        } else {
+//            app.createTopLevelWindow(this);
+//        }
+        app.loginOnStart();
     }
 
     @Override
@@ -437,33 +427,33 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
 
         boolean sessionIsAlive = true;
 
-        Connection connection = app.getConnection();
-
-        if (connection.isAuthenticated()) {
-            // Ping middleware session if connected
-            log.debug("Ping middleware session");
-
-            try {
-                UserSession session = connection.getSession();
-                if (session != null && session.isAuthenticated()) {
-                    // todo do we need this ?
-                    // userSessionService.getUserSession(session.getId());
-
-                    if (hasAuthenticatedSession()
-                            && !Objects.equals(userSession, session)) {
-                        setUserSession(session);
-                    }
-                }
-            } catch (Exception e) {
-                sessionIsAlive = false;
-
-                app.exceptionHandlers.handle(new com.vaadin.server.ErrorEvent(e));
-            }
-
-            if (sessionIsAlive) {
-                events.publish(new SessionHeartbeatEvent(app));
-            }
-        }
+//        Connection connection = app.getConnection();
+//
+//        if (connection.isAuthenticated()) {
+//            // Ping middleware session if connected
+//            log.debug("Ping middleware session");
+//
+//            try {
+//                UserSession session = connection.getSession();
+//                if (session != null && session.isAuthenticated()) {
+//                    // todo do we need this ?
+//                    // userSessionService.getUserSession(session.getId());
+//
+//                    if (hasAuthenticatedSession()
+//                            && !Objects.equals(userSession, session)) {
+//                        setUserSession(session);
+//                    }
+//                }
+//            } catch (Exception e) {
+//                sessionIsAlive = false;
+//
+//                app.exceptionHandlers.handle(new com.vaadin.server.ErrorEvent(e));
+//            }
+//
+//            if (sessionIsAlive) {
+//                events.publish(new SessionHeartbeatEvent(app));
+//            }
+//        }
 
         urlChangeHandler.restoreState();
 
@@ -530,7 +520,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     }
 
     /**
-     * @return true if UI test mode is enabled and cuba-id attribute should be added to DOM tree
+     * @return true if UI test mode is enabled and jmix-id attribute should be added to DOM tree
      */
     public boolean isTestMode() {
         return properties.isTestMode();
@@ -582,7 +572,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
         try {
             String action = (String) wrappedSession.getAttribute(LAST_REQUEST_ACTION_ATTR);
             LinkHandler linkHandler = AppBeans.getPrototype(LinkHandler.NAME, app, action, params);
-            if (app.connection.isConnected() && linkHandler.canHandleLink()) {
+            if (linkHandler.canHandleLink()) {
                 linkHandler.handle();
             } else {
                 app.linkHandler = linkHandler;
@@ -636,16 +626,16 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
         return topLevelWindow.unwrapComposition(AbstractComponent.class);
     }
 
-    public List<CubaTimer> getTimers() {
+    public List<JmixTimer> getTimers() {
         AbstractComponent timersHolder = getTopLevelWindowComposition();
 
         return timersHolder.getExtensions().stream()
-                .filter(extension -> extension instanceof CubaTimer)
-                .map(extension -> (CubaTimer) extension)
+                .filter(extension -> extension instanceof JmixTimer)
+                .map(extension -> (JmixTimer) extension)
                 .collect(Collectors.toList());
     }
 
-    public void addTimer(CubaTimer timer) {
+    public void addTimer(JmixTimer timer) {
         AbstractComponent timersHolder = getTopLevelWindowComposition();
 
         if (!timersHolder.getExtensions().contains(timer)) {
@@ -653,7 +643,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
         }
     }
 
-    public void removeTimer(CubaTimer timer) {
+    public void removeTimer(JmixTimer timer) {
         AbstractComponent timersHolder = getTopLevelWindowComposition();
 
         timersHolder.removeExtension(timer);
@@ -670,11 +660,11 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     }
 
     protected void updateUiTheme() {
-        UserSession userSession = userSessionSource.getUserSession();
-
-        if (userSession.isAuthenticated()) {
+//        UserSession userSession = userSessionSource.getUserSession();
+//
+//        if (userSession.isAuthenticated()) {
             // load theme from user settings
-            String themeName = userSettingsTools.loadAppWindowTheme();
+            /*String themeName = userSettingsTools.loadAppWindowTheme();
 
             if (!Objects.equals(themeName, getTheme())) {
                 // check theme support
@@ -683,8 +673,8 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
                     app.applyTheme(themeName);
                     setTheme(themeName);
                 }
-            }
-        }
+            }*/
+//        }
     }
 
     public JmixFileDownloader getFileDownloader() {
@@ -711,9 +701,8 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     public void paintContent(PaintTarget target) throws PaintException {
         super.paintContent(target);
 
-        // todo navigation
-        /*String lastHistoryOp = ((WebUrlRouting) getUrlRouting()).getLastHistoryOperation();
-        target.addAttribute(CubaUIConstants.LAST_HISTORY_OP, lastHistoryOp);*/
+        String lastHistoryOp = ((WebUrlRouting) getUrlRouting()).getLastHistoryOperation();
+        target.addAttribute(AppUIConstants.LAST_HISTORY_OP, lastHistoryOp);
     }
 
     /**

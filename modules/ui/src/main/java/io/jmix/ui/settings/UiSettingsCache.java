@@ -17,12 +17,12 @@
 package io.jmix.ui.settings;
 
 import com.vaadin.server.VaadinSession;
-import io.jmix.core.commons.util.Preconditions;
-import io.jmix.ui.executors.IllegalConcurrentAccessException;
+import io.jmix.core.common.util.Preconditions;
+import io.jmix.ui.executor.IllegalConcurrentAccessException;
+import io.jmix.ui.settings.SettingsClient;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -35,7 +35,7 @@ public class UiSettingsCache {
 
     public static final String NAME = "cuba_SettingsClient";
 
-    @Inject
+    @Autowired
     protected UserSettingService userSettingService;
 
     @Nullable

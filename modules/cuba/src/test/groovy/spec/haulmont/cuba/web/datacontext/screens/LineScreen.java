@@ -19,7 +19,7 @@ package spec.haulmont.cuba.web.datacontext.screens;
 import com.haulmont.cuba.core.model.sales.OrderLine;
 import com.haulmont.cuba.core.model.sales.OrderLineParam;
 import com.haulmont.cuba.gui.components.TextField;
-import io.jmix.ui.components.Table;
+import io.jmix.ui.component.Table;
 import io.jmix.ui.model.CollectionPropertyContainer;
 import io.jmix.ui.model.DataComponents;
 import io.jmix.ui.model.DataContext;
@@ -32,7 +32,7 @@ import io.jmix.ui.screen.UiDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @UiController
 @UiDescriptor("line-screen.xml")
@@ -41,20 +41,20 @@ public class LineScreen extends StandardEditor<OrderLine> {
 
     private static final Logger log = LoggerFactory.getLogger(LineScreen.class);
 
-    @Inject
+    @Autowired
     private TextField<Integer> qtyField;
 
-    @Inject
+    @Autowired
     private DataComponents dataComponents;
 
-    @Inject
+    @Autowired
     public Table<OrderLineParam> paramsTable;
 
-    @Inject
+    @Autowired
     private DataContext dataContext;
-    @Inject
+    @Autowired
     private InstanceContainer<OrderLine> lineDc;
-    @Inject
+    @Autowired
     public CollectionPropertyContainer<OrderLineParam> paramsDc;
 
     @Subscribe

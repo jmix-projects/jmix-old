@@ -16,10 +16,11 @@
 
 package io.jmix.ui.model.impl;
 
-import io.jmix.core.metamodel.datatypes.Datatype;
+import io.jmix.core.metamodel.datatype.Datatype;
 import io.jmix.core.impl.keyvalue.KeyValueMetaClass;
 import io.jmix.core.impl.keyvalue.KeyValueMetaProperty;
 import io.jmix.core.entity.KeyValueEntity;
+import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.model.KeyValueContainer;
 import org.springframework.context.ApplicationContext;
 
@@ -33,7 +34,7 @@ public class KeyValueContainerImpl extends InstanceContainerImpl<KeyValueEntity>
         super(applicationContext, new KeyValueMetaClass());
     }
 
-    public KeyValueContainerImpl(ApplicationContext applicationContext, KeyValueMetaClass entityMetaClass) {
+    public KeyValueContainerImpl(ApplicationContext applicationContext, MetaClass entityMetaClass) {
         super(applicationContext, entityMetaClass);
     }
 

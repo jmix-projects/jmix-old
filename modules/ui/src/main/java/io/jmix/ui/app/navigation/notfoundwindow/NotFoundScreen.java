@@ -19,16 +19,16 @@ package io.jmix.ui.app.navigation.notfoundwindow;
 import io.jmix.core.Messages;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.WindowParam;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Label;
-import io.jmix.ui.components.Window;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.Label;
+import io.jmix.ui.component.Window;
 import io.jmix.ui.navigation.Route;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Subscribe;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.theme.HaloTheme;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Route("not-found")
 @UiController(NotFoundScreen.ID)
@@ -39,10 +39,10 @@ public class NotFoundScreen extends Screen {
     @WindowParam(name = "requestedRoute", required = true)
     protected String requestedRoute;
 
-    @Inject
+    @Autowired
     protected UiComponents uiComponents;
 
-    @Inject
+    @Autowired
     protected Messages messages;
 
     @Subscribe
@@ -52,10 +52,10 @@ public class NotFoundScreen extends Screen {
         Label<String> msgLabel = uiComponents.create(Label.TYPE_STRING);
         msgLabel.setAlignment(Component.Alignment.TOP_CENTER);
         msgLabel.addStyleName(HaloTheme.LABEL_H1);
-        msgLabel.setValue(messages.formatMessage("notAssociatedRoute", requestedRoute));
+        msgLabel.setValue(messages.formatMessage("","notAssociatedRoute", requestedRoute));
 
         window.add(msgLabel);
 
-        window.setCaption(messages.formatMessage("tabCaption", requestedRoute));
+        window.setCaption(messages.formatMessage("","tabCaption", requestedRoute));
     }
 }

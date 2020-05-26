@@ -19,23 +19,23 @@ package io.jmix.ui.app.inputdialog;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.Messages;
 import io.jmix.core.Metadata;
-import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.common.util.ParamsMap;
 import io.jmix.core.entity.FileDescriptor;
-import io.jmix.core.metamodel.datatypes.Datatype;
-import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
-import io.jmix.core.metamodel.datatypes.impl.*;
+import io.jmix.core.metamodel.datatype.Datatype;
+import io.jmix.core.metamodel.datatype.DatatypeRegistry;
+import io.jmix.core.metamodel.datatype.impl.*;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.Actions;
 import io.jmix.ui.Dialogs;
 import io.jmix.ui.UiComponents;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.DialogAction;
-import io.jmix.ui.actions.picker.ClearAction;
-import io.jmix.ui.actions.picker.LookupAction;
-import io.jmix.ui.components.*;
-import io.jmix.ui.components.data.options.ContainerOptions;
-import io.jmix.ui.components.inputdialog.InputDialogAction;
-import io.jmix.ui.icons.Icons;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.action.DialogAction;
+import io.jmix.ui.action.picker.ClearAction;
+import io.jmix.ui.action.picker.LookupAction;
+import io.jmix.ui.component.*;
+import io.jmix.ui.component.data.options.ContainerOptions;
+import io.jmix.ui.component.inputdialog.InputDialogAction;
+import io.jmix.ui.icon.Icons;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.model.DataComponents;
@@ -44,7 +44,7 @@ import io.jmix.ui.sys.PersistenceManagerClient;
 import io.jmix.ui.theme.ThemeConstants;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,40 +77,40 @@ public class InputDialog extends Screen {
     public static final CloseAction INPUT_DIALOG_NO_ACTION = new StandardCloseAction("inputDialogNo");
 
 
-    @Inject
+    @Autowired
     protected UiComponents uiComponents;
 
-    @Inject
+    @Autowired
     protected DatatypeRegistry datatypeRegistry;
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
+    @Autowired
     protected Actions actions;
 
-    @Inject
+    @Autowired
     protected Messages messages;
 
-    @Inject
+    @Autowired
     protected Icons icons;
 
-    @Inject
+    @Autowired
     protected ScreenValidation screenValidation;
 
-    @Inject
+    @Autowired
     protected ThemeConstants theme;
 
-    @Inject
+    @Autowired
     protected PersistenceManagerClient persistenceManagerClient;
 
-    @Inject
+    @Autowired
     protected DataComponents dataComponents;
 
-    @Inject
+    @Autowired
     protected Form form;
 
-    @Inject
+    @Autowired
     protected HBoxLayout actionsLayout;
 
     protected List<InputParameter> parameters = new ArrayList<>(2);
@@ -350,7 +350,7 @@ public class InputDialog extends Screen {
 
         Datatype datatype = null;
         if (parameter.getDatatypeJavaClass() != null) {
-            datatype = datatypeRegistry.get(parameter.getDatatypeJavaClass());
+            datatype = datatypeRegistry.find(parameter.getDatatypeJavaClass());
         } else if (parameter.getDatatype() != null) {
             datatype = parameter.getDatatype();
         }
@@ -360,7 +360,7 @@ public class InputDialog extends Screen {
             if (field != null) {
                 return field;
             }
-            datatype = datatypeRegistry.getNN(String.class);
+            datatype = datatypeRegistry.get(String.class);
         }
 
         if (datatype instanceof NumberDatatype

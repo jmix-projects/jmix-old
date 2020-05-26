@@ -20,17 +20,17 @@ package com.haulmont.cuba.core;
 import com.haulmont.cuba.core.model.common.User;
 import com.haulmont.cuba.core.testsupport.CoreTest;
 import groovy.lang.Binding;
-import io.jmix.core.Scripting;
+import com.haulmont.cuba.core.global.Scripting;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @CoreTest
 public class ScriptingTest {
 
-    @Inject
+    @Autowired
     protected Scripting scripting;
 
     @Test
@@ -48,7 +48,7 @@ public class ScriptingTest {
 
     @Test
     public void testImportsEvaluate() {
-        String result = scripting.evaluateGroovy("import io.jmix.core.commons.util.StringHelper\n" +
+        String result = scripting.evaluateGroovy("import io.jmix.core.common.util.StringHelper\n" +
                 "return StringHelper.removeExtraSpaces(' Hello! ')", (Binding) null);
         assertNotNull(result);
     }
@@ -56,7 +56,7 @@ public class ScriptingTest {
     @Test
     public void testPackageAndImportsEvaluate() {
         String result = scripting.evaluateGroovy("package com.haulmont.cuba.core\n" +
-                "import io.jmix.core.commons.util.StringHelper\n" +
+                "import io.jmix.core.common.util.StringHelper\n" +
                 "return StringHelper.removeExtraSpaces(' Hello! ')", (Binding) null);
         assertNotNull(result);
     }

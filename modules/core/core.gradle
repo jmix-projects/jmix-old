@@ -19,16 +19,18 @@ apply plugin: 'groovy'
 apply plugin: 'java-library'
 apply plugin: 'io.jmix'
 
-version = rootProject.jmixVersion
+group = 'io.jmix.core'
 
 dependencies {
     api platform(project(':jmix-platform'))
-    
+
     api 'org.springframework.boot:spring-boot'
     api 'org.springframework:spring-context'
     api 'org.springframework:spring-webmvc'
     api 'org.apache.commons:commons-lang3'
+    api 'org.apache.commons:commons-compress'
     api 'org.slf4j:slf4j-api'
+    api 'io.micrometer:micrometer-core'
     api 'org.codehaus.groovy:groovy'
     api 'org.apache.commons:commons-pool2'
     api 'javax.servlet:javax.servlet-api'
@@ -50,6 +52,8 @@ dependencies {
     api 'org.eclipse.persistence:jakarta.persistence'
     api 'org.antlr:antlr-runtime'
 
+    implementation'com.google.code.gson:gson'
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation 'org.springframework:spring-test'
     testImplementation "org.spockframework:spock-core"
@@ -63,9 +67,12 @@ jar {
     archivesBaseName = 'jmix-core'
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier = 'sources'
+java {
+    withSourcesJar()
+}
+
+artifacts {
+    archives sourcesJar
 }
 
 test {
@@ -75,11 +82,8 @@ test {
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            groupId = 'io.jmix.core'
             artifactId = 'jmix-core'
-
             from components.java
-            artifact sourcesJar
         }
     }
 }

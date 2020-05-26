@@ -14,11 +14,11 @@
   ~ limitations under the License.
   -->
 
-<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd">
+<window xmlns="http://jmix.io/schema/ui/window">
     <data>
         <instance id="groupDc"
-                  class="io.jmix.security.entity.Group"
-                  view="group.browse">
+                  class="com.haulmont.cuba.core.model.common.Group"
+                  fetchPlan="group.browse">
             <loader/>
             <collection id="constraintsDc"
                         property="constraints"/>

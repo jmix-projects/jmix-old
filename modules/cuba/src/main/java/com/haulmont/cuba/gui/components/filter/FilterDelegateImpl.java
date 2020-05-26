@@ -20,11 +20,10 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.haulmont.cuba.CubaProperties;
-import com.haulmont.cuba.core.global.DataManager;
-import com.haulmont.cuba.core.global.LoadContext;
+import com.haulmont.cuba.core.global.Configuration;
 import com.haulmont.cuba.core.global.Messages;
 import com.haulmont.cuba.core.global.Metadata;
-import com.haulmont.cuba.core.global.*;
+import com.haulmont.cuba.core.global.UserSessionSource;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.WindowParams;
 import com.haulmont.cuba.gui.components.CubaComponentsHelper;
@@ -40,29 +39,27 @@ import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
 import com.haulmont.cuba.security.entity.FilterEntity;
+import com.haulmont.cuba.security.global.UserSession;
 import io.jmix.core.*;
-import io.jmix.core.commons.datastruct.Node;
-import io.jmix.core.commons.datastruct.Pair;
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.commons.util.ParamsMap;
-import io.jmix.core.commons.xmlparsing.Dom4jTools;
-import io.jmix.core.Entity;
+import io.jmix.core.common.datastruct.Node;
+import io.jmix.core.common.datastruct.Pair;
+import io.jmix.core.common.event.Subscription;
+import io.jmix.core.common.util.ParamsMap;
+import io.jmix.core.common.xmlparsing.Dom4jTools;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.queryconditions.JpqlCondition;
+import io.jmix.core.querycondition.JpqlCondition;
 import io.jmix.core.security.Security;
-import io.jmix.core.security.UserSession;
-import io.jmix.core.security.UserSessionSource;
+import io.jmix.dynattr.DynAttrMetadata;
 import io.jmix.ui.*;
-import io.jmix.ui.actions.AbstractAction;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.BaseAction;
-import io.jmix.ui.actions.DialogAction;
-import io.jmix.ui.actions.DialogAction.Type;
-import io.jmix.ui.components.*;
-import io.jmix.ui.components.Component.Alignment;
-import io.jmix.ui.components.data.meta.ContainerDataUnit;
-import io.jmix.ui.components.data.meta.EntityDataUnit;
-import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
+import io.jmix.ui.action.AbstractAction;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.action.BaseAction;
+import io.jmix.ui.action.DialogAction;
+import io.jmix.ui.action.DialogAction.Type;
+import io.jmix.ui.component.*;
+import io.jmix.ui.component.Component.Alignment;
+import io.jmix.ui.component.data.meta.ContainerDataUnit;
+import io.jmix.ui.component.data.meta.EntityDataUnit;
 import io.jmix.ui.filter.*;
 import io.jmix.ui.gui.OpenType;
 import io.jmix.ui.model.BaseCollectionLoader;
@@ -84,7 +81,7 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -105,40 +102,42 @@ public class FilterDelegateImpl implements FilterDelegate {
     protected static final Logger log = LoggerFactory.getLogger(FilterDelegateImpl.class);
     protected static final String MODIFIED_INDICATOR_SYMBOL = " *";
 
-    @Inject
+    @Autowired
     protected UiComponents uiComponents;
-    @Inject
+    @Autowired
     protected ThemeConstantsManager themeConstantsManager;
-    @Inject
+    @Autowired
     protected Messages messages;
-    @Inject
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected WindowConfig windowConfig;
-    @Inject
+    @Autowired
     protected UserSessionSource userSessionSource;
-    @Inject
+    @Autowired
     protected Configuration configuration;
-    @Inject
+    @Autowired
     protected Security security;
-    @Inject
+    @Autowired
     protected FilterHelper filterHelper;
-    @Inject
+    @Autowired
     protected FilterParser filterParser;
-    @Inject
+    @Autowired
     protected MaxResultsFieldHelper maxResultsFieldHelper;
     protected ScreenBuilders screenBuilders;
-    @Inject
+    @Autowired
     protected Dom4jTools dom4JTools;
 
-    @Inject
+    @Autowired
     protected DataManager dataService;
-    @Inject
+    @Autowired
     protected PersistenceManagerClient persistenceManager;
-    @Inject
+    @Autowired
     protected CubaProperties properties;
+    @Autowired
+    protected DynAttrMetadata dynAttrMetadata;
 
-    @Inject
+    @Autowired
     protected BeanLocator beanLocator;
 
     // protected FtsFilterHelper ftsFilterHelper; todo fts
@@ -238,7 +237,7 @@ public class FilterDelegateImpl implements FilterDelegate {
         LAST
     }
 
-    @Inject
+    @Autowired
     public void setScreenBuilders(ScreenBuilders screenBuilders) {
         this.screenBuilders = screenBuilders;
     }
@@ -591,10 +590,9 @@ public class FilterDelegateImpl implements FilterDelegate {
         }
 
         if (condition instanceof DynamicAttributesCondition) {
-            return DynamicAttributesUtils.getMetaPropertyPath(
-                    adapter.getMetaClass(),
-                    ((DynamicAttributesCondition) condition).getCategoryAttributeId()
-            ) != null;
+            String attributeId = ((DynamicAttributesCondition) condition).getCategoryAttributeId();
+            return dynAttrMetadata.getAttributes(adapter.getMetaClass()).stream()
+                    .anyMatch(attr -> Objects.equals(attr.getId(), attributeId));
         }
 
         return true;
@@ -892,6 +890,8 @@ public class FilterDelegateImpl implements FilterDelegate {
 
         clearParamValueChangeSubscriptions();
 
+        clearParamEditors();
+
         recursivelyCreateConditionsLayout(conditionsFocusType, false, conditions.getRootNodes(), conditionsLayout, 0);
 
         if (isApplyImmediately()) {
@@ -1061,6 +1061,15 @@ public class FilterDelegateImpl implements FilterDelegate {
         paramEditors.put(condition, paramEditor);
     }
 
+    protected void clearParamEditors() {
+        if (paramEditors != null) {
+            for (Map.Entry<AbstractCondition, ParamEditor> item : paramEditors.entrySet()) {
+                item.getKey().removeListener(item.getValue());
+            }
+            paramEditors.clear();
+        }
+    }
+
     protected List<Node<AbstractCondition>> fetchVisibleNodes(List<Node<AbstractCondition>> nodes) {
         List<Node<AbstractCondition>> visibleConditionNodes = new ArrayList<>();
         for (Node<AbstractCondition> node : nodes) {
@@ -1188,14 +1197,12 @@ public class FilterDelegateImpl implements FilterDelegate {
      * Load filter entities from database and saves them in {@code filterEntities} collection.
      */
     protected void loadFilterEntities() {
-        LoadContext<FilterEntity> ctx = LoadContext.create(FilterEntity.class);
-        ctx.setView("app");
-        ctx.setQueryString("select f from sec$Filter f "+  /*"left join f.user u " +*/
-                "where f.componentId = :component" /*+ "and (u.id = :userId or u is null) order by f.name"*/)
-                .setParameter("component", CubaComponentsHelper.getFilterComponentPath(filter))/*
-                .setParameter("userId", userSessionSource.getUserSession().getCurrentOrSubstitutedUser().getId())*/;
-
-        filterEntities = new ArrayList<>(dataService.loadList(ctx));
+        filterEntities = new ArrayList<>(dataService.load(FilterEntity.class)
+                .fetchPlan("app")
+                .query("select f from sec$Filter f " +  /*"left join f.user u " +*/
+                        "where f.componentId = :component" /*+ "and (u.id = :userId or u is null) order by f.name"*/)
+                //.parameter("userId", userSessionSource.getUserSession().getCurrentOrSubstitutedUser().getId())
+                .list());
     }
 
     protected FilterEntity getDefaultFilter(List<FilterEntity> filters) {
@@ -2114,9 +2121,9 @@ public class FilterDelegateImpl implements FilterDelegate {
         if (buttons == null) {
             return; // in lookup windows, there is no button panel
         }
-        io.jmix.ui.components.Button addToSetBtn = (Button) buttons.getComponent("addToSetBtn");
-        io.jmix.ui.components.Button addToCurSetBtn = (Button) buttons.getComponent("addToCurSetBtn");
-        io.jmix.ui.components.Button removeFromCurSetBtn = (Button) buttons.getComponent("removeFromCurSetBtn");
+        io.jmix.ui.component.Button addToSetBtn = (Button) buttons.getComponent("addToSetBtn");
+        io.jmix.ui.component.Button addToCurSetBtn = (Button) buttons.getComponent("addToCurSetBtn");
+        io.jmix.ui.component.Button removeFromCurSetBtn = (Button) buttons.getComponent("removeFromCurSetBtn");
 
         Action addToSet = table.getAction("filter.addToSet");
 
@@ -2547,13 +2554,6 @@ public class FilterDelegateImpl implements FilterDelegate {
             }
             conditionListeners.clear();
         }
-
-        if (paramEditors != null) {
-            for (Map.Entry<AbstractCondition, ParamEditor> item : paramEditors.entrySet()) {
-                item.getKey().removeListener(item.getValue());
-            }
-            paramEditors.clear();
-        }
     }
 
     protected void subscribeToParamValueChangeEventRecursively(List<Node<AbstractCondition>> conditions) {
@@ -2897,8 +2897,7 @@ public class FilterDelegateImpl implements FilterDelegate {
     }
 
     protected void removeFilterEntity() {
-        CommitContext ctx = new CommitContext(Collections.emptyList(), Collections.singletonList(filterEntity));
-        dataService.commit(ctx);
+        dataService.save(filterEntity);
         filterEntities.remove(filterEntity);
         setFilterEntity(adHocFilter);
         initFilterSelectComponents();
@@ -3265,7 +3264,7 @@ public class FilterDelegateImpl implements FilterDelegate {
 
         void setQueryFilter(QueryFilter filter);
 
-        void setDataLoaderCondition(io.jmix.core.queryconditions.Condition dataLoaderCondition);
+        void setDataLoaderCondition(io.jmix.core.querycondition.Condition dataLoaderCondition);
 
         Map<String, Object> getLastRefreshParameters();
 
@@ -3308,7 +3307,7 @@ public class FilterDelegateImpl implements FilterDelegate {
         /**
          * Condition which was set on DataLoader before applying the filter
          */
-        protected io.jmix.core.queryconditions.Condition dataLoaderCondition;
+        protected io.jmix.core.querycondition.Condition dataLoaderCondition;
 
         protected static final Pattern COMPONENT_PARAM_PATTERN = Pattern.compile("(:)component\\$([\\w.]+)");
         protected static final Pattern CUSTOM_PARAM_PATTERN = Pattern.compile("(:)custom\\$([\\w.]+)");
@@ -3355,7 +3354,7 @@ public class FilterDelegateImpl implements FilterDelegate {
         }
 
         @Override
-        public void setDataLoaderCondition(io.jmix.core.queryconditions.Condition dataLoaderCondition) {
+        public void setDataLoaderCondition(io.jmix.core.querycondition.Condition dataLoaderCondition) {
             this.dataLoaderCondition = dataLoaderCondition;
         }
 
@@ -3440,12 +3439,12 @@ public class FilterDelegateImpl implements FilterDelegate {
                 ftsCustomParameters.clear();
 
 
-                io.jmix.core.queryconditions.Condition condition = queryFilter.toQueryCondition(loaderParameters.keySet());
+                io.jmix.core.querycondition.Condition condition = queryFilter.toQueryCondition(loaderParameters.keySet());
 
                 if (dataLoaderCondition != null) {
-                    io.jmix.core.queryconditions.LogicalCondition combined
-                            = new io.jmix.core.queryconditions.LogicalCondition(
-                            io.jmix.core.queryconditions.LogicalCondition.Type.AND);
+                    io.jmix.core.querycondition.LogicalCondition combined
+                            = new io.jmix.core.querycondition.LogicalCondition(
+                            io.jmix.core.querycondition.LogicalCondition.Type.AND);
                     combined.add(dataLoaderCondition);
                     if (condition != null) {
                         combined.add(condition);
@@ -3626,7 +3625,7 @@ public class FilterDelegateImpl implements FilterDelegate {
         }
 
         @Override
-        public void setDataLoaderCondition(io.jmix.core.queryconditions.Condition dataLoaderCondition) {
+        public void setDataLoaderCondition(io.jmix.core.querycondition.Condition dataLoaderCondition) {
         }
 
         @Override

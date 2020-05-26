@@ -16,6 +16,7 @@
 
 package com.haulmont.cuba.core.model;
 
+import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.data.entity.BaseUuidEntity;
 
 import javax.persistence.Column;
@@ -25,6 +26,7 @@ import javax.persistence.Entity;
 public class Foo extends BaseUuidEntity {
 
     @Column(name = "NAME")
+    @InstanceName
     private String name;
 
     public String getName() {

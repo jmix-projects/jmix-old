@@ -17,8 +17,8 @@ package com.haulmont.cuba.gui.components;
 
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.Datasource;
-import io.jmix.ui.components.*;
-import io.jmix.ui.components.Field.Validator;
+import io.jmix.ui.component.*;
+import io.jmix.ui.component.Field.Validator;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.function.Consumer;
 public interface FieldGroup extends Component, Component.BelongToFrame, Component.HasCaption, Component.HasIcon,
                                     HasBorder, HasContextHelp, Component.Editable, Validatable,
                                     EditableChangeNotifier, ChildEditableController,
-                                    ComponentContainer, HasSubParts {
+                                    ComponentContainer, HasSubParts, HasHtmlSanitizer {
     String NAME = "fieldGroup";
 
     /**

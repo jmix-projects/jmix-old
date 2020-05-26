@@ -21,11 +21,10 @@ import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.AbstractComponent;
 import io.jmix.core.MessageTools;
 import io.jmix.core.security.Security;
-import io.jmix.core.security.UserSession;
-import io.jmix.ui.components.ComponentsHelper;
-import io.jmix.ui.components.KeyCombination;
-import io.jmix.ui.components.Window;
-import io.jmix.ui.components.mainwindow.SideMenu;
+import io.jmix.ui.component.ComponentsHelper;
+import io.jmix.ui.component.KeyCombination;
+import io.jmix.ui.component.Window;
+import io.jmix.ui.component.mainwindow.SideMenu;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.AppUI;
 import org.apache.commons.lang3.StringUtils;
@@ -34,11 +33,11 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static io.jmix.ui.components.KeyCombination.getShortcutModifiers;
+import static io.jmix.ui.component.KeyCombination.getShortcutModifiers;
 
 /**
  * Side menu builder.
@@ -46,17 +45,17 @@ import static io.jmix.ui.components.KeyCombination.getShortcutModifiers;
 @Component(SideMenuBuilder.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class SideMenuBuilder {
-    public static final String NAME = "cuba_SideMenuBuilder";
+    public static final String NAME = "jmix_SideMenuBuilder";
 
-    @Inject
+    @Autowired
     protected Security security;
 
-    @Inject
+    @Autowired
     protected MenuConfig menuConfig;
-    @Inject
+    @Autowired
     protected MenuItemCommands menuItemCommands;
 
-    @Inject
+    @Autowired
     protected MessageTools messageTools;
 
     public SideMenuBuilder() {

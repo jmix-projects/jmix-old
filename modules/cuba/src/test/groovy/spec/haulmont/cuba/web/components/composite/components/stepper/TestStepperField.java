@@ -19,20 +19,20 @@ package spec.haulmont.cuba.web.components.composite.components.stepper;
 import com.haulmont.cuba.gui.components.TextField;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.ui.components.Button;
-import io.jmix.ui.components.CssLayout;
-import io.jmix.ui.components.Field;
-import io.jmix.ui.components.ValidationException;
-import io.jmix.ui.components.data.ValueSource;
-import io.jmix.ui.components.impl.CompositeComponent;
-import io.jmix.ui.components.impl.CompositeDescriptor;
-import io.jmix.ui.components.impl.CompositeWithCaption;
-import io.jmix.ui.components.impl.CompositeWithContextHelp;
-import io.jmix.ui.components.impl.CompositeWithHtmlCaption;
-import io.jmix.ui.components.impl.CompositeWithHtmlDescription;
-import io.jmix.ui.components.impl.CompositeWithIcon;
-import io.jmix.ui.widgets.CubaTextField;
+import io.jmix.core.common.event.Subscription;
+import io.jmix.ui.component.Button;
+import io.jmix.ui.component.CssLayout;
+import io.jmix.ui.component.Field;
+import io.jmix.ui.component.ValidationException;
+import io.jmix.ui.component.data.ValueSource;
+import io.jmix.ui.component.impl.CompositeComponent;
+import io.jmix.ui.component.impl.CompositeDescriptor;
+import io.jmix.ui.component.impl.CompositeWithCaption;
+import io.jmix.ui.component.impl.CompositeWithContextHelp;
+import io.jmix.ui.component.impl.CompositeWithHtmlCaption;
+import io.jmix.ui.component.impl.CompositeWithHtmlDescription;
+import io.jmix.ui.component.impl.CompositeWithIcon;
+import io.jmix.ui.widget.JmixTextField;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -54,9 +54,9 @@ public class TestStepperField extends CompositeComponent<CssLayout> implements F
         super.setComposition(composition);
 
         valueField = getInnerComponent("stepper_valueField");
-        CubaTextField cubaTextField = valueField.unwrap(CubaTextField.class);
-        cubaTextField.addShortcutListener(createAdjustmentShortcut(ShortcutAction.KeyCode.ARROW_UP, 1));
-        cubaTextField.addShortcutListener(createAdjustmentShortcut(ShortcutAction.KeyCode.ARROW_DOWN, -1));
+        JmixTextField jmixTextField = valueField.unwrap(JmixTextField.class);
+        jmixTextField.addShortcutListener(createAdjustmentShortcut(ShortcutAction.KeyCode.ARROW_UP, 1));
+        jmixTextField.addShortcutListener(createAdjustmentShortcut(ShortcutAction.KeyCode.ARROW_DOWN, -1));
 
         upBtn = getInnerComponent("stepper_upBtn");
         downBtn = getInnerComponent("stepper_downBtn");
@@ -161,5 +161,15 @@ public class TestStepperField extends CompositeComponent<CssLayout> implements F
     @Override
     public ValueSource<Integer> getValueSource() {
         return valueField.getValueSource();
+    }
+
+    @Override
+    public boolean isHtmlSanitizerEnabled() {
+        return getComposition().isHtmlSanitizerEnabled();
+    }
+
+    @Override
+    public void setHtmlSanitizerEnabled(boolean htmlSanitizerEnabled) {
+        getComposition().setHtmlSanitizerEnabled(htmlSanitizerEnabled);
     }
 }

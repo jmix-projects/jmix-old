@@ -25,7 +25,7 @@ import io.jmix.data.entity.BaseLongIdEntity;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import java.util.List;
@@ -35,17 +35,17 @@ import java.util.stream.Collectors;
 public class EntityIdentifierInitializer implements EntityInitializer, Ordered {
     public static final String NAME = "jmix_EntityIdentifierInitializer";
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
-    @Inject
+    @Autowired
     protected NumberIdSource numberIdSource;
-    @Inject
+    @Autowired
     protected CoreProperties coreProperties;
 
     @Override
-    public <T> void initEntity(Entity<T> entity) {
+    public void initEntity(Entity entity) {
         MetaClass metaClass = metadata.getClass(entity.getClass());
 
         MetaProperty primaryKeyProperty = metadataTools.getPrimaryKeyProperty(metaClass);
@@ -53,7 +53,7 @@ public class EntityIdentifierInitializer implements EntityInitializer, Ordered {
             // create an instance of embedded ID
             Entity key = metadata.create(primaryKeyProperty.getRange().asClass());
             //noinspection unchecked
-            EntityValues.setId(entity, (T) key);
+            EntityValues.setId(entity, key);
         } else if (entity instanceof BaseLongIdEntity || entity instanceof BaseIntegerIdEntity) {
             if (!coreProperties.isIdGenerationForEntitiesInAdditionalDataStoresEnabled()
                     && !Stores.MAIN.equals(metadataTools.getStoreName(metaClass))) {

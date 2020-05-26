@@ -32,7 +32,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.sql.Connection;
 import java.util.*;
 import java.util.concurrent.*;
@@ -84,7 +84,7 @@ public class TestEntityChangedEventListener implements
 
     public List<EventInfo> allEvents = new ArrayList<>();
 
-    @Inject
+    @Autowired
     private Persistence persistence;
 
     public void clear() {
@@ -98,13 +98,13 @@ public class TestEntityChangedEventListener implements
     }
 
     @EventListener
-    void beforeCommit(EntityChangedEvent<Order, UUID> event) {
+    void beforeCommit(EntityChangedEvent<Order> event) {
         allEvents.add(new EventInfo("EntityChangedEvent: beforeCommit, " + event.getType(), event));
         entityChangedEvents.add(new Info(event, isCommitted(event.getEntityId())));
     }
 
     @TransactionalEventListener
-    void afterCommit(EntityChangedEvent<Order, UUID> event) {
+    void afterCommit(EntityChangedEvent<Order> event) {
         allEvents.add(new EventInfo("EntityChangedEvent: afterCommit, " + event.getType(), event));
         entityChangedEvents.add(new Info(event, isCommitted(event.getEntityId())));
     }
@@ -159,7 +159,7 @@ public class TestEntityChangedEventListener implements
         allEvents.add(new EventInfo("BeforeUpdateEntityListener", entity));
     }
 
-    private boolean isCommitted(Id<Order, UUID> entityId) {
+    private boolean isCommitted(Id<Order> entityId) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Boolean> future = executor.submit(() -> {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(persistence.getDataSource());

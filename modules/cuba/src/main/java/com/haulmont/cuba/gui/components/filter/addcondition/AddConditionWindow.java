@@ -26,16 +26,16 @@ import com.haulmont.cuba.gui.components.filter.descriptor.PropertyConditionDescr
 import io.jmix.core.AppBeans;
 import io.jmix.core.Entity;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.ui.actions.AbstractAction;
-import io.jmix.ui.components.Button;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.KeyCombination;
-import io.jmix.ui.components.TextField;
-import io.jmix.ui.components.Tree;
+import io.jmix.ui.action.AbstractAction;
+import io.jmix.ui.component.Button;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.KeyCombination;
+import io.jmix.ui.component.TextField;
+import io.jmix.ui.component.Tree;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -46,25 +46,25 @@ import java.util.UUID;
  */
 public class AddConditionWindow extends AbstractWindow {
 
-    @Inject
+    @Autowired
     protected ConditionDescriptorsDs conditionDescriptorsDs;
 
-    @Inject
+    @Autowired
     protected TextField<String> treeFilter;
 
-    @Inject
+    @Autowired
     protected Tree tree;
 
-    @Inject
+    @Autowired
     protected Button cancelBtn;
 
-    @Inject
+    @Autowired
     protected Button selectBtn;
 
-    @Inject
+    @Autowired
     protected ThemeConstantsManager themeConstantsManager;
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
     @Override

@@ -18,16 +18,16 @@ package spec.haulmont.cuba.web.lookupscreenfacet.screens;
 
 import com.haulmont.cuba.core.model.common.User;
 import io.jmix.core.Metadata;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.components.Button;
-import io.jmix.ui.components.LookupScreenFacet;
-import io.jmix.ui.components.PickerField;
-import io.jmix.ui.components.Table;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.component.Button;
+import io.jmix.ui.component.LookupScreenFacet;
+import io.jmix.ui.component.PickerField;
+import io.jmix.ui.component.Table;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.screen.*;
 import spec.haulmont.cuba.web.user.screens.UserBrowseTest;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 
 @SuppressWarnings({"unused"})
@@ -35,27 +35,27 @@ import java.util.Collection;
 @UiDescriptor("lookup-screen-facet-test-screen.xml")
 public class LookupScreenFacetTestScreen extends Screen {
 
-    @Inject
+    @Autowired
     public Metadata metadata;
 
-    @Inject
+    @Autowired
     public CollectionContainer<User> userDc;
 
-    @Inject
+    @Autowired
     public PickerField<User> pickerField;
-    @Inject
+    @Autowired
     public Table<User> usersTable;
-    @Inject
+    @Autowired
     public Button button;
 
-    @Inject
+    @Autowired
     public Action action;
 
-    @Inject
+    @Autowired
     public LookupScreenFacet<User, UserBrowseTest> lookupScreen;
-    @Inject
+    @Autowired
     public LookupScreenFacet<User, UserBrowseTest> tableLookupScreen;
-    @Inject
+    @Autowired
     public LookupScreenFacet<User, UserBrowseTest> fieldLookupScreen;
 
     @Subscribe

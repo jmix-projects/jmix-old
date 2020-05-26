@@ -21,18 +21,18 @@ import com.haulmont.cuba.gui.WindowManagerProvider;
 import io.jmix.core.AppBeans;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowInfo;
-import io.jmix.ui.actions.AbstractAction;
-import io.jmix.ui.components.Button;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.HBoxLayout;
-import io.jmix.ui.components.TextField;
-import io.jmix.ui.components.Window;
+import io.jmix.ui.action.AbstractAction;
+import io.jmix.ui.component.Button;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.HBoxLayout;
+import io.jmix.ui.component.TextField;
+import io.jmix.ui.component.Window;
 import io.jmix.ui.gui.OpenType;
-import io.jmix.ui.icons.CubaIcon;
+import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.xml.layout.ComponentsFactory;
 import org.springframework.context.annotation.Scope;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,13 +44,13 @@ import java.util.List;
 @Scope("prototype")
 public class DateInIntervalComponent {
 
-    @Inject
+    @Autowired
     protected ComponentsFactory componentsFactory;
 
-    @Inject
+    @Autowired
     protected WindowManagerProvider windowManagerProvider;
 
-    @Inject
+    @Autowired
     protected WindowConfig windowConfig;
 
     protected List<ValueChangeListener> valueChangeListeners = new ArrayList<>();
@@ -73,7 +73,7 @@ public class DateInIntervalComponent {
         layout.add(textField);
 
         Button openEditorBtn = componentsFactory.createComponent(Button.class);
-        openEditorBtn.setIconFromSet(CubaIcon.PICKERFIELD_LOOKUP);
+        openEditorBtn.setIconFromSet(JmixIcon.PICKERFIELD_LOOKUP);
         openEditorBtn.setStyleName("c-dateintervaleditor-button");
         openEditorBtn.setCaption("");
         openEditorBtn.setAction(new AbstractAction("openEditor") {
@@ -102,7 +102,7 @@ public class DateInIntervalComponent {
         layout.add(openEditorBtn);
 
         Button clearBtn = componentsFactory.createComponent(Button.class);
-        clearBtn.setIconFromSet(CubaIcon.PICKERFIELD_CLEAR);
+        clearBtn.setIconFromSet(JmixIcon.PICKERFIELD_CLEAR);
         clearBtn.setStyleName("c-dateintervaleditor-button");
         clearBtn.setCaption("");
         clearBtn.setAction(new AbstractAction("clear") {

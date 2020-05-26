@@ -21,7 +21,7 @@ import com.google.common.collect.Sets;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Metadata;
 import io.jmix.core.Stores;
-import io.jmix.core.commons.util.StackTrace;
+import io.jmix.core.common.util.StackTrace;
 import io.jmix.core.Entity;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.data.EntityChangeType;
@@ -54,7 +54,7 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -70,26 +70,26 @@ public class PersistenceSupport implements ApplicationContextAware {
 
     public static final String PROP_NAME = "jmix.storeName";
 
-    @Inject
+    @Autowired
     protected StoreAwareLocator storeAwareLocator;
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
+    @Autowired
     protected EntityListenerManager entityListenerManager;
 
-    @Inject
+    @Autowired
     protected QueryCacheManager queryCacheManager;
 
-    @Inject
+    @Autowired
     protected OrmCacheSupport ormCacheSupport;
 
-    @Inject
+    @Autowired
     protected EntityChangedEventManager entityChangedEventManager;
 
     @Autowired(required = false)
-    protected List<PersistenceLifecycleListener> lifecycleListeners = new ArrayList<>();
+    protected List<OrmLifecycleListener> lifecycleListeners = new ArrayList<>();
 
     protected List<BeforeCommitTransactionListener> beforeCommitTxListeners;
 
@@ -206,7 +206,7 @@ public class PersistenceSupport implements ApplicationContextAware {
         traverseEntities(getInstanceContainerResourceHolder(storeName), new OnSaveEntityVisitor(storeName), warnAboutImplicitFlush);
     }
 
-    protected void fireBeforeDetachEntityListener(Entity<?> entity, String storeName) {
+    protected void fireBeforeDetachEntityListener(Entity entity, String storeName) {
         if (!(entity.__getEntityEntry().isDetached())) {
             JmixEntityFetchGroup.setAccessLocalUnfetched(false);
             try {
@@ -217,7 +217,7 @@ public class PersistenceSupport implements ApplicationContextAware {
         }
     }
 
-    protected static boolean isDeleted(Entity<?> entity, AttributeChangeListener changeListener) {
+    protected static boolean isDeleted(Entity entity, AttributeChangeListener changeListener) {
         if ((entity instanceof SoftDelete)) {
             ObjectChangeSet changeSet = changeListener.getObjectChangeSet();
             return changeSet != null
@@ -300,9 +300,9 @@ public class PersistenceSupport implements ApplicationContextAware {
 
     protected void makeDetached(Object instance) {
         if (instance instanceof Entity) {
-            ((Entity<?>) instance).__getEntityEntry().setNew(false);
-            ((Entity<?>) instance).__getEntityEntry().setManaged(false);
-            ((Entity<?>) instance).__getEntityEntry().setDetached(true);
+            ((Entity) instance).__getEntityEntry().setNew(false);
+            ((Entity) instance).__getEntityEntry().setManaged(false);
+            ((Entity) instance).__getEntityEntry().setDetached(true);
         }
         if (instance instanceof FetchGroupTracker) {
             ((FetchGroupTracker) instance)._persistence_setSession(null);
@@ -316,7 +316,7 @@ public class PersistenceSupport implements ApplicationContextAware {
         if (lifecycleListeners == null) {
             return;
         }
-        for (PersistenceLifecycleListener listener : lifecycleListeners) {
+        for (OrmLifecycleListener listener : lifecycleListeners) {
             listener.onFlush(storeName);
         }
     }
@@ -325,13 +325,13 @@ public class PersistenceSupport implements ApplicationContextAware {
         if (lifecycleListeners == null) {
             return;
         }
-        for (PersistenceLifecycleListener listener : lifecycleListeners) {
+        for (OrmLifecycleListener listener : lifecycleListeners) {
             listener.onEntityChange(entity, type, changes);
         }
     }
 
     public interface EntityVisitor {
-        boolean visit(Entity<?> entity);
+        boolean visit(Entity entity);
     }
 
     public static class ContainerResourceHolder extends ResourceHolderSupport {
@@ -482,15 +482,15 @@ public class PersistenceSupport implements ApplicationContextAware {
                 for (Object instance : instances) {
                     if (instance instanceof Entity) {
                         if (status == TransactionSynchronization.STATUS_COMMITTED) {
-                            if (((Entity<?>) instance).__getEntityEntry().isNew()) {
+                            if (((Entity) instance).__getEntityEntry().isNew()) {
                                 // new instances become not new and detached only if the transaction was committed
-                                ((Entity<?>) instance).__getEntityEntry().setNew(false);
+                                ((Entity) instance).__getEntityEntry().setNew(false);
                             }
                         } else { // commit failed or the transaction was rolled back
                             makeDetached(instance);
                             for (Entity entity : container.getNewDetachedInstances()) {
-                                ((Entity<?>) entity).__getEntityEntry().setNew(true);
-                                ((Entity<?>) entity).__getEntityEntry().setDetached(false);
+                                entity.__getEntityEntry().setNew(true);
+                                entity.__getEntityEntry().setDetached(false);
                             }
                         }
                     }

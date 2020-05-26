@@ -16,28 +16,28 @@
 
 package spec.haulmont.cuba.web.screenfacet.screens;
 
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.components.Button;
-import io.jmix.ui.components.ScreenFacet;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.component.Button;
+import io.jmix.ui.component.ScreenFacet;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Subscribe;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @UiController("cuba_ScreenFacetTestScreen")
 @UiDescriptor("screen-facet-test-screen.xml")
 public class ScreenFacetTestScreen extends Screen {
 
-    @Inject
+    @Autowired
     public Button button;
-    @Inject
+    @Autowired
     public Action action;
 
-    @Inject
+    @Autowired
     public ScreenFacet<ScreenToOpenWithFacet> screenIdFacet;
-    @Inject
+    @Autowired
     public ScreenFacet<ScreenToOpenWithFacet> screenClassFacet;
 
     public boolean afterShowListenerTriggered = false;

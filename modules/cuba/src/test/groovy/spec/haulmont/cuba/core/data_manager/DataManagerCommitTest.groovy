@@ -20,18 +20,19 @@ import com.haulmont.cuba.core.global.CommitContext
 import com.haulmont.cuba.core.global.DataManager
 import com.haulmont.cuba.core.model.sales.Customer
 import com.haulmont.cuba.core.model.sales.Order
+import com.haulmont.cuba.core.entity.contracts.Id
 import io.jmix.core.*
 import io.jmix.core.entity.KeyValueEntity
 import spec.haulmont.cuba.core.CoreTestSpecification
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 import static com.haulmont.cuba.core.testsupport.TestSupport.deleteRecord
 
 class DataManagerCommitTest extends CoreTestSpecification {
-    @Inject
+    @Autowired
     private DataManager dataManager
-    @Inject
+    @Autowired
     private EntityStates entityStates
     private Customer customer
 

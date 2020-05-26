@@ -23,8 +23,8 @@ import io.jmix.data.entity.StandardEntity;
 import io.jmix.core.entity.annotation.Listeners;
 import io.jmix.core.entity.annotation.OnDelete;
 import io.jmix.core.entity.annotation.PublishEntityChangedEvents;
-import io.jmix.core.metamodel.annotations.Composition;
-import io.jmix.core.metamodel.annotations.NamePattern;
+import io.jmix.core.metamodel.annotation.Composition;
+import com.haulmont.chile.core.annotations.NamePattern;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

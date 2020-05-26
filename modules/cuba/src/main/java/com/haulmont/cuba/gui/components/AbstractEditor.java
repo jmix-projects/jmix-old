@@ -23,23 +23,23 @@ import com.haulmont.cuba.gui.data.impl.CollectionPropertyDatasourceImpl;
 import com.haulmont.cuba.gui.data.impl.DatasourceImplementation;
 import com.haulmont.cuba.gui.data.impl.DsContextImplementation;
 import com.haulmont.cuba.gui.data.impl.EntityCopyUtils;
+import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributesGuiTools;
 import io.jmix.core.*;
-import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
-import io.jmix.core.validation.groups.UiCrossFieldChecks;
+import io.jmix.core.validation.group.UiCrossFieldChecks;
+import io.jmix.dynattr.impl.model.Categorized;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.UiProperties;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.BaseAction;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.ComponentsHelper;
-import io.jmix.ui.components.ValidationErrors;
-import io.jmix.ui.components.Window;
-import io.jmix.ui.dynamicattributes.DynamicAttributesGuiTools;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.action.BaseAction;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.ComponentsHelper;
+import io.jmix.ui.component.ValidationErrors;
+import io.jmix.ui.component.Window;
 import io.jmix.ui.screen.ReadOnlyAwareScreen;
 import io.jmix.ui.screen.ReadOnlyScreensSupport;
 import io.jmix.ui.sys.PersistenceHelper;
@@ -48,7 +48,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintViolation;
 import javax.validation.ElementKind;
 import javax.validation.Path;
@@ -65,7 +65,7 @@ import java.util.Set;
 public class AbstractEditor<T extends Entity> extends AbstractWindow
         implements Window.Editor<T>, ReadOnlyAwareScreen {
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
     protected boolean showSaveNotification = true;
@@ -155,7 +155,6 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
      * @param item entity instance
      */
     @SuppressWarnings("unchecked")
-    @Override
     public void setItem(Entity item) {
         if (PersistenceHelper.isNew(item)) {
             DatasourceImplementation parentDs = (DatasourceImplementation) getParentDs();
@@ -240,10 +239,9 @@ public class AbstractEditor<T extends Entity> extends AbstractWindow
                 dynamicAttributesGuiTools.initDefaultAttributeValues(item, metadata.getClass(item));
             }
 
-            // todo dynamic attributes
-//            if (item instanceof Categorized) {
-//                dynamicAttributesGuiTools.listenCategoryChanges(ds);
-//            }
+            if (item instanceof Categorized) {
+                dynamicAttributesGuiTools.listenCategoryChanges(ds);
+            }
         }
 
         ds.setItem(item);

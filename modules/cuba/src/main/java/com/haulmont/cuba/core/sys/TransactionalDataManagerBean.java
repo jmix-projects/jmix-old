@@ -16,43 +16,51 @@
 
 package com.haulmont.cuba.core.sys;
 
-import com.haulmont.cuba.core.global.CommitContext;
-import com.haulmont.cuba.core.global.DataManager;
-import com.haulmont.cuba.core.global.LoadContext;
-import io.jmix.core.*;
-import io.jmix.core.Entity;
-import io.jmix.core.entity.EntityValues;
-import io.jmix.core.entity.KeyValueEntity;
 import com.haulmont.cuba.core.TransactionalDataManager;
 import com.haulmont.cuba.core.Transactions;
+import com.haulmont.cuba.core.global.*;
+import com.haulmont.cuba.core.global.DataManager;
+import com.haulmont.cuba.core.global.LoadContext;
+import io.jmix.core.Entity;
+import io.jmix.core.Metadata;
+import io.jmix.core.entity.KeyValueEntity;
+import io.jmix.core.*;
+import io.jmix.core.entity.EntityValues;
 import org.springframework.stereotype.Component;
+import com.haulmont.cuba.core.entity.contracts.Id;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Component(TransactionalDataManager.NAME)
 public class TransactionalDataManagerBean implements TransactionalDataManager {
 
-    @Inject
+    @Autowired
     protected DataManager dataManager;
 
-    @Inject
+    @Autowired
     protected Transactions transactions;
 
-    @Inject
+    @Autowired
     private Metadata metadata;
 
-    @Inject
+    @Autowired
     private EntityStates entityStates;
 
+    @Inject
+    private TransactionalActionFactory transactionalActionFactory;
+
     @Override
-    public <E extends Entity<K>, K> FluentLoader<E, K> load(Class<E> entityClass) {
+    public <E extends Entity> FluentLoader<E> load(Class<E> entityClass) {
         return new FluentLoader<>(entityClass, dataManager.getDelegate());
     }
 
     @Override
-    public <E extends Entity<K>, K> FluentLoader.ById<E, K> load(Id<E, K> entityId) {
+    public <E extends Entity, K> FluentLoader.ById<E> load(Id<E, K> entityId) {
         return new FluentLoader<>(entityId.getEntityClass(), dataManager.getDelegate()).id(entityId.getValue());
     }
 
@@ -129,7 +137,7 @@ public class TransactionalDataManagerBean implements TransactionalDataManager {
     }
 
     @Override
-    public <T extends Entity<K>, K> T getReference(Class<T> entityClass, K id) {
+    public <T extends Entity, K> T getReference(Class<T> entityClass, K id) {
         T entity = metadata.create(entityClass);
         EntityValues.setId(entity, id);
         entityStates.makePatch(entity);
@@ -144,6 +152,11 @@ public class TransactionalDataManagerBean implements TransactionalDataManager {
     @Override
     public Transactions transactions() {
         return transactions;
+    }
+
+    @Override
+    public TransactionalAction commitAction(Supplier<CommitContext> supplier) {
+        return transactionalActionFactory.getTransactionalAction(supplier, true);
     }
 
     private static class Secure extends TransactionalDataManagerBean {

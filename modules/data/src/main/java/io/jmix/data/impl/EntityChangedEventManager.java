@@ -36,21 +36,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component(EntityChangedEventManager.NAME)
 public class EntityChangedEventManager {
 
-    public static final String NAME = "cuba_EntityChangedEventManager";
+    public static final String NAME = "jmix_EntityChangedEventManager";
 
     private static final Logger log = LoggerFactory.getLogger(EntityChangedEventManager.class);
 
-    @Inject
+    @Autowired
     private Metadata metadata;
 
-    @Inject
+    @Autowired
     private Events eventPublisher;
 
     private static class PublishingInfo {
@@ -249,7 +249,7 @@ public class EntityChangedEventManager {
             Object value = EntityValues.getValue(entity, property.getName());
             if (deleted) {
                 if (value instanceof Entity) {
-                    boolean isEmbeddable = ((Entity<?>) value).__getEntityEntry().isEmbeddable();
+                    boolean isEmbeddable = ((Entity) value).__getEntityEntry().isEmbeddable();
                     if (isEmbeddable) {
                         embeddedChanges.computeIfAbsent(property.getName(), s -> getEntityAttributeChanges((Entity) value, true));
                     } else {

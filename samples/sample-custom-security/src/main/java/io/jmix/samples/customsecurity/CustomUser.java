@@ -17,37 +17,26 @@
 package io.jmix.samples.customsecurity;
 
 import io.jmix.data.entity.BaseUuidEntity;
-import io.jmix.core.entity.User;
+import io.jmix.core.entity.BaseUser;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.Collections;
 
-public class CustomUser extends BaseUuidEntity implements User {
+public class CustomUser extends BaseUuidEntity implements BaseUser {
 
     private static final long serialVersionUID = 2032149054729862959L;
 
-    private String login;
+    private String username;
     private String password;
     private String name;
 
-    public CustomUser(String login, String password, String name) {
-        this.login = login;
+    public CustomUser(String username, String password, String name) {
+        this.username = username;
         this.password = password;
         this.name = name;
     }
 
-    @Override
-    public String getLogin() {
-        return login;
-    }
-
-    @Override
-    public String getLoginLowerCase() {
-        return login == null ? null : login.toLowerCase();
-    }
-
-    @Override
     public String getName() {
         return name;
     }
@@ -64,7 +53,7 @@ public class CustomUser extends BaseUuidEntity implements User {
 
     @Override
     public String getUsername() {
-        return getLoginLowerCase();
+        return username;
     }
 
     @Override
@@ -85,5 +74,10 @@ public class CustomUser extends BaseUuidEntity implements User {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getKey() {
+        return username;
     }
 }

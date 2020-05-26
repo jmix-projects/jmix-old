@@ -20,8 +20,8 @@ import com.haulmont.cuba.core.model.sales.Order;
 import com.haulmont.cuba.core.model.sales.OrderLine;
 import io.jmix.core.Metadata;
 import io.jmix.ui.ScreenBuilders;
-import io.jmix.ui.builders.EditorClassBuilder;
-import io.jmix.ui.components.Table;
+import io.jmix.ui.builder.EditorClassBuilder;
+import io.jmix.ui.component.Table;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.DataComponents;
 import io.jmix.ui.model.DataContext;
@@ -33,7 +33,7 @@ import io.jmix.ui.screen.UiDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @UiController
 @UiDescriptor("order-screen.xml")
@@ -41,25 +41,25 @@ public class OrderScreen extends Screen {
 
     private static final Logger log = LoggerFactory.getLogger(OrderScreen.class);
 
-    @Inject
+    @Autowired
     private DataComponents dataComponents;
 
-    @Inject
+    @Autowired
     private DataContext dataContext;
 
-    @Inject
+    @Autowired
     private InstanceContainer<Order> orderDc;
 
-    @Inject
+    @Autowired
     private CollectionContainer<OrderLine> linesDc;
 
-    @Inject
+    @Autowired
     private ScreenBuilders screenBuilders;
 
-    @Inject
+    @Autowired
     private Metadata metadata;
 
-    @Inject
+    @Autowired
     private Table<OrderLine> itemsTable;
 
     private Order order;

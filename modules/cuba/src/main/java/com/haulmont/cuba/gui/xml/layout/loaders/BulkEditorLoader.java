@@ -22,14 +22,14 @@ import com.haulmont.cuba.gui.components.ListComponent;
 import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
 import io.jmix.core.AppBeans;
 import io.jmix.core.security.Security;
-import io.jmix.core.security.UserSessionSource;
+import com.haulmont.cuba.core.global.UserSessionSource;
 import io.jmix.ui.GuiDevelopmentException;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.ComponentsHelper;
-import io.jmix.ui.components.Field;
-import io.jmix.ui.components.Window;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.ComponentsHelper;
+import io.jmix.ui.component.Field;
+import io.jmix.ui.component.Window;
 import io.jmix.ui.gui.OpenType;
-import io.jmix.ui.xml.layout.loaders.AbstractComponentLoader;
+import io.jmix.ui.xml.layout.loader.AbstractComponentLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -73,7 +73,7 @@ public class BulkEditorLoader extends AbstractComponentLoader<BulkEditor> {
         Consumer<?> consumer = super.loadValidator(validatorElement);
         if (!(consumer instanceof Field.Validator)) {
             throw new GuiDevelopmentException(
-                    "BulkEditor validator must implement io.jmix.ui.components.Field.Validator", context);
+                    "BulkEditor validator must implement io.jmix.ui.component.Field.Validator", context);
         }
         return (Field.Validator) consumer;
     }
@@ -100,6 +100,8 @@ public class BulkEditorLoader extends AbstractComponentLoader<BulkEditor> {
         loadVisible(resultComponent, element);
 
         loadStyleName(resultComponent, element);
+
+        loadHtmlSanitizerEnabled(resultComponent, element);
 
         loadCaption(resultComponent, element);
         loadDescription(resultComponent, element);

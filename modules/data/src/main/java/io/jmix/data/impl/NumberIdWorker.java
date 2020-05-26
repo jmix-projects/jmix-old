@@ -26,7 +26,7 @@ import io.jmix.data.Sequences;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Generates ids for entities with long/integer PK using database sequences.
@@ -34,18 +34,18 @@ import javax.inject.Inject;
 @Component(NumberIdWorker.NAME)
 public class NumberIdWorker {
 
-    public static final String NAME = "cuba_NumberIdWorker";
+    public static final String NAME = "jmix_NumberIdWorker";
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
 
-    @Inject
+    @Autowired
     protected Sequences sequences;
 
-    @Inject
+    @Autowired
     protected DataProperties dataProperties;
 
     public Long createLongId(String entityName, String sequenceName) {

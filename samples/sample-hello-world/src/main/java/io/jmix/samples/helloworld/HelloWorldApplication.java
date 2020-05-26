@@ -2,15 +2,12 @@ package io.jmix.samples.helloworld;
 
 import io.jmix.core.DataManager;
 import io.jmix.core.security.Authenticator;
-import io.jmix.security.entity.Group;
-import io.jmix.security.entity.User;
+import io.jmix.samples.helloworld.entity.Greeting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
-
-import java.util.List;
 
 @SpringBootApplication
 public class HelloWorldApplication {

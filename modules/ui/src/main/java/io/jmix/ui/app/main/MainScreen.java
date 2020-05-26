@@ -16,14 +16,14 @@
 
 package io.jmix.ui.app.main;
 
-import io.jmix.ui.components.Button;
+import io.jmix.ui.component.Button;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Subscribe;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Base class for a controller of application Main screen.
@@ -31,7 +31,7 @@ import javax.inject.Inject;
 @UiDescriptor("main-screen.xml")
 @UiController("main")
 public class MainScreen extends Screen {
-    @Inject
+    @Autowired
     protected Notifications notifications;
 
     @Subscribe

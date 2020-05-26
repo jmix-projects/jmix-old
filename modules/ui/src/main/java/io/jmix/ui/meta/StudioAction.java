@@ -16,7 +16,7 @@
 
 package io.jmix.ui.meta;
 
-import io.jmix.ui.actions.Action;
+import io.jmix.ui.action.Action;
 
 import java.lang.annotation.*;
 
@@ -26,7 +26,7 @@ import java.lang.annotation.*;
  * direct or indirect subclass of {@link Action}.
  */
 @Documented
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
 public @interface StudioAction {
     /**

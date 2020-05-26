@@ -19,22 +19,21 @@ package io.jmix.ui.sys;
 import com.google.common.reflect.TypeToken;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.DevelopmentException;
-import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
+import io.jmix.core.metamodel.datatype.DatatypeRegistry;
 import io.jmix.ui.UiComponents;
-import io.jmix.ui.components.AppWorkArea;
-import io.jmix.ui.components.*;
-import io.jmix.ui.components.impl.WebAppWorkArea;
-import io.jmix.ui.components.impl.*;
-import io.jmix.ui.components.mainwindow.*;
-import io.jmix.ui.components.mainwindow.impl.*;
+import io.jmix.ui.component.AppWorkArea;
+import io.jmix.ui.component.*;
+import io.jmix.ui.component.impl.WebAppWorkArea;
+import io.jmix.ui.component.impl.*;
+import io.jmix.ui.component.mainwindow.*;
+import io.jmix.ui.component.mainwindow.impl.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Primary;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
@@ -45,13 +44,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @org.springframework.stereotype.Component(UiComponents.NAME)
 public class WebUiComponents implements UiComponents {
 
-    @Inject
+    @Autowired
     protected ApplicationContext applicationContext;
-    @Inject
+    @Autowired
     protected DatatypeRegistry datatypeRegistry;
-    /*@Inject
+    /*@Autowired
     protected CompositeDescriptorLoader compositeDescriptorLoader;*/ // todo composite
-    @Inject
+    @Autowired
     protected BeanLocator beanLocator;
 
     protected Map<String, Class<? extends Component>> classes = new ConcurrentHashMap<>();
@@ -202,7 +201,7 @@ public class WebUiComponents implements UiComponents {
             if (actualTypeArguments.length == 1 && actualTypeArguments[0] instanceof Class) {
                 Class actualTypeArgument = (Class) actualTypeArguments[0];
 
-                ((HasDatatype) t).setDatatype(datatypeRegistry.get(actualTypeArgument));
+                ((HasDatatype) t).setDatatype(datatypeRegistry.find(actualTypeArgument));
             }
         }
         return t;

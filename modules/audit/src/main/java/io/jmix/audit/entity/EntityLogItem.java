@@ -24,8 +24,8 @@ import io.jmix.core.entity.Creatable;
 import io.jmix.core.entity.annotation.EmbeddedParameters;
 import io.jmix.core.entity.annotation.Listeners;
 import io.jmix.core.entity.annotation.SystemLevel;
-import io.jmix.core.metamodel.annotations.ModelProperty;
-import io.jmix.core.metamodel.datatypes.impl.EnumClass;
+import io.jmix.core.metamodel.annotation.ModelProperty;
+import io.jmix.core.metamodel.datatype.impl.EnumClass;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.data.entity.BaseUuidEntity;
 import io.jmix.data.entity.ReferenceToEntity;
@@ -41,7 +41,7 @@ import java.util.Set;
  */
 @Entity(name = "sec$EntityLog")
 @Table(name = "SEC_ENTITY_LOG")
-@Listeners("cuba_EntityLogItemDetachListener")
+@Listeners("jmix_EntityLogItemDetachListener")
 @SystemLevel
 public class EntityLogItem extends BaseUuidEntity implements Creatable {
 

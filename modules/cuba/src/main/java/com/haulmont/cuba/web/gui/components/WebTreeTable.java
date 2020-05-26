@@ -22,7 +22,7 @@ import io.jmix.core.Entity;
 import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 @Deprecated
-public class WebTreeTable<E extends Entity> extends io.jmix.ui.components.impl.WebTreeTable<E> implements TreeTable<E> {
+public class WebTreeTable<E extends Entity> extends io.jmix.ui.component.impl.WebTreeTable<E> implements TreeTable<E> {
 
     @Override
     protected ComponentSettingsBinder getSettingsBinder() {

@@ -19,7 +19,7 @@ package io.jmix.data.impl.liquibase;
 import io.jmix.core.JmixModuleDescriptor;
 import io.jmix.core.JmixModules;
 import io.jmix.core.Stores;
-import io.jmix.core.commons.util.Dom4j;
+import io.jmix.core.common.util.Dom4j;
 import org.dom4j.Document;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
@@ -29,7 +29,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class LiquibaseChangeLogProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(LiquibaseChangeLogProcessor.class);
 
-    @Inject
+    @Autowired
     public LiquibaseChangeLogProcessor(Environment environment, JmixModules jmixModules) {
         this.environment = environment;
         this.jmixModules = jmixModules;

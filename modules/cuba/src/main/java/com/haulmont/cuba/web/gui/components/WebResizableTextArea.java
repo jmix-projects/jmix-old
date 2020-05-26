@@ -21,7 +21,7 @@ import com.haulmont.cuba.settings.CubaResizableTextAreaSettingsBinder;
 import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 @Deprecated
-public class WebResizableTextArea<V> extends io.jmix.ui.components.impl.WebResizableTextArea<V> implements ResizableTextArea<V> {
+public class WebResizableTextArea<V> extends io.jmix.ui.component.impl.WebResizableTextArea<V> implements ResizableTextArea<V> {
 
     @Override
     protected ComponentSettingsBinder getSettingsBinder() {

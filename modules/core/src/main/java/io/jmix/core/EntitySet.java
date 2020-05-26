@@ -17,8 +17,7 @@
 package io.jmix.core;
 
 import com.google.common.collect.ForwardingSet;
-import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.Entity;
+import io.jmix.core.common.util.Preconditions;
 import io.jmix.core.entity.EntityValues;
 
 import java.io.Serializable;
@@ -73,7 +72,7 @@ public class EntitySet extends ForwardingSet<Entity> implements Serializable {
      * @param entityId entity id
      */
     @SuppressWarnings("unchecked")
-    public <T extends Entity<K>, K> Optional<T> optional(Class<T> entityClass, K entityId) {
+    public <T extends Entity> Optional<T> optional(Class<T> entityClass, Object entityId) {
         Preconditions.checkNotNullArgument(entityClass, "entityClass is null");
         Preconditions.checkNotNullArgument(entityId, "entityId is null");
         return (Optional<T>) entities.stream()
@@ -99,7 +98,7 @@ public class EntitySet extends ForwardingSet<Entity> implements Serializable {
      * @param entityId entity id
      * @throws IllegalArgumentException if the entity not found
      */
-    public <T extends Entity<K>, K> T get(Class<T> entityClass, K entityId) {
+    public <T extends Entity> T get(Class<T> entityClass, Object entityId) {
         return optional(entityClass, entityId).orElseThrow(() -> new IllegalArgumentException("Entity not found"));
     }
 

@@ -23,16 +23,14 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import io.jmix.core.*;
 import io.jmix.core.security.LoginException;
-import io.jmix.core.security.UserSession;
-import io.jmix.core.security.UserSessionSource;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.BaseAction;
-import io.jmix.ui.actions.DialogAction;
-import io.jmix.ui.components.RootWindow;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.action.BaseAction;
+import io.jmix.ui.action.DialogAction;
+import io.jmix.ui.component.RootWindow;
 import io.jmix.ui.exception.ExceptionHandlers;
-import io.jmix.ui.executors.IllegalConcurrentAccessException;
-import io.jmix.ui.icons.CubaIcon;
-import io.jmix.ui.icons.Icons;
+import io.jmix.ui.executor.IllegalConcurrentAccessException;
+import io.jmix.ui.icon.JmixIcon;
+import io.jmix.ui.icon.Icons;
 import io.jmix.ui.logging.AppLog;
 import io.jmix.ui.screen.OpenMode;
 import io.jmix.ui.screen.Screen;
@@ -49,7 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -84,28 +82,24 @@ public abstract class App {
 
     protected AppLog appLog;
 
-    protected Connection connection;
-
     protected ExceptionHandlers exceptionHandlers;
 
-    @Inject
+    @Autowired
     protected CoreProperties coreProperties;
-    @Inject
+    @Autowired
     protected WindowConfig windowConfig;
-    @Inject
+    @Autowired
     protected ThemeConstantsRepository themeConstantsRepository;
-    @Inject
-    protected UserSessionSource userSessionSource;
-    @Inject
+    @Autowired
     protected MessageTools messageTools;
-    @Inject
+    @Autowired
     protected UiSettingsCache settingsCache;
 
-    @Inject
+    @Autowired
     protected Events events;
-    @Inject
+    @Autowired
     protected BeanLocator beanLocator;
-    @Inject
+    @Autowired
     protected UiProperties uiProperties;
 
     protected AppCookies cookies;
@@ -121,7 +115,7 @@ public abstract class App {
     }
 
     protected ThemeConstants loadTheme() {
-        String appWindowTheme = uiProperties.getAppWindowTheme();
+        String appWindowTheme = uiProperties.getTheme();
         String userAppTheme = cookies.getCookieValue(APP_THEME_COOKIE_PREFIX + coreProperties.getWebContextName());
         if (userAppTheme != null) {
             if (!Objects.equals(userAppTheme, appWindowTheme)) {
@@ -188,10 +182,6 @@ public abstract class App {
 
     public abstract void loginOnStart() throws LoginException;
 
-    protected Connection createConnection() {
-        return beanLocator.getPrototype(Connection.NAME);
-    }
-
     /**
      * Called when <em>the first</em> UI of the session is initialized.
      */
@@ -217,7 +207,6 @@ public abstract class App {
 
         appLog = new AppLog(10, beanLocator.get(TimeSource.NAME));
 
-        connection = createConnection();
         exceptionHandlers = new ExceptionHandlers(this, beanLocator);
         cookies = new AppCookies();
 
@@ -366,13 +355,6 @@ public abstract class App {
     }
 
     /**
-     * @return Current connection object
-     */
-    public Connection getConnection() {
-        return connection;
-    }
-
-    /**
      * @return WindowManagerImpl instance or null if the current UI has no MainWindow
      * @deprecated Get screens API from {@link AppUI} instead.
      */
@@ -425,11 +407,6 @@ public abstract class App {
     }
 
     public void setLocale(Locale locale) {
-        UserSession session = getConnection().getSession();
-        if (session != null) {
-            session.setLocale(locale);
-        }
-
         AppUI currentUi = AppUI.getCurrent();
         // it can be null if we handle request in a custom RequestHandler
         if (currentUi != null) {
@@ -469,14 +446,13 @@ public abstract class App {
      * Removes all windows from all UIs.
      */
     public void removeAllWindows() {
-        UserSession currentSession = AppUI.getCurrent().getUserSession();
-
         List<AppUI> authenticatedUIs = getAppUIs()
                 .stream()
                 .filter(ui ->
-                        ui.hasAuthenticatedSession()
-                                && (Objects.equals(ui.getUserSession(), currentSession)
-                                || uiProperties.isForceRefreshAuthenticatedTabs()))
+                                uiProperties.isForceRefreshAuthenticatedTabs()
+//                        ui.hasAuthenticatedSession()
+//                                && (Objects.equals(ui.getUserSession(), currentSession)
+                                )
                 .collect(Collectors.toList());
 
         removeAllWindows(authenticatedUIs);
@@ -501,7 +477,7 @@ public abstract class App {
                     }
                 }
 
-                // also remove all native Vaadin windows, that is not under CUBA control
+                // also remove all native Vaadin windows, that is not under Jmix control
                 Window[] windows = ui.getWindows().toArray(new Window[0]);
 
                 for (Window win : windows) {
@@ -522,18 +498,18 @@ public abstract class App {
         }
     }
 
-    /**
-     * Sets UserSession from {@link Connection#getSession()}
-     * and re-initializes the given {@code ui}.
-     */
-    public void recreateUi(AppUI ui) {
-        ui.setUserSession(connection.getSession());
-
-        removeAllWindows(Collections.singletonList(ui));
-        createTopLevelWindow(ui);
-
-        ui.getPage().open(ControllerUtils.getLocationWithoutParams(), "_self");
-    }
+//    /**
+//     * Sets UserSession from {@link Connection#getSession()}
+//     * and re-initializes the given {@code ui}.
+//     */
+//    public void recreateUi(AppUI ui) {
+//        ui.setUserSession(connection.getSession());
+//
+//        removeAllWindows(Collections.singletonList(ui));
+//        createTopLevelWindow(ui);
+//
+//        ui.getPage().open(ControllerUtils.getLocationWithoutParams(), "_self");
+//    }
 
     protected void clearSettingsCache() {
         settingsCache.clear();
@@ -572,7 +548,7 @@ public abstract class App {
                         .withActions(
                                 new BaseAction("closeApplication")
                                         .withCaption(messages.getMessage("closeApplication"))
-                                        .withIcon(icons.get(CubaIcon.DIALOG_OK))
+                                        .withIcon(icons.get(JmixIcon.DIALOG_OK))
                                         .withHandler(event -> {
                                             performStandardLogout(ui);
 
@@ -614,8 +590,8 @@ public abstract class App {
 
     protected void forceLogout() {
         removeAllWindows();
-
-        Connection connection = getConnection();
-        connection.logout();
+        //todo MG
+//        Connection connection = getConnection();
+//        connection.logout();
     }
 }

@@ -28,24 +28,24 @@ import org.eclipse.persistence.jpa.JpaCache;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManagerFactory;
 
 @Component(OrmCacheSupport.NAME)
 public class OrmCacheSupport {
 
-    public static final String NAME = "cuba_OrmCacheSupport";
+    public static final String NAME = "jmix_OrmCacheSupport";
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
+    @Autowired
     protected StoreAwareLocator storeAwareLocator;
 
-    @Inject
+    @Autowired
     protected EntityStates entityStates;
 
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
 
     /**
@@ -54,7 +54,7 @@ public class OrmCacheSupport {
      * @param entity  which is being updated and can potentially be an element of a collection
      * @param changes changes in the entity. Null when creating and removing the entity.
      */
-    public void evictMasterEntity(Entity<?> entity, @Nullable EntityAttributeChanges changes) {
+    public void evictMasterEntity(Entity entity, @Nullable EntityAttributeChanges changes) {
         MetaClass metaClass = metadata.getClass(entity.getClass());
         for (MetaProperty property : metaClass.getProperties()) {
             if (!property.getRange().isClass() || property.getRange().getCardinality().isMany())

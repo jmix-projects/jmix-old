@@ -22,7 +22,8 @@ import org.dom4j.Element;
  * Interface defining methods for working with screen settings.
  * <p>Screen settings are saved in the database for the current user.
  *
- * @see Screen
+ * @see io.jmix.ui.component.AbstractWindow#getSettings()
+ * @see io.jmix.ui.component.AbstractWindow#applySettings(Settings)
  * @deprecated For the {@link Screen} use ScreenSettingsFacet in the "ui-persistence" add-on instead.
  */
 @Deprecated

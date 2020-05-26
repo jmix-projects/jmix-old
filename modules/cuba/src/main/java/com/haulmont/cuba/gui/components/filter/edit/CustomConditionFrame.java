@@ -33,27 +33,27 @@ import io.jmix.core.impl.jpql.DomainModel;
 import io.jmix.core.impl.jpql.DomainModelBuilder;
 import io.jmix.core.impl.jpql.DomainModelWithCaptionsBuilder;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.security.UserSession;
-import io.jmix.core.security.UserSessionSource;
-import io.jmix.ui.components.CheckBox;
-import io.jmix.ui.components.DateField;
-import io.jmix.ui.components.Frame;
-import io.jmix.ui.components.Label;
-import io.jmix.ui.components.LookupField;
-import io.jmix.ui.components.SourceCodeEditor;
-import io.jmix.ui.components.TextField;
-import io.jmix.ui.components.autocomplete.JpqlSuggestionFactory;
-import io.jmix.ui.components.autocomplete.Suggestion;
-import io.jmix.ui.components.autocomplete.impl.HintProvider;
-import io.jmix.ui.components.autocomplete.impl.HintRequest;
-import io.jmix.ui.components.autocomplete.impl.HintResponse;
-import io.jmix.ui.components.autocomplete.impl.Option;
+import com.haulmont.cuba.security.global.UserSession;
+import com.haulmont.cuba.core.global.UserSessionSource;
+import io.jmix.ui.component.CheckBox;
+import io.jmix.ui.component.DateField;
+import io.jmix.ui.component.Frame;
+import io.jmix.ui.component.Label;
+import io.jmix.ui.component.LookupField;
+import io.jmix.ui.component.SourceCodeEditor;
+import io.jmix.ui.component.TextField;
+import io.jmix.ui.component.autocomplete.JpqlSuggestionFactory;
+import io.jmix.ui.component.autocomplete.Suggestion;
+import io.jmix.ui.component.autocomplete.impl.HintProvider;
+import io.jmix.ui.component.autocomplete.impl.HintRequest;
+import io.jmix.ui.component.autocomplete.impl.HintResponse;
+import io.jmix.ui.component.autocomplete.impl.Option;
 import org.antlr.runtime.RecognitionException;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,41 +70,41 @@ public class CustomConditionFrame extends ConditionFrame<CustomCondition> {
 
     protected static final String WHERE = " where ";
 
-    @Inject
+    @Autowired
     protected LookupField<ParamType> typeSelect;
-    @Inject
+    @Autowired
     protected LookupField<Object> entitySelect;
 
-    @Inject
+    @Autowired
     protected CheckBox inExprCb;
 
-    @Inject
+    @Autowired
     protected TextField<String> nameField;
-    @Inject
+    @Autowired
     protected TextField<String> entityParamViewField;
 
-    @Inject
+    @Autowired
     protected SourceCodeEditor joinField;
-    @Inject
+    @Autowired
     protected SourceCodeEditor whereField;
-    @Inject
+    @Autowired
     protected SourceCodeEditor entityParamWhereField;
 
-    @Inject
+    @Autowired
     protected CheckBox useUserTimeZone;
 
-    @Inject
+    @Autowired
     protected Label<String> paramViewLab;
-    @Inject
+    @Autowired
     protected Label<String> paramWhereLab;
-    @Inject
+    @Autowired
     protected Label<String> entityLab;
-    @Inject
+    @Autowired
     protected Label<String> nameLab;
-    @Inject
+    @Autowired
     protected Label<String> useUserTimeZoneLab;
 
-    @Inject
+    @Autowired
     protected UserSessionSource userSessionSource;
 
     protected boolean initializing;

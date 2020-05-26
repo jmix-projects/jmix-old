@@ -24,10 +24,9 @@ import com.haulmont.cuba.core.testsupport.TestUserSessionSource;
 import com.haulmont.cuba.web.gui.CubaUiComponents;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WebBrowser;
-import io.jmix.core.compatibility.AppProperties;
-import io.jmix.core.metamodel.datatypes.FormatStrings;
-import io.jmix.core.metamodel.datatypes.FormatStringsRegistry;
-import io.jmix.core.security.UserSessionSource;
+import io.jmix.core.metamodel.datatype.FormatStrings;
+import io.jmix.core.metamodel.datatype.FormatStringsRegistry;
+import com.haulmont.cuba.core.global.UserSessionSource;
 import io.jmix.data.persistence.JpqlSortExpressionProvider;
 import io.jmix.security.JmixSecurityConfiguration;
 import io.jmix.ui.UiComponents;
@@ -40,7 +39,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.sql.DataSource;
 import java.util.Locale;
 
@@ -51,11 +50,8 @@ import java.util.Locale;
 @PropertySource("classpath:/com/haulmont/cuba/core/test-app.properties")
 public class WebTestConfiguration {
 
-    @Inject
+    @Autowired
     protected FormatStringsRegistry formatStringsRegistry;
-
-    @Inject
-    protected AppProperties appProperties;
 
     protected VaadinSession vaadinSession;
 
@@ -64,12 +60,10 @@ public class WebTestConfiguration {
         // saving session to avoid it be GC'ed
         VaadinSession.setCurrent(vaadinSession = createTestVaadinSession());
 
-        appProperties.setProperty("cuba.iconsConfig", "io.jmix.ui.icons.CubaIcon");
-
         formatStringsRegistry.setFormatStrings(Locale.ENGLISH, new FormatStrings(
                 '.', ',',
                 "#,##0", "#,##0.###", "#,##0.##",
-                "dd/MM/yyyy", "dd/MM/yyyy HH:mm", "HH:mm",
+                "dd/MM/yyyy", "dd/MM/yyyy HH:mm", "dd/MM/yyyy HH:mm Z", "HH:mm", "HH:mm Z",
                 "True", "False"));
     }
 
@@ -91,12 +85,12 @@ public class WebTestConfiguration {
         return new UserEntityListener();
     }
 
-    @Bean(name = "cuba_UserSessionSource")
+    @Bean(name = UserSessionSource.NAME)
     UserSessionSource userSessionSource() {
         return new TestUserSessionSource();
     }
 
-    @Bean(name = "cuba_JpqlSortExpressionProvider")
+    @Bean(name = JpqlSortExpressionProvider.NAME)
     JpqlSortExpressionProvider jpqlSortExpressionProvider() {
         return new TestJpqlSortExpressionProvider();
     }

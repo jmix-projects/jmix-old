@@ -25,14 +25,15 @@ import io.jmix.core.*
 import com.haulmont.cuba.core.Persistence
 import org.springframework.jdbc.core.JdbcTemplate
 import spec.haulmont.cuba.core.CoreTestSpecification
+import com.haulmont.cuba.core.entity.contracts.Id
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 class EntityChangedEventVersionTest extends CoreTestSpecification {
 
-    @Inject
+    @Autowired
     DataManager dataManager
-    @Inject
+    @Autowired
     Persistence persistence
 
     void cleanup() {

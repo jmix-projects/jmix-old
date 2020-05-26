@@ -1,4 +1,4 @@
-import io.jmix.audit.EntityLogAPI
+import io.jmix.audit.EntityLog
 import io.jmix.audit.JmixAuditConfiguration
 import io.jmix.audit.entity.EntityLogItem
 import io.jmix.audit.entity.LoggedAttribute
@@ -19,7 +19,7 @@ import org.springframework.transaction.support.TransactionTemplate
 import spock.lang.Specification
 import test_support.JmixAuditTestConfiguration
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
 import javax.persistence.TypedQuery
@@ -42,20 +42,20 @@ import javax.persistence.TypedQuery
 
 @ContextConfiguration(classes = [JmixCoreConfiguration, JmixDataConfiguration, JmixAuditConfiguration, JmixAuditTestConfiguration])
 class AbstractEntityLogTest extends Specification {
-    @Inject
-    protected EntityLogAPI entityLog
-    @Inject
+    @Autowired
+    protected EntityLog entityLog
+    @Autowired
     protected PersistenceTools persistenceTools
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools
-    @Inject
+    @Autowired
     protected JdbcTemplate jdbc
     @PersistenceContext
     protected EntityManager em
 
     protected TransactionTemplate transaction
 
-    @Inject
+    @Autowired
     protected void setTransactionManager(PlatformTransactionManager transactionManager) {
         transaction = new TransactionTemplate(transactionManager);
         transaction.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
@@ -153,7 +153,7 @@ class AbstractEntityLogTest extends Specification {
     }
 
     protected void initEntityLogAPI() {
-        entityLog = AppBeans.get(EntityLogAPI.class)
+        entityLog = AppBeans.get(EntityLog.class)
         entityLog.invalidateCache()
     }
 }

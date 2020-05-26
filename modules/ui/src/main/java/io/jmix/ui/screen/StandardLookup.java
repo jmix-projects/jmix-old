@@ -20,14 +20,14 @@ import com.google.common.base.Strings;
 import io.jmix.core.Messages;
 import io.jmix.core.Entity;
 import io.jmix.ui.UiProperties;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.BaseAction;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.LookupComponent;
-import io.jmix.ui.components.LookupComponent.LookupSelectionChangeNotifier;
-import io.jmix.ui.components.Window;
-import io.jmix.ui.icons.CubaIcon;
-import io.jmix.ui.icons.Icons;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.action.BaseAction;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.LookupComponent;
+import io.jmix.ui.component.LookupComponent.LookupSelectionChangeNotifier;
+import io.jmix.ui.component.Window;
+import io.jmix.ui.icon.JmixIcon;
+import io.jmix.ui.icon.Icons;
 import io.jmix.ui.util.OperationResult;
 
 import javax.annotation.Nullable;
@@ -59,7 +59,7 @@ public class StandardLookup<T extends Entity> extends Screen implements LookupSc
 
         Action commitAction = new BaseAction(LOOKUP_SELECT_ACTION_ID)
                 .withCaption(messages.getMessage("actions.Select"))
-                .withIcon(icons.get(CubaIcon.LOOKUP_OK))
+                .withIcon(icons.get(JmixIcon.LOOKUP_OK))
                 .withPrimary(true)
                 .withShortcut(commitShortcut)
                 .withHandler(this::select);
@@ -68,7 +68,7 @@ public class StandardLookup<T extends Entity> extends Screen implements LookupSc
 
         Action closeAction = new BaseAction(LOOKUP_CANCEL_ACTION_ID)
                 .withCaption(messages.getMessage("actions.Cancel"))
-                .withIcon(icons.get(CubaIcon.LOOKUP_CANCEL))
+                .withIcon(icons.get(JmixIcon.LOOKUP_CANCEL))
                 .withHandler(this::cancel);
 
         window.addAction(closeAction);

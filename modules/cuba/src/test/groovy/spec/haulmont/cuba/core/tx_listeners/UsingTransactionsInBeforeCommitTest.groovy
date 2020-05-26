@@ -25,14 +25,14 @@ import com.haulmont.cuba.core.Transaction
 import org.springframework.jdbc.core.JdbcTemplate
 import spec.haulmont.cuba.core.CoreTestSpecification
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 import static com.haulmont.cuba.core.testsupport.TestSupport.deleteRecord
 
 class UsingTransactionsInBeforeCommitTest extends CoreTestSpecification {
-    @Inject
+    @Autowired
     private Metadata metadata
-    @Inject
+    @Autowired
     private Persistence persistence
 
     private Group companyGroup
@@ -47,6 +47,7 @@ class UsingTransactionsInBeforeCommitTest extends CoreTestSpecification {
 
     void cleanup() {
         def jdbcTemplate = new JdbcTemplate(persistence.getDataSource())
+        jdbcTemplate.update("delete from TEST_USER_ROLE")
         jdbcTemplate.update("delete from TEST_USER")
         deleteRecord(companyGroup)
     }

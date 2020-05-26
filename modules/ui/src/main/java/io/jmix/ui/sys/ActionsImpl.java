@@ -16,10 +16,10 @@
 
 package io.jmix.ui.sys;
 
-import io.jmix.core.Scripting;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.ActionType;
+import io.jmix.core.HotDeployManager;
 import io.jmix.ui.Actions;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.action.ActionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -32,7 +32,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
@@ -48,9 +48,9 @@ public class ActionsImpl implements Actions, ApplicationListener<ContextRefreshe
     @Autowired(required = false)
     protected List<ActionsConfiguration> configurations = Collections.emptyList();
 
-    @Inject
-    protected Scripting scripting;
-    @Inject
+    @Autowired
+    protected HotDeployManager hotDeployManager;
+    @Autowired
     protected ApplicationContext applicationContext;
 
     protected Map<String, Class<? extends Action>> classes = new HashMap<>();
@@ -181,7 +181,7 @@ public class ActionsImpl implements Actions, ApplicationListener<ContextRefreshe
             classes.clear();
 
             for (Map.Entry<String, String> entry : squashedMap.entrySet()) {
-                Class clazz = scripting.loadClassNN(entry.getValue());
+                Class clazz = hotDeployManager.loadClass(entry.getValue());
                 classes.put(entry.getKey(), clazz);
             }
 

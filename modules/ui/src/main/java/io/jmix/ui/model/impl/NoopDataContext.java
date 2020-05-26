@@ -17,8 +17,8 @@
 package io.jmix.ui.model.impl;
 
 import io.jmix.core.*;
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.commons.events.sys.VoidSubscription;
+import io.jmix.core.common.event.Subscription;
+import io.jmix.core.common.event.sys.VoidSubscription;
 import io.jmix.ui.model.DataContext;
 
 import javax.annotation.Nullable;
@@ -41,7 +41,7 @@ public class NoopDataContext implements DataContext {
 
     @Nullable
     @Override
-    public <T extends Entity<K>, K> T find(Class<T> entityClass, K entityId) {
+    public <T extends Entity> T find(Class<T> entityClass, Object entityId) {
         return null;
     }
 

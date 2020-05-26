@@ -25,7 +25,7 @@ import io.jmix.core.metamodel.model.MetaClass;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,22 +33,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @CoreTest
 public class MetadataTest {
 
-    @Inject
+    @Autowired
     private Metadata metadata;
-    @Inject
+    @Autowired
     private MetadataTools metadataTools;
 
     @Test
     public void testPersistentAndTransientEntities() throws Exception {
-
         assertTrue(metadataTools.isPersistent(User.class));
-        assertFalse(metadataTools.isTransient(User.class));
-
         assertFalse(metadataTools.isPersistent(LockInfo.class));
-        assertTrue(metadataTools.isTransient(LockInfo.class));
-
         assertFalse(metadataTools.isPersistent(TestNotPersistentEntity.class));
-        assertTrue(metadataTools.isNotPersistent(TestNotPersistentEntity.class));
     }
 
     @Test
@@ -67,28 +61,19 @@ public class MetadataTest {
         metaClass = metadata.getSession().getClass(EntityLogItem.class);
         assertTrue(metadataTools.isPersistent(metaClass.getProperty("user")));
         assertFalse(metadataTools.isPersistent(metaClass.getProperty("attributes")));
-        assertTrue(metadataTools.isNotPersistent(metaClass.getProperty("attributes")));
+        assertFalse(metadataTools.isPersistent(metaClass.getProperty("attributes")));
 
         // Folder
         metaClass = metadata.getSession().getClass(Folder.class);
         assertTrue(metadataTools.isPersistent(metaClass.getProperty("name")));
-        assertTrue(metadataTools.isNotPersistent(new Folder(), "itemStyle"));
 
         // UserSessionEntity
         metaClass = metadata.getSession().getClass(UserSessionEntity.class);
         assertFalse(metadataTools.isPersistent(metaClass.getProperty("id")));
-        assertTrue(metadataTools.isNotPersistent(metaClass.getProperty("id")));
-        assertTrue(metadataTools.isNotPersistent(metadata.create(metaClass), "id"));
-        assertTrue(metadataTools.isNotPersistent(metaClass.getProperty("login")));
-        assertTrue(metadataTools.isNotPersistent(metaClass.getProperty("login")));
 
         // TestTransientEntity
         metaClass = metadata.getSession().getClass(TestNotPersistentEntity.class);
         assertFalse(metadataTools.isPersistent(metaClass.getProperty("id")));
-        assertTrue(metadataTools.isNotPersistent(metaClass.getProperty("id")));
-        assertTrue(metadataTools.isNotPersistent(metadata.create(metaClass), "id"));
-        assertTrue(metadataTools.isNotPersistent(metaClass.getProperty("name")));
-        assertTrue(metadataTools.isNotPersistent(metaClass.getProperty("info")));
     }
 
     @Test
@@ -96,7 +81,7 @@ public class MetadataTest {
     public void testEmbeddedProperty() {
         // TestTransientEntity
         MetaClass metaClass = metadata.getSession().getClass(TestNotPersistentEntity.class);
-        assertTrue(metadataTools.isNotPersistent(metaClass.getProperty("embeddedRef")));
+        assertFalse(metadataTools.isPersistent(metaClass.getProperty("embeddedRef")));
         assertFalse(metadataTools.isEmbedded(metaClass.getProperty("embeddedRef")));
     }
 

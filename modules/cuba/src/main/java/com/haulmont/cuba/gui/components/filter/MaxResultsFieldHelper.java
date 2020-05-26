@@ -19,11 +19,11 @@ package com.haulmont.cuba.gui.components.filter;
 import com.google.common.base.Splitter;
 import com.haulmont.cuba.CubaProperties;
 import io.jmix.ui.UiComponents;
-import io.jmix.ui.components.LookupField;
+import io.jmix.ui.component.LookupField;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +31,13 @@ import java.util.List;
 public class MaxResultsFieldHelper {
     public static final String NAME = "cuba_MaxResultsFieldHelper";
 
-    @Inject
+    @Autowired
     protected UiComponents uiComponents;
-    @Inject
+    @Autowired
     protected FilterHelper filterHelper;
-    @Inject
+    @Autowired
     protected ThemeConstantsManager themeConstantsManager;
-    @Inject
+    @Autowired
     protected CubaProperties properties;
 
     public LookupField<Integer> createMaxResultsLookupField() {

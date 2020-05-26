@@ -19,6 +19,7 @@ package io.jmix.ui.model;
 import io.jmix.core.Entity;
 import io.jmix.core.Metadata;
 import io.jmix.core.entity.EntityValues;
+import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.security.Security;
 import io.jmix.ui.model.impl.*;
 import io.jmix.core.security.EntityOp;
@@ -28,7 +29,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 
 /**
@@ -37,13 +38,13 @@ import java.util.Collection;
 @Component("jmix_DataComponents")
 public class DataComponents implements ApplicationContextAware {
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
+    @Autowired
     protected Security security;
 
-    @Inject
+    @Autowired
     protected SorterFactory sorterFactory;
 
     private ApplicationContext applicationContext;
@@ -137,6 +138,13 @@ public class DataComponents implements ApplicationContextAware {
      */
     public KeyValueContainer createKeyValueContainer() {
         return new KeyValueContainerImpl(applicationContext);
+    }
+
+    /**
+     * Creates {@code KeyValueContainer} for the given MetaClass.
+     */
+    public KeyValueContainer createKeyValueContainer(MetaClass metaClass) {
+        return new KeyValueContainerImpl(applicationContext, metaClass);
     }
 
     /**

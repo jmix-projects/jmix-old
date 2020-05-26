@@ -19,7 +19,7 @@ apply plugin: 'groovy'
 apply plugin: 'java-library'
 apply plugin: 'io.jmix'
 
-version = rootProject.jmixVersion
+group = 'io.jmix.security'
 
 dependencies {
     api platform(project(':jmix-platform'))
@@ -38,27 +38,23 @@ dependencies {
     testRuntimeOnly 'org.hsqldb:hsqldb'
 }
 
-entitiesEnhancing {
-    enabled = true
-}
-
 jar {
     archivesBaseName = 'jmix-security'
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier = 'sources'
+java {
+    withSourcesJar()
+}
+
+artifacts {
+    archives sourcesJar
 }
 
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            groupId = 'io.jmix.security'
             artifactId = 'jmix-security'
-
             from components.java
-            artifact sourcesJar
         }
     }
 }

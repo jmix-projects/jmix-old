@@ -23,7 +23,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
-import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.common.event.Subscription;
 import io.jmix.ui.screen.Install;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.ScreenFragment;
@@ -39,6 +39,8 @@ import org.springframework.util.ReflectionUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.lang.invoke.*;

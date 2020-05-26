@@ -19,7 +19,7 @@ import io.jmix.core.BeanLocator;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.FetchPlanRepository;
 import io.jmix.core.MetadataTools;
-import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.common.util.Preconditions;
 import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.IdProxy;
@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityNotFoundException;
 import java.sql.Connection;
 
@@ -46,11 +46,11 @@ public class EntityManagerImpl implements EntityManager {
 
     private JmixEntityManager delegate;
 
-    @Inject
+    @Autowired
     private BeanLocator beanLocator;
-    @Inject
+    @Autowired
     private MetadataTools metadataTools;
-    @Inject
+    @Autowired
     private FetchPlanRepository fetchPlanRepository;
 
     private static final Logger log = LoggerFactory.getLogger(EntityManagerImpl.class);
@@ -110,19 +110,19 @@ public class EntityManagerImpl implements EntityManager {
     }
 
     @Override
-    public <T extends Entity<K>, K> T find(Class<T> entityClass, K id) {
+    public <T extends Entity, K> T find(Class<T> entityClass, K id) {
         return delegate.find(entityClass, id);
     }
 
     @Nullable
     @Override
-    public <T extends Entity<K>, K> T find(Class<T> entityClass, K id, FetchPlan... fetchPlans) {
+    public <T extends Entity, K> T find(Class<T> entityClass, K id, FetchPlan... fetchPlans) {
         return delegate.find(entityClass, id, PersistenceHints.builder().withFetchPlans(fetchPlans).build());
     }
 
     @Nullable
     @Override
-    public <T extends Entity<K>, K> T find(Class<T> entityClass, K id, String... fetchPlanNames) {
+    public <T extends Entity, K> T find(Class<T> entityClass, K id, String... fetchPlanNames) {
         FetchPlan[] fetchPlanArray = new FetchPlan[fetchPlanNames.length];
         for (int i = 0; i < fetchPlanNames.length; i++) {
             fetchPlanArray[i] = fetchPlanRepository.getFetchPlan(entityClass, fetchPlanNames[i]);
@@ -131,7 +131,7 @@ public class EntityManagerImpl implements EntityManager {
     }
 
     @Override
-    public <T extends Entity<K>, K> T getReference(Class<T> clazz, K id) {
+    public <T extends Entity, K> T getReference(Class<T> clazz, K id) {
         return delegate.getReference(clazz, id);
     }
 
@@ -188,7 +188,7 @@ public class EntityManagerImpl implements EntityManager {
 
     @Nullable
     @Override
-    public <T extends Entity<K>, K> T reload(Class<T> entityClass, K id, String... fetchPlanNames) {
+    public <T extends Entity, K> T reload(Class<T> entityClass, K id, String... fetchPlanNames) {
         Preconditions.checkNotNullArgument(entityClass, "entityClass is null");
         Preconditions.checkNotNullArgument(id, "id is null");
 

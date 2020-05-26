@@ -17,7 +17,7 @@
 package io.jmix.core;
 
 import com.google.common.collect.Sets;
-import io.jmix.core.commons.util.StackTrace;
+import io.jmix.core.common.util.StackTrace;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -27,13 +27,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 /**
  * Provides information about entities states.
@@ -42,16 +42,16 @@ import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
 public class EntityStates {
     public static final String NAME = "jmix_EntityStates";
 
-    @Inject
+    @Autowired
     protected PersistentAttributesLoadChecker checker;
 
-    @Inject
+    @Autowired
     protected FetchPlanRepository viewRepository;
 
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
     private static final Logger log = LoggerFactory.getLogger(EntityStates.class);
@@ -69,7 +69,7 @@ public class EntityStates {
     public boolean isNew(Object entity) {
         checkNotNullArgument(entity, "entity is null");
         if (entity instanceof Entity) {
-            return ((Entity<?>) entity).__getEntityEntry().isNew();
+            return ((Entity) entity).__getEntityEntry().isNew();
         } else {
             if (log.isTraceEnabled()) {
                 log.trace("EntityStates.isNew is called for unsupported type '{}'. Stacktrace:\n{}",
@@ -90,7 +90,7 @@ public class EntityStates {
     public boolean isManaged(Object entity) {
         checkNotNullArgument(entity, "entity is null");
         if (entity instanceof Entity) {
-            return ((Entity<?>) entity).__getEntityEntry().isManaged();
+            return ((Entity) entity).__getEntityEntry().isManaged();
         } else {
             if (log.isTraceEnabled()) {
                 log.trace("EntityStates.isManaged is called for unsupported type '{}'. Stacktrace:\n{}",
@@ -111,7 +111,7 @@ public class EntityStates {
      */
     public boolean isDetached(Object entity) {
         checkNotNullArgument(entity, "entity is null");
-        if (entity instanceof Entity && ((Entity<?>) entity).__getEntityEntry().isDetached()) {
+        if (entity instanceof Entity && ((Entity) entity).__getEntityEntry().isDetached()) {
             return true;
         } else {
             if (log.isTraceEnabled()) {
@@ -403,7 +403,12 @@ public class EntityStates {
             return;
         visited.add(entity);
 
-        for (MetaProperty property : metadata.getClass(entity).getProperties()) {
+        // Using MetaClass of the fetchPlan helps in the case when the entity is an item of a collection, and the collection
+        // can contain instances of different subclasses. So we don't want to add specific properties of subclasses
+        // to the resulting view.
+        MetaClass metaClass = metadata.getClass(fetchPlan.getEntityClass());
+
+        for (MetaProperty property : metaClass.getProperties()) {
             if (!isLoaded(entity, property.getName()))
                 continue;
 
@@ -441,7 +446,7 @@ public class EntityStates {
         if (entity instanceof SoftDelete && ((SoftDelete) entity).isDeleted())
             return true;
 
-        if (entity instanceof Entity && ((Entity<?>) entity).__getEntityEntry().isRemoved()) {
+        if (entity instanceof Entity && ((Entity) entity).__getEntityEntry().isRemoved()) {
             return true;
         }
         return false;
@@ -462,7 +467,7 @@ public class EntityStates {
     public void makeDetached(Entity entity) {
         checkNotNullArgument(entity, "entity is null");
 
-        if (((Entity<?>) entity).__getEntityEntry().isManaged())
+        if (entity.__getEntityEntry().isManaged())
             throw new IllegalStateException("entity is managed");
 
         entity.__getEntityEntry().setNew(false);

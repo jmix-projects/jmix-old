@@ -16,13 +16,13 @@
 
 package test_support.testmodel;
 
-import io.jmix.core.metamodel.annotations.ModelProperty;
+import io.jmix.core.metamodel.annotation.ModelProperty;
 
 import javax.persistence.*;
 
 @Entity(name = "test$StringKeyEntity")
 @Table(name = "TEST_STRING_KEY")
-public class StringKeyEntity implements io.jmix.core.Entity<String> {
+public class StringKeyEntity implements io.jmix.core.Entity {
 
     private static final long serialVersionUID = 871701970234815437L;
 

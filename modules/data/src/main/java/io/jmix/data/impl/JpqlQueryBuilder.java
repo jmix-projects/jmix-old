@@ -20,18 +20,18 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import io.jmix.core.*;
-import io.jmix.core.commons.util.StringHelper;
+import io.jmix.core.common.util.StringHelper;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.queryconditions.Condition;
-import io.jmix.core.queryconditions.ConditionJpqlGenerator;
+import io.jmix.core.querycondition.Condition;
+import io.jmix.core.querycondition.ConditionJpqlGenerator;
 import io.jmix.data.PersistenceSecurity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.*;
@@ -68,22 +68,22 @@ public class JpqlQueryBuilder {
     protected String resultQuery;
     protected Map<String, Object> resultParameters;
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
+    @Autowired
     protected PersistenceSecurity security;
 
-    @Inject
+    @Autowired
     protected ConditionJpqlGenerator conditionJpqlGenerator;
 
-    @Inject
+    @Autowired
     protected SortJpqlGenerator sortJpqlGenerator;
 
-    @Inject
+    @Autowired
     protected QueryTransformerFactory queryTransformerFactory;
 
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
 
     public JpqlQueryBuilder setId(Object id) {

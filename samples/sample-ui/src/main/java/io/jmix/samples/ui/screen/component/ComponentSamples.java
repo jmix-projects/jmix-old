@@ -20,17 +20,17 @@ import io.jmix.core.MetadataTools;
 import io.jmix.ui.Dialogs;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.UiComponents;
-import io.jmix.ui.actions.DialogAction;
+import io.jmix.ui.action.DialogAction;
 import io.jmix.ui.app.inputdialog.DialogActions;
 import io.jmix.ui.app.inputdialog.InputParameter;
-import io.jmix.ui.components.*;
+import io.jmix.ui.component.*;
 import io.jmix.ui.screen.LoadDataBeforeShow;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Subscribe;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,29 +39,29 @@ import java.util.List;
 @LoadDataBeforeShow
 public class ComponentSamples extends Screen {
 
-    @Inject
+    @Autowired
     private CheckBoxGroup<String> checkBoxGroup;
 
-    @Inject
+    @Autowired
     private TwinColumn<String> twinColumn;
 
-    @Inject
+    @Autowired
     private OptionsList<List, String> optionsList;
 
-    @Inject
+    @Autowired
     private OptionsGroup<List, String> optionsGroup;
 
-    @Inject
+    @Autowired
     private VBoxLayout othersVBox;
 
-    @Inject
+    @Autowired
     private UiComponents uiComponents;
 
-    @Inject
+    @Autowired
     private Dialogs dialogs;
-    @Inject
+    @Autowired
     private Notifications notifications;
-    @Inject
+    @Autowired
     private MetadataTools metadataTools;
 
 //    private ListEditor<String> listEditor;

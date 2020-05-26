@@ -17,17 +17,14 @@
 package io.jmix.core;
 
 import io.jmix.core.annotation.JmixModule;
-import io.jmix.core.annotation.JmixProperty;
-import io.jmix.core.compatibility.AppContext;
 import io.jmix.core.impl.JmixMessageSource;
 import io.jmix.core.security.JmixCoreSecurityConfiguration;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.PriorityOrdered;
@@ -43,11 +40,8 @@ import org.springframework.core.annotation.Order;
 @Import(JmixCoreSecurityConfiguration.class)
 @ComponentScan
 @ConfigurationPropertiesScan
-@JmixModule(dependsOn = {}, properties = {
-        @JmixProperty(name = "jmix.core.fetchPlansConfig", value = "io/jmix/core/views.xml"),
-        @JmixProperty(name = "jmix.core.workDir", value = "${user.dir}/.jmix/work"),
-        @JmixProperty(name = "jmix.core.confDir", value = "${user.dir}/.jmix/conf")
-})
+@JmixModule(dependsOn = {})
+@PropertySource(name = "io.jmix.core", value = "classpath:/io/jmix/core/module.properties")
 public class JmixCoreConfiguration {
 
     @Bean("jmix_ModulesProcessor")
@@ -65,15 +59,14 @@ public class JmixCoreConfiguration {
         return new JmixMessageSource(modules, resources);
     }
 
-    @EventListener
-    @Order(Events.HIGHEST_CORE_PRECEDENCE + 10)
-    public void onApplicationContextRefreshFirst(ContextRefreshedEvent event) {
-        AppContext.Internals.setApplicationContext(event.getApplicationContext());
+    @Bean
+    public MeterRegistry simpleMeterRegistry() {
+        return new SimpleMeterRegistry();
     }
 
     @EventListener
-    @Order(Events.LOWEST_CORE_PRECEDENCE - 10)
-    public void onApplicationContextRefreshLast(ContextRefreshedEvent event) {
-        AppContext.Internals.startContext();
+    @Order(Events.HIGHEST_CORE_PRECEDENCE + 5)
+    public void onApplicationContextRefreshFirst(ContextRefreshedEvent event) {
+        AppBeans.setApplicationContext(event.getApplicationContext());
     }
 }

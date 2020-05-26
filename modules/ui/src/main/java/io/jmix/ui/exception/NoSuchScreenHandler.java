@@ -17,22 +17,21 @@ package io.jmix.ui.exception;
 
 import io.jmix.core.Messages;
 import io.jmix.ui.NoSuchScreenException;
-import io.jmix.ui.components.Frame;
-// import io.jmix.ui.components.compatibility.WindowManager;
+// import io.jmix.ui.component.compatibility.WindowManager;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Handles {@link NoSuchScreenException}.
  *
  */
-@Component("cuba_NoSuchScreenHandler")
+@Component("jmix_NoSuchScreenHandler")
 public class NoSuchScreenHandler extends AbstractGenericExceptionHandler implements Ordered {
 
-    @Inject
+    @Autowired
     protected Messages messages;
 
     public NoSuchScreenHandler() {

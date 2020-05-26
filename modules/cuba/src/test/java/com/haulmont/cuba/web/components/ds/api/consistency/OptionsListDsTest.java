@@ -7,16 +7,16 @@ package com.haulmont.cuba.web.components.ds.api.consistency;
 
 import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.components.OptionsList;
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.security.entity.Role;
-import io.jmix.security.entity.RoleType;
+import io.jmix.core.common.event.Subscription;
+import com.haulmont.cuba.core.model.common.Role;
+import com.haulmont.cuba.core.model.common.RoleType;
 import io.jmix.ui.UiComponents;
-import io.jmix.ui.components.HasValue;
+import io.jmix.ui.component.HasValue;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.function.Consumer;
 
 import static org.junit.Assert.assertEquals;
@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Disabled
 public class OptionsListDsTest extends AbstractComponentDsTest {
 
-    @Inject
+    @Autowired
     protected UiComponents uiComponents;
 
     @Test

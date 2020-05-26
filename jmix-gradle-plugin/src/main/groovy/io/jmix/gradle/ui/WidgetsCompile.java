@@ -152,7 +152,7 @@ public class WidgetsCompile extends WidgetsTask {
     protected void generateWidgetSetXml(List<File> compilerClassPath, File gwtTemp, String widgetSetClass) {
         StringBuilder gwtXmlBuilder = new StringBuilder();
         gwtXmlBuilder.append("<module>\n");
-        gwtXmlBuilder.append("    <inherits name=\"io.jmix.ui.widgets.WidgetSet\"/>\n");
+        gwtXmlBuilder.append("    <inherits name=\"io.jmix.ui.widget.WidgetSet\"/>\n");
 
         for (File file : compilerClassPath) {
             if (file.getName().endsWith(".jar")) {

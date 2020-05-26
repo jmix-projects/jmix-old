@@ -17,15 +17,12 @@
 package com.haulmont.cuba.gui.components.actions;
 
 import com.haulmont.cuba.gui.data.Datasource;
-import io.jmix.core.EntityStates;
-import io.jmix.core.FetchPlan;
-import io.jmix.core.FetchPlanRepository;
-import io.jmix.core.Entity;
+import com.haulmont.cuba.gui.dynamicattributes.DynamicAttributesGuiTools;
+import io.jmix.core.*;
 import io.jmix.ui.Actions;
-import io.jmix.ui.dynamicattributes.DynamicAttributesGuiTools;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Contains utility methods used by GUI actions.
@@ -35,14 +32,16 @@ public class GuiActionSupport {
 
     public static final String NAME = "cuba_GuiActionSupport";
 
-    @Inject
-    protected FetchPlanRepository viewRepository;
-    @Inject
+    @Autowired
+    protected FetchPlanRepository fetchPlanRepository;
+    @Autowired
     protected EntityStates entityStates;
-    @Inject
+    @Autowired
     protected DynamicAttributesGuiTools dynamicAttributesGuiTools;
+    @Autowired
+    protected DataManager dataManager;
 
-    @Inject
+    @Autowired
     protected Actions actions;
 
     /**
@@ -51,19 +50,19 @@ public class GuiActionSupport {
      * dynamic attributes and the entity instance does not contain them.
      */
     public Entity reloadEntityIfNeeded(Entity entity, Datasource targetDatasource) {
-        boolean needDynamicAttributes = false;
-        boolean dynamicAttributesAreLoaded = true;
-        //dynamicAttributesAreLoaded = e.getDynamicAttributes() != null;
-        needDynamicAttributes = targetDatasource.getLoadDynamicAttributes();
+        boolean needDynamicAttributes = targetDatasource.getLoadDynamicAttributes();
+        boolean dynamicAttributesAreLoaded = dynamicAttributesGuiTools.hasDynamicAttributes(entity);
 
-
-        FetchPlan view = targetDatasource.getView();
-        if (view == null) {
-            view = viewRepository.getFetchPlan(entity.getClass(), FetchPlan.LOCAL);
+        FetchPlan fetchPlan = targetDatasource.getView();
+        if (fetchPlan == null) {
+            fetchPlan = fetchPlanRepository.getFetchPlan(entity.getClass(), FetchPlan.LOCAL);
         }
 
-        if (!entityStates.isLoadedWithFetchPlan(entity, view)) {
-            entity = targetDatasource.getDsContext().getDataSupplier().reload(entity, view, null, needDynamicAttributes);
+        if (!entityStates.isLoadedWithFetchPlan(entity, fetchPlan)) {
+            entity = dataManager.load(Id.of(entity))
+                    .fetchPlan(fetchPlan)
+                    .dynamicAttributes(needDynamicAttributes)
+                    .optional().orElse(null);
         } else if (needDynamicAttributes && !dynamicAttributesAreLoaded) {
             dynamicAttributesGuiTools.reloadDynamicAttributes(entity);
         }

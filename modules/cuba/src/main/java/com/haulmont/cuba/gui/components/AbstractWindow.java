@@ -22,14 +22,14 @@ import com.haulmont.cuba.gui.screen.ScreenSettings;
 import com.haulmont.cuba.gui.screen.compatibility.LegacyFrame;
 import io.jmix.core.Events;
 import io.jmix.core.MessageTools;
-import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.common.event.Subscription;
 import io.jmix.ui.UiProperties;
 import io.jmix.ui.WindowInfo;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.BaseAction;
-import io.jmix.ui.components.*;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.action.BaseAction;
+import io.jmix.ui.component.*;
 import io.jmix.ui.gui.OpenType;
-import io.jmix.ui.icons.Icons;
+import io.jmix.ui.icon.Icons;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.screen.compatibility.CubaLegacySettings;
 import io.jmix.ui.settings.compatibility.Settings;
@@ -39,7 +39,7 @@ import org.dom4j.Element;
 import org.springframework.core.annotation.Order;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -68,13 +68,13 @@ public class AbstractWindow extends Screen
 
     private Settings settings;
 
-    @Inject
+    @Autowired
     protected Messages messages;
-    @Inject
+    @Autowired
     protected MessageTools messageTools;
-    @Inject
+    @Autowired
     private MessageBundle messageBundle;
-    @Inject
+    @Autowired
     private WindowManager windowManager;
 
     public AbstractWindow() {

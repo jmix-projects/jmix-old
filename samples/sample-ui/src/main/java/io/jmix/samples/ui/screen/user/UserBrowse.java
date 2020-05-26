@@ -21,7 +21,7 @@ import io.jmix.security.entity.User;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.screen.*;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @UiController("sec_User.browse")
 @UiDescriptor("user-browse.xml")
@@ -29,18 +29,18 @@ import javax.inject.Inject;
 //@LoadDataBeforeShow
 public class UserBrowse extends StandardLookup<User> {
 
-    @Inject
+    @Autowired
     private CollectionContainer<User> usersDc;
 
     @Subscribe
     private void onInit(InitEvent event) {
         User user1 = new User();
-        user1.setActive(true);
+        user1.setEnabled(true);
         user1.setFirstName("asd");
         user1.setLastName("asxcvcx");
 
         User user2 = new User();
-        user2.setActive(true);
+        user2.setEnabled(true);
         user2.setFirstName("asd");
         user2.setLastName("asxcvcx");
 

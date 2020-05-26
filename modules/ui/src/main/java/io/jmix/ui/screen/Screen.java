@@ -17,27 +17,29 @@
 package io.jmix.ui.screen;
 
 import io.jmix.core.BeanLocator;
-import io.jmix.core.commons.events.EventHub;
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.commons.events.TriggerOnce;
+import io.jmix.core.common.event.EventHub;
+import io.jmix.core.common.event.Subscription;
+import io.jmix.core.common.event.TriggerOnce;
 import io.jmix.ui.Screens;
 import io.jmix.ui.UiProperties;
 import io.jmix.ui.WindowInfo;
-import io.jmix.ui.components.Window;
-import io.jmix.ui.components.impl.WindowImplementation;
+import io.jmix.ui.component.Window;
+import io.jmix.ui.component.impl.WindowImplementation;
 import io.jmix.ui.model.ScreenData;
 import io.jmix.ui.screen.compatibility.CubaLegacySettings;
+import io.jmix.ui.navigation.UrlParamsChangedEvent;
+import io.jmix.ui.settings.Settings;
 import io.jmix.ui.util.OperationResult;
 import org.springframework.context.ApplicationListener;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.EventObject;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 /**
  * Base class for all screen controllers.
@@ -68,7 +70,7 @@ public abstract class Screen implements FrameOwner {
         return beanLocator;
     }
 
-    @Inject
+    @Autowired
     protected void setBeanLocator(BeanLocator beanLocator) {
         this.beanLocator = beanLocator;
     }
@@ -277,7 +279,7 @@ public abstract class Screen implements FrameOwner {
         return eventHub.subscribe(AfterDetachEvent.class, listener);
     }
 
-    /* todo navigation
+    /**
      * Adds {@link UrlParamsChangedEvent} listener.
      * <p>
      * You can also add an event listener declaratively using a controller method annotated with {@link Subscribe}:
@@ -291,9 +293,9 @@ public abstract class Screen implements FrameOwner {
      * @param listener listener
      * @return subscription
      */
-    /*protected Subscription addUrlParamsChangeListener(Consumer<UrlParamsChangedEvent> listener) {
+    protected Subscription addUrlParamsChangeListener(Consumer<UrlParamsChangedEvent> listener) {
         return eventHub.subscribe(UrlParamsChangedEvent.class, listener);
-    }*/
+    }
 
     /**
      * Shows this screen.

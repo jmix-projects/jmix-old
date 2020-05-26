@@ -20,36 +20,33 @@ package com.haulmont.cuba.gui.components.filter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.haulmont.cuba.CubaProperties;
-import com.haulmont.cuba.core.global.DataManager;
-import com.haulmont.cuba.core.global.LoadContext;
 import com.haulmont.cuba.core.global.Messages;
 import com.haulmont.cuba.core.global.Metadata;
+import com.haulmont.cuba.core.global.UserSessionSource;
 import com.haulmont.cuba.gui.WindowManager;
 import com.haulmont.cuba.gui.WindowManagerProvider;
 import com.haulmont.cuba.gui.components.FilterDataContext;
 import com.haulmont.cuba.gui.components.filter.dateinterval.DateInIntervalComponent;
 import com.haulmont.cuba.gui.components.listeditor.ListEditorHelper;
+import com.haulmont.cuba.security.global.UserSession;
 import io.jmix.core.*;
-import io.jmix.core.commons.events.EventHub;
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.commons.util.ParamsMap;
-import io.jmix.core.Entity;
+import io.jmix.core.common.event.EventHub;
+import io.jmix.core.common.event.Subscription;
+import io.jmix.core.common.util.ParamsMap;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.annotation.IgnoreUserTimeZone;
 import io.jmix.core.entity.annotation.Lookup;
 import io.jmix.core.entity.annotation.LookupType;
-import io.jmix.core.metamodel.datatypes.Datatype;
-import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
-import io.jmix.core.metamodel.datatypes.Datatypes;
+import io.jmix.core.metamodel.datatype.Datatype;
+import io.jmix.core.metamodel.datatype.DatatypeRegistry;
+import io.jmix.core.metamodel.datatype.Datatypes;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.security.UserSession;
-import io.jmix.core.security.UserSessionSource;
+import io.jmix.dynattr.DynAttrUtils;
 import io.jmix.ui.UiComponents;
-import io.jmix.ui.components.*;
-import io.jmix.ui.components.data.ValueConversionException;
-import io.jmix.ui.components.data.options.ContainerOptions;
-import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
+import io.jmix.ui.component.*;
+import io.jmix.ui.component.data.ValueConversionException;
+import io.jmix.ui.component.data.options.ContainerOptions;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.model.DataComponents;
@@ -67,7 +64,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.TemporalType;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -114,31 +111,31 @@ public class Param {
     protected boolean required;
     protected boolean isDateInterval;
     protected List<String> runtimeEnum;
-    protected UUID categoryAttrId;
+    protected String categoryAttrId;
     protected Component editComponent;
     protected boolean isFoldersFilterEntitiesSet = false;
 
-    @Inject
+    @Autowired
     protected BeanLocator beanLocator;
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected Messages messages;
-    @Inject
+    @Autowired
     protected UserSessionSource userSessionSource;
-    @Inject
+    @Autowired
     protected UiComponents uiComponents;
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
-    @Inject
+    @Autowired
     protected DataManager dataManager;
-    @Inject
+    @Autowired
     protected CubaProperties properties;
-    @Inject
+    @Autowired
     protected DataComponents dataComponents;
 
-    @Inject
+    @Autowired
     protected DatatypeRegistry datatypeRegistry;
 
     protected ThemeConstants theme;
@@ -163,7 +160,7 @@ public class Param {
         private MetaProperty property;
         private boolean inExpr;
         private boolean required;
-        private UUID categoryAttrId;
+        private String categoryAttrId;
         private boolean isDateInterval;
         private boolean useUserTimeZone;
 
@@ -218,7 +215,7 @@ public class Param {
             return this;
         }
 
-        public Builder setCategoryAttrId(UUID categoryAttrId) {
+        public Builder setCategoryAttrId(String categoryAttrId) {
             this.categoryAttrId = categoryAttrId;
             return this;
         }
@@ -249,7 +246,7 @@ public class Param {
         isDateInterval = builder.isDateInterval;
         useUserTimeZone = builder.useUserTimeZone;
 
-        if (DynamicAttributesUtils.isDynamicAttribute(builder.property)) {
+        if (DynAttrUtils.isDynamicAttributeProperty(builder.property.getName())) {
             // todo dynamic attributes
             /*CategoryAttribute categoryAttribute = DynamicAttributesUtils.getCategoryAttribute(builder.property);
             if (categoryAttribute.getDataType() == PropertyType.ENUMERATION) {
@@ -258,7 +255,7 @@ public class Param {
         }
     }
 
-    @Inject
+    @Autowired
     protected void setThemeConstantsManager(ThemeConstantsManager themeManager) {
         this.theme = themeManager.getConstants();
     }
@@ -470,11 +467,11 @@ public class Param {
     protected List<Entity> loadEntityList(String[] ids) {
         MetaClass metaClass = metadata.getClassNN(javaClass);
         //noinspection unchecked
-        LoadContext<Entity> ctx = new LoadContext<>(javaClass)
-                .setFetchPlan(FetchPlan.BASE);
-        ctx.setQueryString(String.format("select e from %s e where e.id in :ids", metaClass.getName()))
-                .setParameter("ids", Arrays.asList(ids));
-        return dataManager.loadList(ctx);
+        return dataManager.load(javaClass)
+                .fetchPlan(FetchPlan.BASE)
+                .query(String.format("select e from %s e where e.id in :ids", metaClass.getName()))
+                .parameter("ids", Arrays.asList(ids))
+                .list();
     }
 
     protected Object loadEntity(String id) {
@@ -488,10 +485,10 @@ public class Param {
             }
         }
         //noinspection unchecked
-        LoadContext<Entity> ctx = new LoadContext<>(javaClass)
-                .setFetchPlan(FetchPlan.BASE)
-                .setId(objectId);
-        return dataManager.load(ctx);
+        return dataManager.load(javaClass)
+                .fetchPlan(FetchPlan.BASE)
+                .id(objectId)
+                .optional().orElse(null);
     }
 
     public String formatValue(Object value) {
@@ -720,7 +717,7 @@ public class Param {
         }
 
         DateField<Object> dateField = uiComponents.create(DateField.NAME);
-        dateField.setDatatype(datatypeRegistry.getNN(javaClass));
+        dateField.setDatatype(datatypeRegistry.get(javaClass));
 
         DateField.Resolution resolution;
         String formatStr;
@@ -746,7 +743,7 @@ public class Param {
 
     protected Component createTimeField(Class javaClass, ValueProperty valueProperty) {
         TimeField<Object> timeField = uiComponents.create(TimeField.NAME);
-        timeField.setDatatype(datatypeRegistry.get(javaClass));
+        timeField.setDatatype(datatypeRegistry.find(javaClass));
         timeField.setFormat(messages.getMainMessage("timeFormat"));
         timeField.addValueChangeListener(e -> _setValue(e.getValue(), valueProperty));
         timeField.setValue(_getValue(valueProperty));

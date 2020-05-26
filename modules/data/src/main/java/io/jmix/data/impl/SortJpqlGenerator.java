@@ -26,25 +26,25 @@ import io.jmix.core.metamodel.model.MetaPropertyPath;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 @Component(SortJpqlGenerator.NAME)
 public class SortJpqlGenerator {
     public static final String NAME = "jmix_SortJpqlGenerator";
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
-    @Inject
+    @Autowired
     protected QueryTransformerFactory queryTransformerFactory;
-    @Inject
+    @Autowired
     protected JpqlSortExpressionProvider jpqlSortExpressionProvider;
-    @Inject
+    @Autowired
     protected DbmsSpecifics dbmsSpecifics;
 
     public String processQuery(String entityName, List<String> valueProperties, String queryString, Sort sort) {
@@ -84,10 +84,30 @@ public class SortJpqlGenerator {
     }
 
     protected List<String> getUniqueSortExpression(List<String> sortExpressions, MetaClass metaClass, boolean asc) {
-        MetaPropertyPath idProperty = metaClass.getPropertyPath(metadataTools.getPrimaryKeyName(metaClass));
-        List<String> uniqueSortExpressions = getPropertySortExpressions(Objects.requireNonNull(idProperty), asc);
-        if (uniqueSortExpressions.stream().noneMatch(sortExpressions::contains)) {
-            return uniqueSortExpressions;
+        String pkName = metadataTools.getPrimaryKeyName(metaClass);
+
+        if (pkName != null) {
+            MetaProperty idProperty = metaClass.getProperty(pkName);
+            if (metadataTools.hasCompositePrimaryKey(metaClass)) {
+                List<String> uniqueSortExpressions = new ArrayList<>();
+                MetaClass pkMetaClass = idProperty.getRange().asClass();
+                for (MetaProperty metaProperty : pkMetaClass.getProperties()) {
+                    if (metadataTools.isPersistent(metaProperty)) {
+                        MetaPropertyPath idPropertyPath = metaClass.getPropertyPath(String.format("%s.%s", pkName, metaProperty.getName()));
+                        List<String> currentSortExpressions = getPropertySortExpressions(Objects.requireNonNull(idPropertyPath), asc);
+                        if (currentSortExpressions.stream().noneMatch(sortExpressions::contains)) {
+                            uniqueSortExpressions.addAll(currentSortExpressions);
+                        }
+                    }
+                }
+                return uniqueSortExpressions;
+            } else {
+                MetaPropertyPath idPropertyPath = metaClass.getPropertyPath(pkName);
+                List<String> uniqueSortExpressions = getPropertySortExpressions(Objects.requireNonNull(idPropertyPath), asc);
+                if (uniqueSortExpressions.stream().noneMatch(sortExpressions::contains)) {
+                    return uniqueSortExpressions;
+                }
+            }
         }
         return Collections.emptyList();
     }
@@ -133,7 +153,7 @@ public class SortJpqlGenerator {
     }
 
     protected List<String> getEntityPropertySortExpression(MetaPropertyPath metaPropertyPath, boolean sortDirectionAsc) {
-        Collection<MetaProperty> properties = metadataTools.getNamePatternProperties(
+        Collection<MetaProperty> properties = metadataTools.getInstanceNameRelatedProperties(
                 metaPropertyPath.getMetaProperty().getRange().asClass());
 
         if (!properties.isEmpty()) {

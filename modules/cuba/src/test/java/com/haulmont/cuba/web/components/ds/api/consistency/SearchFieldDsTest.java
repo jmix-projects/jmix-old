@@ -8,15 +8,15 @@ package com.haulmont.cuba.web.components.ds.api.consistency;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.components.SearchField;
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.security.entity.Group;
-import io.jmix.security.entity.User;
+import io.jmix.core.common.event.Subscription;
+import com.haulmont.cuba.core.model.common.Group;
+import com.haulmont.cuba.core.model.common.User;
 import io.jmix.ui.UiComponents;
-import io.jmix.ui.components.HasValue;
+import io.jmix.ui.component.HasValue;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Disabled
 public class SearchFieldDsTest extends AbstractComponentDsTest {
 
-    @Inject
+    @Autowired
     protected UiComponents uiComponents;
 
     @Test

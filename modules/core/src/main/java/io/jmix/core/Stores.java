@@ -30,11 +30,11 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 
 /**
- * Utility class for accessing registered data source names.
+ * Utility class for accessing registered data store names.
  */
 @Component(Stores.NAME)
 public class Stores {
@@ -45,22 +45,22 @@ public class Stores {
     public static final String NOOP = "noop";
     public static final String UNDEFINED = "undefined";
 
-    @Inject
+    @Autowired
     protected Environment environment;
 
-    @Inject
+    @Autowired
     protected OrmStoreDescriptor ormStoreDescriptor;
 
-    @Inject
+    @Autowired
     protected NoopStoreDescriptor noopStoreDescriptor;
 
-    @Inject
+    @Autowired
     protected UndefinedStoreDescriptor undefinedStoreDescriptor;
 
-    @Inject
+    @Autowired
     protected ApplicationContext applicationContext;
 
-    @Inject
+    @Autowired
     protected Map<String, StoreDescriptor> descriptors;
 
     protected Map<String, Store> stores = new HashMap<>();
@@ -85,7 +85,7 @@ public class Stores {
 
     @Nullable
     protected StoreDescriptor getStoreDescriptor(String storeName) {
-        String descriptorName = environment.getProperty("jmix." + storeName + "StoreDescriptor");
+        String descriptorName = environment.getProperty("jmix.core.storeDescriptor_" + storeName);
         if (descriptorName != null) {
             StoreDescriptor descriptor = descriptors.get(descriptorName);
             if (descriptor != null) {
@@ -125,10 +125,10 @@ public class Stores {
     }
 
     /**
-     * @return the list of additional data store names registered in the {@code cuba.additionalStores} app property
+     * @return the list of additional data store names registered in the {@code jmix.core.additionalStores} property
      */
     public List<String> getAdditional() {
-        String property = environment.getProperty("jmix.additionalStores");
+        String property = environment.getProperty("jmix.core.additionalStores");
         if (!Strings.isNullOrEmpty(property))
             return SPLITTER.splitToList(property);
         else

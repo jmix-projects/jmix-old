@@ -29,10 +29,10 @@ import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityAttrAccess;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.icons.CubaIcon;
-import io.jmix.ui.icons.Icons;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.icon.JmixIcon;
+import io.jmix.ui.icon.Icons;
 import org.springframework.context.annotation.Scope;
 
 import java.util.Set;
@@ -120,7 +120,7 @@ public class ExcludeAction extends RemoveAction
         this.caption = messages.getMessage("actions.Exclude");
         this.metadata = AppBeans.get(Metadata.NAME);
 
-        this.icon = AppBeans.get(Icons.class).get(CubaIcon.EXCLUDE_ACTION);
+        this.icon = AppBeans.get(Icons.class).get(JmixIcon.EXCLUDE_ACTION);
     }
 
     @Override

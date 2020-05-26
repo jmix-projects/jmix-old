@@ -21,8 +21,9 @@ import io.jmix.core.EntityEntry;
 import io.jmix.core.UuidProvider;
 import io.jmix.core.entity.annotation.DisableEnhancing;
 import io.jmix.core.entity.annotation.SystemLevel;
-import io.jmix.core.metamodel.annotations.ModelObject;
+import io.jmix.core.metamodel.annotation.ModelObject;
 import io.jmix.core.metamodel.model.MetaClass;
+import org.springframework.lang.NonNull;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -46,7 +47,7 @@ import java.util.UUID;
 @SystemLevel
 @DisableEnhancing
 public class KeyValueEntity
-        implements HasInstanceMetaClass, Entity<Object> {
+        implements HasInstanceMetaClass, Entity {
 
     protected UUID uuid;
 
@@ -56,10 +57,10 @@ public class KeyValueEntity
 
     protected MetaClass metaClass;
 
-    protected EntityEntry<Object> entityEntry;
+    protected EntityEntry entityEntry;
 
-    protected static class KeyValueEntityEntry extends BaseEntityEntry<Object> {
-        public KeyValueEntityEntry(Entity<Object> source) {
+    protected static class KeyValueEntityEntry extends BaseEntityEntry {
+        public KeyValueEntityEntry(Entity source) {
             super(source);
         }
 
@@ -74,12 +75,12 @@ public class KeyValueEntity
         }
 
         @Override
-        public <T> T getAttributeValue(String name) {
+        public <T> T getAttributeValue(@NonNull String name) {
             return ((KeyValueEntity) source).getValue(name);
         }
 
         @Override
-        public void setAttributeValue(String name, Object value, boolean checkEquals) {
+        public void setAttributeValue(@NonNull String name, Object value, boolean checkEquals) {
             ((KeyValueEntity) source).setValue(name, value, checkEquals);
         }
     }
@@ -179,7 +180,7 @@ public class KeyValueEntity
     }
 
     @Override
-    public EntityEntry<Object> __getEntityEntry() {
+    public EntityEntry __getEntityEntry() {
         return entityEntry == null ? entityEntry = new KeyValueEntityEntry(this) : entityEntry;
     }
 

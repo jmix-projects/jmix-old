@@ -16,8 +16,8 @@
 
 package format_strings
 
-import io.jmix.core.metamodel.datatypes.FormatStrings
-import io.jmix.core.metamodel.datatypes.impl.FormatStringsRegistryImpl
+import io.jmix.core.metamodel.datatype.FormatStrings
+import io.jmix.core.metamodel.datatype.impl.FormatStringsRegistryImpl
 
 import java.util.Locale
 
@@ -26,8 +26,8 @@ class TestFormatStringsRegistry extends FormatStringsRegistryImpl {
     TestFormatStringsRegistry() {
         setFormatStrings(Locale.ENGLISH, new FormatStrings(
                 '.' as char, ',' as char,
-        '#,##0', '#,##0.###', '#,##0.##',
-                'dd/MM/yyyy', 'dd/MM/yyyy HH:mm', 'HH:mm',
+                '#,##0', '#,##0.###', '#,##0.##',
+                'dd/MM/yyyy', 'dd/MM/yyyy HH:mm', 'dd/MM/yyyy HH:mm', 'HH:mm', 'HH:mm',
                 'True', 'False'))
     }
 }

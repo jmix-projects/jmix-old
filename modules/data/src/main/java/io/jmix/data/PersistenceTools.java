@@ -17,9 +17,9 @@
 package io.jmix.data;
 
 import io.jmix.core.*;
-import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.common.util.Preconditions;
 import io.jmix.core.entity.*;
-import io.jmix.core.metamodel.datatypes.impl.EnumClass;
+import io.jmix.core.metamodel.datatype.impl.EnumClass;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.eclipse.persistence.descriptors.ClassDescriptor;
@@ -42,7 +42,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
@@ -65,16 +65,16 @@ public class PersistenceTools {
     @PersistenceContext
     protected EntityManager entityManager;
 
-    @Inject
+    @Autowired
     protected DataSource dataSource;
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
+    @Autowired
     protected EntityStates entityStates;
 
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
 
     /**

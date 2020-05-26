@@ -16,7 +16,7 @@
 
 package io.jmix.ui.sys;
 
-import io.jmix.core.commons.util.Dom4j;
+import io.jmix.core.common.util.Dom4j;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
 import org.apache.commons.io.IOUtils;
@@ -25,7 +25,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 /**
  * Parses screen XML taking into account 'assign' elements.
@@ -43,7 +43,7 @@ public class ScreenXmlParser {
     
     public static final String NAME = "jmix_ScreenXmlParser";
 
-    @Inject
+    @Autowired
     protected ThemeConstantsManager themeConstantsManager;
 
     public Document parseDescriptor(InputStream stream) {

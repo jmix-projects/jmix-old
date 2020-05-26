@@ -18,13 +18,13 @@ package io.jmix.security.impl;
 
 import com.google.common.collect.Multimap;
 import io.jmix.core.*;
-import io.jmix.core.entity.*;
+import io.jmix.core.entity.EntityValues;
 import io.jmix.core.impl.jpql.JpqlSyntaxException;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.ConstraintOperationType;
+import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.core.security.Security;
-import io.jmix.core.security.UserSessionSource;
 import io.jmix.data.PersistenceAttributeSecurity;
 import io.jmix.data.PersistenceSecurity;
 import io.jmix.data.RowLevelSecurityException;
@@ -37,9 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
-import java.io.Serializable;
 import java.util.*;
 import java.util.function.BiPredicate;
 
@@ -50,36 +49,32 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
 
     private static final Logger log = LoggerFactory.getLogger(StandardPersistenceSecurity.class);
 
-    @Inject
+    @Autowired
     protected SecurityTokenManager securityTokenManager;
 
-    @Inject
+    @Autowired
     protected StoreAwareLocator storeAwareLocator;
 
-    @Inject
+    @Autowired
     protected ReferenceToEntitySupport referenceToEntitySupport;
 
-    @Inject
+    @Autowired
     protected PersistenceAttributeSecurity persistenceAttributeSecurity;
 
-    @Inject
+    @Autowired
     protected EntityStates entityStates;
 
-    @Inject
+    @Autowired
     protected Security security;
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
-    protected UserSessionSource userSessionSource;
+    @Autowired
+    protected CurrentAuthentication currentAuthentication;
 
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
-
-    protected StandardUserSession getUserSession() {
-        return (StandardUserSession) userSessionSource.getUserSession();
-    }
 
     @Override
     public boolean applyConstraints(JmixQuery query) {
@@ -112,31 +107,31 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
     @Override
     public void setQueryParam(JmixQuery query, String paramName) {
         if (paramName.startsWith(CONSTRAINT_PARAM_SESSION_ATTR)) {
-            StandardUserSession userSession = getUserSession();
-
             String attrName = paramName.substring(CONSTRAINT_PARAM_SESSION_ATTR.length());
 
             if (CONSTRAINT_PARAM_USER_LOGIN.equals(attrName)) {
                 String userLogin = /*userSession.getSubstitutedUser() != null ?
                         userSession.getSubstitutedUser().getLogin() :*/
-                        userSession.getUser().getLogin();
+                        currentAuthentication.getUser().getUsername();
                 query.setParameter(paramName, userLogin);
 
             } else if (CONSTRAINT_PARAM_USER_ID.equals(attrName)) {
                 UUID userId = /*userSession.getSubstitutedUser() != null ?
                         userSession.getSubstitutedUser().getId() :*/
-                        userSession.getUser().getId();
+                        UUID.fromString(currentAuthentication.getUser().getKey());
                 query.setParameter(paramName, userId);
 
             } else if (CONSTRAINT_PARAM_USER_GROUP_ID.equals(attrName)) {
-                Object groupId = /*userSession.getSubstitutedUser() != null ?
-                        userSession.getSubstitutedUser().getGroup().getId() :*/
-                        userSession.getUser().getGroup().getId();
-                query.setParameter(paramName, groupId);
+                //todo MG
+//                Object groupId = /*userSession.getSubstitutedUser() != null ?
+//                        userSession.getSubstitutedUser().getGroup().getId() :*/
+//                        userSession.getUser().getGroup().getId();
+//                query.setParameter(paramName, groupId);
 
             } else {
-                Serializable value = userSession.getAttribute(attrName);
-                query.setParameter(paramName, value);
+                //todo MG
+//                Serializable value = userSession.getAttribute(attrName);
+//                query.setParameter(paramName, value);
             }
         }
     }
@@ -308,7 +303,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
         }
         handled.add(entityId);
         if (!entity.__getEntityEntry().isEmbeddable()) {
-            EntityEntry<?> entityEntry = entity.__getEntityEntry();
+            EntityEntry entityEntry = entity.__getEntityEntry();
             Multimap<String, Object> filteredData = entityEntry.getSecurityState().getFilteredData();
             for (MetaProperty property : metaClass.getProperties()) {
                 if (metadataTools.isPersistent(property) && entityStates.isLoaded(entity, property.getName())) {

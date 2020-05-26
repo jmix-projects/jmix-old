@@ -19,8 +19,8 @@ package io.jmix.ui.navigation.navigationhandler;
 import io.jmix.core.DataManager;
 import io.jmix.core.LoadContext;
 import io.jmix.core.*;
-import io.jmix.core.commons.datastruct.Pair;
-import io.jmix.core.commons.util.ParamsMap;
+import io.jmix.core.common.datastruct.Pair;
+import io.jmix.core.common.util.ParamsMap;
 import io.jmix.core.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.security.AccessDeniedException;
@@ -31,7 +31,7 @@ import io.jmix.ui.AppUI;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowInfo;
 import io.jmix.ui.app.navigation.notfoundwindow.NotFoundScreen;
-import io.jmix.ui.components.impl.WebWindow;
+import io.jmix.ui.component.impl.WebWindow;
 import io.jmix.ui.navigation.*;
 import io.jmix.ui.screen.*;
 import org.apache.commons.collections4.MapUtils;
@@ -44,7 +44,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,15 +59,15 @@ public class ScreenNavigationHandler implements NavigationHandler {
 
     protected static final int MAX_SUB_ROUTES = 2;
 
-    @Inject
+    @Autowired
     protected WindowConfig windowConfig;
-    @Inject
+    @Autowired
     protected Security security;
-    @Inject
+    @Autowired
     protected DataManager dataManager;
-    @Inject
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     private FetchPlanRepository fetchPlanRepository;
 
     @Override

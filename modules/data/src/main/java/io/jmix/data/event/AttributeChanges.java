@@ -120,7 +120,7 @@ public class AttributeChanges {
      * @return Id of the referenced object
      */
     @Nullable
-    public <E extends Entity<K>, K> Id<E, K> getOldReferenceId(String attributeName) {
+    public <E extends Entity> Id<E> getOldReferenceId(String attributeName) {
         return getOldValue(attributeName);
     }
 
@@ -130,7 +130,7 @@ public class AttributeChanges {
      * Usage example:
      * <pre>
      * Collection&lt;Id&lt;OrderLine, UUID&gt;&gt; orderLines = event.getChanges().getOldCollection("orderLines", OrderLine.class);
-     * for (Id&lt;OrderLine, UUID&gt; orderLineId : orderLines) {
+     * for (Id&lt;OrderLine&gt; orderLineId : orderLines) {
      *     OrderLine orderLine = dataManager.load(orderLineId).one();
      *     // ...
      * }
@@ -140,7 +140,7 @@ public class AttributeChanges {
      * @param entityClass   class of the attribute
      * @return collection of Ids
      */
-    public <E extends Entity<K>, K> Collection<Id<E, K>> getOldCollection(String attributeName, Class<E> entityClass) {
+    public <E extends Entity> Collection<Id<E>> getOldCollection(String attributeName, Class<E> entityClass) {
         return getOldValue(attributeName);
     }
 

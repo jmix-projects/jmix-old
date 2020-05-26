@@ -21,18 +21,18 @@ import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.GroupDatasource;
 import io.jmix.security.entity.User;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.UUID;
 
 public class UserBrowse extends AbstractLookup {
 
-    @Inject
+    @Autowired
     private CollectionDatasource<User, UUID> userDs;
 
-    @Inject
+    @Autowired
     private GroupDatasource<User, UUID> groupUserDs;
 
-    @Inject
+    @Autowired
     private SampleConfig sampleConfig;
 
     @Override
@@ -40,12 +40,12 @@ public class UserBrowse extends AbstractLookup {
         System.out.println(">>> " + sampleConfig.getSampleProp());
 
         User user1 = new User();
-        user1.setActive(true);
+        user1.setEnabled(true);
         user1.setFirstName("John");
         user1.setLastName("Doe");
 
         User user2 = new User();
-        user2.setActive(true);
+        user2.setEnabled(true);
         user2.setFirstName("Katherine");
         user2.setLastName("Potter");
 

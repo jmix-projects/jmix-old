@@ -22,7 +22,7 @@ import io.jmix.core.Entity;
 import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 @Deprecated
-public class WebDataGrid<E extends Entity> extends io.jmix.ui.components.impl.WebDataGrid<E> implements DataGrid<E> {
+public class WebDataGrid<E extends Entity> extends io.jmix.ui.component.impl.WebDataGrid<E> implements DataGrid<E> {
 
     @Override
     protected ComponentSettingsBinder getSettingsBinder() {

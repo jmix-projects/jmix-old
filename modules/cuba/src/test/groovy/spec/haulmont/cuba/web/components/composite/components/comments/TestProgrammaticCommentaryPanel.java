@@ -21,21 +21,21 @@ import com.haulmont.cuba.core.global.Messages;
 import com.haulmont.cuba.web.model.compositecomponent.Comment;
 import io.jmix.core.MetadataTools;
 import io.jmix.ui.UiComponents;
-import io.jmix.ui.components.Button;
-import io.jmix.ui.components.ComponentContainer;
-import io.jmix.ui.components.CssLayout;
-import io.jmix.ui.components.DataGrid;
-import io.jmix.ui.components.TextField;
-import io.jmix.ui.components.VBoxLayout;
-import io.jmix.ui.components.data.DataGridItems;
-import io.jmix.ui.components.data.datagrid.ContainerDataGridItems;
-import io.jmix.ui.components.data.meta.ContainerDataUnit;
-import io.jmix.ui.components.impl.CompositeComponent;
-import io.jmix.ui.components.impl.CompositeWithCaption;
+import io.jmix.ui.component.Button;
+import io.jmix.ui.component.ComponentContainer;
+import io.jmix.ui.component.CssLayout;
+import io.jmix.ui.component.DataGrid;
+import io.jmix.ui.component.TextField;
+import io.jmix.ui.component.VBoxLayout;
+import io.jmix.ui.component.data.DataGridItems;
+import io.jmix.ui.component.data.datagrid.ContainerDataGridItems;
+import io.jmix.ui.component.data.meta.ContainerDataUnit;
+import io.jmix.ui.component.impl.CompositeComponent;
+import io.jmix.ui.component.impl.CompositeWithCaption;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.sys.ShowInfoAction;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.function.Function;
 
 public class TestProgrammaticCommentaryPanel extends CompositeComponent<VBoxLayout> implements CompositeWithCaption {
@@ -43,11 +43,11 @@ public class TestProgrammaticCommentaryPanel extends CompositeComponent<VBoxLayo
     public static final String NAME = "testProgrammaticCommentaryPanel";
 
     /* Beans */
-    @Inject
+    @Autowired
     private MetadataTools metadataTools;
-    @Inject
+    @Autowired
     private UiComponents uiComponents;
-    @Inject
+    @Autowired
     private Messages messages;
 
     /* Nested Components */

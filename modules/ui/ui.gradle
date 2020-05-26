@@ -19,7 +19,7 @@ apply plugin: 'groovy'
 apply plugin: 'java-library'
 apply plugin: 'io.jmix'
 
-version = rootProject.jmixVersion
+group = 'io.jmix.ui'
 
 dependencies {
     api platform(project(':jmix-platform'))
@@ -30,10 +30,10 @@ dependencies {
     api 'com.vaadin:vaadin-push'
     api 'com.vaadin:vaadin-spring'
 
-    api 'org.perf4j:perf4j'
-
     api 'org.springframework:spring-websocket'
     api 'org.springframework.boot:spring-boot-autoconfigure'
+
+    api 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20191001.1'
 
     testImplementation 'org.springframework:spring-test'
     testImplementation 'org.spockframework:spock-core'
@@ -48,31 +48,27 @@ dependencies {
 jar {
     with copySpec {
         from sourceSets.main.allJava
-        include "io/jmix/ui/widgets/client/**"
+        include "io/jmix/ui/widget/client/**"
     }
-}
-
-entitiesEnhancing {
-    enabled = true
 }
 
 jar {
     archivesBaseName = 'jmix-ui'
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier = 'sources'
+java {
+    withSourcesJar()
+}
+
+artifacts {
+    archives sourcesJar
 }
 
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            groupId = 'io.jmix.ui'
             artifactId = 'jmix-ui'
-
             from components.java
-            artifact sourcesJar
         }
     }
 }

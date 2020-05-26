@@ -21,20 +21,21 @@ import io.jmix.core.EntityStates;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.Messages;
 import io.jmix.core.Metadata;
-import io.jmix.core.commons.events.Subscription;
-import io.jmix.core.commons.events.TriggerOnce;
+import io.jmix.core.common.event.Subscription;
+import io.jmix.core.common.event.TriggerOnce;
 import io.jmix.core.Entity;
+import io.jmix.core.common.util.Preconditions;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.UiProperties;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.BaseAction;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Frame;
-import io.jmix.ui.components.ValidationErrors;
-import io.jmix.ui.components.Window;
-import io.jmix.ui.icons.CubaIcon;
-import io.jmix.ui.icons.Icons;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.action.BaseAction;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.Frame;
+import io.jmix.ui.component.ValidationErrors;
+import io.jmix.ui.component.Window;
+import io.jmix.ui.icon.JmixIcon;
+import io.jmix.ui.icon.Icons;
 import io.jmix.ui.model.*;
 import io.jmix.ui.util.OperationResult;
 import io.jmix.ui.util.UnknownOperationResult;
@@ -82,7 +83,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen
 
         Action commitAndCloseAction = new BaseAction(WINDOW_COMMIT_AND_CLOSE)
                 .withCaption(messages.getMessage("actions.Ok"))
-                .withIcon(icons.get(CubaIcon.EDITOR_OK))
+                .withIcon(icons.get(JmixIcon.EDITOR_OK))
                 .withPrimary(true)
                 .withShortcut(commitShortcut)
                 .withHandler(this::commitAndClose);
@@ -96,7 +97,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen
         window.addAction(commitAction);
 
         Action closeAction = new BaseAction(WINDOW_CLOSE)
-                .withIcon(icons.get(CubaIcon.EDITOR_CANCEL))
+                .withIcon(icons.get(JmixIcon.EDITOR_CANCEL))
                 .withCaption(messages.getMessage("actions.Cancel"))
                 .withHandler(this::cancel);
 
@@ -104,7 +105,7 @@ public abstract class StandardEditor<T extends Entity> extends Screen
 
         Action enableEditingAction = new BaseAction(ENABLE_EDITING)
                 .withCaption(messages.getMessage("actions.EnableEditing"))
-                .withIcon(icons.get(CubaIcon.ENABLE_EDITING))
+                .withIcon(icons.get(JmixIcon.ENABLE_EDITING))
                 .withHandler(this::enableEditing);
         enableEditingAction.setVisible(false);
         window.addAction(enableEditingAction);
@@ -515,6 +516,10 @@ public abstract class StandardEditor<T extends Entity> extends Screen
             ValidationErrors validationErrors = screenValidation.validateCrossFieldRules(this, getEditedEntity());
 
             errors.addAll(validationErrors);
+
+            ValidationEvent validateEvent = new ValidationEvent(this);
+            fireEvent(ValidationEvent.class, validateEvent);
+            errors.addAll(validateEvent.getErrors());
         }
     }
 
@@ -586,6 +591,16 @@ public abstract class StandardEditor<T extends Entity> extends Screen
      */
     protected Subscription addAfterCommitChangesListener(Consumer<AfterCommitChangesEvent> listener) {
         return getEventHub().subscribe(AfterCommitChangesEvent.class, listener);
+    }
+
+    /**
+     * Adds a listener to {@link ValidationEvent}.
+     *
+     * @param listener listener
+     * @return subscription
+     */
+    protected Subscription addValidationEventListener(Consumer<ValidationEvent> listener) {
+        return getEventHub().subscribe(ValidationEvent.class, listener);
     }
 
     /**
@@ -774,6 +789,42 @@ public abstract class StandardEditor<T extends Entity> extends Screen
          */
         public DataContext getDataContext() {
             return getSource().getScreenData().getDataContext();
+        }
+    }
+
+    /**
+     * Event sent when screen is validated from {@link #validateAdditionalRules(ValidationErrors)} call.
+     * <br>
+     * Use this event listener to perform additional screen validation, for example:
+     * <pre>
+     *     &#64;Subscribe
+     *     protected void onScreenValidation(ValidationEvent event) {
+     *         ValidationErrors errors = performCustomValidation();
+     *         event.addErrors(errors);
+     *     }
+     * </pre>
+     */
+    public static class ValidationEvent extends EventObject {
+
+        ValidationErrors errors = new ValidationErrors();
+
+        public ValidationEvent(Screen source) {
+            super(source);
+        }
+
+        @Override
+        public Screen getSource() {
+            return (Screen) super.getSource();
+        }
+
+        public void addErrors(ValidationErrors errors) {
+            Preconditions.checkNotNullArgument(errors, "Validation errors cannot be null");
+
+            this.errors.addAll(errors);
+        }
+
+        public ValidationErrors getErrors() {
+            return errors;
         }
     }
 }

@@ -19,14 +19,14 @@ package com.haulmont.cuba.gui.components.filter.edit;
 
 import com.haulmont.cuba.gui.components.AbstractFrame;
 import com.haulmont.cuba.gui.components.AbstractWindow;
-import io.jmix.ui.components.Component;
+import io.jmix.ui.component.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Map;
 
 public class DynamicAttributesConditionEditor extends AbstractWindow {
 
-    @Inject
+    @Autowired
     protected DynamicAttributesConditionFrame dynamicAttributesConditionFrame;
 
     @Override

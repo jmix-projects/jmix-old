@@ -23,16 +23,16 @@ import com.haulmont.cuba.gui.data.NestedDatasource;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.MetadataTools;
-import io.jmix.core.commons.events.EventHub;
-import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.common.event.EventHub;
+import io.jmix.core.common.event.Subscription;
 import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.impl.BeanLocatorAware;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.ui.components.data.BindingState;
-import io.jmix.ui.components.data.ValueSource;
+import io.jmix.ui.component.data.BindingState;
+import io.jmix.ui.component.data.ValueSource;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 /**
  * This ValueSource implementation is used by Collection value components like TokenList while binding
@@ -84,14 +84,10 @@ public class LegacyCollectionDsValueSource<V extends Entity> implements ValueSou
             MetaPropertyPath masterDsMpp = metadataTools.resolveMetaPropertyPath(masterDsEntityClass,
                     nestedDsProperty.getName());
 
-            if (masterDsMpp != null) {
-                if (masterDsMpp.getMetaProperty() != nestedDsProperty) {
-                    log.debug("Master Datasource property doesn't match with specified nested datasource property");
-                } else {
-                    metaPropertyPath = masterDsMpp;
-                }
+            if (masterDsMpp.getMetaProperty() != nestedDsProperty) {
+                log.debug("Master Datasource property doesn't match with specified nested datasource property");
             } else {
-                log.debug("Unable to resolve '{}' for '{}' entity", nestedDsProperty.getName(), masterDsEntityClass);
+                metaPropertyPath = masterDsMpp;
             }
         }
 

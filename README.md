@@ -18,9 +18,11 @@ The root project is a composite build which comprises the Gradle plugin and the 
 In order to publish artefacts to the local Maven repo, execute the following commands:
 
 ```
-./gradlew publishToMavenLocal
+./gradlew publishToMavenLocal install
 ./gradlew -b jmix-gradle-plugin/build.gradle publishToMavenLocal
 ```
+
+> The `install` task is needed only to override `*.pom` files in a way that enables IJ IDEA to import library sources. See https://youtrack.jetbrains.com/issue/IDEA-227215.     
 
 If you want to upload artefacts to a remote repository, set up the following properties in `~/.gradle/gradle.properties`:
 

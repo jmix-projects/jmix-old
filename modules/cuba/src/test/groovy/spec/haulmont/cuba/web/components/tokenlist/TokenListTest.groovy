@@ -17,10 +17,10 @@
 package spec.haulmont.cuba.web.components.tokenlist
 
 import com.google.common.collect.Lists
-import io.jmix.security.entity.Constraint
-import io.jmix.ui.components.data.options.ContainerOptions
-import io.jmix.ui.components.data.options.ListEntityOptions
-import io.jmix.ui.components.data.options.MapEntityOptions
+import com.haulmont.cuba.core.model.common.Constraint
+import io.jmix.ui.component.data.options.ContainerOptions
+import io.jmix.ui.component.data.options.ListEntityOptions
+import io.jmix.ui.component.data.options.MapEntityOptions
 import io.jmix.ui.screen.OpenMode
 import spec.haulmont.cuba.web.UiScreenSpec
 import spec.haulmont.cuba.web.components.tokenlist.screens.TokenListScreen

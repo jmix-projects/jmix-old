@@ -16,17 +16,17 @@
 
 package spec.haulmont.cuba.web.components.tokenlist.screens;
 
-import io.jmix.security.entity.Constraint;
-import io.jmix.ui.components.TokenList;
+import com.haulmont.cuba.core.model.common.Constraint;
+import io.jmix.ui.component.TokenList;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @UiController
 @UiDescriptor("tokenlist-screen.xml")
 public class TokenListScreen extends Screen {
-    @Inject
+    @Autowired
     public TokenList<Constraint> tokenList;
 }

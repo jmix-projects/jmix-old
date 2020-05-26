@@ -18,8 +18,8 @@ package com.haulmont.cuba.core.app;
 import io.jmix.core.Metadata;
 import io.jmix.core.cluster.ClusterListenerAdapter;
 import io.jmix.core.cluster.ClusterManager;
-import io.jmix.core.commons.util.Preconditions;
-import io.jmix.data.entity.ConfigEntity;
+import io.jmix.core.common.util.Preconditions;
+import com.haulmont.cuba.core.entity.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -30,7 +30,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -49,13 +49,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @Component(ConfigStorageAPI.NAME)
 public class ConfigStorage implements ConfigStorageAPI {
 
-    @Inject
+    @Autowired
     private Metadata metadata;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Inject
+    @Autowired
     private DataSource dataSource;
 
     protected TransactionTemplate transaction;
@@ -74,12 +74,12 @@ public class ConfigStorage implements ConfigStorageAPI {
         private static final long serialVersionUID = -3116358584797500962L;
     }
 
-    @Inject
+    @Autowired
     protected void setTransactionManager(PlatformTransactionManager transactionManager) {
         transaction = new TransactionTemplate(transactionManager);
     }
 
-    @Inject
+    @Autowired
     public void setClusterManager(ClusterManager clusterManager) {
         this.clusterManager = clusterManager;
         clusterManager.addListener(InvalidateCacheMsg.class, new ClusterListenerAdapter<InvalidateCacheMsg>() {
@@ -164,10 +164,10 @@ public class ConfigStorage implements ConfigStorageAPI {
         Preconditions.checkNotNullArgument(name, "name is null");
 
         transaction.executeWithoutResult(transactionStatus -> {
-            ConfigEntity instance = getConfigInstance(name);
+            Config instance = getConfigInstance(name);
             if (value != null) {
                 if (instance == null) {
-                    instance = metadata.create(ConfigEntity.class);
+                    instance = metadata.create(Config.class);
                     instance.setName(name.trim());
                     instance.setValue(value.trim());
                     entityManager.persist(instance);
@@ -184,10 +184,10 @@ public class ConfigStorage implements ConfigStorageAPI {
     }
 
     @Nullable
-    private ConfigEntity getConfigInstance(String name) {
-        TypedQuery<ConfigEntity> query = entityManager.createQuery("select c from sys$Config c where c.name = ?1", ConfigEntity.class);
+    private Config getConfigInstance(String name) {
+        TypedQuery<Config> query = entityManager.createQuery("select c from sys$Config c where c.name = ?1", Config.class);
         query.setParameter(1, name);
-        List<ConfigEntity> list = query.getResultList();
+        List<Config> list = query.getResultList();
         if (list.isEmpty())
             return null;
         else

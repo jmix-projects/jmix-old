@@ -19,11 +19,11 @@ package spec.haulmont.cuba.web.editorscreenfacet.screens;
 
 import com.haulmont.cuba.core.model.common.User;
 import io.jmix.core.Metadata;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.components.Button;
-import io.jmix.ui.components.EditorScreenFacet;
-import io.jmix.ui.components.PickerField;
-import io.jmix.ui.components.Table;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.component.Button;
+import io.jmix.ui.component.EditorScreenFacet;
+import io.jmix.ui.component.PickerField;
+import io.jmix.ui.component.Table;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.screen.Install;
 import io.jmix.ui.screen.Screen;
@@ -31,36 +31,36 @@ import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
 import spec.haulmont.cuba.web.user.screens.UserEditTest;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings({"unused"})
 @UiController("cuba_EditorScreenFacetTestScreen")
 @UiDescriptor("editor-screen-facet-test-screen.xml")
 public class EditorScreenFacetTestScreen extends Screen {
 
-    @Inject
+    @Autowired
     public Metadata metadata;
 
-    @Inject
+    @Autowired
     public CollectionContainer<User> userDc;
 
-    @Inject
+    @Autowired
     public PickerField<User> userField;
-    @Inject
+    @Autowired
     public Table<User> usersTable;
 
-    @Inject
+    @Autowired
     public Action action;
-    @Inject
+    @Autowired
     public Button button;
 
-    @Inject
+    @Autowired
     public EditorScreenFacet<User, UserEditTest> editorScreenFacet;
-    @Inject
+    @Autowired
     public EditorScreenFacet<User, UserEditTest> tableScreenFacet;
-    @Inject
+    @Autowired
     public EditorScreenFacet<User, UserEditTest> fieldScreenFacet;
-    @Inject
+    @Autowired
     public EditorScreenFacet<User, UserEditTest> editorEntityProvider;
 
     @Install(to = "editorScreenFacet", subject = "entityProvider")

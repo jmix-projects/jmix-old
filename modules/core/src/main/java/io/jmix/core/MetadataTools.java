@@ -20,35 +20,32 @@ import com.google.common.collect.ImmutableList;
 import io.jmix.core.entity.*;
 import io.jmix.core.entity.annotation.IgnoreUserTimeZone;
 import io.jmix.core.entity.annotation.SystemLevel;
-import io.jmix.core.metamodel.annotations.ModelProperty;
-import io.jmix.core.metamodel.annotations.NamePattern;
-import io.jmix.core.metamodel.datatypes.Datatype;
-import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
-import io.jmix.core.metamodel.datatypes.TimeZoneAwareDatatype;
+import io.jmix.core.metamodel.annotation.InstanceName;
+import io.jmix.core.metamodel.annotation.ModelProperty;
+import io.jmix.core.metamodel.datatype.Datatype;
+import io.jmix.core.metamodel.datatype.DatatypeRegistry;
+import io.jmix.core.metamodel.datatype.TimeZoneAwareDatatype;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.metamodel.model.Range;
-import io.jmix.core.security.UserSessionSource;
+import io.jmix.core.security.CurrentAuthentication;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.persistence.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 /**
  * Utility class to provide common metadata-related functionality.
@@ -57,8 +54,6 @@ import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
  */
 @Component(MetadataTools.NAME)
 public class MetadataTools {
-
-    private static final Pattern INSTANCE_NAME_SPLIT_PATTERN = Pattern.compile("[,;]");
 
     public static final String NAME = "jmix_MetadataTools";
 
@@ -78,26 +73,29 @@ public class MetadataTools {
             HasUuid.class
     );
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
+    @Autowired
     protected ExtendedEntities extendedEntities;
 
-    @Inject
+    @Autowired
     protected Messages messages;
 
+    @Autowired
+    protected InstanceNameProvider instanceNameProvider;
+
     // todo dynamic attributes
-//    @Inject
+//    @Autowired
 //    protected DynamicAttributesTools dynamicAttributesTools;
 
-    @Inject
-    protected UserSessionSource userSessionSource;
+    @Autowired
+    protected CurrentAuthentication currentAuthentication;
 
-    @Inject
+    @Autowired
     protected DatatypeRegistry datatypeRegistry;
 
-    @Inject
+    @Autowired
     protected PersistentAttributesLoadChecker persistentAttributesLoadChecker;
 
     protected volatile Collection<Class> enums;
@@ -142,10 +140,10 @@ public class MetadataTools {
                 Boolean ignoreUserTimeZone = getMetaAnnotationValue(property, IgnoreUserTimeZone.class);
                 if (!Boolean.TRUE.equals(ignoreUserTimeZone)) {
                     return ((TimeZoneAwareDatatype) datatype).format(value,
-                            userSessionSource.getLocale(), userSessionSource.getUserSession().getClientDetails().getTimeZone());
+                            currentAuthentication.getLocale(), currentAuthentication.getTimeZone());
                 }
             }
-            return datatype.format(value, userSessionSource.getLocale());
+            return datatype.format(value, currentAuthentication.getLocale());
         } else if (range.isEnum()) {
             return messages.getMessage((Enum) value);
         } else if (value instanceof Entity) {
@@ -173,7 +171,7 @@ public class MetadataTools {
         } else if (value instanceof Entity) {
             return getInstanceName((Entity) value);
         } else if (value instanceof Enum) {
-            return messages.getMessage((Enum) value, userSessionSource.getLocale());
+            return messages.getMessage((Enum) value, currentAuthentication.getLocale());
         } else if (value instanceof Collection) {
             @SuppressWarnings("unchecked")
             Collection<Object> collection = (Collection<Object>) value;
@@ -181,9 +179,9 @@ public class MetadataTools {
                     .map(this::format)
                     .collect(Collectors.joining(", "));
         } else {
-            Datatype datatype = datatypeRegistry.get(value.getClass());
+            Datatype datatype = datatypeRegistry.find(value.getClass());
             if (datatype != null) {
-                return datatype.format(value, userSessionSource.getLocale());
+                return datatype.format(value, currentAuthentication.getLocale());
             }
 
             return value.toString();
@@ -192,87 +190,11 @@ public class MetadataTools {
 
     /**
      * @param instance instance
-     * @return Instance name as defined by {@link io.jmix.core.metamodel.annotations.NamePattern}
+     * @return Instance name as defined by {@link io.jmix.core.metamodel.annotation.InstanceName}
      * or <code>toString()</code>.
      */
     public String getInstanceName(Entity instance) {
-        checkNotNullArgument(instance, "instance is null");
-
-        MetaClass metaClass = metadata.getClass(instance.getClass());
-
-        NamePatternRec rec = parseNamePattern(metaClass);
-        if (rec == null) {
-            return instance.toString();
-        }
-
-        if (rec.methodName != null) {
-            try {
-                Method method = instance.getClass().getMethod(rec.methodName);
-                Object result = method.invoke(instance);
-                return (String) result;
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                throw new RuntimeException("Error getting instance name", e);
-            }
-        }
-
-        Object[] values = new Object[rec.fields.length];
-        for (int i = 0; i < rec.fields.length; i++) {
-            String fieldName = rec.fields[i];
-            MetaProperty property = metaClass.getProperty(fieldName);
-
-            Object value = EntityValues.getValue(instance, fieldName);
-            values[i] = format(value, property);
-        }
-
-        return String.format(rec.format, values);
-    }
-
-    /**
-     * Parse a name pattern defined by {@link NamePattern} annotation.
-     *
-     * @param metaClass entity meta-class
-     * @return record containing the name pattern properties, or null if the @NamePattern is not defined for the meta-class
-     */
-    @Nullable
-    public NamePatternRec parseNamePattern(MetaClass metaClass) {
-        Map attributes = (Map) metaClass.getAnnotations().get(NamePattern.class.getName());
-        if (attributes == null)
-            return null;
-        String pattern = (String) attributes.get("value");
-        if (StringUtils.isBlank(pattern))
-            return null;
-
-        int pos = pattern.indexOf("|");
-        if (pos < 0)
-            throw new DevelopmentException("Invalid name pattern: " + pattern);
-
-        String format = StringUtils.substring(pattern, 0, pos);
-        String trimmedFormat = format.trim();
-        String methodName = trimmedFormat.startsWith("#") ? trimmedFormat.substring(1) : null;
-        String fieldsStr = StringUtils.substring(pattern, pos + 1);
-        String[] fields = INSTANCE_NAME_SPLIT_PATTERN.split(fieldsStr);
-        return new NamePatternRec(format, methodName, fields);
-    }
-
-    public static class NamePatternRec {
-        /**
-         * Name pattern string format
-         */
-        public final String format;
-        /**
-         * Formatting method name or null
-         */
-        public final String methodName;
-        /**
-         * Array of property names
-         */
-        public final String[] fields;
-
-        public NamePatternRec(String format, @Nullable String methodName, String[] fields) {
-            this.fields = fields;
-            this.format = format;
-            this.methodName = methodName;
-        }
+        return instanceNameProvider.getInstanceName(instance);
     }
 
     /**
@@ -420,27 +342,6 @@ public class MetadataTools {
     }
 
     /**
-     * Determine whether the given property is not persistent. Inverse of {@link #isPersistent(MetaProperty)}.
-     * <p>
-     * For objects and properties not registered in metadata this method returns {@code true}.
-     */
-    public boolean isNotPersistent(Object object, String property) {
-        Objects.requireNonNull(object, "object is null");
-        MetaClass metaClass = metadata.getSession().findClass(object.getClass());
-        if (metaClass == null)
-            return true;
-        MetaProperty metaProperty = metaClass.findProperty(property);
-        return metaProperty == null || !isPersistent(metaProperty);
-    }
-
-    /**
-     * Determine whether the given property is not persistent. Inverse of {@link #isPersistent(MetaProperty)}.
-     */
-    public boolean isNotPersistent(MetaProperty metaProperty) {
-        return !isPersistent(metaProperty);
-    }
-
-    /**
      * Determine whether the given property denotes an embedded object.
      *
      * @see Embedded
@@ -558,49 +459,21 @@ public class MetadataTools {
     /**
      * Determine whether the given metaclass represents a persistent entity.
      * <p>
-     * A persistent entity is an entity that is managed by ORM (i.e. registered in a persistence.xml file)
-     * and is not a MappedSuperclass or Embeddable.
+     * A persistent entity is an entity that is managed by ORM and is not a MappedSuperclass.
      */
     public boolean isPersistent(MetaClass metaClass) {
         checkNotNullArgument(metaClass, "metaClass is null");
-        return metaClass.getStore().getDescriptor().isPersistent()
-                && metaClass.getJavaClass().isAnnotationPresent(javax.persistence.Entity.class);
+        return metaClass.getStore().getDescriptor().isPersistent();
     }
 
     /**
      * Determine whether the given class represents a persistent entity.
      * <p>
-     * A persistent entity is an entity that is managed by ORM (i.e. registered in a persistence.xml file)
-     * and is not a MappedSuperclass or Embeddable.
+     * A persistent entity is an entity that is managed by ORM and is not a MappedSuperclass.
      */
     public boolean isPersistent(Class aClass) {
         checkNotNullArgument(aClass, "class is null");
         return isPersistent(metadata.getClass(aClass));
-    }
-
-    /**
-     * Determine whether the given metaclass represents a non-persistent entity.
-     * <p>
-     * A non-persistent entity is not managed by ORM.
-     * <p>
-     * Note that {@code isNotPersistent()} is not the same as {@code !isPersistent()}, because the latter does not
-     * include MappedSuperclass and Embeddable entities that are still managed by ORM.
-     */
-    public boolean isNotPersistent(MetaClass metaClass) {
-        return !metaClass.getStore().getDescriptor().isPersistent();
-    }
-
-    /**
-     * Determine whether the given class represents a non-persistent entity.
-     * <p>
-     * A non-persistent entity is not managed by ORM (i.e. registered in a metadata.xml file).
-     * <p>
-     * Note that {@code isNotPersistent()} is not the same as {@code !isPersistent()}, because the latter does not
-     * include MappedSuperclass and Embeddable entities that a still managed by ORM.
-     */
-    public boolean isNotPersistent(Class aClass) {
-        checkNotNullArgument(aClass, "class is null");
-        return isNotPersistent(metadata.getClass(aClass));
     }
 
     /**
@@ -645,51 +518,28 @@ public class MetadataTools {
     }
 
     /**
-     * Return a collection of properties included into entity's name pattern (see {@link NamePattern}).
+     * Return a collection of properties included into entity's name pattern (see {@link InstanceName}).
      *
      * @param metaClass entity metaclass
      * @return collection of the name pattern properties
      */
     @Nonnull
-    public Collection<MetaProperty> getNamePatternProperties(MetaClass metaClass) {
-        return getNamePatternProperties(metaClass, false);
+    public Collection<MetaProperty> getInstanceNameRelatedProperties(MetaClass metaClass) {
+        return getInstanceNameRelatedProperties(metaClass, false);
     }
 
     /**
-     * Return a collection of properties included into entity's name pattern (see {@link NamePattern}).
+     * Return a collection of properties included into entity's name pattern (see {@link InstanceName}).
      *
      * @param metaClass   entity metaclass
-     * @param useOriginal if true, and if the given metaclass doesn't define a {@link NamePattern} and if it is an
+     * @param useOriginal if true, and if the given metaclass doesn't define a {@link InstanceName} and if it is an
      *                    extended entity, this method tries to find a name pattern in an original entity
      * @return collection of the name pattern properties
      */
-    @Nonnull
-    public Collection<MetaProperty> getNamePatternProperties(MetaClass metaClass, boolean useOriginal) {
-        Collection<MetaProperty> properties = new ArrayList<>();
-        String pattern = (String) getMetaAnnotationAttributes(metaClass.getAnnotations(), NamePattern.class).get("value");
-        if (pattern == null && useOriginal) {
-            MetaClass original = extendedEntities.getOriginalMetaClass(metaClass);
-            if (original != null) {
-                pattern = (String) getMetaAnnotationAttributes(original.getAnnotations(), NamePattern.class).get("value");
-            }
-        }
-        if (!StringUtils.isBlank(pattern)) {
-            String value = StringUtils.substringAfter(pattern, "|");
-            String[] fields = StringUtils.splitPreserveAllTokens(value, ",");
-            for (String field : fields) {
-                String fieldName = StringUtils.trim(field);
 
-                MetaProperty property = metaClass.findProperty(fieldName);
-                if (property != null) {
-                    properties.add(metaClass.findProperty(fieldName));
-                } else {
-                    throw new DevelopmentException(
-                            String.format("Property '%s' is not found in %s", field, metaClass.toString()),
-                            "NamePattern", pattern);
-                }
-            }
-        }
-        return properties;
+    @Nonnull
+    public Collection<MetaProperty> getInstanceNameRelatedProperties(MetaClass metaClass, boolean useOriginal) {
+        return instanceNameProvider.getInstanceNameRelatedProperties(metaClass,useOriginal);
     }
 
     /**
@@ -917,7 +767,7 @@ public class MetadataTools {
      * @return MetaPropertyPath instance
      */
     @Nullable
-    public MetaPropertyPath resolveMetaPropertyPath(MetaClass metaClass, String propertyPath) {
+    public MetaPropertyPath resolveMetaPropertyPathOrNull(MetaClass metaClass, String propertyPath) {
         checkNotNullArgument(metaClass, "metaClass is null");
 
         MetaPropertyPath metaPropertyPath = metaClass.getPropertyPath(propertyPath);
@@ -936,11 +786,11 @@ public class MetadataTools {
      * @param propertyPath path to the attribute
      * @return MetaPropertyPath instance
      */
-    public MetaPropertyPath resolveMetaPropertyPathNN(MetaClass metaClass, String propertyPath) {
-        MetaPropertyPath metaPropertyPath = resolveMetaPropertyPath(metaClass, propertyPath);
-
-        checkNotNullArgument(metaPropertyPath, "Could not resolve property path '%s' in '%s'", propertyPath, metaClass);
-
+    public MetaPropertyPath resolveMetaPropertyPath(MetaClass metaClass, String propertyPath) {
+        MetaPropertyPath metaPropertyPath = resolveMetaPropertyPathOrNull(metaClass, propertyPath);
+        if (metaPropertyPath == null) {
+            throw new IllegalStateException(String.format("Could not resolve property path '%s' in '%s'", propertyPath, metaClass));
+        }
         return metaPropertyPath;
     }
 
@@ -1263,41 +1113,5 @@ public class MetadataTools {
         return e instanceof IllegalStateException
                 || e.getClass().getName().equals("org.eclipse.persistence.exceptions.ValidationException") && e.getMessage() != null
                 && e.getMessage().contains("An attempt was made to traverse a relationship using indirection that had a null Session");
-    }
-
-    /**
-     * DEPRECATED!
-     * Use {@link #isNotPersistent(MetaClass)}.
-     */
-    @Deprecated
-    public boolean isTransient(MetaClass metaClass) {
-        return isNotPersistent(metaClass);
-    }
-
-    /**
-     * DEPRECATED!
-     * Use {@link #isNotPersistent(Class)}.
-     */
-    @Deprecated
-    public boolean isTransient(Class aClass) {
-        return isNotPersistent(aClass);
-    }
-
-    /**
-     * DEPRECATED!
-     * Use {@link #isNotPersistent(Object, String)}.
-     */
-    @Deprecated
-    public boolean isTransient(Object object, String property) {
-        return isNotPersistent(object, property);
-    }
-
-    /**
-     * DEPRECATED!
-     * Use {@link #isNotPersistent(MetaProperty)}.
-     */
-    @Deprecated
-    public boolean isTransient(MetaProperty metaProperty) {
-        return !isPersistent(metaProperty);
     }
 }

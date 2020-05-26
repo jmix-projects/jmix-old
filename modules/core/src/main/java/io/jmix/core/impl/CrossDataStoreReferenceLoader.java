@@ -18,7 +18,7 @@ package io.jmix.core.impl;
 
 import com.google.common.collect.Sets;
 import io.jmix.core.*;
-import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.common.util.Preconditions;
 import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.IdProxy;
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,20 +41,20 @@ import java.util.stream.Collectors;
 @Scope("prototype")
 public class CrossDataStoreReferenceLoader {
 
-    public static final String NAME = "cuba_CrossDataStoreReferenceLoader";
+    public static final String NAME = "jmix_CrossDataStoreReferenceLoader";
 
     private static final Logger log = LoggerFactory.getLogger(CrossDataStoreReferenceLoader.class);
 
-    @Inject
+    @Autowired
     private Metadata metadata;
 
-    @Inject
+    @Autowired
     private MetadataTools metadataTools;
 
-    @Inject
+    @Autowired
     private DataManager dataManager;
 
-    @Inject
+    @Autowired
     private CoreProperties properties;
 
     private MetaClass metaClass;

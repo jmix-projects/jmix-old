@@ -21,12 +21,12 @@ import com.haulmont.cuba.gui.components.filter.Param;
 import io.jmix.core.AppBeans;
 import io.jmix.core.MessageTools;
 import io.jmix.core.MetadataTools;
-import io.jmix.core.metamodel.datatypes.Datatype;
-import io.jmix.core.metamodel.datatypes.Datatypes;
+import io.jmix.core.metamodel.datatype.Datatype;
+import io.jmix.core.metamodel.datatype.Datatypes;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.core.security.UserSessionSource;
+import com.haulmont.cuba.core.global.UserSessionSource;
 
 import javax.persistence.TemporalType;
 

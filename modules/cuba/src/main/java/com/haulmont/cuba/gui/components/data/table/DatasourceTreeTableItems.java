@@ -19,11 +19,11 @@ package com.haulmont.cuba.gui.components.data.table;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.HierarchicalDatasource;
 import io.jmix.core.Entity;
-import io.jmix.ui.components.data.TreeTableItems;
+import io.jmix.ui.component.data.TreeTableItems;
 
 import java.util.Collection;
 
-public class DatasourceTreeTableItems<E extends Entity<K>, K>
+public class DatasourceTreeTableItems<E extends Entity, K>
         extends SortableDatasourceTableItems<E, K>
         implements TreeTableItems<E> {
 

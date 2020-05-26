@@ -16,7 +16,7 @@
 
 package io.jmix.auditui.screen;
 
-import io.jmix.audit.EntityLogAPI;
+import io.jmix.audit.EntityLog;
 import io.jmix.audit.entity.EntityLogAttr;
 import io.jmix.audit.entity.EntityLogItem;
 import io.jmix.audit.entity.LoggedAttribute;
@@ -24,14 +24,14 @@ import io.jmix.audit.entity.LoggedEntity;
 import io.jmix.core.*;
 import io.jmix.core.Entity;
 import io.jmix.core.entity.HasUuid;
-import io.jmix.core.entity.User;
+import io.jmix.core.entity.BaseUser;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Range;
 import io.jmix.ui.*;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.actions.DialogAction;
-import io.jmix.ui.components.*;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.action.DialogAction;
+import io.jmix.ui.component.*;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.model.DataContext;
@@ -39,7 +39,7 @@ import io.jmix.ui.screen.LookupComponent;
 import io.jmix.ui.screen.*;
 import org.apache.commons.lang3.time.DateUtils;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 
 @UiController("entityLog.browse")
@@ -49,80 +49,80 @@ public class EntityLogBrowser extends StandardLookup<EntityLogItem> {
 
     protected static final String SELECT_ALL_CHECK_BOX = "selectAllCheckBox";
 
-    @Inject
+    @Autowired
     protected Messages messages;
-    @Inject
+    @Autowired
     protected MessageBundle messageBundle;
-    @Inject
+    @Autowired
     protected WindowConfig windowConfig;
-    @Inject
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected TimeSource timeSource;
-    @Inject
+    @Autowired
     protected ReferenceToEntitySupport referenceToEntitySupport;
-    @Inject
+    @Autowired
     protected ExtendedEntities extendedEntities;
-    @Inject
-    protected EntityLogAPI entityLog;
-    @Inject
+    @Autowired
+    protected EntityLog entityLog;
+    @Autowired
     protected UiComponents uiComponents;
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
-    @Inject
+    @Autowired
     protected Dialogs dialogs;
-    @Inject
+    @Autowired
     protected Notifications notifications;
-    @Inject
+    @Autowired
     protected ScreenBuilders screenBuilders;
 
-    @Inject
+    @Autowired
     protected CollectionContainer<LoggedEntity> loggedEntityDc;
-    @Inject
+    @Autowired
     protected CollectionLoader<LoggedEntity> loggedEntityDl;
-    @Inject
+    @Autowired
     protected CollectionLoader<EntityLogItem> entityLogDl;
-    @Inject
-    protected CollectionLoader<User> usersDl;
-    @Inject
-    protected CollectionContainer<User> usersDc;
-    @Inject
+    @Autowired
+    protected CollectionLoader<BaseUser> usersDl;
+    @Autowired
+    protected CollectionContainer<BaseUser> usersDc;
+    @Autowired
     protected CollectionContainer<LoggedAttribute> loggedAttrDc;
-    @Inject
+    @Autowired
     protected CollectionLoader<LoggedAttribute> loggedAttrDl;
-    @Inject
+    @Autowired
     protected LookupField changeTypeField;
-    @Inject
+    @Autowired
     protected LookupField<String> entityNameField;
-    @Inject
+    @Autowired
     protected LookupField<String> userField;
-    @Inject
+    @Autowired
     protected LookupField<String> filterEntityNameField;
-    @Inject
+    @Autowired
     protected DataContext dataContext;
-    @Inject
+    @Autowired
     protected PickerField<Entity> instancePicker;
-    @Inject
+    @Autowired
     protected Table<EntityLogItem> entityLogTable;
-    @Inject
+    @Autowired
     protected GroupTable<LoggedEntity> loggedEntityTable;
-    @Inject
+    @Autowired
     protected Table<EntityLogAttr> entityLogAttrTable;
-    @Inject
+    @Autowired
     protected CheckBox manualCheckBox;
-    @Inject
+    @Autowired
     protected CheckBox autoCheckBox;
-    @Inject
+    @Autowired
     protected VBoxLayout actionsPaneLayout;
-    @Inject
+    @Autowired
     protected ScrollBoxLayout attributesBoxScroll;
-    @Inject
+    @Autowired
     protected DateField tillDateField;
-    @Inject
+    @Autowired
     protected DateField fromDateField;
-    @Inject
+    @Autowired
     protected Button cancelBtn;
-    @Inject
+    @Autowired
     protected CheckBox selectAllCheckBox;
 
     protected TreeMap<String, String> entityMetaClassesMap;
@@ -251,8 +251,8 @@ public class EntityLogBrowser extends StandardLookup<EntityLogItem> {
     public TreeMap<String, String> getUsersMap() {
         TreeMap<String, String> options = new TreeMap<>();
         usersDl.load();
-        for (User user : usersDc.getItems()) {
-            options.put(metadataTools.getInstanceName(user), user.getLogin());
+        for (BaseUser user : usersDc.getItems()) {
+            options.put(metadataTools.getInstanceName(user), user.getUsername());
         }
         return options;
     }

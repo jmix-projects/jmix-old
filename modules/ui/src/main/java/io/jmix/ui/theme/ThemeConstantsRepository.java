@@ -18,15 +18,15 @@ package io.jmix.ui.theme;
 
 import io.jmix.core.DevelopmentException;
 import io.jmix.core.Resources;
-import io.jmix.core.compatibility.AppContext;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,8 +40,11 @@ public class ThemeConstantsRepository {
 
     private static final Logger log = LoggerFactory.getLogger(ThemeConstantsRepository.class);
 
-    @Inject
+    @Autowired
     protected Resources resources;
+
+    @Autowired
+    protected Environment environment;
 
     private volatile boolean initialized;
 
@@ -60,7 +63,7 @@ public class ThemeConstantsRepository {
     }
 
     protected void init() {
-        String configName = AppContext.getProperty("jmix.themeConfig");
+        String configName = environment.getProperty("jmix.ui.themeConfig");
         if (!StringUtils.isBlank(configName)) {
             Map<String, Map<String, String>> themeProperties = new HashMap<>();
 

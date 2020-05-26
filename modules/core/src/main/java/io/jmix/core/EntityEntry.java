@@ -19,23 +19,27 @@ package io.jmix.core;
 import io.jmix.core.entity.EntityPropertyChangeListener;
 import io.jmix.core.entity.SecurityState;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
+import java.util.Collection;
 
-public interface EntityEntry<K> extends Serializable {
+public interface EntityEntry extends Serializable {
 
-    Entity<K> getSource();
+    Entity getSource();
 
-    K getEntityId();
+    @Nullable
+    Object getEntityId();
 
-    void setEntityId(K id);
+    void setEntityId(@Nullable Object id);
 
+    @Nullable
     <T> T getAttributeValue(String name);
 
-    default void setAttributeValue(String name, Object value) {
+    default void setAttributeValue(String name, @Nullable Object value) {
         setAttributeValue(name, value, true);
     }
 
-    void setAttributeValue(String name, Object value, boolean checkEquals);
+    void setAttributeValue(String name, @Nullable Object value, boolean checkEquals);
 
     default boolean isEmbeddable() {
         return false;
@@ -57,9 +61,10 @@ public interface EntityEntry<K> extends Serializable {
 
     void setRemoved(boolean removed);
 
+    @Nullable
     SecurityState getSecurityState();
 
-    void setSecurityState(SecurityState securityState);
+    void setSecurityState(@Nullable SecurityState securityState);
 
     /**
      * Add listener to track attributes changes.
@@ -83,5 +88,12 @@ public interface EntityEntry<K> extends Serializable {
     /**
      * Copies the state.
      */
-    void copy(EntityEntry<?> entry);
+    void copy(@Nullable EntityEntry entry);
+
+    void addExtraState(EntityEntryExtraState extraState);
+
+    @Nullable
+    EntityEntryExtraState getExtraState(Class<?> extraStateType);
+
+    Collection<EntityEntryExtraState> getAllExtraState();
 }

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
+<window xmlns="http://jmix.io/schema/ui/window"
         caption="msg://editorCaption"
         focusComponent="form"
         messagesPack="io.jmix.samples.ui.screen.user">
     <data>
         <instance id="userDc"
                   class="io.jmix.security.entity.User"
-                  view="_local">
+                  fetchPlan="_local">
             <loader/>
         </instance>
     </data>

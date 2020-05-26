@@ -18,16 +18,16 @@ package com.haulmont.cuba.gui.components;
 
 import io.jmix.ui.ScreenTools;
 import io.jmix.ui.Screens;
-import io.jmix.ui.components.AppWorkArea;
-import io.jmix.ui.components.Image;
-import io.jmix.ui.components.ThemeResource;
-import io.jmix.ui.components.Window;
-import io.jmix.ui.components.mainwindow.UserIndicator;
+import io.jmix.ui.component.AppWorkArea;
+import io.jmix.ui.component.Image;
+import io.jmix.ui.component.ThemeResource;
+import io.jmix.ui.component.Window;
+import io.jmix.ui.component.mainwindow.UserIndicator;
 import io.jmix.ui.screen.Screen;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -38,9 +38,9 @@ public class AbstractMainWindow extends AbstractTopLevelWindow
 
     protected static final String APP_LOGO_IMAGE = "application.logoImage";
 
-    @Inject
+    @Autowired
     protected Screens screens;
-    @Inject
+    @Autowired
     protected ScreenTools screenTools;
 
     protected AppWorkArea workArea;

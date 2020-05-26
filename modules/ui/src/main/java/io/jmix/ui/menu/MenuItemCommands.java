@@ -16,14 +16,8 @@
 
 package io.jmix.ui.menu;
 
-import com.google.common.collect.ImmutableMap;
-import io.jmix.core.DataManager;
-import io.jmix.core.LoadContext;
 import io.jmix.core.*;
-import io.jmix.core.commons.util.ReflectionHelper;
-import io.jmix.core.compatibility.AppContext;
-import io.jmix.core.compatibility.EntityLoadInfo;
-import io.jmix.core.Entity;
+import io.jmix.core.common.util.ReflectionHelper;
 import io.jmix.core.entity.IdProxy;
 import io.jmix.core.impl.BeanLocatorAware;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -32,24 +26,24 @@ import io.jmix.ui.ScreenBuilders;
 import io.jmix.ui.Screens;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowInfo;
-import io.jmix.ui.components.Window;
+import io.jmix.ui.component.Window;
 import io.jmix.ui.gui.OpenType;
-import io.jmix.ui.logging.UIPerformanceLogger;
 import io.jmix.ui.logging.UserActionsLogger;
+import io.jmix.ui.monitoring.UiMonitoring;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.sys.UiControllerProperty;
 import io.jmix.ui.sys.UiControllerPropertyInjector;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.dom4j.Element;
-import org.perf4j.StopWatch;
-import org.perf4j.slf4j.Slf4JStopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -59,31 +53,34 @@ import java.util.stream.Collectors;
 
 import static io.jmix.ui.screen.UiControllerUtils.getScreenContext;
 
-@Component("cuba_MenuItemCommands")
+@Component(MenuItemCommands.NAME)
 public class MenuItemCommands {
+
+    public static final String NAME = "jmix_MenuItemCommands";
 
     private static final Logger userActionsLog = LoggerFactory.getLogger(UserActionsLogger.class);
     private static final Logger log = LoggerFactory.getLogger(MenuItemCommands.class);
 
-    @Inject
-    protected DataManager dataService;
-    @Inject
+    @Autowired
+    protected DataManager dataManager;
+    @Autowired
     protected MenuConfig menuConfig;
-    @Inject
+    @Autowired
     protected WindowConfig windowConfig;
-    @Inject
-    protected Scripting scripting;
-    @Inject
+    @Autowired
+    protected HotDeployManager hotDeployManager;
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
-    @Inject
-    private FetchPlanRepository fetchPlanRepository;
-    @Inject
+    @Autowired
+    protected FetchPlanRepository fetchPlanRepository;
+    @Autowired
     protected ScreenBuilders screenBuilders;
-
-    @Inject
+    @Autowired
     protected BeanLocator beanLocator;
+    @Autowired
+    protected MeterRegistry meterRegistry;
 
     /**
      * Create menu command.
@@ -111,47 +108,7 @@ public class MenuItemCommands {
     }
 
     protected Map<String, Object> loadParams(MenuItem item) {
-        Element descriptor = item.getDescriptor();
-        if (descriptor == null) {
-            return Collections.emptyMap();
-        }
-
-        ImmutableMap.Builder<String, Object> builder = ImmutableMap.builder();
-
-        for (Element element : descriptor.elements("param")) {
-            String value = element.attributeValue("value");
-            EntityLoadInfo info = EntityLoadInfo.parse(value);
-            if (info == null) {
-                if ("true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value)) {
-                    Boolean booleanValue = Boolean.valueOf(value);
-                    builder.put(element.attributeValue("name"), booleanValue);
-                } else {
-                    if (value.startsWith("${") && value.endsWith("}")) {
-                        String property = AppContext.getProperty(value.substring(2, value.length() - 1));
-                        if (!StringUtils.isEmpty(property)) {
-                            value = property;
-                        }
-                    }
-                    builder.put(element.attributeValue("name"), value);
-                }
-            } else {
-                builder.put(element.attributeValue("name"), loadEntityInstance(info));
-            }
-        }
-
-        String screen = item.getScreen();
-
-        if (StringUtils.isNotEmpty(screen)) {
-            WindowInfo windowInfo = windowConfig.getWindowInfo(screen);
-            // caption is passed only for legacy screens
-            if (windowInfo.getDescriptor() != null) {
-                String caption = menuConfig.getItemCaption(item);
-
-                builder.put("caption", caption);
-            }
-        }
-
-        return builder.build();
+        return Collections.emptyMap();
     }
 
     protected List<UiControllerProperty> loadProperties(Element menuItemDescriptor) {
@@ -212,7 +169,7 @@ public class MenuItemCommands {
         }
 
         //noinspection unchecked
-        Entity entity = dataService.load(ctx);
+        Entity entity = dataManager.load(ctx);
         if (entity == null) {
             throw new RuntimeException(String.format("Unable to load entity of class '%s' with id '%s'",
                     entityClass, entityId));
@@ -251,20 +208,6 @@ public class MenuItemCommands {
         return id;
     }
 
-    protected Entity loadEntityInstance(EntityLoadInfo info) {
-        LoadContext ctx = new LoadContext(info.getMetaClass()).setId(info.getId());
-        if (info.getViewName() != null) {
-            ctx.setFetchPlan(fetchPlanRepository.getFetchPlan(info.getMetaClass(), info.getViewName()));
-        }
-
-        //noinspection unchecked
-        return dataService.load(ctx);
-    }
-
-    protected StopWatch createStopWatch(MenuItem item) {
-        return new Slf4JStopWatch("MenuItem." + item.getId(), LoggerFactory.getLogger(UIPerformanceLogger.class));
-    }
-
     protected class ScreenCommand implements MenuItemCommand {
         protected FrameOwner origin;
         protected MenuItem item;
@@ -288,7 +231,7 @@ public class MenuItemCommands {
         public void run() {
             userActionsLog.trace("Menu item {} triggered", item.getId());
 
-            StopWatch sw = createStopWatch(item);
+            Timer.Sample sample = Timer.start(meterRegistry);
 
             OpenType openType = OpenType.NEW_TAB;
             String openTypeStr = descriptor.attributeValue("openType");
@@ -346,7 +289,7 @@ public class MenuItemCommands {
 
             screens.showFromNavigation(screen);
 
-            sw.stop();
+            sample.stop(UiMonitoring.createMenuTimer(meterRegistry, item.getId()));
         }
 
         protected Entity getEntityToEdit(String screenId) {
@@ -430,7 +373,7 @@ public class MenuItemCommands {
         public void run() {
             userActionsLog.trace("Menu item {} triggered", item.getId());
 
-            StopWatch sw = createStopWatch(item);
+            Timer.Sample sample = Timer.start(meterRegistry);
 
             Object beanInstance = beanLocator.get(bean);
             try {
@@ -451,7 +394,7 @@ public class MenuItemCommands {
                 throw new RuntimeException("Unable to execute bean method", e);
             }
 
-            sw.stop();
+            sample.stop(UiMonitoring.createMenuTimer(meterRegistry, item.getId()));
         }
 
         @Override
@@ -481,9 +424,9 @@ public class MenuItemCommands {
         public void run() {
             userActionsLog.trace("Menu item {} triggered", item.getId());
 
-            StopWatch sw = createStopWatch(item);
+            Timer.Sample sample = Timer.start(meterRegistry);
 
-            Class<?> clazz = scripting.loadClass(runnableClass);
+            Class<?> clazz = hotDeployManager.findClass(runnableClass);
             if (clazz == null) {
                 throw new IllegalStateException(String.format("Can't load class: %s", runnableClass));
             }
@@ -523,7 +466,7 @@ public class MenuItemCommands {
                 ((Runnable) classInstance).run();
             }
 
-            sw.stop();
+            sample.stop(UiMonitoring.createMenuTimer(meterRegistry, item.getId()));
         }
 
         @Override

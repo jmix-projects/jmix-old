@@ -25,7 +25,7 @@ import io.jmix.core.entity.EntityPropertyChangeEvent
 import io.jmix.core.entity.EntityPropertyChangeListener
 import io.jmix.core.entity.SecurityState
 
-import io.jmix.security.entity.User
+import com.haulmont.cuba.core.model.common.User
 import io.jmix.ui.model.DataComponents
 import io.jmix.ui.model.DataContext
 import org.eclipse.persistence.internal.queries.EntityFetchGroup
@@ -33,15 +33,15 @@ import org.eclipse.persistence.queries.FetchGroupTracker
 import spec.haulmont.cuba.web.UiScreenSpec
 import spock.lang.Ignore
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 @Ignore
 class DataContextMergeTest extends UiScreenSpec {
 
-    @Inject
+    @Autowired
     private DataComponents factory
 
-    @Inject
+    @Autowired
     private EntityStates entityStates
 
     def "merge equal instances"() throws Exception {

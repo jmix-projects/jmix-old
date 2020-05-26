@@ -18,13 +18,14 @@ package com.haulmont.cuba.security.entity;
 
 import io.jmix.data.entity.StandardEntity;
 import io.jmix.core.entity.annotation.SystemLevel;
-import io.jmix.core.metamodel.annotations.NamePattern;
+import com.haulmont.chile.core.annotations.NamePattern;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import java.util.UUID;
 
 /**
  * A filter component settings.

@@ -19,7 +19,7 @@ apply plugin: 'groovy'
 apply plugin: 'java-library'
 apply plugin: 'io.jmix'
 
-version = rootProject.jmixVersion
+group = 'io.jmix.audit'
 
 dependencies {
     api platform(project(':jmix-platform'))
@@ -38,27 +38,23 @@ dependencies {
     testRuntimeOnly 'org.slf4j:slf4j-simple'
 }
 
-entitiesEnhancing {
-    enabled = true
-}
-
 jar {
     archivesBaseName = 'jmix-audit-ui'
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier = 'sources'
+java {
+    withSourcesJar()
+}
+
+artifacts {
+    archives sourcesJar
 }
 
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            groupId = 'io.jmix.auditui'
             artifactId = 'jmix-audit-ui'
-
             from components.java
-            artifact sourcesJar
         }
     }
 }

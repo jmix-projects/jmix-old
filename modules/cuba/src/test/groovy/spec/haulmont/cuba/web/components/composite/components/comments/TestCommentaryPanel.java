@@ -20,20 +20,20 @@ import com.google.common.base.Strings;
 import com.haulmont.cuba.gui.components.TextField;
 import com.haulmont.cuba.web.model.compositecomponent.Comment;
 import io.jmix.core.MetadataTools;
-import io.jmix.ui.components.Button;
-import io.jmix.ui.components.ComponentContainer;
-import io.jmix.ui.components.DataGrid;
-import io.jmix.ui.components.VBoxLayout;
-import io.jmix.ui.components.data.DataGridItems;
-import io.jmix.ui.components.data.datagrid.ContainerDataGridItems;
-import io.jmix.ui.components.data.meta.ContainerDataUnit;
-import io.jmix.ui.components.impl.CompositeComponent;
-import io.jmix.ui.components.impl.CompositeDescriptor;
-import io.jmix.ui.components.impl.CompositeWithCaption;
+import io.jmix.ui.component.Button;
+import io.jmix.ui.component.ComponentContainer;
+import io.jmix.ui.component.DataGrid;
+import io.jmix.ui.component.VBoxLayout;
+import io.jmix.ui.component.data.DataGridItems;
+import io.jmix.ui.component.data.datagrid.ContainerDataGridItems;
+import io.jmix.ui.component.data.meta.ContainerDataUnit;
+import io.jmix.ui.component.impl.CompositeComponent;
+import io.jmix.ui.component.impl.CompositeDescriptor;
+import io.jmix.ui.component.impl.CompositeWithCaption;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.sys.ShowInfoAction;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.function.Function;
 
 @CompositeDescriptor("/spec/cuba/web/components/composite/components/comments/commentary-panel.xml")
@@ -42,7 +42,7 @@ public class TestCommentaryPanel extends CompositeComponent<VBoxLayout> implemen
     public static final String NAME = "testCommentaryPanel";
 
     /* Beans */
-    @Inject
+    @Autowired
     private MetadataTools metadataTools;
 
     /* Nested Components */

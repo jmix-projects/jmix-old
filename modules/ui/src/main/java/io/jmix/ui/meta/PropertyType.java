@@ -16,8 +16,8 @@
 
 package io.jmix.ui.meta;
 
-import io.jmix.core.metamodel.datatypes.Datatype;
-import io.jmix.ui.icons.CubaIcon;
+import io.jmix.core.metamodel.datatype.Datatype;
+import io.jmix.ui.icon.JmixIcon;
 
 /**
  * Type of UI component property.
@@ -76,9 +76,9 @@ public enum PropertyType {
      */
     COMPONENT_ID,
     /**
-     * Icon path or ID of icon from predefined CUBA icons.
+     * Icon path or ID of icon from predefined Jmix icons.
      *
-     * @see CubaIcon
+     * @see JmixIcon
      */
     ICON_ID,
     /**

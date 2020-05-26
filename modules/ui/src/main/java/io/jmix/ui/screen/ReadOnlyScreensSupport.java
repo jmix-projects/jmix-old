@@ -18,16 +18,16 @@ package io.jmix.ui.screen;
 
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.security.Security;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.components.ActionsHolder;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Component.Editable;
-import io.jmix.ui.components.ComponentsHelper;
-import io.jmix.ui.components.data.HasValueSource;
-import io.jmix.ui.components.data.ValueSource;
-import io.jmix.ui.components.data.meta.EntityValueSource;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.component.ActionsHolder;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.Component.Editable;
+import io.jmix.ui.component.ComponentsHelper;
+import io.jmix.ui.component.data.HasValueSource;
+import io.jmix.ui.component.data.ValueSource;
+import io.jmix.ui.component.data.meta.EntityValueSource;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 import java.util.function.Predicate;
 
@@ -39,11 +39,11 @@ import static io.jmix.ui.screen.EditorScreen.WINDOW_CLOSE;
  */
 @org.springframework.stereotype.Component(ReadOnlyScreensSupport.NAME)
 public class ReadOnlyScreensSupport {
-    public static final String NAME = "cuba_ReadOnlyScreensSupport";
+    public static final String NAME = "jmix_ReadOnlyScreensSupport";
 
     protected Security security;
 
-    @Inject
+    @Autowired
     public void setSecurity(Security security) {
         this.security = security;
     }

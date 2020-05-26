@@ -18,35 +18,35 @@ package io.jmix.core.impl;
 
 import com.google.common.base.Strings;
 import io.jmix.core.Messages;
-import io.jmix.core.security.UserSessionSource;
+import io.jmix.core.security.CurrentAuthentication;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.IllegalFormatException;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 @Component(Messages.NAME)
 public class MessagesImpl implements Messages {
 
-    @Inject
+    @Autowired
     protected MessageSource messageSource;
 
-    @Inject
-    protected UserSessionSource userSessionSource;
+    @Autowired
+    protected CurrentAuthentication currentAuthentication;
 
     protected static final Pattern ENUM_SUBCLASS_PATTERN = Pattern.compile("\\$[1-9]");
 
     @Override
     public String getMessage(String key) {
-        return getMessage(key, userSessionSource.getLocale());
+        return getMessage(key, currentAuthentication.getLocale());
     }
 
     @Override
@@ -62,7 +62,7 @@ public class MessagesImpl implements Messages {
 
     @Override
     public String getMessage(Class caller, String key) {
-        return getMessage(caller, key, userSessionSource.getLocale());
+        return getMessage(caller, key, currentAuthentication.getLocale());
     }
 
     @Override
@@ -79,7 +79,7 @@ public class MessagesImpl implements Messages {
 
     @Override
     public String getMessage(Enum caller) {
-        return getMessage(caller, userSessionSource.getLocale());
+        return getMessage(caller, currentAuthentication.getLocale());
     }
 
     @Override
@@ -106,7 +106,7 @@ public class MessagesImpl implements Messages {
 
     @Override
     public String getMessage(String group, String key) {
-        return getMessage(group, key, userSessionSource.getLocale());
+        return getMessage(group, key, currentAuthentication.getLocale());
     }
 
     @Override
@@ -118,24 +118,6 @@ public class MessagesImpl implements Messages {
             return messageSource.getMessage(getCode(group, key), null, locale);
         } catch (NoSuchMessageException e) {
             return fallbackMessageOrKey(group, key, locale);
-        }
-    }
-
-    @Override
-    public String formatMessage(String key, Object... params) {
-        try {
-            return String.format(getMessage(key), params);
-        } catch (IllegalFormatException e) {
-            return key;
-        }
-    }
-
-    @Override
-    public String formatMessage(String key, Locale locale, Object... params) {
-        try {
-            return String.format(getMessage(key, locale), params);
-        } catch (IllegalFormatException e) {
-            return key;
         }
     }
 
@@ -222,8 +204,8 @@ public class MessagesImpl implements Messages {
     }
 
     protected Locale getUserLocale() {
-        return userSessionSource.checkCurrentUserSession() ?
-                userSessionSource.getLocale() :
+        return currentAuthentication.isSet() ?
+                currentAuthentication.getLocale() :
                 getDefaultLocale();
     }
 

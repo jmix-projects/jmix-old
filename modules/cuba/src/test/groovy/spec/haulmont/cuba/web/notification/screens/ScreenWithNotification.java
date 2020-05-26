@@ -17,27 +17,27 @@
 package spec.haulmont.cuba.web.notification.screens;
 
 
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.components.Button;
-import io.jmix.ui.components.NotificationFacet;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.component.Button;
+import io.jmix.ui.component.NotificationFacet;
 import io.jmix.ui.screen.Install;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Subscribe;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings({"unused"})
 @UiController
 @UiDescriptor("screen-with-notification.xml")
 public class ScreenWithNotification extends Screen {
 
-    @Inject
+    @Autowired
     public NotificationFacet testNotification;
-    @Inject
+    @Autowired
     public Action notificationAction;
-    @Inject
+    @Autowired
     public Button notificationButton;
 
     public boolean captionProvided = false;

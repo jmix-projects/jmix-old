@@ -19,7 +19,7 @@ apply plugin: 'groovy'
 apply plugin: 'java-library'
 apply plugin: 'io.jmix'
 
-version = rootProject.jmixVersion
+group = 'io.jmix.data'
 
 dependencies {
     api platform(project(':jmix-platform'))
@@ -42,33 +42,27 @@ dependencies {
     testRuntimeOnly 'org.hsqldb:hsqldb'
 }
 
-entitiesEnhancing {
-    enabled = true
-}
-
 test {
     useJUnitPlatform()
-    systemProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug")
-    systemProperty("org.slf4j.simpleLogger.log.eclipselink.sql", "debug")
 }
 
 jar {
     archivesBaseName = 'jmix-data'
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier = 'sources'
+java {
+    withSourcesJar()
+}
+
+artifacts {
+    archives sourcesJar
 }
 
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            groupId = 'io.jmix.data'
             artifactId = 'jmix-data'
-
             from components.java
-            artifact sourcesJar
         }
     }
 }

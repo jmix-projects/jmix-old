@@ -13,10 +13,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-entitiesEnhancing {
-    enabled = true
-}
-
 test {
     useJUnitPlatform()
 }

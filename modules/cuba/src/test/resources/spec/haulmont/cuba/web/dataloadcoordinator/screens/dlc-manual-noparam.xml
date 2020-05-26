@@ -15,13 +15,13 @@
   ~ limitations under the License.
   -->
 
-<window xmlns="http://schemas.haulmont.com/cuba/screen/window.xsd"
-        xmlns:c="http://schemas.haulmont.com/cuba/screen/jpql_condition.xsd"
+<window xmlns="http://jmix.io/schema/ui/window"
+        xmlns:c="http://jmix.io/schema/ui/jpql-condition"
         caption="Owners">
     <data readOnly="true">
         <collection id="ownersDc"
                     class="com.haulmont.cuba.web.testmodel.petclinic.Owner"
-                    view="owner-with-category-view">
+                    fetchPlan="owner-with-category-view">
             <loader id="ownersDl">
                 <query>
                     <![CDATA[select e from pc_Owner e]]>

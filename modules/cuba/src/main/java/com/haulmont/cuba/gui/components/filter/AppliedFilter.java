@@ -25,7 +25,7 @@ import com.haulmont.cuba.gui.components.filter.dateinterval.DateIntervalValue;
 import com.haulmont.cuba.security.entity.FilterEntity;
 import io.jmix.core.AppBeans;
 import io.jmix.core.MetadataTools;
-import io.jmix.core.commons.datastruct.Node;
+import io.jmix.core.common.datastruct.Node;
 import io.jmix.core.Entity;
 import io.jmix.ui.filter.Op;
 import org.apache.commons.lang3.BooleanUtils;
@@ -125,7 +125,7 @@ public class AppliedFilter {
         }
 
         if (value instanceof Entity)
-            return AppBeans.get(MetadataTools.class).getInstanceName((Entity<?>) value);
+            return AppBeans.get(MetadataTools.class).getInstanceName((Entity) value);
 
         if (value instanceof Enum)
             return messages.getMessage((Enum) value);
@@ -135,7 +135,7 @@ public class AppliedFilter {
             ArrayList list = ((ArrayList) value);
             for (Object obj : list) {
                 if (obj instanceof Entity)
-                    names.add(AppBeans.get(MetadataTools.class).getInstanceName(((Entity<?>) obj)));
+                    names.add(AppBeans.get(MetadataTools.class).getInstanceName(((Entity) obj)));
                 else {
                     names.add(FilterConditionUtils.formatParamValue(param, obj));
                 }

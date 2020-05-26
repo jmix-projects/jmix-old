@@ -16,16 +16,16 @@
 
 package io.jmix.core.impl;
 
-import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.metamodel.datatypes.Datatype;
-import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
-import io.jmix.core.metamodel.datatypes.impl.DatatypeDefUtils;
+import io.jmix.core.common.util.Preconditions;
+import io.jmix.core.metamodel.datatype.Datatype;
+import io.jmix.core.metamodel.datatype.DatatypeRegistry;
+import io.jmix.core.metamodel.datatype.impl.DatatypeDefUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 
 @Component(DatatypeRegistry.NAME)
@@ -36,7 +36,7 @@ public class DatatypeRegistryImpl implements DatatypeRegistry {
     protected Map<Class<?>, Datatype> datatypeByClass = new HashMap<>();
     protected Map<String, Datatype> datatypeById = new HashMap<>();
 
-    @Inject
+    @Autowired
     public DatatypeRegistryImpl(List<Datatype> datatypeList) {
         for (Datatype datatype : datatypeList) {
             register(datatype, datatype.getId(), DatatypeDefUtils.isDefaultForClass(datatype));
@@ -54,7 +54,7 @@ public class DatatypeRegistryImpl implements DatatypeRegistry {
     @Nullable
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Datatype<T> get(Class<T> javaClass) {
+    public <T> Datatype<T> find(Class<T> javaClass) {
         Datatype<T> datatype = datatypeByClass.get(javaClass);
         if (datatype == null) {
             // if no exact type found, try to find matching super-type
@@ -74,8 +74,8 @@ public class DatatypeRegistryImpl implements DatatypeRegistry {
      * @throws IllegalArgumentException if no datatype suitable for the given type found
      */
     @Override
-    public <T> Datatype<T> getNN(Class<T> javaClass) {
-        Datatype<T> datatype = get(javaClass);
+    public <T> Datatype<T> get(Class<T> javaClass) {
+        Datatype<T> datatype = find(javaClass);
         if (datatype == null)
             throw new IllegalArgumentException("A datatype for " + javaClass + " is not found");
         return datatype;

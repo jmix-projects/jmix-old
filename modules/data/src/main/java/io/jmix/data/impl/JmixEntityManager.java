@@ -18,7 +18,7 @@ package io.jmix.data.impl;
 
 import com.google.common.collect.Sets;
 import io.jmix.core.*;
-import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.common.util.Preconditions;
 import io.jmix.core.Entity;
 import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -130,7 +130,7 @@ public class JmixEntityManager implements EntityManager {
         }
         if (entity instanceof SoftDelete && PersistenceHints.isSoftDeletion(delegate)) {
             ((SoftDelete) entity).setDeleteTs(timeSource.currentTimestamp());
-            ((SoftDelete) entity).setDeletedBy(auditInfoProvider.getCurrentUserLogin());
+            ((SoftDelete) entity).setDeletedBy(auditInfoProvider.getCurrentUserUsername());
         } else {
             delegate.remove(entity);
             entity.__getEntityEntry().setRemoved(true);
@@ -167,7 +167,7 @@ public class JmixEntityManager implements EntityManager {
         Class<T> effectiveClass = extendedEntities.getEffectiveClass(entityClass);
 
         T reference = delegate.getReference(effectiveClass, getRealId(primaryKey));
-        ((Entity<?>) reference).__getEntityEntry().setNew(false);
+        ((Entity) reference).__getEntityEntry().setNew(false);
         return reference;
     }
 
@@ -473,7 +473,7 @@ public class JmixEntityManager implements EntityManager {
 
             // copy non-persistent attributes to the resulting merged instance
             for (MetaProperty property : metadata.getClass(entity.getClass()).getProperties()) {
-                if (metadataTools.isNotPersistent(property) && !property.isReadOnly()) {
+                if (!metadataTools.isPersistent(property) && !property.isReadOnly()) {
                     // copy using reflection to avoid executing getter/setter code
                     Field field = FieldUtils.getField(entity.getClass(), property.getName(), true);
                     if (field != null) {

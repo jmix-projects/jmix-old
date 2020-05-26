@@ -26,19 +26,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.StringReader;
 import java.util.*;
 
 import static io.jmix.audit.entity.EntityLogAttr.*;
 
-@Component("cuba_EntityLogItemDetachListener")
+@Component("jmix_EntityLogItemDetachListener")
 public class EntityLogItemDetachListener implements BeforeDetachEntityListener<EntityLogItem> {
 
     private final Logger log = LoggerFactory.getLogger(EntityLogItemDetachListener.class);
 
 
-    @Inject
+    @Autowired
     protected EntityStates entityStates;
 
     protected final String[] skipNames = new String[]{VALUE_ID_SUFFIX,

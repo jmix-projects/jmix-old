@@ -19,25 +19,21 @@ import com.google.common.base.Strings;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
-import io.jmix.core.ExtendedEntities;
-import io.jmix.core.Metadata;
-import io.jmix.core.Resources;
-import io.jmix.core.Scripting;
-import io.jmix.core.commons.util.Dom4j;
-import io.jmix.core.compatibility.AppContext;
-import io.jmix.core.Entity;
+import io.jmix.core.*;
+import io.jmix.core.common.util.Dom4j;
 import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.ui.components.Window;
+import io.jmix.ui.component.Window;
+import io.jmix.ui.navigation.RouteDefinition;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.sys.*;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringTokenizer;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
@@ -47,7 +43,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -64,15 +60,12 @@ public class WindowConfig {
 
     public static final String NAME = "jmix_WindowConfig";
 
-    public static final String WINDOW_CONFIG_XML_PROP = "cuba.windowConfig";
+    public static final String WINDOW_CONFIG_XML_PROP = "jmix.ui.windowConfig";
 
     public static final Pattern ENTITY_SCREEN_PATTERN = Pattern.compile("([A-Za-z0-9]+[$_][A-Z][_A-Za-z0-9]*)\\..+");
 
     protected static final List<String> LOGIN_SCREEN_IDS = ImmutableList.of("login", "loginWindow");
     protected static final List<String> MAIN_SCREEN_IDS = ImmutableList.of("main", "mainWindow");
-
-    protected static final String LOGIN_SCREEN_PROP = "jmix.ui.loginScreenId";
-    protected static final String MAIN_SCREEN_PROP = "jmix.ui.mainScreenId";
 
     private final Logger log = LoggerFactory.getLogger(WindowConfig.class);
 
@@ -86,21 +79,26 @@ public class WindowConfig {
     @Autowired(required = false)
     protected List<UiControllersConfiguration> configurations = Collections.emptyList();
 
-    @Inject
+    @Autowired
     protected Resources resources;
-    @Inject
-    protected Scripting scripting;
-    @Inject
+    @Autowired
+    protected HotDeployManager hotDeployManager;
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected ExtendedEntities extendedEntities;
-    @Inject
+    @Autowired
     protected ScreenXmlLoader screenXmlLoader;
-
-    @Inject
+    @Autowired
+    protected UiProperties uiProperties;
+    @Autowired
+    protected Environment environment;
+    @Autowired
     protected ApplicationContext applicationContext;
-    @Inject
+    @Autowired
     protected AnnotationScanMetadataReaderFactory metadataReaderFactory;
+    @Autowired
+    protected JmixModules modules;
 
     protected volatile boolean initialized;
 
@@ -204,7 +202,7 @@ public class WindowConfig {
 
     @SuppressWarnings("unchecked")
     protected Class<? extends FrameOwner> loadDefinedScreenClass(String className) {
-        return (Class<? extends FrameOwner>) scripting.loadClassNN(className);
+        return (Class<? extends FrameOwner>) hotDeployManager.loadClass(className);
     }
 
     protected void checkInitialized() {
@@ -267,9 +265,7 @@ public class WindowConfig {
     }
 
     protected void loadScreensXml() {
-        String configName = AppContext.getProperty(WINDOW_CONFIG_XML_PROP);
-        StringTokenizer tokenizer = new StringTokenizer(configName);
-        for (String location : tokenizer.getTokenArray()) {
+        for (String location : modules.getPropertyValues(WINDOW_CONFIG_XML_PROP)) {
             Resource resource = resources.getResource(location);
             if (resource.exists()) {
                 try (InputStream stream = resource.getInputStream()) {
@@ -302,16 +298,14 @@ public class WindowConfig {
                 continue;
             }
 
-            // todo navigation
-            // RouteDefinition routeDef = loadRouteDefinition(element);
+            RouteDefinition routeDef = loadRouteDefinition(element);
 
-            WindowInfo windowInfo = new WindowInfo(id, windowAttributesProvider, element/*, routeDef*/);
+            WindowInfo windowInfo = new WindowInfo(id, windowAttributesProvider, element, routeDef);
             registerScreen(id, windowInfo);
         }
     }
 
-    // todo navigation
-    /*protected RouteDefinition loadRouteDefinition(Element screenElement) {
+    protected RouteDefinition loadRouteDefinition(Element screenElement) {
         String screenId = screenElement.attributeValue("id");
         String route = screenElement.attributeValue("route");
         String parentPrefix = screenElement.attributeValue("routeParentPrefix");
@@ -346,7 +340,7 @@ public class WindowConfig {
         }
 
         return routeDefinition;
-    }*/
+    }
 
     protected void registerScreen(String id, WindowInfo windowInfo) {
         // todo
@@ -361,12 +355,10 @@ public class WindowConfig {
 
         screens.put(id, windowInfo);
 
-        // todo navigation
-        // registerScreenRoute(id, windowInfo);
+        registerScreenRoute(id, windowInfo);
     }
 
-    // todo navigation
-    /*protected void registerScreenRoute(String screenId, WindowInfo windowInfo) {
+    protected void registerScreenRoute(String screenId, WindowInfo windowInfo) {
         RouteDefinition routeDef = windowInfo.getRouteDefinition();
         if (routeDef != null) {
             String route = routeDef.getPath();
@@ -394,7 +386,7 @@ public class WindowConfig {
 
             routes.put(route, screenId);
         }
-    }*/
+    }
 
     /**
      * Have to do this check due to Login/Main Screen are registered
@@ -402,13 +394,11 @@ public class WindowConfig {
      */
     protected boolean routeOverrideAllowed(String newScreenId) {
         if (LOGIN_SCREEN_IDS.contains(newScreenId)) {
-            String loginScreenId = AppContext.getProperty(LOGIN_SCREEN_PROP);
-            return StringUtils.equals(loginScreenId, newScreenId);
+            return StringUtils.equals(uiProperties.getLoginScreenId(), newScreenId);
         }
 
         if (MAIN_SCREEN_IDS.contains(newScreenId)) {
-            String mainScreenId = AppContext.getProperty(MAIN_SCREEN_PROP);
-            return StringUtils.equals(mainScreenId, newScreenId);
+            return StringUtils.equals(uiProperties.getMainScreenId(), newScreenId);
         }
 
         return true;

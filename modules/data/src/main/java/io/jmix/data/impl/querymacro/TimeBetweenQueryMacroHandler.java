@@ -19,12 +19,11 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import groovy.lang.Binding;
 import io.jmix.core.DateTimeTransformations;
-import io.jmix.core.Scripting;
 import io.jmix.core.TimeSource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -32,7 +31,7 @@ import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Component("cuba_TimeBetweenQueryMacroHandler")
+@Component("jmix_TimeBetweenQueryMacroHandler")
 @Scope("prototype")
 public class TimeBetweenQueryMacroHandler extends AbstractQueryMacroHandler {
 
@@ -62,11 +61,9 @@ public class TimeBetweenQueryMacroHandler extends AbstractQueryMacroHandler {
                     )
                     .build();
 
-    @Inject
+    @Autowired
     protected DateTimeTransformations transformations;
-    @Inject
-    protected Scripting scripting;
-    @Inject
+    @Autowired
     protected TimeSource timeSource;
 
     protected List<MacroArgsTimeBetween> macroArgs = new ArrayList<>();
@@ -161,7 +158,8 @@ public class TimeBetweenQueryMacroHandler extends AbstractQueryMacroHandler {
         try {
             String expr = matcher.group(2);
             if (!Strings.isNullOrEmpty(expr)) {
-                num = scripting.evaluateGroovy(expr, new Binding());
+                expr = expr.replaceAll("\\s+","");
+                num = Integer.parseInt(expr);
             }
         } catch (NumberFormatException e) {
             throw new RuntimeException("Invalid macro argument: " + arg, e);

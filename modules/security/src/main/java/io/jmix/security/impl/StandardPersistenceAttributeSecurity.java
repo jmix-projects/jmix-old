@@ -17,7 +17,7 @@
 package io.jmix.security.impl;
 
 import io.jmix.core.*;
-import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.common.util.Preconditions;
 import io.jmix.core.entity.*;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -33,26 +33,26 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.Field;
 import java.util.*;
 
 @Component(PersistenceAttributeSecurity.NAME)
 public class StandardPersistenceAttributeSecurity implements PersistenceAttributeSecurity {
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
 
-    @Inject
+    @Autowired
     protected Security security;
 
-    @Inject
+    @Autowired
     protected SecurityProperties properties;
 
-    @Inject
+    @Autowired
     protected EntityStates entityStates;
 
     /**
@@ -254,7 +254,7 @@ public class StandardPersistenceAttributeSecurity implements PersistenceAttribut
     protected class FillingInaccessibleAttributesVisitor implements EntityAttributeVisitor {
         @Override
         public boolean skip(MetaProperty property) {
-            return metadataTools.isNotPersistent(property);
+            return !metadataTools.isPersistent(property);
         }
 
         @Override

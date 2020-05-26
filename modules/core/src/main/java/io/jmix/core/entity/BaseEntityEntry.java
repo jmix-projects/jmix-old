@@ -18,20 +18,25 @@ package io.jmix.core.entity;
 
 import io.jmix.core.Entity;
 import io.jmix.core.EntityEntry;
+import io.jmix.core.EntityEntryExtraState;
+import io.jmix.core.EntityValuesProvider;
+import io.jmix.core.common.util.ReflectionHelper;
 import io.jmix.core.metamodel.model.utils.MethodsCache;
 import io.jmix.core.metamodel.model.utils.RelatedPropertiesCache;
+import org.springframework.lang.NonNull;
 
+import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 import java.util.function.BiConsumer;
 
-public abstract class BaseEntityEntry<K> implements EntityEntry<K>, Cloneable {
+public abstract class BaseEntityEntry implements EntityEntry, Cloneable {
     protected byte state = NEW;
     protected SecurityState securityState = new SecurityState();
     protected transient Collection<WeakReference<EntityPropertyChangeListener>> propertyChangeListeners;
-    protected Entity<K> source;
+    protected Entity source;
+    protected Map<Class<?>, EntityEntryExtraState> extraStateMap;
+    protected List<EntityValuesProvider> entityValuesProviders;
 
     public static final int NEW = 1;
     public static final int DETACHED = 2;
@@ -40,28 +45,47 @@ public abstract class BaseEntityEntry<K> implements EntityEntry<K>, Cloneable {
 
     protected static final int PROPERTY_CHANGE_LISTENERS_INITIAL_CAPACITY = 4;
 
-    public BaseEntityEntry(Entity<K> source) {
+    public BaseEntityEntry(Entity source) {
         this.source = source;
     }
 
     @Override
-    public Entity<K> getSource() {
+    @NonNull
+    public Entity getSource() {
         return source;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getAttributeValue(String name) {
-        return (T) MethodsCache.getOrCreate(getSource().getClass()).getGetterNN(name).apply(getSource());
+    public <T> T getAttributeValue(@NonNull String name) {
+        if (entityValuesProviders != null) {
+            for (EntityValuesProvider valuesProvider : entityValuesProviders) {
+                if (valuesProvider.supportAttribute(name)) {
+                    return valuesProvider.getAttributeValue(name);
+                }
+            }
+        }
+        return (T) MethodsCache.getOrCreate(getSource().getClass()).getGetter(name).apply(getSource());
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public void setAttributeValue(String name, Object value, boolean checkEquals) {
-        Object oldValue = getAttributeValue(name);
-        if ((!checkEquals) || (!EntityValues.propertyValueEquals(oldValue, value))) {
-            BiConsumer setter = MethodsCache.getOrCreate(getSource().getClass()).getSetterNN(name);
-            setter.accept(getSource(), value);
+    public void setAttributeValue(@NonNull String name, Object value, boolean checkEquals) {
+        EntityValuesProvider valuesProvider = null;
+        if (entityValuesProviders != null) {
+            valuesProvider = entityValuesProviders.stream()
+                    .filter(provider -> provider.supportAttribute(name))
+                    .findFirst()
+                    .orElse(null);
+        }
+        if (valuesProvider != null) {
+            valuesProvider.setAttributeValue(name, value, checkEquals);
+        } else {
+            Object oldValue = getAttributeValue(name);
+            if (!checkEquals || !EntityValues.propertyValueEquals(oldValue, value)) {
+                BiConsumer setter = MethodsCache.getOrCreate(getSource().getClass()).getSetter(name);
+                setter.accept(getSource(), value);
+            }
         }
     }
 
@@ -116,7 +140,7 @@ public abstract class BaseEntityEntry<K> implements EntityEntry<K>, Cloneable {
     }
 
     @Override
-    public void addPropertyChangeListener(EntityPropertyChangeListener listener) {
+    public void addPropertyChangeListener(@NonNull EntityPropertyChangeListener listener) {
         if (propertyChangeListeners == null) {
             propertyChangeListeners = new ArrayList<>(PROPERTY_CHANGE_LISTENERS_INITIAL_CAPACITY);
         }
@@ -124,7 +148,7 @@ public abstract class BaseEntityEntry<K> implements EntityEntry<K>, Cloneable {
     }
 
     @Override
-    public void removePropertyChangeListener(EntityPropertyChangeListener listener) {
+    public void removePropertyChangeListener(@NonNull EntityPropertyChangeListener listener) {
         if (propertyChangeListeners != null) {
             for (Iterator<WeakReference<EntityPropertyChangeListener>> it = propertyChangeListeners.iterator(); it.hasNext(); ) {
                 EntityPropertyChangeListener iteratorListener = it.next().get();
@@ -168,7 +192,7 @@ public abstract class BaseEntityEntry<K> implements EntityEntry<K>, Cloneable {
     }
 
     @Override
-    public void copy(EntityEntry<?> entry) {
+    public void copy(@Nullable EntityEntry entry) {
         if (entry != null) {
             setNew(entry.isNew());
             setDetached(entry.isDetached());
@@ -176,6 +200,42 @@ public abstract class BaseEntityEntry<K> implements EntityEntry<K>, Cloneable {
             setRemoved(entry.isRemoved());
 
             setSecurityState(entry.getSecurityState());
+
+            for (EntityEntryExtraState extraState : entry.getAllExtraState()) {
+                try {
+                    EntityEntryExtraState newExtraState = ReflectionHelper.newInstance(extraState.getClass(), this);
+                    newExtraState.copy(extraState);
+                    addExtraState(newExtraState);
+                } catch (NoSuchMethodException e) {
+                    throw new IllegalStateException(String.format("Error while create extra state of type: %s", extraState.getClass().getSimpleName()), e);
+                }
+            }
+
         }
+    }
+
+    @Override
+    public void addExtraState(@NonNull EntityEntryExtraState extraState) {
+        if (extraStateMap == null) {
+            extraStateMap = new HashMap<>();
+        }
+        extraStateMap.put(extraState.getClass(), extraState);
+        if (extraState instanceof EntityValuesProvider) {
+            if (entityValuesProviders == null) {
+                entityValuesProviders = new ArrayList<>();
+            }
+            entityValuesProviders.add((EntityValuesProvider) extraState);
+        }
+    }
+
+    @Override
+    public EntityEntryExtraState getExtraState(@NonNull Class<?> extraStateType) {
+        return extraStateMap == null ? null : extraStateMap.get(extraStateType);
+    }
+
+    @NonNull
+    @Override
+    public Collection<EntityEntryExtraState> getAllExtraState() {
+        return extraStateMap == null ? Collections.emptyList() : Collections.unmodifiableCollection(extraStateMap.values());
     }
 }

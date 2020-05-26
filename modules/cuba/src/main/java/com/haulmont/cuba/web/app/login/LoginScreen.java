@@ -17,45 +17,38 @@
 package com.haulmont.cuba.web.app.login;
 
 import com.haulmont.cuba.core.global.Messages;
-import com.vaadin.server.ErrorEvent;
-import io.jmix.core.CoreProperties;
-import io.jmix.core.security.Credentials;
-import io.jmix.core.security.LoginException;
-import io.jmix.core.security.LoginPasswordCredentials;
-import io.jmix.ui.App;
-import io.jmix.ui.Connection;
+import com.haulmont.cuba.gui.components.*;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.Screens;
-import io.jmix.ui.components.*;
-import io.jmix.ui.exception.ExceptionHandlers;
+import io.jmix.ui.component.Component;
 import io.jmix.ui.navigation.Route;
 import io.jmix.ui.navigation.UrlRouting;
-import io.jmix.ui.screen.*;
-import io.jmix.ui.security.LoginScreenAuthDelegate;
-import io.jmix.ui.security.UiLoginProperties;
-import org.apache.commons.lang3.StringUtils;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.Subscribe;
+import io.jmix.ui.screen.UiDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Base class for Login screen.
  */
+
 @Route(path = "login", root = true)
 @UiDescriptor("login-screen.xml")
-@UiController("login")
+//@UiController("login")
 public class LoginScreen extends Screen {
 
     private static final Logger log = LoggerFactory.getLogger(LoginScreen.class);
 
-    @Inject
-    protected CoreProperties coreProperties;
-    @Inject
-    protected UiLoginProperties uiLoginProperties;
+//    @Inject
+//    protected GlobalConfig globalConfig;
+//    @Inject
+//    protected WebConfig webConfig;
+//    @Inject
+//    protected WebAuthConfig webAuthConfig;
 
     @Inject
     protected Messages messages;
@@ -64,12 +57,12 @@ public class LoginScreen extends Screen {
     @Inject
     protected Screens screens;
 
-    @Inject
-    protected App app;
-    @Inject
-    protected Connection connection;
-    @Inject
-    protected LoginScreenAuthDelegate authDelegate;
+//    @Inject
+//    protected App app;
+//    @Inject
+//    protected Connection connection;
+//    @Inject
+//    protected LoginScreenAuthDelegate authDelegate;
 
     @Inject
     protected Image logoImage;
@@ -101,23 +94,23 @@ public class LoginScreen extends Screen {
         initRememberMeLocalesBox();
     }
 
-    @Subscribe
+    /*@Subscribe
     protected void onAfterShow(AfterShowEvent event) {
         doRememberMeLogin();
-    }
+    }*/
 
     protected void initPoweredByLink() {
         Component poweredByLink = getWindow().getComponent("poweredByLink");
         if (poweredByLink != null) {
-            poweredByLink.setVisible(uiLoginProperties.isPoweredByLinkVisible());
+//            poweredByLink.setVisible(webConfig.getLoginDialogPoweredByLinkVisible());
         }
     }
 
     protected void initLocales() {
-        localesSelect.setOptionsMap(coreProperties.getAvailableLocales());
+        /*localesSelect.setOptionsMap(globalConfig.getAvailableLocales());
         localesSelect.setValue(app.getLocale());
 
-        boolean localeSelectVisible = coreProperties.isLocaleSelectVisible();
+        boolean localeSelectVisible = globalConfig.getLocaleSelectVisible();
         localesSelect.setVisible(localeSelectVisible);
 
         // if old layout is used
@@ -144,23 +137,23 @@ public class LoginScreen extends Screen {
             }
 
             loginScreen.show();
-        });
+        });*/
     }
 
     protected void initLogoImage() {
-        String loginLogoImagePath = messages.getMainMessage("loginWindow.logoImage", app.getLocale());
+    /*    String loginLogoImagePath = messages.getMainMessage("loginWindow.logoImage", app.getLocale());
         if (StringUtils.isBlank(loginLogoImagePath) || "loginWindow.logoImage".equals(loginLogoImagePath)) {
             logoImage.setVisible(false);
         } else {
             logoImage.setSource(ThemeResource.class).setPath(loginLogoImagePath);
-        }
+        }*/
     }
 
     protected void initRememberMe() {
-        if (!uiLoginProperties.isRememberMeEnabled()) {
+      /*  if (!webConfig.getRememberMeEnabled()) {
             rememberMeCheckBox.setValue(false);
             rememberMeCheckBox.setVisible(false);
-        }
+        }*/
     }
 
     protected void initRememberMeLocalesBox() {
@@ -171,22 +164,22 @@ public class LoginScreen extends Screen {
     }
 
     protected void initDefaultCredentials() {
-        String defaultUser = uiLoginProperties.getDefaultUser();
+       /* String defaultUser = webConfig.getLoginDialogDefaultUser();
         if (!StringUtils.isBlank(defaultUser) && !"<disabled>".equals(defaultUser)) {
             loginField.setValue(defaultUser);
         } else {
             loginField.setValue("");
         }
 
-        String defaultPassw = uiLoginProperties.getDefaultPassword();
+        String defaultPassw = webConfig.getLoginDialogDefaultPassword();
         if (!StringUtils.isBlank(defaultPassw) && !"<disabled>".equals(defaultPassw)) {
             passwordField.setValue(defaultPassw);
         } else {
             passwordField.setValue("");
-        }
+        }*/
     }
 
-    protected void showUnhandledExceptionOnLogin(@SuppressWarnings("unused") Exception e) {
+    /*protected void showUnhandledExceptionOnLogin(@SuppressWarnings("unused") Exception e) {
         String title = messages.getMainMessage("loginWindow.loginFailed", app.getLocale());
         String message = messages.getMainMessage("loginWindow.pleaseContactAdministrator", app.getLocale());
 
@@ -194,32 +187,32 @@ public class LoginScreen extends Screen {
                 .withCaption(title)
                 .withDescription(message)
                 .show();
-    }
+    }*/
 
-    protected void showLoginException(String message) {
+    /*protected void showLoginException(String message) {
         String title = messages.getMainMessage("loginWindow.loginFailed", app.getLocale());
 
         notifications.create(Notifications.NotificationType.ERROR)
                 .withCaption(title)
                 .withDescription(message)
                 .show();
-    }
+    }*/
 
     public void login() {
-        doLogin();
+//        doLogin();
 
-        setRememberMeCookies();
+//        setRememberMeCookies();
     }
 
-    protected void setRememberMeCookies() {
+/*    protected void setRememberMeCookies() {
         if (Boolean.TRUE.equals(rememberMeCheckBox.getValue())) {
             authDelegate.setRememberMeCookies(loginField.getValue());
         } else {
             authDelegate.resetRememberCookies();
         }
-    }
+    }*/
 
-    protected void doLogin() {
+/*    protected void doLogin() {
         String login = loginField.getValue();
         String password = passwordField.getValue() != null ? passwordField.getValue() : "";
 
@@ -242,16 +235,14 @@ public class LoginScreen extends Screen {
             if (connection.getSession() != null) {
                 Locale loggedInLocale = connection.getSession().getLocale();
 
-                if (coreProperties.isLocaleSelectVisible()) {
+                if (globalConfig.getLocaleSelectVisible()) {
                     app.addCookie(App.COOKIE_LOCALE, loggedInLocale.toLanguageTag());
                 }
             }
-            // todo see ConnectionImpl#loginInternal
-        /*} catch (InternalAuthenticationException e) {
+        } catch (InternalAuthenticationException e) {
             log.error("Internal error during login", e);
 
             showUnhandledExceptionOnLogin(e);
-        */
         } catch (LoginException e) {
             log.info("Login failed: {}", e.toString());
 
@@ -267,21 +258,21 @@ public class LoginScreen extends Screen {
                 showUnhandledExceptionOnLogin(e);
             }
         }
-    }
+    }*/
 
-    protected void doLogin(Credentials credentials) throws LoginException {
+ /*   protected void doLogin(Credentials credentials) throws LoginException {
         authDelegate.doLogin(credentials, localesSelect.isVisibleRecursive());
     }
 
     protected void doRememberMeLogin() {
         authDelegate.doRememberMeLogin(localesSelect.isVisibleRecursive());
-    }
+    }*/
 
-    protected void setAuthInfo(LoginScreenAuthDelegate.AuthInfo authInfo) {
+  /*  protected void setAuthInfo(LoginScreenAuthDelegate.AuthInfo authInfo) {
         loginField.setValue(authInfo.getLogin());
         passwordField.setValue(authInfo.getPassword());
         rememberMeCheckBox.setValue(authInfo.getRememberMe());
 
         localesSelect.focus();
-    }
+    }*/
 }

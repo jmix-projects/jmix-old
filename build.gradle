@@ -17,7 +17,7 @@
 buildscript {
     ext {
         springBootVersion = '2.2.4.RELEASE'
-        jmixVersion = '0.0.1-SNAPSHOT'
+        jmixPluginVersion = '1.0-SNAPSHOT'
     }
     repositories {
         if (rootProject.hasProperty('jmixRepoUrl')) {
@@ -39,7 +39,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath("io.jmix.gradle:jmix-gradle-plugin:0.0.1-SNAPSHOT")
+        classpath("io.jmix.gradle:jmix-gradle-plugin:${jmixPluginVersion}")
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.0.4")
     }
@@ -66,33 +66,44 @@ allprojects {
 }
 
 subprojects {
+    ext.jmixFrameworkItself = true
+
     plugins.withType(JavaPlugin) {
         java {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
         }
     }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.withType(Test) {
+        systemProperty('org.slf4j.simpleLogger.defaultLogLevel', 'debug')
+        systemProperty('org.slf4j.simpleLogger.log.org.springframework', 'info')
+        systemProperty('org.slf4j.simpleLogger.log.eclipselink.sql', 'debug')
+    }
+
+    tasks.withType(Javadoc) {
+        options.addStringOption("sourcepath", "")
+        options.encoding = 'UTF-8'
+        options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
+        destinationDir = file("$buildDir/docs/javadoc")
+
+        title = "${project.name.toUpperCase()} ${project.version.replace('-SNAPSHOT','')} API"
+    }
 }
 
-configure([project(':jmix-platform'), project(':modules:core'), project(':modules:cuba'), project(':modules:data'),
-           project(':modules:remoting'), project(':modules:security'),
-           project(':modules:ui'), project(':modules:ui-persistence'),
-           project(':modules:audit'), project(':modules:audit-ui'),
-           project(':modules:ui-themes'), project(':modules:ui-themes-compiled'),
-           project(':modules:ui-widgets'), project(':modules:ui-widgets-compiled'),
-           project(':starters:starter-data'), project(':starters:starter-ui'),
-           project(':starters:starter-ui-persistence'), project(':starters:starter-security'),
-           project(':starters:starter-standard-nowidgets'), project(':starters:starter-standard'),
-           project(':starters:starter-audit'), project(':starters:starter-audit-ui'),
-           project(':starters:starter-cuba')]) {
-
+configure(subprojects.findAll { !it.name.startsWith('sample-') }) {
     apply plugin: 'maven-publish'
-    
+    apply plugin: 'maven' // remove after https://youtrack.jetbrains.com/issue/IDEA-227215 is fixed
+
     publishing {
         if (rootProject.hasProperty('jmixUploadUrl')) {
             repositories {
                 maven {
-                    url = jmixVersion.endsWith('SNAPSHOT') ? "$jmixUploadUrl/snapshots" : "$jmixUploadUrl/releases"
+                    url = version.endsWith('SNAPSHOT') ? "$jmixUploadUrl/snapshots" : "$jmixUploadUrl/releases"
                     credentials {
                         username rootProject['jmixUploadUser']
                         password rootProject['jmixUploadPassword']
@@ -103,7 +114,7 @@ configure([project(':jmix-platform'), project(':modules:core'), project(':module
     }
 }
 
-configure([project(':modules:core'), project(':modules:data'), project(':modules:security')]) {
+configure([project(':modules:core'), project(':modules:data'), project(':modules:security'), project(':modules:audit')]) {
     if (rootProject.hasProperty('spotbugsEnabled')) {
         apply plugin: 'com.github.spotbugs'
 
@@ -143,18 +154,5 @@ configure([project(':modules:core'), project(':modules:data'), project(':modules
                 }
             }
         }
-    }
-
-    tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
-    }
-
-    tasks.withType(Javadoc) {
-        options.addStringOption("sourcepath", "")
-        options.encoding = 'UTF-8'
-        options.memberLevel = org.gradle.external.javadoc.JavadocMemberLevel.PROTECTED
-        destinationDir = file("$buildDir/docs/javadoc")
-
-        title = "${project.name.toUpperCase()} ${project.version.replace('-SNAPSHOT','')} API"
     }
 }

@@ -18,12 +18,12 @@ package com.haulmont.cuba.core.model.entitychangedevent;
 
 import com.haulmont.cuba.core.global.DataManager;
 import com.haulmont.cuba.core.TransactionalDataManager;
-import io.jmix.data.event.EntityChangedEvent;
+import com.haulmont.cuba.core.app.events.EntityChangedEvent ;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,10 +32,10 @@ public class TestProductChangeListener {
 
     public boolean doLog;
 
-    @Inject
+    @Autowired
     private TransactionalDataManager tdm;
 
-    @Inject
+    @Autowired
     private DataManager dm;
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)

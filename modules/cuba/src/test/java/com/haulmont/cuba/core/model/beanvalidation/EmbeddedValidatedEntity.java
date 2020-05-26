@@ -17,7 +17,7 @@
 package com.haulmont.cuba.core.model.beanvalidation;
 
 import io.jmix.core.Entity;
-import io.jmix.core.metamodel.annotations.ModelObject;
+import io.jmix.core.metamodel.annotation.ModelObject;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Column;
@@ -25,7 +25,7 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 @ModelObject(name = "test$EmbeddedValidatedEntity")
-public class EmbeddedValidatedEntity implements Entity<Object> {
+public class EmbeddedValidatedEntity implements Entity {
     @Length(min = 5, max = 2147483647)
     @Column(name = "NAME")
     protected String name;

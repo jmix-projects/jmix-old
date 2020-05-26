@@ -23,13 +23,13 @@ import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.ui.actions.DialogAction;
-import io.jmix.ui.components.Component.Focusable;
-import io.jmix.ui.components.DataGrid;
-import io.jmix.ui.components.ListComponent;
-import io.jmix.ui.components.Table;
-import io.jmix.ui.components.data.DataUnit;
-import io.jmix.ui.components.data.meta.ContainerDataUnit;
+import io.jmix.ui.action.DialogAction;
+import io.jmix.ui.component.Component.Focusable;
+import io.jmix.ui.component.DataGrid;
+import io.jmix.ui.component.ListComponent;
+import io.jmix.ui.component.Table;
+import io.jmix.ui.component.data.DataUnit;
+import io.jmix.ui.component.data.meta.ContainerDataUnit;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.Nested;
@@ -39,12 +39,12 @@ import io.jmix.ui.screen.ScreenContext;
 import io.jmix.ui.screen.UiControllerUtils;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 import static io.jmix.ui.screen.UiControllerUtils.getScreenContext;
 
 /**
@@ -54,19 +54,19 @@ import static io.jmix.ui.screen.UiControllerUtils.getScreenContext;
 @Component(RemoveOperation.NAME)
 public class RemoveOperation {
 
-    public static final String NAME = "cuba_RemoveHelper";
+    public static final String NAME = "jmix_RemoveHelper";
 
-    @Inject
+    @Autowired
     protected WindowConfig windowConfig;
-    @Inject
+    @Autowired
     protected DataManager dataManager;
-    @Inject
+    @Autowired
     protected Messages messages;
-    @Inject
+    @Autowired
     protected ExtendedEntities extendedEntities;
-    @Inject
+    @Autowired
     protected EntityStates entityStates;
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
     /**

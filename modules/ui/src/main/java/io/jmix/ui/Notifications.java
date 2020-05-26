@@ -16,8 +16,8 @@
 
 package io.jmix.ui;
 
-import io.jmix.ui.components.ContentMode;
-import io.jmix.ui.components.HasUserOriginated;
+import io.jmix.ui.component.ContentMode;
+import io.jmix.ui.component.HasUserOriginated;
 
 import java.util.function.Consumer;
 
@@ -138,6 +138,19 @@ public interface Notifications {
          * @return position
          */
         Position getPosition();
+
+        /**
+         * Sets whether html sanitizer is enabled or not for notification content.
+         *
+         * @param htmlSanitizerEnabled specifies whether html sanitizer is enabled
+         * @return builder
+         */
+        NotificationBuilder withHtmlSanitizer(boolean htmlSanitizerEnabled);
+
+        /**
+         * @return html sanitizer is enabled for notification content
+         */
+        boolean isHtmlSanitizerEnabled();
 
         /**
          * Sets the delay before the notification disappears.

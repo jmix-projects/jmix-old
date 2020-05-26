@@ -23,10 +23,10 @@ import io.jmix.core.security.AccessDeniedException;
 import io.jmix.core.security.PermissionType;
 import io.jmix.core.security.Security;
 import io.jmix.ui.*;
-import io.jmix.ui.components.CloseOriginType;
-import io.jmix.ui.components.RootWindow;
-import io.jmix.ui.components.Window;
-import io.jmix.ui.components.impl.WebWindow;
+import io.jmix.ui.component.CloseOriginType;
+import io.jmix.ui.component.RootWindow;
+import io.jmix.ui.component.Window;
+import io.jmix.ui.component.impl.WebWindow;
 import io.jmix.ui.navigation.accessfilter.NavigationFilter;
 import io.jmix.ui.navigation.accessfilter.NavigationFilter.AccessCheckResult;
 import io.jmix.ui.screen.FrameOwner;
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -54,21 +54,21 @@ public class UrlChangeHandler implements InitializingBean {
 
     private static final Logger log = LoggerFactory.getLogger(UrlChangeHandler.class);
 
-    @Inject
+    @Autowired
     protected Messages messages;
-    @Inject
+    @Autowired
     protected Security security;
-    @Inject
+    @Autowired
     protected BeanLocator beanLocator;
-    @Inject
+    @Autowired
     protected UrlTools urlTools;
 
-    @Inject
+    @Autowired
     protected UiProperties uiProperties;
-    @Inject
+    @Autowired
     protected WindowConfig windowConfig;
 
-    @Inject
+    @Autowired
     protected List<NavigationFilter> navigationFilters;
 
     protected AppUI ui;

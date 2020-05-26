@@ -18,7 +18,7 @@ package spec.haulmont.cuba.web.menu
 
 
 import com.haulmont.cuba.core.global.LoadContext
-import io.jmix.security.entity.User
+import com.haulmont.cuba.core.model.common.User
 import io.jmix.ui.menu.MenuItem
 import io.jmix.ui.menu.MenuItemCommands
 import io.jmix.ui.screen.OpenMode
@@ -31,12 +31,12 @@ import spec.haulmont.cuba.web.menu.commandtargets.TestRunnable
 import spec.haulmont.cuba.web.menu.commandtargets.TestWebBean
 import spock.lang.Ignore
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 @Ignore
 class MenuItemCommandsTest extends UiScreenSpec {
 
-    @Inject
+    @Autowired
     MenuItemCommands menuCommands
 
     void setup() {
@@ -71,7 +71,7 @@ class MenuItemCommandsTest extends UiScreenSpec {
         def dataService = Mock(DataService)
         dataService.load(_ as LoadContext) >> user
 
-        menuCommands.dataService = dataService
+        menuCommands.dataManager = dataService
 
         when: 'Screen menu item command with params and properties is running'
         def screenCmd = menuCommands.create(mainWindow, createScreenMenuItem()) as MenuItemCommands.ScreenCommand

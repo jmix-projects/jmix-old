@@ -21,22 +21,22 @@ import com.haulmont.cuba.gui.components.filter.FilterDelegate;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.security.entity.FilterEntity;
 import com.vaadin.server.Sizeable;
-import io.jmix.core.commons.events.Subscription;
+import io.jmix.core.common.event.Subscription;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.ComponentContainer;
-import io.jmix.ui.components.FilterImplementation;
-import io.jmix.ui.components.Frame;
-import io.jmix.ui.components.HasOuterMargin;
-import io.jmix.ui.components.MarginInfo;
-import io.jmix.ui.components.impl.WebAbstractComponent;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.ComponentContainer;
+import io.jmix.ui.component.FilterImplementation;
+import io.jmix.ui.component.Frame;
+import io.jmix.ui.component.HasOuterMargin;
+import io.jmix.ui.component.MarginInfo;
+import io.jmix.ui.component.impl.WebAbstractComponent;
 import io.jmix.ui.model.BaseCollectionLoader;
 import io.jmix.ui.settings.component.SettingsWrapper;
 import org.dom4j.Element;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -56,7 +56,7 @@ public class WebFilter extends WebAbstractComponent<com.vaadin.ui.Component> imp
     public WebFilter() {
     }
 
-    @Inject
+    @Autowired
     protected void setDelegate(FilterDelegate delegate) {
         this.delegate = delegate;
 

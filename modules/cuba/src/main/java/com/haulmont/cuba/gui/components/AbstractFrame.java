@@ -23,16 +23,16 @@ import io.jmix.core.DevelopmentException;
 import io.jmix.core.Events;
 import io.jmix.core.Messages;
 import io.jmix.ui.UiProperties;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.components.*;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.component.*;
 import io.jmix.ui.gui.OpenType;
-import io.jmix.ui.icons.Icons;
+import io.jmix.ui.icon.Icons;
 import io.jmix.ui.screen.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.Order;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -54,11 +54,11 @@ public class AbstractFrame extends ScreenFragment implements Frame, Frame.Wrappe
     private Component parent;
     private DsContext dsContext;
 
-    @Inject
+    @Autowired
     protected Messages messages;
-    @Inject
+    @Autowired
     private MessageBundle messageBundle;
-    @Inject
+    @Autowired
     private WindowManager windowManager;
 
     public AbstractFrame() {

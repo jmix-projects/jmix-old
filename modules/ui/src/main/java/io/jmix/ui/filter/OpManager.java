@@ -22,11 +22,9 @@ import io.jmix.core.metamodel.model.MetaProperty;
 import java.util.EnumSet;
 
 public interface OpManager {
-    String NAME = "cuba_OpManager";
+    String NAME = "jmix_OpManager";
 
     EnumSet<Op> availableOps(Class javaClass);
-
-    EnumSet<Op> availableOpsForCollectionDynamicAttribute();
 
     EnumSet<Op> availableOps(MetaClass metaClass, MetaProperty metaProperty);
 }

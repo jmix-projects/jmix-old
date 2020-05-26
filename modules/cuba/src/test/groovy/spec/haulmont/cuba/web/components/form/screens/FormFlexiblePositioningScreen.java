@@ -17,25 +17,25 @@
 package spec.haulmont.cuba.web.components.form.screens;
 
 import io.jmix.ui.UiComponents;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Form;
-import io.jmix.ui.components.TextArea;
-import io.jmix.ui.components.TextField;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.Form;
+import io.jmix.ui.component.TextArea;
+import io.jmix.ui.component.TextField;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Subscribe;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @UiDescriptor("form-flexible-positioning-screen.xml")
 @UiController
 public class FormFlexiblePositioningScreen extends Screen {
 
-    @Inject
+    @Autowired
     private Form form;
 
-    @Inject
+    @Autowired
     private UiComponents uiComponents;
 
     @Subscribe

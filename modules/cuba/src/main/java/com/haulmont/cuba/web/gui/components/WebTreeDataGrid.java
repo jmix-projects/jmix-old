@@ -22,7 +22,7 @@ import io.jmix.core.Entity;
 import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 
 @Deprecated
-public class WebTreeDataGrid<E extends Entity> extends io.jmix.ui.components.impl.WebTreeDataGrid<E>
+public class WebTreeDataGrid<E extends Entity> extends io.jmix.ui.component.impl.WebTreeDataGrid<E>
         implements TreeDataGrid<E> {
 
     @Override

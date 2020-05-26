@@ -18,17 +18,16 @@ package io.jmix.ui.exception;
 
 import io.jmix.core.Messages;
 import io.jmix.core.security.AccessDeniedException;
-import io.jmix.ui.components.Frame;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Component("cuba_AccessDeniedHandler")
+@Component("jmix_AccessDeniedHandler")
 public class AccessDeniedHandler extends AbstractGenericExceptionHandler implements Ordered {
 
-    @Inject
+    @Autowired
     protected Messages messages;
 
     public AccessDeniedHandler() {

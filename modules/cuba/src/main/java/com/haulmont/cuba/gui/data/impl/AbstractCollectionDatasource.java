@@ -22,19 +22,18 @@ import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.DataSupplier;
 import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.core.*;
-import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.metamodel.annotations.ModelProperty;
+import io.jmix.core.metamodel.annotation.ModelProperty;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.metamodel.model.utils.ObjectPathUtils;
-import io.jmix.core.security.UserSession;
-import io.jmix.core.security.UserSessionSource;
-import io.jmix.ui.components.ComponentsHelper;
-import io.jmix.ui.components.Frame;
-import io.jmix.ui.components.FrameContext;
-import io.jmix.ui.components.HasValue;
+import com.haulmont.cuba.security.global.UserSession;
+import com.haulmont.cuba.core.global.UserSessionSource;
+import io.jmix.ui.component.ComponentsHelper;
+import io.jmix.ui.component.Frame;
+import io.jmix.ui.component.FrameContext;
+import io.jmix.ui.component.HasValue;
 import io.jmix.ui.filter.ParameterInfo;
 import io.jmix.ui.filter.ParametersHelper;
 import io.jmix.ui.filter.QueryFilter;
@@ -55,7 +54,7 @@ import java.util.stream.Collectors;
  * @param <K> type of entity ID
  */
 @Deprecated
-public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
+public abstract class AbstractCollectionDatasource<T extends Entity, K>
         extends DatasourceImpl<T>
         implements CollectionDatasource<T, K>,
         CollectionDatasource.SupportsRefreshMode<T, K> {
@@ -304,7 +303,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
                         if (pathElements.length > 1) {
                             Object entity = params.get(pathElements[0]);
                             if (entity instanceof Entity) {
-                                value = EntityValues.getValueEx((Entity<?>) entity, Arrays.copyOfRange(pathElements, 1, pathElements.length));
+                                value = EntityValues.getValueEx((Entity) entity, Arrays.copyOfRange(pathElements, 1, pathElements.length));
                             }
                         }
                     }
@@ -411,8 +410,8 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
         }
 
         String sessionPrefix = ParameterInfo.Type.SESSION.getPrefix() + "$";
-        templateParams.put(sessionPrefix + "userId", userSession.getUser().getId());
-        templateParams.put(sessionPrefix + "userLogin", userSession.getUser().getLoginLowerCase());
+        templateParams.put(sessionPrefix + "userId", UUID.fromString(userSession.getUser().getKey()));
+        templateParams.put(sessionPrefix + "userLogin", userSession.getUser().getUsername());
         for (String name : userSession.getAttributeNames()) {
             templateParams.put(sessionPrefix + name, userSession.getAttribute(name));
         }
@@ -550,7 +549,7 @@ public abstract class AbstractCollectionDatasource<T extends Entity<K>, K>
                     q.setParameter(entry.getKey(), entry.getValue());
             }
         } else if (!(context instanceof ValueLoadContext)) {
-            Collection<MetaProperty> properties = metadata.getTools().getNamePatternProperties(metaClass);
+            Collection<MetaProperty> properties = metadata.getTools().getInstanceNameRelatedProperties(metaClass);
             if (!properties.isEmpty()) {
                 String orderBy = properties.stream()
                         .filter(m -> m != null

@@ -20,20 +20,20 @@ import test_support.addon1.TestAddon1Configuration
 import test_support.addon1.TestStringDatatype
 import test_support.AppContextTestExecutionListener
 import io.jmix.core.JmixCoreConfiguration
-import io.jmix.core.metamodel.datatypes.DatatypeRegistry
-import io.jmix.core.metamodel.datatypes.impl.StringDatatype
+import io.jmix.core.metamodel.datatype.DatatypeRegistry
+import io.jmix.core.metamodel.datatype.impl.StringDatatype
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestExecutionListeners
 import spock.lang.Specification
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 @ContextConfiguration(classes = [JmixCoreConfiguration, TestAddon1Configuration])
 @TestExecutionListeners(value = AppContextTestExecutionListener,
         mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 class DatatypeOverrideTest extends Specification {
 
-    @Inject
+    @Autowired
     DatatypeRegistry registry
 
     def "TestStringDatatype is default for String java class"() {
@@ -43,6 +43,6 @@ class DatatypeOverrideTest extends Specification {
         registry.get('string').class == StringDatatype
 
         registry.get('string_mod').class == TestStringDatatype
-        registry.get(String).class == TestStringDatatype
+        registry.find(String).class == TestStringDatatype
     }
 }

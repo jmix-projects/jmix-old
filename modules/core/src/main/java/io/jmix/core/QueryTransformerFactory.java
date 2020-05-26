@@ -19,7 +19,7 @@ import io.jmix.core.impl.jpql.DomainModel;
 import io.jmix.core.impl.jpql.DomainModelBuilder;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Factory to get {@link QueryParser} and {@link QueryTransformer} instances.
@@ -27,11 +27,11 @@ import javax.inject.Inject;
 @Component(QueryTransformerFactory.NAME)
 public class QueryTransformerFactory {
 
-    public static final String NAME = "cuba_QueryTransformerFactory";
+    public static final String NAME = "jmix_QueryTransformerFactory";
 
     protected volatile DomainModel domainModel;
 
-    @Inject
+    @Autowired
     protected BeanLocator beanLocator;
 
     public static QueryTransformer createTransformer(String query) {

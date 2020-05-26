@@ -16,22 +16,20 @@
 
 package io.jmix.security.impl;
 
+import io.jmix.core.Entity;
 import io.jmix.core.ExtendedEntities;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
-import io.jmix.core.Scripting;
-import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.IdProxy;
-import io.jmix.core.metamodel.datatypes.Datatype;
-import io.jmix.core.metamodel.datatypes.DatatypeRegistry;
-import io.jmix.core.metamodel.datatypes.impl.EnumClass;
+import io.jmix.core.metamodel.datatype.Datatype;
+import io.jmix.core.metamodel.datatype.DatatypeRegistry;
+import io.jmix.core.metamodel.datatype.impl.EnumClass;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.security.*;
 import io.jmix.data.RowLevelSecurityException;
-import io.jmix.security.entity.Permission;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.groovy.runtime.MethodClosure;
 import org.slf4j.Logger;
@@ -39,7 +37,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.function.Predicate;
@@ -54,37 +55,38 @@ public class StandardSecurity implements Security {
 
     private static final Logger log = LoggerFactory.getLogger(StandardSecurity.class);
 
-    @Inject
-    protected UserSessionSource userSessionSource;
+    @Autowired
+    protected CurrentAuthentication currentAuthentication;
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
 
-    @Inject
+    @Autowired
     protected ExtendedEntities extendedEntities;
 
-    @Inject
+    @Autowired
     protected DatatypeRegistry datatypeRegistry;
 
-    @Inject
-    protected Scripting scripting;
+    protected ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
 
-    private StandardUserSession getUserSession() {
-        return (StandardUserSession) userSessionSource.getUserSession();
-    }
+//    private StandardUserSession getUserSession() {
+//        return (StandardUserSession) userSessionSource.getUserSession();
+//    }
 
     @Override
     public boolean isScreenPermitted(String windowAlias) {
-        return getUserSession().isPermitted(PermissionType.SCREEN, windowAlias, 1);
+//        return getUserSession().isPermitted(PermissionType.SCREEN, windowAlias, 1);
+        return true;
     }
 
     @Override
     public boolean isEntityOpPermitted(MetaClass metaClass, EntityOp entityOp) {
-        return getUserSession().isPermitted(PermissionType.ENTITY_OP,
-                metaClass.getName() + Permission.TARGET_PATH_DELIMETER + entityOp.getId(), 1);
+//        return getUserSession().isPermitted(PermissionType.ENTITY_OP,
+//                metaClass.getName() + Permission.TARGET_PATH_DELIMETER + entityOp.getId(), 1);
+        return true;
     }
 
     @Override
@@ -94,8 +96,9 @@ public class StandardSecurity implements Security {
 
     @Override
     public boolean isEntityAttrPermitted(MetaClass metaClass, String property, EntityAttrAccess access) {
-        return getUserSession().isPermitted(PermissionType.ENTITY_ATTR,
-                metaClass.getName() + Permission.TARGET_PATH_DELIMETER + property, access.getId());
+//        return getUserSession().isPermitted(PermissionType.ENTITY_ATTR,
+//                metaClass.getName() + Permission.TARGET_PATH_DELIMETER + property, access.getId());
+        return true;
     }
 
     @Override
@@ -105,7 +108,7 @@ public class StandardSecurity implements Security {
 
     @Override
     public boolean isEntityAttrUpdatePermitted(MetaClass metaClass, String propertyPath) {
-        MetaPropertyPath metaPropertyPath = metadataTools.resolveMetaPropertyPath(metaClass, propertyPath);
+        MetaPropertyPath metaPropertyPath = metadataTools.resolveMetaPropertyPathOrNull(metaClass, propertyPath);
         return metaPropertyPath != null && isEntityAttrUpdatePermitted(metaPropertyPath);
     }
 
@@ -132,13 +135,14 @@ public class StandardSecurity implements Security {
 
     @Override
     public boolean isEntityAttrReadPermitted(MetaClass metaClass, String propertyPath) {
-        MetaPropertyPath metaPropertyPath = metadataTools.resolveMetaPropertyPath(metaClass, propertyPath);
+        MetaPropertyPath metaPropertyPath = metadataTools.resolveMetaPropertyPathOrNull(metaClass, propertyPath);
         return metaPropertyPath != null && isEntityAttrReadPermitted(metaPropertyPath);
     }
 
     @Override
     public boolean isSpecificPermitted(String name) {
-        return getUserSession().isPermitted(PermissionType.SPECIFIC, name, 1);
+//        return getUserSession().isPermitted(PermissionType.SPECIFIC, name, 1);
+        return true;
     }
 
     @Override
@@ -169,7 +173,8 @@ public class StandardSecurity implements Security {
 
     @Override
     public boolean hasConstraints() {
-        return getUserSession().hasConstraints();
+//        return getUserSession().hasConstraints();
+        return false;
     }
 
     @Override
@@ -192,9 +197,20 @@ public class StandardSecurity implements Security {
         Map<String, Object> context = new HashMap<>();
         context.put("__entity__", entity);
         context.put("parse", new MethodClosure(this, "parseValue"));
-        context.put("userSession", userSessionSource.getUserSession());
+        //todo MG
+//        context.put("userSession", currentAuthentication.getUserSession());
         fillGroovyConstraintsContext(context);
-        return scripting.evaluateGroovy(groovyScript.replace("{E}", "__entity__"), context);
+        ScriptEngine engine = scriptEngineManager.getEngineByName("groovy");
+        for (Map.Entry<String, Object> entry : context.entrySet()) {
+            engine.put(entry.getKey(), entry.getValue());
+        }
+        Object result;
+        try {
+            result = engine.eval(groovyScript.replace("{E}", "__entity__"));
+        } catch (ScriptException e) {
+            throw new RuntimeException("Error evaluating Groovy expression", e);
+        }
+        return result;
     }
 
     protected boolean isEntityAttrPermitted(MetaClass metaClass, MetaPropertyPath propertyPath, EntityAttrAccess access) {
@@ -242,14 +258,15 @@ public class StandardSecurity implements Security {
     }
 
     public List<ConstraintData> getConstraints(MetaClass metaClass) {
-        StandardUserSession userSession = getUserSession();
-        MetaClass mainMetaClass = extendedEntities.getOriginalOrThisMetaClass(metaClass);
-
-        List<ConstraintData> constraints = new ArrayList<>(userSession.getConstraints(mainMetaClass.getName()));
-        for (MetaClass parent : mainMetaClass.getAncestors()) {
-            constraints.addAll(userSession.getConstraints(parent.getName()));
-        }
-        return constraints;
+//        StandardUserSession userSession = getUserSession();
+//        MetaClass mainMetaClass = extendedEntities.getOriginalOrThisMetaClass(metaClass);
+//
+//        List<ConstraintData> constraints = new ArrayList<>(userSession.getConstraints(mainMetaClass.getName()));
+//        for (MetaClass parent : mainMetaClass.getAncestors()) {
+//            constraints.addAll(userSession.getConstraints(parent.getName()));
+//        }
+//        return constraints;
+        return new ArrayList<>();
     }
 
     /**
@@ -294,7 +311,7 @@ public class StandardSecurity implements Security {
                 //noinspection unchecked
                 return Enum.valueOf((Class<Enum>) clazz, strValue);
             } else {
-                Datatype datatype = datatypeRegistry.get(clazz);
+                Datatype datatype = datatypeRegistry.find(clazz);
                 return datatype != null ? datatype.parse(strValue) : strValue;
             }
         } catch (ParseException | IllegalArgumentException e) {

@@ -17,7 +17,7 @@
 package io.jmix.data.impl;
 
 import io.jmix.core.*;
-import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.common.util.Preconditions;
 import io.jmix.core.Entity;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,20 +44,20 @@ import java.util.stream.Collectors;
 @Component(FetchGroupManager.NAME)
 public class FetchGroupManager {
 
-    public static final String NAME = "cuba_FetchGroupManager";
+    public static final String NAME = "jmix_FetchGroupManager";
 
     private final Logger log = LoggerFactory.getLogger(FetchGroupManager.class);
 
-    @Inject
+    @Autowired
     private Metadata metadata;
 
-    @Inject
+    @Autowired
     private MetadataTools metadataTools;
 
-    @Inject
+    @Autowired
     private FetchPlanRepository viewRepository;
 
-    @Inject
+    @Autowired
     private ExtendedEntities extendedEntities;
 
     public void setFetchPlan(JpaQuery query, String queryString, @Nullable FetchPlan fetchPlan, boolean singleResultExpected) {

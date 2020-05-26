@@ -22,6 +22,8 @@ import io.jmix.core.Stores
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.TestExecutionListeners
 import spock.lang.Specification
+import test_support.app.entity.Address
+import test_support.app.entity.Owner
 import test_support.base.entity.BaseGenericIdEntity
 import test_support.base.entity.BaseUuidEntity
 import test_support.base.entity.StandardEntity
@@ -31,14 +33,14 @@ import test_support.AppContextTestExecutionListener
 import test_support.app.TestAppConfiguration
 import test_support.app.entity.Pet
 
-import javax.inject.Inject
+import org.springframework.beans.factory.annotation.Autowired
 
 @ContextConfiguration(classes = [JmixCoreConfiguration, TestAddon1Configuration, TestAppConfiguration])
 @TestExecutionListeners(value = AppContextTestExecutionListener,
         mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 class MetadataTest extends Specification {
 
-    @Inject
+    @Autowired
     Metadata metadata
 
     def "entities are in metadata"() {
@@ -115,6 +117,27 @@ class MetadataTest extends Specification {
 
         metaClass.store != null
         metaClass.store.name == Stores.UNDEFINED
+    }
+
+    def "store of embeddable and its properties is MAIN"() {
+
+        def metaClass = metadata.getClass(Address)
+
+        expect:
+
+        metaClass.store != null
+        metaClass.store.name == Stores.MAIN
+        metaClass.getProperty('city').store.name == Stores.MAIN
+    }
+
+    def "store of embedded property is MAIN"() {
+
+        def metaClass = metadata.getClass(Owner)
+        def property = metaClass.getProperty('address')
+
+        expect:
+
+        property.store.name == Stores.MAIN
     }
 
     def "store of entity property is NOOP"() {

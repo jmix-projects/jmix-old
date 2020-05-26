@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * INTERNAL.
@@ -35,7 +35,7 @@ public class DbmsType {
 
     public static final String NAME = "jmix_DbmsType";
 
-    @Inject
+    @Autowired
     protected Environment environment;
 
     public String getType() {
@@ -43,7 +43,7 @@ public class DbmsType {
     }
 
     public String getType(String storeName) {
-        String propName = "jmix.dbmsType";
+        String propName = "jmix.data.dbmsType";
         if (!Stores.isMain(storeName))
             propName = propName + "_" + storeName;
 
@@ -58,7 +58,7 @@ public class DbmsType {
     }
 
     public String getVersion(String storeName) {
-        String propName = "jmix.dbmsVersion";
+        String propName = "jmix.data.dbmsVersion";
         if (!Stores.isMain(storeName))
             propName = propName + "_" + storeName;
 

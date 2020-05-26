@@ -32,15 +32,15 @@ public class WebScreenTools implements ScreenTools {
 
     private static final Logger log = LoggerFactory.getLogger(WebScreenTools.class);
 
-    /*@Inject
+    /*@Autowired
     protected WebConfig webConfig;*/
-    @Inject
+    @Autowired
     protected UiProperties uiProperties;
-    @Inject
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected WindowConfig windowConfig;
-    @Inject
+    @Autowired
     protected UserSettingService userSettingService;
 
     @Override

@@ -23,10 +23,10 @@ import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.ui.*;
 import io.jmix.ui.app.navigation.notfoundwindow.NotFoundScreen;
-import io.jmix.ui.components.DialogWindow;
-import io.jmix.ui.components.RootWindow;
-import io.jmix.ui.components.impl.WebAppWorkArea;
-import io.jmix.ui.components.impl.WebWindow;
+import io.jmix.ui.component.DialogWindow;
+import io.jmix.ui.component.RootWindow;
+import io.jmix.ui.component.impl.WebAppWorkArea;
+import io.jmix.ui.component.impl.WebWindow;
 import io.jmix.ui.screen.EditorScreen;
 import io.jmix.ui.screen.OpenMode;
 import io.jmix.ui.screen.Screen;
@@ -35,20 +35,20 @@ import io.jmix.ui.sys.ControllerUtils;
 import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.ui.sys.UiDescriptorUtils;
 import io.jmix.ui.sys.WebScreens;
-import io.jmix.ui.widgets.client.ui.AppUIConstants;
+import io.jmix.ui.widget.client.ui.AppUIConstants;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.nullToEmpty;
-import static io.jmix.core.commons.util.Preconditions.checkNotEmptyString;
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotEmptyString;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 import static io.jmix.ui.screen.UiControllerUtils.getScreenContext;
 
 public class WebUrlRouting implements UrlRouting {
@@ -58,15 +58,15 @@ public class WebUrlRouting implements UrlRouting {
 
     private static final Logger log = LoggerFactory.getLogger(WebUrlRouting.class);
 
-    @Inject
+    @Autowired
     protected Events events;
-    @Inject
+    @Autowired
     protected UiProperties uiProperties;
-    @Inject
+    @Autowired
     protected WindowConfig windowConfig;
-    @Inject
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected UrlTools urlTools;
 
     protected AppUI ui;

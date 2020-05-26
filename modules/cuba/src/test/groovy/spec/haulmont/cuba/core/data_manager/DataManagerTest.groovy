@@ -16,6 +16,8 @@
 
 package spec.haulmont.cuba.core.data_manager
 
+import com.haulmont.cuba.core.Persistence
+import com.haulmont.cuba.core.entity.contracts.Id
 import com.haulmont.cuba.core.global.DataManager
 import com.haulmont.cuba.core.global.LoadContext
 import com.haulmont.cuba.core.model.common.Group
@@ -24,25 +26,26 @@ import com.haulmont.cuba.core.model.primary_keys.CompositeKeyEntity
 import com.haulmont.cuba.core.model.primary_keys.EntityKey
 import com.haulmont.cuba.core.model.sales.OrderLine
 import com.haulmont.cuba.core.model.sales.Product
+import com.haulmont.cuba.core.testsupport.TestSupport
 import groovy.sql.Sql
 import io.jmix.core.*
-import com.haulmont.cuba.core.Persistence
+import org.springframework.beans.factory.annotation.Autowired
 import spec.haulmont.cuba.core.CoreTestSpecification
-
-import javax.inject.Inject
 
 import static com.haulmont.cuba.core.testsupport.TestSupport.deleteRecord
 
 class DataManagerTest extends CoreTestSpecification {
-    @Inject
+    @Autowired
     private DataManager dataManager
-    @Inject
+    @Autowired
     private Persistence persistence
 
     User defaultUser
     Group defaultGroup
 
     void setup() {
+        TestSupport.setAuthenticationToSecurityContext();
+
         defaultGroup = new Group(name: 'Company')
         defaultUser = new User(login: 'admin', group: defaultGroup)
 

@@ -16,8 +16,8 @@
 
 package spec.haulmont.cuba.web.components.timefield
 
-import io.jmix.ui.widgets.CubaTimeFieldWrapper
-import io.jmix.ui.widgets.client.timefield.AmPm
+import io.jmix.ui.widget.JmixTimeFieldWrapper
+import io.jmix.ui.widget.client.timefield.AmPm
 import spock.lang.Specification
 
 import java.time.LocalTime
@@ -78,13 +78,13 @@ class TimeFieldTimeConversionTest extends Specification {
     }
 
     def convertTo12h(int hours24) {
-        return new CubaTimeFieldWrapper()
+        return new JmixTimeFieldWrapper()
                 .convertTo12hFormat(timeOf(hours24))
     }
 
     def convertTo24h(int hours12, AmPm amPm) {
-        return new CubaTimeFieldWrapper()
-                .convertFrom12hFormat(new CubaTimeFieldWrapper.AmPmLocalTime(timeOf(hours12), amPm))
+        return new JmixTimeFieldWrapper()
+                .convertFrom12hFormat(new JmixTimeFieldWrapper.AmPmLocalTime(timeOf(hours12), amPm))
     }
 
     def timeOf(int hours) {

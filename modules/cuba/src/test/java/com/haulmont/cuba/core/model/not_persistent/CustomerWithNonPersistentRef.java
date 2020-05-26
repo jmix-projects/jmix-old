@@ -17,8 +17,8 @@
 package com.haulmont.cuba.core.model.not_persistent;
 
 import com.haulmont.cuba.core.model.primary_keys.EntityKey;
-import io.jmix.core.metamodel.annotations.ModelProperty;
-import io.jmix.core.metamodel.annotations.NamePattern;
+import io.jmix.core.metamodel.annotation.ModelProperty;
+import com.haulmont.chile.core.annotations.NamePattern;
 
 import javax.persistence.*;
 

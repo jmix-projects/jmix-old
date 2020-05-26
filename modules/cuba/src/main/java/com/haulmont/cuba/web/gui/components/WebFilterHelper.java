@@ -29,16 +29,16 @@ import com.vaadin.ui.components.grid.TreeGridDragSource;
 import com.vaadin.ui.components.grid.TreeGridDropTarget;
 import io.jmix.core.BeanLocator;
 import com.haulmont.cuba.core.global.Configuration;
-import io.jmix.core.commons.datastruct.Node;
+import io.jmix.core.common.datastruct.Node;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.UiComponents;
-import io.jmix.ui.components.*;
-import io.jmix.ui.widgets.CubaTextField;
-import io.jmix.ui.widgets.CubaTree;
-import io.jmix.ui.widgets.ShortcutListenerDelegate;
+import io.jmix.ui.component.*;
+import io.jmix.ui.widget.JmixTextField;
+import io.jmix.ui.widget.JmixTree;
+import io.jmix.ui.widget.ShortcutListenerDelegate;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -49,13 +49,13 @@ public class WebFilterHelper implements FilterHelper {
 
     protected static final String TREE_DRAGGED_ITEM_ID = "itemid";
 
-    @Inject
+    @Autowired
     protected Configuration configuration;
 
-    @Inject
+    @Autowired
     protected UiComponents uiComponents;
 
-    @Inject
+    @Autowired
     protected BeanLocator beanLocator;
 
     @Override
@@ -121,7 +121,7 @@ public class WebFilterHelper implements FilterHelper {
     @SuppressWarnings("unchecked")
     @Override
     public void initConditionsDragAndDrop(final Tree tree, final ConditionsTree conditions) {
-        CubaTree vTree = tree.unwrapOrNull(CubaTree.class);
+        JmixTree vTree = tree.unwrapOrNull(JmixTree.class);
         if (vTree == null) {
             return;
         }
@@ -318,12 +318,12 @@ public class WebFilterHelper implements FilterHelper {
 
     @Override
     public void setFieldReadOnlyFocusable(TextField textField, boolean readOnlyFocusable) {
-        textField.withUnwrapped(CubaTextField.class, vTextField ->
+        textField.withUnwrapped(JmixTextField.class, vTextField ->
                 vTextField.setReadOnlyFocusable(readOnlyFocusable));
     }
 
     @Override
-    public void setComponentFocusable(io.jmix.ui.components.Component component, boolean focusable) {
+    public void setComponentFocusable(io.jmix.ui.component.Component component, boolean focusable) {
         Component vComponent = component.unwrap(Component.class);
         if (vComponent instanceof Component.Focusable) {
             ((Component.Focusable) vComponent).setTabIndex(focusable ? 0 : -1);
@@ -342,7 +342,7 @@ public class WebFilterHelper implements FilterHelper {
 
     @Override
     public void addShortcutListener(TextField textField, final ShortcutListener listener) {
-        textField.withUnwrapped(CubaTextField.class, vTextField -> {
+        textField.withUnwrapped(JmixTextField.class, vTextField -> {
             int[] modifiers = null;
             KeyCombination.Modifier[] listenerModifiers = listener.getKeyCombination().getModifiers();
             if (listenerModifiers != null) {
@@ -367,7 +367,7 @@ public class WebFilterHelper implements FilterHelper {
     }
 
     @Override
-    public void setInternalDebugId(io.jmix.ui.components.Component component, String id) {
+    public void setInternalDebugId(io.jmix.ui.component.Component component, String id) {
         AppUI ui = AppUI.getCurrent();
         if (ui != null && ui.isTestMode()) {
             component.unwrap(Component.class).setCubaId(id);

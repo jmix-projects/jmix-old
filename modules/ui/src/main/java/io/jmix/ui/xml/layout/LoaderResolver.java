@@ -20,7 +20,7 @@ import org.dom4j.Element;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Component(LoaderResolver.NAME)
@@ -28,7 +28,7 @@ public class LoaderResolver {
 
     public static final String NAME = "jmix_LoaderResolver";
 
-    @Inject
+    @Autowired
     protected List<LoaderConfig> loaderConfigs;
 
     @SuppressWarnings("rawtypes")
@@ -37,6 +37,18 @@ public class LoaderResolver {
         for (LoaderConfig config : loaderConfigs) {
             if (config.supports(element)) {
                 return config.getLoader(element);
+            }
+        }
+        return null;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Nullable
+    public Class<? extends ComponentLoader> getFragmentLoader(Element root) {
+        for (LoaderConfig config : loaderConfigs) {
+            Class<? extends ComponentLoader> loader = config.getFragmentLoader(root);
+            if (loader != null) {
+                return loader;
             }
         }
         return null;

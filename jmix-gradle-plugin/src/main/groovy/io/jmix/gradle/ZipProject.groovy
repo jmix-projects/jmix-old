@@ -76,8 +76,8 @@ class ZipProject extends DefaultTask {
             }
         }
         project.copy {
-            from 'deploy/hsqldb'
-            into "$tmpRootDir/deploy/hsqldb"
+            from '.jmix/hsqldb'
+            into "$tmpRootDir/.jmix/hsqldb"
         }
 
         ant.zip(destfile: zipFilePath, basedir: tmpDir)

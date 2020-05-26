@@ -21,9 +21,9 @@ import io.jmix.core.BeanLocator;
 import io.jmix.core.DevelopmentException;
 import io.jmix.core.Events;
 import io.jmix.ui.*;
-import io.jmix.ui.actions.Action;
-import io.jmix.ui.components.*;
-import io.jmix.ui.components.Component.HasXmlDescriptor;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.component.*;
+import io.jmix.ui.component.Component.HasXmlDescriptor;
 import io.jmix.ui.export.ExportDisplay;
 import io.jmix.ui.model.DataContext;
 import io.jmix.ui.model.DataLoader;
@@ -36,8 +36,8 @@ import io.jmix.ui.sys.UiControllerReflectionInspector.AnnotatedMethod;
 import io.jmix.ui.sys.UiControllerReflectionInspector.InjectElement;
 import io.jmix.ui.sys.UiControllerReflectionInspector.ScreenIntrospectionData;
 import io.jmix.ui.sys.compatibility.LegacyDependencyResolver;
-import io.jmix.ui.sys.delegates.*;
-import io.jmix.ui.sys.events.UiEventListenerMethodAdapter;
+import io.jmix.ui.sys.delegate.*;
+import io.jmix.ui.sys.event.UiEventListenerMethodAdapter;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
 import org.apache.commons.lang3.StringUtils;
@@ -52,7 +52,7 @@ import org.springframework.context.event.EventListener;
 
 import javax.annotation.Nullable;
 import javax.annotation.Resource;
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.inject.Named;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
@@ -94,12 +94,12 @@ public class UiControllerDependencyInjector {
         this.options = options;
     }
 
-    @Inject
+    @Autowired
     public void setBeanLocator(BeanLocator beanLocator) {
         this.beanLocator = beanLocator;
     }
 
-    @Inject
+    @Autowired
     public void setReflectionInspector(UiControllerReflectionInspector reflectionInspector) {
         this.reflectionInspector = reflectionInspector;
     }

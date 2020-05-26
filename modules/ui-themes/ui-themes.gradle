@@ -18,7 +18,7 @@ import io.jmix.gradle.ui.ThemeCompile
 
 apply plugin: 'java'
 
-version = rootProject.jmixVersion
+group = 'io.jmix.ui-themes'
 
 configurations {
     themes
@@ -34,7 +34,7 @@ dependencies {
 
 task compileThemes(type: ThemeCompile) {
     scssDir = 'src/main/resources'
-    themes = ['halo', 'hover']
+    themes = ['halo', 'hover', 'helium']
 }
 
 jar {
@@ -44,9 +44,7 @@ jar {
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            groupId = 'io.jmix.ui-themes'
             artifactId = 'jmix-ui-themes'
-
             from components.java
         }
     }

@@ -19,28 +19,24 @@ import com.google.common.base.Preconditions;
 import com.haulmont.cuba.core.global.LoadContext;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import io.jmix.core.AppBeans;
-import io.jmix.core.commons.collections.ReadOnlyLinkedMapValuesView;
 import io.jmix.core.Entity;
+import io.jmix.core.common.collections.ReadOnlyLinkedMapValuesView;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
-import io.jmix.ui.components.AggregationInfo;
+import io.jmix.ui.component.AggregationInfo;
 import io.jmix.ui.filter.Condition;
 import io.jmix.ui.filter.DenyingClause;
 import io.jmix.ui.filter.LogicalCondition;
 import io.jmix.ui.filter.LogicalOp;
 import io.jmix.ui.gui.data.impl.AggregatableDelegate;
-import io.jmix.ui.logging.UIPerformanceLogger;
 import io.jmix.ui.sys.PersistenceHelper;
 import org.apache.commons.collections4.map.LinkedMap;
-import org.perf4j.StopWatch;
-import org.perf4j.slf4j.Slf4JStopWatch;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
+import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 /**
  * Most commonly used {@link CollectionDatasource} implementation.
@@ -51,7 +47,7 @@ import static io.jmix.core.commons.util.Preconditions.checkNotNullArgument;
  * @param <T> type of entity
  * @param <K> type of entity ID
  */
-public class CollectionDatasourceImpl<T extends Entity<K>, K>
+public class CollectionDatasourceImpl<T extends Entity, K>
         extends
         AbstractCollectionDatasource<T, K>
         implements
@@ -189,7 +185,8 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
         if (this.item != null && !prevIds.contains(EntityValues.<K>getId(this.item))) {
             setItem(null);
         } else if (this.item != null) {
-            setItem(getItem(EntityValues.getId(this.item)));
+            //noinspection unchecked
+            setItem(getItem((K) EntityValues.getId(this.item)));
         } else {
             setItem(null);
         }
@@ -457,7 +454,7 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
             setItem(null);
         }
 
-        data.remove(EntityValues.<K>getId(item));
+        data.remove(EntityValues.getId(item));
         detachListener(item);
 
         fireCollectionChanged(Operation.REMOVE, Collections.singletonList(item));
@@ -614,9 +611,6 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
             return;
         }
 
-        String tag = getLoggingTag("CDS");
-        StopWatch sw = new Slf4JStopWatch(tag, LoggerFactory.getLogger(UIPerformanceLogger.class));
-
         if (needLoading()) {
             LoadContext context = beforeLoadData(params);
             if (context == null) {
@@ -630,8 +624,6 @@ public class CollectionDatasourceImpl<T extends Entity<K>, K>
                 dataLoadError = e;
             }
         }
-
-        sw.stop();
     }
 
     /**

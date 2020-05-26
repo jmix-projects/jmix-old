@@ -15,25 +15,22 @@
  */
 package io.jmix.ui.menu;
 
-import io.jmix.core.AppBeans;
-import io.jmix.core.MessageTools;
-import io.jmix.core.Messages;
-import io.jmix.core.Resources;
-import io.jmix.core.commons.xmlparsing.Dom4jTools;
-import io.jmix.core.compatibility.AppContext;
-import io.jmix.ui.components.KeyCombination;
-import io.jmix.ui.icons.Icons;
+import io.jmix.core.*;
+import io.jmix.core.common.xmlparsing.Dom4jTools;
+import io.jmix.ui.UiProperties;
+import io.jmix.ui.component.KeyCombination;
+import io.jmix.ui.icon.Icons;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringTokenizer;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -42,7 +39,7 @@ import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import static io.jmix.ui.icons.Icons.ICON_NAME_REGEX;
+import static io.jmix.ui.icon.Icons.ICON_NAME_REGEX;
 
 /**
  * GenericUI class holding information about the main menu structure.
@@ -54,24 +51,33 @@ public class MenuConfig {
 
     public static final String NAME = "jmix_MenuConfig";
 
-    public static final String MENU_CONFIG_XML_PROP = "jmix.menuConfig";
+    public static final String MENU_CONFIG_XML_PROP = "jmix.ui.menuConfig";
 
     protected List<MenuItem> rootItems = new ArrayList<>();
 
-    @Inject
+    @Autowired
     protected Resources resources;
 
-    @Inject
+    @Autowired
     protected Messages messages;
 
-    @Inject
+    @Autowired
     protected MessageTools messageTools;
 
-    @Inject
+    @Autowired
     protected ThemeConstantsManager themeConstantsManager;
 
-    @Inject
+    @Autowired
     protected Dom4jTools dom4JTools;
+
+    @Autowired
+    protected Environment environment;
+
+    @Autowired
+    protected UiProperties uiProperties;
+
+    @Autowired
+    protected JmixModules modules;
 
     protected volatile boolean initialized;
 
@@ -123,10 +129,11 @@ public class MenuConfig {
     protected void init() {
         rootItems.clear();
 
-        String configName = AppContext.getProperty(MENU_CONFIG_XML_PROP);
+        List<String> locations = uiProperties.isCompositeMenu() ?
+                modules.getPropertyValues(MENU_CONFIG_XML_PROP) :
+                Collections.singletonList(environment.getProperty(MENU_CONFIG_XML_PROP));
 
-        StringTokenizer tokenizer = new StringTokenizer(configName);
-        for (String location : tokenizer.getTokenArray()) {
+        for (String location : locations) {
             Resource resource = resources.getResource(location);
             if (resource.exists()) {
                 try (InputStream stream = resource.getInputStream()) {
@@ -390,7 +397,7 @@ public class MenuConfig {
         }
         // If the shortcut string looks like a property, try to get it from the application properties
         if (shortcut.startsWith("${") && shortcut.endsWith("}")) {
-            String property = AppContext.getProperty(shortcut.substring(2, shortcut.length() - 1));
+            String property = environment.getProperty(shortcut.substring(2, shortcut.length() - 1));
             if (!StringUtils.isEmpty(property))
                 shortcut = property;
             else
