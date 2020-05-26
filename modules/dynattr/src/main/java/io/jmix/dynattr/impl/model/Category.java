@@ -29,7 +29,7 @@ import io.jmix.data.entity.StandardEntity;
 import javax.persistence.*;
 import java.util.List;
 
-@javax.persistence.Entity(name = "sys$Category")
+@javax.persistence.Entity(name = "sys_Category")
 @Table(name = "SYS_CATEGORY")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "DISCRIMINATOR", discriminatorType = DiscriminatorType.INTEGER)

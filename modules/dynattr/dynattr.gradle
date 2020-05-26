@@ -35,7 +35,7 @@ dependencies {
 }
 
 jar {
-    archivesBaseName = 'jmix-dynattr-api'
+    archivesBaseName = 'jmix-dynattr'
 }
 
 java {
@@ -49,7 +49,7 @@ artifacts {
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            artifactId = 'jmix-dynattr-api'
+            artifactId = 'jmix-dynattr'
             from components.java
         }
     }

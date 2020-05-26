@@ -38,7 +38,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
-@Entity(name = "sys$CategoryAttribute")
+@Entity(name = "sys_CategoryAttribute")
 @Table(name = "SYS_CATEGORY_ATTR")
 @SystemLevel
 public class CategoryAttribute extends StandardEntity {

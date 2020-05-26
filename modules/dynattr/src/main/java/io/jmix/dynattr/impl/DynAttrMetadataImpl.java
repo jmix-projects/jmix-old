@@ -122,7 +122,7 @@ public class DynAttrMetadataImpl implements DynAttrMetadata {
                             })
                             .build();
 
-                    return entityManager.createQuery("select c from sys$Category c", Category.class)
+                    return entityManager.createQuery("select c from sys_Category c", Category.class)
                             .setHint(PersistenceHints.FETCH_PLAN, fetchPlan)
                             .getResultList().stream()
                             .map(CommonCategoryDefinition::new)

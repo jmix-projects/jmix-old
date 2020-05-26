@@ -47,32 +47,4 @@ public final class DynAttrUtils {
     public static MetaProperty getMetaProperty(AttributeDefinition attributeDefinition) {
         return null;
     }
-
-//    /**
-//     * Resolve attribute value's Java class
-//     */
-//    public static Class getAttributeClass(AttributeDefinition attribute) {
-//        AttributeType propertyType = attribute.getDataType();
-//        switch (propertyType) {
-//            case STRING:
-//                return String.class;
-//            case INTEGER:
-//                return Integer.class;
-//            case DOUBLE:
-//                return Double.class;
-//            case DECIMAL:
-//                return BigDecimal.class;
-//            case BOOLEAN:
-//                return Boolean.class;
-//            case DATE:
-//                return Date.class;
-//            case DATE_WITHOUT_TIME:
-//                return LocalDate.class;
-//            case ENUMERATION:
-//                return String.class;
-//            case ENTITY:
-//                return attribute.getJavaClassForEntity();
-//        }
-//        return String.class;
-//    }
 }
