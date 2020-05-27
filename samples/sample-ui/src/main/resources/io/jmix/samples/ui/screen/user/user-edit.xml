@@ -16,19 +16,14 @@
         <scrollBox id="scrollBox" spacing="true">
             <form id="form" dataContainer="userDc">
                 <column width="250px">
-                    <textField id="loginField" property="login"/>
+                    <textField id="usernameField" property="username"/>
                     <textField id="nameField" property="name"/>
                     <textField id="firstNameField" property="firstName"/>
                     <textField id="lastNameField" property="lastName"/>
                     <textField id="middleNameField" property="middleName"/>
-                    <textField id="positionField" property="position"/>
                     <textField id="emailField" property="email"/>
                     <textField id="languageField" property="language"/>
                     <textField id="timeZoneField" property="timeZone"/>
-                    <checkBox id="timeZoneAutoField" property="timeZoneAuto"/>
-                    <checkBox id="activeField" property="active"/>
-                    <checkBox id="changePasswordAtNextLogonField" property="changePasswordAtNextLogon"/>
-                    <textField id="ipMaskField" property="ipMask"/>
                 </column>
             </form>
         </scrollBox>

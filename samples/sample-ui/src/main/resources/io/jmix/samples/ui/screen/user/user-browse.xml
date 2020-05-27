@@ -4,8 +4,16 @@
         messagesPack="io.jmix.samples.ui">
     <data readOnly="true">
         <collection id="usersDc"
-                    class="io.jmix.security.entity.User"
-                    fetchPlan="_local">
+                    class="io.jmix.security.entity.User">
+            <fetchPlan>
+                <property name="username"/>
+                <property name="firstName"/>
+                <property name="lastName"/>
+                <property name="middleName"/>
+                <property name="email"/>
+                <property name="language"/>
+                <property name="timeZone"/>
+            </fetchPlan>
             <loader id="usersDl">
                 <query>
                     <![CDATA[select e from sec_User e]]>
@@ -27,19 +35,13 @@
                 <action id="remove" type="remove"/>
             </actions>
             <columns>
-                <column id="login"/>
                 <column id="name"/>
                 <column id="firstName"/>
                 <column id="lastName"/>
                 <column id="middleName"/>
-                <column id="position"/>
                 <column id="email"/>
                 <column id="language"/>
                 <column id="timeZone"/>
-                <column id="timeZoneAuto"/>
-                <column id="active"/>
-                <column id="changePasswordAtNextLogon"/>
-                <column id="ipMask"/>
             </columns>
             <rowsCount/>
             <buttonsPanel id="buttonsPanel"

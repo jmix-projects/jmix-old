@@ -34,7 +34,7 @@
                                scaleMode="SCALE_DOWN"/>
                         <label id="appTitleLabel"
                                stylename="c-app-title"
-                               value="mainMsg://application.logoLabel"/>
+                               value="msg://application.caption"/>
                     </cssLayout>
                     <sideMenu id="sideMenu"
                               width="100%"/>
