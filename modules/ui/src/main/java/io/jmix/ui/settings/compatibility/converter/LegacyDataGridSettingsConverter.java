@@ -16,7 +16,7 @@
 
 package io.jmix.ui.settings.compatibility.converter;
 
-import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.component.DataGrid;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.DataGridSettings;
 import io.jmix.ui.settings.component.DataGridSettings.ColumnSettings;

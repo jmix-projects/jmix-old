@@ -17,7 +17,7 @@
 package com.haulmont.cuba.settings;
 
 import com.haulmont.cuba.web.gui.components.WebTreeDataGrid;
-import io.jmix.ui.components.Component;
+import io.jmix.ui.component.Component;
 import io.jmix.ui.settings.component.binder.TreeDataGridSettingsBinder;
 
 @org.springframework.stereotype.Component(CubaTreeDataGridSettingsBinder.NAME)

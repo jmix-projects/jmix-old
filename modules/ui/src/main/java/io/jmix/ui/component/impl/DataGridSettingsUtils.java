@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.components.impl;
+package io.jmix.ui.component.impl;
 
-import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.component.DataGrid;
+import io.jmix.ui.component.impl.WebAbstractDataGrid;
 import io.jmix.ui.settings.component.binder.DataGridSettingsBinder;
 
 import java.util.List;

@@ -16,8 +16,8 @@
 
 package io.jmix.ui.persistence.settings;
 
-import io.jmix.core.commons.util.Preconditions;
-import io.jmix.ui.components.Component;
+import io.jmix.core.common.util.Preconditions;
+import io.jmix.ui.component.Component;
 import io.jmix.ui.settings.component.TableSettings;
 import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 import io.jmix.ui.settings.component.ComponentSettings;

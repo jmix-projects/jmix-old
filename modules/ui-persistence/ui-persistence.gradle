@@ -19,7 +19,7 @@ apply plugin: 'groovy'
 apply plugin: 'java-library'
 apply plugin: 'io.jmix'
 
-version = rootProject.jmixVersion
+group = 'io.jmix.ui.persistence'
 
 dependencies {
     api platform(project(':jmix-platform'))
@@ -36,27 +36,23 @@ dependencies {
     testRuntimeOnly 'org.hsqldb:hsqldb'
 }
 
-entitiesEnhancing {
-    enabled = true
-}
-
 jar {
     archivesBaseName = 'jmix-ui-persistence'
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier = 'sources'
+java {
+    withSourcesJar()
+}
+
+artifacts {
+    archives sourcesJar
 }
 
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            groupId = 'io.jmix.ui.persistence'
-            artifactId = 'jmix-ui-persistence'
-
+            artifactId = 'jmix-audit'
             from components.java
-            artifact sourcesJar
         }
     }
 }

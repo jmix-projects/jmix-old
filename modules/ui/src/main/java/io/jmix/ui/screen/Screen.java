@@ -21,14 +21,12 @@ import io.jmix.core.common.event.EventHub;
 import io.jmix.core.common.event.Subscription;
 import io.jmix.core.common.event.TriggerOnce;
 import io.jmix.ui.Screens;
-import io.jmix.ui.UiProperties;
 import io.jmix.ui.WindowInfo;
 import io.jmix.ui.component.Window;
 import io.jmix.ui.component.impl.WindowImplementation;
 import io.jmix.ui.model.ScreenData;
 import io.jmix.ui.screen.compatibility.CubaLegacySettings;
 import io.jmix.ui.navigation.UrlParamsChangedEvent;
-import io.jmix.ui.settings.Settings;
 import io.jmix.ui.util.OperationResult;
 import org.springframework.context.ApplicationListener;
 

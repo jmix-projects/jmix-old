@@ -18,9 +18,9 @@ package io.jmix.ui.settings.component.binder;
 
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.AbstractSplitPanel;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.SplitPanel;
-import io.jmix.ui.components.impl.WebSplitPanel;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.SplitPanel;
+import io.jmix.ui.component.impl.WebSplitPanel;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.settings.component.SplitPanelSettings;

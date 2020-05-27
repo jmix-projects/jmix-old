@@ -16,11 +16,11 @@
 
 package io.jmix.ui.settings.facet;
 
-import io.jmix.ui.components.Accordion;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Facet;
-import io.jmix.ui.components.TabSheet;
-import io.jmix.ui.components.Window;
+import io.jmix.ui.component.Accordion;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.Facet;
+import io.jmix.ui.component.TabSheet;
+import io.jmix.ui.component.Window;
 import io.jmix.ui.screen.Screen.AfterDetachEvent;
 import io.jmix.ui.screen.Screen.AfterShowEvent;
 import io.jmix.ui.screen.Screen.BeforeShowEvent;

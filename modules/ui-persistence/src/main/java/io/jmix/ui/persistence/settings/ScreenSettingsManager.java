@@ -17,10 +17,10 @@
 package io.jmix.ui.persistence.settings;
 
 import io.jmix.core.BeanLocator;
-import io.jmix.core.commons.util.Preconditions;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.HasTablePresentations;
-import io.jmix.ui.presentations.TablePresentations;
+import io.jmix.core.common.util.Preconditions;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.HasTablePresentations;
+import io.jmix.ui.presentation.TablePresentations;
 import io.jmix.ui.settings.component.ComponentSettings.HasSettingsPresentation;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.ScreenSettings;
@@ -35,7 +35,7 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.UUID;
 
-import static io.jmix.ui.components.ComponentsHelper.getComponentPath;
+import static io.jmix.ui.component.ComponentsHelper.getComponentPath;
 
 /**
  * Provides functionality for applying and saving component settings.

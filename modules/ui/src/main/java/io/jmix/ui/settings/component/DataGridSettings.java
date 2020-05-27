@@ -16,7 +16,7 @@
 
 package io.jmix.ui.settings.component;
 
-import io.jmix.ui.components.DataGrid;
+import io.jmix.ui.component.DataGrid;
 
 import java.io.Serializable;
 import java.util.List;

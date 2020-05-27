@@ -20,7 +20,7 @@ import io.jmix.core.entity.Creatable;
 import io.jmix.core.entity.Updatable;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.data.entity.BaseUuidEntity;
-import io.jmix.ui.presentations.model.TablePresentation;
+import io.jmix.ui.presentation.model.TablePresentation;
 
 import javax.persistence.*;
 import java.util.Date;

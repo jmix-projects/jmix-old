@@ -19,7 +19,7 @@ package io.jmix.ui.settings;
 import com.vaadin.server.VaadinSession;
 import io.jmix.core.common.util.Preconditions;
 import io.jmix.ui.executor.IllegalConcurrentAccessException;
-import io.jmix.ui.settings.SettingsClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;

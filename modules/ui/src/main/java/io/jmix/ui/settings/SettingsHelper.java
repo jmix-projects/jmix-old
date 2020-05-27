@@ -16,7 +16,7 @@
 
 package io.jmix.ui.settings;
 
-import io.jmix.core.commons.util.ReflectionHelper;
+import io.jmix.core.common.util.ReflectionHelper;
 import io.jmix.ui.settings.component.ComponentSettings;
 
 public final class SettingsHelper {

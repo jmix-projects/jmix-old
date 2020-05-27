@@ -16,7 +16,7 @@
 
 package io.jmix.ui.settings.compatibility.converter;
 
-import io.jmix.ui.components.HasSettings;
+import io.jmix.ui.component.HasSettings;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.TableSettings;
 import org.dom4j.Element;

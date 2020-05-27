@@ -16,25 +16,24 @@
 
 package io.jmix.ui.settings.component.binder;
 
+import io.jmix.core.MetadataTools;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.GroupTable;
-import io.jmix.ui.components.Table;
-import io.jmix.ui.components.Table.Column;
-import io.jmix.ui.components.data.meta.EntityTableItems;
-import io.jmix.ui.components.impl.WebGroupTable;
-import io.jmix.ui.dynamicattributes.DynamicAttributesTools;
-import io.jmix.ui.dynamicattributes.DynamicAttributesUtils;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.GroupTable;
+import io.jmix.ui.component.Table;
+import io.jmix.ui.component.Table.Column;
+import io.jmix.ui.component.data.meta.EntityTableItems;
+import io.jmix.ui.component.impl.WebGroupTable;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.GroupTableSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.settings.component.TableSettings;
-import io.jmix.ui.widgets.CubaGroupTable;
+import io.jmix.ui.widget.JmixGroupTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -47,11 +46,11 @@ public class GroupTableSettingsBinder extends AbstractTableSettingsBinder {
 
     public static final String NAME = "jmix_GroupTableSettingsBinder";
 
-    protected DynamicAttributesTools dynamicAttributesTools;
+    protected MetadataTools metadataTools;
 
-    @Inject
-    protected void setDynamicAttributesTools(DynamicAttributesTools dynamicAttributesTools) {
-        this.dynamicAttributesTools = dynamicAttributesTools;
+    @Autowired
+    protected void setMetadataTools(MetadataTools metadataTools) {
+        this.metadataTools = metadataTools;
     }
 
     @Override
@@ -112,10 +111,7 @@ public class GroupTableSettingsBinder extends AbstractTableSettingsBinder {
             List<MetaPropertyPath> properties = new ArrayList<>(groupProperties.size());
 
             for (String id : groupProperties) {
-                MetaPropertyPath property = DynamicAttributesUtils.isDynamicAttribute(id)
-                        ? dynamicAttributesTools.getMetaPropertyPath(metaClass, id)
-                        : metaClass.getPropertyPath(id);
-
+                MetaPropertyPath property = metadataTools.resolveMetaPropertyPathOrNull(metaClass, id);
                 if (property != null) {
                     properties.add(property);
                 } else {
@@ -189,7 +185,7 @@ public class GroupTableSettingsBinder extends AbstractTableSettingsBinder {
         return groupProperties;
     }
 
-    protected CubaGroupTable getCubaGroupTable(GroupTable groupTable) {
-        return groupTable.unwrap(CubaGroupTable.class);
+    protected JmixGroupTable getCubaGroupTable(GroupTable groupTable) {
+        return groupTable.unwrap(JmixGroupTable.class);
     }
 }

@@ -16,14 +16,14 @@
 
 package io.jmix.ui.settings.component.binder;
 
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.ResizableTextArea;
-import io.jmix.ui.components.ResizableTextArea.ResizeDirection;
-import io.jmix.ui.components.impl.WebResizableTextArea;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.ResizableTextArea;
+import io.jmix.ui.component.ResizableTextArea.ResizeDirection;
+import io.jmix.ui.component.impl.WebResizableTextArea;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.ResizableTextAreaSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
-import io.jmix.ui.widgets.CubaResizableTextAreaWrapper;
+import io.jmix.ui.widget.JmixResizableTextAreaWrapper;
 
 @SuppressWarnings("rawtypes")
 @org.springframework.stereotype.Component(ResizableTextAreaSettingsBinder.NAME)
@@ -96,15 +96,15 @@ public class ResizableTextAreaSettingsBinder implements ComponentSettingsBinder<
     }
 
     protected String getWidth(ResizableTextArea textArea) {
-        CubaResizableTextAreaWrapper textAreaWrapper =
-                (CubaResizableTextAreaWrapper) ((Component.Wrapper) textArea).getComposition();
+        JmixResizableTextAreaWrapper textAreaWrapper =
+                (JmixResizableTextAreaWrapper) ((Component.Wrapper) textArea).getComposition();
 
         return textArea.getWidth() + textAreaWrapper.getWidthUnits().toString();
     }
 
     protected String getHeight(ResizableTextArea textArea) {
-        CubaResizableTextAreaWrapper textAreaWrapper =
-                (CubaResizableTextAreaWrapper) ((Component.Wrapper) textArea).getComposition();
+        JmixResizableTextAreaWrapper textAreaWrapper =
+                (JmixResizableTextAreaWrapper) ((Component.Wrapper) textArea).getComposition();
 
         return textArea.getHeight() + textAreaWrapper.getHeightUnits().toString();
     }

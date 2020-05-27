@@ -16,7 +16,7 @@
 
 package io.jmix.ui.settings.impl;
 
-import io.jmix.core.entity.User;
+import io.jmix.core.entity.BaseUser;
 import io.jmix.ui.settings.UserSettingService;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +47,7 @@ public class EmptyUserSettingServiceImpl implements UserSettingService {
     }
 
     @Override
-    public void copySettings(User fromUser, User toUser) {
+    public void copySettings(BaseUser fromUser, BaseUser toUser) {
         // do nothing
     }
 

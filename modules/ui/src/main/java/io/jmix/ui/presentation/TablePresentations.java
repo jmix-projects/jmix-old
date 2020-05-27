@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.presentations;
+package io.jmix.ui.presentation;
 
-import io.jmix.ui.components.HasTablePresentations;
-import io.jmix.ui.presentations.model.EmptyTablePresentation;
-import io.jmix.ui.presentations.model.TablePresentation;
+import io.jmix.ui.component.HasTablePresentations;
+import io.jmix.ui.presentation.model.EmptyTablePresentation;
+import io.jmix.ui.presentation.model.TablePresentation;
 import org.dom4j.Element;
 
 import javax.annotation.Nullable;

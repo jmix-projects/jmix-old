@@ -16,22 +16,39 @@
 
 package io.jmix.ui.component;
 
-import io.jmix.ui.presentation.Presentations;
+import io.jmix.ui.presentation.TablePresentations;
+import io.jmix.ui.settings.component.ComponentSettings;
+import io.jmix.ui.settings.component.SettingsWrapper;
+
+import javax.annotation.Nullable;
 
 /**
  * Component having presentations.
  */
-public interface HasPresentations extends HasSettings {
+public interface HasTablePresentations extends HasSettings {
     void usePresentations(boolean b);
     boolean isUsePresentations();
 
     void resetPresentation();
     void loadPresentations();
 
-    Presentations getPresentations();
+    TablePresentations getPresentations();
 
     void applyPresentation(Object id);
     void applyPresentationAsDefault(Object id);
 
     Object getDefaultPresentationId();
+
+    /**
+     * Sets default settings for a component. When the presentation is reset it will be applied for the component.
+     *
+     * @param wrapper settings wrapper
+     */
+    void setDefaultSettings(SettingsWrapper wrapper);
+
+    /**
+     * @return default settings for a component or null if not set
+     */
+    @Nullable
+    ComponentSettings getDefaultSettings();
 }

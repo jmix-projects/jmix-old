@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.presentations;
+package io.jmix.ui.presentation;
 
-import io.jmix.ui.presentations.model.TablePresentation;
-import io.jmix.ui.components.Component;
+import io.jmix.ui.presentation.model.TablePresentation;
+import io.jmix.ui.component.Component;
 import org.dom4j.Element;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;

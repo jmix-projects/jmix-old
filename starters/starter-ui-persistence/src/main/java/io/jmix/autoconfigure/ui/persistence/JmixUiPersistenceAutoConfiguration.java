@@ -42,20 +42,4 @@ import javax.sql.DataSource;
         JmixUiConfiguration.class,
         JmixUiPersistenceConfiguration.class})
 public class JmixUiPersistenceAutoConfiguration {
-
-    @Bean
-    @Primary
-    @ConditionalOnMissingBean(name = "entityManagerFactory")
-    protected LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource,
-                                                                          PersistenceConfigProcessor processor,
-                                                                          JpaVendorAdapter jpaVendorAdapter) {
-        return new JmixEntityManagerFactoryBean(Stores.MAIN, dataSource, processor, jpaVendorAdapter);
-    }
-
-    @Bean
-    @Primary
-    @ConditionalOnMissingBean(name = "transactionManager")
-    protected PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
-        return new JmixTransactionManager(Stores.MAIN, entityManagerFactory);
-    }
 }

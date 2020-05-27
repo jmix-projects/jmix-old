@@ -18,22 +18,21 @@ package io.jmix.ui.persistence;
 
 import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.core.annotation.JmixModule;
-import io.jmix.core.annotation.JmixProperty;
 import io.jmix.data.JmixDataConfiguration;
 import io.jmix.ui.JmixUiConfiguration;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.presentations.TablePresentations;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.presentation.TablePresentations;
 import io.jmix.ui.settings.UserSettingService;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.*;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan
+@ConfigurationPropertiesScan
 @EnableTransactionManagement
-@JmixModule(
-        dependsOn = {JmixCoreConfiguration.class, JmixDataConfiguration.class, JmixUiConfiguration.class},
-        properties = {@JmixProperty(name = "jmix.core.fetchPlansConfig", value = "io/jmix/ui/persistence/fetch-plan.xml", append = true)})
+@JmixModule(dependsOn = {JmixCoreConfiguration.class, JmixDataConfiguration.class, JmixUiConfiguration.class})
 public class JmixUiPersistenceConfiguration {
 
     @Bean(UserSettingService.NAME)

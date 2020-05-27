@@ -17,41 +17,40 @@
 package io.jmix.ui.persistence;
 
 import io.jmix.core.*;
-import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.commons.xmlparsing.Dom4jTools;
+import io.jmix.core.common.util.Preconditions;
+import io.jmix.core.common.xmlparsing.Dom4jTools;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.entity.User;
-import io.jmix.core.security.UserSession;
-import io.jmix.core.security.UserSessionSource;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.ComponentsHelper;
+import io.jmix.core.entity.BaseUser;
+import io.jmix.core.security.CurrentAuthentication;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.ComponentsHelper;
 import io.jmix.ui.persistence.entity.UiTablePresentation;
-import io.jmix.ui.presentations.TablePresentations;
-import io.jmix.ui.presentations.PresentationsChangeListener;
-import io.jmix.ui.presentations.model.TablePresentation;
+import io.jmix.ui.presentation.TablePresentations;
+import io.jmix.ui.presentation.PresentationsChangeListener;
+import io.jmix.ui.presentation.model.TablePresentation;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import java.util.*;
 
 public class TablePresentationsImpl implements TablePresentations {
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected FetchPlanRepository fetchPlanRepository;
-    @Inject
+    @Autowired
     protected DataManager dataManager;
-    @Inject
+    @Autowired
     protected Dom4jTools dom4jTools;
-    @Inject
-    protected UserSessionSource sessionSource;
-    @Inject
+    @Autowired
+    protected CurrentAuthentication authentication;
+    @Autowired
     protected EntityStates entityStates;
 
     protected String name;
@@ -357,14 +356,13 @@ public class TablePresentationsImpl implements TablePresentations {
             ctx.setFetchPlan(fetchPlanRepository.getFetchPlan(
                     UiTablePresentation.class, "app"));
 
-            UserSession session = sessionSource.getUserSession();
-            // todo user substitution
-            User user = session.getUser();
+//             todo user substitution
+            BaseUser user = authentication.getUser();
 
             ctx.setQueryString("select p from ui_TablePresentation p " +
                     "where p.componentId = :component and (p.userLogin is null or p.userLogin = :userLogin)")
                     .setParameter("component", name)
-                    .setParameter("userLogin", user.getLogin());
+                    .setParameter("userLogin", user.getUsername());
 
             final List<UiTablePresentation> list = dataManager.loadList(ctx);
 

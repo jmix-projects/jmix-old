@@ -16,7 +16,7 @@
 
 package io.jmix.ui.settings.component;
 
-import io.jmix.ui.components.HasSettings;
+import io.jmix.ui.component.HasSettings;
 
 /**
  * Wrapper for {@link ComponentSettings}.

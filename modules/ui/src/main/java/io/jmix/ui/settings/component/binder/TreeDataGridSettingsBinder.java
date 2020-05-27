@@ -17,11 +17,11 @@
 package io.jmix.ui.settings.component.binder;
 
 import com.google.common.base.Strings;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.DataGrid;
-import io.jmix.ui.components.DataGrid.Column;
-import io.jmix.ui.components.TreeDataGrid;
-import io.jmix.ui.components.impl.WebTreeDataGrid;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.DataGrid;
+import io.jmix.ui.component.DataGrid.Column;
+import io.jmix.ui.component.TreeDataGrid;
+import io.jmix.ui.component.impl.WebTreeDataGrid;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.DataGridSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;

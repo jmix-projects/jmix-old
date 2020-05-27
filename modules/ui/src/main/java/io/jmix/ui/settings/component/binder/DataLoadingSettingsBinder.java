@@ -16,7 +16,7 @@
 
 package io.jmix.ui.settings.component.binder;
 
-import io.jmix.ui.components.Component;
+import io.jmix.ui.component.Component;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.presentations.model;
+package io.jmix.ui.presentation.model;
 
 /**
  * Stub. By default, UI does not provide persistence functionality for presentations. To save/load presentations add

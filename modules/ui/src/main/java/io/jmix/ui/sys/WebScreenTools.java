@@ -23,9 +23,8 @@ import io.jmix.ui.navigation.EditorTypeExtractor;
 import io.jmix.ui.settings.UserSettingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.inject.Inject;
 
 @Component(ScreenTools.NAME)
 public class WebScreenTools implements ScreenTools {

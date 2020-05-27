@@ -17,7 +17,7 @@
 package io.jmix.ui.persistence.settings;
 
 import com.google.gson.*;
-import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.common.util.Preconditions;
 import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.UiSettingsCache;
 import io.jmix.ui.settings.component.ComponentSettings;

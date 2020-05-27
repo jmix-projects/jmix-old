@@ -17,10 +17,10 @@
 package io.jmix.ui.persistence.settings.facet;
 
 import io.jmix.core.AppBeans;
-import io.jmix.core.commons.events.EventHub;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Frame;
-import io.jmix.ui.components.impl.WebAbstractFacet;
+import io.jmix.core.common.event.EventHub;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.Frame;
+import io.jmix.ui.component.impl.WebAbstractFacet;
 import io.jmix.ui.persistence.settings.ScreenSettingsManager;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.Screen.AfterDetachEvent;

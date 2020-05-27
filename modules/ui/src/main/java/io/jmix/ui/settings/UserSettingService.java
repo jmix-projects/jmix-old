@@ -15,7 +15,7 @@
  */
 package io.jmix.ui.settings;
 
-import io.jmix.core.entity.User;
+import io.jmix.core.entity.BaseUser;
 
 import javax.annotation.Nullable;
 import java.util.Set;
@@ -49,7 +49,7 @@ public interface UserSettingService {
     /**
      * Copy user settings to another user
      */
-    void copySettings(User fromUser, User toUser);
+    void copySettings(BaseUser fromUser, BaseUser toUser);
 
     /**
      * Delete settings of screens (settings of tables, filters etc) for the current user.

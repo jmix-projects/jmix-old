@@ -17,9 +17,9 @@
 
 package io.jmix.ui.settings;
 
-import io.jmix.core.commons.util.Preconditions;
+import io.jmix.core.common.util.Preconditions;
 import io.jmix.ui.UiProperties;
-import io.jmix.ui.components.AppWorkArea;
+import io.jmix.ui.component.AppWorkArea;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
@@ -70,16 +70,16 @@ public class UserSettingsTools {
         userSettingService.saveSetting("appWindowMode", mode.name());
     }
 
-    public String loadAppWindowTheme() {
-        String s = userSettingService.loadSetting("appWindowTheme");
+    public String loadTheme() {
+        String s = userSettingService.loadSetting("theme");
         if (s != null) {
             return s;
         }
-        return uiProperties.getAppWindowTheme();
+        return uiProperties.getTheme();
     }
 
     public void saveAppWindowTheme(String theme) {
-        userSettingService.saveSetting("appWindowTheme", theme);
+        userSettingService.saveSetting("theme", theme);
     }
 
     @Nullable

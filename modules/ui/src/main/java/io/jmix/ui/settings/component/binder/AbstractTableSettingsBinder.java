@@ -19,20 +19,20 @@ package io.jmix.ui.settings.component.binder;
 import com.google.common.base.Strings;
 import io.jmix.core.UuidProvider;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.ui.components.Component;
-import io.jmix.ui.components.Table;
-import io.jmix.ui.components.data.TableItems;
-import io.jmix.ui.components.data.meta.ContainerDataUnit;
-import io.jmix.ui.components.data.meta.EntityTableItems;
-import io.jmix.ui.components.impl.WebTable;
-import io.jmix.ui.components.presentations.TablePresentationsBox;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.Table;
+import io.jmix.ui.component.data.TableItems;
+import io.jmix.ui.component.data.meta.ContainerDataUnit;
+import io.jmix.ui.component.data.meta.EntityTableItems;
+import io.jmix.ui.component.impl.WebTable;
+import io.jmix.ui.component.presentation.TablePresentationsLayout;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.model.HasLoader;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.settings.component.TableSettings;
-import io.jmix.ui.widgets.CubaEnhancedTable;
+import io.jmix.ui.widget.JmixEnhancedTable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -61,7 +61,7 @@ public abstract class AbstractTableSettingsBinder implements DataLoadingSettings
             table.setTextSelectionEnabled(tableSettings.getTextSelection());
 
             if (table.getPresentations() != null) {
-                ((TablePresentationsBox) getEnhancedTable(table).getPresentationsBox()).updateTextSelection();
+                ((TablePresentationsLayout) getEnhancedTable(table).getPresentationsLayout()).updateTextSelection();
             }
         }
 
@@ -363,8 +363,8 @@ public abstract class AbstractTableSettingsBinder implements DataLoadingSettings
         return false;
     }
 
-    protected CubaEnhancedTable getEnhancedTable(Table table) {
-        return table.unwrap(CubaEnhancedTable.class);
+    protected JmixEnhancedTable getEnhancedTable(Table table) {
+        return table.unwrap(JmixEnhancedTable.class);
     }
 
     protected com.vaadin.v7.ui.Table getVTable(Table table) {

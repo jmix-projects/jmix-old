@@ -18,9 +18,9 @@ package io.jmix.ui.persistence;
 
 import io.jmix.core.Metadata;
 import io.jmix.core.UuidProvider;
-import io.jmix.core.commons.util.Preconditions;
-import io.jmix.core.commons.xmlparsing.Dom4jTools;
-import io.jmix.core.entity.User;
+import io.jmix.core.common.util.Preconditions;
+import io.jmix.core.common.xmlparsing.Dom4jTools;
+import io.jmix.core.entity.BaseUser;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.security.*;
 import io.jmix.ui.persistence.entity.UiTablePresentation;
@@ -29,12 +29,12 @@ import io.jmix.ui.settings.UserSettingService;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -43,16 +43,16 @@ import java.util.*;
 
 public class UserSettingServiceImpl implements UserSettingService {
 
-    @Inject
-    protected UserSessionSource userSessionSource;
+    @Autowired
+    protected CurrentAuthentication authentication;
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
 
-    @Inject
+    @Autowired
     protected Security security;
 
-    @Inject
+    @Autowired
     protected Dom4jTools dom4JTools;
 
     @PersistenceContext
@@ -60,7 +60,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
     protected TransactionTemplate transaction;
 
-    @Inject
+    @Autowired
     protected void setTransactionManager(PlatformTransactionManager transactionManager) {
         transaction = new TransactionTemplate(transactionManager);
         transaction.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
@@ -86,7 +86,7 @@ public class UserSettingServiceImpl implements UserSettingService {
             UiSetting us = findUserSettings(name);
             if (us == null) {
                 us = metadata.create(UiSetting.class);
-                us.setUserLogin(userSessionSource.getUserSession().getUser().getLogin());
+                us.setUserLogin(authentication.getUser().getUsername());
                 us.setName(name);
                 us.setValue(value);
 
@@ -110,7 +110,7 @@ public class UserSettingServiceImpl implements UserSettingService {
     }
 
     @Override
-    public void copySettings(User fromUser, User toUser) {
+    public void copySettings(BaseUser fromUser, BaseUser toUser) {
         Preconditions.checkNotNullArgument(fromUser);
         Preconditions.checkNotNullArgument(toUser);
 
@@ -122,7 +122,7 @@ public class UserSettingServiceImpl implements UserSettingService {
 
         transaction.executeWithoutResult(status -> {
             Query deleteSettingsQuery = entityManager.createQuery("delete from ui_Setting s where s.userLogin = ?1");
-            deleteSettingsQuery.setParameter(1, toUser.getLogin());
+            deleteSettingsQuery.setParameter(1, toUser.getUsername());
             deleteSettingsQuery.executeUpdate();
         });
 
@@ -138,12 +138,12 @@ public class UserSettingServiceImpl implements UserSettingService {
         transaction.executeWithoutResult(status -> {
             TypedQuery<UiSetting> q = entityManager.
                     createQuery("select s from ui_Setting s where s.userLogin = ?1", UiSetting.class);
-            q.setParameter(1, fromUser.getLogin());
+            q.setParameter(1, fromUser.getUsername());
             List<UiSetting> fromUserSettings = q.getResultList();
 
             for (UiSetting currSetting : fromUserSettings) {
                 UiSetting newSetting = metadata.create(UiSetting.class);
-                newSetting.setUserLogin(toUser.getLogin());
+                newSetting.setUserLogin(toUser.getUsername());
                 newSetting.setName(currSetting.getName());
 
                 try {
@@ -188,7 +188,7 @@ public class UserSettingServiceImpl implements UserSettingService {
             TypedQuery<UiSetting> selectQuery = entityManager.createQuery(
                     "select e from ui_Setting e where e.user.id = ?1",
                     UiSetting.class);
-            selectQuery.setParameter(1, userSessionSource.getUserSession().getUser().getId());
+            selectQuery.setParameter(1, authentication.getUser().getUsername());
 
             List<UiSetting> userSettings = selectQuery.getResultList();
 
@@ -205,7 +205,7 @@ public class UserSettingServiceImpl implements UserSettingService {
         TypedQuery<UiSetting> q = entityManager.createQuery(
                 "select s from ui_Setting s where s.userLogin = ?1 and s.name =?2",
                 UiSetting.class);
-        q.setParameter(1, userSessionSource.getUserSession().getUser().getLogin());
+        q.setParameter(1, authentication.getUser().getUsername());
         q.setParameter(2, name);
 
         List result = q.getResultList();
@@ -216,23 +216,23 @@ public class UserSettingServiceImpl implements UserSettingService {
         return (UiSetting) result.get(0);
     }
 
-    protected Map<UUID, UiTablePresentation> copyPresentations(User fromUser, User toUser) {
+    protected Map<UUID, UiTablePresentation> copyPresentations(BaseUser fromUser, BaseUser toUser) {
         Map<UUID, UiTablePresentation> resultMap = transaction.execute(status -> {
             // delete existing
             Query delete = entityManager.createQuery("delete from ui_TablePresentation p where p.userLogin = ?1");
-            delete.setParameter(1, toUser.getLogin());
+            delete.setParameter(1, toUser.getUsername());
             delete.executeUpdate();
 
             // copy settings
             TypedQuery<UiTablePresentation> selectQuery = entityManager.createQuery(
                     "select p from ui_TablePresentation p where p.userLogin = ?1", UiTablePresentation.class);
-            selectQuery.setParameter(1, fromUser.getLogin());
+            selectQuery.setParameter(1, fromUser.getUsername());
             List<UiTablePresentation> presentations = selectQuery.getResultList();
 
             Map<UUID, UiTablePresentation> presentationMap = new HashMap<>();
             for (UiTablePresentation presentation : presentations) {
                 UiTablePresentation newPresentation = metadata.create(UiTablePresentation.class);
-                newPresentation.setUserLogin(toUser.getLogin());
+                newPresentation.setUserLogin(toUser.getUsername());
                 newPresentation.setComponentId(presentation.getComponentId());
                 newPresentation.setAutoSave(presentation.getAutoSave());
                 newPresentation.setName(presentation.getName());

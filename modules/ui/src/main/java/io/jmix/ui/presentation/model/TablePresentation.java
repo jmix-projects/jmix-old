@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.presentations.model;
+package io.jmix.ui.presentation.model;
 
 import io.jmix.core.Entity;
-import io.jmix.ui.presentations.TablePresentations;
-
-import java.util.UUID;
+import io.jmix.ui.presentation.TablePresentations;
 
 /**
  * Base interface for Presentation entity.

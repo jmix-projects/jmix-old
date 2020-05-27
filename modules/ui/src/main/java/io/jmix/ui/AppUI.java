@@ -664,7 +664,7 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
 //
 //        if (userSession.isAuthenticated()) {
             // load theme from user settings
-            /*String themeName = userSettingsTools.loadAppWindowTheme();
+            /*String themeName = userSettingsTools.loadTheme();
 
             if (!Objects.equals(themeName, getTheme())) {
                 // check theme support
