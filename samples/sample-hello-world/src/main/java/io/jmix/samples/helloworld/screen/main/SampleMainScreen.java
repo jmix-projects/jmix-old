@@ -1,27 +1,31 @@
 package io.jmix.samples.helloworld.screen.main;
 
-import com.vaadin.server.WebBrowser;
 import io.jmix.core.Messages;
-import io.jmix.ui.*;
-import io.jmix.ui.component.*;
+import io.jmix.ui.AppUI;
+import io.jmix.ui.ScreenTools;
+import io.jmix.ui.Screens;
+import io.jmix.ui.component.AppWorkArea;
+import io.jmix.ui.component.Component;
+import io.jmix.ui.component.Image;
+import io.jmix.ui.component.ThemeResource;
+import io.jmix.ui.component.Window;
 import io.jmix.ui.component.dev.LayoutAnalyzerContextMenuProvider;
 import io.jmix.ui.component.mainwindow.AppMenu;
-import io.jmix.ui.component.mainwindow.SideMenu;
 import io.jmix.ui.component.mainwindow.UserIndicator;
-import io.jmix.ui.screen.*;
+import io.jmix.ui.screen.LoadDataBeforeShow;
+import io.jmix.ui.screen.Screen;
+import io.jmix.ui.screen.Subscribe;
+import io.jmix.ui.screen.UiController;
+import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.screen.UiDescriptor;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
-
-import static io.jmix.ui.component.ComponentsHelper.setStyleName;
 
 @UiController("sample_MainScreen")
 @UiDescriptor("sample-main-screen.xml")
 @LoadDataBeforeShow
 public class SampleMainScreen extends Screen implements Window.HasWorkArea {
-
-    public static final String SIDEMENU_COLLAPSED_STATE = "sidemenuCollapsed";
-    public static final String SIDEMENU_COLLAPSED_STYLENAME = "collapsed";
 
     protected static final String APP_LOGO_IMAGE = "application.logoImage";
 
@@ -67,40 +71,8 @@ public class SampleMainScreen extends Screen implements Window.HasWorkArea {
 
     protected void initMenu() {
         Component menu = getAppMenu();
-        if (menu == null) {
-            menu = getSideMenu();
-        }
-
         if (menu != null) {
             ((Component.Focusable) menu).focus();
-        }
-
-        initCollapsibleMenu();
-    }
-
-    protected void initCollapsibleMenu() {
-        Component sideMenuContainer = getWindow().getComponent("sideMenuContainer");
-        if (sideMenuContainer instanceof CssLayout) {
-            if (isMobileDevice()) {
-                setSideMenuCollapsed(true);
-            } else {
-                String menuCollapsedCookie = App.getInstance()
-                        .getCookieValue(SIDEMENU_COLLAPSED_STATE);
-
-                boolean menuCollapsed = Boolean.parseBoolean(menuCollapsedCookie);
-
-                setSideMenuCollapsed(menuCollapsed);
-            }
-
-            initCollapseMenuControls();
-        }
-    }
-
-    protected void initCollapseMenuControls() {
-        Button collapseMenuButton = getCollapseMenuButton();
-        if (collapseMenuButton != null) {
-            collapseMenuButton.addClickListener(event ->
-                    setSideMenuCollapsed(!isMenuCollapsed()));
         }
     }
 
@@ -124,62 +96,12 @@ public class SampleMainScreen extends Screen implements Window.HasWorkArea {
     }
 
     @Nullable
-    protected Button getCollapseMenuButton() {
-        return (Button) getWindow().getComponent("collapseMenuButton");
-    }
-
-    @Nullable
     protected Image getLogoImage() {
         return (Image) getWindow().getComponent("logoImage");
     }
 
     @Nullable
     protected AppMenu getAppMenu() {
-        return (AppMenu) getWindow().getComponent("appMenu");
+        return (AppMenu) getWindow().getComponent("mainMenu");
     }
-
-    @Nullable
-    protected SideMenu getSideMenu() {
-        return (SideMenu) getWindow().getComponent("sideMenu");
-    }
-
-    protected void setSideMenuCollapsed(boolean collapsed) {
-        Component sideMenuContainer = getWindow().getComponent("sideMenuContainer");
-        CssLayout sideMenuPanel = (CssLayout) getWindow().getComponent("sideMenuPanel");
-        Button collapseMenuButton = getCollapseMenuButton();
-
-        setStyleName(sideMenuContainer, SIDEMENU_COLLAPSED_STYLENAME, collapsed);
-        setStyleName(sideMenuPanel, SIDEMENU_COLLAPSED_STYLENAME, collapsed);
-
-        if (collapseMenuButton != null) {
-            Messages messages = getBeanLocator().get(Messages.class);
-            if (collapsed) {
-                collapseMenuButton.setCaption(messages.getMessage("menuExpandGlyph"));
-                collapseMenuButton.setDescription(messages.getMessage("sideMenuExpand"));
-            } else {
-                collapseMenuButton.setCaption(messages.getMessage("menuCollapseGlyph"));
-                collapseMenuButton.setDescription(messages.getMessage("sideMenuCollapse"));
-            }
-        }
-
-        App.getInstance()
-                .addCookie(SIDEMENU_COLLAPSED_STATE, String.valueOf(collapsed));
-    }
-
-    protected boolean isMenuCollapsed() {
-        CssLayout sideMenuPanel = (CssLayout) getWindow().getComponent("sideMenuPanel");
-        return sideMenuPanel != null
-                && sideMenuPanel.getStyleName() != null
-                && sideMenuPanel.getStyleName().contains(SIDEMENU_COLLAPSED_STYLENAME);
-    }
-
-    protected boolean isMobileDevice() {
-        WebBrowser browser = AppUI.getCurrent()
-                .getPage()
-                .getWebBrowser();
-
-        return browser.getScreenWidth() < 500
-                || browser.getScreenHeight() < 800;
-    }
-
 }
