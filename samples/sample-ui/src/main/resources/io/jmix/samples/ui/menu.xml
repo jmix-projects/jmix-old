@@ -3,6 +3,5 @@
     <menu id="application">
         <item screen="sec_User.browse"/>
         <item screen="component-samples"/>
-        <item screen="entityInspector.browse"/>
     </menu>
 </menu-config>
