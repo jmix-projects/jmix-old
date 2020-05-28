@@ -51,7 +51,6 @@ public class MainScreen extends Screen implements Window.HasWorkArea {
         initLogoImage();
         initFtsField();
         initUserIndicator();
-//        initTitleBar();
         initMenu();
         initLayoutAnalyzerContextMenu();
     }
@@ -143,15 +142,6 @@ public class MainScreen extends Screen implements Window.HasWorkArea {
                     openLoginScreen());
         }
     }
-
-//    protected void initTitleBar() {
-//        if (getBeanLocator().get(UiProperties.class).isUseInverseHeader()) {
-//            Component titleBar = getTitleBar();
-//            if (titleBar != null) {
-//                titleBar.setStyleName("c-app-menubar c-inverse-header");
-//            }
-//        }
-//    }
 
     @Subscribe
     protected void onAfterShow(AfterShowEvent event) {
