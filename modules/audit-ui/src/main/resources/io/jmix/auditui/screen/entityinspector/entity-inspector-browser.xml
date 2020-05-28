@@ -31,5 +31,9 @@ messagesPack="io.jmix.auditui.screen.entityinspector">
         </hbox>
         <vbox id="filterBox" visible="false"/>
         <vbox id="tableBox" height="100%"/>
+        <hbox id="lookupActions" spacing="true" visible="false">
+            <button action="lookupSelectAction"/>
+            <button action="lookupCancelAction"/>
+        </hbox>
     </layout>
 </window>

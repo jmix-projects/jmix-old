@@ -33,6 +33,7 @@ import io.jmix.ui.action.ItemTrackingAction;
 import io.jmix.ui.action.list.RefreshAction;
 import io.jmix.ui.action.list.RemoveAction;
 import io.jmix.ui.component.*;
+import io.jmix.ui.component.LookupComponent;
 import io.jmix.ui.component.data.table.ContainerTableItems;
 import io.jmix.ui.export.ExportFormat;
 import io.jmix.ui.icon.Icons;
@@ -49,6 +50,7 @@ import javax.inject.Inject;
 import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static io.jmix.ui.export.ExportFormat.JSON;
@@ -145,7 +147,6 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
             Session session = metadata.getSession();
             selectedMeta = session.getClass(entityName);
             createEntitiesTable(selectedMeta);
-
             lookupBox.setVisible(false);
         } else {
             entitiesLookup.setOptionsMap(getEntitiesLookupFieldOptions());
@@ -154,18 +155,10 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         }
     }
 
-    //TODO Lookup component
-//    @Override
-//    public void setSelectHandler(Consumer lookupHandler) {
-//        super.setSelectHandler(lookupHandler);
-//
-//        setLookupComponent(entitiesTable);
-//
-//        Action selectAction = getAction(LOOKUP_SELECT_ACTION_ID);
-//        entitiesTable.setLookupSelectHandler(items ->
-//                selectAction.actionPerform(entitiesTable)
-//        );
-//    }
+    @Override
+    protected LookupComponent<Entity> getLookupComponent() {
+        return entitiesTable;
+    }
 
     protected Map<String, MetaClass> getEntitiesLookupFieldOptions() {
         Map<String, MetaClass> options = new TreeMap<>();
@@ -295,6 +288,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         entitiesTable.addStyleName("table-boolean-text");
 
         createFilter();
+        entitiesDl.load();
     }
 
     //TODO create filter component (Filter in Table/DataGrid #221)

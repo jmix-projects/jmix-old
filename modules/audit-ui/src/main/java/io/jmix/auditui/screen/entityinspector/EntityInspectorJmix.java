@@ -21,27 +21,35 @@ import io.jmix.core.common.util.ParamsMap;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
+import io.jmix.core.metamodel.model.Range;
 import io.jmix.core.security.EntityOp;
+import io.jmix.ui.Actions;
 import io.jmix.ui.Screens;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.UiProperties;
-import io.jmix.ui.action.AbstractAction;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.action.BaseAction;
+import io.jmix.ui.action.list.AddAction;
+import io.jmix.ui.action.picker.ClearAction;
+import io.jmix.ui.action.picker.LookupAction;
 import io.jmix.ui.component.*;
 import io.jmix.ui.component.data.ValueSource;
 import io.jmix.ui.component.data.table.ContainerTableItems;
 import io.jmix.ui.component.data.value.ContainerValueSource;
+import io.jmix.ui.icon.Icons;
+import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.model.*;
 import io.jmix.ui.screen.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static io.jmix.auditui.screen.entityinspector.EntityFormUtils.*;
+import static io.jmix.ui.component.Component.FULL_SIZE;
 import static io.jmix.ui.component.Window.COMMIT_ACTION_ID;
 
 @UiController("entityInspector.edit")
@@ -75,6 +83,10 @@ public class EntityInspectorJmix extends Screen {
     protected UiProperties uiProperties;
     @Autowired
     protected Screens screens;
+    @Autowired
+    protected Actions actions;
+    @Inject
+    protected Icons icons;
 
     @Autowired
     protected EntityStates entityStates;
@@ -90,6 +102,7 @@ public class EntityInspectorJmix extends Screen {
     protected Entity item;
     protected Boolean isNew = false;
     protected MetaClass meta;
+    protected String parentProperty;
 
     protected Boolean autocommit;
 
@@ -198,6 +211,7 @@ public class EntityInspectorJmix extends Screen {
     private void init(Map<String, Object> params) {
         dataContext = dataComponents.createDataContext();
         autocommit = params.get("autocommit") != null ? (Boolean) params.get("autocommit") : true;
+        parentProperty = (String) params.get("parentProperty");
     }
 
     private void setWindowCaption() {
@@ -321,13 +335,14 @@ public class EntityInspectorJmix extends Screen {
      */
     protected void addField(InstanceContainer container, Form form, MetaProperty metaProperty, boolean isReadonly) {
         MetaClass metaClass = container.getEntityMetaClass();
+        Range range = metaProperty.getRange();
+
         boolean isRequired = isRequired(metaProperty);
         if (!attrViewPermitted(metaClass, metaProperty))
             return;
 
-        if ((metaProperty.getType() == MetaProperty.Type.COMPOSITION
-                || metaProperty.getType() == MetaProperty.Type.ASSOCIATION)
-                && !entityOpPermitted(metaProperty.getRange().asClass(), EntityOp.READ))
+        if ((range.isClass())
+                && !entityOpPermitted(range.asClass(), EntityOp.READ))
             return;
 
         ValueSource valueSource = new ContainerValueSource<>(container, metaProperty.getName());
@@ -346,11 +361,26 @@ public class EntityInspectorJmix extends Screen {
             field = createBooleanField();
         }
 
+        if (range.isClass()) {
+            PickerField pickerField = uiComponents.create(PickerField.class);
+
+            LookupAction lookupAction = actions.create(LookupAction.class);
+            lookupAction.setScreenClass(EntityInspectorBrowser.class);
+            lookupAction.setScreenOptionsSupplier(() -> getPropertyLookupOptions(metaProperty));
+            lookupAction.setOpenMode(OpenMode.THIS_TAB);
+
+            pickerField.addAction(lookupAction);
+            pickerField.addAction(actions.create(ClearAction.class));
+
+            field = pickerField;
+        }
+
         field.setValueSource(valueSource);
         field.setCaption(getPropertyCaption(metaClass, metaProperty));
         field.setRequired(isRequired);
 
-        if (metaProperty.getRange().isClass() && !metadataTools.isEmbedded(metaProperty)) {
+        isReadonly = isReadonly || metaProperty.getName().equals(parentProperty);
+        if (range.isClass() && !metadataTools.isEmbedded(metaProperty)) {
             field.setEditable(metadataTools.isOwningSide(metaProperty) && !isReadonly);
         } else {
             field.setEditable(!isReadonly);
@@ -383,8 +413,7 @@ public class EntityInspectorJmix extends Screen {
 
         //vertical box for the table and its label
         BoxLayout vbox = uiComponents.create(VBoxLayout.class);
-        vbox.setWidth("100%");
-        vbox.setHeight("100%");
+        vbox.setSizeFull();
 //        CollectionLoader loader = dataComponents.createCollectionLoader();
         CollectionContainer container = dataComponents.createCollectionContainer(meta.getJavaClass(), parent, childMeta.getName());
 //        loader.setContainer(container);
@@ -432,7 +461,8 @@ public class EntityInspectorJmix extends Screen {
 //            table.setRowsCount(rowsCount);
 //        }
 
-        table.setWidth("100%");
+        table.setWidth(FULL_SIZE);
+        table.setHeight(FULL_SIZE);
 
         vbox.add(table);
         vbox.expand(table);
@@ -484,17 +514,51 @@ public class EntityInspectorJmix extends Screen {
      */
     protected ButtonsPanel createButtonsPanel(MetaProperty metaProperty,
                                               CollectionContainer container, Table table) {
-        MetaClass propertyMetaClass = metaProperty.getRange().asClass();
         ButtonsPanel propertyButtonsPanel = uiComponents.create(ButtonsPanel.class);
+
+        propertyButtonsPanel.add(createButton(table, container, metaProperty));
+        propertyButtonsPanel.add(addButton(table, container, metaProperty));
+        return propertyButtonsPanel;
+    }
+
+    private Button addButton(Table table, CollectionContainer container, MetaProperty metaProperty) {
+        Button addButton = uiComponents.create(Button.class);
+        AddAction addAction = createAddAction(table, metaProperty);
+        addButton.setAction(addAction);
+        table.addAction(addAction);
+        addButton.setIcon(icons.get(JmixIcon.ADD_ACTION));
+        return addButton;
+    }
+
+    private AddAction createAddAction(Table table, MetaProperty metaProperty) {
+        AddAction addAction = actions.create(AddAction.class);
+        addAction.setOpenMode(OpenMode.THIS_TAB);
+        addAction.setTarget(table);
+        addAction.setScreenClass(EntityInspectorBrowser.class);
+
+        addAction.setScreenOptionsSupplier(() -> getPropertyLookupOptions(metaProperty));
+        addAction.setShortcut(uiProperties.getTableAddShortcut());
+        return addAction;
+    }
+
+    protected Object getPropertyLookupOptions(MetaProperty metaProperty) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("entity", metaProperty.getRange().asClass().getName());
+        MetaProperty inverseProperty = metaProperty.getInverse();
+        if (inverseProperty != null) {
+            params.put("parentProperty", inverseProperty.getName());
+        }
+        return new MapScreenOptions(params);
+    }
+
+    private Button createButton(Table table, CollectionContainer container, MetaProperty metaProperty) {
         Button createButton = uiComponents.create(Button.class);
-        CreateAction createAction = new CreateAction(metaProperty, container, propertyMetaClass);
+        CreateAction createAction = new CreateAction(container, metaProperty);
         createButton.setAction(createAction);
         table.addAction(createAction);
         createButton.setCaption(messages.getMessage(EntityInspectorEditor.class, "create"));
-        createButton.setIcon("icons/create.png");
-
-        propertyButtonsPanel.add(createButton);
-        return propertyButtonsPanel;
+        createButton.setIcon(icons.get(JmixIcon.CREATE_ACTION));
+        return createButton;
     }
 
     public Entity getItem() {
@@ -504,18 +568,24 @@ public class EntityInspectorJmix extends Screen {
     /**
      * Opens entity inspector's editor to create entity
      */
-    protected class CreateAction extends AbstractAction {
+    protected class CreateAction extends io.jmix.ui.action.list.CreateAction {
 
         private CollectionContainer container;
         private MetaClass entityMeta;
         protected MetaProperty metaProperty;
 
-        protected CreateAction(MetaProperty metaProperty, CollectionContainer container, MetaClass metaClass) {
-            super("create");
+        protected CreateAction(CollectionContainer container, MetaProperty metaProperty) {
+            super();
             this.container = container;
-            this.entityMeta = metaClass;
+            this.entityMeta = metaProperty.getRange().asClass();
             this.metaProperty = metaProperty;
             setShortcut(uiProperties.getTableInsertShortcut());
+        }
+
+        //TODO handle security
+        @Override
+        protected boolean isPermitted() {
+            return true;
         }
 
         @Override
@@ -533,17 +603,18 @@ public class EntityInspectorJmix extends Screen {
                 editorParams.put("parentContainer", container);
             }
 
-            screens.create(EntityInspectorEditor.class, OPEN_TYPE, new MapScreenOptions(editorParams))
+            screens.create(EntityInspectorJmix.class, OPEN_TYPE, new MapScreenOptions(editorParams))
                     .show()
                     .addAfterCloseListener(afterCloseEvent -> {
                         if (COMMIT_ACTION_ID.equals(((StandardCloseAction) afterCloseEvent.getCloseAction()).getActionId())
                                 && metaProperty.getType() == MetaProperty.Type.ASSOCIATION) {
-                            EntityInspectorEditor screen = (EntityInspectorEditor) afterCloseEvent.getScreen();
+                            EntityInspectorJmix screen = (EntityInspectorJmix) afterCloseEvent.getScreen();
                             container.getMutableItems().add(screen.getItem());
                         }
                     });
 
         }
     }
+
 
 }

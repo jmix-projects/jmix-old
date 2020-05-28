@@ -102,4 +102,5 @@ public final class EntityFormUtils {
     public static boolean containsSeparator(String s) {
         return s.indexOf('\n') >= 0 || s.indexOf('\r') >= 0;
     }
+
 }
