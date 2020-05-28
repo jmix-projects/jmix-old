@@ -19,11 +19,17 @@ package io.jmix.auditui;
 import io.jmix.audit.JmixAuditConfiguration;
 import io.jmix.core.JmixCoreConfiguration;
 import io.jmix.core.annotation.JmixModule;
+import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
 import io.jmix.ui.JmixUiConfiguration;
+import io.jmix.ui.sys.UiControllersConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.util.Collections;
 
 @Configuration
 @ComponentScan
@@ -31,4 +37,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @JmixModule(dependsOn = {JmixCoreConfiguration.class, JmixAuditConfiguration.class, JmixUiConfiguration.class})
 @PropertySource(name = "io.jmix.auditui", value = "classpath:/io/jmix/auditui/module.properties")
 public class JmixAuditUiConfiguration {
+
+    @Bean("jmix_AuditUiConfiguration")
+    public UiControllersConfiguration screens(ApplicationContext applicationContext,
+                                              AnnotationScanMetadataReaderFactory metadataReaderFactory) {
+        UiControllersConfiguration uiControllers
+                = new UiControllersConfiguration(applicationContext, metadataReaderFactory);
+        uiControllers.setBasePackages(Collections.singletonList("io.jmix.auditui"));
+        return uiControllers;
+    }
+
 }

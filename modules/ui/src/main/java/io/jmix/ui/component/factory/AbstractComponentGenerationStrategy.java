@@ -51,6 +51,7 @@ public abstract class AbstractComponentGenerationStrategy implements ComponentGe
     public AbstractComponentGenerationStrategy(Messages messages,
                                                GuiActionSupport guiActionSupport) {
         this.messages = messages;
+        this.guiActionSupport = guiActionSupport;
     }
 
     protected Component createComponentInternal(ComponentGenerationContext context) {

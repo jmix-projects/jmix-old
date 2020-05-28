@@ -27,6 +27,7 @@ dependencies {
     api project(':modules:core')
     api project(':modules:audit')
     api project(':modules:ui')
+    api project(':modules:security')
 
     testImplementation 'org.springframework:spring-test'
     testImplementation 'org.spockframework:spock-core'
