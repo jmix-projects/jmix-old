@@ -26,8 +26,7 @@ public interface CubaLegacySettings {
     void applySettings(Settings settings);
 
     /**
-     * This method is called by the framework when closing the screen
-     * to save user settings if they have been changed.
+     * This method is called by the framework when closing the screen to save user settings if they have been changed.
      */
     void saveSettings();
 
@@ -41,4 +40,11 @@ public interface CubaLegacySettings {
      * This method is called by the framework on reset to defaults action
      */
     void deleteSettings();
+
+    /**
+     * Applies screen settings to data components.
+     *
+     * @param settings screen settings
+     */
+    void applyDataLoadingSettings(Settings settings);
 }

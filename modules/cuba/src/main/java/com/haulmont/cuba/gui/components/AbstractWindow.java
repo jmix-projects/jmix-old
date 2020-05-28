@@ -777,6 +777,14 @@ public class AbstractWindow extends Screen
         screenSettings.applySettings(this, settings);
     }
 
+    @Override
+    public void applyDataLoadingSettings(Settings settings) {
+        this.settings = settings;
+
+        ScreenSettings screenSettings = getBeanLocator().get(ScreenSettings.NAME);
+        screenSettings.applyDataLoadingSettings(this, settings);
+    }
+
     /**
      * This method is called when the screen is closed to save the screen settings to the database.
      */

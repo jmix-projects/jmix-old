@@ -30,8 +30,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan
-@ConfigurationPropertiesScan
 @EnableTransactionManagement
+@PropertySource(name = "io.jmix.ui.persistence", value = "classpath:/io/jmix/ui/persistence/module.properties")
 @JmixModule(dependsOn = {JmixCoreConfiguration.class, JmixDataConfiguration.class, JmixUiConfiguration.class})
 public class JmixUiPersistenceConfiguration {
 
