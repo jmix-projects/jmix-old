@@ -18,7 +18,6 @@ package test_support;
 
 import io.jmix.core.Stores;
 import io.jmix.core.annotation.JmixModule;
-import io.jmix.core.security.UserSessionSource;
 import io.jmix.data.impl.JmixEntityManagerFactoryBean;
 import io.jmix.data.impl.JmixTransactionManager;
 import io.jmix.data.impl.PersistenceConfigProcessor;
@@ -61,11 +60,6 @@ public class JmixUiPersistenceTestConfiguration {
     @Primary
     PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         return new JmixTransactionManager(Stores.MAIN, entityManagerFactory);
-    }
-
-    @Bean(UserSessionSource.NAME)
-    UserSessionSource userSessionSource() {
-        return new TestUserSessionSource();
     }
 
     @Bean(UiSettingsCache.NAME)

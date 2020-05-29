@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import io.jmix.ui.components.GroupBoxLayout
-import io.jmix.ui.components.ResizableTextArea
-import io.jmix.ui.components.SizeUnit
-import io.jmix.ui.components.SplitPanel
-import io.jmix.ui.components.VBoxLayout
+import io.jmix.ui.component.GroupBoxLayout
+import io.jmix.ui.component.ResizableTextArea
+import io.jmix.ui.component.SizeUnit
+import io.jmix.ui.component.SplitPanel
+import io.jmix.ui.component.VBoxLayout
 import io.jmix.ui.settings.component.GroupBoxSettings
 import io.jmix.ui.settings.component.ResizableTextAreaSettings
 import io.jmix.ui.settings.component.SettingsWrapperImpl

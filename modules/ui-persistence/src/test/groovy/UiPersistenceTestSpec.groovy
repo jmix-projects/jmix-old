@@ -16,6 +16,9 @@
 
 import io.jmix.core.BeanLocator
 import io.jmix.core.JmixCoreConfiguration
+import io.jmix.core.security.SecurityContextHelper
+import io.jmix.core.security.UserAuthentication
+import io.jmix.core.security.impl.CoreUser
 import io.jmix.data.JmixDataConfiguration
 import io.jmix.ui.JmixUiConfiguration
 import io.jmix.ui.UiComponents
@@ -52,6 +55,11 @@ class UiPersistenceTestSpec extends Specification {
 
     void setup() {
         reloadScreenSettings()
+
+        CoreUser user = new CoreUser("test_admin", "test_admin", "test_admin")
+        UserAuthentication authentication = new UserAuthentication(user, Collections.emptyList())
+        authentication.setLocale(Locale.US)
+        SecurityContextHelper.setAuthentication(authentication)
     }
 
     void cleanup() {
