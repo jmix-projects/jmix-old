@@ -25,7 +25,6 @@ import io.jmix.ui.component.Table;
 import io.jmix.ui.component.impl.WebComponentsHelper;
 import io.jmix.ui.component.presentation.action.PresentationActionsBuilder;
 import io.jmix.ui.presentation.PresentationsChangeListener;
-import io.jmix.ui.presentation.TablePresentations;
 import io.jmix.ui.presentation.model.TablePresentation;
 import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 import io.jmix.ui.sys.TestIdManager;
@@ -37,7 +36,7 @@ import java.util.*;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
-public class TablePresentationsLayout extends VerticalLayout {
+public class TablePresentations extends VerticalLayout {
 
     public static final String CUSTOM_STYLE_NAME_PREFIX = "cs";
 
@@ -61,7 +60,7 @@ public class TablePresentationsLayout extends VerticalLayout {
 
     protected PresentationActionsBuilder presentationActionsBuilder;
 
-    public TablePresentationsLayout(Table component, ComponentSettingsBinder settingsBinder) {
+    public TablePresentations(Table component, ComponentSettingsBinder settingsBinder) {
         this.table = component;
         this.messages = AppBeans.get(Messages.NAME);
 
@@ -79,7 +78,7 @@ public class TablePresentationsLayout extends VerticalLayout {
 
         table.getPresentations().addListener(new PresentationsChangeListener() {
             @Override
-            public void currentPresentationChanged(TablePresentations presentations, Object oldPresentationId) {
+            public void currentPresentationChanged(io.jmix.ui.presentation.TablePresentations presentations, Object oldPresentationId) {
                 table.getPresentations().commit();
                 if (presentationsMenuMap != null) {
                     // simple change current item
@@ -104,12 +103,12 @@ public class TablePresentationsLayout extends VerticalLayout {
             }
 
             @Override
-            public void presentationsSetChanged(TablePresentations presentations) {
+            public void presentationsSetChanged(io.jmix.ui.presentation.TablePresentations presentations) {
                 build();
             }
 
             @Override
-            public void defaultPresentationChanged(TablePresentations presentations, Object oldPresentationId) {
+            public void defaultPresentationChanged(io.jmix.ui.presentation.TablePresentations presentations, Object oldPresentationId) {
                 if (presentationsMenuMap != null) {
                     if (oldPresentationId != null) {
                         if (oldPresentationId instanceof TablePresentation)
@@ -229,7 +228,7 @@ public class TablePresentationsLayout extends VerticalLayout {
         menuBar.removeItems();
         presentationsMenuMap = new HashMap<>();
 
-        TablePresentations p = table.getPresentations();
+        io.jmix.ui.presentation.TablePresentations p = table.getPresentations();
 
         for (Object presId : p.getPresentationIds()) {
             MenuBar.MenuItem item = menuBar.addItem(

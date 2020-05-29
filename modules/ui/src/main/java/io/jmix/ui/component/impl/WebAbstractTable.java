@@ -56,11 +56,10 @@ import io.jmix.ui.component.data.aggregation.Aggregations;
 import io.jmix.ui.component.data.meta.ContainerDataUnit;
 import io.jmix.ui.component.data.meta.EmptyDataUnit;
 import io.jmix.ui.component.data.meta.EntityTableItems;
-import io.jmix.ui.component.presentation.TablePresentationsLayout;
+import io.jmix.ui.component.presentation.TablePresentations;
 import io.jmix.ui.component.table.*;
 import io.jmix.ui.icon.IconResolver;
 import io.jmix.ui.model.*;
-import io.jmix.ui.presentation.TablePresentations;
 import io.jmix.ui.presentation.model.TablePresentation;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.InstallTargetHandler;
@@ -182,7 +181,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     protected Map<Table.Column, String> aggregationCells = null;
 
     protected boolean usePresentations;
-    protected TablePresentations presentations;
+    protected io.jmix.ui.presentation.TablePresentations presentations;
 
     protected TableSettings defaultTableSettings;
     protected LegacySettingsConverter settingsConverter;
@@ -963,7 +962,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         component.setTabIndex(tabIndex);
     }
 
-    protected void setTablePresentationsLayout(TablePresentationsLayout tablePresentations) {
+    protected void setTablePresentationsLayout(TablePresentations tablePresentations) {
         component.setPresentationsLayout(tablePresentations);
     }
 
@@ -2613,7 +2612,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
 
     protected boolean handleSpecificVariables(Map<String, Object> variables) {
         if (isUsePresentations() && presentations != null) {
-            TablePresentations p = getPresentations();
+            io.jmix.ui.presentation.TablePresentations p = getPresentations();
 
             if (p.getCurrent() != null && p.isAutoSave(p.getCurrent()) && needUpdatePresentation(variables)) {
                 if (getFrame().getFrameOwner() instanceof CubaLegacySettings) {
@@ -2682,16 +2681,16 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     @Override
     public void loadPresentations() {
         if (isUsePresentations()) {
-            presentations = beanLocator.getPrototype(TablePresentations.NAME, this);
+            presentations = beanLocator.getPrototype(io.jmix.ui.presentation.TablePresentations.NAME, this);
 
-            setTablePresentationsLayout(new TablePresentationsLayout(this, getSettingsBinder()));
+            setTablePresentationsLayout(new TablePresentations(this, getSettingsBinder()));
         } else {
             throw new UnsupportedOperationException("Component doesn't use presentations");
         }
     }
 
     @Override
-    public TablePresentations getPresentations() {
+    public io.jmix.ui.presentation.TablePresentations getPresentations() {
         if (isUsePresentations()) {
             return presentations;
         } else {
