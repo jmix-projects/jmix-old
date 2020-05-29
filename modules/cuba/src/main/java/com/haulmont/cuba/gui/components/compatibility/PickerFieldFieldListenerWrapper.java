@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.component.compatibility;
+package com.haulmont.cuba.gui.components.compatibility;
 
+import com.haulmont.cuba.gui.components.PickerField;
 import io.jmix.core.Entity;
-import io.jmix.ui.component.PickerField;
 
 import java.util.function.Consumer;
 

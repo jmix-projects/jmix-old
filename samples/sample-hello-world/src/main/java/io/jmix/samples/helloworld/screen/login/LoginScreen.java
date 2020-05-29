@@ -25,7 +25,7 @@ import io.jmix.ui.Notifications;
 import io.jmix.ui.ScreenBuilders;
 import io.jmix.ui.UiProperties;
 import io.jmix.ui.action.Action;
-import io.jmix.ui.component.LookupField;
+import io.jmix.ui.component.ComboBox;
 import io.jmix.ui.component.PasswordField;
 import io.jmix.ui.component.TextField;
 import io.jmix.ui.navigation.Route;
@@ -55,7 +55,7 @@ public class LoginScreen extends Screen {
     protected PasswordField passwordField;
 
     @Autowired
-    protected LookupField<Locale> localesField;
+    protected ComboBox<Locale> localesField;
 
     @Autowired
     protected Notifications notifications;
