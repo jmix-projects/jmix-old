@@ -5,6 +5,7 @@ group = 'io.jmix.starter.standard'
 
 dependencies {
     api project(':starters:starter-standard-nowidgets')
+    api project(':starters:starter-ui-persistence')
 
     implementation project(':modules:ui-widgets-compiled')
     implementation project(':modules:ui-themes-compiled')
