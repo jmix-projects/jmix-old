@@ -59,7 +59,6 @@ allprojects {
                 }
             }
         } else {
-            mavenLocal()
             jcenter()
             maven { url "https://dl.bintray.com/cuba-platform/main" }
         }
