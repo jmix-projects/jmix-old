@@ -58,9 +58,9 @@ public class Role extends StandardEntity {
     @Composition
     private Set<Permission> permissions;
 
-    @InstanceName
-    public String getCaption(){
-        return String.format("%s [%s]",getLocName(),getName());
+    @InstanceName(relatedProperties = {"locName", "name"})
+    public String getCaption() {
+        return String.format("%s [%s]", getLocName(), getName());
     }
 
     public String getName() {

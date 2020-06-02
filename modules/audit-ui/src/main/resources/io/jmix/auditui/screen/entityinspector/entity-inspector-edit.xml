@@ -18,7 +18,7 @@
         caption=""
         messagesPack="io.jmix.auditui.screen.entityinspector">
     <actions>
-        <action id="windowCommitAndClose"/>
+        <action id="windowCommitAndClose" primary="true"/>
         <action id="windowClose"/>
     </actions>
     <layout expand="tablesTabSheet" spacing="true">
