@@ -178,7 +178,8 @@ public class EntityInspectorEditor extends StandardEditor {
             switch (metaProperty.getType()) {
                 case DATATYPE:
                 case ENUM:
-                    boolean includeId = primaryKeyProperty.equals(metaProperty)
+                    boolean includeId = primaryKeyProperty != null
+                            && primaryKeyProperty.equals(metaProperty)
                             && String.class.equals(metaProperty.getJavaType());
                     //skip system properties
                     if (metadataTools.isSystem(metaProperty) && !includeId) {
@@ -204,7 +205,7 @@ public class EntityInspectorEditor extends StandardEditor {
                             Entity propertyValue = EntityValues.getValue(item, metaProperty.getName());
                             propertyValue = dataContext.merge(propertyValue);
                             InstanceContainer embeddedContainer = dataComponents.createInstanceContainer(
-                                    item.getClass(), container, metaProperty.getName());
+                                    propertyValue.getClass(), container, metaProperty.getName());
                             embeddedContainer.setItem(propertyValue);
                             createForm(getPropertyCaption(metaClass, metaProperty), embeddedContainer);
                         } else {
@@ -229,31 +230,6 @@ public class EntityInspectorEditor extends StandardEditor {
             Entity item = metadata.create(meta);
             setEntityToEdit(item);
         }
-    }
-
-    /**
-     * Loads single item by id.
-     *
-     * @param meta      item's meta class
-     * @param id        item's id
-     * @param fetchPlan fetchPlan
-     * @return loaded item if found, null otherwise
-     */
-    protected Entity loadSingleItem(MetaClass meta, Object id, FetchPlan fetchPlan) {
-        String primaryKeyName = metadataTools.getPrimaryKeyName(meta);
-        if (primaryKeyName == null) {
-            throw new IllegalStateException(String.format("Entity %s has no primary key", meta.getName()));
-        }
-
-        LoadContext ctx = new LoadContext(meta);
-        ctx.setLoadDynamicAttributes(true);
-        ctx.setSoftDeletion(false);
-        ctx.setFetchPlan(fetchPlan);
-
-        String query = String.format("select e from %s e where e.%s = :id", meta.getName(), primaryKeyName);
-        LoadContext.Query q = ctx.setQueryString(query);
-        q.setParameter("id", id);
-        return dataManager.load(ctx);
     }
 
     /**
@@ -344,7 +320,7 @@ public class EntityInspectorEditor extends StandardEditor {
 
         Field field = (Field) uiComponentsGenerator.generate(componentContext);
 
-        if (requireTextArea(metaProperty, getEditedEntity(), MAX_TEXTFIELD_STRING_LENGTH)) {
+        if (requireTextArea(metaProperty, container.getItem(), MAX_TEXTFIELD_STRING_LENGTH)) {
             field = uiComponents.create(TextArea.NAME);
         }
 
