@@ -21,334 +21,214 @@ import io.jmix.core.common.util.ParamsMap;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.metamodel.model.Range;
-import io.jmix.core.metamodel.model.utils.InstanceUtils;
-import io.jmix.core.security.EntityAttrAccess;
 import io.jmix.core.security.EntityOp;
-import io.jmix.core.security.Security;
 import io.jmix.ui.*;
-import io.jmix.ui.action.AbstractAction;
 import io.jmix.ui.action.Action;
-import io.jmix.ui.action.BaseAction;
-import io.jmix.ui.action.ItemTrackingAction;
-import io.jmix.ui.action.list.AddAction;
-import io.jmix.ui.action.list.ExcludeAction;
-import io.jmix.ui.action.list.RemoveAction;
+import io.jmix.ui.action.list.*;
+import io.jmix.ui.action.picker.ClearAction;
+import io.jmix.ui.action.picker.LookupAction;
 import io.jmix.ui.component.*;
 import io.jmix.ui.component.data.ValueSource;
 import io.jmix.ui.component.data.table.ContainerTableItems;
 import io.jmix.ui.component.data.value.ContainerValueSource;
+import io.jmix.ui.icon.Icons;
+import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.model.*;
+import io.jmix.ui.model.impl.NoopDataContext;
 import io.jmix.ui.screen.*;
-import io.jmix.ui.sys.PersistenceHelper;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.inject.Inject;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import java.util.*;
 
-import static io.jmix.ui.component.Window.COMMIT_ACTION_ID;
+import static io.jmix.auditui.screen.entityinspector.EntityFormUtils.*;
+import static io.jmix.core.metamodel.model.MetaProperty.Type.ASSOCIATION;
+import static io.jmix.ui.component.Component.FULL_SIZE;
 
-//@UiController("entityInspector.edit")
-//@UiDescriptor("entity-inspector-edit.xml")
-public class EntityInspectorEditor extends Screen {
+@UiController("entityInspector.edit")
+@UiDescriptor("entity-inspector-edit.xml")
+public class EntityInspectorEditor extends StandardEditor {
 
+    public static final String PARENT_CONTEXT_PARAM = "parentContext";
+    public static final String PARENT_PROPERTY_PARAM = "parentProperty";
+
+    public static final int MAX_TEXTFIELD_STRING_LENGTH = 255;
     public static final int CAPTION_MAX_LENGTH = 100;
     public static final int MAX_TEXT_LENGTH = 50;
-
     public static final Screens.LaunchMode OPEN_TYPE = OpenMode.THIS_TAB;
-    public static final int MAX_TEXTFIELD_STRING_LENGTH = 255;
 
     @Autowired
     protected Metadata metadata;
     @Autowired
     protected MetadataTools metadataTools;
     @Autowired
-    protected InstanceNameProvider instanceNameProvider;
-    @Autowired
-    protected MessageTools messageTools;
-    @Autowired
-    protected Messages messages;
+    protected DataManager dataManager;
     @Autowired
     protected FetchPlanRepository fetchPlanRepository;
     @Autowired
-    protected Security security;
+    protected Messages messages;
     @Autowired
-    protected DataManager dataManager;
-    @Autowired
-    protected EntityStates entityStates;
-    @Autowired
-    protected UiProperties uiProperties;
-    @Autowired
-    protected UiComponentsGenerator uiComponentsGenerator;
-
-    @Autowired
-    protected BoxLayout buttonsBox;
-    @Autowired
-    protected BoxLayout contentPane;
-    @Autowired
-    protected BoxLayout runtimePane;
-    @Autowired
-    protected TabSheet tablesTabSheet;
-
+    protected MessageTools messageTools;
     @Autowired
     protected UiComponents uiComponents;
     @Autowired
+    protected UiComponentsGenerator uiComponentsGenerator;
+    @Autowired
     protected DataComponents dataComponents;
     @Autowired
-    protected Notifications notifications;
+    protected UiProperties uiProperties;
     @Autowired
     protected Screens screens;
-//    @Autowired
+    @Autowired
+    protected ScreenBuilders screenBuilders;
+    @Autowired
+    protected Actions actions;
+    @Inject
+    protected Icons icons;
+
+    @Autowired
+    protected EntityStates entityStates;
+
+    @Autowired
+    protected BoxLayout contentPane;
+
+    @Autowired
+    protected TabSheet tablesTabSheet;
+
+    private DataContext parentDataContext;
     private DataContext dataContext;
-//    @Autowired
-//    protected Configuration configuration;
-//    @Autowired
-//    protected ThemeConstants themeConstants;
 
-    @WindowParam(name = "item")
-    protected Entity item;
-
-    @WindowParam(name = "parent")
-    protected Entity parent;
-
-    @WindowParam(name = "parentProperty")
+    protected Boolean isNew = true;
     protected String parentProperty;
+    protected InstanceContainer container;
 
-    @WindowParam(name = "parentDs")
-    protected InstanceContainer parentDc;
-
-    @WindowParam(name = "datasource")
-    protected InstanceLoader dataLoader;
-
-    @WindowParam(name = "dataContainer")
-    protected InstanceContainer dataContainer;
-
-    protected MetaClass meta;
-    //    protected DsContextImpl dsContext;
-    protected Map<String, DataLoader> dataLoaders;
-
-    protected Boolean isNew;
-    protected Boolean autocommit;
-    protected Boolean showSystemFields;
-    protected Collection<Table> tables;
-
-    protected Collection<Field> reserveLineSeparatorFields;
-    //    protected RuntimePropsDatasource rDS;
-    protected CollectionLoader categoriesDl;
-
-    protected ButtonsPanel buttonsPanel;
-    protected Button commitButton;
-    protected Button cancelButton;
-    protected Form focusFieldGroup;
-    protected String focusFieldId;
-
-    public EntityInspectorEditor() {
-        dataLoaders = new HashMap<>();
-        tables = new LinkedList<>();
-        isNew = true;
-        autocommit = true;
-        showSystemFields = false;
-    }
+    protected Boolean autocommit = true;
 
     @Subscribe
     protected void onInit(InitEvent initEvent) {
-        Map<String, Object> params = new HashMap<>();
-        ScreenOptions options = initEvent.getOptions();
-        if (options instanceof MapScreenOptions) {
-            params = ((MapScreenOptions) options).getParams();
-        }
-
-        dataContext = dataComponents.createDataContext();
-
-        item = (Entity) params.get("item");
-        isNew = item == null || entityStates.isNew(item);
-        meta = item != null ? metadata.getClass(item) : metadata.getSession().getClass((String) params.get("metaClass"));
-        autocommit = params.get("autocommit") != null ? (Boolean) params.get("autocommit") : true;
-        showSystemFields = params.get("showSystemFields") != null ? (Boolean) params.get("showSystemFields") : false;
-
-        if (meta == null) {
-            throw new IllegalStateException("Entity or entity's MetaClass must be specified");
-        }
-
-        getWindow().setCaption(meta.getName());
-        initShortcuts();
-
-        FetchPlan fetchPlan = createView(meta);
-
-        //TODO DsContext
-//        dsContext = new DsContextImpl(dataManager);
-//        dsContext.setFrameContext(getDsContext().getFrameContext());
-//        setDsContext(dsContext);
-
-        //TODO replace to entity
-        boolean createRequest = item == null;
-        if (createRequest) {
-            item = metadata.create(meta);
-            setParentField(item, parentProperty, parent);
-            //TODO handle dynamic attributes
-//            if (item instanceof BaseGenericIdEntity) {
-//                ((BaseGenericIdEntity) item).setDynamicAttributes(new HashMap<>());
-//            }
+        if (initEvent.getOptions() instanceof MapScreenOptions) {
+            MapScreenOptions screenOptions = (MapScreenOptions) initEvent.getOptions();
+            Map<String, Object> params = screenOptions.getParams();
+            if (params.get(PARENT_CONTEXT_PARAM) != null) {
+                parentDataContext = (DataContext) params.get(PARENT_CONTEXT_PARAM);
+                dataContext = new NoopDataContext(getBeanLocator());
+            } else {
+                dataContext = dataComponents.createDataContext();
+            }
+            parentProperty = (String) params.get(PARENT_PROPERTY_PARAM);
+            createNewItemByMetaClass(params);
         } else {
-            //edit request
-            Object itemId = Id.of(item).getValue();
-            if (!isNew) {
-                item = loadSingleItem(meta, itemId, fetchPlan);
-            }
-            if (item == null) {
-                throw new EntityAccessException(meta, itemId);
-            }
+            dataContext = dataComponents.createDataContext();
         }
-        createEmbeddedFields(meta, item);
+        getScreenData().setDataContext(dataContext);
+    }
 
-        //TODO dependencies to dynamic attributes
-        boolean categorizedEntity = /*item instanceof Categorized;*/false;
+    @Subscribe
+    protected void beforeShow(BeforeShowEvent event) {
+        createForm(null, getEditedEntityContainer());
+        setWindowCaption();
+    }
 
-        if (dataLoader == null) {
-            dataContainer = parentDc != null ? dataComponents.createInstanceContainer(item.getClass(), parentDc, parentProperty)
-                    : dataComponents.createInstanceContainer(item.getClass());
-            dataContainer.setItem(item);
-            dataLoader = dataComponents.createInstanceLoader();
-            dataLoader.setFetchPlan(fetchPlan);
-            dataLoader.setContainer(dataContainer);
-            dataContext.merge(item);
-        }
-        //TODO handle dsContext
-//        dsContext.register(dataLoader);
-        createPropertyDatasources(dataContainer);
-        //TODO init runtime properties
-//        if (categorizedEntity) {
-//            initRuntimePropertiesDatasources(fetchPlan);
-//        }
-
-        dataLoader.load();
-
-        reserveLineSeparatorFields = new LinkedList<>();
-        createDataComponents(meta, item);
-        //TODO init runtime properties
-//        if (categorizedEntity) {
-//            createRuntimeDataComponents();
-//        }
-
-        dataContainer.setItem(item);
-
-        //TODO init runtime properties
-//        if (categorizedEntity) {
-//            rDS.refresh();
-//        }
-
-        createCommitButtons();
-        getWindow().setCaption(meta.getName());
-
-        if (focusFieldGroup != null && focusFieldId != null) {
-            //TODO focus field
-//            focusFieldGroup.focusField(focusFieldId);
+    @Subscribe
+    protected void afterCommit(AfterCommitChangesEvent event) {
+        if (parentDataContext != null) {
+            parentDataContext.merge(getEditedEntity());
         }
     }
 
-    public Entity getItem() {
-        return dataLoader.getContainer().getItem();
+    @Override
+    public void setEntityToEdit(Entity entity) {
+        super.setEntityToEdit(entity);
+        container = initMainContainer(entity);
+        isNew = entityStates.isNew(entity);
     }
 
-    protected void initShortcuts() {
-        Action commitAction = new BaseAction("commitAndClose")
-                .withCaption(messages.getMessage("actions.OkClose"))
-                .withShortcut(uiProperties.getCommitShortcut())
-                .withHandler(e ->
-                        commitAndClose()
-                );
-        getWindow().addAction(commitAction);
+    @Override
+    protected InstanceContainer getEditedEntityContainer() {
+        return container;
     }
 
-    protected void setParentField(Entity item, String parentProperty, Entity parent) {
-        if (parentProperty != null && parent != null && item != null) {
-            //TODO set parent property
-//            item.setValue(parentProperty, parent);
+    private InstanceContainer initMainContainer(Entity entity) {
+        InstanceContainer container = dataComponents.createInstanceContainer(entity.getClass());
+        if (!entityStates.isNew(entity)) {
+            InstanceLoader loader = dataComponents.createInstanceLoader();
+            loader.setFetchPlan(createView(metadata.getClass(entity)));
+            loader.setEntityId(EntityValues.getId(entity));
+            loader.setContainer(container);
+            loader.load();
         }
+        return container;
     }
 
-//    protected void createRuntimeDataComponents() {
-//        if (rDS != null && categoriesDl != null) {
-//            Map<String, Object> params = new HashMap<>();
-//            params.put("runtimeDs", rDS.getId());
-//            params.put("categoriesDs", categoriesDl.getId());
-//            params.put("fieldWidth", themeConstants.get("cuba.gui.EntityInspectorEditor.field.width"));
-//            params.put("borderVisible", Boolean.TRUE);
-//
-//            RuntimePropertiesFrame runtimePropertiesFrame = (RuntimePropertiesFrame) openFrame(runtimePane, "runtimePropertiesFrame", params);
-//            runtimePropertiesFrame.setFrame(this.getFrame());
-//            runtimePropertiesFrame.setMessagesPack("com.haulmont.cuba.gui.app.core.entityinspector");
-//            runtimePropertiesFrame.setCategoryFieldVisible(false);
-//
-//            runtimePropertiesFrame.setHeightAuto();
-//            runtimePropertiesFrame.setWidthFull();
-//
-//            runtimePane.add(runtimePropertiesFrame);
-//        }
-//    }
+    private void createForm(String caption, InstanceContainer container) {
+        MetaClass metaClass = container.getEntityMetaClass();
+        Entity item = getEditedEntity();
 
-//    protected void initRuntimePropertiesDatasources(View view) {
-//        rDS = new RuntimePropsDatasourceImpl(dsContext, dataManager, "rDS", dataLoader.getId(), null);
-//        MetaClass categoriesMeta = metadata.getSession().getClass(Category.class);
-//        categoriesDl = new CollectionDatasourceImpl();
-//        ViewProperty categoryProperty = view.getProperty("category");
-//        if (categoryProperty == null) {
-//            throw new IllegalArgumentException("Category property not found. Not a categorized entity?");
-//        }
-//        categoriesDl.setup(dsContext, dataManager, "categoriesDs", categoriesMeta, categoryProperty.getView());
-//        categoriesDl.setQuery(String.format("select c from sys$Category c where c.entityType='%s'", meta.getName()));
-//        categoriesDl.refresh();
-//        dsContext.register(rDS);
-//        dsContext.register(categoriesDl);
-//    }
+        Form form = uiComponents.create(Form.class);
+        if (caption != null) {
+            form.setCaption(caption);
+        }
 
-    /**
-     * Recursively instantiates the embedded properties.
-     * E.g. embedded properties of the embedded property will also be instantiated.
-     *
-     * @param metaClass meta class of the entity
-     * @param item      entity instance
-     */
-    protected void createEmbeddedFields(MetaClass metaClass, Entity item) {
+        contentPane.add(form);
+        MetaProperty primaryKeyProperty = metadataTools.getPrimaryKeyProperty(metaClass);
+
         for (MetaProperty metaProperty : metaClass.getProperties()) {
-            if (isEmbedded(metaProperty)) {
-                MetaClass embeddedMetaClass = metaProperty.getRange().asClass();
-                Entity embedded = EntityValues.getValue(item, metaProperty.getName());
-                if (embedded == null) {
-                    embedded = metadata.create(embeddedMetaClass);
-                    EntityValues.setValue(item, metaProperty.getName(), embedded);
-                }
-                createEmbeddedFields(embeddedMetaClass, embedded);
+            boolean isReadonly = metaProperty.isReadOnly();
+            switch (metaProperty.getType()) {
+                case DATATYPE:
+                case ENUM:
+                    boolean includeId = primaryKeyProperty.equals(metaProperty)
+                            && String.class.equals(metaProperty.getJavaType());
+                    //skip system properties
+                    if (metadataTools.isSystem(metaProperty) && !includeId) {
+                        continue;
+                    }
+                    if (metaProperty.getType() != MetaProperty.Type.ENUM
+                            && (isByteArray(metaProperty) || isUuid(metaProperty))) {
+                        continue;
+                    }
+
+                    if (includeId && !isNew) {
+                        isReadonly = true;
+                    }
+
+                    addField(container, form, metaProperty, isReadonly);
+                    break;
+                case COMPOSITION:
+                case ASSOCIATION:
+                    if (metaProperty.getRange().getCardinality().isMany()) {
+                        addTable(container, metaProperty);
+                    } else {
+                        if (isEmbedded(metaProperty)) {
+                            Entity propertyValue = EntityValues.getValue(item, metaProperty.getName());
+                            propertyValue = dataContext.merge(propertyValue);
+                            InstanceContainer embeddedContainer = dataComponents.createInstanceContainer(
+                                    item.getClass(), container, metaProperty.getName());
+                            embeddedContainer.setItem(propertyValue);
+                            createForm(getPropertyCaption(metaClass, metaProperty), embeddedContainer);
+                        } else {
+                            addField(container, form, metaProperty, isReadonly);
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }
 
-    /**
-     * Returns metaProperty of the referred entity annotated with either nullIndicatorAttributeName or
-     * nullIndicatorColumnName property.
-     *
-     * @param embeddedMetaProperty embedded property of the current entity
-     * @return property of the referred entity
-     */
-    protected MetaProperty getNullIndicatorProperty(MetaProperty embeddedMetaProperty) {
-        // Unsupported for EclipseLink ORM
-        return null;
+    private void setWindowCaption() {
+        MetaClass metaClass = metadata.getClass(getEditedEntity());
+        getWindow().setCaption(messages.getMessage(metaClass.getJavaClass(), metaClass.getName()));
     }
 
-    /**
-     * Checks if the property is embedded
-     *
-     * @param metaProperty meta property
-     * @return true if embedded, false otherwise
-     */
-    protected boolean isEmbedded(MetaProperty metaProperty) {
-        return metaProperty.getAnnotatedElement().isAnnotationPresent(javax.persistence.Embedded.class)
-                || metaProperty.getAnnotatedElement().isAnnotationPresent(javax.persistence.EmbeddedId.class);
+    private void createNewItemByMetaClass(Map<String, Object> params) {
+        if (params.get("metaClass") != null) {
+            MetaClass meta = (MetaClass) params.get("metaClass");
+            Entity item = metadata.create(meta);
+            setEntityToEdit(item);
+        }
     }
 
     /**
@@ -374,699 +254,6 @@ public class EntityInspectorEditor extends Screen {
         LoadContext.Query q = ctx.setQueryString(query);
         q.setParameter("id", id);
         return dataManager.load(ctx);
-    }
-
-    /**
-     * Creates components representing item data
-     * (fieldGroup, fieldGroups for embedded properties, tables for the referred entities)
-     *
-     * @param metaClass item meta class
-     */
-    protected void createDataComponents(MetaClass metaClass, Entity item) {
-        Form form = uiComponents.create(Form.class);
-        //TODO border
-//        form.setBorderVisible(true);
-
-        contentPane.add(form);
-//        form.setFrame(frame);
-        MetaProperty primaryKeyProperty = metadataTools.getPrimaryKeyProperty(metaClass);
-
-        List<Component> customFields = new ArrayList<>();
-        for (MetaProperty metaProperty : metaClass.getProperties()) {
-            boolean isRequired = isRequired(metaProperty);
-            boolean isReadonly = metaProperty.isReadOnly();
-            switch (metaProperty.getType()) {
-                case DATATYPE:
-                case ENUM:
-                    boolean includeId = primaryKeyProperty.equals(metaProperty)
-                            && String.class.equals(metaProperty.getJavaType());
-                    //skip system properties
-                    if (metadataTools.isSystem(metaProperty) && !showSystemFields && !includeId) {
-                        continue;
-                    }
-                    if (metaProperty.getType() != MetaProperty.Type.ENUM
-                            && (isByteArray(metaProperty) || isUuid(metaProperty))) {
-                        continue;
-                    }
-
-                    if (includeId && !isNew) {
-                        isReadonly = true;
-                    }
-
-                    Range range = metaProperty.getRange();
-                    if (range.isDatatype() && range.asDatatype().getJavaClass().equals(Boolean.class)) {
-                        addBooleanCustomField(metaClass, metaProperty, item, form, isRequired, isReadonly);
-                        break;
-                    }
-
-                    addField(dataContainer, metaClass, metaProperty, item, form, isRequired, false, isReadonly, customFields);
-                    break;
-                case COMPOSITION:
-                case ASSOCIATION:
-                    if (metaProperty.getRange().getCardinality().isMany()) {
-                        addTable(metaClass, metaProperty);
-                    } else {
-                        if (isEmbedded(metaProperty)) {
-                            Entity propertyValue = EntityValues.getValue(item, metaProperty.getName());
-                            dataContext.merge(propertyValue);
-                            addEmbeddedFieldGroup(metaProperty, "", propertyValue,
-                                    (!metaProperty.getAnnotatedElement().isAnnotationPresent(javax.persistence.EmbeddedId.class)
-                                            || entityStates.isNew(item)));
-                        } else {
-                            addField(dataContainer, metaClass, metaProperty, item, form, isRequired, true, isReadonly, customFields);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        createCustomFields(form, customFields);
-    }
-
-    /**
-     * Creates field group for the embedded property
-     *
-     * @param embeddedMetaProperty meta property of the embedded property
-     * @param embeddedItem         current value of the embedded property
-     */
-    protected void addEmbeddedFieldGroup(MetaProperty embeddedMetaProperty, String fqnPrefix, Entity embeddedItem, boolean editable) {
-        String fqn = fqnPrefix.isEmpty() ? embeddedMetaProperty.getName()
-                : fqnPrefix + "." + embeddedMetaProperty.getName();
-        DataLoader embedDs = dataLoaders.get(fqn);
-        if (embedDs == null) {
-            throw new IllegalStateException(String.format("Datasource %s for property %s not found", fqn,
-                    embeddedMetaProperty.getName()));
-        }
-        Form fieldGroup = uiComponents.create(Form.class);
-        fieldGroup.setCaption(getPropertyCaption(embedDs.getContainer().getEntityMetaClass(), embeddedMetaProperty));
-
-        contentPane.add(fieldGroup);
-
-        fieldGroup.setEditable(editable);
-
-        MetaClass embeddableMetaClass = embeddedMetaProperty.getRange().asClass();
-        Collection<Component> customFields = new LinkedList<>();
-        MetaProperty nullIndicatorProperty = getNullIndicatorProperty(embeddedMetaProperty);
-
-        List<String> dateTimeFields = new ArrayList<>();
-
-        for (MetaProperty metaProperty : embeddableMetaClass.getProperties()) {
-            boolean isRequired = isRequired(metaProperty) || metaProperty.equals(nullIndicatorProperty);
-            boolean isReadonly = metaProperty.isReadOnly();
-
-            if (metaProperty.getType() == MetaProperty.Type.DATATYPE) {
-                if (metaProperty.getRange().asDatatype().getJavaClass().equals(Date.class)) {
-                    dateTimeFields.add(metaProperty.getName());
-                }
-            }
-
-            switch (metaProperty.getType()) {
-                case DATATYPE:
-                case ENUM:
-                    //skip system properties
-                    if (metadataTools.isSystem(metaProperty) && !showSystemFields) {
-                        continue;
-                    }
-                    if (metaProperty.getType() != MetaProperty.Type.ENUM
-                            && (isByteArray(metaProperty) || isUuid(metaProperty))) {
-                        continue;
-                    }
-                    addField(embedDs.getContainer(), embeddableMetaClass, metaProperty, embeddedItem, fieldGroup, isRequired, false, isReadonly, customFields);
-                    break;
-
-                case COMPOSITION:
-                case ASSOCIATION:
-                    if (metaProperty.getRange().getCardinality().isMany()) {
-                        throw new IllegalStateException("tables for the embeddable entities are not supported");
-                    } else {
-                        if (isEmbedded(metaProperty)) {
-                            Entity propertyValue = EntityValues.getValue(embeddedItem, metaProperty.getName());
-                            addEmbeddedFieldGroup(metaProperty, fqn, propertyValue, editable);
-                        } else {
-                            addField(embedDs.getContainer(), embeddableMetaClass, metaProperty, embeddedItem, fieldGroup, isRequired, true, isReadonly, customFields);
-                        }
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        customFields.forEach(field -> fieldGroup.add(field));
-
-        for (String dateTimeField : dateTimeFields) {
-            Component field = fieldGroup.getComponent(dateTimeField);
-            if (field != null) {
-                ((DateField) field).setResolution(DateField.Resolution.SEC);
-            }
-        }
-    }
-
-    protected boolean isByteArray(MetaProperty metaProperty) {
-        return metaProperty.getRange().asDatatype().getJavaClass().equals(byte[].class);
-    }
-
-    protected boolean isUuid(MetaProperty metaProperty) {
-        return metaProperty.getRange().asDatatype().getJavaClass().equals(UUID.class);
-    }
-
-    protected boolean isRequired(MetaProperty metaProperty) {
-        if (metaProperty.isMandatory())
-            return true;
-
-        ManyToOne many2One = metaProperty.getAnnotatedElement().getAnnotation(ManyToOne.class);
-        if (many2One != null && !many2One.optional())
-            return true;
-
-        OneToOne one2one = metaProperty.getAnnotatedElement().getAnnotation(OneToOne.class);
-        return one2one != null && !one2one.optional();
-    }
-
-    /**
-     * Creates and registers in dsContext property datasource for each of the entity non-datatype
-     * and non-enum property
-     *
-     * @param masterDs master datasource
-     */
-    protected void createPropertyDatasources(InstanceContainer masterDs) {
-        for (MetaProperty metaProperty : meta.getProperties()) {
-            Range range = metaProperty.getRange();
-            if (range.isClass()) {
-                MetaClass propertyClass = range.asClass();
-                switch (metaProperty.getType()) {
-                    case COMPOSITION:
-                    case ASSOCIATION:
-                        DataLoader propertyDs;
-                        if (range.getCardinality().isMany()) {
-                            CollectionLoader loader = dataComponents.createCollectionLoader();
-                            loader.setLoadDelegate(loadContext -> EntityValues.getValue(masterDs.getItem(), metaProperty.getName()));
-                            CollectionContainer container = dataComponents.createCollectionContainer(
-                                    propertyClass.getJavaClass(), masterDs, metaProperty.getName());
-                            loader.setContainer(container);
-                            propertyDs = loader;
-                        } else {
-                            InstanceLoader loader = dataComponents.createInstanceLoader();
-                            loader.setLoadDelegate(o -> EntityValues.getValue(masterDs.getItem(), metaProperty.getName()));
-                            InstanceContainer container = dataComponents.createInstanceContainer(
-                                    propertyClass.getJavaClass(), masterDs, metaProperty.getName());
-                            loader.setContainer(container);
-                            propertyDs = loader;
-                        }
-                        if (isEmbedded(metaProperty)) {
-                            createNestedEmbeddedDatasources(range.asClass(), metaProperty.getName(), propertyDs);
-                        }
-                        dataLoaders.put(metaProperty.getName(), propertyDs);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
-
-    protected void createNestedEmbeddedDatasources(MetaClass metaClass, String fqnPrefix, DataLoader masterDs) {
-        for (MetaProperty metaProperty : metaClass.getProperties()) {
-            if (MetaProperty.Type.ASSOCIATION == metaProperty.getType()
-                    || MetaProperty.Type.COMPOSITION == metaProperty.getType()) {
-                if (isEmbedded(metaProperty)) {
-                    String fqn = fqnPrefix + "." + metaProperty.getName();
-                    MetaClass propertyMetaClass = metaProperty.getRange().asClass();
-                    InstanceLoader loader = dataComponents.createInstanceLoader();
-                    InstanceContainer container = dataComponents.createInstanceContainer(propertyMetaClass.getJavaClass(), masterDs.getContainer(), metaProperty.getName());
-                    loader.setContainer(container);
-                    createNestedEmbeddedDatasources(propertyMetaClass, fqn, loader);
-                    dataLoaders.put(fqn, loader);
-                }
-            }
-        }
-    }
-
-    protected void createCommitButtons() {
-        buttonsPanel = uiComponents.create(ButtonsPanel.class);
-        commitButton = uiComponents.create(Button.class);
-        commitButton.setIcon("icons/ok.png");
-        commitButton.setCaption(messages.getMessage(EntityInspectorEditor.class, "commit"));
-        commitButton.setAction(new CommitAction());
-        cancelButton = uiComponents.create(Button.class);
-        cancelButton.setIcon("icons/cancel.png");
-        cancelButton.setCaption(messages.getMessage(EntityInspectorEditor.class, "cancel"));
-        cancelButton.setAction(new CancelAction());
-        buttonsPanel.add(commitButton);
-        buttonsPanel.add(cancelButton);
-        buttonsBox.add(buttonsPanel);
-    }
-
-    /**
-     * Adds field to the specified field group.
-     * If the field should be custom, adds it to the specified customFields collection
-     * which can be used later to create fieldGenerators
-     *
-     * @param metaProperty meta property of the item's property which field is creating
-     * @param item         entity instance containing given property
-     * @param form         field group to which created field will be added
-     * @param customFields if the field is custom it will be added to this collection
-     * @param required     true if the field is required
-     * @param custom       true if the field is custom
-     */
-    protected void addField(InstanceContainer container, MetaClass metaClass, MetaProperty metaProperty, Entity item,
-                            Form form, boolean required, boolean custom, boolean readOnly,
-                            Collection<Component> customFields) {
-        metaClass = container.getEntityMetaClass();
-        if (!attrViewPermitted(metaClass, metaProperty))
-            return;
-
-        if ((metaProperty.getType() == MetaProperty.Type.COMPOSITION
-                || metaProperty.getType() == MetaProperty.Type.ASSOCIATION)
-                && !entityOpPermitted(metaProperty.getRange().asClass(), EntityOp.READ))
-            return;
-
-        ValueSource valueSource = new ContainerValueSource<>(container, metaProperty.getName());
-
-        ComponentGenerationContext componentContext =
-                new ComponentGenerationContext(metaClass, metaProperty.getName());
-        componentContext.setValueSource(valueSource);
-
-        Field field = (Field) uiComponentsGenerator.generate(componentContext);
-
-        field.setCaption(getPropertyCaption(metaClass, metaProperty));
-        field.setRequired(required);
-
-        if (metaProperty.getRange().isClass() && !metadataTools.isEmbedded(metaProperty)) {
-            field.setEditable(metadataTools.isOwningSide(metaProperty) && !readOnly);
-        } else {
-            field.setEditable(!readOnly);
-        }
-
-        field.setWidth("400px");
-
-        if (requireTextArea(metaProperty, item)) {
-            Element root = DocumentHelper.createElement("textArea");
-            root.addAttribute("rows", "3");
-            //TODO Text area
-//            field.setXmlDescriptor(root);
-        }
-
-        if (focusFieldId == null && !readOnly) {
-            focusFieldId = field.getId();
-            focusFieldGroup = form;
-        }
-
-        if (required) {
-            field.setRequiredMessage(messageTools.getDefaultRequiredMessage(metaClass, metaProperty.getName()));
-        }
-        form.add(field);
-        if (custom)
-            customFields.add(field);
-    }
-
-
-    /**
-     * Adds LookupField with boolean values instead of CheckBox that can't display null value.
-     *
-     * @param metaClass    meta property of the item's property which field is creating
-     * @param metaProperty meta property of the item's property which field is creating
-     * @param item         entity instance containing given property
-     * @param form         field group to which created field will be added
-     * @param required     true if the field is required
-     * @param readOnly     false if field should be editable
-     */
-    protected void addBooleanCustomField(MetaClass metaClass, MetaProperty metaProperty, Entity item,
-                                         Form form, boolean required, boolean readOnly) {
-        if (!attrViewPermitted(metaClass, metaProperty)) {
-            return;
-        }
-
-        LookupField field = uiComponents.create(LookupField.NAME);
-        String caption = getPropertyCaption(dataContainer.getEntityMetaClass(), metaProperty);
-        field.setCaption(caption);
-        field.setEditable(!readOnly);
-        field.setRequired(required);
-        //TODO add ds
-//        field.setDatasource(dataLoader, metaProperty.getName());
-        field.setOptionsMap(ParamsMap.of(
-                messages.getMessage("trueString"), Boolean.TRUE,
-                messages.getMessage("falseString"), Boolean.FALSE));
-        field.setTextInputAllowed(false);
-
-        if (!PersistenceHelper.isNew(item)) {
-            MetaPropertyPath metaPropertyPath = metaClass.getPropertyPath(metaProperty.getName());
-            Object value = InstanceUtils.getValueEx(item, metaPropertyPath.getPath());
-            field.setValue(value);
-        }
-
-        field.setWidth("400px");
-        form.add(field);
-    }
-
-    /**
-     * @param metaProperty meta property
-     * @param item         entity containing property of the given meta property
-     * @return true if property require text area component; that is if it either too long or contains line separators
-     */
-    protected boolean requireTextArea(MetaProperty metaProperty, Entity item) {
-        if (!String.class.equals(metaProperty.getJavaType())) {
-            return false;
-        }
-
-        Integer textLength = (Integer) metaProperty.getAnnotations().get("length");
-        boolean isLong = textLength == null || textLength > MAX_TEXTFIELD_STRING_LENGTH;
-
-        Object value = EntityValues.getValue(item, metaProperty.getName());
-        boolean isContainsSeparator = value != null && containsSeparator((String) value);
-
-        return isLong || isContainsSeparator;
-    }
-
-    protected boolean containsSeparator(String s) {
-        return s.indexOf('\n') >= 0 || s.indexOf('\r') >= 0;
-    }
-
-    /**
-     * Checks if specified property is a reference to entity's parent entity.
-     * Parent entity can be specified during creating of this screen.
-     *
-     * @param metaProperty meta property
-     * @return true if property references to a parent entity
-     */
-    protected boolean isParentProperty(MetaProperty metaProperty) {
-        return parentProperty != null && metaProperty.getName().equals(parentProperty);
-    }
-
-    /**
-     * Creates custom fields and adds them to the form
-     */
-    protected void createCustomFields(Form form, Collection<Component> customFields) {
-        //TODO check custom fields
-//        for (Component field : customFields) {
-//            //custom field generator creates an pickerField
-//
-//                MetaProperty metaProperty = datasource.getMetaClass().getPropertyNN(propertyId);
-//                MetaClass propertyMeta = metaProperty.getRange().asClass();
-//
-//                PickerField pickerField = uiComponents.create(PickerField.class);
-//                String caption = getPropertyCaption(datasource.getMetaClass(), metaProperty);
-//                pickerField.setCaption(caption);
-//                pickerField.setMetaClass(propertyMeta);
-//                pickerField.setWidth("400px");
-//
-//                PickerField.LookupAction lookupAction = pickerField.addLookupAction();
-//                //forwards lookup to the EntityInspectorBrowse window
-//                lookupAction.setLookupScreen(EntityInspectorBrowse.SCREEN_NAME);
-//                lookupAction.setLookupScreenOpenType(OPEN_TYPE);
-//                lookupAction.setLookupScreenParams(ParamsMap.of("entity", propertyMeta.getName()));
-//
-//                pickerField.addClearAction();
-//                //don't lets user to change parent
-//                if (isParentProperty(metaProperty)) {
-//                    //set parent item if it has been retrieved
-//                    if (parent != null) {
-//                        if (parent.toString() == null) {
-//                            initNamePatternFields(parent);
-//                        }
-//                        pickerField.setValue(parent);
-//                    }
-//                    pickerField.setEditable(false);
-//                }
-//                pickerField.setDatasource(datasource, propertyId);
-//                form.add(pickerField);
-//        }
-    }
-
-    /**
-     * Tries to initialize entity fields included in entity name pattern by default values
-     *
-     * @param entity instance
-     */
-    protected void initNamePatternFields(Entity entity) {
-        Collection<MetaProperty> properties = metadataTools.getInstanceNameRelatedProperties(metadata.getClass(entity));
-        for (MetaProperty property : properties) {
-            if (EntityValues.getValue(entity, property.getName()) == null
-                    && property.getType() == MetaProperty.Type.DATATYPE) {
-                try {
-                    EntityValues.setValue(entity, property.getName(), property.getJavaType().newInstance());
-                } catch (InstantiationException | IllegalAccessException e) {
-                    throw new RuntimeException("Unable to set value of name pattern field", e);
-                }
-            }
-        }
-    }
-
-    protected String getPropertyCaption(MetaClass metaClass, MetaProperty metaProperty) {
-        String caption = messageTools.getPropertyCaption(metaClass, metaProperty.getName());
-        if (caption.length() < CAPTION_MAX_LENGTH)
-            return caption;
-        else
-            return caption.substring(0, CAPTION_MAX_LENGTH);
-    }
-
-    /**
-     * Creates a table for the entities in ONE_TO_MANY or MANY_TO_MANY relation with the current one
-     */
-    protected void addTable(MetaClass metaClass, MetaProperty childMeta) {
-        MetaClass meta = childMeta.getRange().asClass();
-
-        //don't show empty table if the user don't have permissions on the attribute or the entity
-        if (!attrViewPermitted(metaClass, childMeta.getName()) ||
-                !entityOpPermitted(meta, EntityOp.READ)) {
-            return;
-        }
-
-        //don't show table on new master item, because an exception occurred on safe new item in table
-        if (isNew && childMeta.getType().equals(MetaProperty.Type.ASSOCIATION)) {
-            return;
-        }
-
-        //vertical box for the table and its label
-        BoxLayout vbox = uiComponents.create(VBoxLayout.class);
-        vbox.setWidth("100%");
-        CollectionLoader propertyDs = (CollectionLoader) dataLoaders.get(childMeta.getName());
-
-        Table<?> table = uiComponents.create(Table.NAME);
-        table.setMultiSelect(true);
-
-        //place non-system properties columns first
-        List<Table.Column> nonSystemPropertyColumns = new ArrayList<>();
-        List<Table.Column> systemPropertyColumns = new ArrayList<>();
-        for (MetaProperty metaProperty : meta.getProperties()) {
-            if (metaProperty.getRange().isClass() || isRelatedToNonLocalProperty(metaProperty))
-                continue; // because we use local views
-            Table.Column column = new Table.Column(meta.getPropertyPath(metaProperty.getName()));
-            if (!metadataTools.isSystem(metaProperty)) {
-                column.setCaption(getPropertyCaption(meta, metaProperty));
-                nonSystemPropertyColumns.add(column);
-            } else {
-                column.setCaption(metaProperty.getName());
-                systemPropertyColumns.add(column);
-            }
-            if (metaProperty.getJavaType().equals(String.class)) {
-                column.setMaxTextLength(MAX_TEXT_LENGTH);
-            }
-        }
-        for (Table.Column column : nonSystemPropertyColumns) {
-            table.addColumn(column);
-        }
-
-        for (Table.Column column : systemPropertyColumns) {
-            table.addColumn(column);
-        }
-
-        //set datasource so we could create a buttons panel
-        table.setItems(new ContainerTableItems(propertyDs.getContainer()));
-
-        //refresh ds to read ds size
-        propertyDs.load();
-        ButtonsPanel propertyButtonsPanel = createButtonsPanel(childMeta, propertyDs, table);
-        table.setButtonsPanel(propertyButtonsPanel);
-
-        //TODO supports paging
-//        if (propertyDs instanceof CollectionDatasource.SupportsPaging) {
-//            RowsCount rowsCount = uiComponents.create(RowsCount.class);
-//            rowsCount.setDatasource(propertyDs);
-//            table.setRowsCount(rowsCount);
-//        }
-
-        table.setWidth("100%");
-
-        //TODO theme constants
-//        vbox.setHeight(themeConstants.get("cuba.gui.EntityInspectorEditor.tableContainer.height"));
-        vbox.add(table);
-        vbox.expand(table);
-        vbox.setMargin(true);
-
-        //TODO tabsheet
-        TabSheet.Tab tab = tablesTabSheet.addTab(childMeta.toString(), vbox);
-        tab.setCaption(getPropertyCaption(metaClass, childMeta));
-        tables.add(table);
-    }
-
-    /**
-     * Determine whether the given metaProperty relates to at least one non local property
-     */
-    protected boolean isRelatedToNonLocalProperty(MetaProperty metaProperty) {
-        MetaClass metaClass = metaProperty.getDomain();
-        for (String relatedProperty : metadataTools.getRelatedProperties(metaProperty)) {
-            //noinspection ConstantConditions
-            if (metaClass.getProperty(relatedProperty).getRange().isClass()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Creates a buttons panel managing table's content.
-     *
-     * @param metaProperty property representing table's data
-     * @param propertyDs   property's Datasource (CollectionPropertyDatasource usually)
-     * @param table        table
-     * @return buttons panel
-     */
-    protected ButtonsPanel createButtonsPanel(MetaProperty metaProperty,
-                                              CollectionLoader propertyDs, Table table) {
-        MetaClass propertyMetaClass = metaProperty.getRange().asClass();
-        ButtonsPanel propertyButtonsPanel = uiComponents.create(ButtonsPanel.class);
-
-        Button createButton = uiComponents.create(Button.class);
-        CreateAction createAction = new CreateAction(metaProperty, propertyDs.getContainer(), propertyMetaClass);
-        createButton.setAction(createAction);
-        table.addAction(createAction);
-        createButton.setCaption(messages.getMessage(EntityInspectorEditor.class, "create"));
-        createButton.setIcon("icons/create.png");
-
-        Button addButton = uiComponents.create(Button.class);
-        AddAction addAction = createAddAction(metaProperty, propertyDs.getContainer(), table, propertyMetaClass);
-        table.addAction(addAction);
-        addButton.setAction(addAction);
-        addButton.setCaption(messages.getMessage(EntityInspectorEditor.class, "add"));
-        addButton.setIcon("icons/add.png");
-
-        Button editButton = uiComponents.create(Button.class);
-        EditAction editAction = new EditAction(metaProperty, table, propertyDs.getContainer());
-        editButton.setAction(editAction);
-        editButton.setCaption(messages.getMessage(EntityInspectorEditor.class, "edit"));
-        editButton.setIcon("icons/edit.png");
-        table.addAction(editAction);
-        table.setItemClickAction(editAction);
-        table.setEnterPressAction(editAction);
-
-        Action removeAction = createRemoveAction(metaProperty, table);
-        Button removeButton = uiComponents.create(Button.class);
-        removeButton.setAction(removeAction);
-        table.addAction(removeAction);
-        removeButton.setCaption(messages.getMessage(EntityInspectorEditor.class, "remove"));
-        removeButton.setIcon("icons/remove.png");
-
-        propertyButtonsPanel.add(createButton);
-        propertyButtonsPanel.add(addButton);
-        propertyButtonsPanel.add(editButton);
-        propertyButtonsPanel.add(removeButton);
-        return propertyButtonsPanel;
-    }
-
-    protected AddAction createAddAction(MetaProperty metaProperty, CollectionContainer propertyDs,
-                                        Table table, MetaClass propertyMetaClass) {
-        //TODO handler
-        Window.Lookup.Handler addHandler = createAddHandler(metaProperty, propertyDs);
-        AddAction addAction = new AddAction() {
-            //TODO handle security
-            @Override
-            protected boolean isPermitted() {
-                return true;
-            }
-        };
-        addAction.setTarget(table);
-        addAction.setOpenMode(OpenMode.THIS_TAB);
-        addAction.setScreenClass(EntityInspectorBrowser.class);
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("entity", propertyMetaClass.getName());
-        MetaProperty inverseProperty = metaProperty.getInverse();
-        if (inverseProperty != null)
-            params.put("parentProperty", inverseProperty.getName());
-        //TODO handleParams
-//        addAction.setWindowParams(params);
-        addAction.setShortcut(uiProperties.getTableAddShortcut());
-        return addAction;
-    }
-
-    @SuppressWarnings("unchecked")
-    //TODO replace lookup handler
-    protected Window.Lookup.Handler createAddHandler(final MetaProperty metaProperty, final CollectionContainer propertyDs) {
-        Window.Lookup.Handler result = items -> {
-            for (Object item : items) {
-                Entity entity = (Entity) item;
-                if (!propertyDs.getItems().contains(entity)) {
-                    MetaProperty inverseProperty = metaProperty.getInverse();
-                    if (inverseProperty != null) {
-                        if (!inverseProperty.getRange().getCardinality().isMany()) {
-                            //set currently editing item to the child's parent property
-                            EntityValues.setValue(entity, inverseProperty.getName(), dataContainer.getItem());
-                            propertyDs.getMutableItems().add(entity);
-                        } else {
-                            Collection properties = EntityValues.getValue(entity, inverseProperty.getName());
-                            if (properties != null) {
-                                properties.add(dataContainer.getItem());
-                                propertyDs.getMutableItems().add(entity);
-                            }
-                        }
-                    }
-                }
-
-                propertyDs.getMutableItems().add(entity);
-            }
-        };
-
-        return result;
-    }
-
-    public void commitAndClose() {
-        try {
-            //TODO handle commit
-//            validate();
-            dataContext.commit();
-            close(WINDOW_COMMIT_AND_CLOSE_ACTION);
-        } catch (ValidationException e) {
-            notifications.create(Notifications.NotificationType.TRAY)
-                    .withCaption("Validation error")
-                    .withDescription(e.getMessage())
-                    .show();
-        }
-    }
-
-    /**
-     * Creates either Remove or Exclude action depending on property type
-     */
-    protected Action.HasTarget createRemoveAction(MetaProperty metaProperty, Table table) {
-        Action.HasTarget result;
-        switch (metaProperty.getType()) {
-            case COMPOSITION:
-                result = new RemoveAction() {
-                    //TODO handle security
-                    @Override
-                    protected boolean isPermitted() {
-                        return true;
-                    }
-                };
-                result.setTarget(table);
-                break;
-            case ASSOCIATION:
-                result = new ExcludeAction() {
-                    //TODO handle security
-                    @Override
-                    protected boolean isPermitted() {
-                        return true;
-                    }
-                };
-                result.setTarget(table);
-                result.setShortcut(uiProperties.getTableRemoveShortcut());
-                break;
-            default:
-                throw new IllegalArgumentException("property must contain an entity");
-        }
-
-        return result;
     }
 
     /**
@@ -1129,137 +316,328 @@ public class EntityInspectorEditor extends Screen {
         return embeddedViewWithRelations;
     }
 
-    protected class CommitAction extends AbstractAction {
+    /**
+     * Adds field to the specified field group.
+     * If the field should be custom, adds it to the specified customFields collection
+     * which can be used later to create fieldGenerators
+     *
+     * @param metaProperty meta property of the item's property which field is creating
+     * @param form         field group to which created field will be added
+     */
+    protected void addField(InstanceContainer container, Form form, MetaProperty metaProperty, boolean isReadonly) {
+        MetaClass metaClass = container.getEntityMetaClass();
+        Range range = metaProperty.getRange();
 
-        protected CommitAction() {
-            super("commit", Status.PRIMARY);
+        boolean isRequired = isRequired(metaProperty);
+        if (!attrViewPermitted(metaClass, metaProperty))
+            return;
+
+        if ((range.isClass())
+                && !entityOpPermitted(range.asClass(), EntityOp.READ))
+            return;
+
+        ValueSource valueSource = new ContainerValueSource<>(container, metaProperty.getName());
+
+        ComponentGenerationContext componentContext =
+                new ComponentGenerationContext(metaClass, metaProperty.getName());
+        componentContext.setValueSource(valueSource);
+
+        Field field = (Field) uiComponentsGenerator.generate(componentContext);
+
+        if (requireTextArea(metaProperty, getEditedEntity(), MAX_TEXTFIELD_STRING_LENGTH)) {
+            field = uiComponents.create(TextArea.NAME);
         }
 
-        @Override
-        public void actionPerform(Component component) {
-            commitAndClose();
-        }
-    }
-
-    protected class CancelAction extends AbstractAction {
-
-        protected CancelAction() {
-            super("cancel");
+        if (isBoolean(metaProperty)) {
+            field = createBooleanField();
         }
 
-        @Override
-        public void actionPerform(Component component) {
-            close(WINDOW_COMMIT_AND_CLOSE_ACTION);
+        if (range.isClass()) {
+            PickerField pickerField = uiComponents.create(PickerField.class);
+
+            LookupAction lookupAction = actions.create(LookupAction.class);
+            lookupAction.setScreenClass(EntityInspectorBrowser.class);
+            lookupAction.setScreenOptionsSupplier(() -> getPropertyLookupOptions(metaProperty));
+            lookupAction.setOpenMode(OpenMode.THIS_TAB);
+
+            pickerField.addAction(lookupAction);
+            pickerField.addAction(actions.create(ClearAction.class));
+
+            field = pickerField;
         }
+
+        field.setValueSource(valueSource);
+        field.setCaption(getPropertyCaption(metaClass, metaProperty));
+        field.setRequired(isRequired);
+
+        isReadonly = isReadonly || metaProperty.getName().equals(parentProperty);
+        if (range.isClass() && !metadataTools.isEmbedded(metaProperty)) {
+            field.setEditable(metadataTools.isOwningSide(metaProperty) && !isReadonly);
+        } else {
+            field.setEditable(!isReadonly);
+        }
+
+        field.setWidth("400px");
+
+        if (isRequired) {
+            field.setRequiredMessage(messageTools.getDefaultRequiredMessage(metaClass, metaProperty.getName()));
+        }
+        form.add(field);
     }
 
     /**
-     * Opens entity inspector's editor to create entity
+     * Creates a table for the entities in ONE_TO_MANY or MANY_TO_MANY relation with the current one
      */
-    protected class CreateAction extends AbstractAction {
+    protected void addTable(InstanceContainer parent, MetaProperty childMeta) {
+        MetaClass meta = childMeta.getRange().asClass();
 
-        private CollectionContainer entitiesDs;
-        private MetaClass entityMeta;
-        protected MetaProperty metaProperty;
-
-        protected CreateAction(MetaProperty metaProperty, CollectionContainer entitiesDs, MetaClass entityMeta) {
-            super("create");
-            this.entitiesDs = entitiesDs;
-            this.entityMeta = entityMeta;
-            this.metaProperty = metaProperty;
-            setShortcut(uiProperties.getTableInsertShortcut());
+        //don't show empty table if the user don't have permissions on the attribute or the entity
+        if (!attrViewPermitted(parent.getEntityMetaClass(), childMeta) ||
+                !entityOpPermitted(meta, EntityOp.READ)) {
+            return;
         }
 
-        @Override
-        @SuppressWarnings("unchecked")
-        public void actionPerform(Component component) {
+        //don't show table on new master item, because an exception occurred on safe new item in table
+        if (isNew && childMeta.getType().equals(ASSOCIATION)) {
+            return;
+        }
+
+        //vertical box for the table and its label
+        BoxLayout vbox = uiComponents.create(VBoxLayout.class);
+        vbox.setSizeFull();
+        CollectionLoader loader = dataComponents.createCollectionLoader();
+        CollectionContainer container = dataComponents.createCollectionContainer(meta.getJavaClass(), parent, childMeta.getName());
+        loader.setContainer(container);
+//        TODO replace to query
+        loader.setLoadDelegate(loadContext -> {
+            Collection<?> value = EntityValues.getValue(parent.getItem(), childMeta.getName());
+            return value != null ? new ArrayList<>(value) : new ArrayList<>();
+        });
+
+        Table<?> table = uiComponents.create(Table.NAME);
+        table.setMultiSelect(true);
+
+        //place non-system properties columns first
+        List<Table.Column> nonSystemPropertyColumns = new ArrayList<>();
+        List<Table.Column> systemPropertyColumns = new ArrayList<>();
+        for (MetaProperty metaProperty : meta.getProperties()) {
+            if (metaProperty.getRange().isClass() || isRelatedToNonLocalProperty(metaProperty))
+                continue; // because we use local views
+            Table.Column column = new Table.Column(meta.getPropertyPath(metaProperty.getName()));
+            if (!metadataTools.isSystem(metaProperty)) {
+                column.setCaption(getPropertyCaption(meta, metaProperty));
+                nonSystemPropertyColumns.add(column);
+            } else {
+                column.setCaption(metaProperty.getName());
+                systemPropertyColumns.add(column);
+            }
+            if (metaProperty.getJavaType().equals(String.class)) {
+                column.setMaxTextLength(MAX_TEXT_LENGTH);
+            }
+        }
+        for (Table.Column column : nonSystemPropertyColumns) {
+            table.addColumn(column);
+        }
+
+        for (Table.Column column : systemPropertyColumns) {
+            table.addColumn(column);
+        }
+
+        table.setItems(new ContainerTableItems(container));
+
+        ButtonsPanel propertyButtonsPanel = createButtonsPanel(table, childMeta);
+        table.setButtonsPanel(propertyButtonsPanel);
+
+        //TODO supports paging
+//        if (propertyDs instanceof CollectionDatasource.SupportsPaging) {
+//            RowsCount rowsCount = uiComponents.create(RowsCount.class);
+//            rowsCount.setDatasource(propertyDs);
+//            table.setRowsCount(rowsCount);
+//        }
+
+        table.setWidth(FULL_SIZE);
+        table.setHeight(FULL_SIZE);
+
+        vbox.add(table);
+        vbox.expand(table);
+        vbox.setMargin(true);
+
+        TabSheet.Tab tab = tablesTabSheet.addTab(childMeta.toString(), vbox);
+        tab.setCaption(getPropertyCaption(parent.getEntityMetaClass(), childMeta));
+
+        loader.load();
+    }
+
+    private Field createBooleanField() {
+        LookupField field = uiComponents.create(LookupField.NAME);
+        field.setOptionsMap(ParamsMap.of(
+                messages.getMessage("trueString"), Boolean.TRUE,
+                messages.getMessage("falseString"), Boolean.FALSE));
+        field.setTextInputAllowed(false);
+        return field;
+    }
+
+    protected String getPropertyCaption(MetaClass metaClass, MetaProperty metaProperty) {
+        String caption = messageTools.getPropertyCaption(metaClass, metaProperty.getName());
+        if (caption.length() < CAPTION_MAX_LENGTH)
+            return caption;
+        else
+            return caption.substring(0, CAPTION_MAX_LENGTH);
+    }
+
+
+    /**
+     * Determine whether the given metaProperty relates to at least one non local property
+     */
+    protected boolean isRelatedToNonLocalProperty(MetaProperty metaProperty) {
+        MetaClass metaClass = metaProperty.getDomain();
+        for (String relatedProperty : metadataTools.getRelatedProperties(metaProperty)) {
+            //noinspection ConstantConditions
+            if (metaClass.getProperty(relatedProperty).getRange().isClass()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Creates a buttons panel managing table's content.
+     *
+     * @param table        table
+     * @param metaProperty property representing table's data
+     * @return buttons panel
+     */
+    protected ButtonsPanel createButtonsPanel(Table table, MetaProperty metaProperty) {
+        ButtonsPanel propertyButtonsPanel = uiComponents.create(ButtonsPanel.class);
+
+        propertyButtonsPanel.add(createButton(table, metaProperty));
+        if (metaProperty.getType() == ASSOCIATION) {
+            propertyButtonsPanel.add(addButton(table, metaProperty));
+        }
+        propertyButtonsPanel.add(editButton(table, metaProperty));
+        propertyButtonsPanel.add(removeButton(table, metaProperty));
+        return propertyButtonsPanel;
+    }
+
+    private Button addButton(Table table, MetaProperty metaProperty) {
+        Button addButton = uiComponents.create(Button.class);
+        AddAction addAction = createAddAction(table, metaProperty);
+        addButton.setAction(addAction);
+        table.addAction(addAction);
+        addButton.setIcon(icons.get(JmixIcon.ADD_ACTION));
+        return addButton;
+    }
+
+    private AddAction createAddAction(Table table, MetaProperty metaProperty) {
+        AddAction addAction = actions.create(AddAction.class);
+        addAction.setOpenMode(OpenMode.THIS_TAB);
+        addAction.setTarget(table);
+        addAction.setScreenClass(EntityInspectorBrowser.class);
+
+        addAction.setScreenOptionsSupplier(() -> getPropertyLookupOptions(metaProperty));
+        addAction.setShortcut(uiProperties.getTableAddShortcut());
+        return addAction;
+    }
+
+    protected Object getPropertyLookupOptions(MetaProperty metaProperty) {
+        return new MapScreenOptions(ParamsMap.of("entity", metaProperty.getRange().asClass().getName()));
+    }
+
+    private Button createButton(Table table, MetaProperty metaProperty) {
+        Button createButton = uiComponents.create(Button.class);
+        CreateAction createAction = createCreateAction(table, metaProperty);
+        createButton.setAction(createAction);
+        table.addAction(createAction);
+        createButton.setIcon(icons.get(JmixIcon.CREATE_ACTION));
+        return createButton;
+    }
+
+    private CreateAction createCreateAction(Table table, MetaProperty metaProperty) {
+        CreateAction createAction = actions.create(CreateAction.class);
+        createAction.setOpenMode(OpenMode.THIS_TAB);
+        createAction.setTarget(table);
+        createAction.setScreenClass(EntityInspectorEditor.class);
+
+        createAction.setScreenOptionsSupplier(() -> {
             Map<String, Object> editorParams = new HashMap<>();
-            editorParams.put("metaClass", entityMeta.getName());
-            editorParams.put("autocommit", Boolean.FALSE);
             MetaProperty inverseProperty = metaProperty.getInverse();
             if (inverseProperty != null) {
-                editorParams.put("parentProperty", inverseProperty.getName());
+                editorParams.put(PARENT_PROPERTY_PARAM, inverseProperty.getName());
             }
-            editorParams.put("parent", item);
-            if (metaProperty.getType() == MetaProperty.Type.COMPOSITION) {
-                editorParams.put("parentDs", entitiesDs);
-            }
+            editorParams.put(PARENT_CONTEXT_PARAM, parentDataContext != null ? parentDataContext : dataContext);
+            return new MapScreenOptions(editorParams);
 
-            screens.create(EntityInspectorEditor.class, OPEN_TYPE, new MapScreenOptions(editorParams))
-                    .show()
-                    .addAfterCloseListener(afterCloseEvent -> {
-                        if (COMMIT_ACTION_ID.equals(((StandardCloseAction) afterCloseEvent.getCloseAction()).getActionId())
-                                && metaProperty.getType() == MetaProperty.Type.ASSOCIATION) {
-                            EntityInspectorEditor screen = (EntityInspectorEditor) afterCloseEvent.getScreen();
-                            entitiesDs.getMutableItems().add(screen.getItem());
-                        }
-                    });
-
-        }
-    }
-
-    protected boolean attrViewPermitted(MetaClass metaClass, String property) {
-        return attrPermitted(metaClass, property, EntityAttrAccess.VIEW);
-    }
-
-    protected class EditAction extends ItemTrackingAction {
-
-        private Table entitiesTable;
-        private CollectionContainer entitiesDs;
-        private MetaProperty metaProperty;
-
-        protected EditAction(MetaProperty metaProperty, Table entitiesTable, CollectionContainer entitiesDs) {
-            super(entitiesTable, "edit");
-            this.entitiesTable = entitiesTable;
-            this.entitiesDs = entitiesDs;
-            this.metaProperty = metaProperty;
-        }
-
-        @Override
-        public void actionPerform(Component component) {
-            Set selected = entitiesTable.getSelected();
-
-            if (selected.size() != 1) {
-                return;
-            }
-
-            Entity editItem = (Entity) selected.toArray()[0];
-            Map<String, Object> editorParams = new HashMap<>();
-            editorParams.put("metaClass", metadata.getClass(editItem));
-            editorParams.put("item", editItem);
-            editorParams.put("parent", item);
-            editorParams.put("autocommit", Boolean.FALSE);
+        });
+        createAction.setNewEntitySupplier(() -> {
+            Entity newItem = metadata.create(metaProperty.getRange().asClass());
             MetaProperty inverseProperty = metaProperty.getInverse();
             if (inverseProperty != null) {
-                editorParams.put("parentProperty", inverseProperty.getName());
+                EntityValues.setValue(newItem, inverseProperty.getName(), getEditedEntity());
             }
-            if (metaProperty.getType() == MetaProperty.Type.COMPOSITION) {
-                editorParams.put("parentDs", entitiesDs);
+            return newItem;
+        });
+        createAction.setShortcut(uiProperties.getTableInsertShortcut());
+        return createAction;
+    }
+
+    private Button editButton(Table table, MetaProperty metaProperty) {
+        Button editButton = uiComponents.create(Button.class);
+        EditAction editAction = createEditAction(table, metaProperty);
+        editButton.setAction(editAction);
+        table.addAction(editAction);
+        editButton.setIcon(icons.get(JmixIcon.EDIT_ACTION));
+        return editButton;
+    }
+
+    private EditAction createEditAction(Table table, MetaProperty metaProperty) {
+        EditAction editAction = actions.create(EditAction.class);
+        editAction.setOpenMode(OpenMode.THIS_TAB);
+        editAction.setTarget(table);
+        editAction.setScreenClass(EntityInspectorEditor.class);
+
+        editAction.setScreenOptionsSupplier(() -> {
+            Map<String, Object> editorParams = new HashMap<>();
+            MetaProperty inverseProperty = metaProperty.getInverse();
+            if (inverseProperty != null) {
+                editorParams.put(PARENT_PROPERTY_PARAM, inverseProperty.getName());
             }
+            editorParams.put(PARENT_CONTEXT_PARAM, dataContext);
+            return new MapScreenOptions(editorParams);
 
-            screens.create(EntityInspectorEditor.class, OPEN_TYPE, new MapScreenOptions(editorParams))
-                    .show()
-                    .addAfterCloseListener(afterCloseEvent -> {
-                        EntityInspectorEditor screen = (EntityInspectorEditor) afterCloseEvent.getScreen();
-                        entitiesDs.replaceItem(screen.getItem());
-                    });
+        });
+        editAction.setShortcut(uiProperties.getTableInsertShortcut());
+        return editAction;
+    }
 
-            //TODO replace item
+    private Button removeButton(Table table, MetaProperty metaProperty) {
+        Button removeButton = uiComponents.create(Button.class);
+        Action removeAction = createRemoveAction(table, metaProperty);
+        removeButton.setAction(removeAction);
+        table.addAction(removeAction);
+        removeButton.setIcon(icons.get(JmixIcon.REMOVE_ACTION));
+        removeButton.setCaption(messages.getMessage("remove"));
+        return removeButton;
+    }
 
-//            Window window = openWindow("entityInspector.edit", OPEN_TYPE, editorParams);
-//            window.addCloseListener(actionId -> entitiesDs.replaceItem());
+    /**
+     * Creates either Remove or Exclude action depending on property type
+     */
+    protected Action.HasTarget createRemoveAction(Table table, MetaProperty metaProperty) {
+        Action.HasTarget result;
+        switch (metaProperty.getType()) {
+            case COMPOSITION:
+                result = actions.create(RemoveAction.class);
+                result.setTarget(table);
+                break;
+            case ASSOCIATION:
+                result = actions.create(ExcludeAction.class);
+                result.setTarget(table);
+                break;
+            default:
+                throw new IllegalArgumentException("property must contain an entity");
         }
+        result.setShortcut(uiProperties.getTableRemoveShortcut());
+        return result;
     }
 
-    protected boolean attrViewPermitted(MetaClass metaClass, MetaProperty metaProperty) {
-        return attrPermitted(metaClass, metaProperty.getName(), EntityAttrAccess.VIEW);
-    }
-
-    protected boolean attrPermitted(MetaClass metaClass, String property, EntityAttrAccess entityAttrAccess) {
-        return security.isEntityAttrPermitted(metaClass, property, entityAttrAccess);
-    }
-
-    protected boolean entityOpPermitted(MetaClass metaClass, EntityOp entityOp) {
-        return security.isEntityOpPermitted(metaClass, entityOp);
-    }
 }

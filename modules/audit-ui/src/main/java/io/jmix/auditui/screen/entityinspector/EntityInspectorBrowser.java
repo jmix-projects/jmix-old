@@ -17,7 +17,6 @@
 package io.jmix.auditui.screen.entityinspector;
 
 import io.jmix.core.*;
-import io.jmix.core.common.util.ParamsMap;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -25,15 +24,14 @@ import io.jmix.core.metamodel.model.Range;
 import io.jmix.core.metamodel.model.Session;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
-import io.jmix.ui.Screens;
-import io.jmix.ui.UiComponents;
-import io.jmix.ui.UiProperties;
-import io.jmix.ui.action.BaseAction;
+import io.jmix.ui.*;
 import io.jmix.ui.action.ItemTrackingAction;
+import io.jmix.ui.action.list.CreateAction;
+import io.jmix.ui.action.list.EditAction;
 import io.jmix.ui.action.list.RefreshAction;
 import io.jmix.ui.action.list.RemoveAction;
-import io.jmix.ui.component.*;
 import io.jmix.ui.component.LookupComponent;
+import io.jmix.ui.component.*;
 import io.jmix.ui.component.data.table.ContainerTableItems;
 import io.jmix.ui.export.ExportFormat;
 import io.jmix.ui.icon.Icons;
@@ -45,12 +43,12 @@ import io.jmix.ui.screen.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.inject.Inject;
 import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static io.jmix.ui.export.ExportFormat.JSON;
@@ -68,6 +66,8 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
     protected Messages messages;
     @Inject
     protected Screens screens;
+    @Autowired
+    protected ScreenBuilders screenBuilders;
     @Inject
     protected Metadata metadata;
     @Inject
@@ -117,6 +117,8 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
 
     @Inject
     protected Icons icons;
+    @Autowired
+    protected Actions actions;
 
     //TODO filter implementation component (Filter in Table/DataGrid #221)
     protected Component filter;
@@ -317,19 +319,17 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
 
         createButton = uiComponents.create(Button.class);
         createButton.setCaption(messages.getMessage(EntityInspectorBrowser.class, "create"));
-        CreateAction createAction = new CreateAction();
+        CreateAction createAction = createCreateAction(table);
         table.addAction(createAction);
         createButton.setAction(createAction);
         createButton.setIcon(icons.get(JmixIcon.CREATE_ACTION));
-        createButton.setFrame(getWindow().getFrame());
 
         editButton = uiComponents.create(Button.class);
         editButton.setCaption(messages.getMessage(EntityInspectorBrowser.class, "edit"));
-        EditAction editAction = new EditAction();
+        EditAction editAction = createEditAction(table);
         table.addAction(editAction);
         editButton.setAction(editAction);
         editButton.setIcon(icons.get(JmixIcon.EDIT_ACTION));
-        editButton.setFrame(getWindow().getFrame());
 
         removeButton = uiComponents.create(Button.class);
         removeButton.setCaption(messages.getMessage(EntityInspectorBrowser.class, "remove"));
@@ -428,10 +428,29 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         buttonsPanel.add(removeButton);
 //        buttonsPanel.add(excelButton);
         buttonsPanel.add(refreshButton);
-//        buttonsPanel.add(exportPopupButton);
+        buttonsPanel.add(exportPopupButton);
 //        buttonsPanel.add(importUpload);
 
         table.setButtonsPanel(buttonsPanel);
+    }
+
+    private CreateAction createCreateAction(Table table) {
+        CreateAction createAction = actions.create(CreateAction.class);
+        createAction.setOpenMode(OpenMode.THIS_TAB);
+        createAction.setTarget(table);
+        createAction.setScreenClass(EntityInspectorEditor.class);
+        createAction.setNewEntitySupplier(() ->  metadata.create(selectedMeta));
+        createAction.setShortcut(uiProperties.getTableInsertShortcut());
+        return createAction;
+    }
+
+    private EditAction createEditAction(Table table) {
+        EditAction editAction = actions.create(EditAction.class);
+        editAction.setOpenMode(OpenMode.THIS_TAB);
+        editAction.setTarget(table);
+        editAction.setScreenClass(EntityInspectorEditor.class);
+        editAction.setShortcut(uiProperties.getTableInsertShortcut());
+        return editAction;
     }
 
     protected FetchPlan createView(MetaClass meta) {
@@ -486,52 +505,6 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
             }
         }
         return entityImportView;
-    }
-
-    protected class CreateAction extends BaseAction {
-
-        public CreateAction() {
-            super("create");
-            this.primary = true;
-            setShortcut(uiProperties.getTableInsertShortcut());
-        }
-
-        @Override
-        public void actionPerform(Component component) {
-            screens.create(EntityInspectorJmix.class, OpenMode.THIS_TAB,
-                    new MapScreenOptions(
-                            ParamsMap.of("metaClass", selectedMeta.getName())))
-                    .show()
-                    .addAfterCloseListener(afterCloseEvent -> {
-                        entitiesDl.load();
-                        entitiesTable.focus();
-                    });
-        }
-    }
-
-    protected class EditAction extends ItemTrackingAction {
-
-        public EditAction() {
-            super("edit");
-        }
-
-        @Override
-        public void actionPerform(Component component) {
-            Set selected = entitiesTable.getSelected();
-            if (selected.size() != 1)
-                return;
-
-            Entity item = (Entity) selected.iterator().next();
-
-            screens.create(EntityInspectorJmix.class, OpenMode.THIS_TAB,
-                    new MapScreenOptions(
-                            ParamsMap.of("item", item)))
-                    .show()
-                    .addAfterCloseListener(afterCloseEvent -> {
-                        entitiesDl.load();
-                        entitiesTable.focus();
-                    });
-        }
     }
 
     protected String getPropertyCaption(MetaClass metaClass, MetaProperty metaProperty) {

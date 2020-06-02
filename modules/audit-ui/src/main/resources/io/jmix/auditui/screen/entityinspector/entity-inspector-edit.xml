@@ -30,9 +30,13 @@
                 </scrollBox>
             </tab>
         </tabSheet>
-        <buttonsPanel id="buttonsBox">
-            <button action="windowCommitAndClose" icon="icons/ok.png" caption="msg://commit" primary="true"/>
-            <button action="windowClose" icon="icons/cancel.png" caption="msg://cancel"/>
-        </buttonsPanel>
+        <hbox id="editActions" spacing="true">
+            <button action="windowCommitAndClose"/>
+            <button action="windowClose"/>
+        </hbox>
+<!--        <buttonsPanel id="buttonsBox">-->
+<!--            <button action="windowCommitAndClose" icon="icons/ok.png" caption="msg://commit" primary="true"/>-->
+<!--            <button action="windowClose" icon="icons/cancel.png" caption="msg://cancel"/>-->
+<!--        </buttonsPanel>-->
     </layout>
 </window>
