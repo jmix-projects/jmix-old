@@ -93,7 +93,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
     protected UiProperties uiProperties;
 
     @Inject
-    protected LookupField<MetaClass> entitiesLookup;
+    protected ComboBox<MetaClass> entitiesLookup;
 
     @Inject
     protected CheckBox removedRecords;
@@ -428,7 +428,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         buttonsPanel.add(removeButton);
 //        buttonsPanel.add(excelButton);
         buttonsPanel.add(refreshButton);
-        buttonsPanel.add(exportPopupButton);
+//        buttonsPanel.add(exportPopupButton);
 //        buttonsPanel.add(importUpload);
 
         table.setButtonsPanel(buttonsPanel);

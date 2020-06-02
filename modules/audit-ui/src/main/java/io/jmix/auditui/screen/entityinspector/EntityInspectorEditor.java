@@ -26,8 +26,8 @@ import io.jmix.core.security.EntityOp;
 import io.jmix.ui.*;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.action.list.*;
-import io.jmix.ui.action.picker.ClearAction;
-import io.jmix.ui.action.picker.LookupAction;
+import io.jmix.ui.action.entitypicker.ClearAction;
+import io.jmix.ui.action.entitypicker.LookupAction;
 import io.jmix.ui.component.*;
 import io.jmix.ui.component.data.ValueSource;
 import io.jmix.ui.component.data.table.ContainerTableItems;
@@ -220,7 +220,7 @@ public class EntityInspectorEditor extends StandardEditor {
 
     private void setWindowCaption() {
         MetaClass metaClass = metadata.getClass(getEditedEntity());
-        getWindow().setCaption(messages.getMessage(metaClass.getJavaClass(), metaClass.getName()));
+        getWindow().setCaption(messageTools.getEntityCaption(metaClass));
     }
 
     private void createNewItemByMetaClass(Map<String, Object> params) {
@@ -353,7 +353,7 @@ public class EntityInspectorEditor extends StandardEditor {
         }
 
         if (range.isClass()) {
-            PickerField pickerField = uiComponents.create(PickerField.class);
+            EntityPicker pickerField = uiComponents.create(EntityPicker.class);
 
             LookupAction lookupAction = actions.create(LookupAction.class);
             lookupAction.setScreenClass(EntityInspectorBrowser.class);
@@ -469,7 +469,7 @@ public class EntityInspectorEditor extends StandardEditor {
     }
 
     private Field createBooleanField() {
-        LookupField field = uiComponents.create(LookupField.NAME);
+        ComboBox field = uiComponents.create(ComboBox.NAME);
         field.setOptionsMap(ParamsMap.of(
                 messages.getMessage("trueString"), Boolean.TRUE,
                 messages.getMessage("falseString"), Boolean.FALSE));

@@ -14,7 +14,7 @@
   ~ limitations under the License.
   -->
 
-<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+<window xmlns="http://jmix.io/schema/ui/window"
         caption="msg://browserCaption"
 messagesPack="io.jmix.auditui.screen.entityinspector">
 
@@ -25,7 +25,7 @@ messagesPack="io.jmix.auditui.screen.entityinspector">
     <layout expand="tableBox" spacing="true">
         <hbox id="lookupBox" spacing="true">
             <label value="msg://entityType" align="MIDDLE_LEFT"/>
-            <lookupField id="entitiesLookup" width="theme://cuba.gui.EntityInspectorBrowse.entitiesSelect.width"/>
+            <comboBox id="entitiesLookup" width="theme://cuba.gui.EntityInspectorBrowse.entitiesSelect.width"/>
             <checkBox id="removedRecords" caption="msg://showRemovedRecords" align="MIDDLE_LEFT"/>
             <checkBox id="textSelection" caption="msg://textSelection" align="MIDDLE_LEFT" visible="false"/>
         </hbox>
