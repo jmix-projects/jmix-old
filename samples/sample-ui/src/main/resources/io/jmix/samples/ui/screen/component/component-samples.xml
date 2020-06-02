@@ -115,30 +115,30 @@
                         <!--                <timeField editable="false"/>-->
                         <!--                <timeField enable="false"/>-->
                     </hbox>
-                    <hbox caption="LookupField" spacing="true">
-                        <lookupField/>
-                        <lookupField id="editableLookupField" editable="false"/>
-                        <lookupField enable="false"/>
+                    <hbox caption="ComboBox" spacing="true">
+                        <comboBox/>
+                        <comboBox id="editableComboBox" editable="false"/>
+                        <comboBox enable="false"/>
                     </hbox>
-                    <hbox caption="PickerField" spacing="true">
-                        <pickerField/>
-                        <pickerField editable="false"/>
-                        <pickerField enable="false"/>
+                    <hbox caption="EntityPicker" spacing="true">
+                        <entityPicker/>
+                        <entityPicker editable="false"/>
+                        <entityPicker enable="false"/>
                     </hbox>
                     <hbox caption="SuggestionField" spacing="true">
                         <suggestionField/>
                         <suggestionField editable="false"/>
                         <suggestionField enable="false"/>
                     </hbox>
-                    <hbox caption="SuggestionPickerField" spacing="true">
-                        <suggestionPickerField/>
-                        <suggestionPickerField editable="false"/>
-                        <suggestionPickerField enable="false"/>
+                    <hbox caption="EntitySuggestionField" spacing="true">
+                        <entitySuggestionField/>
+                        <entitySuggestionField editable="false"/>
+                        <entitySuggestionField enable="false"/>
                     </hbox>
-                    <hbox caption="LookupPickerField" spacing="true">
-                        <lookupPickerField/>
-                        <lookupPickerField editable="false"/>
-                        <lookupPickerField enable="false"/>
+                    <hbox caption="EntityComboBox" spacing="true">entityComboBox
+                        <entityComboBox/>
+                        <entityComboBox editable="false"/>
+                        <entityComboBox enable="false"/>
                     </hbox>
                     <hbox caption="PasswordField" spacing="true">
                         <passwordField/>
@@ -183,7 +183,7 @@
                         <button caption="btn"/>
                         <label value="label"/>
                     </cssLayout>
-                    <grid caption="Grid Layout" height="100px" width="200px">
+                    <gridLayout caption="Grid Layout" height="100px" width="200px">
                         <columns count="2"/>
                         <rows>
                             <row>
@@ -195,7 +195,7 @@
                                 <label value="Col 2 row 2"/>
                             </row>
                         </rows>
-                    </grid>
+                    </gridLayout>
                 </scrollBox>
             </tab>
             <tab id="othersTab" caption="Others">

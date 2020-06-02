@@ -25,6 +25,8 @@ import io.jmix.ui.component.mainwindow.AppMenu;
 import io.jmix.ui.component.mainwindow.SideMenu;
 import io.jmix.ui.component.mainwindow.UserIndicator;
 import io.jmix.ui.screen.*;
+import io.jmix.ui.widget.JmixCollapsibleMenuLayoutExtension;
+import io.jmix.ui.widget.JmixCssActionsLayout;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
@@ -51,7 +53,6 @@ public class MainScreen extends Screen implements Window.HasWorkArea {
         initLogoImage();
         initFtsField();
         initUserIndicator();
-//        initTitleBar();
         initMenu();
         initLayoutAnalyzerContextMenu();
     }
@@ -109,6 +110,11 @@ public class MainScreen extends Screen implements Window.HasWorkArea {
     protected void initCollapsibleMenu() {
         Component sideMenuContainer = getWindow().getComponent("sideMenuContainer");
         if (sideMenuContainer instanceof CssLayout) {
+            Component sideMenuLayout = getWindow().getComponent("horizontalWrap");
+            if (sideMenuLayout instanceof  CssLayout) {
+                sideMenuLayout.withUnwrapped(JmixCssActionsLayout.class, JmixCollapsibleMenuLayoutExtension::new);
+            }
+
             if (isMobileDevice()) {
                 setSideMenuCollapsed(true);
             } else {
@@ -143,15 +149,6 @@ public class MainScreen extends Screen implements Window.HasWorkArea {
                     openLoginScreen());
         }
     }
-
-//    protected void initTitleBar() {
-//        if (getBeanLocator().get(UiProperties.class).isUseInverseHeader()) {
-//            Component titleBar = getTitleBar();
-//            if (titleBar != null) {
-//                titleBar.setStyleName("c-app-menubar c-inverse-header");
-//            }
-//        }
-//    }
 
     @Subscribe
     protected void onAfterShow(AfterShowEvent event) {

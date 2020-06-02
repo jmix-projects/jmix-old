@@ -25,7 +25,7 @@
                 width="800"/>
     <layout spacing="true" expand="expander">
         <label value="Users"/>
-        <lookupField caption="Select Role"/>
+        <comboBox caption="Select Role"/>
         <groupTable id="usersTable"
                     width="100%"
                     dataContainer="usersDc">

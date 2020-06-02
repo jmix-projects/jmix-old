@@ -62,10 +62,10 @@
 <!--                        <checkBox id="rememberMeCheckBox"-->
 <!--                                  caption="msg://loginScreen.rememberMe"-->
 <!--                                  stylename="c-login-remember-me"/>-->
-                        <lookupField id="localesField"
-                                     nullOptionVisible="false"
-                                     stylename="c-login-locale"
-                                     textInputAllowed="false"/>
+                        <comboBox id="localesField"
+                                  nullOptionVisible="false"
+                                  stylename="c-login-locale"
+                                  textInputAllowed="false"/>
                     </hbox>
 
                     <button id="loginButton"
