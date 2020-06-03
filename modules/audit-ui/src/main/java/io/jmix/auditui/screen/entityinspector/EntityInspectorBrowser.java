@@ -17,14 +17,19 @@
 package io.jmix.auditui.screen.entityinspector;
 
 import io.jmix.core.*;
-import io.jmix.core.entity.SoftDelete;
+import io.jmix.core.metamodel.datatype.Datatypes;
+import io.jmix.core.metamodel.datatype.FormatStringsRegistry;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Range;
 import io.jmix.core.metamodel.model.Session;
+import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
-import io.jmix.ui.*;
+import io.jmix.ui.Actions;
+import io.jmix.ui.Notifications;
+import io.jmix.ui.UiComponents;
+import io.jmix.ui.UiProperties;
 import io.jmix.ui.action.ItemTrackingAction;
 import io.jmix.ui.action.list.CreateAction;
 import io.jmix.ui.action.list.EditAction;
@@ -45,7 +50,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.inject.Inject;
 import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -62,75 +66,64 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
 
     protected static final Logger log = LoggerFactory.getLogger(EntityInspectorBrowser.class);
 
-    @Inject
-    protected Messages messages;
-    @Inject
-    protected Screens screens;
     @Autowired
-    protected ScreenBuilders screenBuilders;
-    @Inject
+    protected Messages messages;
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
-    @Inject
+    @Autowired
     protected MessageTools messageTools;
-    @Inject
+    @Autowired
     protected Security security;
-    @Inject
+    @Autowired
     protected DataComponents dataComponents;
-    @Inject
+    @Autowired
     protected FetchPlanRepository fetchPlanRepository;
 
-    @Inject
-    protected BoxLayout lookupBox;
-    @Inject
-    protected BoxLayout tableBox;
-
-    @Inject
+    @Autowired
     protected UiComponents uiComponents;
-
-    @Inject
+    @Autowired
     protected UiProperties uiProperties;
-
-    @Inject
-    protected ComboBox<MetaClass> entitiesLookup;
-
-    @Inject
-    protected CheckBox removedRecords;
-
-    @Inject
-    protected CheckBox textSelection;
-
-    @Inject
-    protected BoxLayout filterBox;
-
-    //TODO Import/export service
-//    @Inject
-//    protected EntityImportExportService entityImportExportService;
-
-//    @Inject
-//    protected ExportDisplay exportDisplay;
-
-    //TODO file upload API (File storage API and UI components #103)
-//    @Inject
-//    protected FileUploadingAPI fileUploadingAPI;
-
-    @Inject
+    @Autowired
+    protected Notifications notifications;
+    @Autowired
     protected Icons icons;
     @Autowired
     protected Actions actions;
 
+    @Autowired
+    protected BoxLayout lookupBox;
+    @Autowired
+    protected BoxLayout tableBox;
+
+    @Autowired
+    protected ComboBox<MetaClass> entitiesLookup;
+
+    @Autowired
+    protected CheckBox removedRecords;
+
+    @Autowired
+    protected CheckBox textSelection;
+
+    @Autowired
+    protected BoxLayout filterBox;
+
+    //TODO Import/export service
+//    @Autowired
+//    protected EntityImportExportService entityImportExportService;
+
+//    @Autowired
+//    protected ExportDisplay exportDisplay;
+
+    //TODO file upload API (File storage API and UI components #103)
+//    @Autowired
+//    protected FileUploadingAPI fileUploadingAPI;
+
+
     //TODO filter implementation component (Filter in Table/DataGrid #221)
     protected Component filter;
     protected Table entitiesTable;
-
-    protected Button createButton;
-    protected Button editButton;
-    protected Button removeButton;
-    protected Button excelButton;
-    protected Button refreshButton;
-    protected FileUploadField importUpload;
-    protected PopupButton exportPopupButton;
 
     protected CollectionContainer<Entity> entitiesDc;
     protected CollectionLoader<Entity> entitiesDl;
@@ -145,6 +138,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
             params = ((MapScreenOptions) options).getParams();
         }
         String entityName = (String) params.get("entity");
+        getScreenData().setDataContext(dataComponents.createDataContext());
         if (entityName != null) {
             Session session = metadata.getSession();
             selectedMeta = session.getClass(entityName);
@@ -200,19 +194,11 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
             filterBox.remove(filter);
         }
 
-        entitiesTable = uiComponents.create(Table.NAME);
-
+        createContainer(meta);
         textSelection.setVisible(true);
         textSelection.addValueChangeListener(e -> changeTableTextSelectionEnabled());
 
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat(messages.getMessage("dateTimeFormat"));
-        Function<?, String> dateTimeFormatter = value -> {
-            if (value == null) {
-                return StringUtils.EMPTY;
-            }
-
-            return dateTimeFormat.format(value);
-        };
+        entitiesTable = uiComponents.create(Table.NAME);
 
         //collect properties in order to add non-system columns first
         List<Table.Column> nonSystemPropertyColumns = new ArrayList<>(10);
@@ -229,10 +215,6 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
             }
 
             Table.Column column = new Table.Column(meta.getPropertyPath(metaProperty.getName()));
-
-            if (range.isDatatype() && range.asDatatype().getJavaClass().equals(Date.class)) {
-                column.setFormatter(dateTimeFormatter);
-            }
 
             if (metaProperty.getJavaType().equals(String.class)) {
                 column.setMaxTextLength(MAX_TEXT_LENGTH);
@@ -253,22 +235,6 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         for (Table.Column column : systemPropertyColumns) {
             entitiesTable.addColumn(column);
         }
-
-        if (entitiesDc != null) {
-
-            //TODO unregister DC
-//            ((DsContextImplementation) getDsContext()).unregister(entitiesDc);
-        }
-
-        entitiesDc = dataComponents.createCollectionContainer(meta.getJavaClass());
-        entitiesDc.setFetchPlan(createView(meta));
-
-        entitiesDl = dataComponents.createCollectionLoader();
-        entitiesDl.setFetchPlan(createView(meta));
-        entitiesDl.setContainer(entitiesDc);
-        entitiesDl.setLoadDynamicAttributes(true);
-        entitiesDl.setSoftDeletion(!removedRecords.isChecked());
-        entitiesDl.setQuery(String.format("select e from %s e", meta.getName()));
 
         entitiesTable.setItems(new ContainerTableItems(entitiesDc));
 
@@ -293,21 +259,21 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         entitiesDl.load();
     }
 
+    private void createContainer(MetaClass meta) {
+        entitiesDc = dataComponents.createCollectionContainer(meta.getJavaClass());
+        entitiesDc.setFetchPlan(createView(meta));
+
+        entitiesDl = dataComponents.createCollectionLoader();
+        entitiesDl.setFetchPlan(createView(meta));
+        entitiesDl.setContainer(entitiesDc);
+        entitiesDl.setLoadDynamicAttributes(true);
+        entitiesDl.setSoftDeletion(!removedRecords.isChecked());
+        entitiesDl.setQuery(String.format("select e from %s e", meta.getName()));
+    }
+
     //TODO create filter component (Filter in Table/DataGrid #221)
     protected void createFilter() {
-//        filter = uiComponents.create(FilterImplementation.class);
-//        filter.setId("filter");
-//        filter.setFrame(frame);
-//
-//        filterBox.add(filter);
-//
-//        filter.setUseMaxResults(true);
-//        filter.setManualApplyRequired(true);
-//        filter.setEditable(true);
-//
-//        filter.setDatasource(entitiesDc);
-//        ((FilterImplementation) filter).loadFiltersAndApplyDefault();
-//        filter.apply(true);
+
     }
 
     protected boolean isEmbedded(MetaProperty metaProperty) {
@@ -317,63 +283,39 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
     protected void createButtonsPanel(Table table) {
         ButtonsPanel buttonsPanel = uiComponents.create(ButtonsPanel.class);
 
-        createButton = uiComponents.create(Button.class);
-        createButton.setCaption(messages.getMessage(EntityInspectorBrowser.class, "create"));
+        Button createButton = uiComponents.create(Button.class);
         CreateAction createAction = createCreateAction(table);
         table.addAction(createAction);
         createButton.setAction(createAction);
         createButton.setIcon(icons.get(JmixIcon.CREATE_ACTION));
 
-        editButton = uiComponents.create(Button.class);
-        editButton.setCaption(messages.getMessage(EntityInspectorBrowser.class, "edit"));
+        Button editButton = uiComponents.create(Button.class);
         EditAction editAction = createEditAction(table);
         table.addAction(editAction);
         editButton.setAction(editAction);
         editButton.setIcon(icons.get(JmixIcon.EDIT_ACTION));
 
-        removeButton = uiComponents.create(Button.class);
-        removeButton.setCaption(messages.getMessage(EntityInspectorBrowser.class, "remove"));
-        RemoveAction removeAction = new RemoveAction("remove") {
-            @Override
-            protected boolean isPermitted() {
-                if (!getTarget().getSelected().isEmpty()) {
-                    if (getTarget().getSingleSelected() instanceof SoftDelete) {
-                        for (Object e : getTarget().getSelected()) {
-                            if (((SoftDelete) e).isDeleted())
-                                return false;
-                        }
-                    }
-                }
-                //TODO Add security
-//                return super.isPermitted();
-                return true;
-            }
-
-
-        };
-        removeAction.setTarget(entitiesTable);
-        removeAction.setAfterActionPerformedHandler(event -> entitiesDl.load());
+        Button removeButton = uiComponents.create(Button.class);
+        RemoveAction removeAction = createRemoveAction();
         table.addAction(removeAction);
         removeButton.setAction(removeAction);
         removeButton.setIcon(icons.get(JmixIcon.REMOVE_ACTION));
         removeButton.setFrame(getWindow().getFrame());
 
         //TODO excel action
-        excelButton = uiComponents.create(Button.class);
+//        excelButton = uiComponents.create(Button.class);
 //        excelButton.setCaption(messages.getMessage(com.haulmont.cuba.gui.app.core.entityinspector.EntityInspectorBrowse.class, "excel"));
 //        excelButton.setAction(new ExcelAction(entitiesTable));
 //        excelButton.setIcon(icons.get(CubaIcon.EXCEL_ACTION));
 //        excelButton.setFrame(frame);
 
-        refreshButton = uiComponents.create(Button.class);
-        refreshButton.setCaption(messages.getMessage(EntityInspectorBrowser.class, "refresh"));
-        RefreshAction refreshAction = new RefreshAction("refresh");
-        refreshAction.setTarget(entitiesTable);
+        Button refreshButton = uiComponents.create(Button.class);
+        RefreshAction refreshAction = createRefreshAction();
         refreshButton.setAction(refreshAction);
         refreshButton.setIcon(icons.get(JmixIcon.REFRESH_ACTION));
         refreshButton.setFrame(getWindow().getFrame());
 
-        exportPopupButton = uiComponents.create(PopupButton.class);
+        PopupButton exportPopupButton = uiComponents.create(PopupButton.class);
         exportPopupButton.setIcon(icons.get(JmixIcon.DOWNLOAD));
         exportPopupButton.addAction(new ExportAction("exportJSON", JSON));
         exportPopupButton.addAction(new ExportAction("exportZIP", ZIP));
@@ -434,12 +376,25 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         table.setButtonsPanel(buttonsPanel);
     }
 
+    private RefreshAction createRefreshAction() {
+        RefreshAction refreshAction = actions.create(RefreshAction.class);
+        refreshAction.setTarget(entitiesTable);
+        return refreshAction;
+    }
+
+    private RemoveAction createRemoveAction() {
+        RemoveAction removeAction = actions.create(RemoveAction.class);
+        removeAction.setTarget(entitiesTable);
+        removeAction.setAfterActionPerformedHandler(event -> entitiesDl.load());
+        return removeAction;
+    }
+
     private CreateAction createCreateAction(Table table) {
         CreateAction createAction = actions.create(CreateAction.class);
         createAction.setOpenMode(OpenMode.THIS_TAB);
         createAction.setTarget(table);
         createAction.setScreenClass(EntityInspectorEditor.class);
-        createAction.setNewEntitySupplier(() ->  metadata.create(selectedMeta));
+        createAction.setNewEntitySupplier(() -> metadata.create(selectedMeta));
         createAction.setShortcut(uiProperties.getTableInsertShortcut());
         return createAction;
     }
@@ -549,6 +504,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
 //                    exportDisplay.show(new ByteArrayDataProvider(data), resourceName, JSON);
                 }
             } catch (Exception e) {
+
                 //TODO show notification
 //                showNotification(messages.getMessage("exportFailed"), e.getMessage(), Frame.NotificationType.ERROR);
                 log.error("Entities export failed", e);

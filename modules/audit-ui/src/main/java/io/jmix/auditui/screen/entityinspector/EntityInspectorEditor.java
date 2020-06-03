@@ -56,14 +56,11 @@ public class EntityInspectorEditor extends StandardEditor {
     public static final int MAX_TEXTFIELD_STRING_LENGTH = 255;
     public static final int CAPTION_MAX_LENGTH = 100;
     public static final int MAX_TEXT_LENGTH = 50;
-    public static final Screens.LaunchMode OPEN_TYPE = OpenMode.THIS_TAB;
 
     @Autowired
     protected Metadata metadata;
     @Autowired
     protected MetadataTools metadataTools;
-    @Autowired
-    protected DataManager dataManager;
     @Autowired
     protected FetchPlanRepository fetchPlanRepository;
     @Autowired
@@ -78,10 +75,6 @@ public class EntityInspectorEditor extends StandardEditor {
     protected DataComponents dataComponents;
     @Autowired
     protected UiProperties uiProperties;
-    @Autowired
-    protected Screens screens;
-    @Autowired
-    protected ScreenBuilders screenBuilders;
     @Autowired
     protected Actions actions;
     @Inject
@@ -102,8 +95,6 @@ public class EntityInspectorEditor extends StandardEditor {
     protected Boolean isNew = true;
     protected String parentProperty;
     protected InstanceContainer container;
-
-    protected Boolean autocommit = true;
 
     @Subscribe
     protected void onInit(InitEvent initEvent) {
@@ -166,6 +157,7 @@ public class EntityInspectorEditor extends StandardEditor {
         Entity item = getEditedEntity();
 
         Form form = uiComponents.create(Form.class);
+        form.setChildrenCaptionWidth(200);
         if (caption != null) {
             form.setCaption(caption);
         }
@@ -293,7 +285,7 @@ public class EntityInspectorEditor extends StandardEditor {
     }
 
     /**
-     * Adds field to the specified field group.
+     * Adds field to the specified form.
      * If the field should be custom, adds it to the specified customFields collection
      * which can be used later to create fieldGenerators
      *
@@ -373,11 +365,6 @@ public class EntityInspectorEditor extends StandardEditor {
             return;
         }
 
-        //don't show table on new master item, because an exception occurred on safe new item in table
-        if (isNew && childMeta.getType().equals(ASSOCIATION)) {
-            return;
-        }
-
         //vertical box for the table and its label
         BoxLayout vbox = uiComponents.create(VBoxLayout.class);
         vbox.setSizeFull();
@@ -423,13 +410,6 @@ public class EntityInspectorEditor extends StandardEditor {
 
         ButtonsPanel propertyButtonsPanel = createButtonsPanel(table, childMeta);
         table.setButtonsPanel(propertyButtonsPanel);
-
-        //TODO supports paging
-//        if (propertyDs instanceof CollectionDatasource.SupportsPaging) {
-//            RowsCount rowsCount = uiComponents.create(RowsCount.class);
-//            rowsCount.setDatasource(propertyDs);
-//            table.setRowsCount(rowsCount);
-//        }
 
         table.setWidth(FULL_SIZE);
         table.setHeight(FULL_SIZE);
