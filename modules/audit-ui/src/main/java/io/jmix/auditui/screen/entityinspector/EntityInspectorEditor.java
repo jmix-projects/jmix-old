@@ -16,22 +16,21 @@
 
 package io.jmix.auditui.screen.entityinspector;
 
+import io.jmix.auditui.screen.entityinspector.assistant.InspectorFetchPlanBuilder;
+import io.jmix.auditui.screen.entityinspector.assistant.InspectorFormBuilder;
+import io.jmix.auditui.screen.entityinspector.assistant.InspectorTableBuilder;
 import io.jmix.core.*;
 import io.jmix.core.common.util.ParamsMap;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.metamodel.model.Range;
 import io.jmix.core.security.EntityOp;
-import io.jmix.ui.*;
+import io.jmix.ui.Actions;
+import io.jmix.ui.UiComponents;
+import io.jmix.ui.UiProperties;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.action.list.*;
-import io.jmix.ui.action.entitypicker.ClearAction;
-import io.jmix.ui.action.entitypicker.LookupAction;
 import io.jmix.ui.component.*;
-import io.jmix.ui.component.data.ValueSource;
-import io.jmix.ui.component.data.table.ContainerTableItems;
-import io.jmix.ui.component.data.value.ContainerValueSource;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.model.*;
@@ -40,11 +39,13 @@ import io.jmix.ui.screen.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.jmix.auditui.screen.entityinspector.EntityFormUtils.*;
 import static io.jmix.core.metamodel.model.MetaProperty.Type.ASSOCIATION;
-import static io.jmix.ui.component.Component.FULL_SIZE;
 
 @UiController("entityInspector.edit")
 @UiDescriptor("entity-inspector-edit.xml")
@@ -53,24 +54,17 @@ public class EntityInspectorEditor extends StandardEditor {
     public static final String PARENT_CONTEXT_PARAM = "parentContext";
     public static final String PARENT_PROPERTY_PARAM = "parentProperty";
 
-    public static final int MAX_TEXTFIELD_STRING_LENGTH = 255;
     public static final int CAPTION_MAX_LENGTH = 100;
     public static final int MAX_TEXT_LENGTH = 50;
 
     @Autowired
     protected Metadata metadata;
     @Autowired
-    protected MetadataTools metadataTools;
-    @Autowired
-    protected FetchPlanRepository fetchPlanRepository;
-    @Autowired
     protected Messages messages;
     @Autowired
     protected MessageTools messageTools;
     @Autowired
     protected UiComponents uiComponents;
-    @Autowired
-    protected UiComponentsGenerator uiComponentsGenerator;
     @Autowired
     protected DataComponents dataComponents;
     @Autowired
@@ -117,7 +111,7 @@ public class EntityInspectorEditor extends StandardEditor {
 
     @Subscribe
     protected void beforeShow(BeforeShowEvent event) {
-        createForm(null, getEditedEntityContainer());
+        createForm(getEditedEntityContainer());
         setWindowCaption();
     }
 
@@ -144,7 +138,11 @@ public class EntityInspectorEditor extends StandardEditor {
         InstanceContainer container = dataComponents.createInstanceContainer(entity.getClass());
         if (!entityStates.isNew(entity)) {
             InstanceLoader loader = dataComponents.createInstanceLoader();
-            loader.setFetchPlan(createView(metadata.getClass(entity)));
+            loader.setFetchPlan(InspectorFetchPlanBuilder.of(entity.getClass())
+                    .withCollections(true)
+                    .withEmbedded(true)
+                    .withSystemProperties(true)
+                    .build());
             loader.setEntityId(EntityValues.getId(entity));
             loader.setContainer(container);
             loader.load();
@@ -152,42 +150,18 @@ public class EntityInspectorEditor extends StandardEditor {
         return container;
     }
 
-    private void createForm(String caption, InstanceContainer container) {
+    private void createForm(InstanceContainer container) {
+        Form form = InspectorFormBuilder.from(container)
+                .withDisabledProperties(parentProperty)
+                .build();
+
         MetaClass metaClass = container.getEntityMetaClass();
         Entity item = getEditedEntity();
 
-        Form form = uiComponents.create(Form.class);
-        form.setChildrenCaptionWidth(200);
-        if (caption != null) {
-            form.setCaption(caption);
-        }
-
         contentPane.add(form);
-        MetaProperty primaryKeyProperty = metadataTools.getPrimaryKeyProperty(metaClass);
 
         for (MetaProperty metaProperty : metaClass.getProperties()) {
-            boolean isReadonly = metaProperty.isReadOnly();
             switch (metaProperty.getType()) {
-                case DATATYPE:
-                case ENUM:
-                    boolean includeId = primaryKeyProperty != null
-                            && primaryKeyProperty.equals(metaProperty)
-                            && String.class.equals(metaProperty.getJavaType());
-                    //skip system properties
-                    if (metadataTools.isSystem(metaProperty) && !includeId) {
-                        continue;
-                    }
-                    if (metaProperty.getType() != MetaProperty.Type.ENUM
-                            && (isByteArray(metaProperty) || isUuid(metaProperty))) {
-                        continue;
-                    }
-
-                    if (includeId && !isNew) {
-                        isReadonly = true;
-                    }
-
-                    addField(container, form, metaProperty, isReadonly);
-                    break;
                 case COMPOSITION:
                 case ASSOCIATION:
                     if (metaProperty.getRange().getCardinality().isMany()) {
@@ -199,9 +173,10 @@ public class EntityInspectorEditor extends StandardEditor {
                             InstanceContainer embeddedContainer = dataComponents.createInstanceContainer(
                                     propertyValue.getClass(), container, metaProperty.getName());
                             embeddedContainer.setItem(propertyValue);
-                            createForm(getPropertyCaption(metaClass, metaProperty), embeddedContainer);
-                        } else {
-                            addField(container, form, metaProperty, isReadonly);
+                            Form embeddedForm = InspectorFormBuilder.from(embeddedContainer)
+                                    .withCaption(getPropertyCaption(metaClass, metaProperty))
+                                    .build();
+                            contentPane.add(embeddedForm);
                         }
                     }
                     break;
@@ -225,135 +200,6 @@ public class EntityInspectorEditor extends StandardEditor {
     }
 
     /**
-     * Creates a view, loading all the properties.
-     * Referenced entities will be loaded with a LOCAL view.
-     *
-     * @param meta meta class
-     * @return View instance
-     */
-    protected FetchPlan createView(MetaClass meta) {
-        FetchPlan fetchPlan = new FetchPlan(meta.getJavaClass(), false);
-        for (MetaProperty metaProperty : meta.getProperties()) {
-            switch (metaProperty.getType()) {
-                case DATATYPE:
-                case ENUM:
-                    fetchPlan.addProperty(metaProperty.getName());
-                    break;
-                case ASSOCIATION:
-                case COMPOSITION:
-                    MetaClass metaPropertyClass = metaProperty.getRange().asClass();
-                    String metaPropertyClassName = metaPropertyClass.getName();
-
-                    if (metadataTools.isEmbedded(metaProperty)) {
-                        FetchPlan embeddedViewWithRelations = createEmbeddedPlan(metaPropertyClass);
-                        fetchPlan.addProperty(metaProperty.getName(), embeddedViewWithRelations);
-                    } else {
-                        String viewName;
-                        if (metaProperty.getRange().getCardinality().isMany()) {
-                            viewName = FetchPlan.LOCAL;
-                        } else {
-                            viewName = FetchPlan.MINIMAL;
-                        }
-                        FetchPlan propView = fetchPlanRepository.getFetchPlan(metaPropertyClass, viewName);
-                        fetchPlan.addProperty(metaProperty.getName(),
-                                new FetchPlan(propView, metaPropertyClassName + ".entity-inspector-fetchPlan", true));
-                    }
-                    break;
-                default:
-                    throw new IllegalStateException("unknown property type");
-            }
-        }
-        return fetchPlan;
-    }
-
-    protected FetchPlan createEmbeddedPlan(MetaClass metaPropertyClass) {
-        FetchPlan propView = fetchPlanRepository.getFetchPlan(metaPropertyClass, FetchPlan.BASE);
-        FetchPlan embeddedViewWithRelations = new FetchPlan(propView, metaPropertyClass.getName() + ".entity-inspector-view", true);
-
-        // iterate embedded properties and add relations with MINIMAL view
-        for (MetaProperty embeddedNestedProperty : metaPropertyClass.getProperties()) {
-            if (embeddedNestedProperty.getRange().isClass() &&
-                    !embeddedNestedProperty.getRange().getCardinality().isMany()) {
-                FetchPlan embeddedRelationView = fetchPlanRepository.getFetchPlan(
-                        embeddedNestedProperty.getRange().asClass(), FetchPlan.MINIMAL);
-
-                embeddedViewWithRelations.addProperty(embeddedNestedProperty.getName(), embeddedRelationView);
-            }
-        }
-
-        return embeddedViewWithRelations;
-    }
-
-    /**
-     * Adds field to the specified form.
-     * If the field should be custom, adds it to the specified customFields collection
-     * which can be used later to create fieldGenerators
-     *
-     * @param metaProperty meta property of the item's property which field is creating
-     * @param form         field group to which created field will be added
-     */
-    protected void addField(InstanceContainer container, Form form, MetaProperty metaProperty, boolean isReadonly) {
-        MetaClass metaClass = container.getEntityMetaClass();
-        Range range = metaProperty.getRange();
-
-        boolean isRequired = isRequired(metaProperty);
-        if (!attrViewPermitted(metaClass, metaProperty))
-            return;
-
-        if ((range.isClass())
-                && !entityOpPermitted(range.asClass(), EntityOp.READ))
-            return;
-
-        ValueSource valueSource = new ContainerValueSource<>(container, metaProperty.getName());
-
-        ComponentGenerationContext componentContext =
-                new ComponentGenerationContext(metaClass, metaProperty.getName());
-        componentContext.setValueSource(valueSource);
-
-        Field field = (Field) uiComponentsGenerator.generate(componentContext);
-
-        if (requireTextArea(metaProperty, container.getItem(), MAX_TEXTFIELD_STRING_LENGTH)) {
-            field = uiComponents.create(TextArea.NAME);
-        }
-
-        if (isBoolean(metaProperty)) {
-            field = createBooleanField();
-        }
-
-        if (range.isClass()) {
-            EntityPicker pickerField = uiComponents.create(EntityPicker.class);
-
-            LookupAction lookupAction = actions.create(LookupAction.class);
-            lookupAction.setScreenClass(EntityInspectorBrowser.class);
-            lookupAction.setScreenOptionsSupplier(() -> getPropertyLookupOptions(metaProperty));
-            lookupAction.setOpenMode(OpenMode.THIS_TAB);
-
-            pickerField.addAction(lookupAction);
-            pickerField.addAction(actions.create(ClearAction.class));
-
-            field = pickerField;
-        }
-
-        field.setValueSource(valueSource);
-        field.setCaption(getPropertyCaption(metaClass, metaProperty));
-        field.setRequired(isRequired);
-
-        isReadonly = isReadonly || metaProperty.getName().equals(parentProperty);
-        if (range.isClass() && !metadataTools.isEmbedded(metaProperty)) {
-            field.setEditable(metadataTools.isOwningSide(metaProperty) && !isReadonly);
-        } else {
-            field.setEditable(!isReadonly);
-        }
-
-        field.setWidth("400px");
-
-        if (isRequired) {
-            field.setRequiredMessage(messageTools.getDefaultRequiredMessage(metaClass, metaProperty.getName()));
-        }
-        form.add(field);
-    }
-
-    /**
      * Creates a table for the entities in ONE_TO_MANY or MANY_TO_MANY relation with the current one
      */
     protected void addTable(InstanceContainer parent, MetaProperty childMeta) {
@@ -368,6 +214,22 @@ public class EntityInspectorEditor extends StandardEditor {
         //vertical box for the table and its label
         BoxLayout vbox = uiComponents.create(VBoxLayout.class);
         vbox.setSizeFull();
+
+        Table entitiesTable = InspectorTableBuilder.of(createTableContainer(parent, childMeta, meta))
+                .withMaxTextLength(MAX_TEXT_LENGTH)
+                .withSystem(true)
+                .withButtons(table -> createButtonsPanel(table, childMeta))
+                .build();
+
+        vbox.add(entitiesTable);
+        vbox.expand(entitiesTable);
+        vbox.setMargin(true);
+
+        TabSheet.Tab tab = tablesTabSheet.addTab(childMeta.toString(), vbox);
+        tab.setCaption(getPropertyCaption(parent.getEntityMetaClass(), childMeta));
+    }
+
+    private CollectionContainer createTableContainer(InstanceContainer parent, MetaProperty childMeta, MetaClass meta) {
         CollectionLoader loader = dataComponents.createCollectionLoader();
         CollectionContainer container = dataComponents.createCollectionContainer(meta.getJavaClass(), parent, childMeta.getName());
         loader.setContainer(container);
@@ -376,61 +238,8 @@ public class EntityInspectorEditor extends StandardEditor {
             Collection<?> value = EntityValues.getValue(parent.getItem(), childMeta.getName());
             return value != null ? new ArrayList<>(value) : new ArrayList<>();
         });
-
-        Table<?> table = uiComponents.create(Table.NAME);
-        table.setMultiSelect(true);
-
-        //place non-system properties columns first
-        List<Table.Column> nonSystemPropertyColumns = new ArrayList<>();
-        List<Table.Column> systemPropertyColumns = new ArrayList<>();
-        for (MetaProperty metaProperty : meta.getProperties()) {
-            if (metaProperty.getRange().isClass() || isRelatedToNonLocalProperty(metaProperty))
-                continue; // because we use local views
-            Table.Column column = new Table.Column(meta.getPropertyPath(metaProperty.getName()));
-            if (!metadataTools.isSystem(metaProperty)) {
-                column.setCaption(getPropertyCaption(meta, metaProperty));
-                nonSystemPropertyColumns.add(column);
-            } else {
-                column.setCaption(metaProperty.getName());
-                systemPropertyColumns.add(column);
-            }
-            if (metaProperty.getJavaType().equals(String.class)) {
-                column.setMaxTextLength(MAX_TEXT_LENGTH);
-            }
-        }
-        for (Table.Column column : nonSystemPropertyColumns) {
-            table.addColumn(column);
-        }
-
-        for (Table.Column column : systemPropertyColumns) {
-            table.addColumn(column);
-        }
-
-        table.setItems(new ContainerTableItems(container));
-
-        ButtonsPanel propertyButtonsPanel = createButtonsPanel(table, childMeta);
-        table.setButtonsPanel(propertyButtonsPanel);
-
-        table.setWidth(FULL_SIZE);
-        table.setHeight(FULL_SIZE);
-
-        vbox.add(table);
-        vbox.expand(table);
-        vbox.setMargin(true);
-
-        TabSheet.Tab tab = tablesTabSheet.addTab(childMeta.toString(), vbox);
-        tab.setCaption(getPropertyCaption(parent.getEntityMetaClass(), childMeta));
-
         loader.load();
-    }
-
-    private Field createBooleanField() {
-        ComboBox field = uiComponents.create(ComboBox.NAME);
-        field.setOptionsMap(ParamsMap.of(
-                messages.getMessage("trueString"), Boolean.TRUE,
-                messages.getMessage("falseString"), Boolean.FALSE));
-        field.setTextInputAllowed(false);
-        return field;
+        return container;
     }
 
     protected String getPropertyCaption(MetaClass metaClass, MetaProperty metaProperty) {
@@ -441,21 +250,6 @@ public class EntityInspectorEditor extends StandardEditor {
             return caption.substring(0, CAPTION_MAX_LENGTH);
     }
 
-
-    /**
-     * Determine whether the given metaProperty relates to at least one non local property
-     */
-    protected boolean isRelatedToNonLocalProperty(MetaProperty metaProperty) {
-        MetaClass metaClass = metaProperty.getDomain();
-        for (String relatedProperty : metadataTools.getRelatedProperties(metaProperty)) {
-            //noinspection ConstantConditions
-            if (metaClass.getProperty(relatedProperty).getRange().isClass()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * Creates a buttons panel managing table's content.
      *
@@ -464,7 +258,7 @@ public class EntityInspectorEditor extends StandardEditor {
      * @return buttons panel
      */
     protected ButtonsPanel createButtonsPanel(Table table, MetaProperty metaProperty) {
-        ButtonsPanel propertyButtonsPanel = uiComponents.create(ButtonsPanel.class);
+        ButtonsPanel propertyButtonsPanel = table.getButtonsPanel();
 
         propertyButtonsPanel.add(createButton(table, metaProperty));
         if (metaProperty.getType() == ASSOCIATION) {

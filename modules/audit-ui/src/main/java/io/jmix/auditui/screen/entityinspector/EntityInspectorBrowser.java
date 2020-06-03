@@ -16,15 +16,14 @@
 
 package io.jmix.auditui.screen.entityinspector;
 
+import io.jmix.auditui.screen.entityinspector.assistant.InspectorFetchPlanBuilder;
+import io.jmix.auditui.screen.entityinspector.assistant.InspectorTableBuilder;
 import io.jmix.core.*;
 import io.jmix.core.entity.SoftDelete;
-import io.jmix.core.metamodel.datatype.Datatypes;
-import io.jmix.core.metamodel.datatype.FormatStringsRegistry;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Range;
 import io.jmix.core.metamodel.model.Session;
-import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
 import io.jmix.ui.Actions;
@@ -39,7 +38,6 @@ import io.jmix.ui.action.list.RefreshAction;
 import io.jmix.ui.action.list.RemoveAction;
 import io.jmix.ui.component.LookupComponent;
 import io.jmix.ui.component.*;
-import io.jmix.ui.component.data.table.ContainerTableItems;
 import io.jmix.ui.export.ExportFormat;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.icon.JmixIcon;
@@ -47,15 +45,15 @@ import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.model.DataComponents;
 import io.jmix.ui.screen.*;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Modifier;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.function.Function;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static io.jmix.ui.export.ExportFormat.JSON;
 import static io.jmix.ui.export.ExportFormat.ZIP;
@@ -80,8 +78,6 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
     protected Security security;
     @Autowired
     protected DataComponents dataComponents;
-    @Autowired
-    protected FetchPlanRepository fetchPlanRepository;
 
     @Autowired
     protected UiComponents uiComponents;
@@ -126,9 +122,6 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
     //TODO filter implementation component (Filter in Table/DataGrid #221)
     protected Component filter;
     protected Table entitiesTable;
-
-    protected CollectionContainer<Entity> entitiesDc;
-    protected CollectionLoader<Entity> entitiesDl;
 
     protected MetaClass selectedMeta;
 
@@ -198,16 +191,17 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         }
         textSelection.setVisible(true);
 
-        createContainer(meta);
-        createTable(meta);
-        entitiesTable.setItems(new ContainerTableItems(entitiesDc));
+        entitiesTable = InspectorTableBuilder.of(createContainer(meta))
+                .withMaxTextLength(MAX_TEXT_LENGTH)
+                .withSystem(true)
+                .withButtons(table -> createButtonsPanel(table))
+                .build();
 
         tableBox.add(entitiesTable);
         tableBox.expand(entitiesTable);
 
         addSelectionListener();
         createFilter();
-        entitiesDl.load();
     }
 
     private void addSelectionListener() {
@@ -228,68 +222,21 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         });
     }
 
-    private void createTable(MetaClass meta) {
-        entitiesTable = uiComponents.create(Table.NAME);
+    private CollectionContainer createContainer(MetaClass meta) {
+        CollectionContainer entitiesDc = dataComponents.createCollectionContainer(meta.getJavaClass());
+        FetchPlan fetchPlan = InspectorFetchPlanBuilder.of(meta.getJavaClass())
+                .withSystemProperties(true)
+                .build();
+        entitiesDc.setFetchPlan(fetchPlan);
 
-        //collect properties in order to add non-system columns first
-        List<Table.Column> nonSystemPropertyColumns = new ArrayList<>(10);
-        List<Table.Column> systemPropertyColumns = new ArrayList<>(10);
-        for (MetaProperty metaProperty : meta.getProperties()) {
-            //don't show embedded, transient & multiple referred entities
-            if (isEmbedded(metaProperty) || !metadataTools.isPersistent(metaProperty)) {
-                continue;
-            }
-
-            Range range = metaProperty.getRange();
-            if (range.getCardinality().isMany()) {
-                continue;
-            }
-
-            Table.Column column = new Table.Column(meta.getPropertyPath(metaProperty.getName()));
-
-            if (metaProperty.getJavaType().equals(String.class)) {
-                column.setMaxTextLength(MAX_TEXT_LENGTH);
-            }
-
-            if (!metadataTools.isSystem(metaProperty)) {
-                column.setCaption(getPropertyCaption(meta, metaProperty));
-                nonSystemPropertyColumns.add(column);
-            } else {
-                column.setCaption(metaProperty.getName());
-                systemPropertyColumns.add(column);
-            }
-        }
-        for (Table.Column column : nonSystemPropertyColumns) {
-            entitiesTable.addColumn(column);
-        }
-
-        for (Table.Column column : systemPropertyColumns) {
-            entitiesTable.addColumn(column);
-        }
-        entitiesTable.setSizeFull();
-        createButtonsPanel(entitiesTable);
-
-        RowsCount rowsCount = uiComponents.create(RowsCount.class);
-        rowsCount.setRowsCountTarget(entitiesTable);
-        entitiesTable.setRowsCount(rowsCount);
-
-        entitiesTable.setEnterPressAction(entitiesTable.getAction("edit"));
-        entitiesTable.setItemClickAction(entitiesTable.getAction("edit"));
-        entitiesTable.setMultiSelect(true);
-
-        entitiesTable.addStyleName("table-boolean-text");
-    }
-
-    private void createContainer(MetaClass meta) {
-        entitiesDc = dataComponents.createCollectionContainer(meta.getJavaClass());
-        entitiesDc.setFetchPlan(createView(meta));
-
-        entitiesDl = dataComponents.createCollectionLoader();
-        entitiesDl.setFetchPlan(createView(meta));
+        CollectionLoader entitiesDl = dataComponents.createCollectionLoader();
+        entitiesDl.setFetchPlan(fetchPlan);
         entitiesDl.setContainer(entitiesDc);
         entitiesDl.setLoadDynamicAttributes(true);
         entitiesDl.setSoftDeletion(!removedRecords.isChecked());
         entitiesDl.setQuery(String.format("select e from %s e", meta.getName()));
+        entitiesDl.load();
+        return entitiesDc;
     }
 
     //TODO create filter component (Filter in Table/DataGrid #221)
@@ -297,12 +244,8 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
 
     }
 
-    protected boolean isEmbedded(MetaProperty metaProperty) {
-        return metaProperty.getAnnotatedElement().isAnnotationPresent(javax.persistence.Embedded.class);
-    }
-
     protected void createButtonsPanel(Table table) {
-        ButtonsPanel buttonsPanel = uiComponents.create(ButtonsPanel.class);
+        ButtonsPanel buttonsPanel = table.getButtonsPanel();
 
         Button createButton = uiComponents.create(Button.class);
         CreateAction createAction = createCreateAction(table);
@@ -317,7 +260,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         editButton.setIcon(icons.get(JmixIcon.EDIT_ACTION));
 
         Button removeButton = uiComponents.create(Button.class);
-        RemoveAction removeAction = createRemoveAction();
+        RemoveAction removeAction = createRemoveAction(table);
         table.addAction(removeAction);
         removeButton.setAction(removeAction);
         removeButton.setIcon(icons.get(JmixIcon.REMOVE_ACTION));
@@ -331,7 +274,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
 //        excelButton.setFrame(frame);
 
         Button refreshButton = uiComponents.create(Button.class);
-        RefreshAction refreshAction = createRefreshAction();
+        RefreshAction refreshAction = createRefreshAction(table);
         refreshButton.setAction(refreshAction);
         refreshButton.setIcon(icons.get(JmixIcon.REFRESH_ACTION));
         refreshButton.setFrame(getWindow().getFrame());
@@ -393,20 +336,17 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         buttonsPanel.add(refreshButton);
 //        buttonsPanel.add(exportPopupButton);
 //        buttonsPanel.add(importUpload);
-
-        table.setButtonsPanel(buttonsPanel);
     }
 
-    private RefreshAction createRefreshAction() {
+    private RefreshAction createRefreshAction(Table table) {
         RefreshAction refreshAction = actions.create(RefreshAction.class);
-        refreshAction.setTarget(entitiesTable);
+        refreshAction.setTarget(table);
         return refreshAction;
     }
 
-    private RemoveAction createRemoveAction() {
+    private RemoveAction createRemoveAction(Table table) {
         RemoveAction removeAction = actions.create(RemoveAction.class);
-        removeAction.setTarget(entitiesTable);
-        removeAction.setAfterActionPerformedHandler(event -> entitiesDl.load());
+        removeAction.setTarget(table);
         return removeAction;
     }
 
@@ -427,30 +367,6 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         editAction.setScreenClass(EntityInspectorEditor.class);
         editAction.setShortcut(uiProperties.getTableInsertShortcut());
         return editAction;
-    }
-
-    protected FetchPlan createView(MetaClass meta) {
-        FetchPlan view = new FetchPlan(meta.getJavaClass(), false);
-        for (MetaProperty metaProperty : meta.getProperties()) {
-            switch (metaProperty.getType()) {
-                case DATATYPE:
-                case ENUM:
-                    view.addProperty(metaProperty.getName());
-                    break;
-                case ASSOCIATION:
-                case COMPOSITION:
-                    if (!metaProperty.getRange().getCardinality().isMany()) {
-                        FetchPlan minimal = fetchPlanRepository
-                                .getFetchPlan(metaProperty.getRange().asClass(), FetchPlan.MINIMAL);
-                        FetchPlan propView = new FetchPlan(minimal, metaProperty.getName() + "Ds", false);
-                        view.addProperty(metaProperty.getName(), propView);
-                    }
-                    break;
-                default:
-                    throw new IllegalStateException("unknown property type");
-            }
-        }
-        return view;
     }
 
     protected EntityImportView createEntityImportView(MetaClass metaClass) {
@@ -481,10 +397,6 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
             }
         }
         return entityImportView;
-    }
-
-    protected String getPropertyCaption(MetaClass metaClass, MetaProperty metaProperty) {
-        return messageTools.getPropertyCaption(metaClass, metaProperty.getName());
     }
 
     protected boolean readPermitted(MetaClass metaClass) {
@@ -525,9 +437,10 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
 //                    exportDisplay.show(new ByteArrayDataProvider(data), resourceName, JSON);
                 }
             } catch (Exception e) {
-
-                //TODO show notification
-//                showNotification(messages.getMessage("exportFailed"), e.getMessage(), Frame.NotificationType.ERROR);
+                notifications.create(Notifications.NotificationType.ERROR)
+                        .withCaption(messages.getMessage("exportFailed"))
+                        .withDescription(e.getMessage())
+                        .show();
                 log.error("Entities export failed", e);
             }
         }
