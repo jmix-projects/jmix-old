@@ -38,6 +38,7 @@ import io.jmix.ui.action.list.RefreshAction;
 import io.jmix.ui.action.list.RemoveAction;
 import io.jmix.ui.component.LookupComponent;
 import io.jmix.ui.component.*;
+import io.jmix.ui.export.ExportDisplay;
 import io.jmix.ui.export.ExportFormat;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.icon.JmixIcon;
@@ -50,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Modifier;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,11 +110,11 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
     protected BoxLayout filterBox;
 
     //TODO Import/export service
-//    @Autowired
-//    protected EntityImportExportService entityImportExportService;
+    @Autowired
+    protected EntityImportExport entityImportExport;
 
-//    @Autowired
-//    protected ExportDisplay exportDisplay;
+    @Autowired
+    protected ExportDisplay exportDisplay;
 
     //TODO file upload API (File storage API and UI components #103)
 //    @Autowired
@@ -313,9 +315,9 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
 //                Collection<Entity> importedEntities;
 //                if ("json".equals(Files.getFileExtension(fileName))) {
 //                    String content = new String(fileBytes, StandardCharsets.UTF_8);
-//                    importedEntities = entityImportExportService.importEntitiesFromJSON(content, createEntityImportView(selectedMeta));
+//                    importedEntities = entityImportExport.importEntitiesFromJSON(content, createEntityImportView(selectedMeta));
 //                } else {
-//                    importedEntities = entityImportExportService.importEntitiesFromZIP(fileBytes, createEntityImportView(selectedMeta));
+//                    importedEntities = entityImportExport.importEntitiesFromZIP(fileBytes, createEntityImportView(selectedMeta));
 //                }
 //
 //                // todo localize the message !
@@ -427,13 +429,13 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
             //TODO export
             try {
                 if (exportFormat == ZIP) {
-//                    byte[] data = entityImportExportService.exportEntitiesToZIP(selected);
-//                    String resourceName = selectedMeta.getJavaClass().getSimpleName() + ".zip";
+                    byte[] data = entityImportExport.exportEntitiesToZIP(selected);
+                    String resourceName = selectedMeta.getJavaClass().getSimpleName() + ".zip";
 //                    exportDisplay.show(new ByteArrayDataProvider(data), resourceName, ZIP);
                 } else if (exportFormat == JSON) {
-//                    byte[] data = entityImportExportService.exportEntitiesToJSON(selected)
-//                            .getBytes(StandardCharsets.UTF_8);
-//                    String resourceName = selectedMeta.getJavaClass().getSimpleName() + ".json";
+                    byte[] data = entityImportExport.exportEntitiesToJSON(selected)
+                            .getBytes(StandardCharsets.UTF_8);
+                    String resourceName = selectedMeta.getJavaClass().getSimpleName() + ".json";
 //                    exportDisplay.show(new ByteArrayDataProvider(data), resourceName, JSON);
                 }
             } catch (Exception e) {
