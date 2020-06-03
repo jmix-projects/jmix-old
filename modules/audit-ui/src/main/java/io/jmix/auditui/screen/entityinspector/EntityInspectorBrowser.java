@@ -17,6 +17,7 @@
 package io.jmix.auditui.screen.entityinspector;
 
 import io.jmix.core.*;
+import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.datatype.Datatypes;
 import io.jmix.core.metamodel.datatype.FormatStringsRegistry;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -30,6 +31,7 @@ import io.jmix.ui.Actions;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.UiProperties;
+import io.jmix.ui.action.Action;
 import io.jmix.ui.action.ItemTrackingAction;
 import io.jmix.ui.action.list.CreateAction;
 import io.jmix.ui.action.list.EditAction;
@@ -149,6 +151,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
             entitiesLookup.addValueChangeListener(e -> showEntities());
             removedRecords.addValueChangeListener(e -> showEntities());
         }
+        textSelection.addValueChangeListener(e -> changeTableTextSelectionEnabled());
     }
 
     @Override
@@ -193,11 +196,39 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         if (filter != null) {
             filterBox.remove(filter);
         }
+        textSelection.setVisible(true);
 
         createContainer(meta);
-        textSelection.setVisible(true);
-        textSelection.addValueChangeListener(e -> changeTableTextSelectionEnabled());
+        createTable(meta);
+        entitiesTable.setItems(new ContainerTableItems(entitiesDc));
 
+        tableBox.add(entitiesTable);
+        tableBox.expand(entitiesTable);
+
+        addSelectionListener();
+        createFilter();
+        entitiesDl.load();
+    }
+
+    private void addSelectionListener() {
+        entitiesTable.addSelectionListener(event -> {
+            Table.SelectionEvent selectionEvent = (Table.SelectionEvent) event;
+            boolean removeEnabled = true;
+            if (!selectionEvent.getSelected().isEmpty()) {
+                for (Object o : selectionEvent.getSelected()) {
+                    if (o instanceof SoftDelete) {
+                        if (((SoftDelete) o).isDeleted()) {
+                            removeEnabled = false;
+                        }
+                    }
+                }
+            }
+            Action removeAction = entitiesTable.getAction(RemoveAction.ID);
+            removeAction.setEnabled(removeEnabled && removeAction.isEnabled());
+        });
+    }
+
+    private void createTable(MetaClass meta) {
         entitiesTable = uiComponents.create(Table.NAME);
 
         //collect properties in order to add non-system columns first
@@ -235,14 +266,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         for (Table.Column column : systemPropertyColumns) {
             entitiesTable.addColumn(column);
         }
-
-        entitiesTable.setItems(new ContainerTableItems(entitiesDc));
-
-        tableBox.add(entitiesTable);
-        tableBox.expand(entitiesTable);
-
         entitiesTable.setSizeFull();
-
         createButtonsPanel(entitiesTable);
 
         RowsCount rowsCount = uiComponents.create(RowsCount.class);
@@ -254,9 +278,6 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         entitiesTable.setMultiSelect(true);
 
         entitiesTable.addStyleName("table-boolean-text");
-
-        createFilter();
-        entitiesDl.load();
     }
 
     private void createContainer(MetaClass meta) {
