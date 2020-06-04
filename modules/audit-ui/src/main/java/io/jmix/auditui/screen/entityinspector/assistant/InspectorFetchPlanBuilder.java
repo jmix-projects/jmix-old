@@ -76,19 +76,12 @@ public class InspectorFetchPlanBuilder {
     }
 
     public FetchPlan build() {
-        return createView(metaClass);
-    }
-
-    protected FetchPlan createView(MetaClass meta) {
         if (withSystemProperties) {
             fetchPlanBuilder.addSystem();
         }
-        for (MetaProperty metaProperty : meta.getProperties()) {
+        fetchPlanBuilder.addFetchPlan(FetchPlan.LOCAL);
+        for (MetaProperty metaProperty : metaClass.getProperties()) {
             switch (metaProperty.getType()) {
-                case DATATYPE:
-                case ENUM:
-                    fetchPlanBuilder.add(metaProperty.getName());
-                    break;
                 case ASSOCIATION:
                 case COMPOSITION:
                     MetaClass metaPropertyClass = metaProperty.getRange().asClass();
