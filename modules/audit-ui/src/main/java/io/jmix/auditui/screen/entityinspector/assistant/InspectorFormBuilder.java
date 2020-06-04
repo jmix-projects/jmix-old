@@ -147,7 +147,7 @@ public class InspectorFormBuilder {
                     break;
                 case COMPOSITION:
                 case ASSOCIATION:
-                    if (!metaProperty.getRange().getCardinality().isMany()) {
+                    if (!isMany(metaProperty)) {
                         if (!isEmbedded(metaProperty)) {
                             addField(container, form, metaProperty, isReadonly);
                         }
@@ -215,7 +215,7 @@ public class InspectorFormBuilder {
         field.setCaption(getPropertyCaption(metaClass, metaProperty));
         field.setRequired(isRequired);
 
-        isReadonly = isReadonly || disabledProperties != null && disabledProperties.contains(metaProperty.getName());
+        isReadonly = isReadonly || (disabledProperties != null && disabledProperties.contains(metaProperty.getName()));
         if (range.isClass() && !metadataTools.isEmbedded(metaProperty)) {
             field.setEditable(metadataTools.isOwningSide(metaProperty) && !isReadonly);
         } else {
@@ -241,10 +241,11 @@ public class InspectorFormBuilder {
 
     protected String getPropertyCaption(MetaClass metaClass, MetaProperty metaProperty) {
         String caption = messageTools.getPropertyCaption(metaClass, metaProperty.getName());
-        if (caption.length() < maxCaptionLength)
+        if (caption.length() < maxCaptionLength) {
             return caption;
-        else
+        } else {
             return caption.substring(0, maxCaptionLength);
+        }
     }
 
 }

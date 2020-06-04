@@ -81,6 +81,17 @@ public final class EntityFormUtils {
     }
 
     /**
+     * Checks if the property is many
+     *
+     * @param metaProperty meta property
+     * @return true if many, false otherwise
+     */
+    public static boolean isMany(MetaProperty metaProperty) {
+        return metaProperty.getAnnotatedElement().isAnnotationPresent(javax.persistence.Embedded.class)
+                || metaProperty.getAnnotatedElement().isAnnotationPresent(javax.persistence.EmbeddedId.class);
+    }
+
+    /**
      * @param metaProperty meta property
      * @param item         entity containing property of the given meta property
      * @return true if property require text area component; that is if it either too long or contains line separators

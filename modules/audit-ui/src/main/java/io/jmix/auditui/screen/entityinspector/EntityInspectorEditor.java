@@ -164,7 +164,7 @@ public class EntityInspectorEditor extends StandardEditor {
             switch (metaProperty.getType()) {
                 case COMPOSITION:
                 case ASSOCIATION:
-                    if (metaProperty.getRange().getCardinality().isMany()) {
+                    if (isMany(metaProperty)) {
                         addTable(container, metaProperty);
                     } else {
                         if (isEmbedded(metaProperty)) {

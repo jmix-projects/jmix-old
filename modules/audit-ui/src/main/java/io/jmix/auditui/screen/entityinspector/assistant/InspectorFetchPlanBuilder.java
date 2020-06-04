@@ -26,6 +26,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+import static io.jmix.auditui.screen.entityinspector.EntityFormUtils.isMany;
+
 @Component(InspectorFetchPlanBuilder.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class InspectorFetchPlanBuilder {
@@ -91,14 +93,13 @@ public class InspectorFetchPlanBuilder {
                             createEmbeddedPlan(metaPropertyClass, builder);
                         });
                     } else {
-                        boolean many = metaProperty.getRange().getCardinality().isMany();
-                        if (withCollections && many) {
-                            fetchPlanBuilder.add(metaProperty.getName(),
-                                    builder -> builder.addFetchPlan(FetchPlan.LOCAL)
-                                            .addSystem());
-                        }
-
-                        if (!many) {
+                        if (isMany(metaProperty)) {
+                            if (withCollections) {
+                                fetchPlanBuilder.add(metaProperty.getName(),
+                                        builder -> builder.addFetchPlan(FetchPlan.LOCAL)
+                                                .addSystem());
+                            }
+                        } else {
                             fetchPlanBuilder.add(metaProperty.getName(),
                                     builder -> builder.addFetchPlan(FetchPlan.MINIMAL));
                         }
@@ -114,8 +115,7 @@ public class InspectorFetchPlanBuilder {
     protected void createEmbeddedPlan(MetaClass metaClass, FetchPlanBuilder builder) {
         builder.addFetchPlan(FetchPlan.BASE);
         for (MetaProperty embeddedNestedProperty : metaClass.getProperties()) {
-            if (embeddedNestedProperty.getRange().isClass() &&
-                    !embeddedNestedProperty.getRange().getCardinality().isMany()) {
+            if (embeddedNestedProperty.getRange().isClass() && !isMany(embeddedNestedProperty)) {
                 builder.add(embeddedNestedProperty.getName(), FetchPlan.MINIMAL);
             }
         }

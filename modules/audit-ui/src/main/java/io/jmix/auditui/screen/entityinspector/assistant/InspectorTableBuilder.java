@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static io.jmix.auditui.screen.entityinspector.EntityFormUtils.isEmbedded;
+import static io.jmix.auditui.screen.entityinspector.EntityFormUtils.isMany;
 
 @Component(InspectorTableBuilder.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -95,8 +96,7 @@ public class InspectorTableBuilder {
                 continue;
             }
 
-            Range range = metaProperty.getRange();
-            if (range.getCardinality().isMany()) {
+            if (isMany(metaProperty)) {
                 continue;
             }
 
