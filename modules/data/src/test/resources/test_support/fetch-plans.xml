@@ -16,8 +16,18 @@
 
 <fetchPlans xmlns="http://jmix.io/schema/core/fetch-plans">
 
+    <fetchPlan class="test_support.entity.lazyloading.FPMainEntity" name="FPMainEntity">
+        <property name="refField"/>
+    </fetchPlan>
+
     <fetchPlan class="test_support.entity.lazyloading.FPManyEntity" name="FPManyEntity">
         <property name="name"/>
+        <property name="mainEntity" fetchPlan="FPMainEntity"/>
+    </fetchPlan>
+
+    <fetchPlan class="test_support.entity.lazyloading.ManyToManyTwoEntity" name="ManyToManyTwoEntity">
+        <property name="name"/>
+        <property name="manyToManyEntities"/>
     </fetchPlan>
 
 </fetchPlans>

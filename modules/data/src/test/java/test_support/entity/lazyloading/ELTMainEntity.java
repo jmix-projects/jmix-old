@@ -25,13 +25,25 @@ import javax.persistence.Table;
 import java.util.List;
 
 @Table(name = "ELT_MAIN_ENTITY")
-@Entity(name = "elt_ELTMainEntity")
+@Entity(name = "elt_MainEntity")
 public class ELTMainEntity extends StandardEntity {
     @Column(name = "NAME")
     protected String name;
 
     @OneToMany(mappedBy = "mainEntity")
     protected List<ELTManyEntity> refField;
+
+
+    @OneToMany(mappedBy = "eltMainEntity")
+    protected List<FPManyEntity> fpManyEntities;
+
+    public List<FPManyEntity> getFpManyEntities() {
+        return fpManyEntities;
+    }
+
+    public void setFpManyEntities(List<FPManyEntity> fpManyEntities) {
+        this.fpManyEntities = fpManyEntities;
+    }
 
     public List<ELTManyEntity> getRefField() {
         return refField;

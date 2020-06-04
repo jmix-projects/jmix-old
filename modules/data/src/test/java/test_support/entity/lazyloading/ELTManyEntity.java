@@ -21,7 +21,7 @@ import io.jmix.data.entity.StandardEntity;
 import javax.persistence.*;
 
 @Table(name = "ELT_MANY_ENTITY")
-@Entity(name = "elt_ELTManyEntity")
+@Entity(name = "elt_ManyEntity")
 public class ELTManyEntity extends StandardEntity {
     @Column(name = "NAME")
     protected String name;

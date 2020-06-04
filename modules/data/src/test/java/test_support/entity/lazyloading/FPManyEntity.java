@@ -30,6 +30,17 @@ public class FPManyEntity extends StandardEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MAIN_ENTITY_ID")
     protected FPMainEntity mainEntity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ELT_MAIN_ENTITY_ID")
+    protected ELTMainEntity eltMainEntity;
+
+    public ELTMainEntity getEltMainEntity() {
+        return eltMainEntity;
+    }
+
+    public void setEltMainEntity(ELTMainEntity eltMainEntity) {
+        this.eltMainEntity = eltMainEntity;
+    }
 
     public String getSecondName() {
         return secondName;
