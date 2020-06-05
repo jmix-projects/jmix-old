@@ -208,7 +208,7 @@
                     <hbox spacing="true">
                         <checkBoxGroup id="checkBoxGroup"/>
                         <twinColumn id="twinColumn"/>
-                        <optionsGroup id="optionsGroup"/>
+                        <radioButtonGroup id="radioButtonGroup"/>
                         <optionsList id="optionsList"/>
                     </hbox>
                     <popupButton caption="PopupButton">
