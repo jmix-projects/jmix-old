@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.component;
+package com.haulmont.cuba.web.gui.components;
 
-import io.jmix.core.entity.FileDescriptor;
+import com.haulmont.cuba.gui.components.FileMultiUploadField;
 
-/**
- * A resource that can be obtained from the <code>FileStorage</code> using the given <code>FileDescriptor</code>.
- */
-public interface FileDescriptorResource extends Resource, ResourceView.HasMimeType, ResourceView.HasStreamSettings {
-    FileDescriptorResource setFileDescriptor(FileDescriptor fileDescriptor);
-
-    FileDescriptor getFileDescriptor();
+@Deprecated
+public class WebFileMultiUploadField extends io.jmix.ui.component.impl.WebFileMultiUploadField
+        implements FileMultiUploadField {
 }
