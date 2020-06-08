@@ -15,8 +15,8 @@
   -->
 
 <window xmlns="http://jmix.io/schema/ui/window"
-        caption="msg://browserCaption"
-messagesPack="io.jmix.auditui.screen.entityinspector">
+        caption="msg://io.jmix.datatoolsui.screen.entityinspector/browserCaption"
+messagesPack="io.jmix.datatoolsui.screen.entityinspector">
 
     <dialogMode height="theme://cuba.gui.dialogSize.height.xlarge"
                 width="theme://cuba.gui.dialogSize.width.xlarge"

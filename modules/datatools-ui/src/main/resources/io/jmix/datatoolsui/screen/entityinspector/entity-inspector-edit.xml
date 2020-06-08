@@ -16,7 +16,7 @@
 
 <window xmlns="http://jmix.io/schema/ui/window"
         caption=""
-        messagesPack="io.jmix.auditui.screen.entityinspector">
+        messagesPack="io.jmix.datatoolsui.screen.entityinspector">
     <actions>
         <action id="windowCommitAndClose" primary="true"/>
         <action id="windowClose"/>

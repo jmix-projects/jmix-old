@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.auditui.screen.entityinspector;
+package io.jmix.datatoolsui.screen.entityinspector;
 
-import io.jmix.auditui.screen.entityinspector.assistant.InspectorFetchPlanBuilder;
-import io.jmix.auditui.screen.entityinspector.assistant.InspectorTableBuilder;
+import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorFetchPlanBuilder;
+import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorTableBuilder;
 import io.jmix.core.*;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -113,8 +113,8 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
     @Autowired
     protected EntityImportExport entityImportExport;
 
-    @Autowired
-    protected ExportDisplay exportDisplay;
+//    @Autowired
+//    protected ExportDisplay exportDisplay;
 
     //TODO file upload API (File storage API and UI components #103)
 //    @Autowired

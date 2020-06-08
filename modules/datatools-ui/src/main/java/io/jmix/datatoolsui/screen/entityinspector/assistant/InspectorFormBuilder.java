@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.jmix.auditui.screen.entityinspector.assistant;
+package io.jmix.datatoolsui.screen.entityinspector.assistant;
 
-import io.jmix.auditui.screen.entityinspector.EntityInspectorBrowser;
+import io.jmix.datatoolsui.screen.entityinspector.EntityInspectorBrowser;
 import io.jmix.core.*;
 import io.jmix.core.common.util.ParamsMap;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 
-import static io.jmix.auditui.screen.entityinspector.EntityFormUtils.*;
+import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.*;
 
 @Component(InspectorFormBuilder.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)

@@ -42,6 +42,7 @@ dependencies {
         api "io.jmix.starter.securityui:jmix-starter-security-ui:$version"
         api "io.jmix.starter.dynattr:jmix-starter-dynattr:$version"
         api "io.jmix.starter.dynattrui:jmix-starter-dynattr-ui:$version"
+        api "io.jmix.starter.auditui:jmix-starter-datatools-ui:$version"
 
         api "io.jmix.core:jmix-core:$version"
         api "io.jmix.cuba:jmix-cuba:$version"
@@ -58,7 +59,8 @@ dependencies {
         api "io.jmix.ui-themes-compiled:jmix-ui-themes-compiled:$version"
         api "io.jmix.ui-widgets:jmix-ui-widgets:$version"
         api "io.jmix.ui-widgets-compiled:jmix-ui-widgets-compiled:$version"
-        
+        api "io.jmix.datatoolsui:jmix-datatools-ui:$version"
+
         api 'com.google.guava:guava:27.0.1-jre'
         api 'commons-io:commons-io:2.6'
         api 'commons-fileupload:commons-fileupload:1.4'

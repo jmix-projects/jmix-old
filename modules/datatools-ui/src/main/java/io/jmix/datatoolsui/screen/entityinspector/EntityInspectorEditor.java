@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.jmix.auditui.screen.entityinspector;
+package io.jmix.datatoolsui.screen.entityinspector;
 
-import io.jmix.auditui.screen.entityinspector.assistant.InspectorFetchPlanBuilder;
-import io.jmix.auditui.screen.entityinspector.assistant.InspectorFormBuilder;
-import io.jmix.auditui.screen.entityinspector.assistant.InspectorTableBuilder;
+import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorFetchPlanBuilder;
+import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorFormBuilder;
+import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorTableBuilder;
 import io.jmix.core.*;
 import io.jmix.core.common.util.ParamsMap;
 import io.jmix.core.entity.EntityValues;
@@ -44,7 +44,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.jmix.auditui.screen.entityinspector.EntityFormUtils.*;
+import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.*;
 import static io.jmix.core.metamodel.model.MetaProperty.Type.ASSOCIATION;
 
 @UiController("entityInspector.edit")

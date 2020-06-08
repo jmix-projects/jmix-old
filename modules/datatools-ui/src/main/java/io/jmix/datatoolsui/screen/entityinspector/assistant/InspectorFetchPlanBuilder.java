@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.auditui.screen.entityinspector.assistant;
+package io.jmix.datatoolsui.screen.entityinspector.assistant;
 
 import io.jmix.core.*;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-import static io.jmix.auditui.screen.entityinspector.EntityFormUtils.isMany;
+import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.isMany;
 
 @Component(InspectorFetchPlanBuilder.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -105,8 +105,6 @@ public class InspectorFetchPlanBuilder {
                         }
                     }
                     break;
-                default:
-                    throw new IllegalStateException("unknown property type");
             }
         }
         return fetchPlanBuilder.build();

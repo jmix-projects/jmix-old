@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.auditui.screen.entityinspector.assistant;
+package io.jmix.datatoolsui.screen.entityinspector.assistant;
 
 import io.jmix.core.*;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static io.jmix.auditui.screen.entityinspector.EntityFormUtils.isEmbedded;
-import static io.jmix.auditui.screen.entityinspector.EntityFormUtils.isMany;
+import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.isEmbedded;
+import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.isMany;
 
 @Component(InspectorTableBuilder.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)

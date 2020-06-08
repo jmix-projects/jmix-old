@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.auditui.screen.entityinspector;
+package io.jmix.datatoolsui.screen.entityinspector;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.Entity;
@@ -87,8 +87,7 @@ public final class EntityFormUtils {
      * @return true if many, false otherwise
      */
     public static boolean isMany(MetaProperty metaProperty) {
-        return metaProperty.getAnnotatedElement().isAnnotationPresent(javax.persistence.Embedded.class)
-                || metaProperty.getAnnotatedElement().isAnnotationPresent(javax.persistence.EmbeddedId.class);
+        return metaProperty.getRange().getCardinality().isMany();
     }
 
     /**
