@@ -2118,16 +2118,6 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <!-- OptionsGroup -->
-    <xs:complexType name="optionsGroupComponent">
-        <xs:complexContent>
-            <xs:extension base="optionsBaseFieldComponent">
-                <xs:attribute name="orientation" type="orientation"/>
-                <xs:attribute name="multiselect" type="xs:boolean"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
     <!-- OptionsList -->
     <xs:complexType name="optionsListComponent">
         <xs:complexContent>
@@ -2179,7 +2169,16 @@
                 <xs:attribute name="uploadButtonDescription" type="resourceString"/>
 
                 <xs:attribute name="showFileName" type="xs:boolean"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <!-- FileStorageUploadField -->
+    <xs:complexType name="fileStorageUploadComponent">
+        <xs:complexContent>
+            <xs:extension base="uploadComponent">
                 <xs:attribute name="fileStoragePutMode" type="fileStoragePutMode"/>
+                <xs:attribute name="fileStorage" type="xs:string"/>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -3383,7 +3382,6 @@
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attribute name="caption" type="resourceString"/>
         <xs:attribute name="message" type="resourceString"/>
-        <xs:attribute name="type" type="dialogMessageType"/>
 
         <xs:attribute name="contentMode" type="contentMode"/>
         <xs:attribute name="maximized" type="xs:boolean"/>
@@ -3436,13 +3434,6 @@
             <xs:enumeration value="OK_CANCEL"/>
             <xs:enumeration value="YES_NO"/>
             <xs:enumeration value="YES_NO_CANCEL"/>
-        </xs:restriction>
-    </xs:simpleType>
-
-    <xs:simpleType name="dialogMessageType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="CONFIRMATION"/>
-            <xs:enumeration value="WARNING"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -3769,13 +3760,13 @@
                 <xs:element name="entityComboBox" type="entityComboBoxComponent"/>
 
                 <xs:element name="colorPicker" type="colorPickerComponent"/>
-                <xs:element name="optionsGroup" type="optionsGroupComponent"/>
                 <xs:element name="radioButtonGroup" type="radioButtonGroupComponent"/>
                 <xs:element name="checkBoxGroup" type="checkBoxGroupComponent"/>
                 <xs:element name="optionsList" type="optionsListComponent"/>
                 <xs:element name="progressBar" type="progressBarComponent"/>
 
                 <xs:element name="upload" type="uploadComponent"/>
+                <xs:element name="fileStorageUpload" type="fileStorageUploadComponent"/>
                 <xs:element name="multiUpload" type="multiuploadComponent"/>
                 <xs:element name="embedded" type="embeddedComponent"/>
                 <xs:element name="image" type="imageComponent"/>

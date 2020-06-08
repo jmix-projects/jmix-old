@@ -49,7 +49,7 @@ public class ComponentSamples extends Screen {
     private OptionsList<List, String> optionsList;
 
     @Autowired
-    private OptionsGroup<List, String> optionsGroup;
+    private RadioButtonGroup<String> radioButtonGroup;
 
     @Autowired
     private VBoxLayout othersVBox;
@@ -72,7 +72,7 @@ public class ComponentSamples extends Screen {
         checkBoxGroup.setOptionsList(options);
         twinColumn.setOptionsList(options);
         optionsList.setOptionsList(options);
-        optionsGroup.setOptionsList(options);
+        radioButtonGroup.setOptionsList(options);
 
 //        listEditor = uiComponents.create(ListEditor.NAME);
 //        listEditor.setOptionsList(options);
