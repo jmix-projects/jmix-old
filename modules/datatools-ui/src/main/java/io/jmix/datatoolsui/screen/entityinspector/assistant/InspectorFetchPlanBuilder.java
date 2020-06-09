@@ -39,7 +39,7 @@ public class InspectorFetchPlanBuilder {
     @Autowired
     private MetadataTools metadataTools;
 
-    private FetchPlanBuilder fetchPlanBuilder;
+    private final FetchPlanBuilder fetchPlanBuilder;
 
     protected Class<? extends Entity> entityClass;
     private MetaClass metaClass;

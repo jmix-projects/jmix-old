@@ -39,6 +39,7 @@ import java.util.function.Consumer;
 import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.isEmbedded;
 import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.isMany;
 
+@SuppressWarnings({"rawtypes","unchecked"})
 @Component(InspectorTableBuilder.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class InspectorTableBuilder {
@@ -52,8 +53,8 @@ public class InspectorTableBuilder {
     @Autowired
     protected UiComponents uiComponents;
 
-    private MetaClass metaClass;
-    private CollectionContainer collectionContainer;
+    private final MetaClass metaClass;
+    private final CollectionContainer collectionContainer;
 
     private Integer maxTextLength = 0;
     private Boolean withSystem = false;

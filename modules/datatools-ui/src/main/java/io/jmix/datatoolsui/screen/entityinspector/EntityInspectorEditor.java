@@ -47,6 +47,7 @@ import java.util.Map;
 import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.*;
 import static io.jmix.core.metamodel.model.MetaProperty.Type.ASSOCIATION;
 
+@SuppressWarnings({"rawtypes","unchecked"})
 @UiController("entityInspector.edit")
 @UiDescriptor("entity-inspector-edit.xml")
 public class EntityInspectorEditor extends StandardEditor {
@@ -169,9 +170,11 @@ public class EntityInspectorEditor extends StandardEditor {
                     } else {
                         if (isEmbedded(metaProperty)) {
                             Entity propertyValue = EntityValues.getValue(item, metaProperty.getName());
-                            propertyValue = dataContext.merge(propertyValue);
+                            if (propertyValue!=null) {
+                                propertyValue = dataContext.merge(propertyValue);
+                            }
                             InstanceContainer embeddedContainer = dataComponents.createInstanceContainer(
-                                    propertyValue.getClass(), container, metaProperty.getName());
+                                    metaProperty.getRange().asClass().getJavaClass(), container, metaProperty.getName());
                             embeddedContainer.setItem(propertyValue);
                             Form embeddedForm = InspectorFormBuilder.from(embeddedContainer)
                                     .withCaption(getPropertyCaption(metaClass, metaProperty))
@@ -257,7 +260,7 @@ public class EntityInspectorEditor extends StandardEditor {
      * @param metaProperty property representing table's data
      * @return buttons panel
      */
-    protected ButtonsPanel createButtonsPanel(Table table, MetaProperty metaProperty) {
+    protected void createButtonsPanel(Table table, MetaProperty metaProperty) {
         ButtonsPanel propertyButtonsPanel = table.getButtonsPanel();
 
         propertyButtonsPanel.add(createButton(table, metaProperty));
@@ -266,7 +269,6 @@ public class EntityInspectorEditor extends StandardEditor {
         }
         propertyButtonsPanel.add(editButton(table, metaProperty));
         propertyButtonsPanel.add(removeButton(table, metaProperty));
-        return propertyButtonsPanel;
     }
 
     private Button addButton(Table table, MetaProperty metaProperty) {

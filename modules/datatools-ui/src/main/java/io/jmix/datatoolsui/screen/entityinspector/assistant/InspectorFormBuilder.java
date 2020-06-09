@@ -43,6 +43,7 @@ import java.util.List;
 
 import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.*;
 
+@SuppressWarnings({"rawtypes","unchecked"})
 @Component(InspectorFormBuilder.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class InspectorFormBuilder {
@@ -50,7 +51,6 @@ public class InspectorFormBuilder {
     public static final String NAME = "jmix_EntityInspectorFormBuilder";
 
     public static final int MAX_TEXTFIELD_STRING_LENGTH = 255;
-    public static final int CAPTION_MAX_LENGTH = 100;
 
     @Autowired
     protected UiComponents uiComponents;
@@ -67,7 +67,7 @@ public class InspectorFormBuilder {
     @Autowired
     protected MessageTools messageTools;
 
-    private InstanceContainer container;
+    private final InstanceContainer container;
 
     private String caption = null;
     private Integer maxCaptionLength = 50;

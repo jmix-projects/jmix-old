@@ -16,8 +16,6 @@
 
 package io.jmix.datatoolsui.screen.entityinspector;
 
-import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorFetchPlanBuilder;
-import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorTableBuilder;
 import io.jmix.core.*;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -26,6 +24,8 @@ import io.jmix.core.metamodel.model.Range;
 import io.jmix.core.metamodel.model.Session;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
+import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorFetchPlanBuilder;
+import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorTableBuilder;
 import io.jmix.ui.Actions;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.UiComponents;
@@ -38,7 +38,6 @@ import io.jmix.ui.action.list.RefreshAction;
 import io.jmix.ui.action.list.RemoveAction;
 import io.jmix.ui.component.LookupComponent;
 import io.jmix.ui.component.*;
-import io.jmix.ui.export.ExportDisplay;
 import io.jmix.ui.export.ExportFormat;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.icon.JmixIcon;
@@ -60,6 +59,7 @@ import java.util.TreeMap;
 import static io.jmix.ui.export.ExportFormat.JSON;
 import static io.jmix.ui.export.ExportFormat.ZIP;
 
+@SuppressWarnings({"rawtypes","unchecked"})
 @UiController("entityInspector.browse")
 @UiDescriptor("entity-inspector-browser.xml")
 public class EntityInspectorBrowser extends StandardLookup<Entity> {
@@ -196,7 +196,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         entitiesTable = InspectorTableBuilder.of(createContainer(meta))
                 .withMaxTextLength(MAX_TEXT_LENGTH)
                 .withSystem(true)
-                .withButtons(table -> createButtonsPanel(table))
+                .withButtons(this::createButtonsPanel)
                 .build();
 
         tableBox.add(entitiesTable);
@@ -220,7 +220,9 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
                 }
             }
             Action removeAction = entitiesTable.getAction(RemoveAction.ID);
-            removeAction.setEnabled(removeEnabled && removeAction.isEnabled());
+            if (removeAction != null) {
+                removeAction.setEnabled(removeEnabled && removeAction.isEnabled());
+            }
         });
     }
 
