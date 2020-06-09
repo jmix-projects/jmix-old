@@ -16,6 +16,8 @@
 
 package io.jmix.datatoolsui.screen.entityinspector;
 
+import com.google.common.collect.Sets;
+import com.google.common.io.Files;
 import io.jmix.core.*;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -38,6 +40,8 @@ import io.jmix.ui.action.list.RefreshAction;
 import io.jmix.ui.action.list.RemoveAction;
 import io.jmix.ui.component.LookupComponent;
 import io.jmix.ui.component.*;
+import io.jmix.ui.export.ByteArrayDataProvider;
+import io.jmix.ui.export.ExportDisplay;
 import io.jmix.ui.export.ExportFormat;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.icon.JmixIcon;
@@ -45,10 +49,16 @@ import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.model.DataComponents;
 import io.jmix.ui.screen.*;
+import io.jmix.ui.upload.TemporaryStorage;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
@@ -56,10 +66,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static com.google.common.base.Strings.nullToEmpty;
 import static io.jmix.ui.export.ExportFormat.JSON;
 import static io.jmix.ui.export.ExportFormat.ZIP;
 
-@SuppressWarnings({"rawtypes","unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked"})
 @UiController("entityInspector.browse")
 @UiDescriptor("entity-inspector-browser.xml")
 public class EntityInspectorBrowser extends StandardLookup<Entity> {
@@ -109,23 +120,19 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
     @Autowired
     protected BoxLayout filterBox;
 
-    //TODO Import/export service
     @Autowired
     protected EntityImportExport entityImportExport;
 
-//    @Autowired
-//    protected ExportDisplay exportDisplay;
-
-    //TODO file upload API (File storage API and UI components #103)
-//    @Autowired
-//    protected FileUploadingAPI fileUploadingAPI;
-
+    @Autowired
+    protected ExportDisplay exportDisplay;
 
     //TODO filter implementation component (Filter in Table/DataGrid #221)
     protected Component filter;
     protected Table entitiesTable;
 
     protected MetaClass selectedMeta;
+    private CollectionLoader entitiesDl;
+    private CollectionContainer entitiesDc;
 
     @Subscribe
     protected void onInit(InitEvent initEvent) {
@@ -227,13 +234,13 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
     }
 
     private CollectionContainer createContainer(MetaClass meta) {
-        CollectionContainer entitiesDc = dataComponents.createCollectionContainer(meta.getJavaClass());
+        entitiesDc = dataComponents.createCollectionContainer(meta.getJavaClass());
         FetchPlan fetchPlan = InspectorFetchPlanBuilder.of(meta.getJavaClass())
                 .withSystemProperties(true)
                 .build();
         entitiesDc.setFetchPlan(fetchPlan);
 
-        CollectionLoader entitiesDl = dataComponents.createCollectionLoader();
+        entitiesDl = dataComponents.createCollectionLoader();
         entitiesDl.setFetchPlan(fetchPlan);
         entitiesDl.setContainer(entitiesDc);
         entitiesDl.setLoadDynamicAttributes(true);
@@ -284,62 +291,52 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         refreshButton.setFrame(getWindow().getFrame());
 
         PopupButton exportPopupButton = uiComponents.create(PopupButton.class);
+        exportPopupButton.setCaption(messages.getMessage(EntityInspectorBrowser.class, "export"));
         exportPopupButton.setIcon(icons.get(JmixIcon.DOWNLOAD));
         exportPopupButton.addAction(new ExportAction("exportJSON", JSON));
         exportPopupButton.addAction(new ExportAction("exportZIP", ZIP));
 
-        //TODO init file upload (File storage API and UI components #103)
-//        importUpload = uiComponents.create(FileUploadField.class);
-//        importUpload.setFrame(getWindow().getFrame());
-//        importUpload.setPermittedExtensions(Sets.newHashSet(".json", ".zip"));
-//        importUpload.setUploadButtonIcon(icons.get(JmixIcon.UPLOAD));
-//        importUpload.setUploadButtonCaption(messages.getMessage("import"));
+        FileUploadField importUpload = uiComponents.create(FileUploadField.class);
+        importUpload.setShowClearButton(true);
+        importUpload.setPasteZone(tableBox);
+        importUpload.setPermittedExtensions(Sets.newHashSet(".json", ".zip"));
+        importUpload.setUploadButtonIcon(icons.get(JmixIcon.UPLOAD));
+        importUpload.setUploadButtonCaption(messages.getMessage(EntityInspectorBrowser.class, "import"));
 
-//        importUpload.addFileUploadSucceedListener(event -> {
-//            File file = fileUploadingAPI.getFile(importUpload.getFileId());
-//            if (file == null) {
-//                String errorMsg = String.format("Entities import upload error. File with id %s not found", importUpload.getFileId());
-//                throw new RuntimeException(errorMsg);
-//            }
-//            byte[] fileBytes;
-//            try (InputStream is = new FileInputStream(file)) {
-//                fileBytes = IOUtils.toByteArray(is);
-//            } catch (IOException e) {
-//                throw new RuntimeException("Unable to upload file", e);
-//            }
-//            try {
-//                fileUploadingAPI.deleteFile(importUpload.getFileId());
-//            } catch (FileStorageException e) {
-//                log.error("Unable to delete temp file", e);
-//            }
-//            String fileName = importUpload.getFileName();
-//            try {
-//                Collection<Entity> importedEntities;
-//                if ("json".equals(Files.getFileExtension(fileName))) {
-//                    String content = new String(fileBytes, StandardCharsets.UTF_8);
-//                    importedEntities = entityImportExport.importEntitiesFromJSON(content, createEntityImportView(selectedMeta));
-//                } else {
-//                    importedEntities = entityImportExport.importEntitiesFromZIP(fileBytes, createEntityImportView(selectedMeta));
-//                }
-//
-//                // todo localize the message !
-//                showNotification(importedEntities.size() + " entities imported", NotificationType.HUMANIZED);
-//            } catch (Exception e) {
-//                showNotification(getMessage("importFailed"),
-//                        formatMessage("importFailedMessage", fileName, nullToEmpty(e.getMessage())),
-//                        NotificationType.ERROR);
-//                log.error("Entities import error", e);
-//            }
-//            entitiesDc.refresh();
-//        });
+        importUpload.addFileUploadSucceedListener(event -> {
+            byte[] fileBytes = importUpload.getValue();
+            String fileName = importUpload.getFileName();
+            try {
+                Collection<Entity> importedEntities;
+                if (JSON.getFileExt().equals(Files.getFileExtension(fileName))) {
+                    String content = new String(fileBytes, StandardCharsets.UTF_8);
+                    importedEntities = entityImportExport.importEntitiesFromJson(content, createEntityImportView(selectedMeta));
+                } else {
+                    importedEntities = entityImportExport.importEntitiesFromZIP(fileBytes, createEntityImportView(selectedMeta));
+                }
+
+                notifications.create(Notifications.NotificationType.HUMANIZED)
+                        .withDescription(messages.formatMessage(EntityInspectorBrowser.class, "importSuccessful", importedEntities.size()))
+                        .show();
+            } catch (Exception e) {
+                notifications.create(Notifications.NotificationType.ERROR)
+                        .withCaption(messages.getMessage(EntityInspectorBrowser.class, "importFailed"))
+                        .withDescription(messages.formatMessage(
+                                EntityInspectorBrowser.class, "importFailedMessage",
+                                fileName, nullToEmpty(e.getMessage())))
+                        .show();
+                log.error("Entities import error", e);
+            }
+            entitiesDl.load();
+        });
 
         buttonsPanel.add(createButton);
         buttonsPanel.add(editButton);
         buttonsPanel.add(removeButton);
 //        buttonsPanel.add(excelButton);
         buttonsPanel.add(refreshButton);
-//        buttonsPanel.add(exportPopupButton);
-//        buttonsPanel.add(importUpload);
+        buttonsPanel.add(exportPopupButton);
+        buttonsPanel.add(importUpload);
     }
 
     private RefreshAction createRefreshAction(Table table) {
@@ -413,7 +410,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
 
     protected class ExportAction extends ItemTrackingAction {
 
-        private ExportFormat exportFormat;
+        private final ExportFormat exportFormat;
 
         public ExportAction(String id, ExportFormat exportFormat) {
             super(id);
@@ -428,21 +425,20 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
                 selected = entitiesTable.getItems().getItems();
             }
 
-            //TODO export
             try {
                 if (exportFormat == ZIP) {
                     byte[] data = entityImportExport.exportEntitiesToZIP(selected);
                     String resourceName = selectedMeta.getJavaClass().getSimpleName() + ".zip";
-//                    exportDisplay.show(new ByteArrayDataProvider(data), resourceName, ZIP);
+                    exportDisplay.show(new ByteArrayDataProvider(data), resourceName, ZIP);
                 } else if (exportFormat == JSON) {
                     byte[] data = entityImportExport.exportEntitiesToJSON(selected)
                             .getBytes(StandardCharsets.UTF_8);
                     String resourceName = selectedMeta.getJavaClass().getSimpleName() + ".json";
-//                    exportDisplay.show(new ByteArrayDataProvider(data), resourceName, JSON);
+                    exportDisplay.show(new ByteArrayDataProvider(data), resourceName, JSON);
                 }
             } catch (Exception e) {
                 notifications.create(Notifications.NotificationType.ERROR)
-                        .withCaption(messages.getMessage("exportFailed"))
+                        .withCaption(messages.getMessage(EntityInspectorBrowser.class, "exportFailed"))
                         .withDescription(e.getMessage())
                         .show();
                 log.error("Entities export failed", e);
@@ -451,7 +447,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
 
         @Override
         public String getCaption() {
-            return messages.getMessage(id);
+            return messages.getMessage(EntityInspectorBrowser.class, id);
         }
     }
 }
