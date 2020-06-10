@@ -49,16 +49,14 @@ import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.model.DataComponents;
 import io.jmix.ui.screen.*;
-import io.jmix.ui.upload.TemporaryStorage;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.inject.Scope;
 import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
@@ -200,7 +198,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         }
         textSelection.setVisible(true);
 
-        entitiesTable = InspectorTableBuilder.of(createContainer(meta))
+        entitiesTable = InspectorTableBuilder.from(getBeanLocator(),createContainer(meta))
                 .withMaxTextLength(MAX_TEXT_LENGTH)
                 .withSystem(true)
                 .withButtons(this::createButtonsPanel)
@@ -235,7 +233,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
 
     private CollectionContainer createContainer(MetaClass meta) {
         entitiesDc = dataComponents.createCollectionContainer(meta.getJavaClass());
-        FetchPlan fetchPlan = InspectorFetchPlanBuilder.of(meta.getJavaClass())
+        FetchPlan fetchPlan = InspectorFetchPlanBuilder.of(getBeanLocator(),meta.getJavaClass())
                 .withSystemProperties(true)
                 .build();
         entitiesDc.setFetchPlan(fetchPlan);

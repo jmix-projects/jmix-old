@@ -47,7 +47,7 @@ import java.util.Map;
 import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.*;
 import static io.jmix.core.metamodel.model.MetaProperty.Type.ASSOCIATION;
 
-@SuppressWarnings({"rawtypes","unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked"})
 @UiController("entityInspector.edit")
 @UiDescriptor("entity-inspector-edit.xml")
 public class EntityInspectorEditor extends StandardEditor {
@@ -139,7 +139,7 @@ public class EntityInspectorEditor extends StandardEditor {
         InstanceContainer container = dataComponents.createInstanceContainer(entity.getClass());
         if (!entityStates.isNew(entity)) {
             InstanceLoader loader = dataComponents.createInstanceLoader();
-            loader.setFetchPlan(InspectorFetchPlanBuilder.of(entity.getClass())
+            loader.setFetchPlan(InspectorFetchPlanBuilder.of(getBeanLocator(), entity.getClass())
                     .withCollections(true)
                     .withEmbedded(true)
                     .withSystemProperties(true)
@@ -152,7 +152,7 @@ public class EntityInspectorEditor extends StandardEditor {
     }
 
     private void createForm(InstanceContainer container) {
-        Form form = InspectorFormBuilder.from(container)
+        Form form = InspectorFormBuilder.from(getBeanLocator(), container)
                 .withDisabledProperties(parentProperty)
                 .build();
 
@@ -170,13 +170,13 @@ public class EntityInspectorEditor extends StandardEditor {
                     } else {
                         if (isEmbedded(metaProperty)) {
                             Entity propertyValue = EntityValues.getValue(item, metaProperty.getName());
-                            if (propertyValue!=null) {
+                            if (propertyValue != null) {
                                 propertyValue = dataContext.merge(propertyValue);
                             }
                             InstanceContainer embeddedContainer = dataComponents.createInstanceContainer(
                                     metaProperty.getRange().asClass().getJavaClass(), container, metaProperty.getName());
                             embeddedContainer.setItem(propertyValue);
-                            Form embeddedForm = InspectorFormBuilder.from(embeddedContainer)
+                            Form embeddedForm = InspectorFormBuilder.from(getBeanLocator(), embeddedContainer)
                                     .withCaption(getPropertyCaption(metaClass, metaProperty))
                                     .build();
                             contentPane.add(embeddedForm);
@@ -218,7 +218,7 @@ public class EntityInspectorEditor extends StandardEditor {
         BoxLayout vbox = uiComponents.create(VBoxLayout.class);
         vbox.setSizeFull();
 
-        Table entitiesTable = InspectorTableBuilder.of(createTableContainer(parent, childMeta, meta))
+        Table entitiesTable = InspectorTableBuilder.from(getBeanLocator(), createTableContainer(parent, childMeta, meta))
                 .withMaxTextLength(MAX_TEXT_LENGTH)
                 .withSystem(true)
                 .withButtons(table -> createButtonsPanel(table, childMeta))

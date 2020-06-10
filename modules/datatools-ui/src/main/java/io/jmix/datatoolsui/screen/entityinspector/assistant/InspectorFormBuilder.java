@@ -75,8 +75,8 @@ public class InspectorFormBuilder {
     private String fieldWidth = "400px";
     private List<String> disabledProperties;
 
-    public static InspectorFormBuilder from(InstanceContainer container) {
-        return AppBeans.getPrototype(InspectorFormBuilder.class, container);
+    public static InspectorFormBuilder from(BeanLocator beanLocator, InstanceContainer container) {
+        return beanLocator.getPrototype(InspectorFormBuilder.class, container);
     }
 
     protected InspectorFormBuilder(InstanceContainer container) {

@@ -48,8 +48,8 @@ public class InspectorFetchPlanBuilder {
     private boolean withEmbedded = false;
     private boolean withSystemProperties = false;
 
-    public static InspectorFetchPlanBuilder of(Class<? extends Entity> entityClass) {
-        return AppBeans.getPrototype(InspectorFetchPlanBuilder.class, entityClass);
+    public static InspectorFetchPlanBuilder of(BeanLocator beanLocator, Class<? extends Entity> entityClass) {
+        return beanLocator.getPrototype(InspectorFetchPlanBuilder.class, entityClass);
     }
 
     protected InspectorFetchPlanBuilder(Class<? extends Entity> entityClass) {
