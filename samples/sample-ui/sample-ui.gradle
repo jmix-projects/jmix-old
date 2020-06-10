@@ -22,7 +22,6 @@ group = 'io.jmix.sample.ui'
 
 dependencies {
     implementation project(':starters:starter-standard')
-    implementation project(':starters:starter-datatools-ui')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.apache.commons:commons-dbcp2'
