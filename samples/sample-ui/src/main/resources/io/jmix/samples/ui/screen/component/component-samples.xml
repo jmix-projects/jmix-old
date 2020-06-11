@@ -151,16 +151,10 @@
                         <currencyField currency="R" enable="false"/>
                         <currencyField currency="R" editable="false" enable="false"/>
                     </hbox>
-                    <hbox caption="FileUpload" spacing="true">
-                        <upload showFileName="true"/>
-                        <upload editable="false"/>
-                        <upload enable="false"/>
-                        <upload editable="false" enable="false"/>
-                    </hbox>
                     <hbox caption="SourceCodeEditor" spacing="true">
-                        <!--                <sourceCodeEditor/>-->
-                        <!--                <sourceCodeEditor editable="false"/>-->
-                        <!--                <sourceCodeEditor enable="false"/>-->
+                        <sourceCodeEditor/>
+                        <sourceCodeEditor editable="false"/>
+                        <sourceCodeEditor enable="false"/>
                     </hbox>
                     <hbox caption="RichTextArea" spacing="true">
                         <richTextArea/>
