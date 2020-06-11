@@ -8,6 +8,7 @@ dependencies {
     api project(':starters:starter-ui')
     api project(':starters:starter-security')
     api project(':starters:starter-security-ui')
+    api project(':starters:starter-datatools-ui')
 
     api 'org.springframework.boot:spring-boot-autoconfigure'
 }

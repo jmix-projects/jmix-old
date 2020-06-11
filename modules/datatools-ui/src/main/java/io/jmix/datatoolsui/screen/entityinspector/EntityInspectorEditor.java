@@ -72,7 +72,7 @@ public class EntityInspectorEditor extends StandardEditor {
     protected UiProperties uiProperties;
     @Autowired
     protected Actions actions;
-    @Inject
+    @Autowired
     protected Icons icons;
 
     @Autowired

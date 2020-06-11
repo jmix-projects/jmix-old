@@ -3,5 +3,6 @@
     <menu id="application" caption="msg://io.jmix.samples.helloworld/menu.application">
         <item screen="sec_User.browse" caption="msg://io.jmix.samples.helloworld/menu.sec_UserBrowse"/>
         <item screen="demoScreen" caption="msg://io.jmix.samples.helloworld/menu.demoScreen"/>
+        <item screen="entityInspector.browse"/>
     </menu>
 </menu-config>

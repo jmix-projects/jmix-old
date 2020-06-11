@@ -48,15 +48,12 @@ import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.model.DataComponents;
+import io.jmix.ui.navigation.Route;
 import io.jmix.ui.screen.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 
-import javax.inject.Scope;
 import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
@@ -69,6 +66,7 @@ import static io.jmix.ui.export.ExportFormat.JSON;
 import static io.jmix.ui.export.ExportFormat.ZIP;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
+@Route("jmixEntityInspector")
 @UiController("entityInspector.browse")
 @UiDescriptor("entity-inspector-browser.xml")
 public class EntityInspectorBrowser extends StandardLookup<Entity> {

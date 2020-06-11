@@ -6,6 +6,7 @@ group = 'io.jmix.sample.helloworld'
 
 dependencies {
     implementation project(':starters:starter-standard')
+    implementation project(':starters:starter-datatools-ui')
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.zaxxer:HikariCP'
     runtimeOnly 'org.hsqldb:hsqldb'
