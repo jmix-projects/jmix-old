@@ -6,6 +6,7 @@ group = 'io.jmix.starter.standard-nowidgets'
 dependencies {
     api project(':starters:starter-data')
     api project(':starters:starter-ui')
+    api project(':starters:starter-ui-data')
     api project(':starters:starter-security')
     api project(':starters:starter-security-ui')
 

@@ -17,10 +17,10 @@
 package io.jmix.samples.rest;
 
 import io.jmix.core.DataManager;
-import io.jmix.core.JmixCoreConfiguration;
+import io.jmix.core.CoreConfiguration;
 import io.jmix.core.security.Authenticator;
-import io.jmix.data.JmixDataConfiguration;
-import io.jmix.rest.JmixRestConfiguration;
+import io.jmix.data.DataConfiguration;
+import io.jmix.rest.RestConfiguration;
 import io.jmix.security.JmixSecurityConfiguration;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +34,10 @@ import org.springframework.context.event.EventListener;
 import javax.sql.DataSource;
 
 @SpringBootApplication
-@Import({JmixCoreConfiguration.class,
+@Import({CoreConfiguration.class,
         JmixSecurityConfiguration.class,
-        JmixDataConfiguration.class,
-        JmixRestConfiguration.class})
+        DataConfiguration.class,
+        RestConfiguration.class})
 public class SampleRestApplication {
 
     @Autowired
