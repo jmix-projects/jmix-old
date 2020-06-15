@@ -17,14 +17,13 @@
 package io.jmix.samples.customsecurity
 
 import io.jmix.core.security.Security
-import io.jmix.core.security.UserAuthentication
 import io.jmix.core.security.UserRepository
+import io.jmix.core.security.authentication.CoreAuthentication
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import spock.lang.Specification
-
-import org.springframework.beans.factory.annotation.Autowired
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class CustomSecurityImplTest extends Specification {
@@ -55,7 +54,7 @@ class CustomSecurityImplTest extends Specification {
 
         then:
 
-        authentication instanceof UserAuthentication
+        authentication instanceof CoreAuthentication
         authentication.user instanceof CustomUser
         authentication.user == userRepository.loadUserByUsername('admin')
     }

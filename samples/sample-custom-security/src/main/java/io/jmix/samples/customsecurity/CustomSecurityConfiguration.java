@@ -16,39 +16,35 @@
 
 package io.jmix.samples.customsecurity;
 
-import io.jmix.core.security.UserAuthenticationProvider;
+import io.jmix.core.security.CoreAuthenticationProvider;
 import io.jmix.core.security.UserRepository;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 @Configuration
+@Conditional(OnCustomSecurityImplementation.class)
 @EnableWebSecurity
 public class CustomSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    protected UserRepository userRepository;
-
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(new SystemAuthenticationProvider(userRepository));
+    protected void configure(AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(new SystemAuthenticationProvider(userRepository()));
 
-        UserAuthenticationProvider userAuthenticationProvider = new UserAuthenticationProvider();
-        userAuthenticationProvider.setUserDetailsService(userRepository);
+        CoreAuthenticationProvider userAuthenticationProvider = new CoreAuthenticationProvider();
+        userAuthenticationProvider.setUserDetailsService(userRepository());
         userAuthenticationProvider.setPasswordEncoder(getPasswordEncoder());
         auth.authenticationProvider(userAuthenticationProvider);
     }
 
-    @Bean(name = "jmix_authenticationManager")
+    @Bean(name = "sec_AuthenticationManager")
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
@@ -59,9 +55,9 @@ public class CustomSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-//    @Bean(name = "jmix_userDetailsService")
-//    @Override
-//    public UserDetailsService userDetailsServiceBean() throws Exception {
-//        return super.userDetailsServiceBean();
-//    }
+    @Bean(UserRepository.NAME)
+    public UserRepository userRepository() {
+        return new CustomUserRepository();
+    }
+
 }

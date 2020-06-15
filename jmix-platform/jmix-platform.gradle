@@ -57,8 +57,10 @@ dependencies {
 
         api "io.jmix.security:jmix-security:$version"
         api "io.jmix.securityui:jmix-security-ui:$version"
+        api "io.jmix.securityui:jmix-security-data:$version"
         api "io.jmix.starter.security:jmix-starter-security:$version"
-        api "io.jmix.starter.securityui:jmix-starter-security-ui:$version"
+        api "io.jmix.starter.security:jmix-starter-security-ui:$version"
+        api "io.jmix.starter.security:jmix-starter-security-data:$version"
 
         api "io.jmix.ui:jmx-ui:$version"
         api "io.jmix.ui:jmx-ui-data:$version"

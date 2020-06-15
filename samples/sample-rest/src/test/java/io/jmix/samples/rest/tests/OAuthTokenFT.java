@@ -17,6 +17,8 @@
 package io.jmix.samples.rest.tests;
 
 import com.jayway.jsonpath.ReadContext;
+import io.jmix.core.security.impl.CoreUser;
+import io.jmix.core.security.impl.InMemoryUserRepository;
 import io.jmix.samples.rest.SampleRestApplication;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -25,9 +27,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -51,9 +55,21 @@ public class OAuthTokenFT {
 
     private String baseUrl;
 
+    @Autowired
+    protected InMemoryUserRepository userRepository;
+
+    protected CoreUser admin;
+
     @Before
     public void setUp() {
+        admin = new CoreUser("admin", "{noop}admin123", "Admin");
+        userRepository.createUser(admin);
         baseUrl = "http://localhost:" + port + "/rest";
+    }
+
+    @After
+    public void tearDown() {
+        userRepository.removeUser(admin);
     }
 
     @Test

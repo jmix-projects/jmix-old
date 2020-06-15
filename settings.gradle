@@ -47,8 +47,10 @@ include 'starters:starter-rest'
 
 include 'modules:security'
 include 'modules:security-ui'
+include 'modules:security-data'
 include 'starters:starter-security'
 include 'starters:starter-security-ui'
+include 'starters:starter-security-data'
 
 include 'modules:ui'
 include 'modules:ui-data'

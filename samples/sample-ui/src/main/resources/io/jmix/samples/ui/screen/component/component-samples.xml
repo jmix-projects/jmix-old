@@ -18,11 +18,11 @@
         caption="Components">
     <data readOnly="true">
         <collection id="usersDc"
-                    class="io.jmix.security.entity.User"
+                    class="io.jmix.samples.ui.entity.SampleUser"
                     fetchPlan="_local">
             <loader id="usersDl">
                 <query>
-                    <![CDATA[select e from sec_User e]]>
+                    <![CDATA[select e from sample_User e]]>
                 </query>
             </loader>
         </collection>

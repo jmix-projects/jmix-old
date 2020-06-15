@@ -6,7 +6,10 @@
 package io.jmix.samples.rest
 
 import com.haulmont.masquerade.restapi.ServiceGenerator
+import io.jmix.core.security.UserRepository
+import io.jmix.core.security.impl.CoreUser
 import io.jmix.samples.rest.service.NotFoundUrlService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import spock.lang.Specification
@@ -20,10 +23,21 @@ class NotFoundUrlFT extends Specification {
     @LocalServerPort
     private int port
 
+    @Autowired
+    UserRepository userRepository
+
+    CoreUser admin
+
     private String baseUrl
 
     void setup() {
+        admin = new CoreUser('admin', '{noop}admin123', 'Admin')
+        userRepository.createUser(admin)
         baseUrl = "http://localhost:" + port + "/rest/"
+    }
+
+    void cleanup() {
+        userRepository.removeUser(admin)
     }
 
     def "REST-API returns 404 for incorrect URL"() {

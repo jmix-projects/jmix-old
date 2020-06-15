@@ -16,8 +16,8 @@
 
 package io.jmix.samples.customsecurity;
 
-import io.jmix.data.entity.BaseUuidEntity;
 import io.jmix.core.entity.BaseUser;
+import io.jmix.data.entity.BaseUuidEntity;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
@@ -79,5 +79,10 @@ public class CustomUser extends BaseUuidEntity implements BaseUser {
     @Override
     public String getKey() {
         return username;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return name;
     }
 }
