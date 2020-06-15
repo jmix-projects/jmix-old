@@ -102,8 +102,8 @@ dependencies {
         api 'org.webjars:ace-builds:1.1.9-1-cuba'
         api 'org.webjars:diff-match-patch:0.1.cuba.1'
 
-        api 'org.spockframework:spock-core:1.2-groovy-2.5'
-        api 'org.spockframework:spock-spring:1.2-groovy-2.5'
+        api 'org.spockframework:spock-core:1.3-groovy-2.5'
+        api 'org.spockframework:spock-spring:1.3-groovy-2.5'
 
         api 'io.swagger:swagger-models:1.6.1'
 
