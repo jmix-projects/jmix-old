@@ -25,6 +25,7 @@ import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityOp;
+import io.jmix.security.entity.User;
 import io.jmix.ui.Actions;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.UiProperties;
@@ -147,6 +148,8 @@ public class EntityInspectorEditor extends StandardEditor {
             loader.setEntityId(EntityValues.getId(entity));
             loader.setContainer(container);
             loader.load();
+        } else {
+            container.setItem(entity);
         }
         return container;
     }
