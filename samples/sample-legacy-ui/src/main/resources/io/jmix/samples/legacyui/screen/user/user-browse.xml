@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
         caption="msg://browseCaption"
-        class="io.jmix.samples.ui.screen.user.UserBrowse"
+        class="io.jmix.samples.legacyui.screen.user.UserBrowse"
         messagesPack="io.jmix.samples.ui.screen.user">
     <dsContext>
         <collectionDatasource id="userDs"

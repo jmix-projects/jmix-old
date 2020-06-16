@@ -23,7 +23,7 @@
     </data>
     <dialogMode height="600"
                 width="800"/>
-    <layout spacing="true" expand="expander">
+    <layout spacing="true" expand="usersTable">
         <label value="Users"/>
         <comboBox caption="Select Role"/>
         <groupTable id="usersTable"
@@ -51,7 +51,6 @@
                 <button id="removeBtn" action="usersTable.remove"/>
             </buttonsPanel>
         </groupTable>
-        <vbox id="expander"/>
         <vbox id="lookupActions" spacing="true" visible="false">
             <button action="lookupSelectAction"/>
             <button action="lookupCancelAction"/>
