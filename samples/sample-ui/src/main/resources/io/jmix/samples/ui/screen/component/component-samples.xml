@@ -161,6 +161,9 @@
                         <richTextArea editable="false"/>
                         <richTextArea enable="false"/>
                     </hbox>
+                    <hbox caption="FileUpload" spacing="true">
+                        <upload/>
+                    </hbox>
                 </scrollBox>
             </tab>
             <tab id="layoutTab" caption="Layouts">
