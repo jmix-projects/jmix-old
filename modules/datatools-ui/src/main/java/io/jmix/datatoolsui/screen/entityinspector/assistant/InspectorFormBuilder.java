@@ -43,7 +43,7 @@ import java.util.List;
 
 import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.*;
 
-@SuppressWarnings({"rawtypes","unchecked"})
+@SuppressWarnings({"rawtypes", "unchecked"})
 @Component(InspectorFormBuilder.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class InspectorFormBuilder {
@@ -68,6 +68,7 @@ public class InspectorFormBuilder {
     protected MessageTools messageTools;
 
     private final InstanceContainer container;
+    private Entity entityToEdit;
 
     private String caption = null;
     private Integer maxCaptionLength = 50;
@@ -110,7 +111,7 @@ public class InspectorFormBuilder {
 
     public Form build() {
         MetaClass metaClass = container.getEntityMetaClass();
-        Entity item = container.getItem();
+        Entity item = getItem();
 
         Form form = uiComponents.create(Form.class);
         if (captionWidth != null) {
@@ -160,6 +161,10 @@ public class InspectorFormBuilder {
         return form;
     }
 
+    private Entity getItem() {
+        return container.getItem();
+    }
+
     /**
      * Adds field to the specified form.
      * If the field should be custom, adds it to the specified customFields collection
@@ -188,7 +193,7 @@ public class InspectorFormBuilder {
 
         Field field = (Field) uiComponentsGenerator.generate(componentContext);
 
-        if (requireTextArea(metaProperty, container.getItem(), MAX_TEXTFIELD_STRING_LENGTH)) {
+        if (requireTextArea(metaProperty, getItem(), MAX_TEXTFIELD_STRING_LENGTH)) {
             field = uiComponents.create(TextArea.NAME);
         }
 

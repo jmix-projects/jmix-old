@@ -16,13 +16,13 @@
 
 package io.jmix.autoconfigure.datatoolsui;
 
-import io.jmix.core.JmixCoreConfiguration;
-import io.jmix.datatoolsui.JmixDatatoolsUiConfiguration;
-import io.jmix.ui.JmixUiConfiguration;
+import io.jmix.core.CoreConfiguration;
+import io.jmix.datatoolsui.DatatoolsUiConfiguration;
+import io.jmix.ui.UiConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({JmixCoreConfiguration.class, JmixUiConfiguration.class, JmixDatatoolsUiConfiguration.class})
-public class JmixDatatoolsUiAutoConfiguration {
+@Import({CoreConfiguration.class, UiConfiguration.class, DatatoolsUiConfiguration.class})
+public class DatatoolsUiAutoConfiguration {
 }

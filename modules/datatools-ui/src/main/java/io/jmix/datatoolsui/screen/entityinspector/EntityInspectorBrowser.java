@@ -293,7 +293,6 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
         exportPopupButton.addAction(new ExportAction("exportZIP", ZIP));
 
         FileUploadField importUpload = uiComponents.create(FileUploadField.class);
-        importUpload.setShowClearButton(true);
         importUpload.setPasteZone(tableBox);
         importUpload.setPermittedExtensions(Sets.newHashSet(".json", ".zip"));
         importUpload.setUploadButtonIcon(icons.get(JmixIcon.UPLOAD));
@@ -301,7 +300,7 @@ public class EntityInspectorBrowser extends StandardLookup<Entity> {
 
         importUpload.addFileUploadSucceedListener(event -> {
             byte[] fileBytes = importUpload.getValue();
-            String fileName = importUpload.getFileName();
+            String fileName = event.getFileName();
             try {
                 Collection<Entity> importedEntities;
                 if (JSON.getFileExt().equals(Files.getFileExtension(fileName))) {

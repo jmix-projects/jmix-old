@@ -16,16 +16,15 @@
 
 package io.jmix.datatoolsui.screen.entityinspector;
 
-import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorFetchPlanBuilder;
-import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorFormBuilder;
-import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorTableBuilder;
 import io.jmix.core.*;
 import io.jmix.core.common.util.ParamsMap;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityOp;
-import io.jmix.security.entity.User;
+import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorFetchPlanBuilder;
+import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorFormBuilder;
+import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorTableBuilder;
 import io.jmix.ui.Actions;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.UiProperties;
@@ -39,14 +38,13 @@ import io.jmix.ui.model.impl.NoopDataContext;
 import io.jmix.ui.screen.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.*;
 import static io.jmix.core.metamodel.model.MetaProperty.Type.ASSOCIATION;
+import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.*;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 @UiController("entityInspector.edit")
@@ -140,6 +138,7 @@ public class EntityInspectorEditor extends StandardEditor {
         InstanceContainer container = dataComponents.createInstanceContainer(entity.getClass());
         if (!entityStates.isNew(entity)) {
             InstanceLoader loader = dataComponents.createInstanceLoader();
+            loader.setDataContext(dataContext);
             loader.setFetchPlan(InspectorFetchPlanBuilder.of(getBeanLocator(), entity.getClass())
                     .withCollections(true)
                     .withEmbedded(true)

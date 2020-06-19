@@ -16,10 +16,10 @@
 
 package io.jmix.datatoolsui;
 
-import io.jmix.core.JmixCoreConfiguration;
+import io.jmix.core.CoreConfiguration;
 import io.jmix.core.annotation.JmixModule;
 import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
-import io.jmix.ui.JmixUiConfiguration;
+import io.jmix.ui.UiConfiguration;
 import io.jmix.ui.sys.UiControllersConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -33,9 +33,9 @@ import java.util.Collections;
 @Configuration
 @ComponentScan
 @EnableTransactionManagement
-@JmixModule(dependsOn = {JmixCoreConfiguration.class, JmixUiConfiguration.class})
+@JmixModule(dependsOn = {CoreConfiguration.class, UiConfiguration.class})
 @PropertySource(name = "io.jmix.datatoolsui", value = "classpath:/io/jmix/datatoolsui/module.properties")
-public class JmixDatatoolsUiConfiguration {
+public class DatatoolsUiConfiguration {
 
     @Bean("jmix_JmixDatatoolsUiConfiguration")
     public UiControllersConfiguration screens(ApplicationContext applicationContext,
