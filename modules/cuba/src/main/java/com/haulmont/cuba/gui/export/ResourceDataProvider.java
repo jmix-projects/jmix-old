@@ -15,28 +15,13 @@
  *
  */
 
-package io.jmix.ui.export;
-
-import io.jmix.core.AppBeans;
-import io.jmix.core.Resources;
-
-import java.io.InputStream;
+package com.haulmont.cuba.gui.export;
 
 /**
  * DataProvider for application resources
- *
  */
-public class ResourceDataProvider implements ExportDataProvider {
-
-    private String resourcePath;
-
+public class ResourceDataProvider extends io.jmix.ui.download.ResourceDataProvider implements ExportDataProvider {
     public ResourceDataProvider(String resourcePath) {
-        this.resourcePath = resourcePath;
-    }
-
-    @Override
-    public InputStream provide() {
-        Resources resources = AppBeans.get(Resources.NAME);
-        return resources.getResourceAsStream(resourcePath);
+        super(resourcePath);
     }
 }

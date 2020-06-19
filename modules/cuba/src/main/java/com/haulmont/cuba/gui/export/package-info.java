@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright (c) 2008-2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.export;
 
-import java.io.InputStream;
+@NonNullApi
+package com.haulmont.cuba.gui.export;
 
-/**
- * Provides data for {@link ExportDisplay}.
- */
-public interface ExportDataProvider {
-
-    InputStream provide();
-
-    @Deprecated
-    default void close() {
-    }
-}
+import org.springframework.lang.NonNullApi;
