@@ -60,7 +60,7 @@ allprojects {
             }
         } else {
             jcenter()
-            maven { url "https://dl.bintray.com/cuba-platform/main" }
+            maven { url "https://nexus.jmix.io/repository/public" }
         }
     }
 }
