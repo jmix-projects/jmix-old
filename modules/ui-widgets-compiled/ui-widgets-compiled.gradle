@@ -23,7 +23,7 @@ group = 'io.jmix.ui'
 def uiWidgets = project(':modules:ui-widgets')
 def inputDir = new File(uiWidgets.buildDir, 'widgets')
 
-sourceSets.main.output.dir(inputDir, builtBy: uiWidgets.getTasksByName(JmixPlugin.COMPILE_WIDGETS_TASK_NAME,true)[0])
+sourceSets.main.output.dir(inputDir, builtBy: uiWidgets.tasks.getByName(JmixPlugin.COMPILE_WIDGETS_TASK_NAME))
 
 jar {
     archivesBaseName = 'jmix-ui-widgets-compiled'

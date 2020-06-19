@@ -23,7 +23,7 @@ group = 'io.jmix.ui'
 def uiThemes = project(':modules:ui-themes')
 def inputDir = new File(uiThemes.buildDir, 'themes')
 
-sourceSets.main.output.dir(inputDir, builtBy: uiThemes.getTasksByName(JmixPlugin.COMPILE_THEMES_TASK_NAME,true)[0])
+sourceSets.main.output.dir(inputDir, builtBy: uiThemes.tasks.getByName(JmixPlugin.COMPILE_THEMES_TASK_NAME))
 
 jar {
     archivesBaseName = 'jmix-ui-themes-compiled'
