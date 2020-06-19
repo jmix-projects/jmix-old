@@ -161,7 +161,7 @@ public class DataSet {
         deletePlants(conn);
         deleteColours(conn);
         deleteDrivers(conn);
-        deletePermissions(conn);
+//        deletePermissions(conn);
         deleteUserRoles(conn);
         deleteRoles(conn);
         deleteUsers(conn);
@@ -172,7 +172,7 @@ public class DataSet {
 //        deleteInstances(conn, "SYS_ATTR_VALUE", categoryAttributeValueIds);
 //        deleteInstances(conn, "SYS_CATEGORY_ATTR", categoryAttributeIds);
 //        deleteInstances(conn, "SYS_CATEGORY", categoryIds);
-        deleteInstances(conn, "SEC_CONSTRAINT", constraintIds);
+//        deleteInstances(conn, "SEC_CONSTRAINT", constraintIds);
         deleteInstances(conn, "SAMPLE_REST_SEC_GROUP", groupIds);
         deleteInstances(conn, "REF_PLANT", plantIds);
         deleteStringInstances(conn, "REF_CURRENCY", "CODE", currencyIds);

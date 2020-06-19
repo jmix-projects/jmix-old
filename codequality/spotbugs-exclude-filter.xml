@@ -62,11 +62,6 @@
     </Match>
 
     <Match>
-        <Bug pattern="NM_SAME_SIMPLE_NAME_AS_INTERFACE"/>
-        <Class name="io.jmix.security.entity.User"/>
-    </Match>
-
-    <Match>
         <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED"/>
         <Or>
             <Class name="io.jmix.ui.model.impl.ObservableList"/>

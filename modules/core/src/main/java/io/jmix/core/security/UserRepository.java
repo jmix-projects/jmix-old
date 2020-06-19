@@ -23,11 +23,11 @@ import java.util.List;
 
 public interface UserRepository extends UserDetailsService {
 
-    String NAME = "jmix_UserRepository";
+    String NAME = "core_UserRepository";
 
     BaseUser getSystemUser();
 
     BaseUser getAnonymousUser();
 
-    List<? extends BaseUser> getAll();
+    List<BaseUser> getByUsernameLike(String username);
 }

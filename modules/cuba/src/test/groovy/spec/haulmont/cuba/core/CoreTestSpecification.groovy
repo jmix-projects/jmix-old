@@ -16,6 +16,7 @@
 
 package spec.haulmont.cuba.core
 
+
 import com.haulmont.cuba.core.testsupport.CoreTest
 import spock.lang.Specification
 

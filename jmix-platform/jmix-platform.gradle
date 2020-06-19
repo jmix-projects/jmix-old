@@ -30,36 +30,52 @@ dependencies {
     api platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
     
     constraints {
-        api "io.jmix.starter.standard:jmix-starter-standard:$version"
-        api "io.jmix.starter.standard-nowidgets:jmix-starter-standard-nowidgets:$version"
-        api "io.jmix.starter.data:jmix-starter-data:$version"
-        api "io.jmix.starter.ui:jmix-starter-ui:$version"
-        api "io.jmix.starter.ui.persistence:jmix-starter-ui-persistence:$version"
-        api "io.jmix.starter.cuba:jmix-starter-cuba:$version"
-        api "io.jmix.starter.audit:jmix-starter-audit:$version"
-        api "io.jmix.starter.auditui:jmix-starter-audit-ui:$version"
-        api "io.jmix.starter.security:jmix-starter-security:$version"
-        api "io.jmix.starter.securityui:jmix-starter-security-ui:$version"
-        api "io.jmix.starter.dynattr:jmix-starter-dynattr:$version"
-        api "io.jmix.starter.dynattrui:jmix-starter-dynattr-ui:$version"
-        api "io.jmix.starter.auditui:jmix-starter-datatools-ui:$version"
-
-        api "io.jmix.core:jmix-core:$version"
-        api "io.jmix.cuba:jmix-cuba:$version"
-        api "io.jmix.data:jmix-data:$version"
-        api "io.jmix.dynattr:jmix-dynattr:$version"
-        api "io.jmix.dynattr:jmix-dynattr-ui:$version"
         api "io.jmix.audit:jmix-audit:$version"
         api "io.jmix.audit:jmix-audit-ui:$version"
-        api "io.jmix.security:jmix-security:$version"
-        api "io.jmix.securityui:jmix-security-ui:$version"
-        api "io.jmix.ui:jmx-ui:$version"
-        api "io.jmix.ui:jmx-ui-persistence:$version"
-        api "io.jmix.ui-themes:jmix-ui-themes:$version"
-        api "io.jmix.ui-themes-compiled:jmix-ui-themes-compiled:$version"
-        api "io.jmix.ui-widgets:jmix-ui-widgets:$version"
-        api "io.jmix.ui-widgets-compiled:jmix-ui-widgets-compiled:$version"
+        api "io.jmix.starter.audit:jmix-starter-audit:$version"
+        api "io.jmix.starter.audit:jmix-starter-audit-ui:$version"
+
+        api "io.jmix.core:jmix-core:$version"
+        api "io.jmix.starter.core:jmix-starter-core:$version"
+
+        api "io.jmix.cuba:jmix-cuba:$version"
+        api "io.jmix.starter.cuba:jmix-starter-cuba:$version"
+
+        api "io.jmix.data:jmix-data:$version"
+        api "io.jmix.starter.data:jmix-starter-data:$version"
+
+        api "io.jmix.dynattr:jmix-dynattr:$version"
+        api "io.jmix.dynattr:jmix-dynattr-ui:$version"
+        api "io.jmix.starter.dynattr:jmix-starter-dynattr:$version"
+        api "io.jmix.starter.dynattr:jmix-starter-dynattr-ui:$version"
+
+        api "io.jmix.fsfilestorage:jmix-fsfilestorage:$version"
+        api "io.jmix.starter.fsfilestorage:jmix-starter-fsfilestorage:$version"
+
+        api "io.jmix.rest:jmix-rest:$version"
+        api "io.jmix.starter.rest:jmix-starter-rest:$version"
+
         api "io.jmix.datatoolsui:jmix-datatools-ui:$version"
+        api "io.jmix.starter.auditui:jmix-starter-datatools-ui:$version"
+
+        api "io.jmix.security:jmix-security:$version"
+        api "io.jmix.security:jmix-security-ui:$version"
+        api "io.jmix.security:jmix-security-data:$version"
+        api "io.jmix.starter.security:jmix-starter-security:$version"
+        api "io.jmix.starter.security:jmix-starter-security-ui:$version"
+        api "io.jmix.starter.security:jmix-starter-security-data:$version"
+
+        api "io.jmix.ui:jmx-ui:$version"
+        api "io.jmix.ui:jmx-ui-data:$version"
+        api "io.jmix.ui:jmix-ui-themes:$version"
+        api "io.jmix.ui:jmix-ui-themes-compiled:$version"
+        api "io.jmix.ui:jmix-ui-widgets:$version"
+        api "io.jmix.ui:jmix-ui-widgets-compiled:$version"
+        api "io.jmix.starter.ui:jmix-starter-ui:$version"
+        api "io.jmix.starter.ui:jmix-starter-ui-data:$version"
+
+        api "io.jmix.starter.standard-nowidgets:jmix-starter-standard-nowidgets:$version"
+        api "io.jmix.starter.standard:jmix-starter-standard:$version"
 
         api 'com.google.guava:guava:27.0.1-jre'
         api 'commons-io:commons-io:2.6'
@@ -88,9 +104,12 @@ dependencies {
 
         api 'org.webjars:ace-builds:1.1.9-1-cuba'
         api 'org.webjars:diff-match-patch:0.1.cuba.1'
+        api 'org.webjars:jquery:3.3.1'
+        api 'org.webjars:jquery-ui:1.12.1'
+        api 'org.webjars.bower:jquery-file-upload:9.22.0.cuba.0'
 
-        api 'org.spockframework:spock-core:1.2-groovy-2.5'
-        api 'org.spockframework:spock-spring:1.2-groovy-2.5'
+        api 'org.spockframework:spock-core:1.3-groovy-2.5'
+        api 'org.spockframework:spock-spring:1.3-groovy-2.5'
 
         api 'io.swagger:swagger-models:1.6.1'
 

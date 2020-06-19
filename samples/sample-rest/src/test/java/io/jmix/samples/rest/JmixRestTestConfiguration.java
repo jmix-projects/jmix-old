@@ -17,7 +17,7 @@
 package io.jmix.samples.rest;
 
 import io.jmix.core.annotation.JmixModule;
-import io.jmix.rest.JmixRestConfiguration;
+import io.jmix.rest.RestConfiguration;
 import io.jmix.samples.rest.transformer.RepairJsonTransformerFromVersion;
 import io.jmix.samples.rest.transformer.RepairJsonTransformerToVersion;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -28,7 +28,7 @@ import org.springframework.context.annotation.PropertySource;
 import javax.sql.DataSource;
 
 @Configuration
-@JmixModule(dependsOn = JmixRestConfiguration.class)
+@JmixModule(dependsOn = RestConfiguration.class)
 @PropertySource("classpath:/application.properties")
 public class JmixRestTestConfiguration {
 

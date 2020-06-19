@@ -9,8 +9,6 @@ import groovy.sql.Sql
 import io.jmix.core.security.PermissionType
 import io.jmix.samples.rest.api.DataSet
 import io.jmix.samples.rest.entity.driver.DriverStatus
-import io.jmix.security.entity.ConstraintCheckType
-import io.jmix.security.entity.RoleType
 
 class DataUtils {
 
@@ -28,7 +26,7 @@ class DataUtils {
     }
 
     static UUID createConstraint(DataSet dataSet, Sql sql,
-                                 ConstraintCheckType checkType,
+//                                 ConstraintCheckType checkType,
                                  String metaClass,
                                  String expression,
                                  UUID groupId) {
@@ -36,7 +34,7 @@ class DataUtils {
         sql.dataSet('sec_constraint').add(
                 id: constraintId,
                 version: 1,
-                check_type: checkType.getId(),
+//                check_type: checkType.getId(),
                 entity_name: metaClass,
                 groovy_script: expression,
                 group_id: groupId
@@ -72,13 +70,12 @@ class DataUtils {
         return roleId
     }
 
-    static UUID createRole(DataSet dataSet, Sql sql, String name, RoleType roleType) {
+    static UUID createRole(DataSet dataSet, Sql sql, String name) {
         def roleId = dataSet.createRoleUuid()
         sql.dataSet('sample_rest_sec_role').add(
                 id: roleId,
                 version: 1,
-                name: name,
-                role_type: roleType.id
+                name: name
         )
         return roleId
     }

@@ -16,10 +16,13 @@
 
 package security
 
-import io.jmix.core.JmixCoreConfiguration
+import io.jmix.core.CoreConfiguration
 import io.jmix.core.entity.BaseUser
 import io.jmix.core.security.SystemAuthenticationToken
 import io.jmix.core.security.impl.AuthenticatorImpl
+import io.jmix.core.security.impl.CoreUser
+import io.jmix.core.security.impl.InMemoryUserRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.test.context.ContextConfiguration
@@ -28,9 +31,7 @@ import org.springframework.test.context.TestPropertySource
 import spock.lang.Specification
 import test_support.AppContextTestExecutionListener
 
-import org.springframework.beans.factory.annotation.Autowired
-
-@ContextConfiguration(classes = [JmixCoreConfiguration])
+@ContextConfiguration(classes = [CoreConfiguration])
 @TestPropertySource(properties = ["jmix.securityImplementation = core"])
 @TestExecutionListeners(value = AppContextTestExecutionListener,
         mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
@@ -38,6 +39,21 @@ class AuthenticatorTest extends Specification {
 
     @Autowired
     AuthenticatorImpl authenticator
+
+    @Autowired
+    InMemoryUserRepository userRepository
+
+    CoreUser admin
+
+    def setup() {
+        admin = new CoreUser('admin', '{noop}admin123', 'Admin')
+        userRepository.createUser(admin)
+    }
+
+    def cleanup() {
+        userRepository.removeUser(admin)
+    }
+
 
     def "authenticate as system"() {
         when:

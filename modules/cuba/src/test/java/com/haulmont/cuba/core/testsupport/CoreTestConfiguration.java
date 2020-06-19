@@ -16,21 +16,22 @@
 
 package com.haulmont.cuba.core.testsupport;
 
-import com.haulmont.cuba.JmixCubaConfiguration;
+import com.haulmont.cuba.CubaConfiguration;
 import com.haulmont.cuba.core.global.UserSessionSource;
 import com.haulmont.cuba.core.model.common.UserEntityListener;
-import io.jmix.core.JmixCoreConfiguration;
+import io.jmix.core.CoreConfiguration;
 import io.jmix.core.Stores;
-import io.jmix.data.JmixDataConfiguration;
+import io.jmix.data.DataConfiguration;
 import io.jmix.data.impl.JmixEntityManagerFactoryBean;
 import io.jmix.data.impl.JmixTransactionManager;
 import io.jmix.data.impl.PersistenceConfigProcessor;
 import io.jmix.data.persistence.JpqlSortExpressionProvider;
-import io.jmix.dynattr.JmixDynAttrConfiguration;
-import io.jmix.dynattrui.JmixDynAttrUiConfiguration;
-import io.jmix.fsfilestorage.JmixFileSystemFileStorageConfiguration;
-import io.jmix.ui.JmixUiConfiguration;
+import io.jmix.dynattr.DynAttrConfiguration;
+import io.jmix.dynattrui.DynAttrUiConfiguration;
+import io.jmix.fsfilestorage.FileSystemFileStorageConfiguration;
+import io.jmix.ui.UiConfiguration;
 import org.springframework.context.annotation.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -41,12 +42,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
-@Import({JmixCoreConfiguration.class, JmixCubaConfiguration.class, JmixDataConfiguration.class, JmixUiConfiguration.class,
-        JmixDynAttrConfiguration.class, JmixDynAttrUiConfiguration.class, JmixFileSystemFileStorageConfiguration.class})
-@PropertySource("classpath:/com/haulmont/cuba/core/test-app.properties")
+@Import({CoreConfiguration.class, CubaConfiguration.class, DataConfiguration.class, UiConfiguration.class,
+        DynAttrConfiguration.class, DynAttrUiConfiguration.class, FileSystemFileStorageConfiguration.class})
+@PropertySource("classpath:/com/haulmont/cuba/core/test-core-app.properties")
 public class CoreTestConfiguration {
 
     @Bean
+    @Primary
     DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
                 .generateUniqueName(true)

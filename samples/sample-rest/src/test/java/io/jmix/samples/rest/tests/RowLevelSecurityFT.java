@@ -6,7 +6,6 @@
 package io.jmix.samples.rest.tests;
 
 import com.jayway.jsonpath.ReadContext;
-import io.jmix.security.entity.ConstraintCheckType;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.junit.After;
@@ -273,27 +272,27 @@ public class RowLevelSecurityFT extends AbstractRestControllerFT {
                 "Group"
         );
 
-        insuranceCaseConstraintId = dirtyData.createConstraintUuid();
-        executePrepared("insert into sec_constraint(id, version, check_type, entity_name, groovy_script, group_id) " +
-                        "values(?, ?, ?, ?, ?, ?)",
-                insuranceCaseConstraintId,
-                1l,
-                ConstraintCheckType.MEMORY.getId(),
-                "ref$InsuranceCase",
-                "{E}.description.startsWith('A')",
-                groupId
-        );
-
-        modelConstraintId = dirtyData.createConstraintUuid();
-        executePrepared("insert into sec_constraint(id, version, check_type, entity_name, groovy_script, group_id) " +
-                        "values(?, ?, ?, ?, ?, ?)",
-                modelConstraintId,
-                1l,
-                ConstraintCheckType.MEMORY.getId(),
-                "ref$Model",
-                "{E}.name.startsWith('A')",
-                groupId
-        );
+//        insuranceCaseConstraintId = dirtyData.createConstraintUuid();
+//        executePrepared("insert into sec_constraint(id, version, check_type, entity_name, groovy_script, group_id) " +
+//                        "values(?, ?, ?, ?, ?, ?)",
+//                insuranceCaseConstraintId,
+//                1l,
+//                ConstraintCheckType.MEMORY.getId(),
+//                "ref$InsuranceCase",
+//                "{E}.description.startsWith('A')",
+//                groupId
+//        );
+//
+//        modelConstraintId = dirtyData.createConstraintUuid();
+//        executePrepared("insert into sec_constraint(id, version, check_type, entity_name, groovy_script, group_id) " +
+//                        "values(?, ?, ?, ?, ?, ?)",
+//                modelConstraintId,
+//                1l,
+//                ConstraintCheckType.MEMORY.getId(),
+//                "ref$Model",
+//                "{E}.name.startsWith('A')",
+//                groupId
+//        );
 
 //        userId = dirtyData.createUserUuid();
 //        String pwd = encryption.getPasswordHash(userId, userPassword);

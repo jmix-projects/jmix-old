@@ -17,7 +17,10 @@
 package io.jmix.samples.rest
 
 import groovy.sql.Sql
+import io.jmix.core.security.impl.CoreUser
+import io.jmix.core.security.impl.InMemoryUserRepository
 import io.jmix.samples.rest.api.DataSet
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 import spock.lang.Specification
@@ -31,15 +34,22 @@ class DataSpec extends Specification {
     @LocalServerPort
     private int port
 
+    @Autowired
+    InMemoryUserRepository userRepository
+
     public DataSet dirtyData = new DataSet()
     public Sql sql
 
-    public String userPassword = "admin123"
-    public String userLogin = "admin"
-    public String userToken
-    public String baseUrl
+    String userPassword = "admin123"
+    String userLogin = "admin"
+    String userToken
+    String baseUrl
+    CoreUser admin
 
     void setup() {
+        admin = new CoreUser(userLogin, "{noop}$userPassword", "Admin")
+        userRepository.createUser(admin)
+
         baseUrl = "http://localhost:" + port + "/rest"
         userToken = getAuthToken(baseUrl, userLogin, userPassword)
 
@@ -49,6 +59,7 @@ class DataSpec extends Specification {
     }
 
     void cleanup() {
+        userRepository.removeUser(admin)
         dirtyData.cleanup(sql.connection)
         if (sql != null) {
             sql.close()

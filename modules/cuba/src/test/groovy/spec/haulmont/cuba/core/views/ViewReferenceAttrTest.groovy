@@ -20,18 +20,20 @@ import com.haulmont.cuba.core.global.DataManager
 import com.haulmont.cuba.core.global.LoadContext
 import com.haulmont.cuba.core.model.common.Group
 import com.haulmont.cuba.core.model.common.User
-import io.jmix.core.*
-import spec.haulmont.cuba.core.CoreTestSpecification
-
+import com.haulmont.cuba.core.testsupport.TestSupport
+import io.jmix.core.DevelopmentException
+import io.jmix.core.FetchPlan
+import io.jmix.core.FetchPlanRepository
 import org.springframework.beans.factory.annotation.Autowired
-
-import static com.haulmont.cuba.core.testsupport.TestSupport.deleteRecord
+import spec.haulmont.cuba.core.CoreTestSpecification
 
 class ViewReferenceAttrTest extends CoreTestSpecification {
     @Autowired
     FetchPlanRepository viewRepository
     @Autowired
     DataManager dataManager
+    @Autowired
+    TestSupport testSupport
 
     User user
     Group group
@@ -44,7 +46,7 @@ class ViewReferenceAttrTest extends CoreTestSpecification {
     }
 
     void cleanup() {
-        deleteRecord(user, group)
+        testSupport.deleteRecord(user, group)
     }
 
     def "Negative (String): PL-9999 Raise exception at the moment of view creation if not reference attribute has view"() {
@@ -57,8 +59,6 @@ class ViewReferenceAttrTest extends CoreTestSpecification {
         LoadContext<User> ctx = new LoadContext<>(User.class)
                 .setView(wrongView)
         ctx.setQueryString("select u from test\$User u")
-
-        DataManager dataManager = AppBeans.get(DataManager.NAME)
 
         String exceptionMessage = ""
 
@@ -84,8 +84,6 @@ class ViewReferenceAttrTest extends CoreTestSpecification {
         LoadContext<User> ctx = new LoadContext<>(User.class)
                 .setView(wrongView)
         ctx.setQueryString("select u from test\$User u")
-
-        DataManager dataManager = AppBeans.get(DataManager.NAME)
 
         String exceptionMessage = ""
 
@@ -114,7 +112,6 @@ class ViewReferenceAttrTest extends CoreTestSpecification {
                 .setView(correctView)
         ctx.setQueryString("select u from test\$User u where u.login = 'admin'")
 
-        DataManager dataManager = AppBeans.get(DataManager.NAME)
         User user
 
         when:

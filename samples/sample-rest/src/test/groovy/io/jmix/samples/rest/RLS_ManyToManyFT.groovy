@@ -5,8 +5,8 @@
 
 package io.jmix.samples.rest
 
-import io.jmix.samples.rest.api.DataSet
 import groovy.sql.Sql
+import io.jmix.samples.rest.api.DataSet
 import org.apache.http.HttpStatus
 import org.junit.Ignore
 import spock.lang.Specification
@@ -37,10 +37,10 @@ class RLS_ManyToManyFT extends Specification {
 
         def groupId = createGroup(dirtyData, sql, 'Group')
 
-        createConstraint(dirtyData, sql,
-                ConstraintCheckType.MEMORY, 'ref$Model',
-                "!{E}.name.startsWith('Model#2_') && !{E}.name.startsWith('Model#5_')",
-                groupId)
+//        createConstraint(dirtyData, sql,
+//                ConstraintCheckType.MEMORY, 'ref$Model',
+//                "!{E}.name.startsWith('Model#2_') && !{E}.name.startsWith('Model#5_')",
+//                groupId)
 
         UUID userId = createUser(dirtyData, sql,
                 userLogin, userPassword, groupId)

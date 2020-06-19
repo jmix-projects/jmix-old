@@ -17,20 +17,12 @@
 package authorization
 
 
-import io.jmix.core.JmixCoreConfiguration
-import io.jmix.data.JmixDataConfiguration
-import io.jmix.security.JmixSecurityConfiguration
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.TestPropertySource
 import spock.lang.Ignore
-import spock.lang.Specification
-import test_support.JmixSecurityTestConfiguration
+import test_support.SecuritySpecification
 
-@ContextConfiguration(classes = [JmixCoreConfiguration, JmixDataConfiguration, JmixSecurityConfiguration, JmixSecurityTestConfiguration])
-@TestPropertySource(properties = ["jmix.securityImplementation = standard"])
 //todo MG
 @Ignore
-class AuthorizationTest extends Specification {
+class AuthorizationTest extends SecuritySpecification {
 
 //    @Autowired
 //    DataManager dataManager
