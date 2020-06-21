@@ -16,6 +16,7 @@
 
 package messages
 
+import spock.lang.Subject
 import test_support.addon1.TestAddon1Configuration
 import test_support.AppContextTestExecutionListener
 import test_support.app.TestAppConfiguration
@@ -29,16 +30,17 @@ import spock.lang.Specification
 
 import org.springframework.beans.factory.annotation.Autowired
 
+import static test_support.TestLocales.*
+
 @ContextConfiguration(classes = [CoreConfiguration, TestAddon1Configuration, TestAppConfiguration])
-@TestExecutionListeners(value = AppContextTestExecutionListener,
-        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
+@TestExecutionListeners(
+    value = AppContextTestExecutionListener,
+    mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
+)
 class MessagesTest extends Specification {
 
     @Autowired
     Messages messages
-
-    static final LOC_EN = Locale.ENGLISH
-    static final Locale LOC_RU = Locale.forLanguageTag('ru')
 
     def "get message"() {
         expect:
@@ -55,6 +57,7 @@ class MessagesTest extends Specification {
         messages.getMessage(PetType.BIRD, LOC_EN) == 'Bird'
         messages.getMessage(PetType.BIRD, LOC_RU) == 'Птица'
     }
+
 
     def "get nonexistent message"() {
         expect:
