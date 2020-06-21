@@ -16,7 +16,6 @@
 
 package messages
 
-import spock.lang.Subject
 import test_support.addon1.TestAddon1Configuration
 import test_support.AppContextTestExecutionListener
 import test_support.app.TestAppConfiguration
