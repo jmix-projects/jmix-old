@@ -24,10 +24,21 @@ import java.util.Locale
 class TestFormatStringsRegistry extends FormatStringsRegistryImpl {
 
     TestFormatStringsRegistry() {
-        setFormatStrings(Locale.ENGLISH, new FormatStrings(
+        setFormatStrings(
+            Locale.ENGLISH,
+            new FormatStrings(
                 '.' as char, ',' as char,
-                '#,##0', '#,##0.###', '#,##0.##',
-                'dd/MM/yyyy', 'dd/MM/yyyy HH:mm', 'dd/MM/yyyy HH:mm', 'HH:mm', 'HH:mm',
-                'True', 'False'))
+                '#,##0',
+                '#,##0.###',
+                '#,##0.##',
+                'dd/MM/yyyy',
+                'dd/MM/yyyy HH:mm',
+                'dd/MM/yyyy HH:mm',
+                'HH:mm',
+                'HH:mm',
+                'True',
+                'False'
+            )
+        )
     }
 }
