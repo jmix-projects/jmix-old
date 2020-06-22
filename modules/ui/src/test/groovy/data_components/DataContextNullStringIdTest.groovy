@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,35 +14,33 @@
  * limitations under the License.
  */
 
-package spec.haulmont.cuba.web.datacontext
+package data_components
 
-import com.haulmont.cuba.core.TestStringIdEntity
 import io.jmix.ui.model.DataComponents
-import spec.haulmont.cuba.web.UiScreenSpec
-import spock.lang.Ignore
 
 import org.springframework.beans.factory.annotation.Autowired
+import test_support.DataContextSpec
+import test_support.entity.TestStringIdEntity
 
-@Ignore
-class DataContextNullIdTest extends UiScreenSpec {
+class DataContextNullStringIdTest extends DataContextSpec {
 
     @Autowired
     private DataComponents factory
 
-    def "can contain only 1 instance with null id"() {
+    def "can contain any number of instances with null id"() {
         TestStringIdEntity entity1 = new TestStringIdEntity(name: "111")
         TestStringIdEntity entity2 = new TestStringIdEntity(name: "222")
 
         def dataContext = factory.createDataContext()
-        def merged1 = dataContext.merge(entity1)
 
         when:
-
+        def merged1 = dataContext.merge(entity1)
         def merged2 = dataContext.merge(entity2)
 
         then:
-
-        thrown(IllegalStateException)
+        dataContext.contains(merged1)
+        dataContext.contains(merged2)
+        dataContext.content.get(TestStringIdEntity).size() == 2
     }
 
     def "merged instance with null id"() {
@@ -58,7 +56,7 @@ class DataContextNullIdTest extends UiScreenSpec {
 
         !merged.is(entity)
         dataContext.contains(entity)
-        dataContext.find(TestStringIdEntity, null).is(merged)
+        dataContext.contains(merged)
     }
 
     def "merged instance changes id"() {
@@ -83,5 +81,6 @@ class DataContextNullIdTest extends UiScreenSpec {
 
         dataContext.find(TestStringIdEntity, '1') == null
         dataContext.find(TestStringIdEntity, '2').is(merged)
+        dataContext.content.get(TestStringIdEntity).size() == 1
     }
 }

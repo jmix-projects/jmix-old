@@ -48,7 +48,13 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
 
             makeEntityEntryField(ctClass);
 
-            makeEntityEntryMethods(ctClass, String.format("%s.%s",ctClass.getName(), GEN_ENTITY_ENTRY_CLASS_NAME));
+            String entryClassName = String.format("%s.%s", ctClass.getName(), GEN_ENTITY_ENTRY_CLASS_NAME);
+
+            makeEntityEntryMethods(ctClass, entryClassName);
+
+            if (getGeneratedIdField(ctClass) == null) {
+                initEntityEntry(ctClass, entryClassName);
+            }
 
             if (!embeddable) {
                 makeEqualsMethod(ctClass);
@@ -68,43 +74,54 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
         ctClass.addInterface(classPool.get(ENTITY_ENTRY_ENHANCED_TYPE));
     }
 
-    protected void makeEntityEntryClass(CtClass ctClass, CtField primaryKey) throws CannotCompileException, NotFoundException, IOException {
+    protected void makeEntityEntryClass(CtClass ctClass, CtField primaryKeyField) throws CannotCompileException, NotFoundException, IOException {
         CtClass nestedCtClass = ctClass.makeNestedClass(GEN_ENTITY_ENTRY_CLASS_NAME, true);
 
-        if (primaryKey != null) {
-            boolean pkGeneratedValue = isPkGeneratedValue(primaryKey);
+        if (primaryKeyField != null) {
+            CtField generatedIdField = getGeneratedIdField(ctClass);
 
-            String getterName;
-            String setterName;
-            CtClass idType;
-            if (pkGeneratedValue) {
-                nestedCtClass.setSuperclass(classPool.get(BASE_DB_GENERATED_ID_ENTITY_ENTRY_TYPE));
-                getterName = "getDbGeneratedId";
-                setterName = "setDbGeneratedId";
-                idType = classPool.get(Object.class.getName());
+            CtClass idType = classPool.get(Object.class.getName());
+            if (generatedIdField == null) {
+                nestedCtClass.setSuperclass(classPool.get(NULLABLE_ID_ENTITY_ENTRY_TYPE));
             } else {
                 nestedCtClass.setSuperclass(classPool.get(BASE_ENTITY_ENTRY_TYPE));
-                getterName = "getEntityId";
-                setterName = "setEntityId";
-                idType = classPool.get(Object.class.getName());
             }
 
-            CtMethod getIdMethod = CtNewMethod.make(idType, getterName,
+            CtMethod getIdMethod = CtNewMethod.make(idType, "getEntityId",
                     null, null,
                     String.format("return ((%s)getSource()).get%s();",
                             ctClass.getName(),
-                            StringUtils.capitalize(primaryKey.getName())),
+                            StringUtils.capitalize(primaryKeyField.getName())),
                     nestedCtClass);
             nestedCtClass.addMethod(getIdMethod);
 
-            CtMethod setIdMethod = CtNewMethod.make(CtClass.voidType, setterName,
+            CtMethod setIdMethod = CtNewMethod.make(CtClass.voidType, "setEntityId",
                     new CtClass[]{idType}, null,
                     String.format("((%s)getSource()).set%s((%s)$1);",
                             ctClass.getName(),
-                            StringUtils.capitalize(primaryKey.getName()),
-                            primaryKey.getType().getName()),
+                            StringUtils.capitalize(primaryKeyField.getName()),
+                            primaryKeyField.getType().getName()),
                     nestedCtClass);
             nestedCtClass.addMethod(setIdMethod);
+
+            if (generatedIdField != null) {
+                CtMethod getGeneratedIdMethod = CtNewMethod.make(idType, "getGeneratedIdOrNull",
+                        null, null,
+                        String.format("return ((%s)getSource()).get%s();",
+                                ctClass.getName(),
+                                StringUtils.capitalize(generatedIdField.getName())),
+                        nestedCtClass);
+                nestedCtClass.addMethod(getGeneratedIdMethod);
+
+                CtMethod setGeneratedIdMethod = CtNewMethod.make(CtClass.voidType, "setGeneratedId",
+                        new CtClass[]{idType}, null,
+                        String.format("((%s)getSource()).set%s((%s)$1);",
+                                ctClass.getName(),
+                                StringUtils.capitalize(generatedIdField.getName()),
+                                generatedIdField.getType().getName()),
+                        nestedCtClass);
+                nestedCtClass.addMethod(setGeneratedIdMethod);
+            }
         }
 
         nestedCtClass.writeFile(outputDir);
@@ -135,6 +152,16 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
         ctClass.addMethod(copyEntryMethod);
     }
 
+    private void initEntityEntry(CtClass ctClass, String entryClassName) throws CannotCompileException {
+        CtConstructor constructor;
+        try {
+            constructor = ctClass.getDeclaredConstructor(null);
+        } catch (NotFoundException e) {
+            constructor = CtNewConstructor.defaultConstructor(ctClass);
+        }
+        constructor.insertAfter(String.format("%s = new %s(this);", GEN_ENTITY_ENTRY_VAR_NAME, entryClassName));
+    }
+
     protected void makeEqualsMethod(CtClass ctClass) throws NotFoundException, CannotCompileException {
         if (findEqualsMethod(ctClass) == null) {
             CtMethod entryMethod = CtNewMethod.make(CtClass.booleanType, "equals", new CtClass[]{classPool.get(Object.class.getName())}, null,
@@ -146,7 +173,7 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
     protected void makeHashCodeMethod(CtClass ctClass) throws NotFoundException, CannotCompileException {
         if (findHashCodeMethod(ctClass) == null) {
             CtMethod entryMethod = CtNewMethod.make(CtClass.intType, "hashCode", null, null,
-                    String.format("return %s().getEntityId() != null ? %s().getEntityId().hashCode() : super.hashCode();", GET_ENTITY_ENTRY_METHOD_NAME, GET_ENTITY_ENTRY_METHOD_NAME),
+                    "return io.jmix.core.impl.EntityInternals.hashCode(this);",
                     ctClass);
             ctClass.addMethod(entryMethod);
         }

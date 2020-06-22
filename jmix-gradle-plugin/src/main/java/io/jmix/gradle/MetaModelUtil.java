@@ -20,6 +20,7 @@ import javassist.*;
 import javassist.bytecode.AnnotationsAttribute;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class MetaModelUtil {
@@ -27,7 +28,7 @@ public class MetaModelUtil {
     public static final String ENTITY_ENTRY_TYPE = "io.jmix.core.EntityEntry";
     public static final String BASE_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.BaseEntityEntry";
     public static final String EMBEDDABLE_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.EmbeddableEntityEntry";
-    public static final String BASE_DB_GENERATED_ID_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.BaseDbGeneratedIdEntityEntry";
+    public static final String NULLABLE_ID_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.NullableIdEntityEntry";
 
     public static final String SETTERS_ENHANCED_TYPE = "io.jmix.core.entity.JmixSettersEnhanced";
     public static final String ENTITY_ENTRY_ENHANCED_TYPE = "io.jmix.core.entity.JmixEntityEntryEnhanced";
@@ -114,6 +115,27 @@ public class MetaModelUtil {
 
         }
         return null;
+    }
+
+    @Nullable
+    public static CtField getGeneratedIdField(CtClass ctClass) {
+        CtField result = null;
+        for (CtField field : ctClass.getDeclaredFields()) {
+            AnnotationsAttribute annotationsInfo = (AnnotationsAttribute) field.getFieldInfo().getAttribute(AnnotationsAttribute.visibleTag);
+
+            if (annotationsInfo == null) {
+                continue;
+            }
+
+            if (annotationsInfo.getAnnotation("io.jmix.core.entity.annotation.JmixGeneratedId") != null) {
+                if (result != null) {
+                    throw new IllegalStateException("More than one @JmixGeneratedId field in " + ctClass.getName());
+                }
+                result = field;
+            }
+
+        }
+        return result;
     }
 
     public static boolean isPkGeneratedValue(CtField field) {
