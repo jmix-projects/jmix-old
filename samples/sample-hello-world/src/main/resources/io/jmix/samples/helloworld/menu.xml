@@ -4,5 +4,6 @@
         <item screen="demoScreen" caption="msg://io.jmix.samples.helloworld/menu.demoScreen"/>
         <item screen="sample_Customer.browse" caption="msg://io.jmix.samples.helloworld/menu.sample_Customer.browse"/>
         <item screen="sample_Order.browse" caption="msg://io.jmix.samples.helloworld/menu.sample_Order.browse"/>
+        <item screen="entityInspector.browse"/>
     </menu>
 </menu-config>

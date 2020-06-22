@@ -1,20 +1,19 @@
 apply plugin: 'java'
 apply plugin: 'java-library'
 
-group = 'io.jmix.starter.audit'
+group = 'io.jmix.starter.datatoolsui'
 
 dependencies {
     api project(':modules:core')
     api project(':modules:ui')
     api project(':modules:security')
-    api project(':modules:audit')
-    api project(':modules:audit-ui')
+    api project(':modules:datatools-ui')
 
     api 'org.springframework.boot:spring-boot-autoconfigure'
 }
 
 jar {
-    archivesBaseName = 'jmix-starter-audit-ui'
+    archivesBaseName = 'jmix-starter-datatools-ui'
 }
 
 java {
@@ -28,7 +27,7 @@ artifacts {
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            artifactId = 'jmix-starter-audit-ui'
+            artifactId = 'jmix-starter-datatools-ui'
             from components.java
         }
     }

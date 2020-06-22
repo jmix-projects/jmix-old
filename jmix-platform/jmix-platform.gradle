@@ -55,6 +55,9 @@ dependencies {
         api "io.jmix.rest:jmix-rest:$version"
         api "io.jmix.starter.rest:jmix-starter-rest:$version"
 
+        api "io.jmix.datatoolsui:jmix-datatools-ui:$version"
+        api "io.jmix.starter.auditui:jmix-starter-datatools-ui:$version"
+
         api "io.jmix.security:jmix-security:$version"
         api "io.jmix.security:jmix-security-ui:$version"
         api "io.jmix.security:jmix-security-data:$version"
