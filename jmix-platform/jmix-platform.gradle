@@ -20,7 +20,7 @@ plugins {
 
 group = 'io.jmix.bom'
 
-def vaadinVersion = '8.9.2-1-jmix'
+def vaadinVersion = '8.9.2-2-jmix'
 
 javaPlatform {
     allowDependencies()
