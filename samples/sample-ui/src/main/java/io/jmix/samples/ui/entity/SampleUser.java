@@ -17,7 +17,6 @@ package io.jmix.samples.ui.entity;
 
 import io.jmix.core.entity.BaseUser;
 import io.jmix.core.entity.annotation.SystemLevel;
-import io.jmix.core.entity.annotation.TrackEditScreenHistory;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.data.entity.StandardEntity;
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +35,6 @@ import java.util.Collections;
 @Entity(name = "sample_User")
 @Table(name = "SAMPLE_USER")
 //@Listeners("jmix_UserEntityListener")
-@TrackEditScreenHistory
 public class SampleUser extends StandardEntity implements BaseUser {
 
     private static final long serialVersionUID = 5007187642916030394L;

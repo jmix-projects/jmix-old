@@ -17,7 +17,10 @@
 package io.jmix.samples.rest.entity.driver;
 
 import io.jmix.core.DeletePolicy;
-import io.jmix.core.entity.annotation.*;
+import io.jmix.core.entity.annotation.Listeners;
+import io.jmix.core.entity.annotation.Lookup;
+import io.jmix.core.entity.annotation.LookupType;
+import io.jmix.core.entity.annotation.OnDelete;
 import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.ModelProperty;
@@ -30,7 +33,6 @@ import java.util.Set;
 
 @Entity(name = "ref_Car")
 @Table(name = "REF_CAR")
-@TrackEditScreenHistory
 @Listeners("jmix_CarDetachListener")
 public class Car extends StandardEntity {
     private static final long serialVersionUID = -7377186515184761381L;

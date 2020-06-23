@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity.annotation;
+package com.haulmont.cuba.core.entity.annotation;
+
+import io.jmix.core.entity.annotation.MetaAnnotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,17 +24,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates that annotated entity should not be available for security constraints UI<br>
+ * Indicates whether to track an edit screen opening for this entity. If no such annotation present for an entity, or
+ * value() is false, no tracking performed.
+ *
+ * <p>Can be overridden in <code>*-metadata.xml</code> file.</p>
+ *
  */
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @MetaAnnotation
-public @interface UnavailableInSecurityConstraints {
+public @interface TrackEditScreenHistory {
 
     boolean value() default true;
-
-    /**
-     * Set to true if you want this annotation to be set on subclasses.
-     */
-    boolean propagateToSubclasses() default false;
 }
