@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2018 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package spec.haulmont.cuba.core.metadata
+package number_id_generation
 
-import com.haulmont.cuba.core.Persistence
-import com.haulmont.cuba.core.model.number_id.NumberIdSingleTableRoot
 import io.jmix.core.DataManager
 import io.jmix.core.Metadata
 import io.jmix.data.DataConfigPropertiesAccess
@@ -29,14 +27,17 @@ import io.jmix.data.persistence.DbmsSpecifics
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.JdbcTemplate
-import spec.haulmont.cuba.core.CoreTestSpecification
 
 import org.springframework.beans.factory.annotation.Autowired
+import test_support.DataSpec
+import test_support.entity.number_id_generation.NumberIdSingleTableRoot
+
+import javax.sql.DataSource
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class NumberIdConcurrencyTest extends CoreTestSpecification {
+class NumberIdConcurrencyTest extends DataSpec {
 
     @Autowired
     private Metadata metadata
@@ -49,9 +50,9 @@ class NumberIdConcurrencyTest extends CoreTestSpecification {
     @Autowired
     private NumberIdCache numberIdCache
     @Autowired
-    private Persistence persistence
-    @Autowired
     private DataProperties dataProperties
+    @Autowired
+    private DataSource dataSource
 
     private SequenceSupport sequenceSupport
 
@@ -67,7 +68,7 @@ class NumberIdConcurrencyTest extends CoreTestSpecification {
     void cleanup() {
         cleanupSequences()
 
-        def template = new JdbcTemplate(persistence.getDataSource())
+        def template = new JdbcTemplate(dataSource)
         template.update('delete from TEST_NUMBER_ID_SINGLE_TABLE_ROOT')
     }
 
@@ -77,7 +78,7 @@ class NumberIdConcurrencyTest extends CoreTestSpecification {
 
         if (sequenceExists()) {
             def sql = sequenceSupport.deleteSequenceSql(getSequenceName('test$NumberIdSingleTableRoot'))
-            def template = new JdbcTemplate(persistence.getDataSource())
+            def template = new JdbcTemplate(dataSource)
             template.update(sql)
         }
     }
@@ -180,7 +181,7 @@ class NumberIdConcurrencyTest extends CoreTestSpecification {
 
     private boolean sequenceExists() {
         def sequenceExistsSql = sequenceSupport.sequenceExistsSql(getSequenceName('test$NumberIdSingleTableRoot'))
-        def template = new JdbcTemplate(persistence.getDataSource())
+        def template = new JdbcTemplate(dataSource)
         def rows = template.queryForList(sequenceExistsSql)
         return !rows.isEmpty()
     }
@@ -188,19 +189,19 @@ class NumberIdConcurrencyTest extends CoreTestSpecification {
 
     private long getNextSequenceValue() {
         def sql = sequenceSupport.getNextValueSql(getSequenceName('test$NumberIdSingleTableRoot'))
-        def template = new JdbcTemplate(persistence.getDataSource())
+        def template = new JdbcTemplate(dataSource)
         return template.queryForObject(sql, Long.class)
     }
 
     private long getCurrentSequenceValue() {
         def sql = "select NEXT_VALUE from INFORMATION_SCHEMA.SYSTEM_SEQUENCES where SEQUENCE_NAME = '" + getSequenceName('test$NumberIdSingleTableRoot').toUpperCase() + "'"
-        def template = new JdbcTemplate(persistence.getDataSource())
+        def template = new JdbcTemplate(dataSource)
         def rows = template.queryForList(sql)
         return (rows[0]['NEXT_VALUE'] as long) - 1
     }
 
     private long countEntities() {
-        def template = new JdbcTemplate(persistence.getDataSource())
+        def template = new JdbcTemplate(dataSource)
         return template.queryForObject("select count(*) from TEST_NUMBER_ID_SINGLE_TABLE_ROOT", Long.class)
     }
 }

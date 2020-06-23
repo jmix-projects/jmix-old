@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2018 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,35 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.core.model.number_id;
+package test_support.entity.number_id_generation;
 
 
-import io.jmix.data.entity.BaseLongIdEntity;
+import io.jmix.core.entity.annotation.JmixGeneratedId;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorValue("R")
-@Table(name = "TEST_NUMBER_ID_JOINED_ROOT")
-@Entity(name = "test$NumberIdJoinedRoot")
-public class NumberIdJoinedRoot extends BaseLongIdEntity {
+@Table(name = "TEST_NUMBER_ID_SEQ_NAME_FIRST")
+@Entity(name = "test$NumberIdSeqNameFirst")
+public class NumberIdSeqNameFirst implements io.jmix.core.Entity {
+
+    @Id
+    @Column(name = "ID")
+    @JmixGeneratedId(sequenceName = "seq_number_id_name")
+    protected Long id;
 
     @Column(name = "NAME")
     protected String name;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2018 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.core.model.number_id;
+package test_support.entity.number_id_generation;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
-@DiscriminatorValue("C")
-@Table(name = "TEST_NUMBER_ID_JOINED_CHILD")
-@Entity(name = "test$NumberIdJoinedChild")
-public class NumberIdJoinedChild extends NumberIdJoinedRoot {
+@DiscriminatorValue("G")
+@Entity(name = "test$NumberIdSingleTableGrandChild")
+public class NumberIdSingleTableGrandChild extends NumberIdSingleTableChild {
 
-    @Column(name = "INFO")
-    protected String info;
+    @Column(name = "DESCRIPTION")
+    protected String description;
 
-    public String getInfo() {
-        return info;
+    public String getDescription() {
+        return description;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

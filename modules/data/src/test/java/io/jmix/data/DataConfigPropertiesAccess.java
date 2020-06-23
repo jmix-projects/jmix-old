@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2018 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.core.model.number_id;
+package io.jmix.data;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+public class DataConfigPropertiesAccess {
 
-@DiscriminatorValue("C")
-@Entity(name = "test$NumberIdSingleTableChild")
-public class NumberIdSingleTableChild extends NumberIdSingleTableRoot {
-
-    @Column(name = "INFO")
-    protected String info;
-
-    public String getInfo() {
-        return info;
+    public static void setInMemoryDistinct(DataProperties properties, boolean value) {
+        properties.inMemoryDistinct = value;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public static void setNumberIdCacheSize(DataProperties properties, int value) {
+        properties.numberIdCacheSize = value;
     }
 }

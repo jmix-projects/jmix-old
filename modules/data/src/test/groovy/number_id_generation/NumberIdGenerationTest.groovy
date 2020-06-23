@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2018 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-package spec.haulmont.cuba.core.metadata
+package number_id_generation
 
-import com.haulmont.cuba.core.Persistence
-import com.haulmont.cuba.core.model.number_id.NumberIdJoinedChild
-import com.haulmont.cuba.core.model.number_id.NumberIdJoinedRoot
-import com.haulmont.cuba.core.model.number_id.NumberIdSeqNameFirst
-import com.haulmont.cuba.core.model.number_id.NumberIdSeqNameSecond
-import com.haulmont.cuba.core.model.number_id.NumberIdSingleTableChild
-import com.haulmont.cuba.core.model.number_id.NumberIdSingleTableGrandChild
-import com.haulmont.cuba.core.model.number_id.NumberIdSingleTableRoot
+import test_support.entity.number_id_generation.NumberIdJoinedChild
+import test_support.entity.number_id_generation.NumberIdJoinedRoot
+import test_support.entity.number_id_generation.NumberIdSeqNameFirst
+import test_support.entity.number_id_generation.NumberIdSeqNameSecond
+import test_support.entity.number_id_generation.NumberIdSingleTableChild
+import test_support.entity.number_id_generation.NumberIdSingleTableGrandChild
+import test_support.entity.number_id_generation.NumberIdSingleTableRoot
 import io.jmix.core.Metadata
 import io.jmix.core.Stores
 import io.jmix.data.SequenceSupport
 import io.jmix.data.StoreAwareLocator
 import io.jmix.data.persistence.DbmsSpecifics
 import org.springframework.jdbc.core.JdbcTemplate
-import spec.haulmont.cuba.core.CoreTestSpecification
 
 import org.springframework.beans.factory.annotation.Autowired
+import test_support.DataSpec
 
-class NumberIdGenerationTest extends CoreTestSpecification {
+class NumberIdGenerationTest extends DataSpec {
     @Autowired
     private Metadata metadata
     @Autowired
