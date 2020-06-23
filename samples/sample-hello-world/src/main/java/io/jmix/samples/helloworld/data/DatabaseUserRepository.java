@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-package test_support.annotated_role_builder;
+package io.jmix.samples.helloworld.data;
 
-import io.jmix.security.role.annotation.Role;
+import io.jmix.samples.helloworld.entity.User;
+import io.jmix.securitydata.user.AbstractDatabaseUserRepository;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 
-@Role(name = "TestRestScopeRole", code = "TestRestScopeRole", scope = "rest")
-public interface TestRestScopeRole {
+@Primary
+@Component("sample_UserRepository")
+public class DatabaseUserRepository extends AbstractDatabaseUserRepository<User> {
+
+    @Override
+    protected Class<User> getUserClass() {
+        return User.class;
+    }
 }

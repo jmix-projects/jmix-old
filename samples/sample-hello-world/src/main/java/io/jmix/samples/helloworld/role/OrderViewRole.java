@@ -23,10 +23,7 @@ import io.jmix.samples.helloworld.screen.customer.CustomerEdit;
 import io.jmix.security.model.EntityAttributePolicyAction;
 import io.jmix.security.model.EntityPolicyAction;
 import io.jmix.security.model.RowLevelPolicyAction;
-import io.jmix.security.role.annotation.EntityAttributePolicy;
-import io.jmix.security.role.annotation.EntityPolicy;
-import io.jmix.security.role.annotation.PredicateRowLevelPolicy;
-import io.jmix.security.role.annotation.Role;
+import io.jmix.security.role.annotation.*;
 import io.jmix.securityui.role.annotation.ScreenPolicy;
 
 import java.util.function.Predicate;
@@ -42,11 +39,13 @@ public interface OrderViewRole {
     @EntityAttributePolicy(entityClass = Order.class,
         attributes = {"number", "date", "customer"},
         actions = {EntityAttributePolicyAction.UPDATE})
+    @JpqlRowLevelPolicy(entityClass = Order.class,
+        where = "{E}.number like 'A-%'")
     void order();
 
     @ScreenPolicy(screenClasses = {CustomerBrowse.class, CustomerEdit.class})
     @EntityPolicy(entityClass = Customer.class,
-        actions = {EntityPolicyAction.READ})
+        actions = {EntityPolicyAction.ALL})
     @EntityAttributePolicy(entityClass = Customer.class,
         attributes = "*",
         actions = {EntityAttributePolicyAction.UPDATE})

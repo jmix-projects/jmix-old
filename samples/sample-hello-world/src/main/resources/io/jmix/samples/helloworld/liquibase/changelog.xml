@@ -60,8 +60,37 @@
                              foreignKeyName="FK_SAMPLE_ORDER_SAMPLE_CUSTOMER"
                              references="SAMPLE_CUSTOMER(ID)"/>
             </column>
-
         </createTable>
+
+        <createTable tableName="SEC_USER">
+            <column name="ID" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="VERSION" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATE_TS" type="datetime"/>
+            <column name="CREATED_BY" type="varchar(50)"/>
+            <column name="UPDATE_TS" type="datetime"/>
+            <column name="UPDATED_BY" type="varchar(50)"/>
+            <column name="DELETE_TS" type="datetime"/>
+            <column name="DELETED_BY" type="varchar(50)"/>
+
+            <column name="USERNAME" type="varchar(255)"/>
+            <column name="FIRST_NAME" type="varchar(255)"/>
+            <column name="LAST_NAME" type="varchar(255)"/>
+            <column name="PASSWORD" type="varchar(255)"/>
+            <column name="EMAIL" type="varchar(255)"/>
+            <column name="ENABLED" type="boolean"/>
+        </createTable>
+
+        <insert tableName="SEC_USER">
+            <column name="ID" value="60885987-1b61-4247-94c7-dff348347f93"/>
+            <column name="VERSION" value="1"/>
+            <column name="USERNAME" value="admin"/>
+            <column name="PASSWORD" value="{noop}admin"/>
+            <column name="ENABLED" value="true"/>
+        </insert>
 
     </changeSet>
 
