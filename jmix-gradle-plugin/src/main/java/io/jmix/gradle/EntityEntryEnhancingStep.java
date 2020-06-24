@@ -112,15 +112,6 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
                                 StringUtils.capitalize(generatedIdField.getName())),
                         nestedCtClass);
                 nestedCtClass.addMethod(getGeneratedIdMethod);
-
-                CtMethod setGeneratedIdMethod = CtNewMethod.make(CtClass.voidType, "setGeneratedId",
-                        new CtClass[]{idType}, null,
-                        String.format("((%s)getSource()).set%s((%s)$1);",
-                                ctClass.getName(),
-                                StringUtils.capitalize(generatedIdField.getName()),
-                                generatedIdField.getType().getName()),
-                        nestedCtClass);
-                nestedCtClass.addMethod(setGeneratedIdMethod);
             }
         }
 
