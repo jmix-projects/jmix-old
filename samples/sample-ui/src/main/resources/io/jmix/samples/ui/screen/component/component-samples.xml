@@ -162,7 +162,7 @@
                         <richTextArea enable="false"/>
                     </hbox>
                     <hbox caption="FileUpload" spacing="true">
-                        <upload/>
+                        <fileUpload/>
                     </hbox>
                 </scrollBox>
             </tab>
