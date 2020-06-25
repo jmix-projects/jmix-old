@@ -46,6 +46,9 @@ public interface OrderViewRole {
     @ScreenPolicy(screenClasses = {CustomerBrowse.class, CustomerEdit.class})
     @EntityPolicy(entityClass = Customer.class,
         actions = {EntityPolicyAction.ALL})
+    @EntityPolicy(entityClass = Customer.class,
+        actions = {EntityPolicyAction.READ},
+            scope = "rest")
     @EntityAttributePolicy(entityClass = Customer.class,
         attributes = "*",
         actions = {EntityAttributePolicyAction.UPDATE})
