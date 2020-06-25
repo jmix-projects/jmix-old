@@ -62,7 +62,7 @@ public class MetadataControllerFT extends AbstractRestControllerFT {
         String url = baseUrl + "/metadata/entities/ref$Driver";
         try (CloseableHttpResponse response = sendGet(url, oauthToken, null)) {
             ReadContext ctx = parseResponse(response);
-            //todo Extends
+            //todo ReplaceEntity
             assertEquals("ref$Driver", ctx.read("$.entityName"));
 //            assertEquals("ref$ExtDriver", ctx.read("$.entityName"));
 
