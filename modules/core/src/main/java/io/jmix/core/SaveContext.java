@@ -16,6 +16,7 @@
 package io.jmix.core;
 
 import io.jmix.core.Entity;
+import io.jmix.core.constraint.AccessConstraint;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -34,8 +35,8 @@ public class SaveContext implements Serializable {
 
     protected boolean softDeletion = true;
     protected boolean discardSaved;
-    protected boolean authorizationRequired;
     protected boolean joinTransaction = true;
+    protected List<AccessConstraint<?>> constraints;
     protected Map<String, Object> dbHints = new HashMap<>();
 
     /**
@@ -165,12 +166,12 @@ public class SaveContext implements Serializable {
         return this;
     }
 
-    public boolean isAuthorizationRequired() {
-        return authorizationRequired;
+    public List<AccessConstraint<?>> getConstraints() {
+        return this.constraints == null ? Collections.emptyList() : this.constraints;
     }
 
-    public SaveContext setAuthorizationRequired(boolean authorizationRequired) {
-        this.authorizationRequired = authorizationRequired;
+    public SaveContext setConstraints(List<AccessConstraint<?>> constraints) {
+        this.constraints = constraints;
         return this;
     }
 

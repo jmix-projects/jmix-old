@@ -17,6 +17,7 @@
 package io.jmix.core;
 
 import io.jmix.core.common.util.StringHelper;
+import io.jmix.core.constraint.AccessConstraint;
 import io.jmix.core.querycondition.Condition;
 
 import javax.annotation.Nullable;
@@ -42,7 +43,7 @@ public class ValueLoadContext implements DataLoadContext, Serializable {
     protected boolean softDeletion = true;
     protected String idName;
     protected List<String> properties = new ArrayList<>();
-    protected boolean authorizationRequired;
+    protected List<AccessConstraint<?>> constraints;
     protected boolean joinTransaction;
 
     /**
@@ -160,12 +161,12 @@ public class ValueLoadContext implements DataLoadContext, Serializable {
         return properties;
     }
 
-    public boolean isAuthorizationRequired() {
-        return authorizationRequired;
+    public List<AccessConstraint<?>> getConstraints() {
+        return this.constraints == null ? Collections.emptyList() : this.constraints;
     }
 
-    public ValueLoadContext setAuthorizationRequired(boolean authorizationRequired) {
-        this.authorizationRequired = authorizationRequired;
+    public ValueLoadContext setConstraints(List<AccessConstraint<?>> constraints) {
+        this.constraints = constraints;
         return this;
     }
 

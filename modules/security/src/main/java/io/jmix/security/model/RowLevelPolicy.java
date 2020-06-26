@@ -34,7 +34,7 @@ public class RowLevelPolicy {
 
     private RowLevelPolicyAction action;
 
-    private Predicate<? extends Entity> predicate;
+    private Predicate<Entity> predicate;
 
     private String whereClause;
 
@@ -58,11 +58,11 @@ public class RowLevelPolicy {
         this.customProperties = customProperties;
     }
 
-    public RowLevelPolicy(String entityName, RowLevelPolicyAction action, Predicate<? extends Entity> predicate) {
+    public RowLevelPolicy(String entityName, RowLevelPolicyAction action, Predicate<Entity> predicate) {
         this(entityName, action, predicate, Collections.emptyMap());
     }
 
-    public RowLevelPolicy(String entityName, RowLevelPolicyAction action, Predicate<? extends Entity> predicate,
+    public RowLevelPolicy(String entityName, RowLevelPolicyAction action, Predicate<Entity> predicate,
                           Map<String, String> customProperties) {
         this.entityName = entityName;
         this.action = action;
@@ -91,7 +91,8 @@ public class RowLevelPolicy {
      * Returns a predicate for in-memory row-level policy
      * @return a predicate
      */
-    public Predicate<? extends Entity> getPredicate() {
+    @Nullable
+    public Predicate<Entity> getPredicate() {
         return predicate;
     }
 
@@ -105,7 +106,7 @@ public class RowLevelPolicy {
 
     /**
      * Returns "join" clause for JPQL policy
-     * @return JPQL "joine" clause
+     * @return JPQL "join" clause
      */
     public String getJoinClause() {
         return joinClause;

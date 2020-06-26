@@ -212,9 +212,8 @@ public class LoadContext<E extends Entity> extends io.jmix.core.LoadContext<E> {
         return this;
     }
 
-    @Override
     public LoadContext<E> setAuthorizationRequired(boolean authorizationRequired) {
-        super.setAuthorizationRequired(authorizationRequired);
+        //TODO: fix API usage with access constraints
         return this;
     }
 
@@ -245,7 +244,6 @@ public class LoadContext<E extends Entity> extends io.jmix.core.LoadContext<E> {
             ctx.getHints().putAll(hints);
         }
         ctx.loadDynamicAttributes = loadDynamicAttributes;
-        ctx.authorizationRequired = authorizationRequired;
         ctx.joinTransaction = joinTransaction;
         return ctx;
     }

@@ -20,6 +20,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import io.jmix.core.*;
 import io.jmix.core.common.util.Preconditions;
+import io.jmix.core.constraint.AccessConstraint;
+import io.jmix.core.context.AccessContext;
 import io.jmix.core.entity.KeyValueEntity;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -28,6 +30,10 @@ import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.security.*;
 import io.jmix.data.*;
 import io.jmix.data.event.EntityChangedEvent;
+import io.jmix.data.impl.context.BeforeLoadEntityContext;
+import io.jmix.data.impl.context.InMemoryReadAttributesContext;
+import io.jmix.data.impl.context.InMemoryReadEntityContext;
+import io.jmix.data.impl.context.ReadEntityQueryContext;
 import io.jmix.data.persistence.DbmsSpecifics;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.persistence.exceptions.QueryException;
@@ -71,18 +77,6 @@ public class OrmDataStore implements DataStore {
 
     private static final Logger log = LoggerFactory.getLogger(OrmDataStore.class);
 
-//    @Value("jmix.data.inMemoryDistinct:false")
-//    protected boolean inMemoryDistinct;
-//
-//    @Value("jmix.data.disableLoadValuesIfConstraints:false")
-//    protected boolean disableLoadValuesIfConstraints;
-//
-//    @Value("jmix.data.dataManagerChecksSecurityOnMiddleware:false")
-//    protected boolean dataManagerChecksSecurityOnMiddleware;
-//
-//    @Value("jmix.data.useReadOnlyTransactionForLoad:false")
-//    protected boolean useReadOnlyTransactionForLoad;
-
     @Autowired
     protected DataProperties properties;
 
@@ -96,11 +90,13 @@ public class OrmDataStore implements DataStore {
     protected FetchPlanRepository fetchPlanRepository;
 
     @Autowired
+    protected AccessManager accessManager;
+
+    @Autowired
     protected Security security;
+
     @Autowired
     protected PersistenceSecurity persistenceSecurity;
-    @Autowired
-    protected PersistenceAttributeSecurity attributeSecurity;
 
     @Autowired
     protected CurrentAuthentication currentAuthentication;
@@ -125,6 +121,9 @@ public class OrmDataStore implements DataStore {
 
     @Autowired
     protected StoreAwareLocator storeAwareLocator;
+
+    @Autowired
+    protected BeanLocator beanLocator;
 
     @Autowired(required = false)
     protected List<OrmLifecycleListener> ormLifecycleListeners;
@@ -154,12 +153,16 @@ public class OrmDataStore implements DataStore {
         }
 
         final MetaClass metaClass = metadata.getSession().getClass(context.getMetaClass());
-        if (isAuthorizationRequired(context) && !isEntityOpPermitted(metaClass, EntityOp.READ)) {
+        final Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
+
+        BeforeLoadEntityContext beforeLoadContext = applyConstraints(accessConstraints, BeforeLoadEntityContext.class, metaClass);
+        if (!beforeLoadContext.isLoadPermitted()) {
             log.debug("reading of {} not permitted, returning null", metaClass);
             return null;
         }
 
         E result = null;
+        InMemoryReadAttributesContext inMemoryReadAttributesContext = null;
         boolean needToApplyInMemoryReadConstraints = needToApplyInMemoryReadConstraints(context);
 
         TransactionStatus txStatus = beginLoadTransaction(context.isJoinTransaction());
@@ -175,8 +178,9 @@ public class OrmDataStore implements DataStore {
                     && context.getQuery().getQueryString() != null)
                     && context.getId() != null;
 
-            FetchPlan fetchPlan = createRestrictedFetchPlan(context);
+            FetchPlan fetchPlan = createFetchPlan(context);
             Query query = createQuery(em, context, singleResult, false);
+
             query.setHint(PersistenceHints.FETCH_PLAN, fetchPlan);
 
             //noinspection unchecked
@@ -185,15 +189,14 @@ public class OrmDataStore implements DataStore {
                 result = resultList.get(0);
             }
 
-            if (result != null && needToFilterByInMemoryReadConstraints(context) && persistenceSecurity.filterByConstraints(result)) {
-                result = null;
+            if (result != null) {
+                //noinspection unchecked
+                result = (E) applyConstraints(accessConstraints, InMemoryReadEntityContext.class, result).getPermittedEntity();
             }
-            if (result != null && needToApplyInMemoryReadConstraints) {
-                persistenceSecurity.calculateFilteredData(result);
-            }
-
 
             if (result != null) {
+                inMemoryReadAttributesContext = applyConstraints(accessConstraints, InMemoryReadAttributesContext.class, result);
+
                 fireLoadListeners(Collections.singletonList(result), context);
             }
 
@@ -209,11 +212,9 @@ public class OrmDataStore implements DataStore {
         commitTransaction(txStatus);
 
         if (result != null) {
-            if (needToApplyInMemoryReadConstraints) {
+            if (inMemoryReadAttributesContext.) {
+                //work with in-memory filtering context
                 persistenceSecurity.applyConstraints(result);
-            }
-            if (isAuthorizationRequired(context)) {
-                attributeSecurity.afterLoad(result);
             }
         }
 
@@ -233,7 +234,9 @@ public class OrmDataStore implements DataStore {
 
         MetaClass metaClass = metadata.getClass(context.getMetaClass());
 
-        if (isAuthorizationRequired(context) && !isEntityOpPermitted(metaClass, EntityOp.READ)) {
+        BeforeLoadEntityContext entityReadContext = accessManager.applyConstraints(beanLocator.getPrototype(BeforeLoadEntityContext.class, metaClass),
+                context.getConstraints());
+        if (!entityReadContext.isLoadPermitted()) {
             log.debug("reading of {} not permitted, returning empty list", metaClass);
             return Collections.emptyList();
         }
@@ -256,7 +259,7 @@ public class OrmDataStore implements DataStore {
                     context.getQuery().setQueryString(transformer.getResult());
                 }
             }
-            FetchPlan fetchPlan = createRestrictedFetchPlan(context);
+            FetchPlan fetchPlan = createFetchPlan(context);
             List<E> entities;
 
             Integer maxIdsBatchSize = dbmsSpecifics.getDbmsFeatures(storeName).getMaxIdsBatchSize();
@@ -299,9 +302,6 @@ public class OrmDataStore implements DataStore {
 
         if (needToApplyInMemoryReadConstraints) {
             persistenceSecurity.applyConstraints((Collection<Entity>) resultList);
-        }
-        if (isAuthorizationRequired(context)) {
-            attributeSecurity.afterLoad(resultList);
         }
 
         return resultList;
@@ -402,7 +402,7 @@ public class OrmDataStore implements DataStore {
                 context.getQuery().setMaxResults(0);
 
                 Query query = createQuery(em, context, false, false);
-                query.setHint(PersistenceHints.FETCH_PLAN, createRestrictedFetchPlan(context));
+                query.setHint(PersistenceHints.FETCH_PLAN, createFetchPlan(context));
 
                 resultList = getResultList(context, query, ensureDistinct);
 
@@ -468,10 +468,6 @@ public class OrmDataStore implements DataStore {
                 // persist new
                 for (Entity entity : context.getEntitiesToSave()) {
                     if (entityStates.isNew(entity)) {
-
-                        if (isAuthorizationRequired(context)) {
-                            attributeSecurity.beforePersist(entity);
-                        }
                         em.persist(entity);
                         saved.add(entity);
                         persisted.add(entity);
@@ -483,7 +479,6 @@ public class OrmDataStore implements DataStore {
                             FetchPlan view = getFetchPlanFromContextOrNull(context, entity);
                             entityFetcher.fetch(entity, view, true);
                         }
-
                     }
                 }
 
@@ -495,9 +490,6 @@ public class OrmDataStore implements DataStore {
                             persistenceSecurity.assertToken(entity);
                         }
                         persistenceSecurity.restoreSecurityStateAndFilteredData(entity);
-                        if (isAuthorizationRequired(context)) {
-                            attributeSecurity.beforeMerge(entity);
-                        }
 
                         Entity merged = em.merge(entity);
                         saved.add(merged);
@@ -509,12 +501,6 @@ public class OrmDataStore implements DataStore {
 
                     }
                 }
-
-
-                // todo dynamic attributes
-                //            for (BaseGenericIdEntity entity : entitiesToStoreDynamicAttributes) {
-                //                dynamicAttributesManagerAPI.storeDynamicAttributes(entity);
-                //            }
 
                 fireSaveListeners(context.getEntitiesToSave());
 
@@ -528,7 +514,6 @@ public class OrmDataStore implements DataStore {
 
                     Entity e;
                     if (entity instanceof SoftDelete) {
-                        attributeSecurity.beforeMerge(entity);
 
                         e = em.merge(entity);
                         entityFetcher.fetch(e, getFetchPlanFromContext(context, entity));
@@ -620,14 +605,6 @@ public class OrmDataStore implements DataStore {
         }
 
         if (!context.isDiscardSaved()) {
-
-            if (isAuthorizationRequired(context)) {
-                for (Entity entity : resultEntities) {
-                    if (!persisted.contains(entity)) {
-                        attributeSecurity.afterCommit(entity);
-                    }
-                }
-            }
             // Update references from newly persisted entities to merged detached entities. Otherwise a new entity can
             // contain a stale instance of a merged one.
             entityReferencesNormalizer.updateReferences(persisted, resultEntities);
@@ -696,7 +673,7 @@ public class OrmDataStore implements DataStore {
 
             List<String> keys = context.getProperties();
 
-            JpqlQueryBuilder queryBuilder = AppBeans.get(JpqlQueryBuilder.NAME);
+            JpqlQueryBuilder queryBuilder = beanLocator.get(JpqlQueryBuilder.NAME);
 
             queryBuilder.setValueProperties(context.getProperties())
                     .setQueryString(contextQuery.getQueryString())
@@ -755,7 +732,7 @@ public class OrmDataStore implements DataStore {
             view = fetchPlanRepository.getFetchPlan(entity.getClass(), FetchPlan.LOCAL);
         }
 
-        return isAuthorizationRequired(context) ? attributeSecurity.createRestrictedFetchPlan(view) : view;
+        return view;
     }
 
     @Nullable
@@ -765,7 +742,7 @@ public class OrmDataStore implements DataStore {
             return null;
         }
 
-        return isAuthorizationRequired(context) ? attributeSecurity.createRestrictedFetchPlan(view) : view;
+        return view;
     }
 
     protected void checkOperationPermitted(Entity entity, ConstraintOperationType operationType) {
@@ -778,16 +755,12 @@ public class OrmDataStore implements DataStore {
         }
     }
 
-    // todo dynamic attributes
-//    protected boolean entityHasDynamicAttributes(Entity entity) {
-//        return entity instanceof BaseGenericIdEntity
-//                && ((BaseGenericIdEntity) entity).getDynamicAttributes() != null;
-//    }
-
     protected Query createQuery(EntityManager em, LoadContext<?> context, boolean singleResult, boolean countQuery) {
+        final MetaClass metaClass = metadata.getSession().getClass(context.getMetaClass());
+
         LoadContext.Query contextQuery = context.getQuery();
 
-        JpqlQueryBuilder queryBuilder = AppBeans.get(JpqlQueryBuilder.NAME);
+        JpqlQueryBuilder queryBuilder = beanLocator.get(JpqlQueryBuilder.NAME);
 
         queryBuilder.setId(context.getId())
                 .setIds(context.getIds())
@@ -809,7 +782,10 @@ public class OrmDataStore implements DataStore {
 //            queryBuilder.setPreviousResults(userSessionSource.getUserSession().getId(), context.getQueryKey());
         }
 
-        Query query = queryBuilder.getQuery(em);
+        JmixQuery<?> query = queryBuilder.getQuery(em);
+
+        query = accessManager.applyConstraints(beanLocator.getPrototype(ReadEntityQueryContext.class, query, metaClass),
+                context.getConstraints()).getResultQuery();
 
         if (contextQuery != null) {
             if (contextQuery.getFirstResult() != 0)
@@ -821,21 +797,20 @@ public class OrmDataStore implements DataStore {
             }
         }
 
-        if (context.getHints() != null) {
-            for (Map.Entry<String, Object> hint : context.getHints().entrySet()) {
-                query.setHint(hint.getKey(), hint.getValue());
-            }
+        for (Map.Entry<String, Object> hint : context.getHints().entrySet()) {
+            query.setHint(hint.getKey(), hint.getValue());
         }
 
         return query;
     }
 
-    protected FetchPlan createRestrictedFetchPlan(LoadContext<?> context) {
+    protected FetchPlan createFetchPlan(LoadContext<?> context) {
         FetchPlan fetchPlan = context.getFetchPlan() != null ? context.getFetchPlan() :
                 fetchPlanRepository.getFetchPlan(metadata.getClass(context.getMetaClass()), FetchPlan.BASE);
 
-        FetchPlan copy = FetchPlan.copy(isAuthorizationRequired(context) ? attributeSecurity.createRestrictedFetchPlan(fetchPlan) : fetchPlan);
+        FetchPlan copy = FetchPlan.copy(fetchPlan);
         if (context.isLoadPartialEntities()
+                //todo: move into security
                 && !needToApplyInMemoryReadConstraints(context)
                 && !needToFilterByInMemoryReadConstraints(context)) {
             copy.setLoadPartialEntities(true);
@@ -1057,15 +1032,15 @@ public class OrmDataStore implements DataStore {
     }
 
     protected boolean isAuthorizationRequired(LoadContext context) {
-        return context.isAuthorizationRequired() || properties.isDataManagerChecksSecurityOnMiddleware();
+        return true;
     }
 
     protected boolean isAuthorizationRequired(ValueLoadContext context) {
-        return context.isAuthorizationRequired() || properties.isDataManagerChecksSecurityOnMiddleware();
+        return true;
     }
 
     protected boolean isAuthorizationRequired(SaveContext context) {
-        return context.isAuthorizationRequired() || properties.isDataManagerChecksSecurityOnMiddleware();
+        return true;
     }
 
     protected List<Integer> getNotPermittedSelectIndexes(QueryParser queryParser) {
@@ -1109,17 +1084,6 @@ public class OrmDataStore implements DataStore {
         }
         return false;
     }
-
-    // todo dynamic attributes
-//    protected Set<Class> collectEntityClassesWithDynamicAttributes(@Nullable View view) {
-//        if (view == null) {
-//            return Collections.emptySet();
-//        }
-//        return collectEntityClasses(view, new HashSet<>()).stream()
-//                .filter(BaseGenericIdEntity.class::isAssignableFrom)
-//                .filter(aClass -> !dynamicAttributesManagerAPI.getAttributesForMetaClass(metadata.getClassNN(aClass)).isEmpty())
-//                .collect(Collectors.toSet());
-//    }
 
     protected Set<Class> collectEntityClasses(FetchPlan view, Set<FetchPlan> visited) {
         if (visited.contains(view)) {
@@ -1214,6 +1178,12 @@ public class OrmDataStore implements DataStore {
                 lifecycleListener.onSave(entities);
             }
         }
+    }
+
+    protected <T extends AccessContext> T applyConstraints(Collection<AccessConstraint<?>> constraints,
+                                                           Class<T> contextClass, Object... params) {
+        T accessContext = beanLocator.getPrototype(contextClass, params);
+        return accessManager.applyConstraints(accessContext, constraints);
     }
 
     protected void handleCascadePersistException(IllegalStateException e) throws IllegalStateException {

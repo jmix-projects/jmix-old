@@ -18,10 +18,12 @@ package io.jmix.core;
 
 import io.jmix.core.common.util.Preconditions;
 import io.jmix.core.common.util.StringHelper;
+import io.jmix.core.constraint.AccessConstraint;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.querycondition.Condition;
 
+import javax.annotation.Nullable;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.*;
@@ -31,12 +33,12 @@ import java.util.stream.Collectors;
  * Class that defines parameters for loading entities from the database via {@link DataManager}.
  * <p>Typical usage:
  * <pre>
-    LoadContext&lt;User&gt; context = new LoadContext(User.class).setQuery(
-            new LoadContext.Query("select u from sec$User u where u.login like :login")
-                    .setParameter("login", "a%")
-                    .setMaxResults(10))
-            .setView("user.browse");
-    List&lt;User&gt; users = dataManager.loadList(context);
+ * LoadContext&lt;User&gt; context = new LoadContext(User.class).setQuery(
+ * new LoadContext.Query("select u from sec$User u where u.login like :login")
+ * .setParameter("login", "a%")
+ * .setMaxResults(10))
+ * .setView("user.browse");
+ * List&lt;User&gt; users = dataManager.loadList(context);
  * </pre>
  * <p>
  * Instead of using this class directly, consider fluent interface with the entry point in {@link DataManager#load(Class)}.
@@ -52,11 +54,11 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
     protected List<Object> idList = new ArrayList<>(0);
     protected boolean softDeletion = true;
     protected List<Query> prevQueries = new ArrayList<>(0);
+    protected List<AccessConstraint<?>> constraints;
     protected int queryKey;
 
     protected boolean loadDynamicAttributes;
     protected boolean loadPartialEntities = true;
-    protected boolean authorizationRequired;
     protected boolean joinTransaction = true;
 
     protected Map<String, Object> hints; // lazy initialized map
@@ -97,6 +99,7 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
     /**
      * @return query definition
      */
+    @Nullable
     public Query getQuery() {
         return query;
     }
@@ -112,7 +115,7 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
 
     /**
      * @param queryString JPQL query string. Only named parameters are supported.
-     * @return  query definition object
+     * @return query definition object
      */
     @Override
     public Query setQueryString(String queryString) {
@@ -124,6 +127,7 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
     /**
      * @return view that is used for loading entities
      */
+    @Nullable
     public FetchPlan getFetchPlan() {
         return fetchPlan;
     }
@@ -161,7 +165,6 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
     }
 
     /**
-     *
      * @param ids identifiers of entities to be loaded
      * @return this instance for chaining
      */
@@ -187,6 +190,7 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
 
     /**
      * Allows to execute query on a previous query result.
+     *
      * @return editable list of previous queries
      */
     public List<Query> getPreviousQueries() {
@@ -260,12 +264,12 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
         return this;
     }
 
-    public boolean isAuthorizationRequired() {
-        return authorizationRequired;
+    public List<AccessConstraint<?>> getConstraints() {
+        return this.constraints == null ? Collections.emptyList() : this.constraints;
     }
 
-    public LoadContext<E> setAuthorizationRequired(boolean authorizationRequired) {
-        this.authorizationRequired = authorizationRequired;
+    public LoadContext<E> setConstraints(List<AccessConstraint<?>> constraints) {
+        this.constraints = constraints;
         return this;
     }
 
@@ -299,7 +303,6 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
             ctx.getHints().putAll(hints);
         }
         ctx.loadDynamicAttributes = loadDynamicAttributes;
-        ctx.authorizationRequired = authorizationRequired;
         ctx.joinTransaction = joinTransaction;
         return ctx;
     }
@@ -354,9 +357,10 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
 
         /**
          * Set value for a query parameter.
+         *
          * @param name  parameter name
          * @param value parameter value
-         * @return  this query instance for chaining
+         * @return this query instance for chaining
          */
         public Query setParameter(String name, Object value) {
             parameters.put(name, value);
@@ -365,10 +369,11 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
 
         /**
          * Set value for a parameter of java.util.Date type.
-         * @param name          parameter name
-         * @param value         date value
-         * @param temporalType  temporal type
-         * @return  this query instance for chaining
+         *
+         * @param name         parameter name
+         * @param value        date value
+         * @param temporalType temporal type
+         * @return this query instance for chaining
          */
         public Query setParameter(String name, Date value, TemporalType temporalType) {
             parameters.put(name, new TemporalValue(value, temporalType));
@@ -442,6 +447,7 @@ public class LoadContext<E extends Entity> implements DataLoadContext, Serializa
 
         /**
          * Indicates that the query results should be cached.
+         *
          * @return the same query instance
          */
         public Query setCacheable(boolean cacheable) {

@@ -25,7 +25,6 @@ import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.ConstraintOperationType;
 import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.core.security.Security;
-import io.jmix.data.PersistenceAttributeSecurity;
 import io.jmix.data.PersistenceSecurity;
 import io.jmix.data.RowLevelSecurityException;
 import io.jmix.data.StoreAwareLocator;
@@ -35,9 +34,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.function.BiPredicate;
@@ -59,9 +58,6 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
     protected ReferenceToEntitySupport referenceToEntitySupport;
 
     @Autowired
-    protected PersistenceAttributeSecurity persistenceAttributeSecurity;
-
-    @Autowired
     protected EntityStates entityStates;
 
     @Autowired
@@ -76,65 +72,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
     @Autowired
     protected MetadataTools metadataTools;
 
-    @Override
-    public boolean applyConstraints(JmixQuery query) {
-        QueryParser parser = QueryTransformerFactory.createParser(query.getQueryString());
-        String entityName = parser.getEntityName();
 
-        List<ConstraintData> constraints = ((StandardSecurity) security).getConstraints(metadata.getClass(entityName),
-                constraint ->
-                        constraint.getCheckType().database()
-                                && (constraint.getOperationType() == ConstraintOperationType.READ
-                                || constraint.getOperationType() == ConstraintOperationType.ALL));
-
-        if (constraints.isEmpty())
-            return false;
-
-        QueryTransformer transformer = QueryTransformerFactory.createTransformer(query.getQueryString());
-
-        for (ConstraintData constraint : constraints) {
-            processConstraint(transformer, constraint, entityName);
-        }
-        query.setQueryString(transformer.getResult());
-
-        for (String paramName : transformer.getAddedParams()) {
-            setQueryParam(query, paramName);
-        }
-        return true;
-    }
-
-    // todo user substitution
-    @Override
-    public void setQueryParam(JmixQuery query, String paramName) {
-        if (paramName.startsWith(CONSTRAINT_PARAM_SESSION_ATTR)) {
-            String attrName = paramName.substring(CONSTRAINT_PARAM_SESSION_ATTR.length());
-
-            if (CONSTRAINT_PARAM_USER_LOGIN.equals(attrName)) {
-                String userLogin = /*userSession.getSubstitutedUser() != null ?
-                        userSession.getSubstitutedUser().getLogin() :*/
-                        currentAuthentication.getUser().getUsername();
-                query.setParameter(paramName, userLogin);
-
-            } else if (CONSTRAINT_PARAM_USER_ID.equals(attrName)) {
-                UUID userId = /*userSession.getSubstitutedUser() != null ?
-                        userSession.getSubstitutedUser().getId() :*/
-                        UUID.fromString(currentAuthentication.getUser().getKey());
-                query.setParameter(paramName, userId);
-
-            } else if (CONSTRAINT_PARAM_USER_GROUP_ID.equals(attrName)) {
-                //todo MG
-//                Object groupId = /*userSession.getSubstitutedUser() != null ?
-//                        userSession.getSubstitutedUser().getGroup().getId() :*/
-//                        userSession.getUser().getGroup().getId();
-//                query.setParameter(paramName, groupId);
-
-            } else {
-                //todo MG
-//                Serializable value = userSession.getAttribute(attrName);
-//                query.setParameter(paramName, value);
-            }
-        }
-    }
 
     @Override
     public boolean filterByConstraints(Collection<Entity> entities) {
@@ -150,10 +88,6 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
         return filtered;
     }
 
-    @Override
-    public boolean filterByConstraints(Entity entity) {
-        return !isPermittedInMemory(entity);
-    }
 
     @Override
     public void applyConstraints(Collection<Entity> entities) {
@@ -241,15 +175,6 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
         }
     }
 
-    @Override
-    public void assertTokenForREST(Entity entity, FetchPlan view) {
-        EntityEntry entityEntry = entity.__getEntityEntry();
-        if (entityEntry.getSecurityState().getSecurityToken() == null) {
-            assertSecurityConstraints(entity,
-                    (e, metaProperty) -> view != null && !view.containsProperty(metaProperty.getName()));
-        }
-    }
-
     protected void assertSecurityConstraints(Entity entity, BiPredicate<Entity, MetaProperty> predicate) {
         MetaClass metaClass = metadata.getClass(entity.getClass());
         for (MetaProperty metaProperty : metaClass.getProperties()) {
@@ -268,31 +193,21 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
         }
     }
 
-    protected void processConstraint(QueryTransformer transformer, ConstraintData constraint, String entityName) {
-        String join = constraint.getJoin();
-        String where = constraint.getWhereClause();
-        try {
-            if (StringUtils.isBlank(join)) {
-                if (!StringUtils.isBlank(where)) {
-                    transformer.addWhere(where);
-                }
-            } else {
-                transformer.addJoinAndWhere(join, where);
-            }
-        } catch (JpqlSyntaxException e) {
-            log.error("Syntax errors found in constraint's JPQL expressions. Entity [{}]. Constraint ID [{}].",
-                    entityName, constraint.getId(), e);
 
-            throw new RowLevelSecurityException(
-                    "Syntax errors found in constraint's JPQL expressions. Please see the logs.", entityName);
-        } catch (Exception e) {
-            log.error("An error occurred when applying security constraint. Entity [{}]. Constraint ID [{}].",
-                    entityName, constraint.getId(), e);
+//        } catch (JpqlSyntaxException e) {
+//            log.error("Syntax errors found in constraint's JPQL expressions. Entity [{}]. Constraint ID [{}].",
+//                    entityName, constraint.getId(), e);
+//
+//            throw new RowLevelSecurityException(
+//                    "Syntax errors found in constraint's JPQL expressions. Please see the logs.", entityName);
+//        } catch (Exception e) {
+//            log.error("An error occurred when applying security constraint. Entity [{}]. Constraint ID [{}].",
+//                    entityName, constraint.getId(), e);
+//
+//            throw new RowLevelSecurityException(
+//                    "An error occurred when applying security constraint. Please see the logs.", entityName);
+//        }
 
-            throw new RowLevelSecurityException(
-                    "An error occurred when applying security constraint. Please see the logs.", entityName);
-        }
-    }
 
     @SuppressWarnings("unchecked")
     protected void applyConstraints(Entity entity, Set<EntityId> handled) {
@@ -370,40 +285,5 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
             securityTokenManager.writeSecurityToken(entity);
         }
         return false;
-    }
-
-    protected boolean isPermittedInMemory(Entity entity) {
-        return ((StandardSecurity) security).isPermitted(entity, constraint ->
-                constraint.getCheckType().memory()
-                        && (constraint.getOperationType() == ConstraintOperationType.READ
-                        || constraint.getOperationType() == ConstraintOperationType.ALL));
-    }
-
-    protected static class EntityId {
-        Object id;
-        String metaClassName;
-
-        public EntityId(Object id, String metaClassName) {
-            this.id = id;
-            this.metaClassName = metaClassName;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            EntityId entityId = (EntityId) o;
-
-            if (!id.equals(entityId.id)) return false;
-            return metaClassName.equals(entityId.metaClassName);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = id.hashCode();
-            result = 31 * result + metaClassName.hashCode();
-            return result;
-        }
     }
 }
