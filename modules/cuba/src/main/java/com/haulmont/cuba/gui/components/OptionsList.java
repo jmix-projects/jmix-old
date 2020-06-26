@@ -18,13 +18,14 @@ package com.haulmont.cuba.gui.components;
 
 import com.haulmont.cuba.gui.data.Datasource;
 
+import java.util.Collection;
+
 /**
  * Component compatible with {@link Datasource}.
  *
- * @param <V> value type: single type or {@code Collection<I>}
- * @param <I> item type
+ * @param <V> value and options type for the component
  * @deprecated Use {@link io.jmix.ui.component.OptionsList} instead
  */
 @Deprecated
-public interface OptionsList<V, I> extends OptionsField<V, I>, io.jmix.ui.component.OptionsList<V, I> {
+public interface OptionsList<V> extends OptionsField<Collection<V>, V>, io.jmix.ui.component.OptionsList<V> {
 }

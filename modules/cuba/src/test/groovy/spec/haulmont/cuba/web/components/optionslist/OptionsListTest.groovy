@@ -52,7 +52,7 @@ class OptionsListTest extends UiScreenSpec {
         def screen = screens.create(OptionsListTestScreen)
         screen.show()
 
-        def optionsList = screen.optionsList as OptionsList<List<OrderLine>, OrderLine>
+        def optionsList = screen.optionsList as OptionsList<OrderLine>
         def orderLine = screen.allOrderLinesDc.getItems().get(0)
         def orderLinesDc = screen.orderLinesDc
 
@@ -72,7 +72,7 @@ class OptionsListTest extends UiScreenSpec {
         def screen = screens.create(OptionsListTestScreen)
         screen.show()
 
-        def optionsList = screen.optionsList as OptionsList<List<OrderLine>, OrderLine>
+        def optionsList = screen.optionsList as OptionsList<OrderLine>
         def orderLine = screen.allOrderLinesDc.getItems().get(0)
 
         when: 'List value is set to ValueSource'
@@ -91,7 +91,7 @@ class OptionsListTest extends UiScreenSpec {
         def screen = screens.create(OptionsListTestScreen)
         screen.show()
 
-        def optionsList = screen.setOptionsList as OptionsList<Set<Product>, Product>
+        def optionsList = screen.setOptionsList as OptionsList<Product>
         def product = screen.allProductsDc.items.get(0)
         def catalog = screen.catalogDc.item
 
@@ -100,44 +100,6 @@ class OptionsListTest extends UiScreenSpec {
 
         then: 'ValueSource is updated'
         catalog.products.size() == 1 && catalog.products.contains(product)
-    }
-
-    def 'Value is propagated to ValueSource from single select OptionsList'() {
-        def screens = vaadinUi.screens
-
-        def mainWindow = screens.create('main', OpenMode.ROOT)
-        screens.show(mainWindow)
-
-        def screen = screens.create(OptionsListTestScreen)
-        screen.show()
-
-        def optionsList = screen.singleOptionsList
-        def product = screen.allProductsDc.items.get(0)
-
-        when: 'A value is set to single select OptionsList'
-        optionsList.setValue(product)
-
-        then: 'Property container is updated'
-        screen.productDc.item == product
-    }
-
-    def 'Value is propagated to single select OptionsList from ValueSource'() {
-        def screens = vaadinUi.screens
-
-        def mainWindow = screens.create('main', OpenMode.ROOT)
-        screens.show(mainWindow)
-
-        def screen = screens.create(OptionsListTestScreen)
-        screen.show()
-
-        def singleOptionsList = screen.singleOptionsList
-        def product = screen.allProductsDc.items.get(0)
-
-        when: 'A value is set to property container'
-        screen.orderLineDc.item.product = product
-
-        then: 'Single select OptionsList is updated'
-        singleOptionsList.value == product
     }
 
     def 'ValueChangeEvent is fired exactly once for OptionsList'() {
@@ -149,17 +111,14 @@ class OptionsListTest extends UiScreenSpec {
         def screen = screens.create(OptionsListTestScreen)
         screen.show()
 
-        def optionsList = screen.optionsList as OptionsList<List<OrderLine>, OrderLine>
-        def requiredOptionsList = screen.requiredOptionsList as OptionsList<List<OrderLine>, OrderLine>
-        def singleOptionsList = screen.singleOptionsList as OptionsList<Product, Product>
+        def optionsList = screen.optionsList as OptionsList<OrderLine>
+        def requiredOptionsList = screen.requiredOptionsList as OptionsList<OrderLine>
 
         def valueChangeListener = Mock(Consumer)
         def requiredValueChangeListener = Mock(Consumer)
-        def singleValueChangeListener = Mock(Consumer)
 
         optionsList.addValueChangeListener(valueChangeListener)
         requiredOptionsList.addValueChangeListener(requiredValueChangeListener)
-        singleOptionsList.addValueChangeListener(singleValueChangeListener)
 
         def order = screen.orderDc.item
         def orderLine = screen.orderLineDc.item
@@ -167,16 +126,12 @@ class OptionsListTest extends UiScreenSpec {
         def olOption = screen.allOrderLinesDc.items.get(0)
         def secondOlOption = screen.allOrderLinesDc.items.get(1)
 
-        def productOption = screen.allProductsDc.items.get(0)
-
         when: 'A value is set to OptionsList'
         optionsList.setValue([olOption])
-        singleOptionsList.setValue(productOption)
 
         then: 'ValueChangeEvent is fired once'
         1 * valueChangeListener.accept(_)
         1 * requiredValueChangeListener.accept(_)
-        1 * singleValueChangeListener.accept(_)
 
         when: 'ValueSource is changed'
         screen.orderLinesDc.mutableItems.add(secondOlOption)
@@ -192,211 +147,5 @@ class OptionsListTest extends UiScreenSpec {
         then: 'ValueChangeEvent is fired once'
         1 * valueChangeListener.accept(_)
         1 * requiredValueChangeListener.accept(_)
-        1 * singleValueChangeListener.accept(_)
-    }
-
-    def testNew() {
-        when:
-        Component component = uiComponents.create(OptionsList)
-
-        then:
-        component != null
-        component instanceof OptionsList
-    }
-
-    def testGetSetValue() {
-        when:
-        def component = uiComponents.create(OptionsList)
-
-        then:
-        component.value == null
-
-        when:
-        component.setOptionsList(["One", "Two", "Three"])
-        component.setValue("One")
-
-        then:
-        component.value == 'One'
-    }
-
-
-    def testSetToReadonly() {
-        when:
-        def component = uiComponents.create(OptionsList)
-
-        component.setEditable(false)
-
-        then:
-        !component.editable
-
-        when:
-
-        component.setOptionsList(new ArrayList<>(Arrays.asList("One", "Two", "Three")))
-        component.setValue("One")
-
-        then:
-        component.value == 'One'
-        !component.editable
-    }
-
-
-    def testSetToReadonlyFromValueListener() {
-        when:
-        def component = uiComponents.create(OptionsList)
-
-        then:
-        component.editable
-
-        when:
-        component.addValueChangeListener({ e -> component.setEditable(false) })
-
-        component.setOptionsList(["One", "Two", "Three"])
-        component.setValue("One")
-
-        then:
-        component.value == 'One'
-        !component.editable
-    }
-
-    def testDatasource() {
-        when:
-        def component = uiComponents.create(OptionsList)
-
-        //noinspection unchecked
-        def testDs = new DsBuilder()
-                .setId("testDs")
-                .setJavaClass(User.class)
-                .setView(viewRepository.getFetchPlan(User.class, FetchPlan.LOCAL))
-                .buildDatasource() as Datasource<User>
-
-        testDs.setItem(new User())
-        ((DatasourceImpl) testDs).valid()
-
-        then:
-        component.value == null
-
-        when:
-
-        component.setDatasource(testDs, "group")
-
-        then:
-        component.datasource != null
-    }
-
-
-    def testOptionsDatasource() {
-        when:
-        def component = uiComponents.create(OptionsList)
-
-        //noinspection unchecked
-        def testDs = new DsBuilder()
-                .setId("testDs")
-                .setJavaClass(User.class)
-                .setView(viewRepository.getFetchPlan(User.class, FetchPlan.LOCAL))
-                .buildDatasource() as Datasource<User>
-
-        testDs.setItem(new User())
-        ((DatasourceImpl) testDs).valid()
-
-        then:
-        component.value == null
-
-        when:
-        Group g = new Group()
-        g.setName("Group 0")
-        testDs.getItem().setGroup(g)
-
-        //noinspection unchecked
-        CollectionDatasource<Group, UUID> groupsDs = new DsBuilder()
-                .setId("testDs")
-                .setJavaClass(Group.class)
-                .setView(viewRepository.getFetchPlan(Group.class, FetchPlan.LOCAL))
-                .setRefreshMode(CollectionDatasource.RefreshMode.NEVER)
-                .setAllowCommit(false)
-                .buildCollectionDatasource()
-
-        Group g1 = new Group()
-        g1.setName("Group 1")
-        groupsDs.includeItem(g1)
-        Group g2 = new Group()
-        g2.setName("Group 2")
-        groupsDs.includeItem(g2)
-
-        component.setOptionsDatasource(groupsDs)
-        component.setValue(g2)
-
-        then:
-        g2 == component.value
-
-        when:
-        component.setDatasource(testDs, "group")
-        component.setValue(g)
-
-        then:
-        g == testDs.item.group
-
-        when:
-        component.setValue(g1)
-
-        then:
-        g1 == testDs.item.group
-
-        when:
-        testDs.getItem().setGroup(g2)
-
-        then:
-        g2 == component.value
-    }
-
-
-    def testValueChangeListener() {
-        when:
-        def component = uiComponents.create(OptionsList)
-
-        final AtomicInteger counter = new AtomicInteger(0)
-
-        then:
-        component.value == null
-
-        when:
-
-        Consumer<HasValue.ValueChangeEvent> listener1 = { e ->
-            counter.addAndGet(1)
-        }
-        Subscription subscription = component.addValueChangeListener(listener1)
-
-        component.setOptionsList(new ArrayList<>(Arrays.asList("One", "Two", "Three")))
-        component.setValue("Two")
-
-        subscription.remove()
-
-        then:
-        counter.get() == 1
-
-        when:
-
-        Consumer<HasValue.ValueChangeEvent> listener2 = { e ->
-            counter.addAndGet(1)
-        }
-        subscription = component.addValueChangeListener(listener2)
-
-        component.setValue("One")
-
-        then:
-        component.value == 'One'
-        counter.get() == 2
-
-        when:
-
-        subscription.remove()
-        Consumer<HasValue.ValueChangeEvent> listener3 = { e ->
-            counter.addAndGet(1)
-        }
-        component.addValueChangeListener(listener3)
-
-        component.setValue("Three")
-
-        then:
-        counter.get() == 3
     }
 }

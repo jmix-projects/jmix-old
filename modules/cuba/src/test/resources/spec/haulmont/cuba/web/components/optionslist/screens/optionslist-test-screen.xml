@@ -44,23 +44,15 @@
     <layout>
         <optionsList id="optionsList"
                      dataContainer="orderDc" property="orderLines"
-                     optionsContainer="allOrderLinesDc"
-                     multiselect="true"/>
+                     optionsContainer="allOrderLinesDc"/>
 
         <optionsList id="requiredOptionsList"
                      dataContainer="orderDc" property="orderLines"
                      optionsContainer="allOrderLinesDc"
-                     multiselect="true"
                      required="true"/>
-
-        <optionsList id="singleOptionsList"
-                     dataContainer="orderLineDc" property="product"
-                     optionsContainer="allProductsDc"
-                     multiselect="false"/>
 
         <optionsList id="setOptionsList"
                      dataContainer="catalogDc" property="products"
-                     optionsContainer="allProductsDc"
-                     multiselect="true"/>
+                     optionsContainer="allProductsDc"/>
     </layout>
 </window>

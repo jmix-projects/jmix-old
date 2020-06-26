@@ -16,9 +16,9 @@
 
 package io.jmix.ui.widget.client.listselect;
 
+import com.vaadin.client.ui.listselect.ListSelectConnector;
 import io.jmix.ui.widget.JmixListSelect;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.v7.client.ui.listselect.ListSelectConnector;
 
 @Connect(value = JmixListSelect.class)
 public class JmixListSelectConnector extends ListSelectConnector {

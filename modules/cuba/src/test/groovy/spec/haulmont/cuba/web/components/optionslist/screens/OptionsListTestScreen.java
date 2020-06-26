@@ -32,7 +32,6 @@ import io.jmix.ui.screen.UiDescriptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -61,13 +60,11 @@ public class OptionsListTestScreen extends Screen {
     public InstanceContainer<Catalog> catalogDc;
 
     @Autowired
-    public OptionsList<List<OrderLine>, OrderLine> optionsList;
+    public OptionsList<OrderLine> optionsList;
     @Autowired
-    public OptionsList<List<OrderLine>, OrderLine> requiredOptionsList;
+    public OptionsList<OrderLine> requiredOptionsList;
     @Autowired
-    public OptionsList<Product, Product> singleOptionsList;
-    @Autowired
-    public OptionsList<Set<Product>, Product> setOptionsList;
+    public OptionsList<Product> setOptionsList;
 
     @Subscribe
     private void onInit(InitEvent event) {

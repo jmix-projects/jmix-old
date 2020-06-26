@@ -16,6 +16,7 @@
 
 package io.jmix.ui.component.impl;
 
+import com.vaadin.data.provider.ListDataProvider;
 import io.jmix.core.common.event.Subscription;
 import io.jmix.core.MetadataTools;
 import io.jmix.ui.component.OptionsList;
@@ -26,35 +27,32 @@ import io.jmix.ui.component.data.meta.EntityValueSource;
 import io.jmix.ui.component.data.meta.OptionsBinding;
 import io.jmix.ui.component.data.options.OptionsBinder;
 import io.jmix.ui.widget.JmixListSelect;
-import com.vaadin.v7.data.util.IndexedContainer;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class WebOptionsList<V, I> extends WebAbstractField<JmixListSelect, V>
-        implements OptionsList<V, I>, InitializingBean {
+public class WebOptionsList<V> extends WebV8AbstractField<JmixListSelect<V>, Set<V>, Collection<V>>
+        implements OptionsList<V>, InitializingBean {
 
     protected MetadataTools metadataTools;
 
-    protected OptionsBinding<I> optionsBinding;
+    protected OptionsBinding<V> optionsBinding;
 
-    protected Function<? super I, String> optionCaptionProvider;
+    protected Function<? super V, String> optionCaptionProvider;
 
     public WebOptionsList() {
         component = createComponent();
     }
 
-    protected JmixListSelect createComponent() {
-        return new JmixListSelect();
+    protected JmixListSelect<V> createComponent() {
+        return new JmixListSelect<>();
     }
 
     @Override
@@ -62,17 +60,17 @@ public class WebOptionsList<V, I> extends WebAbstractField<JmixListSelect, V>
         initComponent(component);
     }
 
-    protected void initComponent(JmixListSelect component) {
-        component.setContainerDataSource(new IndexedContainer());
+    protected void initComponent(JmixListSelect<V> component) {
+        component.setDataProvider(new ListDataProvider<>(Collections.emptyList()));
         component.setItemCaptionGenerator(this::generateItemCaption);
         component.setRequiredError(null);
 
         component.setDoubleClickHandler(this::onDoubleClick);
 
-        attachListener(component);
+        attachValueChangeListener(component);
     }
 
-    protected String generateDefaultItemCaption(I item) {
+    protected String generateDefaultItemCaption(V item) {
         if (valueBinding != null && valueBinding.getSource() instanceof EntityValueSource) {
             EntityValueSource entityValueSource = (EntityValueSource) valueBinding.getSource();
             return metadataTools.format(item, entityValueSource.getMetaPropertyPath().getMetaProperty());
@@ -81,10 +79,7 @@ public class WebOptionsList<V, I> extends WebAbstractField<JmixListSelect, V>
         return metadataTools.format(item);
     }
 
-    protected String generateItemCaption(Object objectItem) {
-        //noinspection unchecked
-        I item = (I) objectItem;
-
+    protected String generateItemCaption(V item) {
         if (item == null) {
             return null;
         }
@@ -102,103 +97,60 @@ public class WebOptionsList<V, I> extends WebAbstractField<JmixListSelect, V>
     }
 
     @Override
-    public boolean isMultiSelect() {
-        return component.isMultiSelect();
-    }
+    protected Collection<V> convertToModel(Set<V> componentRawValue) {
+        Stream<V> items = optionsBinding == null ? Stream.empty()
+                : optionsBinding.getSource().getOptions().filter(componentRawValue::contains);
 
-    @Override
-    public void setMultiSelect(boolean multiselect) {
-        component.setMultiSelect(multiselect);
-    }
+        if (valueBinding != null) {
+            Class<Collection<V>> targetType = valueBinding.getSource().getType();
 
-    @SuppressWarnings("unchecked")
-    @Override
-    protected V convertToModel(Object componentRawValue) {
-        if (isMultiSelect()) {
-            Set collectionValue = (Set) componentRawValue;
-
-            List<I> itemIds = getCurrentItems();
-
-            //noinspection RedundantCast
-            Stream<I> selectedItemsStream = collectionValue.stream()
-                    .filter(item -> itemIds.isEmpty() || itemIds.contains((I) item));
-
-            if (valueBinding != null) {
-                Class<V> targetType = valueBinding.getSource().getType();
-
-                if (List.class.isAssignableFrom(targetType)) {
-                    return (V) selectedItemsStream.collect(Collectors.toList());
-                }
-
-                if (Set.class.isAssignableFrom(targetType)) {
-                    return (V) selectedItemsStream.collect(Collectors.toCollection(LinkedHashSet::new));
-                }
+            if (List.class.isAssignableFrom(targetType)) {
+                return items.collect(Collectors.toList());
             }
 
-            return (V) selectedItemsStream.collect(Collectors.toCollection(LinkedHashSet::new));
+            if (Set.class.isAssignableFrom(targetType)) {
+                return items.collect(Collectors.toCollection(LinkedHashSet::new));
+            }
         }
 
-        return super.convertToModel(componentRawValue);
+        return items.collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Override
-    public V getValue() {
-        return internalValue;
-    }
-
-    @Override
-    public void setValue(V value) {
-        setValueToPresentation(convertToPresentation(value));
-    }
-
-    @Override
-    protected boolean fieldValueEquals(V value, V oldValue) {
-        if (!isMultiSelect()) {
-            return super.fieldValueEquals(value, oldValue);
-        }
-
-        //noinspection unchecked
-        return equalCollections((Collection<V>) value, (Collection<V>) oldValue);
+    protected boolean fieldValueEquals(Collection<V> value, Collection<V> oldValue) {
+        return equalCollections(value, oldValue);
     }
 
     protected boolean equalCollections(Collection<V> a, Collection<V> b) {
-        if (a == null && b == null) {
+        if (CollectionUtils.isEmpty(a) && CollectionUtils.isEmpty(b)) {
             return true;
         }
 
-        if (a == null || b == null) {
+        if ((CollectionUtils.isEmpty(a) && CollectionUtils.isNotEmpty(b))
+                || (CollectionUtils.isNotEmpty(a) && CollectionUtils.isEmpty(b))) {
             return false;
         }
 
         return CollectionUtils.isEqualCollection(a, b);
     }
 
-    @SuppressWarnings("unchecked")
-    protected List<I> getCurrentItems() {
-        IndexedContainer container = (IndexedContainer) component.getContainerDataSource();
-
-        return (List<I>) container.getItemIds();
-    }
-
-    @SuppressWarnings("unchecked")
     @Override
-    protected Object convertToPresentation(V modelValue) {
-        if (isMultiSelect()) {
-            if (modelValue instanceof List) {
-                return new LinkedHashSet<I>((Collection<? extends I>) modelValue);
-            }
+    protected Set<V> convertToPresentation(Collection<V> modelValue) {
+        if (modelValue instanceof List) {
+            return new LinkedHashSet<>(modelValue);
         }
 
-        return super.convertToPresentation(modelValue);
+        return modelValue == null ?
+                new LinkedHashSet<>() : new LinkedHashSet<>(modelValue);
     }
 
     @Override
-    public Options<I> getOptions() {
+    public Options<V> getOptions() {
         return optionsBinding != null ? optionsBinding.getSource() : null;
     }
 
     @Override
-    public void setOptions(Options<I> options) {
+    public void setOptions(Options<V> options) {
         if (this.optionsBinding != null) {
             this.optionsBinding.unbind();
             this.optionsBinding = null;
@@ -211,9 +163,8 @@ public class WebOptionsList<V, I> extends WebAbstractField<JmixListSelect, V>
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected void valueBindingConnected(ValueSource<V> valueSource) {
+    protected void valueBindingConnected(ValueSource<Collection<V>> valueSource) {
         super.valueBindingConnected(valueSource);
 
         if (valueSource instanceof EntityValueSource) {
@@ -223,34 +174,47 @@ public class WebOptionsList<V, I> extends WebAbstractField<JmixListSelect, V>
     }
 
     @Override
-    protected void setValueToPresentation(Object value) {
-        component.setValueToComponent(value);
+    public void setValue(Collection<V> value) {
+        Collection<V> oldValue = getOldValue(value);
+
+        oldValue = new ArrayList<>(oldValue != null
+                ? oldValue
+                : Collections.emptyList());
+
+        setValueToPresentation(convertToPresentation(value));
+
+        this.internalValue = value;
+
+        fireValueChange(oldValue, value);
     }
 
-    protected void setItemsToPresentation(Stream<I> options) {
-        List<I> itemIds = options.collect(Collectors.toList());
-        component.setContainerDataSource(new IndexedContainer(itemIds));
+    protected Collection<V> getOldValue(Collection<V> newValue) {
+        return equalCollections(newValue, internalValue)
+                ? component.getValue()
+                : internalValue;
+    }
+
+    protected void fireValueChange(Collection<V> oldValue, Collection<V> value) {
+        if (!fieldValueEquals(oldValue, value)) {
+            ValueChangeEvent<Collection<V>> event =
+                    new ValueChangeEvent<>(this, oldValue, value, false);
+            publish(ValueChangeEvent.class, event);
+        }
+    }
+
+    protected void setItemsToPresentation(Stream<V> options) {
+        component.setItems(options);
     }
 
     @Override
-    public boolean isNullOptionVisible() {
-        return component.isNullSelectionAllowed();
-    }
-
-    @Override
-    public void setNullOptionVisible(boolean nullOptionVisible) {
-        component.setNullSelectionAllowed(nullOptionVisible);
-    }
-
-    @Override
-    public void setOptionCaptionProvider(Function<? super I, String> optionCaptionProvider) {
+    public void setOptionCaptionProvider(Function<? super V, String> optionCaptionProvider) {
         this.optionCaptionProvider = optionCaptionProvider;
 
         component.markAsDirty();
     }
 
     @Override
-    public Function<? super I, String> getOptionCaptionProvider() {
+    public Function<? super V, String> getOptionCaptionProvider() {
         return optionCaptionProvider;
     }
 
@@ -269,21 +233,16 @@ public class WebOptionsList<V, I> extends WebAbstractField<JmixListSelect, V>
         component.setTabIndex(tabIndex);
     }
 
-    protected boolean isCollectionValuesChanged(Collection<I> value, Collection<I> oldValue) {
-        return value != oldValue;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected void onDoubleClick(Object item) {
+    protected void onDoubleClick(V item) {
         if (hasSubscriptions(DoubleClickEvent.class)) {
-            DoubleClickEvent<I> event = new DoubleClickEvent<>(this, (I) item);
+            DoubleClickEvent<V> event = new DoubleClickEvent<>(this, item);
             publish(DoubleClickEvent.class, event);
         }
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Subscription addDoubleClickListener(Consumer<DoubleClickEvent<I>> listener) {
+    public Subscription addDoubleClickListener(Consumer<DoubleClickEvent<V>> listener) {
         return getEventHub().subscribe(DoubleClickEvent.class, (Consumer) listener);
     }
 }

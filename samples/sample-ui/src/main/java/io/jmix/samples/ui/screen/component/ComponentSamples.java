@@ -48,7 +48,7 @@ public class ComponentSamples extends Screen {
     private TwinColumn<String> twinColumn;
 
     @Autowired
-    private OptionsList<List, String> optionsList;
+    private OptionsList<String> optionsList;
 
     @Autowired
     private RadioButtonGroup<String> radioButtonGroup;
