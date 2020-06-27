@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.component;
+package com.haulmont.cuba.web.gui.components;
 
-import java.net.URL;
+import com.haulmont.cuba.gui.components.BrowserFrame;
+import io.jmix.ui.component.Resource;
 
-/**
- * A resource that can be loaded from the given <code>URL</code>.
- */
-public interface UrlResource extends Resource, ResourceView.HasMimeType {
+@Deprecated
+public class WebBrowserFrame extends io.jmix.ui.component.impl.WebBrowserFrame implements BrowserFrame {
 
-    String NAME = "ui_UrlResource";
-
-    UrlResource setUrl(URL url);
-
-    URL getUrl();
+    @Override
+    public <R extends Resource> R createResource(Class<R> type) {
+        return beanLocator.getPrototype(type);
+    }
 }

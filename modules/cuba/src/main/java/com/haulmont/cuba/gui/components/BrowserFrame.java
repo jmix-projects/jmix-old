@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.component;
+package com.haulmont.cuba.gui.components;
 
-import java.net.URL;
+import io.jmix.ui.component.Resource;
 
 /**
- * A resource that can be loaded from the given <code>URL</code>.
+ * @deprecated Use {@link io.jmix.ui.component.BrowserFrame} instead
  */
-public interface UrlResource extends Resource, ResourceView.HasMimeType {
+@Deprecated
+public interface BrowserFrame extends io.jmix.ui.component.BrowserFrame {
 
-    String NAME = "ui_UrlResource";
-
-    UrlResource setUrl(URL url);
-
-    URL getUrl();
+    /**
+     * Creates resource implementation by its type.
+     *
+     * @param type resource class to be created
+     * @param <R>  {@link Resource} inheritor
+     * @return new resource instance with given type
+     */
+    @Deprecated
+    <R extends Resource> R createResource(Class<R> type);
 }
