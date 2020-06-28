@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,30 @@
  * limitations under the License.
  */
 
-package io.jmix.core.entity;
+package io.jmix.data.impl.converters;
 
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
+import io.jmix.core.entity.BaseUser;
+import org.springframework.core.convert.converter.Converter;
 
 import java.util.Date;
 
-/**
- * Interface to be implemented by entities that contain information about who created them and when.
- *
- * @deprecated use {@link CreatedBy} and {@link CreatedDate} on fields instead.
- */
-@Deprecated
-public interface Creatable {
-    Date getCreateTs();
+public class AuditConverters {
 
-    void setCreateTs(Date date);
+    public enum DateToLongConverter implements Converter<Date, Long> {
+        INSTANCE;
 
-    String getCreatedBy();
+        public Long convert(Date source) {
+            return source.getTime();
+        }
+    }
 
-    void setCreatedBy(String createdBy);
+    public enum UserToStringConverter implements Converter<BaseUser, String> {
+        INSTANCE;
+
+        public String convert(BaseUser source) {
+            return source.getUsername();
+        }
+    }
+
+
 }
