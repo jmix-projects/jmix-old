@@ -19,6 +19,7 @@ package io.jmix.gradle;
 import javassist.*;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
@@ -115,8 +116,56 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
             }
         }
 
+        setupAudition(nestedCtClass, ctClass);
+
         nestedCtClass.writeFile(outputDir);
     }
+
+    protected void setupAudition(CtClass nestedClass, CtClass ctClass) throws NotFoundException, CannotCompileException {
+
+        CtField createdDateField = getCreatedDateField(ctClass);
+        CtField createdByField = getCreatedByField(ctClass);
+        CtField updatedDateField = getUpdatedDateField(ctClass);
+        CtField updatedByField = getUpdatedByField(ctClass);
+
+        createAuditMethods("CreatedDate", createdDateField, nestedClass, ctClass);
+        createAuditMethods("CreatedBy", createdByField, nestedClass, ctClass);
+        createAuditMethods("UpdatedDate", updatedDateField, nestedClass, ctClass);
+        createAuditMethods("UpdatedBy", updatedByField, nestedClass, ctClass);
+
+        if (createdDateField != null || createdByField != null || updatedDateField != null || updatedByField != null) {
+            nestedClass.addInterface(classPool.get("io.jmix.core.entity.JmixAuditable"));
+            logger.debug(String.format("Audition enabled for %s. Fields: createdDate: %s, createdBy: %s, updatedDate: %s, updatedBy: %s",
+                    ctClass.getSimpleName(),
+                    createdDateField == null ? '-' : createdDateField.getName(),
+                    createdByField == null ? '-' : createdByField.getName(),
+                    updatedDateField == null ? '-' : updatedDateField.getName(),
+                    updatedByField == null ? '-' : updatedByField.getName()
+            ));
+        }
+    }
+
+    protected void createAuditMethods(String propName, @Nullable CtField propField, CtClass nestedClass, CtClass ctClass)
+            throws CannotCompileException, NotFoundException {
+
+        if (propField == null)
+            return;
+
+        CtClass objectClass = classPool.get("java.lang.Object");
+        CtClass classClass = classPool.get("java.lang.Class");
+
+        nestedClass.addMethod(CtNewMethod.make(CtClass.voidType, "set" + propName, new CtClass[]{objectClass}, null,
+                String.format("((%s)getSource()).set%s((%s)$1);",
+                        ctClass.getName(),
+                        StringUtils.capitalize(propField.getName()),
+                        propField.getType().getName()),
+                nestedClass));
+
+        nestedClass.addMethod(CtNewMethod.make(classClass, "get" + propName + "Class", null, null,
+                String.format("return %s.class;", propField.getType().getName()),
+                nestedClass));
+    }
+
 
     protected void makeEntityEntryField(CtClass ctClass) throws CannotCompileException, NotFoundException {
         CtField ctField = new CtField(classPool.get(ENTITY_ENTRY_TYPE), GEN_ENTITY_ENTRY_VAR_NAME, ctClass);

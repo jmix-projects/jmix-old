@@ -16,8 +16,9 @@
 
 package io.jmix.data;
 
+import io.jmix.core.entity.BaseUser;
+
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 /**
  * INTERNAL.
@@ -33,4 +34,7 @@ public interface AuditInfoProvider {
 
     @Nullable
     String getCurrentUserKey();
+
+    @Nullable
+    BaseUser getCurrentUser();
 }
