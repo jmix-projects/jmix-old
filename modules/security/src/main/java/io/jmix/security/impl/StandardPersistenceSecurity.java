@@ -72,45 +72,6 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
     @Autowired
     protected MetadataTools metadataTools;
 
-
-
-    @Override
-    public boolean filterByConstraints(Collection<Entity> entities) {
-        boolean filtered = false;
-        for (Iterator<Entity> iterator = entities.iterator(); iterator.hasNext(); ) {
-            Entity entity = iterator.next();
-            if (!isPermittedInMemory(entity)) {
-                //we ignore situations when the collection is immutable
-                iterator.remove();
-                filtered = true;
-            }
-        }
-        return filtered;
-    }
-
-
-    @Override
-    public void applyConstraints(Collection<Entity> entities) {
-        Set<EntityId> handled = new LinkedHashSet<>();
-        entities.forEach(entity -> applyConstraints(entity, handled));
-    }
-
-    @Override
-    public void applyConstraints(Entity entity) {
-        applyConstraints(entity, new HashSet<>());
-    }
-
-    @Override
-    public void calculateFilteredData(Entity entity) {
-        calculateFilteredData(entity, new HashSet<>(), false);
-    }
-
-    @Override
-    public void calculateFilteredData(Collection<Entity> entities) {
-        Set<EntityId> handled = new LinkedHashSet<>();
-        entities.forEach(entity -> calculateFilteredData(entity, handled, false));
-    }
-
     @Override
     public void restoreSecurityState(Entity entity) {
         try {
