@@ -40,7 +40,7 @@ public class InMemoryReadEntityContext implements AccessContext {
         return entities;
     }
 
-    public void addPermittedEntity(Entity entity) {
+    public void addDeniedEntity(Entity entity) {
         if (permittedEntities == null) {
             permittedEntities = new ArrayList<>(entities.size());
         }

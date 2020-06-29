@@ -21,29 +21,29 @@ import io.jmix.core.EntityStates;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.data.impl.context.InMemoryReadAttributesContext;
-import io.jmix.security.model.RowLevelPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.Objects;
 import java.util.Set;
 
-public class InMemoryReadAttributesConstraint extends AbstractRowLevelReadConstraint<InMemoryReadAttributesContext> {
-    @Autowired
-    protected Metadata metadata;
+@Component(InMemoryReadEntityConstraint.NAME)
+public class InMemoryReadAttributesConstraint extends AbstractInMemoryRowLevelConstraint<InMemoryReadAttributesContext> {
+    public static final String NAME = "sec_InMemoryReadAttributesConstraint";
+
     @Autowired
     protected MetadataTools metadataTools;
     @Autowired
     protected EntityStates entityStates;
 
     @Autowired
-    public InMemoryReadAttributesConstraint(CurrentAuthentication currentAuthentication) {
-        super(currentAuthentication);
+    public InMemoryReadAttributesConstraint(CurrentAuthentication currentAuthentication,
+                                            Metadata metadata) {
+        super(currentAuthentication, metadata);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class InMemoryReadAttributesConstraint extends AbstractRowLevelReadConstr
         for (Entity entity : context.getEntities()) {
             traverseEntities(entity, visited, (ownerEntity, propertyEntity, propertyName) -> {
                 if (!isPermitted(propertyEntity)) {
-                    context.addDeniedEntity(ownerEntity, propertyEntity, propertyName);
+                    context.addDeniedEntityAttribute(ownerEntity, propertyEntity, propertyName);
                     return false;
                 }
                 return true;
@@ -90,17 +90,6 @@ public class InMemoryReadAttributesConstraint extends AbstractRowLevelReadConstr
                 }
             }
         }
-    }
-
-    protected boolean isPermitted(Entity entity) {
-        MetaClass entityClass = metadata.getClass(entity.getClass());
-        boolean permitted = true;
-        for (RowLevelPolicy policy : getRowLevelPolicies(entityClass)) {
-            if (Objects.equals(policy.getAction(), action) && policy.getPredicate() != null) {
-                permitted = permitted && policy.getPredicate().test(entity);
-            }
-        }
-        return permitted;
     }
 
     protected boolean isPersistentEntityProperty(MetaProperty metaProperty) {

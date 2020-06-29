@@ -37,7 +37,15 @@ public class InMemoryReadAttributesContext implements AccessContext {
         return entities;
     }
 
-    public void addDeniedEntity(Entity ownerEntity, Entity propertyEntity, String propertyName) {
+    public void addDeniedEntityAttribute(Entity ownerEntity, Entity propertyEntity, String propertyName) {
 
     }
+
+    public void applyAttributes() {
+
+    }
+
+
+
+
 }

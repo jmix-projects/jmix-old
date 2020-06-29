@@ -26,19 +26,14 @@ import io.jmix.security.model.RowLevelPolicyAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-
 @Component(InMemoryReadEntityConstraint.NAME)
-public class InMemoryReadEntityConstraint extends AbstractRowLevelReadConstraint<InMemoryReadEntityContext> {
+public class InMemoryReadEntityConstraint extends AbstractInMemoryRowLevelConstraint<InMemoryReadEntityContext> {
     public static final String NAME = "sec_InMemoryReadEntityConstraint";
-
-    protected Metadata metadata;
 
     @Autowired
     public InMemoryReadEntityConstraint(CurrentAuthentication currentAuthentication,
                                         Metadata metadata) {
-        super(currentAuthentication);
-        this.metadata = metadata;
+        super(currentAuthentication, metadata);
     }
 
     @Override
@@ -49,21 +44,9 @@ public class InMemoryReadEntityConstraint extends AbstractRowLevelReadConstraint
     @Override
     public void applyTo(InMemoryReadEntityContext context) {
         for (Entity entity : context.getEntities()) {
-            //TODO: think about actions enum
-            if (isPermitted(entity, RowLevelPolicyAction.READ.getId())) {
-                context.addPermittedEntity(entity);
+            if (!isPermitted(entity)) {
+                context.addDeniedEntity(entity);
             }
         }
-    }
-
-    protected boolean isPermitted(Entity entity, String action) {
-        MetaClass entityClass = metadata.getClass(entity.getClass());
-        boolean permitted = true;
-        for (RowLevelPolicy policy : getRowLevelPolicies(entityClass)) {
-            if (Objects.equals(policy.getAction(), action) && policy.getPredicate() != null) {
-                permitted = permitted && policy.getPredicate().test(entity);
-            }
-        }
-        return permitted;
     }
 }

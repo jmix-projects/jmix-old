@@ -34,8 +34,6 @@ public class SecurityState implements Serializable {
 
     protected transient Multimap<String, Object> filteredData = null;
 
-    protected String[] inaccessibleAttributes;
-
     protected String[] filteredAttributes;
 
     protected byte[] securityToken;
@@ -46,14 +44,6 @@ public class SecurityState implements Serializable {
 
     public void setFilteredData(Multimap<String, Object> filteredData) {
         this.filteredData = filteredData;
-    }
-
-    public String[] getInaccessibleAttributes() {
-        return inaccessibleAttributes;
-    }
-
-    public void setInaccessibleAttributes(String[] inaccessibleAttributes) {
-        this.inaccessibleAttributes = inaccessibleAttributes;
     }
 
     public String[] getFilteredAttributes() {

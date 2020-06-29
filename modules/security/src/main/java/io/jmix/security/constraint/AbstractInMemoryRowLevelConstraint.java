@@ -16,29 +16,37 @@
 
 package io.jmix.security.constraint;
 
+import io.jmix.core.Entity;
+import io.jmix.core.Metadata;
 import io.jmix.core.constraint.RowLevelConstraint;
 import io.jmix.core.context.AccessContext;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.security.authentication.SecuredAuthentication;
 import io.jmix.security.model.RowLevelPolicy;
+import io.jmix.security.model.RowLevelPolicyAction;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
-public abstract class AbstractRowLevelReadConstraint<T extends AccessContext> implements RowLevelConstraint<T> {
+public abstract class AbstractInMemoryRowLevelConstraint<T extends AccessContext> extends AbstractRowLevelConstraint<T> {
+    protected Metadata metadata;
 
-    protected CurrentAuthentication currentAuthentication;
-
-    public AbstractRowLevelReadConstraint(CurrentAuthentication currentAuthentication) {
-        this.currentAuthentication = currentAuthentication;
+    public AbstractInMemoryRowLevelConstraint(CurrentAuthentication currentAuthentication,
+                                              Metadata metadata) {
+        super(currentAuthentication);
+        this.metadata = metadata;
     }
 
-    protected Collection<RowLevelPolicy> getRowLevelPolicies(MetaClass metaClass) {
-        if (currentAuthentication.getAuthentication() instanceof SecuredAuthentication) {
-            SecuredAuthentication authentication = (SecuredAuthentication) currentAuthentication.getAuthentication();
-            return authentication.getRowLevelPoliciesByEntityName(metaClass);
+    protected boolean isPermitted(Entity entity) {
+        MetaClass entityClass = metadata.getClass(entity.getClass());
+        boolean permitted = true;
+        for (RowLevelPolicy policy : getRowLevelPolicies(entityClass)) {
+            if (policy.getAction() == RowLevelPolicyAction.READ && policy.getPredicate() != null) {
+                permitted = permitted && policy.getPredicate().test(entity);
+            }
         }
-        return Collections.emptyList();
+        return permitted;
     }
 }

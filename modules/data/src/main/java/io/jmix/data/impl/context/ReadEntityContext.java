@@ -22,19 +22,19 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component(BeforeLoadEntityContext.NAME)
+@Component(ReadEntityContext.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class BeforeLoadEntityContext implements AccessContext {
-    public static final String NAME = "data_BeforeLoadEntityContext";
+public class ReadEntityContext implements AccessContext {
+    public static final String NAME = "data_ReadEntityContext";
 
     protected final MetaClass entityClass;
-    protected boolean loadPermitted;
+    protected boolean readPermitted = false;
 
-    public BeforeLoadEntityContext(MetaClass entityClass) {
+    public ReadEntityContext(MetaClass entityClass) {
         this.entityClass = entityClass;
     }
 
-    public boolean isLoadPermitted() {
-        return loadPermitted;
+    public boolean isReadPermitted() {
+        return readPermitted;
     }
 }

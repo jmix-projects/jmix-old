@@ -30,7 +30,7 @@ import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.security.*;
 import io.jmix.data.*;
 import io.jmix.data.event.EntityChangedEvent;
-import io.jmix.data.impl.context.BeforeLoadEntityContext;
+import io.jmix.data.impl.context.ReadEntityContext;
 import io.jmix.data.impl.context.InMemoryReadAttributesContext;
 import io.jmix.data.impl.context.InMemoryReadEntityContext;
 import io.jmix.data.impl.context.ReadEntityQueryContext;
@@ -93,12 +93,6 @@ public class OrmDataStore implements DataStore {
     protected AccessManager accessManager;
 
     @Autowired
-    protected Security security;
-
-    @Autowired
-    protected PersistenceSecurity persistenceSecurity;
-
-    @Autowired
     protected CurrentAuthentication currentAuthentication;
 
     @Autowired
@@ -155,15 +149,14 @@ public class OrmDataStore implements DataStore {
         final MetaClass metaClass = metadata.getSession().getClass(context.getMetaClass());
         final Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
 
-        BeforeLoadEntityContext beforeLoadContext = applyConstraints(accessConstraints, BeforeLoadEntityContext.class, metaClass);
-        if (!beforeLoadContext.isLoadPermitted()) {
+        ReadEntityContext readEntityContext = applyConstraints(accessConstraints, ReadEntityContext.class, metaClass);
+        if (!readEntityContext.isReadPermitted()) {
             log.debug("reading of {} not permitted, returning null", metaClass);
             return null;
         }
 
         E result = null;
         InMemoryReadAttributesContext inMemoryReadAttributesContext = null;
-        boolean needToApplyInMemoryReadConstraints = needToApplyInMemoryReadConstraints(context);
 
         TransactionStatus txStatus = beginLoadTransaction(context.isJoinTransaction());
         try {
@@ -208,14 +201,12 @@ public class OrmDataStore implements DataStore {
         } catch (RuntimeException e) {
             rollbackTransaction(txStatus);
             throw e;
+        } finally {
+            commitTransaction(txStatus);
         }
-        commitTransaction(txStatus);
 
         if (result != null) {
-            if (inMemoryReadAttributesContext.) {
-                //work with in-memory filtering context
-                persistenceSecurity.applyConstraints(result);
-            }
+            inMemoryReadAttributesContext.applyAttributes();
         }
 
         return result;
@@ -233,10 +224,11 @@ public class OrmDataStore implements DataStore {
                     + (context.getQuery() == null || context.getQuery().getMaxResults() == 0 ? "" : ", max=" + context.getQuery().getMaxResults()));
 
         MetaClass metaClass = metadata.getClass(context.getMetaClass());
+        final Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
 
-        BeforeLoadEntityContext entityReadContext = accessManager.applyConstraints(beanLocator.getPrototype(BeforeLoadEntityContext.class, metaClass),
-                context.getConstraints());
-        if (!entityReadContext.isLoadPermitted()) {
+
+        ReadEntityContext entityReadContext = applyConstraints(accessConstraints, ReadEntityContext.class, metaClass);
+        if (!entityReadContext.isReadPermitted()) {
             log.debug("reading of {} not permitted, returning empty list", metaClass);
             return Collections.emptyList();
         }
@@ -244,7 +236,8 @@ public class OrmDataStore implements DataStore {
         queryResultsManager.savePreviousQueryResults(context);
 
         List<E> resultList;
-        boolean needToApplyInMemoryReadConstraints = needToApplyInMemoryReadConstraints(context);
+        InMemoryReadAttributesContext inMemoryReadAttributesContext = null;
+
         TransactionStatus txStatus = beginLoadTransaction(context.isJoinTransaction());
         try {
             EntityManager em = storeAwareLocator.getEntityManager(storeName);
@@ -279,12 +272,9 @@ public class OrmDataStore implements DataStore {
             }
 
             if (!resultList.isEmpty()) {
+                inMemoryReadAttributesContext = applyConstraints(accessConstraints, InMemoryReadAttributesContext.class, resultList);
                 //noinspection rawtypes
                 fireLoadListeners((List<Entity>) resultList, context);
-            }
-
-            if (needToApplyInMemoryReadConstraints) {
-                persistenceSecurity.calculateFilteredData((Collection<Entity>) resultList);
             }
 
             if (context.isJoinTransaction()) {
@@ -297,11 +287,12 @@ public class OrmDataStore implements DataStore {
         } catch (RuntimeException e) {
             rollbackTransaction(txStatus);
             throw e;
+        } finally {
+            commitTransaction(txStatus);
         }
-        commitTransaction(txStatus);
 
-        if (needToApplyInMemoryReadConstraints) {
-            persistenceSecurity.applyConstraints((Collection<Entity>) resultList);
+        if (inMemoryReadAttributesContext != null) {
+            inMemoryReadAttributesContext.applyAttributes();
         }
 
         return resultList;
@@ -324,7 +315,9 @@ public class OrmDataStore implements DataStore {
             List<E> list = executeQuery(query, true);
             entities.addAll(list);
         }
-        return entities;
+
+        //noinspection unchecked
+        return (List<E>) applyConstraints(context.getConstraints(), InMemoryReadEntityContext.class, entities).getPermittedEntities();
     }
 
     @SuppressWarnings("unchecked")
@@ -342,7 +335,8 @@ public class OrmDataStore implements DataStore {
             entities.addAll(list);
         }
 
-        return entities;
+        //noinspection unchecked
+        return (List<E>) applyConstraints(context.getConstraints(), InMemoryReadEntityContext.class, entities).getPermittedEntities();
     }
 
     protected <E extends Entity> List<E> checkAndReorderLoadedEntities(List<?> ids, List<E> entities, MetaClass metaClass) {
@@ -366,8 +360,10 @@ public class OrmDataStore implements DataStore {
                     + ", query=" + context.getQuery());
 
         MetaClass metaClass = metadata.getClass(context.getMetaClass());
+        Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
 
-        if (isAuthorizationRequired(context) && !isEntityOpPermitted(metaClass, EntityOp.READ)) {
+        ReadEntityContext readEntityContext = applyConstraints(accessConstraints, ReadEntityContext.class, metaClass);
+        if (!readEntityContext.isReadPermitted()) {
             log.debug("reading of {} not permitted, returning 0", metaClass);
             return 0;
         }
@@ -382,7 +378,9 @@ public class OrmDataStore implements DataStore {
             context.getQuery().setQueryString("select e from " + metaClass.getName() + " e");
         }
 
-        if (security.hasInMemoryConstraints(metaClass, ConstraintOperationType.READ, ConstraintOperationType.ALL)) {
+        //TODO: how to fix that
+        //security.hasInMemoryConstraints(metaClass, ConstraintOperationType.READ, ConstraintOperationType.ALL)
+        if (false) {
             List resultList;
             TransactionStatus txStatus = beginLoadTransaction(context.isJoinTransaction());
             try {
@@ -809,12 +807,10 @@ public class OrmDataStore implements DataStore {
                 fetchPlanRepository.getFetchPlan(metadata.getClass(context.getMetaClass()), FetchPlan.BASE);
 
         FetchPlan copy = FetchPlan.copy(fetchPlan);
-        if (context.isLoadPartialEntities()
-                //todo: move into security
-                && !needToApplyInMemoryReadConstraints(context)
-                && !needToFilterByInMemoryReadConstraints(context)) {
+        if (context.isLoadPartialEntities()) {
             copy.setLoadPartialEntities(true);
         }
+
         return copy;
     }
 
@@ -825,34 +821,33 @@ public class OrmDataStore implements DataStore {
         if (initialSize == 0) {
             return list;
         }
-        boolean needToFilterByInMemoryReadConstraints = needToFilterByInMemoryReadConstraints(context);
-        boolean filteredByConstraints = false;
+        Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
 
-        if (needToFilterByInMemoryReadConstraints) {
-            filteredByConstraints = persistenceSecurity.filterByConstraints((Collection<Entity>) list);
-        }
+        List<E> permitted = (List<E>) applyConstraints(accessConstraints, InMemoryReadEntityContext.class, list).getPermittedEntity();
 
         if (!ensureDistinct) {
-            return filteredByConstraints ? getResultListIteratively(context, query, list, initialSize, true) : list;
+            return list.size() != permitted.size() ? getResultListIteratively(context, query, permitted, initialSize) : permitted;
         }
 
         int requestedFirst = context.getQuery().getFirstResult();
-        LinkedHashSet<E> set = new LinkedHashSet<>(list);
-        if (set.size() == list.size() && requestedFirst == 0 && !filteredByConstraints) {
+        LinkedHashSet<E> set = new LinkedHashSet<>(permitted);
+        if (set.size() == permitted.size() && requestedFirst == 0 && list.size() == permitted.size()) {
             // If this is the first chunk and it has no duplicates and security constraints are not applied, just return it
-            return list;
+            return permitted;
         }
         // In case of not first chunk, even if there where no duplicates, start filling the set from zero
         // to ensure correct paging
-        return getResultListIteratively(context, query, set, initialSize, needToFilterByInMemoryReadConstraints);
+        return getResultListIteratively(context, query, set, initialSize);
     }
 
     @SuppressWarnings("unchecked")
     protected <E extends Entity> List<E> getResultListIteratively(LoadContext<E> context, Query query,
                                                                   Collection<E> filteredCollection,
-                                                                  int initialSize, boolean needToFilterByInMemoryReadConstraints) {
+                                                                  int initialSize) {
         int requestedFirst = context.getQuery().getFirstResult();
         int requestedMax = context.getQuery().getMaxResults();
+
+        Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
 
         if (requestedMax == 0) {
             // set contains all items if query without paging
@@ -880,11 +875,9 @@ public class OrmDataStore implements DataStore {
                 break;
             }
 
-            if (needToFilterByInMemoryReadConstraints) {
-                persistenceSecurity.filterByConstraints((Collection<Entity>) list);
-            }
+            List<E> permitted = (List<E>) applyConstraints(accessConstraints, InMemoryReadEntityContext.class, list).getPermittedEntity();
 
-            filteredCollection.addAll(list);
+            filteredCollection.addAll(permitted);
 
             firstResult = firstResult + maxResults;
         }
@@ -1031,18 +1024,6 @@ public class OrmDataStore implements DataStore {
         return true;
     }
 
-    protected boolean isAuthorizationRequired(LoadContext context) {
-        return true;
-    }
-
-    protected boolean isAuthorizationRequired(ValueLoadContext context) {
-        return true;
-    }
-
-    protected boolean isAuthorizationRequired(SaveContext context) {
-        return true;
-    }
-
     protected List<Integer> getNotPermittedSelectIndexes(QueryParser queryParser) {
         List<Integer> indexes = new ArrayList<>();
 
@@ -1060,16 +1041,12 @@ public class OrmDataStore implements DataStore {
         return indexes;
     }
 
-    protected boolean needToFilterByInMemoryReadConstraints(LoadContext context) {
-        return security.hasConstraints() && security.hasInMemoryConstraints(metadata.getClass(context.getMetaClass()),
-                ConstraintOperationType.READ, ConstraintOperationType.ALL);
-    }
 
-    protected boolean needToApplyInMemoryReadConstraints(LoadContext context) {
-        return isAuthorizationRequired(context) && security.hasConstraints()
-                && needToApplyByPredicate(context, metaClass ->
-                security.hasInMemoryConstraints(metaClass, ConstraintOperationType.READ, ConstraintOperationType.ALL));
-    }
+//    protected boolean needToApplyInMemoryReadConstraints(LoadContext context) {
+//        return isAuthorizationRequired(context) && security.hasConstraints()
+//                && needToApplyByPredicate(context, metaClass ->
+//                security.hasInMemoryConstraints(metaClass, ConstraintOperationType.READ, ConstraintOperationType.ALL));
+//    }
 
     protected boolean needToApplyByPredicate(LoadContext context, Predicate<MetaClass> hasConstraints) {
         if (context.getFetchPlan() == null) {

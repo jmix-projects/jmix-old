@@ -111,7 +111,6 @@ public class RestControllerUtils {
         public void visit(Entity entity, MetaProperty property) {
             MetaClass metaClass = metadata.getClass(entity.getClass());
             if (!security.isEntityAttrReadPermitted(metaClass, property.getName())) {
-                addInaccessibleAttribute(entity, property.getName());
                 if (!metadataTools.isSystem(property) && !property.isReadOnly()) {
                     // Using reflective access to field because the attribute can be unfetched if loading not partial entities,
                     // which is the case when in-memory constraints exist
@@ -119,13 +118,5 @@ public class RestControllerUtils {
                 }
             }
         }
-    }
-
-    private void addInaccessibleAttribute(Entity entity, String property) {
-        SecurityState securityState = entity.__getEntityEntry().getSecurityState();
-        String[] attributes = securityState.getInaccessibleAttributes();
-        attributes = attributes == null ? new String[1] : Arrays.copyOf(attributes, attributes.length + 1);
-        attributes[attributes.length - 1] = property;
-        securityState.setInaccessibleAttributes(attributes);
     }
 }

@@ -22,8 +22,12 @@ import io.jmix.data.impl.context.ReadEntityQueryContext;
 import io.jmix.security.impl.PredefinedQueryParameters;
 import io.jmix.security.model.RowLevelPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class EntityReadQueryConstraint extends AbstractRowLevelReadConstraint<ReadEntityQueryContext> {
+@Component(EntityReadQueryConstraint.NAME)
+public class EntityReadQueryConstraint extends AbstractRowLevelConstraint<ReadEntityQueryContext> {
+    public static final String NAME = "sec_EntityReadQueryConstraint";
+
     @Autowired
     protected PredefinedQueryParameters predefinedQueryParameters;
 
@@ -40,8 +44,8 @@ public class EntityReadQueryConstraint extends AbstractRowLevelReadConstraint<Re
     @Override
     public void applyTo(ReadEntityQueryContext context) {
         for (RowLevelPolicy policy : getRowLevelPolicies(context.getEntityClass())) {
-            if (!Strings.isNullOrEmpty(policy.getWhere()) || !Strings.isNullOrEmpty(policy.getJoin())) {
-                context.addJoinAndWhere(policy.getJoin(), policy.getWhere());
+            if (!Strings.isNullOrEmpty(policy.getWhereClause()) || !Strings.isNullOrEmpty(policy.getJoinClause())) {
+                context.addJoinAndWhere(policy.getJoinClause(), policy.getWhereClause());
             }
         }
         context.setQueryParamsProvider(param -> predefinedQueryParameters.getParameterValue(param));
