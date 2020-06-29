@@ -21,7 +21,7 @@
     <data readOnly="true">
         <collection id="usersDc"
                     class="io.jmix.samples.helloworld.entity.User">
-            <fetchPlan extends="_minimal">
+            <fetchPlan extends="_instance_name">
                 <property name="username"/>
                 <property name="firstName"/>
                 <property name="lastName"/>

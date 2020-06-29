@@ -24,13 +24,13 @@
         <property name="colour"
                   fetchPlan="_local"/>
         <property name="seller"
-                  fetchPlan="_minimal"/>
+                  fetchPlan="_instance_name"/>
         <property name="currency"
-                  fetchPlan="_minimal"/>
+                  fetchPlan="_instance_name"/>
     </fetchPlan>
 
     <fetchPlan class="io.jmix.samples.rest.entity.driver.Car"
-          extends="_minimal"
+          extends="_instance_name"
           name="car-with-colour">
         <property name="colour"
                   fetchPlan="_local"/>
@@ -60,7 +60,7 @@
     <fetchPlan class="io.jmix.samples.rest.entity.driver.Repair"
           name="repairEdit"
           extends="_local">
-        <property name="car" fetchPlan="_minimal"/>
+        <property name="car" fetchPlan="_instance_name"/>
         <property name="carTokens" fetchPlan="carTokenEdit"/>
         <!--<property name="db1Customer"/>-->
     </fetchPlan>
@@ -71,19 +71,19 @@
         <property name="model"
                   fetchPlan="_local"/>
         <property name="colour"
-                  fetchPlan="_minimal"/>
+                  fetchPlan="_instance_name"/>
         <property name="driverAllocations"
                   fetchPlan="carEdit"/>
         <property name="repairs"
                   fetchPlan="repairEdit"/>
         <property name="seller"
-                  fetchPlan="_minimal"/>
+                  fetchPlan="_instance_name"/>
         <property name="currency"
-                  fetchPlan="_minimal"/>
+                  fetchPlan="_instance_name"/>
         <property name="details"
                   fetchPlan="carDetailsEdit"/>
         <property name="carDocumentation"
-                  fetchPlan="_minimal"/>
+                  fetchPlan="_instance_name"/>
     </fetchPlan>
 
     <fetchPlan entity="ref$CarDetails" name="carDetailsEdit" extends="_local">
@@ -140,7 +140,7 @@
     <fetchPlan class="io.jmix.samples.rest.entity.driver.DriverAllocation"
           name="carEdit">
         <property name="driver"
-                  fetchPlan="_minimal"/>
+                  fetchPlan="_instance_name"/>
     </fetchPlan>
 
     <fetchPlan class="io.jmix.samples.rest.entity.driver.Doc"

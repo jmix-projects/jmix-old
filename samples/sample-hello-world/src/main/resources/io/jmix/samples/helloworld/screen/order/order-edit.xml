@@ -22,7 +22,7 @@
         <instance id="orderDc"
                   class="io.jmix.samples.helloworld.entity.Order">
             <fetchPlan extends="_local">
-                <property name="customer" fetchPlan="_minimal"/>
+                <property name="customer" fetchPlan="_instance_name"/>
             </fetchPlan>
             <loader/>
         </instance>
