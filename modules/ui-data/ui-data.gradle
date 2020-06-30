@@ -29,9 +29,7 @@ dependencies {
 
     api 'com.google.code.gson:gson:2.8.6'
 
-    testImplementation 'org.springframework:spring-test'
-    testImplementation "org.spockframework:spock-core"
-    testImplementation "org.spockframework:spock-spring"
+    testImplementation project(':modules:ui-test-assist')
     testRuntimeOnly 'org.slf4j:slf4j-simple'
     testRuntimeOnly 'org.hsqldb:hsqldb'
 }

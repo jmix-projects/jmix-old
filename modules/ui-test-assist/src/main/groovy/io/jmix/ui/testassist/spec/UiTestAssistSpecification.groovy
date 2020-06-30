@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2018 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-package spec.haulmont.cuba.web
+package io.jmix.ui.testassist.spec
 
-import com.haulmont.cuba.core.global.DataManager
-import com.haulmont.cuba.core.global.UserSessionSource
-import com.haulmont.cuba.security.global.UserSession
-import com.haulmont.cuba.web.testsupport.TestSupport
-import com.haulmont.cuba.web.testsupport.WebTest
-import com.haulmont.cuba.web.testsupport.ui.TestConnectorTracker
-import com.haulmont.cuba.web.testsupport.ui.TestVaadinRequest
-import com.haulmont.cuba.web.testsupport.ui.TestVaadinSession
 import com.vaadin.server.VaadinSession
 import com.vaadin.server.WebBrowser
 import com.vaadin.ui.UI
@@ -32,23 +24,32 @@ import io.jmix.core.FetchPlanRepository
 import io.jmix.core.Metadata
 import io.jmix.core.MetadataTools
 import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory
-import io.jmix.ui.*
+import io.jmix.ui.App
+import io.jmix.ui.AppUI
+import io.jmix.ui.JmixApp
+import io.jmix.ui.UiComponents
+import io.jmix.ui.WindowConfig
 import io.jmix.ui.model.DataComponents
 import io.jmix.ui.sys.AppCookies
 import io.jmix.ui.sys.UiControllersConfiguration
+import io.jmix.ui.testassist.TestSupport
+import io.jmix.ui.testassist.UiTest
+import io.jmix.ui.testassist.ui.TestConnectorTracker
+import io.jmix.ui.testassist.ui.TestVaadinRequest
+import io.jmix.ui.testassist.ui.TestVaadinSession
 import io.jmix.ui.theme.ThemeConstants
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 import spock.lang.Specification
 
-import org.springframework.beans.factory.annotation.Autowired
 import javax.servlet.http.HttpServletRequest
 
 import static org.apache.commons.lang3.reflect.FieldUtils.getDeclaredField
 
-@WebTest
-class WebSpec extends Specification {
+@UiTest
+class UiTestAssistSpecification extends Specification {
 
     @Autowired
     Metadata metadata
@@ -63,16 +64,10 @@ class WebSpec extends Specification {
     EntityStates entityStates
 
     @Autowired
-    DataManager dataManager
-
-    @Autowired
     DataComponents dataComponents
 
     @Autowired
     UiComponents uiComponents
-
-    @Autowired
-    UserSessionSource sessionSource
 
     @Autowired
     ApplicationContext applicationContext
@@ -87,11 +82,6 @@ class WebSpec extends Specification {
 
     @SuppressWarnings("GroovyAccessibility")
     void setup() {
-        exportScreensPackages(['com.haulmont.cuba.web.app.main'])
-
-        def session = new UserSession()
-        session.setAuthenticated(false)
-
         TestSupport.setAuthenticationToSecurityContext()
 
         def injectFactory = applicationContext.getAutowireCapableBeanFactory()
@@ -114,9 +104,9 @@ class WebSpec extends Specification {
 
         def connectorTracker = new TestConnectorTracker(vaadinUi)
         getDeclaredField(UI.class, "connectorTracker", true)
-            .set(vaadinUi, connectorTracker)
+                .set(vaadinUi, connectorTracker)
         getDeclaredField(UI.class, "session", true)
-            .set(vaadinUi, vaadinSession)
+                .set(vaadinUi, vaadinSession)
 
         UI.setCurrent(vaadinUi)
 
