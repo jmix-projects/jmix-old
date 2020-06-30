@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.component.validator;
+package com.haulmont.cuba.gui.components.validators;
 
+import com.haulmont.cuba.gui.components.Field;
 import io.jmix.core.AppBeans;
 import io.jmix.core.BeanValidation;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
-import io.jmix.ui.component.Field;
 import io.jmix.ui.component.ValidationException;
 import org.dom4j.Element;
 import org.hibernate.validator.constraints.Email;
@@ -28,6 +28,10 @@ import javax.validation.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @deprecated Use {@link io.jmix.ui.component.validation.EmailValidator} instead
+ */
+@Deprecated
 public class EmailValidator implements Field.Validator {
 
     protected String message;

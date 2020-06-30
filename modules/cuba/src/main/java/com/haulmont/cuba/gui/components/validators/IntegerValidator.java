@@ -13,58 +13,76 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.component.validator;
+package com.haulmont.cuba.gui.components.validators;
 
+import com.haulmont.cuba.gui.components.Field;
 import io.jmix.core.AppBeans;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
 import io.jmix.core.metamodel.datatype.Datatype;
 import io.jmix.core.metamodel.datatype.Datatypes;
 import io.jmix.core.security.CurrentAuthentication;
-import io.jmix.ui.component.Field;
 import io.jmix.ui.component.ValidationException;
+import io.jmix.ui.component.validation.MaxValidator;
+import io.jmix.ui.component.validation.MinValidator;
+import io.jmix.ui.component.validation.NegativeOrZeroValidator;
+import io.jmix.ui.component.validation.NegativeValidator;
+import io.jmix.ui.component.validation.PositiveOrZeroValidator;
+import io.jmix.ui.component.validation.PositiveValidator;
 import org.dom4j.Element;
 
 import java.text.ParseException;
-import java.util.Date;
+import java.util.Objects;
 
-public class DateValidator implements Field.Validator {
+/**
+ * @deprecated Use {@link MaxValidator}, {@link MinValidator}, {@link NegativeOrZeroValidator},
+ * {@link NegativeValidator}, {@link PositiveOrZeroValidator} or {@link PositiveValidator} instead
+ */
+@Deprecated
+public class IntegerValidator implements Field.Validator {
 
     protected String message;
     protected String messagesPack;
+    protected String onlyPositive;
     protected Messages messages = AppBeans.get(Messages.NAME);
     protected MessageTools messageTools = AppBeans.get(MessageTools.NAME);
 
-    public DateValidator(Element element, String messagesPack) {
-        this.message = element.attributeValue("message");
+    public IntegerValidator(Element element, String messagesPack) {
+        message = element.attributeValue("message");
+        onlyPositive = element.attributeValue("onlyPositive");
         this.messagesPack = messagesPack;
     }
 
-    public DateValidator(String message) {
+    public IntegerValidator(String message) {
         this.message = message;
     }
 
-    public DateValidator() {
-        this.message = messages.getMessage("validation.invalidDate");
+    public IntegerValidator() {
+        this.message = messages.getMessage("validation.invalidNumber");
+    }
+
+    private boolean checkIntegerOnPositive(Integer value) {
+        return !Objects.equals("true", onlyPositive) || value >= 0;
     }
 
     @Override
     public void validate(Object value) throws ValidationException {
-        if (value == null)
+        if (value == null) {
             return;
+        }
 
         boolean result;
         if (value instanceof String) {
             try {
-                Datatype datatype = Datatypes.getNN(java.sql.Date.class);
+                Datatype<Integer> datatype = Datatypes.getNN(Integer.class);
                 CurrentAuthentication currentAuthentication = AppBeans.get(CurrentAuthentication.NAME);
-                datatype.parse((String) value, currentAuthentication.getLocale());
-                result = true;
+                Integer num = datatype.parse((String) value, currentAuthentication.getLocale());
+                result = checkIntegerOnPositive(num);
             } catch (ParseException e) {
                 result = false;
             }
         } else {
-            result = value instanceof Date;
+            result = value instanceof Integer && checkIntegerOnPositive((Integer) value);
         }
         if (!result) {
             String msg = message != null ? messageTools.loadString(messagesPack, message) : "Invalid value '%s'";

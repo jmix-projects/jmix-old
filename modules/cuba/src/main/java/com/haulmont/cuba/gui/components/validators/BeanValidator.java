@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.component.validator;
+package com.haulmont.cuba.gui.components.validators;
 
 import io.jmix.core.AppBeans;
 import io.jmix.core.BeanValidation;
 import io.jmix.core.Messages;
 import io.jmix.core.Metadata;
 import io.jmix.ui.component.Field;
+import io.jmix.ui.component.validator.AbstractBeanValidator;
+import io.jmix.ui.component.validator.BeanPropertyValidator;
 
 /**
  * Validator that applies JSR303 rules for {@link Field} instance using {@link BeanValidation}.
  *
- * @deprecated Use {@link BeanPropertyValidator} instead.
+ * @deprecated Use {@link BeanPropertyValidator} instead
  */
 @Deprecated
 public class BeanValidator extends AbstractBeanValidator {

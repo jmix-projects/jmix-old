@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.component.validator;
+package com.haulmont.cuba.gui.components.validators;
 
+import com.haulmont.cuba.gui.components.Field;
 import io.jmix.core.AppBeans;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
-import io.jmix.ui.component.Field;
 import io.jmix.ui.component.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
@@ -30,7 +30,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
- * @deprecated Use custom validator instead.
+ * @deprecated Use custom validator instead
  */
 @Deprecated
 public class RangeValidator implements Field.Validator {

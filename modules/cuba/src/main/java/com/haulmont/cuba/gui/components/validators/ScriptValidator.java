@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.component.validator;
+package com.haulmont.cuba.gui.components.validators;
 
+import com.haulmont.cuba.gui.components.Field;
 import io.jmix.core.AppBeans;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
 import io.jmix.core.Resources;
-import io.jmix.ui.component.Field;
 import io.jmix.ui.component.ValidationException;
+import io.jmix.ui.component.validation.GroovyScriptValidator;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
@@ -33,6 +34,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @deprecated Use a {@link GroovyScriptValidator} instead
+ */
+@Deprecated
 public class ScriptValidator implements Field.Validator {
 
     private String script;

@@ -13,22 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.component.validator;
+package com.haulmont.cuba.gui.components.validators;
 
+import com.haulmont.cuba.gui.components.Field;
 import io.jmix.core.AppBeans;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
 import io.jmix.core.metamodel.datatype.Datatype;
 import io.jmix.core.metamodel.datatype.Datatypes;
 import io.jmix.core.security.CurrentAuthentication;
-import io.jmix.ui.component.Field;
 import io.jmix.ui.component.ValidationException;
+import io.jmix.ui.component.validation.MaxValidator;
+import io.jmix.ui.component.validation.MinValidator;
+import io.jmix.ui.component.validation.NegativeOrZeroValidator;
+import io.jmix.ui.component.validation.NegativeValidator;
+import io.jmix.ui.component.validation.PositiveOrZeroValidator;
+import io.jmix.ui.component.validation.PositiveValidator;
 import org.dom4j.Element;
 
 import java.text.ParseException;
 import java.util.Objects;
 
-public class IntegerValidator implements Field.Validator {
+/**
+ * @deprecated Use {@link MaxValidator}, {@link MinValidator}, {@link NegativeOrZeroValidator},
+ * {@link NegativeValidator}, {@link PositiveOrZeroValidator} or {@link PositiveValidator} instead
+ */
+@Deprecated
+public class LongValidator implements Field.Validator {
 
     protected String message;
     protected String messagesPack;
@@ -36,22 +47,18 @@ public class IntegerValidator implements Field.Validator {
     protected Messages messages = AppBeans.get(Messages.NAME);
     protected MessageTools messageTools = AppBeans.get(MessageTools.NAME);
 
-    public IntegerValidator(Element element, String messagesPack) {
+    public LongValidator(Element element, String messagesPack) {
         message = element.attributeValue("message");
         onlyPositive = element.attributeValue("onlyPositive");
         this.messagesPack = messagesPack;
     }
 
-    public IntegerValidator(String message) {
+    public LongValidator(String message) {
         this.message = message;
     }
 
-    public IntegerValidator() {
-        this.message = messages.getMessage("validation.invalidNumber");
-    }
-
-    private boolean checkIntegerOnPositive(Integer value) {
-        return !Objects.equals("true", onlyPositive) || value >= 0;
+    private boolean checkPositive(Long value) {
+        return !Objects.equals("true", onlyPositive) || value != null && value >= 0;
     }
 
     @Override
@@ -63,15 +70,17 @@ public class IntegerValidator implements Field.Validator {
         boolean result;
         if (value instanceof String) {
             try {
-                Datatype<Integer> datatype = Datatypes.getNN(Integer.class);
+                Datatype<Long> datatype = Datatypes.getNN(Long.class);
                 CurrentAuthentication currentAuthentication = AppBeans.get(CurrentAuthentication.NAME);
-                Integer num = datatype.parse((String) value, currentAuthentication.getLocale());
-                result = checkIntegerOnPositive(num);
-            } catch (ParseException e) {
+                Long num = datatype.parse((String) value, currentAuthentication.getLocale());
+                result = checkPositive(num);
+            }
+            catch (ParseException e) {
                 result = false;
             }
-        } else {
-            result = value instanceof Integer && checkIntegerOnPositive((Integer) value);
+        }
+        else {
+            result = value instanceof Long && checkPositive((Long) value);
         }
         if (!result) {
             String msg = message != null ? messageTools.loadString(messagesPack, message) : "Invalid value '%s'";
