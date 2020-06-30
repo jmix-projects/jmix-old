@@ -16,14 +16,12 @@
 
 package io.jmix.ui.xml.layout.loader;
 
-import io.jmix.ui.component.OptionsList;
-import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
+import io.jmix.ui.component.MultiOptionsList;
 
-public class OptionsListLoader extends AbstractOptionsBaseLoader<OptionsList> {
+public class MultiOptionsListLoader extends AbstractOptionsBaseLoader<MultiOptionsList> {
     @Override
     public void createComponent() {
-        resultComponent = factory.create(OptionsList.NAME);
+        resultComponent = factory.create(MultiOptionsList.NAME);
         loadId(resultComponent, element);
     }
 

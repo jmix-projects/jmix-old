@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.widget;
+package io.jmix.ui.widget.listselect;
 
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.data.provider.Query;
@@ -26,7 +26,7 @@ import io.jmix.ui.widget.client.listselect.JmixListSelectServerRpc;
 
 import java.util.function.Consumer;
 
-public class JmixListSelect<V> extends ListSelect<V> {
+public class JmixMultiListSelect<V> extends ListSelect<V> {
 
     protected Consumer<V> doubleClickHandler;
 
@@ -51,7 +51,7 @@ public class JmixListSelect<V> extends ListSelect<V> {
         }
     };
 
-    public JmixListSelect() {
+    public JmixMultiListSelect() {
         registerRpc(listSelectServerRpc);
     }
 

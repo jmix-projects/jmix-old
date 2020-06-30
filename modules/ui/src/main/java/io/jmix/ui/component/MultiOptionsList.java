@@ -27,8 +27,8 @@ import java.util.function.Consumer;
  *
  * @param <V> value and options type for the component
  */
-public interface OptionsList<V> extends OptionsField<Collection<V>, V>, Component.Focusable {
-    String NAME = "optionsList";
+public interface MultiOptionsList<V> extends OptionsField<Collection<V>, V>, Component.Focusable {
+    String NAME = "multiOptionsList";
 
     /**
      * Adds a listener that is fired when user double-clicks on a list item.
@@ -45,14 +45,14 @@ public interface OptionsList<V> extends OptionsField<Collection<V>, V>, Componen
     class DoubleClickEvent<V> extends EventObject {
         protected V item;
 
-        public DoubleClickEvent(OptionsList source, V item) {
+        public DoubleClickEvent(MultiOptionsList source, V item) {
             super(source);
             this.item = item;
         }
 
         @Override
-        public OptionsList<V> getSource() {
-            return (OptionsList<V>) super.getSource();
+        public MultiOptionsList<V> getSource() {
+            return (MultiOptionsList<V>) super.getSource();
         }
 
         public V getItem() {

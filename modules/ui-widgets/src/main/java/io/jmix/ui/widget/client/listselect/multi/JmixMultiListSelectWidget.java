@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.widget.client.listselect;
+package io.jmix.ui.widget.client.listselect.multi;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.OptionElement;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.vaadin.client.WidgetUtil;
-import com.vaadin.v7.client.ui.VListSelect;
+import com.vaadin.client.ui.VListSelect;
 
 import java.util.function.Consumer;
 
-public class JmixListSelectWidget extends VListSelect {
+public class JmixMultiListSelectWidget extends VListSelect {
 
     protected Consumer<Integer> doubleClickListener;
 
-    public JmixListSelectWidget() {
-        getOptionsContainer().addDoubleClickHandler(event -> {
-            if (!isEnabled() || isReadonly()) {
+    public JmixMultiListSelectWidget() {
+        select.addDoubleClickHandler(event -> {
+            if (!isEnabled() || isReadOnly()) {
                 return;
             }
 
@@ -46,24 +44,15 @@ public class JmixListSelectWidget extends VListSelect {
     @Override
     protected void updateEnabledState() {
         select.setEnabled(isEnabled());
-        select.setStyleName("v-readonly", isReadonly());
+        select.setStyleName("v-readonly", isReadOnly());
     }
 
     @Override
-    public void onClick(ClickEvent event) {
-        if (!isEnabled() || isReadonly()) {
+    protected void selectionEvent(Object source) {
+        if (!isEnabled() || isReadOnly()) {
             return;
         }
 
-        super.onClick(event);
-    }
-
-    @Override
-    public void onChange(ChangeEvent event) {
-        if (!isEnabled() || isReadonly()) {
-            return;
-        }
-
-        super.onChange(event);
+        super.selectionEvent(source);
     }
 }

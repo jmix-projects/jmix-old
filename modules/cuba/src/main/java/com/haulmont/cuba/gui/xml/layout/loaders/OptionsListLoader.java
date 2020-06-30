@@ -16,26 +16,40 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
-import com.haulmont.cuba.gui.components.DatasourceComponent;
-import com.haulmont.cuba.gui.components.OptionsField;
+import com.haulmont.cuba.gui.components.OptionsList;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
-import io.jmix.ui.xml.layout.loader.OptionsListLoader;
+import io.jmix.ui.xml.layout.loader.AbstractOptionsBaseLoader;
 import org.dom4j.Element;
 
-public class CubaOptionsListLoader extends OptionsListLoader {
+public class OptionsListLoader extends AbstractOptionsBaseLoader<OptionsList> {
+
+    @Override
+    public void createComponent() {
+        resultComponent = factory.create(OptionsList.NAME);
+        loadId(resultComponent, element);
+    }
+
+    @Override
+    public void loadComponent() {
+        super.loadComponent();
+
+        loadCaptionProperty(resultComponent, element);
+        loadOptionsEnum(resultComponent, element);
+        loadTabIndex(resultComponent, element);
+    }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    protected void loadData(io.jmix.ui.component.OptionsList component, Element element) {
+    protected void loadData(OptionsList component, Element element) {
         super.loadData(component, element);
 
         DatasourceLoaderHelper
-                .loadDatasourceIfValueSourceNull((DatasourceComponent) resultComponent, element, context,
+                .loadDatasourceIfValueSourceNull(resultComponent, element, context,
                         (ComponentLoaderContext) getComponentContext())
                 .ifPresent(component::setValueSource);
 
         DatasourceLoaderHelper
-                .loadOptionsDatasourceIfOptionsNull((OptionsField) resultComponent, element,
+                .loadOptionsDatasourceIfOptionsNull(resultComponent, element,
                         (ComponentLoaderContext) getComponentContext())
                 .ifPresent(component::setOptions);
     }

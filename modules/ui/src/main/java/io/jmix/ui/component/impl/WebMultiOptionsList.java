@@ -19,14 +19,14 @@ package io.jmix.ui.component.impl;
 import com.vaadin.data.provider.ListDataProvider;
 import io.jmix.core.common.event.Subscription;
 import io.jmix.core.MetadataTools;
-import io.jmix.ui.component.OptionsList;
+import io.jmix.ui.component.MultiOptionsList;
 import io.jmix.ui.component.data.DataAwareComponentsTools;
 import io.jmix.ui.component.data.Options;
 import io.jmix.ui.component.data.ValueSource;
 import io.jmix.ui.component.data.meta.EntityValueSource;
 import io.jmix.ui.component.data.meta.OptionsBinding;
 import io.jmix.ui.component.data.options.OptionsBinder;
-import io.jmix.ui.widget.JmixListSelect;
+import io.jmix.ui.widget.listselect.JmixMultiListSelect;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -38,8 +38,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class WebOptionsList<V> extends WebV8AbstractField<JmixListSelect<V>, Set<V>, Collection<V>>
-        implements OptionsList<V>, InitializingBean {
+public class WebMultiOptionsList<V> extends WebV8AbstractField<JmixMultiListSelect<V>, Set<V>, Collection<V>>
+        implements MultiOptionsList<V>, InitializingBean {
 
     protected MetadataTools metadataTools;
 
@@ -47,12 +47,12 @@ public class WebOptionsList<V> extends WebV8AbstractField<JmixListSelect<V>, Set
 
     protected Function<? super V, String> optionCaptionProvider;
 
-    public WebOptionsList() {
+    public WebMultiOptionsList() {
         component = createComponent();
     }
 
-    protected JmixListSelect<V> createComponent() {
-        return new JmixListSelect<>();
+    protected JmixMultiListSelect<V> createComponent() {
+        return new JmixMultiListSelect<>();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class WebOptionsList<V> extends WebV8AbstractField<JmixListSelect<V>, Set
         initComponent(component);
     }
 
-    protected void initComponent(JmixListSelect<V> component) {
+    protected void initComponent(JmixMultiListSelect<V> component) {
         component.setDataProvider(new ListDataProvider<>(Collections.emptyList()));
         component.setItemCaptionGenerator(this::generateItemCaption);
         component.setRequiredError(null);

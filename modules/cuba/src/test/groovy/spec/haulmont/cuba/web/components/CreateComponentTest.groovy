@@ -91,7 +91,7 @@ class CreateComponentTest extends WebSpec {
                 OptionsGroup.NAME,
                 CheckBoxGroup.NAME,
                 RadioButtonGroup.NAME,
-                OptionsList.NAME,
+                MultiOptionsList.NAME,
                 FileUploadField.NAME,
                 FileMultiUploadField.NAME,
                 CurrencyField.NAME,

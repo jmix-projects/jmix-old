@@ -74,7 +74,7 @@ public abstract class BaseLoaderConfig {
         loaders.put(EntityComboBox.NAME, EntityComboBoxLoader.class);
         loaders.put(CheckBoxGroup.NAME, CheckBoxGroupLoader.class);
         loaders.put(RadioButtonGroup.NAME, RadioButtonGroupLoader.class);
-        loaders.put(OptionsList.NAME, OptionsListLoader.class);
+        loaders.put(MultiOptionsList.NAME, MultiOptionsListLoader.class);
         loaders.put(FileUploadField.NAME, FileUploadFieldLoader.class);
         loaders.put(FileStorageUploadField.NAME, FileStorageUploadFieldLoader.class);
         loaders.put(FileMultiUploadField.NAME, FileMultiUploadFieldLoader.class);

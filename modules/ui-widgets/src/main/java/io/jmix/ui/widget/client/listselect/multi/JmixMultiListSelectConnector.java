@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.widget.client.listselect;
+package io.jmix.ui.widget.client.listselect.multi;
 
+import com.vaadin.client.ui.listselect.ListSelectConnector;
+import io.jmix.ui.widget.listselect.JmixMultiListSelect;
 import com.vaadin.shared.ui.Connect;
-import com.vaadin.v7.client.ui.listselect.ListSelectConnector;
-import io.jmix.ui.widget.listselect.JmixListSelect;
+import io.jmix.ui.widget.client.listselect.JmixListSelectServerRpc;
 
-@Connect(value = JmixListSelect.class)
-public class JmixListSelectConnector extends ListSelectConnector {
+@Connect(value = JmixMultiListSelect.class)
+public class JmixMultiListSelectConnector extends ListSelectConnector {
 
     @Override
     protected void init() {
@@ -31,7 +32,7 @@ public class JmixListSelectConnector extends ListSelectConnector {
     }
 
     @Override
-    public JmixListSelectWidget getWidget() {
-        return (JmixListSelectWidget) super.getWidget();
+    public JmixMultiListSelectWidget getWidget() {
+        return (JmixMultiListSelectWidget) super.getWidget();
     }
 }

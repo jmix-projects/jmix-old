@@ -30,7 +30,6 @@ import io.jmix.ui.component.GroupTable;
 import io.jmix.ui.component.Image;
 import io.jmix.ui.component.Label;
 import io.jmix.ui.component.MaskedField;
-import io.jmix.ui.component.OptionsList;
 import io.jmix.ui.component.PasswordField;
 import io.jmix.ui.component.RadioButtonGroup;
 import io.jmix.ui.component.ResizableTextArea;
@@ -102,7 +101,7 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
         loaders.put(Label.NAME, CubaLabelLoader.class);
         loaders.put(CheckBoxGroup.NAME, CubaCheckBoxGroupLoader.class);
         loaders.put(RadioButtonGroup.NAME, CubaRadioButtonGroupLoader.class);
-        loaders.put(OptionsList.NAME, CubaOptionsListLoader.class);
+        loaders.put(OptionsList.NAME, OptionsListLoader.class);
         loaders.put(OptionsGroup.NAME, CubaOptionsGroupLoader.class);
         loaders.put(SuggestionPickerField.NAME, CubaSuggestionPickerFieldLoader.class);
         loaders.put(SuggestionField.NAME, CubaSuggestionFieldLoader.class);
