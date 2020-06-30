@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2018 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,32 @@
  * limitations under the License.
  */
 
-package spec.haulmont.cuba.web
+package io.jmix.ui.testassist.spec
 
-import com.haulmont.cuba.core.global.DataManager
-import com.haulmont.cuba.core.global.UserSessionSource
-import com.haulmont.cuba.core.sys.AppProperties
-import com.haulmont.cuba.web.testsupport.WebTest
+import io.jmix.ui.Screens
+import io.jmix.ui.UiProperties
+import io.jmix.ui.screen.OpenMode
 import io.jmix.ui.screen.Screen
-import io.jmix.ui.testassist.spec.ScreenSpecification
 import org.springframework.beans.factory.annotation.Autowired
 
 @SuppressWarnings(["GroovyAccessibility", "GroovyAssignabilityCheck"])
-@WebTest
-class UiScreenSpec extends ScreenSpecification {
+class ScreenSpecification extends UiTestAssistSpecification {
 
     @Autowired
-    AppProperties appProperties
-
-    @Autowired
-    DataManager dataManager
-
-    @Autowired
-    UserSessionSource sessionSource
+    UiProperties uiProperties
 
     @Override
     void setup() {
-        exportScreensPackages(['com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['io.jmix.ui.app.main'])
     }
 
-    protected Screen showMainWindow() {
-        def mainWindow = screens.create("mainWindow", OpenMode.ROOT)
-        screens.show(mainWindow)
-        mainWindow
+    protected Screens getScreens() {
+        vaadinUi.screens
+    }
+
+    protected Screen showMainScreen() {
+        def mainScreen = screens.create("main", OpenMode.ROOT)
+        screens.show(mainScreen)
+        mainScreen
     }
 }

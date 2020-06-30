@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.testsupport.ui;
+package io.jmix.ui.testassist.ui;
 
 import com.vaadin.server.ClientConnector;
 import com.vaadin.ui.ConnectorTracker;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.testsupport;
+package io.jmix.ui.testassist;
 
 import io.jmix.core.security.SecurityContextHelper;
 import io.jmix.core.security.authentication.CoreAuthenticationToken;

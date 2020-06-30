@@ -54,6 +54,7 @@ include 'starters:starter-security-data'
 
 include 'modules:ui'
 include 'modules:ui-data'
+include 'modules:ui-test-assist'
 include 'modules:ui-themes'
 include 'modules:ui-themes-compiled'
 include 'modules:ui-widgets'

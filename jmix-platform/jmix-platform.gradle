@@ -65,8 +65,9 @@ dependencies {
         api "io.jmix.starter.security:jmix-starter-security-ui:$version"
         api "io.jmix.starter.security:jmix-starter-security-data:$version"
 
-        api "io.jmix.ui:jmx-ui:$version"
-        api "io.jmix.ui:jmx-ui-data:$version"
+        api "io.jmix.ui:jmix-ui:$version"
+        api "io.jmix.ui:jmix-ui-data:$version"
+        api "io.jmix.ui:jmix-ui-test-assist:$version"
         api "io.jmix.ui:jmix-ui-themes:$version"
         api "io.jmix.ui:jmix-ui-themes-compiled:$version"
         api "io.jmix.ui:jmix-ui-widgets:$version"
