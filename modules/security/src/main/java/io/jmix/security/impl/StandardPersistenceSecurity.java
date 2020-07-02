@@ -19,19 +19,15 @@ package io.jmix.security.impl;
 import com.google.common.collect.Multimap;
 import io.jmix.core.*;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.impl.jpql.JpqlSyntaxException;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.ConstraintOperationType;
 import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.core.security.Security;
-import io.jmix.data.PersistenceSecurity;
 import io.jmix.data.RowLevelSecurityException;
 import io.jmix.data.StoreAwareLocator;
-import io.jmix.data.impl.JmixQuery;
 import io.jmix.security.SecurityTokenException;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,61 +67,6 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
 
     @Autowired
     protected MetadataTools metadataTools;
-
-    @Override
-    public void restoreSecurityState(Entity entity) {
-        try {
-            securityTokenManager.readSecurityToken(entity);
-        } catch (SecurityTokenException e) {
-            throw new RowLevelSecurityException(
-                    format("Could not restore security state for entity [%s] because security token isn't valid.",
-                            entity), metadata.getClass(entity).getName());
-        }
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void restoreFilteredData(Entity entity) {
-        MetaClass metaClass = metadata.getClass(entity.getClass());
-        String storeName = metadataTools.getStoreName(metaClass);
-        EntityManager entityManager = storeAwareLocator.getEntityManager(storeName);
-
-        EntityEntry entityEntry = entity.__getEntityEntry();
-
-        Multimap<String, Object> filtered = entityEntry.getSecurityState().getFilteredData();
-        if (filtered == null) {
-            return;
-        }
-
-        for (Map.Entry<String, Collection<Object>> entry : filtered.asMap().entrySet()) {
-            MetaProperty property = metaClass.getProperty(entry.getKey());
-            Collection filteredIds = entry.getValue();
-
-            if (property.getRange().isClass() && CollectionUtils.isNotEmpty(filteredIds)) {
-                Class entityClass = property.getRange().asClass().getJavaClass();
-                Class propertyClass = property.getJavaType();
-                if (Collection.class.isAssignableFrom(propertyClass)) {
-                    Collection currentCollection = EntityValues.getValue(entity, property.getName());
-                    if (currentCollection == null) {
-                        throw new RowLevelSecurityException(
-                                format("Could not restore an object to currentValue because it is null [%s]. Entity [%s].",
-                                        property.getName(), metaClass.getName()), metaClass.getName());
-                    }
-
-                    for (Object entityId : filteredIds) {
-                        Entity reference = entityManager.getReference((Class<Entity>) entityClass, entityId);
-                        //we ignore situations when the currentValue is immutable
-                        currentCollection.add(reference);
-                    }
-                } else if (Entity.class.isAssignableFrom(propertyClass)) {
-                    Object entityId = filteredIds.iterator().next();
-                    Entity reference = entityManager.getReference((Class<Entity>) entityClass, entityId);
-                    //we ignore the situation when the field is read-only
-                    EntityValues.setValue(entity, property.getName(), reference);
-                }
-            }
-        }
-    }
 
     @Override
     public void assertToken(Entity entity) {
@@ -180,7 +121,7 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
         handled.add(entityId);
         if (!entity.__getEntityEntry().isEmbeddable()) {
             EntityEntry entityEntry = entity.__getEntityEntry();
-            Multimap<String, Object> filteredData = entityEntry.getSecurityState().getFilteredData();
+            Multimap<String, Object> filteredData = entityEntry.getSecurityState().getErasedData();
             for (MetaProperty property : metaClass.getProperties()) {
                 if (metadataTools.isPersistent(property) && entityStates.isLoaded(entity, property.getName())) {
                     Object value = EntityValues.getValue(entity, property.getName());
@@ -206,45 +147,5 @@ public class StandardPersistenceSecurity implements PersistenceSecurity {
                 }
             }
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    protected boolean calculateFilteredData(Entity entity, Set<EntityId> handled, boolean checkPermitted) {
-        if (referenceToEntitySupport.getReferenceId(entity) == null) {
-            return false;
-        }
-        MetaClass metaClass = metadata.getClass(entity);
-        if (!isPermittedInMemory(entity) && checkPermitted) {
-            return true;
-        }
-        EntityId entityId = new EntityId(referenceToEntitySupport.getReferenceId(entity), metaClass.getName());
-        if (handled.contains(entityId)) {
-            return false;
-        }
-        handled.add(entityId);
-        for (MetaProperty property : metaClass.getProperties()) {
-            if (metadataTools.isPersistent(property) && entityStates.isLoaded(entity, property.getName())) {
-                Object value = EntityValues.getValue(entity, property.getName());
-                if (value instanceof Collection) {
-                    Set filtered = new LinkedHashSet();
-                    for (Entity item : (Collection<Entity>) value) {
-                        if (calculateFilteredData(item, handled, true)) {
-                            filtered.add(referenceToEntitySupport.getReferenceId(item));
-                        }
-                    }
-                    if (!filtered.isEmpty()) {
-                        securityTokenManager.addFiltered(entity, property.getName(), filtered);
-                    }
-                } else if (value instanceof Entity) {
-                    Entity valueEntity = (Entity) value;
-                    if (calculateFilteredData(valueEntity, handled, true)) {
-                        securityTokenManager.addFiltered(entity, property.getName(),
-                                referenceToEntitySupport.getReferenceId(valueEntity));
-                    }
-                }
-            }
-            securityTokenManager.writeSecurityToken(entity);
-        }
-        return false;
     }
 }

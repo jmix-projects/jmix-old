@@ -344,7 +344,7 @@ public class ValueBinder {
                 String metaPropertyName = metaPropertyPath.getMetaProperty().getName();
                 Object value = EntityValues.getValue(targetItem, metaPropertyName);
 
-                String[] filteredAttributes = entityEntry.getSecurityState().getFilteredAttributes();
+                String[] filteredAttributes = entityEntry.getSecurityState().getErasedAttributes();
 
                 if (value == null && filteredAttributes != null
                         && ArrayUtils.contains(filteredAttributes, metaPropertyName)) {

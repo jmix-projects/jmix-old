@@ -22,19 +22,23 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component(ReadEntityContext.NAME)
+@Component(CRUDEntityContext.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class ReadEntityContext implements AccessContext {
+public class CRUDEntityContext implements AccessContext {
     public static final String NAME = "data_ReadEntityContext";
 
     protected final MetaClass entityClass;
-    protected boolean readPermitted = false;
+    protected boolean permitted = true;
 
-    public ReadEntityContext(MetaClass entityClass) {
+    public CRUDEntityContext(MetaClass entityClass) {
         this.entityClass = entityClass;
     }
 
-    public boolean isReadPermitted() {
-        return readPermitted;
+    public boolean isPermitted() {
+        return permitted;
+    }
+
+    public void denyOperation() {
+        this.permitted = false;
     }
 }

@@ -30,9 +30,8 @@ import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.security.*;
 import io.jmix.data.*;
 import io.jmix.data.event.EntityChangedEvent;
-import io.jmix.data.impl.context.ReadEntityContext;
-import io.jmix.data.impl.context.InMemoryReadAttributesContext;
-import io.jmix.data.impl.context.InMemoryReadEntityContext;
+import io.jmix.data.impl.context.CRUDEntityContext;
+import io.jmix.data.impl.context.InMemoryCRUDEntityContext;
 import io.jmix.data.impl.context.ReadEntityQueryContext;
 import io.jmix.data.persistence.DbmsSpecifics;
 import org.apache.commons.lang3.StringUtils;
@@ -123,7 +122,10 @@ public class OrmDataStore implements DataStore {
     protected List<OrmLifecycleListener> ormLifecycleListeners;
 
     @Autowired
-    private EntityReferencesNormalizer entityReferencesNormalizer;
+    protected EntityReferencesNormalizer entityReferencesNormalizer;
+
+    @Autowired
+    protected EntityAttributesEraser entityAttributesEraser;
 
     protected String storeName;
 
@@ -149,14 +151,14 @@ public class OrmDataStore implements DataStore {
         final MetaClass metaClass = metadata.getSession().getClass(context.getMetaClass());
         final Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
 
-        ReadEntityContext readEntityContext = applyConstraints(accessConstraints, ReadEntityContext.class, metaClass);
-        if (!readEntityContext.isReadPermitted()) {
+        CRUDEntityContext readEntityContext = applyConstraints(accessConstraints, CRUDEntityContext.class, metaClass, EntityOp.READ);
+        if (!readEntityContext.isPermitted()) {
             log.debug("reading of {} not permitted, returning null", metaClass);
             return null;
         }
 
         E result = null;
-        InMemoryReadAttributesContext inMemoryReadAttributesContext = null;
+        EntityAttributesEraser.ReferencesCollector referencesCollector = null;
 
         TransactionStatus txStatus = beginLoadTransaction(context.isJoinTransaction());
         try {
@@ -182,13 +184,18 @@ public class OrmDataStore implements DataStore {
                 result = resultList.get(0);
             }
 
-            if (result != null) {
+            InMemoryCRUDEntityContext entityContext =
+                    applyConstraints(accessConstraints, InMemoryCRUDEntityContext.class, metaClass, EntityOp.READ);
+
+            if (result != null && !entityContext.isPermitted(result)) {
                 //noinspection unchecked
-                result = (E) applyConstraints(accessConstraints, InMemoryReadEntityContext.class, result).getPermittedEntity();
+                result = null;
             }
 
             if (result != null) {
-                inMemoryReadAttributesContext = applyConstraints(accessConstraints, InMemoryReadAttributesContext.class, result);
+                referencesCollector = entityAttributesEraser.collectErasingReferences(result, entity ->
+                        applyConstraints(accessConstraints, InMemoryCRUDEntityContext.class, metadata.getClass(entity.getClass()))
+                                .isPermitted(entity));
 
                 fireLoadListeners(Collections.singletonList(result), context);
             }
@@ -206,7 +213,7 @@ public class OrmDataStore implements DataStore {
         }
 
         if (result != null) {
-            inMemoryReadAttributesContext.applyAttributes();
+            entityAttributesEraser.eraseReferences(referencesCollector);
         }
 
         return result;
@@ -227,8 +234,8 @@ public class OrmDataStore implements DataStore {
         final Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
 
 
-        ReadEntityContext entityReadContext = applyConstraints(accessConstraints, ReadEntityContext.class, metaClass);
-        if (!entityReadContext.isReadPermitted()) {
+        CRUDEntityContext entityReadContext = applyConstraints(accessConstraints, CRUDEntityContext.class, metaClass, EntityOp.READ);
+        if (!entityReadContext.isPermitted()) {
             log.debug("reading of {} not permitted, returning empty list", metaClass);
             return Collections.emptyList();
         }
@@ -236,7 +243,7 @@ public class OrmDataStore implements DataStore {
         queryResultsManager.savePreviousQueryResults(context);
 
         List<E> resultList;
-        InMemoryReadAttributesContext inMemoryReadAttributesContext = null;
+        EntityAttributesEraser.ReferencesCollector referencesCollector = null;
 
         TransactionStatus txStatus = beginLoadTransaction(context.isJoinTransaction());
         try {
@@ -253,17 +260,20 @@ public class OrmDataStore implements DataStore {
                 }
             }
             FetchPlan fetchPlan = createFetchPlan(context);
+
+            InMemoryCRUDEntityContext entityContext =
+                    applyConstraints(accessConstraints, InMemoryCRUDEntityContext.class, metaClass, EntityOp.CREATE);
+
             List<E> entities;
 
             Integer maxIdsBatchSize = dbmsSpecifics.getDbmsFeatures(storeName).getMaxIdsBatchSize();
             if (!context.getIds().isEmpty() && entityHasEmbeddedId(metaClass)) {
-                entities = loadListBySingleIds(context, em, fetchPlan);
+                entities = loadListBySingleIds(context, entityContext.getPredicate(), em, fetchPlan);
             } else if (!context.getIds().isEmpty() && maxIdsBatchSize != null && context.getIds().size() > maxIdsBatchSize) {
-                entities = loadListByBatchesOfIds(context, em, fetchPlan, maxIdsBatchSize);
+                entities = loadListByBatchesOfIds(context, entityContext.getPredicate(), em, fetchPlan, maxIdsBatchSize);
             } else {
                 Query query = createQuery(em, context, false, false);
-                query.setHint(PersistenceHints.FETCH_PLAN, fetchPlan);
-                entities = getResultList(context, query, ensureDistinct);
+                entities = getResultList(context, query, entityContext.getPredicate(), ensureDistinct);
             }
             if (context.getIds().isEmpty()) {
                 resultList = entities;
@@ -272,8 +282,9 @@ public class OrmDataStore implements DataStore {
             }
 
             if (!resultList.isEmpty()) {
-                inMemoryReadAttributesContext = applyConstraints(accessConstraints, InMemoryReadAttributesContext.class, resultList);
-                //noinspection rawtypes
+                referencesCollector = entityAttributesEraser.collectErasingReferences(resultList, entity ->
+                        applyConstraints(accessConstraints, InMemoryCRUDEntityContext.class, metadata.getClass(entity.getClass()))
+                                .isPermitted(entity));
                 fireLoadListeners((List<Entity>) resultList, context);
             }
 
@@ -291,8 +302,8 @@ public class OrmDataStore implements DataStore {
             commitTransaction(txStatus);
         }
 
-        if (inMemoryReadAttributesContext != null) {
-            inMemoryReadAttributesContext.applyAttributes();
+        if (referencesCollector != null) {
+            entityAttributesEraser.eraseReferences(referencesCollector);
         }
 
         return resultList;
@@ -303,7 +314,7 @@ public class OrmDataStore implements DataStore {
         return pkProperty == null || pkProperty.getRange().isClass();
     }
 
-    protected <E extends Entity> List<E> loadListBySingleIds(LoadContext<E> context, EntityManager em, FetchPlan fetchPlan) {
+    protected <E extends Entity> List<E> loadListBySingleIds(LoadContext<E> context, @Nullable Predicate<Entity> filteringPredicate, EntityManager em, FetchPlan fetchPlan) {
         LoadContext<?> contextCopy = context.copy();
         contextCopy.setIds(Collections.emptyList());
 
@@ -316,12 +327,17 @@ public class OrmDataStore implements DataStore {
             entities.addAll(list);
         }
 
-        //noinspection unchecked
-        return (List<E>) applyConstraints(context.getConstraints(), InMemoryReadEntityContext.class, entities).getPermittedEntities();
+        if (filteringPredicate != null) {
+            return entities.stream()
+                    .filter(filteringPredicate)
+                    .collect(Collectors.toList());
+        } else {
+            return entities;
+        }
     }
 
     @SuppressWarnings("unchecked")
-    protected <E extends Entity> List<E> loadListByBatchesOfIds(LoadContext<E> context, EntityManager em, FetchPlan view, int batchSize) {
+    protected <E extends Entity> List<E> loadListByBatchesOfIds(LoadContext<E> context, @Nullable Predicate<Entity> filteringPredicate, EntityManager em, FetchPlan view, int batchSize) {
         List<List<Object>> partitions = Lists.partition((List<Object>) context.getIds(), batchSize);
 
         List<E> entities = new ArrayList<>(context.getIds().size());
@@ -335,8 +351,13 @@ public class OrmDataStore implements DataStore {
             entities.addAll(list);
         }
 
-        //noinspection unchecked
-        return (List<E>) applyConstraints(context.getConstraints(), InMemoryReadEntityContext.class, entities).getPermittedEntities();
+        if (filteringPredicate != null) {
+            return entities.stream()
+                    .filter(filteringPredicate)
+                    .collect(Collectors.toList());
+        } else {
+            return entities;
+        }
     }
 
     protected <E extends Entity> List<E> checkAndReorderLoadedEntities(List<?> ids, List<E> entities, MetaClass metaClass) {
@@ -362,8 +383,8 @@ public class OrmDataStore implements DataStore {
         MetaClass metaClass = metadata.getClass(context.getMetaClass());
         Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
 
-        ReadEntityContext readEntityContext = applyConstraints(accessConstraints, ReadEntityContext.class, metaClass);
-        if (!readEntityContext.isReadPermitted()) {
+        CRUDEntityContext readEntityContext = applyConstraints(accessConstraints, CRUDEntityContext.class, metaClass, EntityOp.READ);
+        if (!readEntityContext.isPermitted()) {
             log.debug("reading of {} not permitted, returning 0", metaClass);
             return 0;
         }
@@ -378,9 +399,9 @@ public class OrmDataStore implements DataStore {
             context.getQuery().setQueryString("select e from " + metaClass.getName() + " e");
         }
 
-        //TODO: how to fix that
-        //security.hasInMemoryConstraints(metaClass, ConstraintOperationType.READ, ConstraintOperationType.ALL)
-        if (false) {
+        Predicate<Entity> filteringPredicate =
+                applyConstraints(accessConstraints, InMemoryCRUDEntityContext.class, metaClass, EntityOp.READ).getPredicate();
+        if (filteringPredicate != null) {
             List resultList;
             TransactionStatus txStatus = beginLoadTransaction(context.isJoinTransaction());
             try {
@@ -402,7 +423,7 @@ public class OrmDataStore implements DataStore {
                 Query query = createQuery(em, context, false, false);
                 query.setHint(PersistenceHints.FETCH_PLAN, createFetchPlan(context));
 
-                resultList = getResultList(context, query, ensureDistinct);
+                resultList = getResultList(context, query, filteringPredicate, ensureDistinct);
 
             } catch (RuntimeException e) {
                 rollbackTransaction(txStatus);
@@ -436,16 +457,12 @@ public class OrmDataStore implements DataStore {
 
     @Override
     public Set<Entity> save(SaveContext context) {
-        if (log.isDebugEnabled())
-            log.debug("save: store=" + storeName + ", entitiesToSave=" + context.getEntitiesToSave()
-                    + ", entitiesToRemove=" + context.getEntitiesToRemove());
+        log.debug("save: store={}, entitiesToSave={}, entitiesToRemove={}", storeName, context.getEntitiesToSave(), context.getEntitiesToRemove());
+
+        Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
 
         Set<Entity> saved = new HashSet<>();
         List<Entity> persisted = new ArrayList<>();
-
-        // todo dynamic attributes
-//        List<BaseGenericIdEntity> identityEntitiesToStoreDynamicAttributes = new ArrayList<>();
-//        List<CategoryAttributeValue> attributeValuesToRemove = new ArrayList<>();
 
         SavedEntitiesHolder savedEntitiesHolder = null;
 
@@ -455,13 +472,10 @@ public class OrmDataStore implements DataStore {
             try {
                 EntityManager em = storeAwareLocator.getEntityManager(storeName);
 
-                checkPermissions(context);
+                checkCRUDConstraints(context);
 
                 if (!context.isSoftDeletion())
                     em.setProperty(PersistenceHints.SOFT_DELETION, false);
-
-                // todo dynamic attributes
-                //            List<BaseGenericIdEntity> entitiesToStoreDynamicAttributes = new ArrayList<>();
 
                 // persist new
                 for (Entity entity : context.getEntitiesToSave()) {
@@ -470,8 +484,7 @@ public class OrmDataStore implements DataStore {
                         saved.add(entity);
                         persisted.add(entity);
 
-                        if (isAuthorizationRequired(context))
-                            checkOperationPermitted(entity, ConstraintOperationType.CREATE);
+                        checkInMemoryOperation(accessConstraints, entity, EntityOp.CREATE);
 
                         if (!context.isDiscardSaved()) {
                             FetchPlan view = getFetchPlanFromContextOrNull(context, entity);
@@ -483,20 +496,15 @@ public class OrmDataStore implements DataStore {
                 // merge the rest - instances can be detached or not
                 for (Entity entity : context.getEntitiesToSave()) {
                     if (!entityStates.isNew(entity)) {
-
-                        if (isAuthorizationRequired(context)) {
-                            persistenceSecurity.assertToken(entity);
-                        }
-                        persistenceSecurity.restoreSecurityStateAndFilteredData(entity);
+                        assertToken(accessConstraints, entity);
+                        entityAttributesEraser.restoreAttributes(entity);
 
                         Entity merged = em.merge(entity);
                         saved.add(merged);
 
                         entityFetcher.fetch(merged, getFetchPlanFromContext(context, entity));
 
-                        if (isAuthorizationRequired(context))
-                            checkOperationPermitted(merged, ConstraintOperationType.UPDATE);
-
+                        checkInMemoryOperation(accessConstraints, merged, EntityOp.UPDATE);
                     }
                 }
 
@@ -504,24 +512,17 @@ public class OrmDataStore implements DataStore {
 
                 // remove
                 for (Entity entity : context.getEntitiesToRemove()) {
-
-                    if (isAuthorizationRequired(context)) {
-                        persistenceSecurity.assertToken(entity);
-                    }
-                    persistenceSecurity.restoreSecurityStateAndFilteredData(entity);
-
+                    assertToken(accessConstraints, entity);
+                    entityAttributesEraser.restoreAttributes(entity);
                     Entity e;
                     if (entity instanceof SoftDelete) {
-
                         e = em.merge(entity);
                         entityFetcher.fetch(e, getFetchPlanFromContext(context, entity));
-
                     } else {
                         e = em.merge(entity);
                     }
 
-                    if (isAuthorizationRequired(context))
-                        checkOperationPermitted(e, ConstraintOperationType.DELETE);
+                    checkInMemoryOperation(accessConstraints, e, EntityOp.DELETE);
 
                     em.remove(e);
                     saved.add(e);
@@ -548,8 +549,8 @@ public class OrmDataStore implements DataStore {
                     //                }
                 }
 
-                if (!context.isDiscardSaved() && isAuthorizationRequired(context) && security.hasConstraints()) {
-                    persistenceSecurity.calculateFilteredData(saved);
+                if (!context.isDiscardSaved()) {
+                    entityAttributesEraser.collectErasingReferences(saved, );
                 }
 
                 savedEntitiesHolder = SavedEntitiesHolder.setEntities(saved);
@@ -598,8 +599,8 @@ public class OrmDataStore implements DataStore {
 
         reloadIfUnfetched(resultEntities, context);
 
-        if (!context.isDiscardSaved() && isAuthorizationRequired(context) && security.hasConstraints()) {
-            persistenceSecurity.applyConstraints(resultEntities);
+        if (!context.isDiscardSaved()) {
+            entityAttributesEraser.eraseReferences();
         }
 
         if (!context.isDiscardSaved()) {
@@ -658,7 +659,7 @@ public class OrmDataStore implements DataStore {
                     + (contextQuery.getMaxResults() == 0 ? "" : ", max=" + contextQuery.getMaxResults()));
 
         QueryParser queryParser = queryTransformerFactory.parser(contextQuery.getQueryString());
-        if (isAuthorizationRequired(context) && !checkValueQueryPermissions(queryParser)) {
+        if (!checkValueQueryPermissions(queryParser)) {
             return Collections.emptyList();
         }
 
@@ -743,16 +744,6 @@ public class OrmDataStore implements DataStore {
         return view;
     }
 
-    protected void checkOperationPermitted(Entity entity, ConstraintOperationType operationType) {
-        MetaClass metaClass = metadata.getClass(entity);
-        if (security.hasConstraints()
-                && security.hasConstraints(metaClass)
-                && !security.isPermitted(entity, operationType)) {
-            throw new RowLevelSecurityException(
-                    operationType + " is not permitted for entity " + entity, metaClass.getName(), operationType);
-        }
-    }
-
     protected Query createQuery(EntityManager em, LoadContext<?> context, boolean singleResult, boolean countQuery) {
         final MetaClass metaClass = metadata.getSession().getClass(context.getMetaClass());
 
@@ -806,63 +797,63 @@ public class OrmDataStore implements DataStore {
         FetchPlan fetchPlan = context.getFetchPlan() != null ? context.getFetchPlan() :
                 fetchPlanRepository.getFetchPlan(metadata.getClass(context.getMetaClass()), FetchPlan.BASE);
 
-        FetchPlan copy = FetchPlan.copy(fetchPlan);
-        if (context.isLoadPartialEntities()) {
-            copy.setLoadPartialEntities(true);
-        }
-
-        return copy;
+        return FetchPlan.copy(fetchPlan)
+                .setLoadPartialEntities(context.isLoadPartialEntities());
     }
 
     @SuppressWarnings("unchecked")
-    protected <E extends Entity> List<E> getResultList(LoadContext<E> context, Query query, boolean ensureDistinct) {
+    protected <E extends Entity> List<E> getResultList(LoadContext<E> context, Query query, @Nullable Predicate<Entity> filteringPredicate, boolean ensureDistinct) {
         List<E> list = executeQuery(query, false);
         int initialSize = list.size();
         if (initialSize == 0) {
             return list;
         }
-        Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
 
-        List<E> permitted = (List<E>) applyConstraints(accessConstraints, InMemoryReadEntityContext.class, list).getPermittedEntity();
+        List<E> filteredList = list;
+        if (filteringPredicate != null) {
+            filteredList = list.stream()
+                    .filter(filteringPredicate)
+                    .collect(Collectors.toList());
+        }
 
         if (!ensureDistinct) {
-            return list.size() != permitted.size() ? getResultListIteratively(context, query, permitted, initialSize) : permitted;
+            return list.size() != filteredList.size() ?
+                    getResultListIteratively(context, query, filteringPredicate, filteredList, initialSize) : filteredList;
         }
 
         int requestedFirst = context.getQuery().getFirstResult();
-        LinkedHashSet<E> set = new LinkedHashSet<>(permitted);
-        if (set.size() == permitted.size() && requestedFirst == 0 && list.size() == permitted.size()) {
+        LinkedHashSet<E> set = new LinkedHashSet<>(filteredList);
+        if (set.size() == filteredList.size() && requestedFirst == 0 && list.size() == filteredList.size()) {
             // If this is the first chunk and it has no duplicates and security constraints are not applied, just return it
-            return permitted;
+            return filteredList;
         }
         // In case of not first chunk, even if there where no duplicates, start filling the set from zero
         // to ensure correct paging
-        return getResultListIteratively(context, query, set, initialSize);
+        return getResultListIteratively(context, query, filteringPredicate, set, initialSize);
     }
 
     @SuppressWarnings("unchecked")
     protected <E extends Entity> List<E> getResultListIteratively(LoadContext<E> context, Query query,
-                                                                  Collection<E> filteredCollection,
+                                                                  @Nullable Predicate<Entity> filteredPredicate,
+                                                                  Collection<E> filteredList,
                                                                   int initialSize) {
         int requestedFirst = context.getQuery().getFirstResult();
         int requestedMax = context.getQuery().getMaxResults();
 
-        Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
-
         if (requestedMax == 0) {
             // set contains all items if query without paging
-            return new ArrayList<>(filteredCollection);
+            return new ArrayList<>(filteredList);
         }
 
         int setSize = initialSize + requestedFirst;
-        int factor = filteredCollection.size() == 0 ? 2 : initialSize / filteredCollection.size() * 2;
+        int factor = filteredList.size() == 0 ? 2 : initialSize / filteredList.size() * 2;
 
-        filteredCollection.clear();
+        filteredList.clear();
 
         int firstResult = 0;
         int maxResults = (requestedFirst + requestedMax) * factor;
         int i = 0;
-        while (filteredCollection.size() < setSize) {
+        while (filteredList.size() < setSize) {
             if (i++ > 10000) {
                 log.warn("In-memory distinct: endless loop detected for " + context);
                 break;
@@ -875,18 +866,22 @@ public class OrmDataStore implements DataStore {
                 break;
             }
 
-            List<E> permitted = (List<E>) applyConstraints(accessConstraints, InMemoryReadEntityContext.class, list).getPermittedEntity();
-
-            filteredCollection.addAll(permitted);
+            if (filteredPredicate != null) {
+                filteredList.addAll(list.stream()
+                        .filter(filteredPredicate)
+                        .collect(Collectors.toList()));
+            } else {
+                filteredList.addAll(list);
+            }
 
             firstResult = firstResult + maxResults;
         }
 
         // Copy by iteration because subList() returns non-serializable class
-        int max = Math.min(requestedFirst + requestedMax, filteredCollection.size());
+        int max = Math.min(requestedFirst + requestedMax, filteredList.size());
         List<E> result = new ArrayList<>(max - requestedFirst);
         int j = 0;
-        for (E item : filteredCollection) {
+        for (E item : filteredList) {
             if (j >= max)
                 break;
             if (j >= requestedFirst)
@@ -923,9 +918,10 @@ public class OrmDataStore implements DataStore {
         return list;
     }
 
-    protected void checkPermissions(SaveContext context) {
-        if (!isAuthorizationRequired(context))
+    protected void checkCRUDConstraints(SaveContext context) {
+        if (context.getConstraints() == null) {
             return;
+        }
 
         Set<MetaClass> checkedCreateRights = new HashSet<>();
         Set<MetaClass> checkedUpdateRights = new HashSet<>();
@@ -937,9 +933,9 @@ public class OrmDataStore implements DataStore {
 
             MetaClass metaClass = metadata.getClass(entity);
             if (entityStates.isNew(entity)) {
-                checkPermission(checkedCreateRights, metaClass, EntityOp.CREATE);
+                checkCRUDConstraints(checkedCreateRights, context.getConstraints(), metaClass, EntityOp.CREATE);
             } else {
-                checkPermission(checkedUpdateRights, metaClass, EntityOp.UPDATE);
+                checkCRUDConstraints(checkedUpdateRights, context.getConstraints(), metaClass, EntityOp.UPDATE);
             }
         }
 
@@ -947,20 +943,17 @@ public class OrmDataStore implements DataStore {
             if (entity == null)
                 continue;
 
-            checkPermission(checkedDeleteRights, metadata.getClass(entity), EntityOp.DELETE);
+            checkCRUDConstraints(checkedDeleteRights, context.getConstraints(), metadata.getClass(entity), EntityOp.DELETE);
         }
     }
 
-    protected void checkPermission(Set<MetaClass> cache, MetaClass metaClass, EntityOp operation) {
+    protected void checkCRUDConstraints(Set<MetaClass> cache, Collection<AccessConstraint<?>> constraints, MetaClass metaClass, EntityOp operation) {
         if (cache.contains(metaClass))
             return;
-        checkPermission(metaClass, operation);
-        cache.add(metaClass);
-    }
-
-    protected void checkPermission(MetaClass metaClass, EntityOp operation) {
-        if (!isEntityOpPermitted(metaClass, operation))
+        CRUDEntityContext crudEntityContext = applyConstraints(constraints, CRUDEntityContext.class, metaClass, EntityOp.READ);
+        if (!crudEntityContext.isPermitted())
             throw new AccessDeniedException(PermissionType.ENTITY_OP, operation, metaClass.getName());
+        cache.add(metaClass);
     }
 
     protected boolean checkValueQueryPermissions(QueryParser queryParser) {
@@ -1009,10 +1002,6 @@ public class OrmDataStore implements DataStore {
             }
         }
         return true;
-    }
-
-    protected boolean isEntityOpPermitted(MetaClass metaClass, EntityOp operation) {
-        return security.isEntityOpPermitted(metaClass, operation);
     }
 
     protected boolean isEntityAttrViewPermitted(MetaPropertyPath metaPropertyPath) {
@@ -1161,6 +1150,21 @@ public class OrmDataStore implements DataStore {
                                                            Class<T> contextClass, Object... params) {
         T accessContext = beanLocator.getPrototype(contextClass, params);
         return accessManager.applyConstraints(accessContext, constraints);
+    }
+
+    protected void checkInMemoryOperation(Collection<AccessConstraint<?>> accessConstraints, Entity entity, EntityOp entityOp) {
+        MetaClass metaClass = metadata.getClass(entity.getClass());
+        InMemoryCRUDEntityContext crudContext
+                = applyConstraints(accessConstraints, InMemoryCRUDEntityContext.class, metaClass);
+
+        if (!crudContext.isPermitted(entity)) {
+            throw new RowLevelSecurityException(String.format("%s is not permitted for entity %s", entityOp, entity),
+                    metaClass.getName(), entityOp);
+        }
+    }
+
+    protected void assertToken(Collection<AccessConstraint<?>> accessConstraints, Entity entity) {
+        //TODO:
     }
 
     protected void handleCascadePersistException(IllegalStateException e) throws IllegalStateException {

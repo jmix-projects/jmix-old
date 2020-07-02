@@ -134,13 +134,15 @@ public abstract class BaseEntityEntry implements EntityEntry, Cloneable {
         state = (byte) (removed ? state | REMOVED : state & ~REMOVED);
     }
 
+    @NonNull
     @Override
     public SecurityState getSecurityState() {
         return securityState;
     }
 
+
     @Override
-    public void setSecurityState(SecurityState securityState) {
+    public void setSecurityState(@NonNull SecurityState securityState) {
         this.securityState = securityState;
     }
 

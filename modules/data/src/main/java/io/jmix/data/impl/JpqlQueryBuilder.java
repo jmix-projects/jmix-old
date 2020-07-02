@@ -25,7 +25,6 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.querycondition.Condition;
 import io.jmix.core.querycondition.ConditionJpqlGenerator;
-import io.jmix.data.PersistenceSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -67,9 +66,6 @@ public class JpqlQueryBuilder {
 
     @Autowired
     protected Metadata metadata;
-
-    @Autowired
-    protected PersistenceSecurity security;
 
     @Autowired
     protected ConditionJpqlGenerator conditionJpqlGenerator;

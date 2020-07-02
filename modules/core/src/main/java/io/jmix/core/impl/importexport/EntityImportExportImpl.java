@@ -700,7 +700,7 @@ public class EntityImportExportImpl implements EntityImportExport {
 
     protected Collection getFilteredIds(@Nullable SecurityState securityState, String propertyName) {
         if (securityState != null) {
-            return Optional.ofNullable(securityState.getFilteredData())
+            return Optional.ofNullable(securityState.getErasedData())
                     .map(v -> v.get(propertyName))
                     .orElse(Collections.emptyList());
         }
