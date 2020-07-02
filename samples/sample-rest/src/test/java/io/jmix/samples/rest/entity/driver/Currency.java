@@ -17,10 +17,16 @@
 package io.jmix.samples.rest.entity.driver;
 
 import io.jmix.core.UuidProvider;
-import io.jmix.core.entity.*;
+import io.jmix.core.entity.HasUuid;
+import io.jmix.core.entity.SoftDelete;
+import io.jmix.core.entity.Versioned;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.validation.group.RestApiChecks;
 import io.jmix.samples.rest.validation.TestCurrencyClassConstraint;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -31,7 +37,7 @@ import java.util.UUID;
 @TestCurrencyClassConstraint(groups = RestApiChecks.class)
 @Entity(name = "ref$Currency")
 @Table(name = "REF_CURRENCY")
-public class Currency implements io.jmix.core.Entity, Versioned, Creatable, Updatable, SoftDelete, HasUuid {
+public class Currency implements io.jmix.core.Entity, Versioned, SoftDelete, HasUuid {
     private static final long serialVersionUID = 6912352294666689769L;
 
     @Id
@@ -48,15 +54,19 @@ public class Currency implements io.jmix.core.Entity, Versioned, Creatable, Upda
     @Column(name = "VERSION")
     protected Integer version;
 
+    @CreatedDate
     @Column(name = "CREATE_TS")
     protected Date createTs;
 
+    @CreatedBy
     @Column(name = "CREATED_BY", length = 50)
     protected String createdBy;
 
+    @LastModifiedDate
     @Column(name = "UPDATE_TS")
     protected Date updateTs;
 
+    @LastModifiedBy
     @Column(name = "UPDATED_BY", length = 50)
     protected String updatedBy;
 
@@ -99,42 +109,34 @@ public class Currency implements io.jmix.core.Entity, Versioned, Creatable, Upda
         this.version = version;
     }
 
-    @Override
     public Date getCreateTs() {
         return createTs;
     }
 
-    @Override
     public void setCreateTs(Date createTs) {
         this.createTs = createTs;
     }
 
-    @Override
     public String getCreatedBy() {
         return createdBy;
     }
 
-    @Override
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    @Override
     public Date getUpdateTs() {
         return updateTs;
     }
 
-    @Override
     public void setUpdateTs(Date updateTs) {
         this.updateTs = updateTs;
     }
 
-    @Override
     public String getUpdatedBy() {
         return updatedBy;
     }
 
-    @Override
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }

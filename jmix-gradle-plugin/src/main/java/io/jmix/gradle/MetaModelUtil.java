@@ -20,7 +20,6 @@ import javassist.*;
 import javassist.bytecode.AnnotationsAttribute;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class MetaModelUtil {
@@ -29,8 +28,6 @@ public class MetaModelUtil {
     public static final String BASE_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.BaseEntityEntry";
     public static final String EMBEDDABLE_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.EmbeddableEntityEntry";
     public static final String NULLABLE_ID_ENTITY_ENTRY_TYPE = "io.jmix.core.entity.NullableIdEntityEntry";
-    public static final String CREATABLE_INTERFACE_TYPE = "io.jmix.core.entity.Creatable";
-    public static final String UPDATABLE_INTERFACE_TYPE = "io.jmix.core.entity.Updatable";
 
     public static final String SETTERS_ENHANCED_TYPE = "io.jmix.core.entity.JmixSettersEnhanced";
     public static final String ENTITY_ENTRY_ENHANCED_TYPE = "io.jmix.core.entity.JmixEntityEntryEnhanced";
@@ -102,44 +99,6 @@ public class MetaModelUtil {
         return attribute != null && attribute.getAnnotation(MODEL_OBJECT_ANNOTATION_TYPE) != null;
     }
 
-    public static CtField getPrimaryKey(CtClass ctClass) {
-        for (CtField field : ctClass.getDeclaredFields()) {
-            AnnotationsAttribute annotationsInfo = (AnnotationsAttribute) field.getFieldInfo().getAttribute(AnnotationsAttribute.visibleTag);
-
-            if (annotationsInfo == null) {
-                continue;
-            }
-
-            if (annotationsInfo.getAnnotation("javax.persistence.Id") != null ||
-                    annotationsInfo.getAnnotation("javax.persistence.EmbeddedId") != null) {
-                return field;
-            }
-
-        }
-        return null;
-    }
-
-    @Nullable
-    public static CtField getGeneratedIdField(CtClass ctClass) {
-        CtField result = null;
-        for (CtField field : ctClass.getDeclaredFields()) {
-            AnnotationsAttribute annotationsInfo = (AnnotationsAttribute) field.getFieldInfo().getAttribute(AnnotationsAttribute.visibleTag);
-
-            if (annotationsInfo == null) {
-                continue;
-            }
-
-            if (annotationsInfo.getAnnotation("io.jmix.core.entity.annotation.JmixGeneratedId") != null) {
-                if (result != null) {
-                    throw new IllegalStateException("More than one @JmixGeneratedId field in " + ctClass.getName());
-                }
-                result = field;
-            }
-
-        }
-        return result;
-    }
-
     public static boolean isPkGeneratedValue(CtField field) {
         AnnotationsAttribute annotationsInfo = (AnnotationsAttribute) field.getFieldInfo().getAttribute(AnnotationsAttribute.visibleTag);
 
@@ -150,69 +109,6 @@ public class MetaModelUtil {
         }
 
         return false;
-    }
-
-    @Nullable
-    public static CtField getCreatedDateField(CtClass ctClass) throws NotFoundException {
-        //legacy support
-        for (CtClass ctInterface : ctClass.getInterfaces()) {
-            if (Objects.equals(ctInterface.getName(), CREATABLE_INTERFACE_TYPE)) {
-                return ctClass.getField("createTs");
-            }
-        }
-
-        return findAnnotatedField(ctClass, "org.springframework.data.annotation.CreatedDate");
-    }
-
-    @Nullable
-    public static CtField getCreatedByField(CtClass ctClass) throws NotFoundException {
-        //legacy support
-        for (CtClass ctInterface : ctClass.getInterfaces()) {
-            if (Objects.equals(ctInterface.getName(), CREATABLE_INTERFACE_TYPE)) {
-                return ctClass.getField("createdBy");
-            }
-        }
-
-        return findAnnotatedField(ctClass, "org.springframework.data.annotation.CreatedBy");
-    }
-
-    @Nullable
-    public static CtField getUpdatedDateField(CtClass ctClass) throws NotFoundException {
-        //legacy support
-        for (CtClass ctInterface : ctClass.getInterfaces()) {
-            if (Objects.equals(ctInterface.getName(), UPDATABLE_INTERFACE_TYPE)) {
-                return ctClass.getField("updateTs");
-            }
-        }
-
-        return findAnnotatedField(ctClass, "org.springframework.data.annotation.LastModifiedDate");
-    }
-
-
-    @Nullable
-    public static CtField getUpdatedByField(CtClass ctClass) throws NotFoundException {
-        //legacy support
-        for (CtClass ctInterface : ctClass.getInterfaces()) {
-            if (Objects.equals(ctInterface.getName(), UPDATABLE_INTERFACE_TYPE)) {
-                return ctClass.getField("updatedBy");
-            }
-        }
-
-        return findAnnotatedField(ctClass, "org.springframework.data.annotation.LastModifiedBy");
-    }
-
-    protected static CtField findAnnotatedField(CtClass ctClass, String annotationName) {
-        for (CtField field : ctClass.getFields()) {//todo taimanov search in superclasses too for other methods (to be able create EntityEntry for StandardEntity subclasses)
-            AnnotationsAttribute annotationsInfo = (AnnotationsAttribute) field.getFieldInfo().getAttribute(AnnotationsAttribute.visibleTag);
-            if (annotationsInfo == null) {
-                continue;
-            }
-
-            if (annotationsInfo.getAnnotation(annotationName) != null) {
-                return field;
-            }
-        }
-        return null;
     }
 
     public static boolean isPersistentMethod(CtMethod ctMethod) {
