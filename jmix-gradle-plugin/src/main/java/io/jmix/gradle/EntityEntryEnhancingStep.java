@@ -23,6 +23,8 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import static io.jmix.gradle.AnnotationsInfo.ClassAnnotation.EMBEDDABLE;
+import static io.jmix.gradle.AnnotationsInfo.FieldAnnotation.*;
 import static io.jmix.gradle.MetaModelUtil.*;
 
 public class EntityEntryEnhancingStep extends BaseEnhancingStep {
@@ -39,47 +41,52 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
 
     @Override
     protected void executeInternal(CtClass ctClass) throws IOException, CannotCompileException, NotFoundException {
+        AnnotationsInfo info = AnnotationsInfo.forClass(ctClass);
 
-        CtField primaryKey = getPrimaryKey(ctClass);
-        boolean embeddable = isJpaEmbeddable(ctClass);
+        if (info.hasMetadataChanges()) {
 
-        if (primaryKey != null) {
+            boolean embeddable = info.hasClassAnnotation(EMBEDDABLE);
 
-            makeEntityEntryClass(ctClass, primaryKey);
+            if (info.getPrimaryKey() != null) {
 
-            makeEntityEntryField(ctClass);
+                makeEntityEntryClass(ctClass, info);
 
-            String entryClassName = String.format("%s.%s", ctClass.getName(), GEN_ENTITY_ENTRY_CLASS_NAME);
+                makeEntityEntryField(ctClass);
 
-            makeEntityEntryMethods(ctClass, entryClassName);
+                String entryClassName = String.format("%s.%s", ctClass.getName(), GEN_ENTITY_ENTRY_CLASS_NAME);
 
-            if (getGeneratedIdField(ctClass) == null) {
-                initEntityEntry(ctClass, entryClassName);
+                makeEntityEntryMethods(ctClass, entryClassName);
+
+                if (info.getAnnotatedField(JMIX_GENERATED_ID) == null) {
+                    initEntityEntry(ctClass, entryClassName);
+                }
+
+                if (!embeddable) {
+                    makeEqualsMethod(ctClass);
+
+                    makeHashCodeMethod(ctClass);
+
+                    makeToStringMethod(ctClass);
+
+                    makeWriteObjectMethod(ctClass);
+                }
+            } else if (embeddable) {
+                makeEntityEntryField(ctClass);
+
+                makeEntityEntryMethods(ctClass, EMBEDDABLE_ENTITY_ENTRY_TYPE);
             }
 
-            if (!embeddable) {
-                makeEqualsMethod(ctClass);
-
-                makeHashCodeMethod(ctClass);
-
-                makeToStringMethod(ctClass);
-
-                makeWriteObjectMethod(ctClass);
-            }
-        } else if (embeddable) {
-            makeEntityEntryField(ctClass);
-
-            makeEntityEntryMethods(ctClass, EMBEDDABLE_ENTITY_ENTRY_TYPE);
         }
-
         ctClass.addInterface(classPool.get(ENTITY_ENTRY_ENHANCED_TYPE));
     }
 
-    protected void makeEntityEntryClass(CtClass ctClass, CtField primaryKeyField) throws CannotCompileException, NotFoundException, IOException {
+    protected void makeEntityEntryClass(CtClass ctClass, AnnotationsInfo info) throws CannotCompileException, NotFoundException, IOException {
+        CtField primaryKeyField = info.getPrimaryKey();
+
         CtClass nestedCtClass = ctClass.makeNestedClass(GEN_ENTITY_ENTRY_CLASS_NAME, true);
 
         if (primaryKeyField != null) {
-            CtField generatedIdField = getGeneratedIdField(ctClass);
+            CtField generatedIdField = info.getAnnotatedField(JMIX_GENERATED_ID);
 
             CtClass idType = classPool.get(Object.class.getName());
             if (generatedIdField == null) {
@@ -116,31 +123,32 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
             }
         }
 
-        setupAudition(nestedCtClass, ctClass);
+        setupAudition(nestedCtClass, ctClass, info);
+        //todo taimanov maybe will not work for embedded entity with annotations
 
         nestedCtClass.writeFile(outputDir);
     }
 
-    protected void setupAudition(CtClass nestedClass, CtClass ctClass) throws NotFoundException, CannotCompileException {
+    protected void setupAudition(CtClass nestedClass, CtClass ctClass, AnnotationsInfo info) throws NotFoundException, CannotCompileException {
 
-        CtField createdDateField = getCreatedDateField(ctClass);
-        CtField createdByField = getCreatedByField(ctClass);
-        CtField updatedDateField = getUpdatedDateField(ctClass);
-        CtField updatedByField = getUpdatedByField(ctClass);
+        CtField createdDateField = info.getAnnotatedField(CREATED_DATE);
+        CtField createdByField = info.getAnnotatedField(CREATED_BY);
+        CtField lastModifiedDateField = info.getAnnotatedField(LAST_MODIFIED_DATE);
+        CtField lastModifiedByField = info.getAnnotatedField(LAST_MODIFIED_BY);
 
         createAuditMethods("CreatedDate", createdDateField, nestedClass, ctClass);
         createAuditMethods("CreatedBy", createdByField, nestedClass, ctClass);
-        createAuditMethods("UpdatedDate", updatedDateField, nestedClass, ctClass);
-        createAuditMethods("UpdatedBy", updatedByField, nestedClass, ctClass);
+        createAuditMethods("LastModifiedDate", lastModifiedDateField, nestedClass, ctClass);
+        createAuditMethods("LastModifiedBy", lastModifiedByField, nestedClass, ctClass);
 
-        if (createdDateField != null || createdByField != null || updatedDateField != null || updatedByField != null) {
+        if (createdDateField != null || createdByField != null || lastModifiedDateField != null || lastModifiedByField != null) {
             nestedClass.addInterface(classPool.get("io.jmix.core.entity.JmixAuditable"));
-            logger.debug(String.format("Audition enabled for %s. Fields: createdDate: %s, createdBy: %s, updatedDate: %s, updatedBy: %s",
+            logger.debug(String.format("Audition enabled for %s. Fields: createdDate: %s, createdBy: %s, lastModifiedDate: %s, lastModifiedBy: %s",
                     ctClass.getSimpleName(),
                     createdDateField == null ? '-' : createdDateField.getName(),
                     createdByField == null ? '-' : createdByField.getName(),
-                    updatedDateField == null ? '-' : updatedDateField.getName(),
-                    updatedByField == null ? '-' : updatedByField.getName()
+                    lastModifiedDateField == null ? '-' : lastModifiedDateField.getName(),
+                    lastModifiedByField == null ? '-' : lastModifiedByField.getName()
             ));
         }
     }

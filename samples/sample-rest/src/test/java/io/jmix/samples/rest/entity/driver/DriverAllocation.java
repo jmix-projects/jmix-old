@@ -17,23 +17,26 @@ package io.jmix.samples.rest.entity.driver;
 
 
 import io.jmix.core.DeletePolicy;
-import io.jmix.core.entity.Creatable;
 import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.data.entity.BaseUuidEntity;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity(name = "ref$DriverAllocation")
 @Table(name = "REF_DRIVER_ALLOC")
-public class DriverAllocation extends BaseUuidEntity implements Creatable {
+public class DriverAllocation extends BaseUuidEntity {
 
     private static final long serialVersionUID = 8101497971694305079L;
 
+    @CreatedDate
     @Column(name = "CREATE_TS")
     protected Date createTs;
 
+    @CreatedBy
     @Column(name = "CREATED_BY", length = 50)
     protected String createdBy;
 
@@ -51,22 +54,18 @@ public class DriverAllocation extends BaseUuidEntity implements Creatable {
         return String.format("%s:(%s)", getDriver(), getCar());
     }
 
-    @Override
     public Date getCreateTs() {
         return createTs;
     }
 
-    @Override
     public void setCreateTs(Date createTs) {
         this.createTs = createTs;
     }
 
-    @Override
     public String getCreatedBy() {
         return createdBy;
     }
 
-    @Override
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }

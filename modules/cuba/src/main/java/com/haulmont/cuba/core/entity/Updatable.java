@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.haulmont.cuba.core.entity;
 
-package io.jmix.core.entity;
-
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.util.Date;
 
 /**
- * Interface to be implemented by entities that contain information about who created them and when.
+ * Interface to be implemented by entities that contain information about who updated them and when.
  *
- * @deprecated use {@link CreatedBy} and {@link CreatedDate} on fields instead.
+ * @deprecated use {@link LastModifiedBy} and {@link LastModifiedDate} on fields instead.
  */
 @Deprecated
-public interface Creatable {
-    Date getCreateTs();
+public interface Updatable {
 
-    void setCreateTs(Date date);
+    Date getUpdateTs();
 
-    String getCreatedBy();
+    void setUpdateTs(Date updateTs);
 
-    void setCreatedBy(String createdBy);
+    String getUpdatedBy();
+
+    void setUpdatedBy(String updatedBy);
 }
