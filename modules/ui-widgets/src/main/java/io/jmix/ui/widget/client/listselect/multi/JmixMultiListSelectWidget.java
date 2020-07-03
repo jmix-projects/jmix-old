@@ -16,43 +16,7 @@
 
 package io.jmix.ui.widget.client.listselect.multi;
 
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.OptionElement;
-import com.vaadin.client.WidgetUtil;
-import com.vaadin.client.ui.VListSelect;
+import io.jmix.ui.widget.client.listselect.JmixAbstractListSelectWidget;
 
-import java.util.function.Consumer;
-
-public class JmixMultiListSelectWidget extends VListSelect {
-
-    protected Consumer<Integer> doubleClickListener;
-
-    public JmixMultiListSelectWidget() {
-        select.addDoubleClickHandler(event -> {
-            if (!isEnabled() || isReadOnly()) {
-                return;
-            }
-
-            Element element = WidgetUtil.getElementUnderMouse(event.getNativeEvent());
-
-            if (OptionElement.is(element)) {
-                doubleClickListener.accept(((OptionElement) element).getIndex());
-            }
-        });
-    }
-
-    @Override
-    protected void updateEnabledState() {
-        select.setEnabled(isEnabled());
-        select.setStyleName("v-readonly", isReadOnly());
-    }
-
-    @Override
-    protected void selectionEvent(Object source) {
-        if (!isEnabled() || isReadOnly()) {
-            return;
-        }
-
-        super.selectionEvent(source);
-    }
+public class JmixMultiListSelectWidget extends JmixAbstractListSelectWidget {
 }

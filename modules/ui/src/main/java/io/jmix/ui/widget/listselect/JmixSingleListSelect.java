@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.component;
-
-import java.util.Collection;
+package io.jmix.ui.widget.listselect;
 
 /**
- * List select component. Allows to select multiple values.
- *
- * @param <V> value and options type
+ * @param <V> item type
  */
-public interface MultiOptionsList<V> extends OptionsList<Collection<V>, V> {
-    String NAME = "multiOptionsList";
+public class JmixSingleListSelect<V> extends JmixAbstractListSelect<V> {
 }

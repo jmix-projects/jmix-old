@@ -18,19 +18,10 @@ package io.jmix.ui.xml.layout.loader;
 
 import io.jmix.ui.component.MultiOptionsList;
 
-public class MultiOptionsListLoader extends AbstractOptionsBaseLoader<MultiOptionsList> {
+public class MultiOptionsListLoader extends AbstractOptionsListLoader<MultiOptionsList> {
     @Override
     public void createComponent() {
         resultComponent = factory.create(MultiOptionsList.NAME);
         loadId(resultComponent, element);
-    }
-
-    @Override
-    public void loadComponent() {
-        super.loadComponent();
-
-        loadCaptionProperty(resultComponent, element);
-        loadOptionsEnum(resultComponent, element);
-        loadTabIndex(resultComponent, element);
     }
 }

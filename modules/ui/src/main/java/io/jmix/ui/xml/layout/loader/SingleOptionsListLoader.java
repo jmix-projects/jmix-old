@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.component;
+package io.jmix.ui.xml.layout.loader;
 
-import java.util.Collection;
+import io.jmix.ui.component.SingleOptionsList;
 
-/**
- * List select component. Allows to select multiple values.
- *
- * @param <V> value and options type
- */
-public interface MultiOptionsList<V> extends OptionsList<Collection<V>, V> {
-    String NAME = "multiOptionsList";
+public class SingleOptionsListLoader extends AbstractOptionsListLoader<SingleOptionsList> {
+
+    @Override
+    public void createComponent() {
+        resultComponent = factory.create(SingleOptionsList.NAME);
+        loadId(resultComponent, element);
+    }
 }

@@ -102,6 +102,7 @@ public class WebUiComponents implements UiComponents {
         classes.put(CheckBoxGroup.NAME, WebCheckBoxGroup.class);
         classes.put(RadioButtonGroup.NAME, WebRadioButtonGroup.class);
         classes.put(MultiOptionsList.NAME, WebMultiOptionsList.class);
+        classes.put(SingleOptionsList.NAME, WebSingleOptionsList.class);
         classes.put(FileUploadField.NAME, WebFileUploadField.class);
         classes.put(FileStorageUploadField.NAME, WebFileStorageUploadField.class);
         classes.put(FileMultiUploadField.NAME, WebFileMultiUploadField.class);

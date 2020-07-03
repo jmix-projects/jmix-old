@@ -3746,6 +3746,7 @@
                 <xs:element name="radioButtonGroup" type="radioButtonGroupComponent"/>
                 <xs:element name="checkBoxGroup" type="checkBoxGroupComponent"/>
                 <xs:element name="multiOptionsList" type="optionsListComponent"/>
+                <xs:element name="singleOptionsList" type="optionsListComponent"/>
                 <xs:element name="progressBar" type="progressBarComponent"/>
 
                 <xs:element name="fileUpload" type="fileUploadComponent"/>
