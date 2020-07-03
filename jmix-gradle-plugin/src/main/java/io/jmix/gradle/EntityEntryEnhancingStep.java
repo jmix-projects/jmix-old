@@ -177,7 +177,7 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
 
     protected void makeEntityEntryField(CtClass ctClass) throws CannotCompileException, NotFoundException {
         CtField ctField = new CtField(classPool.get(ENTITY_ENTRY_TYPE), GEN_ENTITY_ENTRY_VAR_NAME, ctClass);
-        ctField.setModifiers(Modifier.PROTECTED);
+        ctField.setModifiers(Modifier.PRIVATE);
         ctClass.addField(ctField);
     }
 
