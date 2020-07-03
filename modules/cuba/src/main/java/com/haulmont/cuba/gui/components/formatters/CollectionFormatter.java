@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.component;
+package com.haulmont.cuba.gui.components.formatters;
 
-import io.jmix.ui.component.formatter.Formatter;
+import io.jmix.core.AppBeans;
+import io.jmix.core.MetadataTools;
+
+import java.util.Collection;
 
 /**
- * Object having a formatter.
+ * @deprecated Use {@link io.jmix.ui.component.formatter.CollectionFormatter} instead
  */
-public interface HasFormatter<V> {
+@Deprecated
+public class CollectionFormatter extends io.jmix.ui.component.formatter.CollectionFormatter {
 
-    Formatter<V> getFormatter();
-
-    void setFormatter(Formatter<? super V> formatter);
+    @Override
+    public String apply(Collection value) {
+        metadataTools = AppBeans.get(MetadataTools.class);
+        return super.apply(value);
+    }
 }

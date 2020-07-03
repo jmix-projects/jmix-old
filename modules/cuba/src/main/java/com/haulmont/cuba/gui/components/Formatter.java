@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.jmix.ui.component;
+package com.haulmont.cuba.gui.components;
 
 import java.util.function.Function;
 
 /**
  * Interface defining method for formatting a value into string.
  * <br> Used by various UI components.
+ *
+ * @deprecated use {@link io.jmix.ui.component.formatter.Formatter}
  */
 @Deprecated
 public interface Formatter<T> extends Function<T, String> {
