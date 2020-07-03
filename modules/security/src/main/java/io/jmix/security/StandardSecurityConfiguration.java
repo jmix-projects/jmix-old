@@ -17,8 +17,13 @@
 package io.jmix.security;
 
 import io.jmix.core.CoreProperties;
+import io.jmix.core.impl.session.HttpSessionRegistryImpl;
+import io.jmix.core.impl.session.SessionAuthenticationStrategies;
 import io.jmix.core.security.UserRepository;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
+import io.jmix.core.session.SessionProperties;
+import io.jmix.core.session.HttpSessionRegistry;
+import io.jmix.core.impl.session.SessionDataAuthenticationStrategy;
 import io.jmix.security.authentication.SecuredAuthenticationProvider;
 import io.jmix.security.role.RoleRepository;
 import io.jmix.security.role.assignment.RoleAssignmentRepository;
@@ -33,8 +38,14 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.session.*;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Configuration
 @ComponentScan
@@ -45,6 +56,9 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
 
     @Autowired
     private CoreProperties coreProperties;
+
+    @Autowired
+    private SessionProperties sessionProperties;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -68,6 +82,7 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        HttpSessionRegistry sessionRegistry = sessionRegistry();
         http.antMatcher("/**")
                 .authorizeRequests().anyRequest().permitAll()
                 .and()
@@ -76,7 +91,22 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
                     anonymousConfigurer.principal(userRepository.getAnonymousUser());
                 })
                 .csrf().disable()
-                .headers().frameOptions().sameOrigin();
+                .headers().frameOptions().sameOrigin()
+                .and()
+                .sessionManagement().sessionAuthenticationStrategy(sessionControlAuthenticationStrategy(sessionRegistry))
+                .maximumSessions(sessionProperties.getMaximumUserSessions()).sessionRegistry(sessionRegistry);
+    }
+
+    @Bean
+    protected SessionAuthenticationStrategy sessionControlAuthenticationStrategy(SessionRegistry sessionRegistry) {
+        return new SessionAuthenticationStrategies(sessionRegistry, sessionProperties.getMaximumUserSessions());
+    }
+
+    @Bean(HttpSessionRegistry.NAME)
+    protected HttpSessionRegistry sessionRegistry() {
+        HttpSessionRegistryImpl httpSessionRegistry = new HttpSessionRegistryImpl();
+        httpSessionRegistry.setDelegate(new SessionRegistryImpl());
+        return httpSessionRegistry;
     }
 
     @Bean(name = "sec_AuthenticationManager")

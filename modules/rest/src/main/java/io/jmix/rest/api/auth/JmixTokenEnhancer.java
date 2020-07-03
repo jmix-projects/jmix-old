@@ -31,6 +31,8 @@ public class JmixTokenEnhancer implements TokenEnhancer {
 
     public static final String EXTENDED_DETAILS_ATTRIBUTE_PREFIX = "ext_";
 
+    public static final String EXTENDED_DETAILS_PRINCIPAL_KEY = "_principal";
+
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         Map<String, String> requestParameters = authentication.getOAuth2Request().getRequestParameters();
@@ -45,6 +47,8 @@ public class JmixTokenEnhancer implements TokenEnhancer {
                 additionalInfos.put(detailsKey, entry.getValue());
             }
         }
+
+        additionalInfos.put(EXTENDED_DETAILS_PRINCIPAL_KEY, authentication.getPrincipal());
 
         if (additionalInfos != null) {
             additionalInfos.putAll(accessToken.getAdditionalInformation());
