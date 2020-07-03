@@ -204,6 +204,17 @@ public class WebMultiOptionsList<V> extends WebV8AbstractField<JmixMultiListSele
 
     protected void setItemsToPresentation(Stream<V> options) {
         component.setItems(options);
+
+        // set value to Vaadin component as it removes value after setItems
+        if (CollectionUtils.isNotEmpty(getValue())) {
+            List<V> optionsList = getOptions().getOptions().collect(Collectors.toList());
+
+            Set<V> missedValues = getValue().stream()
+                    .filter(optionsList::contains)
+                    .collect(Collectors.toSet());
+
+            component.setValue(missedValues);
+        }
     }
 
     @Override

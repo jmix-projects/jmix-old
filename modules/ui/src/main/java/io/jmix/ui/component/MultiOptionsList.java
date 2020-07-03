@@ -23,7 +23,7 @@ import java.util.EventObject;
 import java.util.function.Consumer;
 
 /**
- * Simple list select component.
+ * List select component. Allows to select multiple values.
  *
  * @param <V> value and options type for the component
  */
