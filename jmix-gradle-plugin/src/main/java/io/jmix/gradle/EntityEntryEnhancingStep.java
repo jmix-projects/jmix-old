@@ -123,13 +123,12 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
             }
         }
 
-        setupAudition(nestedCtClass, ctClass, info);
-        //todo taimanov maybe will not work for embedded entity with annotations
+        setupAuditing(nestedCtClass, ctClass, info);
 
         nestedCtClass.writeFile(outputDir);
     }
 
-    protected void setupAudition(CtClass nestedClass, CtClass ctClass, AnnotationsInfo info) throws NotFoundException, CannotCompileException {
+    protected void setupAuditing(CtClass nestedClass, CtClass ctClass, AnnotationsInfo info) throws NotFoundException, CannotCompileException {
 
         CtField createdDateField = info.getAnnotatedField(CREATED_DATE);
         CtField createdByField = info.getAnnotatedField(CREATED_BY);
@@ -142,8 +141,8 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
         createAuditMethods("LastModifiedBy", lastModifiedByField, nestedClass, ctClass);
 
         if (createdDateField != null || createdByField != null || lastModifiedDateField != null || lastModifiedByField != null) {
-            nestedClass.addInterface(classPool.get("io.jmix.core.entity.JmixAuditable"));
-            logger.debug(String.format("Audition enabled for %s. Fields: createdDate: %s, createdBy: %s, lastModifiedDate: %s, lastModifiedBy: %s",
+            nestedClass.addInterface(classPool.get("io.jmix.core.entity.EntityEntryAuditable"));
+            logger.debug(String.format("Auditing enabled for %s. Fields: createdDate: %s, createdBy: %s, lastModifiedDate: %s, lastModifiedBy: %s",
                     ctClass.getSimpleName(),
                     createdDateField == null ? '-' : createdDateField.getName(),
                     createdByField == null ? '-' : createdByField.getName(),
