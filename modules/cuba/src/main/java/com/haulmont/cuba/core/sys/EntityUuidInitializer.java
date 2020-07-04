@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.core.impl;
+package com.haulmont.cuba.core.sys;
 
 import io.jmix.core.EntityInitializer;
 import io.jmix.core.UuidProvider;
@@ -25,11 +25,11 @@ import org.springframework.stereotype.Component;
 
 @Component(EntityUuidInitializer.NAME)
 public class EntityUuidInitializer implements EntityInitializer, Ordered {
-    public static final String NAME = "core_EntityUuidInitializer";
+    public static final String NAME = "cuba_EntityUuidInitializer";
 
     @Override
     public void initEntity(Entity entity) {
-        if (entity instanceof HasUuid) {
+        if (entity instanceof HasUuid && ((HasUuid) entity).getUuid() == null) {
             ((HasUuid) entity).setUuid(UuidProvider.createUuid());
         }
     }

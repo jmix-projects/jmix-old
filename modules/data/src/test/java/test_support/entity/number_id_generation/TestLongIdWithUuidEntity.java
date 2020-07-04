@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.samples.helloworld.entity;
+package test_support.entity.number_id_generation;
 
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
+import io.jmix.core.metamodel.annotation.InstanceName;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,31 +25,44 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
 
-@Entity(name = "sample_Greeting")
-@Table(name = "GREETING")
-public class Greeting implements io.jmix.core.Entity {
+@Table(name = "TEST_LONG_ID_WITH_UUID_ENTITY")
+@Entity(name = "test_TestLongIdWithUuidEntity")
+public class TestLongIdWithUuidEntity implements io.jmix.core.Entity {
 
     @Id
     @Column(name = "ID", nullable = false)
     @JmixGeneratedValue
-    private UUID id;
+    protected Long id;
 
-    @Column(name = "TEXT_")
-    private String text;
+    @Column(name = "UUID")
+    @JmixGeneratedValue
+    protected UUID uuid;
 
-    public UUID getId() {
-        return id;
-    }
+    @Column(name = "NAME")
+    @InstanceName
+    private String name;
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getText() {
-        return text;
+    public Long getId() {
+        return id;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
