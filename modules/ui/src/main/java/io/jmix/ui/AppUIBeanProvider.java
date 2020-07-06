@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-apply plugin: 'java'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'war'
-apply plugin: 'io.jmix'
+package io.jmix.ui;
 
-group = 'io.jmix.sample.legacy-ui'
 
-dependencies {
-    implementation project(':starters:starter-cuba')
+public interface AppUIBeanProvider {
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.apache.commons:commons-dbcp2'
-    runtimeOnly 'org.hsqldb:hsqldb'
+    String NAME = "ui_AppUIBeanProvider";
+
+    Screens createScreens(AppUI appUI);
+
 }
