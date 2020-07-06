@@ -80,6 +80,19 @@ public class ReadEntityQueryContext implements AccessContext {
             boolean hasJoins = false;
 
             //TODO: handle exception and throw RLS exception
+            //        } catch (JpqlSyntaxException e) {
+//            log.error("Syntax errors found in constraint's JPQL expressions. Entity [{}]. Constraint ID [{}].",
+//                    entityName, constraint.getId(), e);
+//
+//            throw new RowLevelSecurityException(
+//                    "Syntax errors found in constraint's JPQL expressions. Please see the logs.", entityName);
+//        } catch (Exception e) {
+//            log.error("An error occurred when applying security constraint. Entity [{}]. Constraint ID [{}].",
+//                    entityName, constraint.getId(), e);
+//
+//            throw new RowLevelSecurityException(
+//                    "An error occurred when applying security constraint. Please see the logs.", entityName);
+//        }
             for (Condition condition : conditions) {
                 if (!Strings.isNullOrEmpty(condition.join)) {
                     hasJoins = true;

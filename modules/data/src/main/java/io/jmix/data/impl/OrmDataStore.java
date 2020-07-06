@@ -61,6 +61,7 @@ import java.util.stream.Collectors;
 
 import static io.jmix.core.entity.EntityValues.getId;
 import static io.jmix.core.entity.EntityValues.getValue;
+import static java.lang.String.format;
 
 /**
  * INTERNAL.
@@ -1095,6 +1096,33 @@ public class OrmDataStore implements DataStore {
 
     protected void assertToken(Collection<AccessConstraint<?>> accessConstraints, Entity entity) {
         //TODO: use InMemoryCRUD entity context
+
+//        @Override
+//        public void assertToken(Entity entity) {
+//            EntityEntry entityEntry = entity.__getEntityEntry();
+//            if (entityEntry.getSecurityState().getSecurityToken() == null) {
+//                assertSecurityConstraints(entity, (e, metaProperty) -> entityStates.isDetached(entity)
+//                        && !entityStates.isLoaded(entity, metaProperty.getName()));
+//            }
+//        }
+//
+//        protected void assertSecurityConstraints(Entity entity, BiPredicate<Entity, MetaProperty> predicate) {
+//            MetaClass metaClass = metadata.getClass(entity.getClass());
+//            for (MetaProperty metaProperty : metaClass.getProperties()) {
+//                if (metaProperty.getRange().isClass() && metadataTools.isPersistent(metaProperty)) {
+//                    if (predicate.test(entity, metaProperty)) {
+//                        continue;
+//                    }
+//                    if (security.hasInMemoryConstraints(metaProperty.getRange().asClass(), ConstraintOperationType.READ,
+//                            ConstraintOperationType.ALL)) {
+//                        throw new RowLevelSecurityException(format("Could not read security token from entity %s, " +
+//                                        "even though there are active READ/ALL constraints for the property: %s", entity,
+//                                metaProperty.getName()),
+//                                metaClass.getName());
+//                    }
+//                }
+//            }
+//        }
     }
 
     protected void handleCascadePersistException(IllegalStateException e) throws IllegalStateException {

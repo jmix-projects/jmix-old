@@ -16,10 +16,12 @@
 
 package io.jmix.data.impl;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import io.jmix.core.Entity;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public interface EntityAttributesEraser {
@@ -34,6 +36,28 @@ public interface EntityAttributesEraser {
     void restoreAttributes(Entity entity);
 
     class ReferencesCollector {
+        protected Multimap<Entity, ReferencesByAttribute> references = HashMultimap.create();
+
+        protected static class ReferencesByAttribute {
+            protected final String attribute;
+            protected final Collection<Entity> references;
+
+            public ReferencesByAttribute(String attribute) {
+                this.attribute = attribute;
+            }
+
+            public String getAttribute() {
+                return attribute;
+            }
+
+            public Collection<Entity> getReferences() {
+                return references;
+            }
+
+            public void addReference(Entity reference) {
+
+            }
+        }
 
         public Collection<Entity> getEntities() {
             return null;
@@ -48,7 +72,18 @@ public interface EntityAttributesEraser {
         }
 
         public void addReference(Entity entity, Entity reference, String propertyName) {
+            if (references.containsKey(entity)) {
+                references.get(entity)
+                        .stream()
+                        .filter(referencesByAttribute -> Objects.equals(referencesByAttribute.getAttribute(), propertyName))
+                        .findFirst()
+                        .orElse()
+                        .ifPresent(referencesByAttribute -> referencesByAttribute.addReference(reference))
 
+
+
+
+            }
         }
     }
 }
