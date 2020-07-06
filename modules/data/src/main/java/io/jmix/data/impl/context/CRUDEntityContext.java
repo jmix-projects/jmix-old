@@ -18,6 +18,7 @@ package io.jmix.data.impl.context;
 
 import io.jmix.core.context.AccessContext;
 import io.jmix.core.metamodel.model.MetaClass;
+import io.jmix.core.security.EntityOp;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -28,17 +29,27 @@ public class CRUDEntityContext implements AccessContext {
     public static final String NAME = "data_ReadEntityContext";
 
     protected final MetaClass entityClass;
+    protected final EntityOp entityOp;
     protected boolean permitted = true;
 
-    public CRUDEntityContext(MetaClass entityClass) {
+    public CRUDEntityContext(MetaClass entityClass, EntityOp entityOp) {
         this.entityClass = entityClass;
+        this.entityOp = entityOp;
+    }
+
+    public MetaClass getEntityClass() {
+        return entityClass;
+    }
+
+    public EntityOp getEntityOp() {
+        return entityOp;
     }
 
     public boolean isPermitted() {
         return permitted;
     }
 
-    public void denyOperation() {
+    public void setDenied() {
         this.permitted = false;
     }
 }

@@ -34,7 +34,9 @@ public interface SecuredAuthentication extends CoreAuthentication {
 
     Collection<ResourcePolicy> getResourcePolicies();
 
+    Collection<ResourcePolicy> getResourceByResourceAndType(String resource, String type);
+
     Collection<RowLevelPolicy> getRowLevelPolicies();
 
-    Collection<RowLevelPolicy> getRowLevelPoliciesByEntityName(MetaClass metaClass);
+    Collection<RowLevelPolicy> getRowLevelPoliciesByEntity(MetaClass metaClass);
 }

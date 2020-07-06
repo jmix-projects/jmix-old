@@ -27,7 +27,7 @@ public interface EntityAttributesEraser {
 
     ReferencesCollector collectErasingReferences(Entity entity, Predicate<Entity> predicate);
 
-    ReferencesCollector collectErasingReferences(List<? extends Entity> entityList, Predicate<Entity> predicate);
+    ReferencesCollector collectErasingReferences(Collection<? extends Entity> entityList, Predicate<Entity> predicate);
 
     void eraseReferences(EntityAttributesEraser.ReferencesCollector referencesCollector);
 
@@ -43,11 +43,11 @@ public interface EntityAttributesEraser {
             return null;
         }
 
-        public Collection<String> getReferencesByAttribute(Entity entity, String attrName) {
+        public Collection<Entity> getReferencesByAttribute(Entity entity, String attrName) {
             return null;
         }
 
-        public void addReference(Entity e, Entity reference, String propertyName) {
+        public void addReference(Entity entity, Entity reference, String propertyName) {
 
         }
     }

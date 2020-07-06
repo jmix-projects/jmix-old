@@ -48,7 +48,7 @@ public class EntityAttributesEraserImpl implements EntityAttributesEraser {
     }
 
     @Override
-    public ReferencesCollector collectErasingReferences(List<? extends Entity> entityList, Predicate<Entity> predicate) {
+    public ReferencesCollector collectErasingReferences(Collection<? extends Entity> entityList, Predicate<Entity> predicate) {
         Set<Entity> visited = new LinkedHashSet<>();
         ReferencesCollector referencesCollector = new ReferencesCollector();
         for (Entity entity : entityList) {
@@ -65,8 +65,19 @@ public class EntityAttributesEraserImpl implements EntityAttributesEraser {
 
     public void eraseReferences(EntityAttributesEraser.ReferencesCollector referencesCollector) {
         for (Entity entity : referencesCollector.getEntities()) {
-            for (String attribute: referencesCollector.getAttributes(entity)) {
+            for (String attribute : referencesCollector.getAttributes(entity)) {
+                Collection<Entity> references = referencesCollector.getReferencesByAttribute(entity, attribute);
 
+                Object value = EntityValues.getValue(entity, attribute);
+                if (value instanceof Collection) {
+                    @SuppressWarnings("unchecked")
+                    Collection<Entity> entities = (Collection<Entity>) value;
+                    entities.removeAll(references);
+                } else if (value instanceof Entity) {
+                    if (references.contains(value)) {
+                        EntityValues.setValue((Entity) value, attribute, null);
+                    }
+                }
             }
         }
     }
@@ -106,7 +117,6 @@ public class EntityAttributesEraserImpl implements EntityAttributesEraser {
         Object id = Iterables.getFirst(ids, null);
         assert id != null;
         Entity reference = dataManager.getReference((Class<Entity>) metaProperty.getJavaType(), id);
-        //we ignore the situation when the field is read-only
         EntityValues.setValue(entity, metaProperty.getName(), reference);
     }
 

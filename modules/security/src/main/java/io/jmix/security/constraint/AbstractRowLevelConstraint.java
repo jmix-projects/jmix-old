@@ -37,7 +37,7 @@ public abstract class AbstractRowLevelConstraint<T extends AccessContext> implem
     protected Collection<RowLevelPolicy> getRowLevelPolicies(MetaClass metaClass) {
         if (currentAuthentication.getAuthentication() instanceof SecuredAuthentication) {
             SecuredAuthentication authentication = (SecuredAuthentication) currentAuthentication.getAuthentication();
-            return authentication.getRowLevelPoliciesByEntityName(metaClass);
+            return authentication.getRowLevelPoliciesByEntity(metaClass);
         }
         return Collections.emptyList();
     }

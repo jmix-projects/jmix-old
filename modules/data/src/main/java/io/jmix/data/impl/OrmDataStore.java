@@ -32,6 +32,7 @@ import io.jmix.data.*;
 import io.jmix.data.event.EntityChangedEvent;
 import io.jmix.data.impl.context.CRUDEntityContext;
 import io.jmix.data.impl.context.InMemoryCRUDEntityContext;
+import io.jmix.data.impl.context.LoadValuesQueryContext;
 import io.jmix.data.impl.context.ReadEntityQueryContext;
 import io.jmix.data.persistence.DbmsSpecifics;
 import org.apache.commons.lang3.StringUtils;
@@ -465,6 +466,7 @@ public class OrmDataStore implements DataStore {
         List<Entity> persisted = new ArrayList<>();
 
         SavedEntitiesHolder savedEntitiesHolder = null;
+        EntityAttributesEraser.ReferencesCollector referencesCollector = null;
 
         try {
 
@@ -550,7 +552,10 @@ public class OrmDataStore implements DataStore {
                 }
 
                 if (!context.isDiscardSaved()) {
-                    entityAttributesEraser.collectErasingReferences(saved, );
+                    referencesCollector = entityAttributesEraser.collectErasingReferences(saved, e ->
+                        applyConstraints(accessConstraints, InMemoryCRUDEntityContext.class, metadata.getClass(e.getClass()))
+                                .isPermitted(e)
+                    );
                 }
 
                 savedEntitiesHolder = SavedEntitiesHolder.setEntities(saved);
@@ -600,7 +605,7 @@ public class OrmDataStore implements DataStore {
         reloadIfUnfetched(resultEntities, context);
 
         if (!context.isDiscardSaved()) {
-            entityAttributesEraser.eraseReferences();
+            entityAttributesEraser.eraseReferences(referencesCollector);
         }
 
         if (!context.isDiscardSaved()) {
@@ -652,14 +657,15 @@ public class OrmDataStore implements DataStore {
         Preconditions.checkNotNullArgument(context.getQuery(), "query is null");
 
         ValueLoadContext.Query contextQuery = context.getQuery();
+        Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
 
         if (log.isDebugEnabled())
             log.debug("query: " + (JpqlQueryBuilder.printQuery(contextQuery.getQueryString()))
                     + (contextQuery.getFirstResult() == 0 ? "" : ", first=" + contextQuery.getFirstResult())
                     + (contextQuery.getMaxResults() == 0 ? "" : ", max=" + contextQuery.getMaxResults()));
 
-        QueryParser queryParser = queryTransformerFactory.parser(contextQuery.getQueryString());
-        if (!checkValueQueryPermissions(queryParser)) {
+        LoadValuesQueryContext queryContext = applyConstraints(accessConstraints, LoadValuesQueryContext.class, contextQuery.getQueryString());
+        if (!queryContext.isPermitted()) {
             return Collections.emptyList();
         }
 
@@ -688,8 +694,7 @@ public class OrmDataStore implements DataStore {
                 query.setMaxResults(contextQuery.getMaxResults());
 
             List resultList = query.getResultList();
-            List<Integer> notPermittedSelectIndexes = isAuthorizationRequired(context) ?
-                    getNotPermittedSelectIndexes(queryParser) : Collections.emptyList();
+            List<Integer> deniedFieldIndexes = queryContext.getDeniedSelectedIndexes();
             for (Object item : resultList) {
                 KeyValueEntity entity = new KeyValueEntity();
                 entity.setIdName(context.getIdName());
@@ -700,7 +705,7 @@ public class OrmDataStore implements DataStore {
                     for (int i = 0; i < keys.size(); i++) {
                         String key = keys.get(i);
                         if (row.length > i) {
-                            if (notPermittedSelectIndexes.contains(i)) {
+                            if (deniedFieldIndexes.contains(i)) {
                                 entity.setValue(key, null);
                             } else {
                                 entity.setValue(key, row[i]);
@@ -708,7 +713,7 @@ public class OrmDataStore implements DataStore {
                         }
                     }
                 } else if (!keys.isEmpty()) {
-                    if (!notPermittedSelectIndexes.isEmpty()) {
+                    if (!deniedFieldIndexes.isEmpty()) {
                         entity.setValue(keys.get(0), null);
                     } else {
                         entity.setValue(keys.get(0), item);
@@ -956,81 +961,6 @@ public class OrmDataStore implements DataStore {
         cache.add(metaClass);
     }
 
-    protected boolean checkValueQueryPermissions(QueryParser queryParser) {
-        queryParser.getQueryPaths().stream()
-                .filter(path -> !path.isSelectedPath())
-                .forEach(path -> {
-                    MetaClass metaClass = metadata.getClass(path.getEntityName());
-                    MetaPropertyPath propertyPath = metaClass.getPropertyPath(path.getPropertyPath());
-                    if (propertyPath == null) {
-                        throw new IllegalStateException(String.format("query path '%s' is unresolved", path.getFullPath()));
-                    }
-
-                    if (!isEntityAttrViewPermitted(propertyPath)) {
-                        throw new AccessDeniedException(PermissionType.ENTITY_ATTR, metaClass + "." + path.getFullPath());
-                    }
-                });
-
-        MetaClass metaClass = metadata.getClass(queryParser.getEntityName());
-        if (!isEntityOpPermitted(metaClass, EntityOp.READ)) {
-            log.debug("reading of {} not permitted, returning empty list", metaClass);
-            return false;
-        }
-        if (security.hasInMemoryConstraints(metaClass, ConstraintOperationType.READ, ConstraintOperationType.ALL)) {
-            String msg = String.format("%s is not permitted for %s", ConstraintOperationType.READ, metaClass.getName());
-            if (properties.isDisableLoadValuesIfConstraints()) {
-                throw new RowLevelSecurityException(msg, metaClass.getName(), ConstraintOperationType.READ);
-            } else {
-                log.debug(msg);
-            }
-        }
-        Set<String> entityNames = queryParser.getAllEntityNames();
-        entityNames.remove(metaClass.getName());
-        for (String entityName : entityNames) {
-            MetaClass entityMetaClass = metadata.getClass(entityName);
-            if (!isEntityOpPermitted(entityMetaClass, EntityOp.READ)) {
-                log.debug("reading of {} not permitted, returning empty list", entityMetaClass);
-                return false;
-            }
-            if (security.hasConstraints(entityMetaClass)) {
-                String msg = String.format("%s is not permitted for %s", ConstraintOperationType.READ, entityName);
-                if (properties.isDisableLoadValuesIfConstraints()) {
-                    throw new RowLevelSecurityException(msg, entityName, ConstraintOperationType.READ);
-                } else {
-                    log.debug(msg);
-                }
-            }
-        }
-        return true;
-    }
-
-    protected boolean isEntityAttrViewPermitted(MetaPropertyPath metaPropertyPath) {
-        for (MetaProperty metaProperty : metaPropertyPath.getMetaProperties()) {
-            if (!security.isEntityAttrPermitted(metaProperty.getDomain(), metaProperty.getName(), EntityAttrAccess.VIEW)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    protected List<Integer> getNotPermittedSelectIndexes(QueryParser queryParser) {
-        List<Integer> indexes = new ArrayList<>();
-
-        int index = 0;
-        for (QueryParser.QueryPath path : queryParser.getQueryPaths()) {
-            if (path.isSelectedPath()) {
-                MetaClass metaClass = metadata.getClass(path.getEntityName());
-                if (!Objects.equals(path.getPropertyPath(), path.getVariableName())
-                        && !isEntityAttrViewPermitted(metaClass.getPropertyPath(path.getPropertyPath()))) {
-                    indexes.add(index);
-                }
-                index++;
-            }
-        }
-        return indexes;
-    }
-
-
 //    protected boolean needToApplyInMemoryReadConstraints(LoadContext context) {
 //        return isAuthorizationRequired(context) && security.hasConstraints()
 //                && needToApplyByPredicate(context, metaClass ->
@@ -1164,7 +1094,7 @@ public class OrmDataStore implements DataStore {
     }
 
     protected void assertToken(Collection<AccessConstraint<?>> accessConstraints, Entity entity) {
-        //TODO:
+        //TODO: use InMemoryCRUD entity context
     }
 
     protected void handleCascadePersistException(IllegalStateException e) throws IllegalStateException {
