@@ -20,8 +20,8 @@ import com.haulmont.cuba.core.model.sales.Catalog;
 import com.haulmont.cuba.core.model.sales.Order;
 import com.haulmont.cuba.core.model.sales.OrderLine;
 import com.haulmont.cuba.core.model.sales.Product;
-import com.haulmont.cuba.gui.components.OptionsList;
 import io.jmix.core.Metadata;
+import io.jmix.ui.component.MultiOptionsList;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.InstancePropertyContainer;
@@ -60,11 +60,11 @@ public class OptionsListTestScreen extends Screen {
     public InstanceContainer<Catalog> catalogDc;
 
     @Autowired
-    public OptionsList<OrderLine> optionsList;
+    public MultiOptionsList<OrderLine> optionsList;
     @Autowired
-    public OptionsList<OrderLine> requiredOptionsList;
+    public MultiOptionsList<OrderLine> requiredOptionsList;
     @Autowired
-    public OptionsList<Product> setOptionsList;
+    public MultiOptionsList<Product> setOptionsList;
 
     @Subscribe
     private void onInit(InitEvent event) {

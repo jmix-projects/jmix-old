@@ -42,16 +42,16 @@
         </instance>
     </data>
     <layout>
-        <optionsList id="optionsList"
+        <multiOptionsList id="optionsList"
                      dataContainer="orderDc" property="orderLines"
                      optionsContainer="allOrderLinesDc"/>
 
-        <optionsList id="requiredOptionsList"
+        <multiOptionsList id="requiredOptionsList"
                      dataContainer="orderDc" property="orderLines"
                      optionsContainer="allOrderLinesDc"
                      required="true"/>
 
-        <optionsList id="setOptionsList"
+        <multiOptionsList id="setOptionsList"
                      dataContainer="catalogDc" property="products"
                      optionsContainer="allProductsDc"/>
     </layout>

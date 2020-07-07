@@ -18,25 +18,14 @@ package spec.haulmont.cuba.web.components.optionslist
 
 import com.haulmont.cuba.core.model.sales.OrderLine
 import com.haulmont.cuba.core.model.sales.Product
-import com.haulmont.cuba.gui.data.CollectionDatasource
-import com.haulmont.cuba.gui.data.Datasource
-import com.haulmont.cuba.gui.data.DsBuilder
-import com.haulmont.cuba.gui.data.impl.DatasourceImpl
-import com.haulmont.cuba.gui.components.OptionsList
-import io.jmix.core.FetchPlan
-import io.jmix.core.common.event.Subscription
-import com.haulmont.cuba.core.model.common.Group
-import com.haulmont.cuba.core.model.common.User
-import io.jmix.ui.component.Component
-import io.jmix.ui.component.HasValue
+import io.jmix.ui.component.MultiOptionsList
 import io.jmix.ui.screen.OpenMode
 import spec.haulmont.cuba.web.UiScreenSpec
 import spec.haulmont.cuba.web.components.optionslist.screens.OptionsListTestScreen
 
-import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Consumer
 
-class OptionsListTest extends UiScreenSpec {
+class MultiOptionsListTest extends UiScreenSpec {
 
     @SuppressWarnings(['GroovyAssignabilityCheck', 'GroovyAccessibility'])
     void setup() {
@@ -52,7 +41,7 @@ class OptionsListTest extends UiScreenSpec {
         def screen = screens.create(OptionsListTestScreen)
         screen.show()
 
-        def optionsList = screen.optionsList as OptionsList<OrderLine>
+        def optionsList = screen.optionsList as MultiOptionsList<OrderLine>
         def orderLine = screen.allOrderLinesDc.getItems().get(0)
         def orderLinesDc = screen.orderLinesDc
 
@@ -63,7 +52,7 @@ class OptionsListTest extends UiScreenSpec {
         orderLinesDc.items.size() == 1 && orderLinesDc.items.contains(orderLine)
     }
 
-    def 'List value is propagated to multiselect OptionsList from ValueSource'() {
+    def 'List value is propagated to MultiOptionsList from ValueSource'() {
         def screens = vaadinUi.screens
 
         def mainWindow = screens.create('main', OpenMode.ROOT)
@@ -72,7 +61,7 @@ class OptionsListTest extends UiScreenSpec {
         def screen = screens.create(OptionsListTestScreen)
         screen.show()
 
-        def optionsList = screen.optionsList as OptionsList<OrderLine>
+        def optionsList = screen.optionsList as MultiOptionsList<OrderLine>
         def orderLine = screen.allOrderLinesDc.getItems().get(0)
 
         when: 'List value is set to ValueSource'
@@ -82,7 +71,7 @@ class OptionsListTest extends UiScreenSpec {
         optionsList.value.size() == 1 && optionsList.value.contains(orderLine)
     }
 
-    def 'Set value is propagated to ValueSource from multiselect OptionsList'() {
+    def 'Set value is propagated to ValueSource from MultiOptionsList'() {
         def screens = vaadinUi.screens
 
         def mainWindow = screens.create('main', OpenMode.ROOT)
@@ -91,7 +80,7 @@ class OptionsListTest extends UiScreenSpec {
         def screen = screens.create(OptionsListTestScreen)
         screen.show()
 
-        def optionsList = screen.setOptionsList as OptionsList<Product>
+        def optionsList = screen.setOptionsList as MultiOptionsList<Product>
         def product = screen.allProductsDc.items.get(0)
         def catalog = screen.catalogDc.item
 
@@ -102,7 +91,7 @@ class OptionsListTest extends UiScreenSpec {
         catalog.products.size() == 1 && catalog.products.contains(product)
     }
 
-    def 'ValueChangeEvent is fired exactly once for OptionsList'() {
+    def 'ValueChangeEvent is fired exactly once for MultiOptionsList'() {
         def screens = vaadinUi.screens
 
         def mainWindow = screens.create('main', OpenMode.ROOT)
@@ -111,8 +100,8 @@ class OptionsListTest extends UiScreenSpec {
         def screen = screens.create(OptionsListTestScreen)
         screen.show()
 
-        def optionsList = screen.optionsList as OptionsList<OrderLine>
-        def requiredOptionsList = screen.requiredOptionsList as OptionsList<OrderLine>
+        def optionsList = screen.optionsList as MultiOptionsList<OrderLine>
+        def requiredOptionsList = screen.requiredOptionsList as MultiOptionsList<OrderLine>
 
         def valueChangeListener = Mock(Consumer)
         def requiredValueChangeListener = Mock(Consumer)
@@ -126,7 +115,7 @@ class OptionsListTest extends UiScreenSpec {
         def olOption = screen.allOrderLinesDc.items.get(0)
         def secondOlOption = screen.allOrderLinesDc.items.get(1)
 
-        when: 'A value is set to OptionsList'
+        when: 'A value is set to MultiOptionsList'
         optionsList.setValue([olOption])
 
         then: 'ValueChangeEvent is fired once'

@@ -19,6 +19,7 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 import com.haulmont.cuba.gui.components.OptionsList;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import io.jmix.ui.xml.layout.loader.AbstractOptionsBaseLoader;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
 public class OptionsListLoader extends AbstractOptionsBaseLoader<OptionsList> {
@@ -32,6 +33,11 @@ public class OptionsListLoader extends AbstractOptionsBaseLoader<OptionsList> {
     @Override
     public void loadComponent() {
         super.loadComponent();
+
+        String multiselect = element.attributeValue("multiselect");
+        if (StringUtils.isNotEmpty(multiselect)) {
+            resultComponent.setMultiSelect(Boolean.parseBoolean(multiselect));
+        }
 
         loadCaptionProperty(resultComponent, element);
         loadOptionsEnum(resultComponent, element);
