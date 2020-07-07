@@ -21,7 +21,9 @@ import com.google.common.collect.Multimap;
 import io.jmix.core.Entity;
 
 import java.util.Collection;
-import java.util.Objects;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public interface EntityAttributesEraser {
@@ -36,54 +38,41 @@ public interface EntityAttributesEraser {
     void restoreAttributes(Entity entity);
 
     class ReferencesCollector {
-        protected Multimap<Entity, ReferencesByAttribute> references = HashMultimap.create();
+        protected Map<Entity, ReferencesByEntity> references = new HashMap<>();
 
-        protected static class ReferencesByAttribute {
-            protected final String attribute;
-            protected final Collection<Entity> references;
+        protected static class ReferencesByEntity {
+            protected final Multimap<String, Entity> referencesByAttributes = HashMultimap.create();
 
-            public ReferencesByAttribute(String attribute) {
-                this.attribute = attribute;
+            public Collection<String> getAttributes() {
+                return referencesByAttributes.keySet();
             }
 
-            public String getAttribute() {
-                return attribute;
+            public Collection<Entity> getReferences(String attribute) {
+                return referencesByAttributes.get(attribute);
             }
 
-            public Collection<Entity> getReferences() {
-                return references;
-            }
-
-            public void addReference(Entity reference) {
-
+            public void addReference(String attribute, Entity reference) {
+                referencesByAttributes.put(attribute, reference);
             }
         }
 
         public Collection<Entity> getEntities() {
-            return null;
+            return references.keySet();
         }
 
         public Collection<String> getAttributes(Entity entity) {
-            return null;
+            ReferencesByEntity referencesByEntity = references.get(entity);
+            return referencesByEntity == null ? Collections.emptyList() : referencesByEntity.getAttributes();
         }
 
-        public Collection<Entity> getReferencesByAttribute(Entity entity, String attrName) {
-            return null;
+        public Collection<Entity> getReferencesByAttribute(Entity entity, String attribute) {
+            ReferencesByEntity referencesByEntity = references.get(entity);
+            return referencesByEntity == null ? Collections.emptyList() : referencesByEntity.getReferences(attribute);
         }
 
         public void addReference(Entity entity, Entity reference, String propertyName) {
-            if (references.containsKey(entity)) {
-                references.get(entity)
-                        .stream()
-                        .filter(referencesByAttribute -> Objects.equals(referencesByAttribute.getAttribute(), propertyName))
-                        .findFirst()
-                        .orElse()
-                        .ifPresent(referencesByAttribute -> referencesByAttribute.addReference(reference))
-
-
-
-
-            }
+            ReferencesByEntity referencesByEntity = references.computeIfAbsent(entity, e -> new ReferencesByEntity());
+            referencesByEntity.addReference(propertyName, reference);
         }
     }
 }
