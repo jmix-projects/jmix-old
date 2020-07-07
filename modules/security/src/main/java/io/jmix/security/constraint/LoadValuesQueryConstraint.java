@@ -20,15 +20,15 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.security.*;
 import io.jmix.data.impl.context.LoadValuesQueryContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component(LoadValuesQueryConstraint.NAME)
 public class LoadValuesQueryConstraint extends AbstractEntityOperationConstraint<LoadValuesQueryContext> {
+    public static final String NAME = "sec_LoadValuesQueryConstraint";
+
     @Autowired
     protected Security security;
-
-    private final Logger log = LoggerFactory.getLogger(LoadValuesQueryConstraint.class);
 
     public LoadValuesQueryConstraint(CurrentAuthentication currentAuthentication) {
         super(currentAuthentication);
