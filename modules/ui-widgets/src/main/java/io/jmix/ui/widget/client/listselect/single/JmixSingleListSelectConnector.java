@@ -16,9 +16,11 @@
 
 package io.jmix.ui.widget.client.listselect.single;
 
+import com.vaadin.client.annotations.OnStateChange;
 import com.vaadin.client.ui.listselect.ListSelectConnector;
 import com.vaadin.shared.ui.Connect;
 import io.jmix.ui.widget.client.listselect.JmixListSelectServerRpc;
+import io.jmix.ui.widget.client.listselect.JmixSingleListSelectState;
 import io.jmix.ui.widget.listselect.JmixSingleListSelect;
 
 @Connect(JmixSingleListSelect.class)
@@ -29,12 +31,21 @@ public class JmixSingleListSelectConnector extends ListSelectConnector {
         super.init();
 
         getWidget().setDoubleClickListener((itemIndex) ->
-                getRpcProxy(JmixListSelectServerRpc.class)
-                        .onDoubleClick(itemIndex));
+                getRpcProxy(JmixListSelectServerRpc.class).onDoubleClick(itemIndex));
     }
 
     @Override
     public JmixSingleListSelectWidget getWidget() {
         return (JmixSingleListSelectWidget) super.getWidget();
+    }
+
+    @Override
+    public JmixSingleListSelectState getState() {
+        return (JmixSingleListSelectState) super.getState();
+    }
+
+    @OnStateChange("nullOptionVisible")
+    void setNullOptionVisible() {
+        getWidget().setNullOptionVisible(getState().nullOptionVisible);
     }
 }
