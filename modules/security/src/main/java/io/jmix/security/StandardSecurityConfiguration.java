@@ -17,13 +17,10 @@
 package io.jmix.security;
 
 import io.jmix.core.CoreProperties;
-import io.jmix.core.impl.session.HttpSessionRegistryImpl;
 import io.jmix.core.impl.session.SessionAuthenticationStrategies;
 import io.jmix.core.security.UserRepository;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
 import io.jmix.core.session.SessionProperties;
-import io.jmix.core.session.HttpSessionRegistry;
-import io.jmix.core.impl.session.SessionDataAuthenticationStrategy;
 import io.jmix.security.authentication.SecuredAuthenticationProvider;
 import io.jmix.security.role.RoleRepository;
 import io.jmix.security.role.assignment.RoleAssignmentRepository;
@@ -42,10 +39,7 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.session.*;
-
-import java.util.LinkedList;
-import java.util.List;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
 @Configuration
 @ComponentScan
@@ -82,7 +76,7 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        HttpSessionRegistry sessionRegistry = sessionRegistry();
+        SessionRegistry sessionRegistry = sessionRegistry();
         http.antMatcher("/**")
                 .authorizeRequests().anyRequest().permitAll()
                 .and()
@@ -102,11 +96,9 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
         return new SessionAuthenticationStrategies(sessionRegistry, sessionProperties.getMaximumUserSessions());
     }
 
-    @Bean(HttpSessionRegistry.NAME)
-    protected HttpSessionRegistry sessionRegistry() {
-        HttpSessionRegistryImpl httpSessionRegistry = new HttpSessionRegistryImpl();
-        httpSessionRegistry.setDelegate(new SessionRegistryImpl());
-        return httpSessionRegistry;
+    @Bean
+    protected SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
     @Bean(name = "sec_AuthenticationManager")

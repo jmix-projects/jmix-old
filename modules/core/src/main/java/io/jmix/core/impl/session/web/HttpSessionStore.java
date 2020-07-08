@@ -17,10 +17,15 @@
 package io.jmix.core.impl.session.web;
 
 import io.jmix.core.session.AuthTokenStore;
-import io.jmix.core.session.HttpSessionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 @Component(HttpSessionStore.NAME)
@@ -29,28 +34,34 @@ public class HttpSessionStore implements AuthTokenStore<HttpSessionWrapper> {
     public static final String NAME = "core_WebSessionStore";
 
     @Autowired
-    protected HttpSessionRegistry webSessionRegistry;
+    protected SessionRegistry sessionRegistry;
 
     @Override
     public Stream<HttpSessionWrapper> tokensStream() {
-        return webSessionRegistry.getAllPrincipals().stream()
-                .flatMap(p -> webSessionRegistry.getAllSessions(p, false).stream())
+        return sessionRegistry.getAllPrincipals().stream()
+                .flatMap(p -> sessionRegistry.getAllSessions(p, false).stream())
+                .filter(distinctByKey(SessionInformation::getSessionId))
                 .map(HttpSessionWrapper::new);
     }
 
     @Override
     public Stream<HttpSessionWrapper> tokensStream(Object principal) {
-        return webSessionRegistry.getAllSessions(principal, false).stream()
+        return sessionRegistry.getAllSessions(principal, false).stream()
                 .map(HttpSessionWrapper::new);
     }
 
     @Override
     public HttpSessionWrapper get(String id) {
-        return new HttpSessionWrapper(webSessionRegistry.getSessionInformation(id));
+        return new HttpSessionWrapper(sessionRegistry.getSessionInformation(id));
+    }
+
+    public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
     }
 
     @Override
     public void invalidate(HttpSessionWrapper token) {
-        webSessionRegistry.expire(token.getId());
+        token.getDelegate().expireNow();
     }
 }

@@ -21,7 +21,7 @@ import io.jmix.core.CoreProperties;
 import io.jmix.core.security.LoginException;
 import io.jmix.core.security.SecurityContextHelper;
 import io.jmix.core.security.UserRepository;
-import io.jmix.core.session.HttpSessionRegistry;
+import io.jmix.core.session.SessionData;
 import io.jmix.ui.util.OperationResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -46,7 +47,10 @@ public class JmixApp extends App {
     protected CoreProperties coreProperties;
 
     @Autowired
-    protected HttpSessionRegistry sessionRegistry;
+    protected SessionRegistry sessionRegistry;
+
+    @Autowired
+    protected SessionData sessionData;
 
     @Override
     public void loginOnStart() throws LoginException {
@@ -70,7 +74,7 @@ public class JmixApp extends App {
     public OperationResult logout() {
         removeAllWindows(Collections.singletonList(AppUI.getCurrent()));
         //TODO EZ handle session expiration
-        sessionRegistry.expire(sessionRegistry.currentSessionId());
+        sessionRegistry.getSessionInformation(sessionData.getSessionId()).expireNow();
         //todo MG authorities
         AnonymousAuthenticationToken anonymousToken = new AnonymousAuthenticationToken(
                 coreProperties.getAnonymousAuthenticationTokenKey(),

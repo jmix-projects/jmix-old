@@ -14,21 +14,9 @@
  * limitations under the License.
  */
 
-package io.jmix.core.session;
+package io.jmix.sessions.validators;
 
-import org.springframework.lang.Nullable;
-import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
+public interface SessionAttributePersistenceValidator {
 
-public interface HttpSessionRegistry extends SessionRegistry {
-
-    String NAME = "core_HttpSessionRegistry";
-
-    @Nullable
-    SessionInformation currentSessionInfo();
-
-    @Nullable
-    String currentSessionId();
-
-    void expire(String sessionId);
+    boolean isPersistent(String attributeName, Object attributeValue);
 }

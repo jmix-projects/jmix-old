@@ -52,6 +52,9 @@ include 'starters:starter-security'
 include 'starters:starter-security-ui'
 include 'starters:starter-security-data'
 
+include 'modules:sessions'
+include 'starters:starter-sessions'
+
 include 'modules:ui'
 include 'modules:ui-data'
 include 'modules:ui-test-assist'
@@ -84,3 +87,4 @@ rootProject.children.each { p1 ->
 		p2.buildFileName = "${p2.name}.gradle"
 	}
 }
+

@@ -18,10 +18,8 @@ package io.jmix.core.security;
 
 import io.jmix.core.CoreProperties;
 import io.jmix.core.entity.BaseUser;
-import io.jmix.core.impl.session.HttpSessionRegistryImpl;
 import io.jmix.core.impl.session.SessionAuthenticationStrategies;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
-import io.jmix.core.session.HttpSessionRegistry;
 import io.jmix.core.session.SessionProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -91,11 +89,9 @@ public class CoreSecurityConfiguration extends WebSecurityConfigurerAdapter impl
         return new SessionAuthenticationStrategies(sessionRegistry, sessionProperties.getMaximumUserSessions());
     }
 
-    @Bean(HttpSessionRegistry.NAME)
-    protected HttpSessionRegistry sessionRegistry() {
-        HttpSessionRegistryImpl httpSessionRegistry = new HttpSessionRegistryImpl();
-        httpSessionRegistry.setDelegate(new SessionRegistryImpl());
-        return httpSessionRegistry;
+    @Bean
+    protected SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
     //todo MG why?
