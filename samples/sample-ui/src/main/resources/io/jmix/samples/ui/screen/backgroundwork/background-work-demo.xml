@@ -13,14 +13,12 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
-<screen-config xmlns="http://schemas.haulmont.com/cuba/screens.xsd">
-    <screen id="loginWindow"
-            template="/com/haulmont/cuba/web/app/loginwindow/loginwindow.xml"/>
-    <screen id="mainWindow"
-            template="/com/haulmont/cuba/web/app/mainwindow/mainwindow.xml"/>
-    <screen id="backgroundWorkWindow"
-            template="/com/haulmont/cuba/gui/backgroundwork/background-work-window.xml"/>
-    <screen id="backgroundWorkProgressWindow"
-            template="/com/haulmont/cuba/gui/backgroundwork/background-work-progress-window.xml"/>
-</screen-config>
+<window xmlns="http://jmix.io/schema/ui/window"
+        caption="msg://caption">
+    <layout spacing="true" expand="expander">
+        <button id="runBT" caption="Run Background Task"/>
+        <button id="runBT2" caption="Run Background Task with Progress"/>
+        <button id="runBT3" caption="Run Background Task with Progress in Percentage"/>
+        <vbox id="expander"/>
+    </layout>
+</window>

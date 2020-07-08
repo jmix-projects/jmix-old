@@ -16,9 +16,14 @@
 
 package io.jmix.samples.legacyui.screen.legacy;
 
+import com.haulmont.cuba.gui.backgroundwork.BackgroundWorkProgressWindow;
+import com.haulmont.cuba.gui.backgroundwork.BackgroundWorkWindow;
 import com.haulmont.cuba.gui.components.AbstractWindow;
 import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.samples.legacyui.entity.SampleUser;
+import io.jmix.ui.executor.BackgroundTask;
+import io.jmix.ui.executor.TaskLifeCycle;
+import io.jmix.ui.screen.Screen;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class LegacyScreen extends AbstractWindow {
@@ -32,5 +37,35 @@ public class LegacyScreen extends AbstractWindow {
         user.setName("Test User");
 
         userDs.setItem(user);
+    }
+
+    public void runBackgroundTask() {
+        BackgroundWorkWindow.show(createBackgroundTask(10, 1, 5000),
+                "Running background task", "Please wait while task is running",
+                true
+        );
+    }
+
+    public void runBackgroundTaskWithProgress() {
+        int total = 10;
+        BackgroundTask<Integer, Void> task = createBackgroundTask(10, total, 1000);
+
+        BackgroundWorkProgressWindow.show(task,
+                "Running background task", "Please wait while task is running",
+                total, true, true
+        );
+    }
+
+    private BackgroundTask<Integer, Void> createBackgroundTask(int timeoutSeconds, int total, int updateIntervalMillis) {
+        return new BackgroundTask<Integer, Void>(timeoutSeconds, this) {
+                @Override
+                public Void run(TaskLifeCycle<Integer> taskLifeCycle) throws Exception {
+                    for (int i = 0; i < total; i++) {
+                        Thread.sleep(updateIntervalMillis);
+                        taskLifeCycle.publish(i);
+                    }
+                    return null;
+                }
+            };
     }
 }

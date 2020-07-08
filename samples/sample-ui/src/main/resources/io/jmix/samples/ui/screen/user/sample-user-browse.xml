@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://jmix.io/schema/ui/window"
-        caption="msg://browseCaption"
-        messagesPack="io.jmix.samples.ui">
+        caption="msg://browseCaption">
     <data readOnly="true">
         <collection id="usersDc"
                     class="io.jmix.samples.ui.entity.SampleUser">
