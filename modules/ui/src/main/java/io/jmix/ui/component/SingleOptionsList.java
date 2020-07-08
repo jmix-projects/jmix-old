@@ -27,12 +27,12 @@ public interface SingleOptionsList<V> extends OptionsList<V, V> {
     /**
      * Sets visibility for first null element in list.
      *
-     * @param nullOptionVisible whether null option visible should be visible
+     * @param nullOptionVisible whether null element should be visible
      */
     void setNullOptionVisible(boolean nullOptionVisible);
 
     /**
-     * @return whether null option visible is currently visible
+     * @return whether null element is currently visible
      */
     boolean isNullOptionVisible();
 }

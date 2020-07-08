@@ -15,7 +15,7 @@
   -->
 
 <window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
-        class="spec.haulmont.cuba.web.components.optionslist.screens.LegacyOptionsListWindow">
+        class="spec.haulmont.cuba.web.components.optionslist.screens.LegacyOptionsListTestWindow">
     <dsContext>
         <datasource id="orderDs"
                     class="com.haulmont.cuba.core.model.sales.Order">

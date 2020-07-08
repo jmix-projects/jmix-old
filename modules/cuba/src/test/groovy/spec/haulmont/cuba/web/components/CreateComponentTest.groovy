@@ -21,6 +21,7 @@ import com.haulmont.cuba.gui.components.FieldGroup
 import com.haulmont.cuba.gui.components.OptionsGroup
 import com.haulmont.cuba.gui.components.SearchField
 import com.haulmont.cuba.gui.components.SearchPickerField
+import com.haulmont.cuba.gui.components.OptionsList
 import io.jmix.ui.Facets
 import io.jmix.ui.component.*
 import io.jmix.ui.component.impl.JavaScriptComponent
@@ -91,7 +92,9 @@ class CreateComponentTest extends WebSpec {
                 OptionsGroup.NAME,
                 CheckBoxGroup.NAME,
                 RadioButtonGroup.NAME,
+                OptionsList.NAME,
                 MultiOptionsList.NAME,
+                SingleOptionsList.NAME,
                 FileUploadField.NAME,
                 FileMultiUploadField.NAME,
                 CurrencyField.NAME,

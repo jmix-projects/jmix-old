@@ -29,8 +29,7 @@ public class JmixMultiListSelectConnector extends ListSelectConnector {
         super.init();
 
         getWidget().setDoubleClickListener((itemIndex) ->
-                getRpcProxy(JmixListSelectServerRpc.class)
-                        .onDoubleClick(itemIndex));
+                getRpcProxy(JmixListSelectServerRpc.class).onDoubleClick(itemIndex));
     }
 
     @Override

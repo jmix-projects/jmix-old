@@ -78,5 +78,4 @@ public abstract class JmixAbstractListSelect<V> extends ListSelect<V> {
         }
         return superError;
     }
-
 }

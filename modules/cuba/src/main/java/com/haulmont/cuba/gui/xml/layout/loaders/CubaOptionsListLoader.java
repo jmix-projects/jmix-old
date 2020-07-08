@@ -22,7 +22,7 @@ import io.jmix.ui.xml.layout.loader.AbstractOptionsBaseLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
-public class OptionsListLoader extends AbstractOptionsBaseLoader<OptionsList> {
+public class CubaOptionsListLoader extends AbstractOptionsBaseLoader<OptionsList> {
 
     @Override
     public void createComponent() {
@@ -37,6 +37,11 @@ public class OptionsListLoader extends AbstractOptionsBaseLoader<OptionsList> {
         String multiselect = element.attributeValue("multiselect");
         if (StringUtils.isNotEmpty(multiselect)) {
             resultComponent.setMultiSelect(Boolean.parseBoolean(multiselect));
+        }
+
+        String nullOptionVisible = element.attributeValue("nullOptionVisible");
+        if (StringUtils.isNotEmpty(nullOptionVisible)) {
+            resultComponent.setNullOptionVisible(Boolean.parseBoolean(nullOptionVisible));
         }
 
         loadCaptionProperty(resultComponent, element);

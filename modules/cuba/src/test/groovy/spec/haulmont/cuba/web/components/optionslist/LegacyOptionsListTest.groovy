@@ -29,7 +29,7 @@ import io.jmix.core.FetchPlan
 import io.jmix.ui.component.Component
 import io.jmix.ui.screen.OpenMode
 import spec.haulmont.cuba.web.UiScreenSpec
-import spec.haulmont.cuba.web.components.optionslist.screens.LegacyOptionsListWindow
+import spec.haulmont.cuba.web.components.optionslist.screens.LegacyOptionsListTestWindow
 import spock.lang.Ignore
 
 class LegacyOptionsListTest extends UiScreenSpec {
@@ -291,7 +291,7 @@ class LegacyOptionsListTest extends UiScreenSpec {
         g2 == component.value
     }
 
-    protected LegacyOptionsListWindow createLegacyScreen() {
+    protected LegacyOptionsListTestWindow createLegacyScreen() {
         return screens.create("legacy-optionslist-test-screen", OpenMode.NEW_TAB)
     }
 }
