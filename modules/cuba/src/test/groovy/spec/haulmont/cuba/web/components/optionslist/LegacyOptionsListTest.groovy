@@ -26,16 +26,11 @@ import com.haulmont.cuba.gui.data.Datasource
 import com.haulmont.cuba.gui.data.DsBuilder
 import com.haulmont.cuba.gui.data.impl.DatasourceImpl
 import io.jmix.core.FetchPlan
-import io.jmix.core.common.event.Subscription
 import io.jmix.ui.component.Component
-import io.jmix.ui.component.HasValue
 import io.jmix.ui.screen.OpenMode
 import spec.haulmont.cuba.web.UiScreenSpec
 import spec.haulmont.cuba.web.components.optionslist.screens.LegacyOptionsListWindow
 import spock.lang.Ignore
-
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.function.Consumer
 
 class LegacyOptionsListTest extends UiScreenSpec {
 
@@ -188,7 +183,6 @@ class LegacyOptionsListTest extends UiScreenSpec {
         !component.editable
     }
 
-
     def testSetToReadonlyFromValueListener() {
         when:
         def component = uiComponents.create(OptionsList)
@@ -295,58 +289,6 @@ class LegacyOptionsListTest extends UiScreenSpec {
 
         then:
         g2 == component.value
-    }
-
-
-    def testValueChangeListener() {
-        when:
-        def component = uiComponents.create(OptionsList)
-
-        final AtomicInteger counter = new AtomicInteger(0)
-
-        then:
-        component.value == null
-
-        when:
-
-        Consumer<HasValue.ValueChangeEvent> listener1 = { e ->
-            counter.addAndGet(1)
-        }
-        Subscription subscription = component.addValueChangeListener(listener1)
-
-        component.setOptionsList(new ArrayList<>(Arrays.asList("One", "Two", "Three")))
-        component.setValue("Two")
-
-        subscription.remove()
-
-        then:
-        counter.get() == 1
-
-        when:
-
-        Consumer<HasValue.ValueChangeEvent> listener2 = { e ->
-            counter.addAndGet(1)
-        }
-        subscription = component.addValueChangeListener(listener2)
-
-        component.setValue("One")
-
-        then:
-        component.value == 'One'
-        counter.get() == 2
-
-        when:
-
-        subscription.remove()
-        Consumer<HasValue.ValueChangeEvent> listener3 = { e ->
-            counter.addAndGet(1)
-        }
-        component.addValueChangeListener(listener3)
-
-        component.setValue("Three")
-
-        then:
-        counter.get() == 3
     }
 
     protected LegacyOptionsListWindow createLegacyScreen() {

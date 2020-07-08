@@ -16,8 +16,28 @@
 
 package io.jmix.ui.widget.listselect;
 
+import io.jmix.ui.widget.client.listselect.JmixSingleListSelectState;
+
 /**
  * @param <V> item type
  */
 public class JmixSingleListSelect<V> extends JmixAbstractListSelect<V> {
+
+    public void setNullOptionVisible(boolean nullOptionVisible) {
+        getState().nullOptionVisible = nullOptionVisible;
+    }
+
+    public boolean isNullOptionVisible() {
+        return getState(false).nullOptionVisible;
+    }
+
+    @Override
+    protected JmixSingleListSelectState getState() {
+        return (JmixSingleListSelectState) super.getState();
+    }
+
+    @Override
+    protected JmixSingleListSelectState getState(boolean markAsDirty) {
+        return (JmixSingleListSelectState) super.getState(markAsDirty);
+    }
 }

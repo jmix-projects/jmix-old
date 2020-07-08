@@ -29,7 +29,7 @@ import java.util.function.Consumer;
 
 public class JmixSingleListSelectWidget extends JmixAbstractListSelectWidget {
 
-    protected Consumer<Boolean> selectionHandler;
+    public static final String NULL_ITEM_KEY = "nullItem";
 
     protected boolean nullOptionVisible = true;
     protected boolean nullOptionSelected = false;
@@ -39,8 +39,8 @@ public class JmixSingleListSelectWidget extends JmixAbstractListSelectWidget {
         select.addChangeHandler(new ChangeHandler() {
             @Override
             public void onChange(ChangeEvent event) {
-                if (isNullOptionVisible() && selectionHandler != null) {
-                    nullOptionSelected = getSelectedItemKeys().contains("nullItem");
+                if (isNullOptionVisible()) {
+                    nullOptionSelected = getSelectedItemKeys().contains(NULL_ITEM_KEY);
                 }
             }
         });
@@ -67,19 +67,11 @@ public class JmixSingleListSelectWidget extends JmixAbstractListSelectWidget {
         });
     }
 
-    public Consumer<Boolean> getNullSelectHandler() {
-        return selectionHandler;
-    }
-
-    public void setSelectionHandler(Consumer<Boolean> selectionHandler) {
-        this.selectionHandler = selectionHandler;
-    }
-
     @Override
     public void setItems(List<JsonObject> items) {
         if (isNullOptionVisible()) {
             JsonObject nullObject = JsJsonObject.create();
-            nullObject.put(DataCommunicatorConstants.KEY, "nullItem");
+            nullObject.put(DataCommunicatorConstants.KEY, NULL_ITEM_KEY);
             nullObject.put(ListingJsonConstants.JSONKEY_ITEM_VALUE, "");
 
             if (nullOptionSelected) {
@@ -98,5 +90,23 @@ public class JmixSingleListSelectWidget extends JmixAbstractListSelectWidget {
 
     public void setNullOptionVisible(boolean nullOptionVisible) {
         this.nullOptionVisible = nullOptionVisible;
+
+        manageNullItem(this.nullOptionVisible);
+    }
+
+    protected void manageNullItem(boolean nullOptionVisible) {
+        if (select.getItemCount() == 0) {
+            // wait while options are loaded
+            return;
+        }
+
+        String key = select.getValue(0);
+        if (nullOptionVisible) {
+            if (!NULL_ITEM_KEY.equals(key)) {
+                select.insertItem("", NULL_ITEM_KEY, 0);
+            }
+        } else if (NULL_ITEM_KEY.equals(key)) {
+            select.removeItem(0);
+        }
     }
 }

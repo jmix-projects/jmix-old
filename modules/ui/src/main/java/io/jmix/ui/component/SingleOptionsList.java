@@ -23,4 +23,16 @@ package io.jmix.ui.component;
  */
 public interface SingleOptionsList<V> extends OptionsList<V, V> {
     String NAME = "singleOptionsList";
+
+    /**
+     * Sets visibility for first null element in list.
+     *
+     * @param nullOptionVisible whether null option visible should be visible
+     */
+    void setNullOptionVisible(boolean nullOptionVisible);
+
+    /**
+     * @return whether null option visible is currently visible
+     */
+    boolean isNullOptionVisible();
 }

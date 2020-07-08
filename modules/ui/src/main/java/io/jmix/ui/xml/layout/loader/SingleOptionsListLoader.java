@@ -25,4 +25,14 @@ public class SingleOptionsListLoader extends AbstractOptionsListLoader<SingleOpt
         resultComponent = factory.create(SingleOptionsList.NAME);
         loadId(resultComponent, element);
     }
+
+    @Override
+    public void loadComponent() {
+        super.loadComponent();
+
+        String nullOptionVisible = element.attributeValue("nullOptionVisible");
+        if (nullOptionVisible != null) {
+            resultComponent.setNullOptionVisible(Boolean.parseBoolean(nullOptionVisible));
+        }
+    }
 }

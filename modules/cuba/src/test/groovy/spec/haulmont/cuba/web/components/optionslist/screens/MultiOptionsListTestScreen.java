@@ -36,8 +36,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @UiController
-@UiDescriptor("optionslist-test-screen.xml")
-public class OptionsListTestScreen extends Screen {
+@UiDescriptor("mutioptionslist-test-screen.xml")
+public class MultiOptionsListTestScreen extends Screen {
 
     @Autowired
     private Metadata metadata;

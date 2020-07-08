@@ -21,7 +21,7 @@ import com.haulmont.cuba.core.model.sales.Product
 import io.jmix.ui.component.MultiOptionsList
 import io.jmix.ui.screen.OpenMode
 import spec.haulmont.cuba.web.UiScreenSpec
-import spec.haulmont.cuba.web.components.optionslist.screens.OptionsListTestScreen
+import spec.haulmont.cuba.web.components.optionslist.screens.MultiOptionsListTestScreen
 
 import java.util.function.Consumer
 
@@ -32,20 +32,20 @@ class MultiOptionsListTest extends UiScreenSpec {
         exportScreensPackages(['spec.haulmont.cuba.web.components.optionslist.screens', 'com.haulmont.cuba.web.app.main'])
     }
 
-    def 'List value is propagated to ValueSource from multiselect OptionsList'() {
+    def 'List value is propagated to ValueSource from MultiOptionsList'() {
         def screens = vaadinUi.screens
 
         def mainWindow = screens.create('main', OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def screen = screens.create(OptionsListTestScreen)
+        def screen = screens.create(MultiOptionsListTestScreen)
         screen.show()
 
         def optionsList = screen.optionsList as MultiOptionsList<OrderLine>
         def orderLine = screen.allOrderLinesDc.getItems().get(0)
         def orderLinesDc = screen.orderLinesDc
 
-        when: 'List value is set to OptionsList'
+        when: 'List value is set to MultiOptionsList'
         optionsList.setValue([orderLine])
 
         then: 'ValueSource is updated'
@@ -58,7 +58,7 @@ class MultiOptionsListTest extends UiScreenSpec {
         def mainWindow = screens.create('main', OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def screen = screens.create(OptionsListTestScreen)
+        def screen = screens.create(MultiOptionsListTestScreen)
         screen.show()
 
         def optionsList = screen.optionsList as MultiOptionsList<OrderLine>
@@ -77,14 +77,14 @@ class MultiOptionsListTest extends UiScreenSpec {
         def mainWindow = screens.create('main', OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def screen = screens.create(OptionsListTestScreen)
+        def screen = screens.create(MultiOptionsListTestScreen)
         screen.show()
 
         def optionsList = screen.setOptionsList as MultiOptionsList<Product>
         def product = screen.allProductsDc.items.get(0)
         def catalog = screen.catalogDc.item
 
-        when: 'Set value is set to OptionsList'
+        when: 'Set value is set to MultiOptionsList'
         optionsList.setValue(Collections.singleton(product))
 
         then: 'ValueSource is updated'
@@ -97,7 +97,7 @@ class MultiOptionsListTest extends UiScreenSpec {
         def mainWindow = screens.create('main', OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def screen = screens.create(OptionsListTestScreen)
+        def screen = screens.create(MultiOptionsListTestScreen)
         screen.show()
 
         def optionsList = screen.optionsList as MultiOptionsList<OrderLine>

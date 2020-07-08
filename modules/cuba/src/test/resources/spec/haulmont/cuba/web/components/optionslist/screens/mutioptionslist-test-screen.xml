@@ -43,16 +43,16 @@
     </data>
     <layout>
         <multiOptionsList id="optionsList"
-                     dataContainer="orderDc" property="orderLines"
-                     optionsContainer="allOrderLinesDc"/>
+                          dataContainer="orderDc" property="orderLines"
+                          optionsContainer="allOrderLinesDc"/>
 
         <multiOptionsList id="requiredOptionsList"
-                     dataContainer="orderDc" property="orderLines"
-                     optionsContainer="allOrderLinesDc"
-                     required="true"/>
+                          dataContainer="orderDc" property="orderLines"
+                          optionsContainer="allOrderLinesDc"
+                          required="true"/>
 
         <multiOptionsList id="setOptionsList"
-                     dataContainer="catalogDc" property="products"
-                     optionsContainer="allProductsDc"/>
+                          dataContainer="catalogDc" property="products"
+                          optionsContainer="allProductsDc"/>
     </layout>
 </window>

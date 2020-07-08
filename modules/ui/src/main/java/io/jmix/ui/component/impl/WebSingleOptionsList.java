@@ -25,6 +25,16 @@ public class WebSingleOptionsList<V> extends WebAbstractListSelect<V, V, JmixSin
         implements SingleOptionsList<V> {
 
     @Override
+    public void setNullOptionVisible(boolean nullOptionVisible) {
+        component.setNullOptionVisible(nullOptionVisible);
+    }
+
+    @Override
+    public boolean isNullOptionVisible() {
+        return component.isNullOptionVisible();
+    }
+
+    @Override
     protected JmixSingleListSelect<V> createComponent() {
         return new JmixSingleListSelect<>();
     }
