@@ -18,10 +18,10 @@ package io.jmix.sessions;
 
 import io.jmix.core.Events;
 import io.jmix.core.security.SecurityContextHelper;
+import io.jmix.sessions.events.JmixSessionCreatedEvent;
+import io.jmix.sessions.events.JmixSessionDestroyedEvent;
+import io.jmix.sessions.events.JmixSessionRestoredEvent;
 import io.jmix.sessions.validators.SessionAttributePersistenceValidator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.session.SessionDestroyedEvent;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
@@ -64,7 +64,9 @@ public class SessionRepositoryWrapper<S extends Session> implements FindByIndexN
 
     @Override
     public SessionWrapper createSession() {
-        return new SessionWrapper(delegate.createSession());
+        SessionWrapper sessionWrapper = new SessionWrapper(delegate.createSession());
+        events.publish(new JmixSessionCreatedEvent<>(sessionWrapper));
+        return sessionWrapper;
     }
 
     @Override
@@ -99,6 +101,7 @@ public class SessionRepositoryWrapper<S extends Session> implements FindByIndexN
                 Object principal = SecurityContextHelper.getAuthentication().getPrincipal();
                 if (principal != null && sessionRegistry.getSessionInformation(id) == null) {
                     sessionRegistry.registerNewSession(id, principal);
+                    events.publish(new JmixSessionRestoredEvent<>(sessionWrapper));
                 }
             }
             return sessionWrapper;
@@ -108,9 +111,9 @@ public class SessionRepositoryWrapper<S extends Session> implements FindByIndexN
 
     @Override
     public void deleteById(String id) {
-        S session = delegate.findById(id);
+        SessionWrapper session = findById(id);
         if (session != null) {
-            events.publish(new RepositorySessionDestroyedEvent(session));
+            events.publish(new JmixSessionDestroyedEvent<>(session));
             delegate.deleteById(id);
         }
         nonPersistentSessionAttributesMap.remove(id);
@@ -125,39 +128,6 @@ public class SessionRepositoryWrapper<S extends Session> implements FindByIndexN
         return map.entrySet().stream()
                 .map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), new SessionWrapper(e.getValue())))
                 .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue));
-    }
-
-    public final class RepositorySessionDestroyedEvent extends SessionDestroyedEvent {
-
-        public RepositorySessionDestroyedEvent(S source) {
-            super(source);
-        }
-
-        @SuppressWarnings("unchecked")
-        public S getSession() {
-            return (S) getSource();
-        }
-
-        @Override
-        public List<SecurityContext> getSecurityContexts() {
-            S session = getSession();
-
-            ArrayList<SecurityContext> contexts = new ArrayList<>();
-
-            for (String attributeName : session.getAttributeNames()) {
-                Object attributeValue = session.getAttribute(attributeName);
-                if (attributeValue instanceof SecurityContext) {
-                    contexts.add((SecurityContext) attributeValue);
-                }
-            }
-
-            return contexts;
-        }
-
-        @Override
-        public String getId() {
-            return getSession().getId();
-        }
     }
 
     public final class SessionWrapper implements Session {

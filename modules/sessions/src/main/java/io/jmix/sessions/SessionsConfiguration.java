@@ -45,7 +45,7 @@ public class SessionsConfiguration<S extends Session> {
 
     @Autowired
     public void setSessionRepository(FindByIndexNameSessionRepository<S> sessionRepository) {
-        sessionRepositoryWrapper = new SessionRepositoryWrapper<>(sessionRepository,sessionRegistry,events);
+        sessionRepositoryWrapper = new SessionRepositoryWrapper<>(sessionRepository, sessionRegistry, events);
         sessionRepositoryWrapper.addAttributePersistenceValidators(new VaadinSessionAttributesValidator());
     }
 
