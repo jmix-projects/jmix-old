@@ -22,6 +22,7 @@ import io.jmix.sessions.events.JmixSessionCreatedEvent;
 import io.jmix.sessions.events.JmixSessionDestroyedEvent;
 import io.jmix.sessions.events.JmixSessionRestoredEvent;
 import io.jmix.sessions.validators.SessionAttributePersistenceValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
@@ -40,8 +41,10 @@ public class SessionRepositoryWrapper<S extends Session> implements FindByIndexN
 
     protected FindByIndexNameSessionRepository<S> delegate;
 
+    @Autowired
     protected SessionRegistry sessionRegistry;
 
+    @Autowired
     protected Events events;
 
     public List<SessionAttributePersistenceValidator> getAttributePersistenceValidators() {
@@ -56,10 +59,8 @@ public class SessionRepositoryWrapper<S extends Session> implements FindByIndexN
         this.attributePersistenceValidators = attributePersistenceValidators;
     }
 
-    public SessionRepositoryWrapper(FindByIndexNameSessionRepository<S> delegate, SessionRegistry sessionRegistry, Events events) {
+    public SessionRepositoryWrapper(FindByIndexNameSessionRepository<S> delegate) {
         this.delegate = delegate;
-        this.sessionRegistry = sessionRegistry;
-        this.events = events;
     }
 
     @Override
