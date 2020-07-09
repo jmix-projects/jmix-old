@@ -16,8 +16,8 @@
 
 package io.jmix.ui.screen;
 
+import io.jmix.core.AccessManager;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
-import io.jmix.core.security.Security;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.component.ActionsHolder;
 import io.jmix.ui.component.Component;
@@ -27,6 +27,9 @@ import io.jmix.ui.component.data.HasValueSource;
 import io.jmix.ui.component.data.ValueSource;
 import io.jmix.ui.component.data.meta.EntityValueSource;
 
+import io.jmix.ui.context.UiReadEntityAttributeContext;
+import io.jmix.ui.context.UiUpdateEntityAttributeContext;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 import java.util.function.Predicate;
@@ -41,11 +44,11 @@ import static io.jmix.ui.screen.EditorScreen.WINDOW_CLOSE;
 public class ReadOnlyScreensSupport {
     public static final String NAME = "ui_ReadOnlyScreensSupport";
 
-    protected Security security;
+    protected AccessManager accessManager;
 
     @Autowired
-    public void setSecurity(Security security) {
-        this.security = security;
+    public void secAccessManager(AccessManager accessManager) {
+        this.accessManager = accessManager;
     }
 
     /**
@@ -121,8 +124,14 @@ public class ReadOnlyScreensSupport {
                     && ((EntityValueSource) valueSource).isDataModelSecurityEnabled()) {
                 MetaPropertyPath metaPropertyPath = ((EntityValueSource) valueSource).getMetaPropertyPath();
 
-                if (!security.isEntityAttrUpdatePermitted(metaPropertyPath)
-                        || !security.isEntityAttrReadPermitted(metaPropertyPath)) {
+                UiReadEntityAttributeContext readAttributeContext = accessManager.applyRegisteredConstraints(
+                        new UiReadEntityAttributeContext(metaPropertyPath));
+
+                UiUpdateEntityAttributeContext updateAttributeContext = accessManager.applyRegisteredConstraints(
+                        new UiUpdateEntityAttributeContext(metaPropertyPath));
+
+                if (!updateAttributeContext.isPermitted()
+                        || !readAttributeContext.isPermitted()) {
                     shouldBeEditable = false;
                 }
             }

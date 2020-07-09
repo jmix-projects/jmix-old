@@ -18,8 +18,8 @@ package io.jmix.ui.menu;
 
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.AbstractComponent;
+import io.jmix.core.AccessManager;
 import io.jmix.core.MessageTools;
-import io.jmix.core.security.Security;
 import io.jmix.ui.component.ComponentsHelper;
 import io.jmix.ui.component.KeyCombination;
 import io.jmix.ui.component.Window;
@@ -45,15 +45,13 @@ public class MenuBuilder {
     public static final String NAME = "ui_AppMenuBuilder";
 
     @Autowired
-    protected Security security;
-
-    @Autowired
     protected MenuConfig menuConfig;
     @Autowired
     protected MenuItemCommands menuItemCommands;
-
     @Autowired
     protected MessageTools messageTools;
+    @Autowired
+    protected AccessManager accessManager;
 
     protected AppMenu appMenu;
 
@@ -134,7 +132,7 @@ public class MenuBuilder {
             assignIcon(menuItem, item);
             assignDescription(menuItem, item);
 
-            createSubMenu(webWindow, menuItem, item, security);
+            createSubMenu(webWindow, menuItem, item);
 
             if (!isMenuItemEmpty(menuItem)) {
                 appMenu.addMenuItem(menuItem);
@@ -142,7 +140,7 @@ public class MenuBuilder {
         }
     }
 
-    protected void createSubMenu(Window webWindow, AppMenu.MenuItem vItem, MenuItem item, Security security) {
+    protected void createSubMenu(Window webWindow, AppMenu.MenuItem vItem, MenuItem item) {
         if (item.isPermitted(security) && !item.getChildren().isEmpty()) {
             for (MenuItem child : item.getChildren()) {
                 if (child.getChildren().isEmpty()) {
@@ -172,7 +170,7 @@ public class MenuBuilder {
                         assignIcon(menuItem, child);
                         assignStyleName(menuItem, child);
 
-                        createSubMenu(webWindow, menuItem, child, security);
+                        createSubMenu(webWindow, menuItem, child);
 
                         if (!isMenuItemEmpty(menuItem)) {
                             vItem.addChildItem(menuItem);

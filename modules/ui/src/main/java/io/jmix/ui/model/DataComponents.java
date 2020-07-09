@@ -16,20 +16,21 @@
 
 package io.jmix.ui.model;
 
+import io.jmix.core.AccessManager;
 import io.jmix.core.Entity;
 import io.jmix.core.Metadata;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.security.Security;
+import io.jmix.ui.context.UiReadEntityAttributeContext;
+import io.jmix.ui.context.UiReadEntityContext;
 import io.jmix.ui.model.impl.*;
-import io.jmix.core.security.EntityOp;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 
 /**
@@ -42,10 +43,10 @@ public class DataComponents implements ApplicationContextAware {
     protected Metadata metadata;
 
     @Autowired
-    protected Security security;
+    protected SorterFactory sorterFactory;
 
     @Autowired
-    protected SorterFactory sorterFactory;
+    protected AccessManager accessManager;
 
     private ApplicationContext applicationContext;
 
@@ -78,8 +79,14 @@ public class DataComponents implements ApplicationContextAware {
         InstancePropertyContainerImpl<E> container = new InstancePropertyContainerImpl<>(
                 applicationContext, metadata.getClass(entityClass), masterContainer, property);
 
-        if (security.isEntityAttrReadPermitted(masterContainer.getEntityMetaClass(), property)
-                && security.isEntityOpPermitted(entityClass, EntityOp.READ)) {
+        UiReadEntityContext readEntityContext = accessManager.applyRegisteredConstraints(
+                new UiReadEntityContext(masterContainer.getEntityMetaClass()));
+
+        UiReadEntityAttributeContext readAttributeContext = accessManager.applyRegisteredConstraints(
+                new UiReadEntityAttributeContext(masterContainer.getEntityMetaClass(), property));
+
+        if (readAttributeContext.isPermitted()
+                && readEntityContext.isPermitted()) {
             masterContainer.addItemChangeListener(e -> {
                 Entity item = masterContainer.getItemOrNull();
                 container.setItem(item != null ? EntityValues.getValue(item, property) : null);
@@ -116,8 +123,14 @@ public class DataComponents implements ApplicationContextAware {
                 applicationContext, metadata.getClass(entityClass), masterContainer, property);
         container.setSorter(sorterFactory.createCollectionPropertyContainerSorter(container));
 
-        if (security.isEntityAttrReadPermitted(masterContainer.getEntityMetaClass(), property)
-                && security.isEntityOpPermitted(entityClass, EntityOp.READ)) {
+        UiReadEntityContext readEntityContext = accessManager.applyRegisteredConstraints(
+                new UiReadEntityContext(masterContainer.getEntityMetaClass()));
+
+        UiReadEntityAttributeContext readAttributeContext = accessManager.applyRegisteredConstraints(
+                new UiReadEntityAttributeContext(masterContainer.getEntityMetaClass(), property));
+
+        if (readAttributeContext.isPermitted()
+                && readEntityContext.isPermitted()) {
             masterContainer.addItemChangeListener(e -> {
                 Entity item = masterContainer.getItemOrNull();
                 container.setItems(item != null ? EntityValues.getValue(item, property) : null);

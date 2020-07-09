@@ -41,8 +41,6 @@ public class ItemTrackingAction extends ListAction implements Action.HasSecurity
     protected ConstraintOperationType constraintOperationType;
     protected String constraintCode;
 
-    protected Security security = AppBeans.get(Security.NAME);
-
     public ItemTrackingAction(String id) {
         this(null, id);
     }

@@ -24,7 +24,6 @@ import io.jmix.core.Messages;
 import io.jmix.core.common.util.ReflectionHelper;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.ConstraintOperationType;
-import io.jmix.core.security.Security;
 import io.jmix.ui.Actions;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.UiComponents;
@@ -194,10 +193,6 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
     @Override
     public void setLayoutLoaderConfig(LayoutLoaderConfig layoutLoaderConfig) {
         this.layoutLoaderConfig = layoutLoaderConfig;
-    }
-
-    protected Security getSecurity() {
-        return beanLocator.get(Security.NAME);
     }
 
     protected Messages getMessages() {

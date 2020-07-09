@@ -17,21 +17,15 @@
 package io.jmix.ui.component.data.value;
 
 import com.google.common.base.Strings;
-import io.jmix.core.BeanLocator;
-import io.jmix.core.BeanValidation;
-import io.jmix.core.MessageTools;
-import io.jmix.core.MetadataTools;
+import io.jmix.core.*;
 import io.jmix.core.common.event.Subscription;
-import io.jmix.core.Entity;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.KeyValueEntity;
-import io.jmix.core.EntityEntry;
 import io.jmix.core.impl.BeanLocatorAware;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.metamodel.model.MetadataObject;
-import io.jmix.core.security.Security;
 import io.jmix.ui.component.Component;
 import io.jmix.ui.component.Field;
 import io.jmix.ui.component.HasValue;
@@ -40,13 +34,13 @@ import io.jmix.ui.component.data.ValueSource;
 import io.jmix.ui.component.data.meta.EntityValueSource;
 import io.jmix.ui.component.data.meta.ValueBinding;
 import io.jmix.ui.component.validator.BeanPropertyValidator;
-import org.apache.commons.lang3.ArrayUtils;
-
 import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.metadata.BeanDescriptor;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -64,8 +58,6 @@ public class ValueBinder {
     protected BeanValidation beanValidation;
     @Autowired
     protected BeanLocator beanLocator;
-    @Autowired
-    protected Security security;
 
     public <V> ValueBinding<V> bind(HasValue<V> component, ValueSource<V> valueSource) {
         if (valueSource instanceof BeanLocatorAware) {
@@ -134,9 +126,7 @@ public class ValueBinder {
         MetaClass propertyEnclosingMetaClass = metadataTools.getPropertyEnclosingMetaClass(metaPropertyPath);
         Class enclosingJavaClass = propertyEnclosingMetaClass.getJavaClass();
 
-        if (enclosingJavaClass != KeyValueEntity.class)
-//                && !DynamicAttributesUtils.isDynamicAttribute(metaProperty)) { // todo dynamic attrs
-        {
+        if (enclosingJavaClass != KeyValueEntity.class) {
             javax.validation.Validator validator = beanValidation.getValidator();
             BeanDescriptor beanDescriptor = validator.getConstraintsForClass(enclosingJavaClass);
 
@@ -341,13 +331,12 @@ public class ValueBinder {
 
                 EntityEntry entityEntry = targetItem.__getEntityEntry();
 
-                String metaPropertyName = metaPropertyPath.getMetaProperty().getName();
-                Object value = EntityValues.getValue(targetItem, metaPropertyName);
+                String propertyName = metaPropertyPath.getMetaProperty().getName();
+                Object value = EntityValues.getValue(targetItem, propertyName);
 
-                String[] filteredAttributes = entityEntry.getSecurityState().getErasedAttributes();
+                List<String> erasedAttributes = entityEntry.getSecurityState().getErasedAttributes();
 
-                if (value == null && filteredAttributes != null
-                        && ArrayUtils.contains(filteredAttributes, metaPropertyName)) {
+                if (value == null && erasedAttributes.contains(propertyName)) {
                     field.setRequired(false);
                 }
             }

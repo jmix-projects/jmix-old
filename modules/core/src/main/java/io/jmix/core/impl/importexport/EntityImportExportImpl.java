@@ -17,6 +17,7 @@
 package io.jmix.core.impl.importexport;
 
 import io.jmix.core.*;
+import io.jmix.core.constraint.AccessConstraintsRegistry;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.SecurityState;
 import io.jmix.core.entity.SoftDelete;
@@ -66,9 +67,6 @@ public class EntityImportExportImpl implements EntityImportExport {
 //    @Autowired
 //    protected DynamicAttributesManagerAPI dynamicAttributesManagerAPI;
 
-//    @Autowired
-//    protected PersistenceSecurity persistenceSecurity;
-
     @Autowired
     protected BeanValidation beanValidation;
 
@@ -89,6 +87,9 @@ public class EntityImportExportImpl implements EntityImportExport {
 
     @Autowired
     protected EntityStates entityStates;
+
+    @Autowired
+    protected AccessConstraintsRegistry accessConstraintsRegistry;
 
     @Override
     public byte[] exportEntitiesToZIP(Collection<? extends Entity> entities, FetchPlan view) {
@@ -220,7 +221,7 @@ public class EntityImportExportImpl implements EntityImportExport {
                     .setFetchPlan(regularView)
                     .setLoadDynamicAttributes(true)
                     .setId(EntityValues.getId(srcEntity))
-                    .setAuthorizationRequired(true);
+                    .setConstraints(accessConstraintsRegistry.getConstraints());
             Entity dstEntity = dataManager.load(ctx);
 
             importEntity(srcEntity, dstEntity, importView, regularView, saveContext, referenceInfoList, optimisticLocking);
@@ -262,7 +263,7 @@ public class EntityImportExportImpl implements EntityImportExport {
             saveContext.setSoftDeletion(true);
         }
 
-        saveContext.setAuthorizationRequired(true);
+        saveContext.setConstraints(accessConstraintsRegistry.getConstraints());
 
         return dataManager.save(saveContext);
     }

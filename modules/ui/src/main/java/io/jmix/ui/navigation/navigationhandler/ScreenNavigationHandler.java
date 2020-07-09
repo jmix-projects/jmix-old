@@ -16,36 +16,34 @@
 
 package io.jmix.ui.navigation.navigationhandler;
 
-import io.jmix.core.DataManager;
-import io.jmix.core.LoadContext;
 import io.jmix.core.*;
 import io.jmix.core.common.datastruct.Pair;
 import io.jmix.core.common.util.ParamsMap;
-import io.jmix.core.Entity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.AccessDeniedException;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.PermissionType;
-import io.jmix.core.security.Security;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.WindowConfig;
 import io.jmix.ui.WindowInfo;
 import io.jmix.ui.app.navigation.notfoundwindow.NotFoundScreen;
 import io.jmix.ui.component.impl.WebWindow;
+import io.jmix.ui.context.UiCreateEntityContext;
+import io.jmix.ui.context.UiReadEntityContext;
 import io.jmix.ui.navigation.*;
 import io.jmix.ui.screen.*;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,8 +61,6 @@ public class ScreenNavigationHandler implements NavigationHandler {
     @Autowired
     protected WindowConfig windowConfig;
     @Autowired
-    protected Security security;
-    @Autowired
     protected DataManager dataManager;
     @Autowired
     protected Metadata metadata;
@@ -72,6 +68,8 @@ public class ScreenNavigationHandler implements NavigationHandler {
     protected FetchPlanRepository fetchPlanRepository;
     @Autowired
     protected MetadataTools metadataTools;
+    @Autowired
+    protected AccessManager accessManager;
 
     @Override
     public boolean doHandle(NavigationState requestedState, AppUI ui) {
@@ -330,14 +328,16 @@ public class ScreenNavigationHandler implements NavigationHandler {
 
         MetaClass metaClass = metadata.getClass(entityClass);
 
-        if (!security.isEntityOpPermitted(metaClass, EntityOp.READ)) {
+        UiReadEntityContext readEntityContext = accessManager.applyRegisteredConstraints(new UiReadEntityContext(metaClass));
+        if (!readEntityContext.isPermitted()) {
             urlChangeHandler.revertNavigationState();
             throw new AccessDeniedException(PermissionType.ENTITY_OP, EntityOp.READ, entityClass.getSimpleName());
         }
 
         if (NEW_ENTITY_ID.equals(idParam)) {
-            boolean createPermitted = security.isEntityOpPermitted(metaClass, EntityOp.CREATE);
-            if (!createPermitted) {
+            UiCreateEntityContext createEntityContext = accessManager.applyRegisteredConstraints(
+                    new UiCreateEntityContext(metaClass));
+            if (!createEntityContext.isPermitted()) {
                 throw new AccessDeniedException(PermissionType.ENTITY_OP, EntityOp.CREATE, entityClass.getSimpleName());
             }
             return ParamsMap.of("item", metadata.create(entityClass));

@@ -19,16 +19,19 @@ package io.jmix.ui.menu;
 import com.google.common.base.Strings;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.AbstractComponent;
+import io.jmix.core.AccessManager;
 import io.jmix.core.MessageTools;
 import io.jmix.core.security.Security;
 import io.jmix.ui.component.ComponentsHelper;
 import io.jmix.ui.component.KeyCombination;
 import io.jmix.ui.component.Window;
 import io.jmix.ui.component.mainwindow.SideMenu;
+import io.jmix.ui.context.UiReadEntityContext;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.AppUI;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -48,12 +51,13 @@ public class SideMenuBuilder {
     public static final String NAME = "jmix_SideMenuBuilder";
 
     @Autowired
-    protected Security security;
-
-    @Autowired
     protected MenuConfig menuConfig;
     @Autowired
     protected MenuItemCommands menuItemCommands;
+    @Autowired
+    protected AccessManager accessManager;
+    @Autowired
+    protected ObjectProvider<UiReadEntityContext> readEntityContextProvider;
 
     @Autowired
     protected MessageTools messageTools;
