@@ -16,6 +16,7 @@
 
 package io.jmix.samples.helloworld.entity;
 
+import io.jmix.core.JmixEntity;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 
 import javax.persistence.Column;
@@ -26,7 +27,7 @@ import java.util.UUID;
 
 @Entity(name = "sample_Greeting")
 @Table(name = "GREETING")
-public class Greeting implements io.jmix.core.Entity {
+public class Greeting implements JmixEntity {
 
     @Id
     @Column(name = "ID", nullable = false)

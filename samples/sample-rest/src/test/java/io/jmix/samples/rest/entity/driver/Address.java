@@ -16,7 +16,7 @@
 
 package io.jmix.samples.rest.entity.driver;
 
-import io.jmix.core.Entity;
+import io.jmix.core.JmixEntity;
 import io.jmix.core.metamodel.annotation.ModelObject;
 
 import javax.persistence.Column;
@@ -25,7 +25,7 @@ import java.sql.Date;
 
 @Embeddable
 @ModelObject(name = "ref$Address")
-public class Address implements Entity {
+public class Address implements JmixEntity {
 
     private static final long serialVersionUID = -6835930349916854264L;
 
