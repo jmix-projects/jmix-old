@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-package com.haulmont.cuba.web.gui.components;
+package io.jmix.ui.component.validation;
 
-import com.haulmont.cuba.gui.components.CheckBoxGroup;
-
-import java.util.Collection;
 import java.util.function.Consumer;
 
-@Deprecated
-public class WebCheckBoxGroup<I> extends io.jmix.ui.component.impl.WebCheckBoxGroup<I> implements CheckBoxGroup<I> {
-    @Override
-    public void addValidator(Consumer<? super Collection<I>> validator) {
-        addValidator(validator::accept);
-    }
-
-    @Override
-    public void removeValidator(Consumer<Collection<I>> validator) {
-        removeValidator(validator::accept);
-    }
+/**
+ * Marker interface to indicate that the implementing class can be used as a validator.
+ *
+ * @param <T> value type
+ */
+public interface Validator<T> extends Consumer<T> {
 }
