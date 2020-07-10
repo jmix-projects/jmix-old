@@ -15,7 +15,7 @@ The root project is a composite build which comprises the Gradle plugin and the 
 
 ## Publishing
 
-In order to publish artefacts to the local Maven repo, execute the following commands:
+In order to publish artifacts to the local Maven repo, execute the following commands:
 
 ```
 ./gradlew publishToMavenLocal install
