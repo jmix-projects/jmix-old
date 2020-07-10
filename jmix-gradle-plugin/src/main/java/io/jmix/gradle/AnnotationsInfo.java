@@ -16,6 +16,8 @@
 
 package io.jmix.gradle;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.NotFoundException;
@@ -34,8 +36,8 @@ public class AnnotationsInfo {
     public static final String LEGACY_INTERFACE_CREATABLE = "com.haulmont.cuba.core.entity.Creatable";
     public static final String LEGACY_INTERFACE_UPDATABLE = "com.haulmont.cuba.core.entity.Updatable";
 
-    private Map<FieldAnnotation, CtField> declaredFields = new HashMap<>();
-    private Map<FieldAnnotation, CtField> inheritedFields = new HashMap<>();
+    private Multimap<FieldAnnotation, CtField> declaredFields = HashMultimap.create();
+    private Multimap<FieldAnnotation, CtField> inheritedFields = HashMultimap.create();
 
     private Set<ClassAnnotation> declaredClassAnnotations = new HashSet<>();
     private Map<ClassAnnotation, CtClass> inheritedClassAnnotations = new HashMap<>();
@@ -123,12 +125,20 @@ public class AnnotationsInfo {
     @Nullable
     public CtField getAnnotatedField(FieldAnnotation annotation) {
         if (declaredFields.containsKey(annotation)) {
-            return declaredFields.get(annotation);
+            Collection<CtField> ctFields = declaredFields.get(annotation);
+            return ctFields.isEmpty() ? null : ctFields.iterator().next();
         }
 
-        return inheritedFields.get(annotation);
+        Collection<CtField> ctFields = inheritedFields.get(annotation);
+        return ctFields.isEmpty() ? null : ctFields.iterator().next();
     }
 
+    public List<CtField> getAnnotatedFields(FieldAnnotation annotation) {
+        List<CtField> list = new ArrayList<>();
+        list.addAll(inheritedFields.get(annotation));
+        list.addAll(declaredFields.get(annotation));
+        return list;
+    }
 
     public boolean hasClassAnnotation(ClassAnnotation annotation) {
         return declaredClassAnnotations.contains(annotation) || inheritedClassAnnotations.containsKey(annotation);
@@ -155,7 +165,7 @@ public class AnnotationsInfo {
 
         ID("javax.persistence.Id"), //todo make not unique and support composite primary keys in EnhancingStep
         EMBEDDED_ID("javax.persistence.EmbeddedId"),
-        JMIX_GENERATED_ID("io.jmix.core.entity.annotation.JmixGeneratedId");
+        JMIX_GENERATED_VALUE("io.jmix.core.entity.annotation.JmixGeneratedValue", false);
 
         private final String className;
         private final boolean unique;//not fully supported yet. need to store multiply fields for annotation

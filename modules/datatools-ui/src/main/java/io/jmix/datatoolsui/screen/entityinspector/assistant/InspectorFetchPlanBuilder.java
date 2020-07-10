@@ -32,29 +32,29 @@ import static io.jmix.datatoolsui.screen.entityinspector.EntityFormUtils.isMany;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class InspectorFetchPlanBuilder {
 
-    public static final String NAME = "jmix_EntityInspectorFetchPlanBuilder";
+    public static final String NAME = "datatools_EntityInspectorFetchPlanBuilder";
 
     @Autowired
     protected Metadata metadata;
     @Autowired
-    private MetadataTools metadataTools;
+    protected MetadataTools metadataTools;
     @Autowired
-    FetchPlans fetchPlans;
+    protected FetchPlans fetchPlans;
 
-    private final FetchPlanBuilder fetchPlanBuilder;
+    protected final FetchPlanBuilder fetchPlanBuilder;
 
-    protected Class<? extends Entity> entityClass;
-    private MetaClass metaClass;
+    protected Class<? extends JmixEntity> entityClass;
+    protected MetaClass metaClass;
 
-    private boolean withCollections = false;
-    private boolean withEmbedded = false;
-    private boolean withSystemProperties = false;
+    protected boolean withCollections = false;
+    protected boolean withEmbedded = false;
+    protected boolean withSystemProperties = false;
 
-    public static InspectorFetchPlanBuilder of(BeanLocator beanLocator, Class<? extends Entity> entityClass) {
+    public static InspectorFetchPlanBuilder of(BeanLocator beanLocator, Class<? extends JmixEntity> entityClass) {
         return beanLocator.getPrototype(InspectorFetchPlanBuilder.class, entityClass);
     }
 
-    protected InspectorFetchPlanBuilder(Class<? extends Entity> entityClass) {
+    protected InspectorFetchPlanBuilder(Class<? extends JmixEntity> entityClass) {
         this.entityClass = entityClass;
         this.fetchPlanBuilder = fetchPlans.builder(entityClass);
     }

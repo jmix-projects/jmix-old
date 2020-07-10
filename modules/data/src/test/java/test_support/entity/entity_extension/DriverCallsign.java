@@ -16,7 +16,8 @@
 
 package test_support.entity.entity_extension;
 
-import io.jmix.core.entity.annotation.JmixGeneratedId;
+import io.jmix.core.JmixEntity;
+import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.metamodel.annotation.InstanceName;
 
 import javax.persistence.*;
@@ -24,11 +25,11 @@ import java.util.UUID;
 
 @Entity(name = "exttest_DriverCallsign")
 @Table(name = "EXTTEST_DRIVER_CALLSIGN")
-public class DriverCallsign implements io.jmix.core.Entity {
+public class DriverCallsign implements JmixEntity {
 
     @Id
     @Column(name = "ID")
-    @JmixGeneratedId
+    @JmixGeneratedValue
     protected UUID id;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "callsign")

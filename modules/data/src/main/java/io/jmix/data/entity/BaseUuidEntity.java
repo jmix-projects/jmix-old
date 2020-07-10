@@ -15,10 +15,10 @@
  */
 package io.jmix.data.entity;
 
-import io.jmix.core.Entity;
+import io.jmix.core.JmixEntity;
 import io.jmix.core.UuidProvider;
 import io.jmix.core.entity.HasUuid;
-import io.jmix.core.entity.annotation.JmixGeneratedId;
+import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.metamodel.annotation.ModelObject;
 
 import javax.persistence.Column;
@@ -33,13 +33,13 @@ import java.util.UUID;
  */
 @MappedSuperclass
 @ModelObject(name = "sys_BaseUuidEntity")
-public abstract class BaseUuidEntity implements Entity, HasUuid {
+public abstract class BaseUuidEntity implements JmixEntity, HasUuid {
 
     private static final long serialVersionUID = -2217624132287086972L;
 
     @Id
     @Column(name = "ID")
-    @JmixGeneratedId
+    @JmixGeneratedValue
     protected UUID id;
 
     public BaseUuidEntity() {

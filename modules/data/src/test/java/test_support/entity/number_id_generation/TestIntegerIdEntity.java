@@ -16,19 +16,20 @@
 
 package test_support.entity.number_id_generation;
 
+import io.jmix.core.JmixEntity;
 import io.jmix.core.entity.Versioned;
-import io.jmix.core.entity.annotation.JmixGeneratedId;
+import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.metamodel.annotation.InstanceName;
 
 import javax.persistence.*;
 
 @Table(name = "TEST_INTEGER_ID_ENTITY")
 @Entity(name = "test_TestIntegerIdEntity")
-public class TestIntegerIdEntity implements io.jmix.core.Entity, Versioned {
+public class TestIntegerIdEntity implements JmixEntity, Versioned {
 
     @Id
     @Column(name = "ID", nullable = false)
-    @JmixGeneratedId
+    @JmixGeneratedValue
     protected Integer id;
 
     @Version

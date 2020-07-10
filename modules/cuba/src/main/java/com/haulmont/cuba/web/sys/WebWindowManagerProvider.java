@@ -33,6 +33,7 @@ public class WebWindowManagerProvider implements WindowManagerProvider {
 
     @Override
     public WindowManager get() {
-        return new CubaScreens(AppUI.getCurrent());
+        AppUI ui = AppUI.getCurrent();
+        return (WindowManager) ui.getScreens();
     }
 }

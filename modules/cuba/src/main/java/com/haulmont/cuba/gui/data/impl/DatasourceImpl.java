@@ -15,6 +15,7 @@
  */
 package com.haulmont.cuba.gui.data.impl;
 
+import com.haulmont.cuba.core.global.PersistenceHelper;
 import io.jmix.core.*;
 import io.jmix.core.common.util.ParamsMap;
 import io.jmix.core.common.util.Preconditions;
@@ -23,7 +24,6 @@ import io.jmix.core.metamodel.model.MetaClass;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.DataSupplier;
 import com.haulmont.cuba.gui.data.DsContext;
-import io.jmix.ui.sys.PersistenceHelper;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -32,7 +32,7 @@ import java.util.Set;
 /**
  * @param <T>
  */
-public class DatasourceImpl<T extends Entity> extends AbstractDatasource<T> implements DatasourceImplementation<T> {
+public class DatasourceImpl<T extends JmixEntity> extends AbstractDatasource<T> implements DatasourceImplementation<T> {
 
     protected DsContext dsContext;
     protected DataSupplier dataSupplier;
@@ -91,7 +91,7 @@ public class DatasourceImpl<T extends Entity> extends AbstractDatasource<T> impl
 
         if (getCommitMode() == CommitMode.DATASTORE) {
             final DataSupplier supplier = getDataSupplier();
-            Entity committedItem = supplier.commit(item, getView());
+            JmixEntity committedItem = supplier.commit(item, getView());
 
             committed(Collections.singleton(committedItem));
 
@@ -237,12 +237,12 @@ public class DatasourceImpl<T extends Entity> extends AbstractDatasource<T> impl
     }
 
     @Override
-    public void committed(Set<Entity> entities) {
+    public void committed(Set<JmixEntity> entities) {
         if (!State.VALID.equals(state)) {
             return;
         }
 
-        for (Entity entity : entities) {
+        for (JmixEntity entity : entities) {
             if (entity.equals(item)) {
                 detachListener(item);
                 T prevItem = item;

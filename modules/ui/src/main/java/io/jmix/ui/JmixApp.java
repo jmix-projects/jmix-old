@@ -72,6 +72,8 @@ public class JmixApp extends App {
 
     @Override
     public OperationResult logout() {
+        closeWindowsInternal(true);
+
         removeAllWindows(Collections.singletonList(AppUI.getCurrent()));
         //TODO EZ handle session expiration
         sessionRegistry.getSessionInformation(sessionData.getSessionId()).expireNow();

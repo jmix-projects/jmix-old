@@ -16,9 +16,8 @@
 package io.jmix.ui.component.impl;
 
 import com.google.common.collect.Lists;
-import io.jmix.core.Entity;
+import io.jmix.core.JmixEntity;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.component.GroupTable;
 import io.jmix.ui.component.Table;
@@ -26,13 +25,10 @@ import io.jmix.ui.component.columnmanager.GroupColumnManager;
 import io.jmix.ui.component.data.GroupTableItems;
 import io.jmix.ui.component.data.TableItems;
 import io.jmix.ui.component.data.ValueConversionException;
-import io.jmix.ui.component.data.meta.EntityTableItems;
 import io.jmix.ui.component.table.GroupTableDataContainer;
 import io.jmix.ui.component.table.TableDataContainer;
 import io.jmix.ui.component.table.TableItemsEventsDelegate;
 import io.jmix.ui.gui.data.GroupInfo;
-import io.jmix.ui.settings.compatibility.converter.LegacyGroupTableSettingsConverter;
-import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
 import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 import io.jmix.ui.settings.component.binder.GroupTableSettingsBinder;
 import io.jmix.ui.widget.JmixEnhancedTable.AggregationInputValueChangeContext;
@@ -42,8 +38,6 @@ import io.jmix.ui.widget.JmixGroupTable.GroupAggregationInputValueChangeContext;
 import io.jmix.ui.widget.data.AggregationContainer;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,7 +49,7 @@ import static com.google.common.base.Strings.emptyToNull;
 import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 @SuppressWarnings("deprecation")
-public class WebGroupTable<E extends Entity> extends WebAbstractTable<JmixGroupTable, E>
+public class WebGroupTable<E extends JmixEntity> extends WebAbstractTable<JmixGroupTable, E>
         implements GroupTable<E>, GroupColumnManager {
 
     protected Map<Table.Column, GroupAggregationCells> groupAggregationCells = null;
@@ -196,11 +190,6 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<JmixGroupT
     @Override
     protected ComponentSettingsBinder getSettingsBinder() {
         return beanLocator.get(GroupTableSettingsBinder.NAME);
-    }
-
-    @Override
-    protected LegacySettingsConverter createSettingsConverter() {
-        return new LegacyGroupTableSettingsConverter();
     }
 
     @Override
@@ -354,7 +343,7 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<JmixGroupT
     }
 
     @Override
-    public void expandPath(Entity item) {
+    public void expandPath(JmixEntity item) {
         if (component.hasGroups()) {
             expandGroupsFor((Collection<GroupInfo>) component.rootGroups(), EntityValues.getId(item));
         }
@@ -523,10 +512,10 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<JmixGroupT
         String formattedValue = formatGroupPropertyValue(groupId, value);
 
         if (groupCellValueFormatter != null) {
-            List<Entity> groupItems = component.getGroupItemIds(groupId).stream()
+            List<JmixEntity> groupItems = component.getGroupItemIds(groupId).stream()
                     .map(itemId -> {
                         TableDataContainer container = (TableDataContainer) component.getContainerDataSource();
-                        return (Entity) container.getInternalItem(itemId);
+                        return (JmixEntity) container.getInternalItem(itemId);
                     })
                     .collect(Collectors.toList());
 
@@ -564,7 +553,7 @@ public class WebGroupTable<E extends Entity> extends WebAbstractTable<JmixGroupT
 
                     TableDataContainer container = (TableDataContainer) component.getContainerDataSource();
 
-                    Entity item = (Entity) container.getInternalItem(itemId);
+                    JmixEntity item = (JmixEntity) container.getInternalItem(itemId);
                     Object captionValue = EntityValues.getValueEx(item, captionProperty);
 
                     // vaadin8 use metadataTools format with metaproperty

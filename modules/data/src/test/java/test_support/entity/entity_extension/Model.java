@@ -16,7 +16,8 @@
 package test_support.entity.entity_extension;
 
 import io.jmix.core.DeletePolicy;
-import io.jmix.core.entity.annotation.JmixGeneratedId;
+import io.jmix.core.JmixEntity;
+import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.metamodel.annotation.InstanceName;
 
@@ -27,11 +28,11 @@ import java.util.UUID;
 
 @Entity(name = "exttest_Model")
 @Table(name = "EXTTEST_MODEL")
-public class Model implements io.jmix.core.Entity {
+public class Model implements JmixEntity {
 
     @Id
     @Column(name = "ID")
-    @JmixGeneratedId
+    @JmixGeneratedValue
     protected UUID id;
 
     @Column(name = "NAME")

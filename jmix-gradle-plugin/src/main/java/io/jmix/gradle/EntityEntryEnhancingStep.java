@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.List;
 
 import static io.jmix.gradle.AnnotationsInfo.ClassAnnotation.EMBEDDABLE;
 import static io.jmix.gradle.AnnotationsInfo.FieldAnnotation.*;
@@ -57,7 +58,7 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
 
                 makeEntityEntryMethods(ctClass, entryClassName);
 
-                if (info.getAnnotatedField(JMIX_GENERATED_ID) == null) {
+                if (findGeneratedIdField(info) == null) {
                     initEntityEntry(ctClass, entryClassName);
                 }
 
@@ -86,7 +87,7 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
         CtClass nestedCtClass = ctClass.makeNestedClass(GEN_ENTITY_ENTRY_CLASS_NAME, true);
 
         if (primaryKeyField != null) {
-            CtField generatedIdField = info.getAnnotatedField(JMIX_GENERATED_ID);
+            CtField generatedIdField = findGeneratedIdField(info);
 
             CtClass idType = classPool.get(Object.class.getName());
             if (generatedIdField == null) {
@@ -126,6 +127,28 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
         setupAuditing(nestedCtClass, ctClass, info);
 
         nestedCtClass.writeFile(outputDir);
+    }
+
+    @Nullable
+    protected CtField findGeneratedIdField(AnnotationsInfo info) {
+        CtField primaryKeyField = info.getPrimaryKey();
+        List<CtField> generatedValueFields = info.getAnnotatedFields(JMIX_GENERATED_VALUE);
+        return generatedValueFields.stream()
+                .filter(ctField -> ctField.equals(primaryKeyField))
+                .findFirst()
+                .orElseGet(() -> generatedValueFields.stream()
+                        .filter(this::isFieldOfUuidType)
+                        .findFirst()
+                        .orElse(null));
+    }
+
+    protected boolean isFieldOfUuidType(CtField ctField) {
+        try {
+            return ctField.getType().getName().equals("java.util.UUID");
+        } catch (NotFoundException e) {
+            // ignore
+        }
+        return false;
     }
 
     protected void setupAuditing(CtClass nestedClass, CtClass ctClass, AnnotationsInfo info) throws NotFoundException, CannotCompileException {

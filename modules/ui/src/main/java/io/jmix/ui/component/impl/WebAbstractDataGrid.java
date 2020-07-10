@@ -17,7 +17,6 @@
 package io.jmix.ui.component.impl;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import com.vaadin.data.HasValue;
 import com.vaadin.data.SelectionModel;
 import com.vaadin.data.ValidationResult;
@@ -72,13 +71,6 @@ import io.jmix.ui.component.valueprovider.*;
 import io.jmix.ui.icon.IconResolver;
 import io.jmix.ui.model.*;
 import io.jmix.ui.screen.ScreenValidation;
-import io.jmix.ui.settings.compatibility.converter.LegacyDataGridSettingsConverter;
-import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
-import io.jmix.ui.settings.component.DataGridSettings;
-import io.jmix.ui.settings.component.SettingsWrapperImpl;
-import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
-import io.jmix.ui.settings.component.binder.DataGridSettingsBinder;
-import io.jmix.ui.settings.component.binder.DataLoadingSettingsBinder;
 import io.jmix.ui.sys.PersistenceManagerClient;
 import io.jmix.ui.sys.ShortcutsDelegate;
 import io.jmix.ui.sys.ShowInfoAction;
@@ -92,21 +84,15 @@ import io.jmix.ui.widget.data.SortableDataProvider;
 import io.jmix.ui.widget.grid.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 import javax.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.beans.PropertyChangeEvent;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -117,7 +103,7 @@ import static io.jmix.ui.component.ComponentsHelper.findActionById;
 import static io.jmix.ui.component.Window.Lookup.LOOKUP_ENTER_PRESSED_ACTION_ID;
 import static io.jmix.ui.component.Window.Lookup.LOOKUP_ITEM_CLICK_ACTION_ID;
 
-public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E>, E extends Entity>
+public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E>, E extends JmixEntity>
         extends WebAbstractComponent<C>
         implements DataGrid<E>, SecuredActionsHolder, LookupComponent.LookupSelectionChangeNotifier<E>,
         DataGridItemsEventsDelegate<E>, HasInnerComponents, InitializingBean {
@@ -150,7 +136,6 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     protected JmixGridContextMenu<E> contextMenu;
     protected final List<ActionMenuItemWrapper> contextMenuItems = new ArrayList<>();
 
-    protected boolean settingsEnabled = true;
     protected boolean sortable = true;
     protected boolean columnsCollapsingAllowed = true;
     protected boolean textSelectionEnabled = false;
@@ -178,8 +163,6 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     protected Registration columnResizeListenerRegistration;
     protected Registration contextClickListenerRegistration;
 
-    protected LegacySettingsConverter settingsConverter;
-
     protected Registration editorCancelListener;
     protected Registration editorOpenListener;
     protected Registration editorBeforeSaveListener;
@@ -202,7 +185,6 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         component = createComponent();
         componentComposition = createComponentComposition();
         shortcutsDelegate = createShortcutsDelegate();
-        settingsConverter = createSettingsConverter();
     }
 
     protected GridComposition createComponentComposition() {
@@ -1516,7 +1498,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         return new ContainerValueSourceProvider<>(instanceContainer);
     }
 
-    protected static class WebDataGridEditorFieldFactory<E extends Entity> implements JmixGridEditorFieldFactory<E> {
+    protected static class WebDataGridEditorFieldFactory<E extends JmixEntity> implements JmixGridEditorFieldFactory<E> {
 
         protected WebAbstractDataGrid<?, E> dataGrid;
         protected DataGridEditorFieldFactory fieldFactory;
@@ -2227,51 +2209,6 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         }
     }
 
-    @Override
-    public void applySettings(Element element) {
-        if (!isSettingsEnabled()) {
-            return;
-        }
-
-        DataGridSettings dataGridSettings = settingsConverter.convertToComponentSettings(element);
-
-        getSettingsBinder().applySettings(this, new SettingsWrapperImpl(dataGridSettings));
-    }
-
-    @Override
-    public void applyDataLoadingSettings(Element element) {
-        if (!isSettingsEnabled()) {
-            return;
-        }
-        DataGridSettings dataGridSettings = settingsConverter.convertToComponentSettings(element);
-
-        DataLoadingSettingsBinder settingsBinder = (DataLoadingSettingsBinder) getSettingsBinder();
-        settingsBinder.applyDataLoadingSettings(this, new SettingsWrapperImpl(dataGridSettings));
-    }
-
-    @Override
-    public boolean saveSettings(Element element) {
-        if (!isSettingsEnabled()) {
-            return false;
-        }
-
-        DataGridSettings dataGridSettings = settingsConverter.convertToComponentSettings(element);
-
-        boolean modified = getSettingsBinder().saveSettings(this, new SettingsWrapperImpl(dataGridSettings));
-        if (modified)
-            settingsConverter.copyToElement(dataGridSettings, element);
-
-        return modified;
-    }
-
-    protected ComponentSettingsBinder getSettingsBinder() {
-        return beanLocator.get(DataGridSettingsBinder.NAME);
-    }
-
-    protected LegacySettingsConverter createSettingsConverter() {
-        return new LegacyDataGridSettingsConverter();
-    }
-
     @Nullable
     protected ColumnImpl<E> getColumnByGridColumn(Grid.Column<E, ?> gridColumn) {
         for (Column<E> column : getColumns()) {
@@ -2292,16 +2229,6 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             }
         }
         return null;
-    }
-
-    @Override
-    public boolean isSettingsEnabled() {
-        return settingsEnabled;
-    }
-
-    @Override
-    public void setSettingsEnabled(boolean settingsEnabled) {
-        this.settingsEnabled = settingsEnabled;
     }
 
     @Override
@@ -3225,7 +3152,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         return null;
     }
 
-    public static abstract class AbstractRenderer<T extends Entity, V> implements RendererWrapper<V> {
+    public static abstract class AbstractRenderer<T extends JmixEntity, V> implements RendererWrapper<V> {
         protected com.vaadin.ui.renderers.Renderer<V> renderer;
         protected WebAbstractDataGrid<?, T> dataGrid;
         protected String nullRepresentation;
@@ -3288,7 +3215,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         }
     }
 
-    protected static class ColumnImpl<E extends Entity> implements Column<E>, HasXmlDescriptor {
+    protected static class ColumnImpl<E extends JmixEntity> implements Column<E>, HasXmlDescriptor {
 
         protected final String id;
         protected final MetaPropertyPath propertyPath;

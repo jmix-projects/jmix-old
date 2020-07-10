@@ -15,8 +15,8 @@
  */
 package io.jmix.data.entity;
 
-import io.jmix.core.Entity;
-import io.jmix.core.entity.annotation.JmixGeneratedId;
+import io.jmix.core.JmixEntity;
+import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.metamodel.annotation.ModelObject;
 
 import javax.persistence.Column;
@@ -28,13 +28,13 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 @ModelObject(name = "sys$BaseLongIdEntity")
-public abstract class BaseLongIdEntity implements Entity {
+public abstract class BaseLongIdEntity implements JmixEntity {
 
     private static final long serialVersionUID = 1748237513475338490L;
 
     @Id
     @Column(name = "ID")
-    @JmixGeneratedId
+    @JmixGeneratedValue
     protected Long id;
 
     public Long getId() {

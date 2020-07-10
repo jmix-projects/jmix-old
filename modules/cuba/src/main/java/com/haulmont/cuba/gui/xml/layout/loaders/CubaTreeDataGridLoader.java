@@ -21,6 +21,7 @@ import com.haulmont.cuba.core.global.Scripting;
 import com.haulmont.cuba.gui.components.DataGrid;
 import com.haulmont.cuba.gui.components.TreeDataGrid;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
+import com.haulmont.cuba.gui.xml.data.ComponentLoaderHelper;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.dynattrui.DynAttrEmbeddingStrategies;
@@ -32,6 +33,13 @@ import javax.annotation.Nullable;
 
 @SuppressWarnings("rawtypes")
 public class CubaTreeDataGridLoader extends TreeDataGridLoader {
+
+    @Override
+    public void loadComponent() {
+        super.loadComponent();
+
+        ComponentLoaderHelper.loadSettingsEnabled((TreeDataGrid) resultComponent, element);
+    }
 
     @Override
     protected CubaTreeDataGridDataHolder initDataGridDataHolder() {
@@ -81,6 +89,17 @@ public class CubaTreeDataGridLoader extends TreeDataGridLoader {
             return beanLocator.get(Scripting.class).loadClassNN(colGenType);
         }
         return null;
+    }
+
+    @Nullable
+    @Override
+    protected io.jmix.ui.component.DataGrid.Renderer loadRenderer(Element columnElement) {
+        io.jmix.ui.component.DataGrid.Renderer renderer = super.loadRenderer(columnElement);
+        if (renderer == null && columnElement.element("renderer") != null) {
+            renderer = ComponentLoaderHelper.loadLegacyRenderer(columnElement.element("renderer"), context, getHotDeployManager(), beanLocator);
+        }
+
+        return renderer;
     }
 
     protected static class CubaTreeDataGridDataHolder extends DataGridDataHolder {

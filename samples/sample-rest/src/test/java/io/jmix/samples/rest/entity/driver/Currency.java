@@ -16,6 +16,7 @@
 
 package io.jmix.samples.rest.entity.driver;
 
+import io.jmix.core.JmixEntity;
 import io.jmix.core.UuidProvider;
 import io.jmix.core.entity.HasUuid;
 import io.jmix.core.entity.SoftDelete;
@@ -37,7 +38,7 @@ import java.util.UUID;
 @TestCurrencyClassConstraint(groups = RestApiChecks.class)
 @Entity(name = "ref$Currency")
 @Table(name = "REF_CURRENCY")
-public class Currency implements io.jmix.core.Entity, Versioned, SoftDelete, HasUuid {
+public class Currency implements JmixEntity, Versioned, SoftDelete, HasUuid {
     private static final long serialVersionUID = 6912352294666689769L;
 
     @Id

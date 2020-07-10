@@ -20,7 +20,7 @@ import io.jmix.core.security.ConstraintOperationType;
 import io.jmix.core.security.EntityAttrAccess;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
-import io.jmix.core.Entity;
+import io.jmix.core.JmixEntity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import org.springframework.stereotype.Component;
@@ -83,12 +83,12 @@ public class CustomSecurityImpl implements Security {
     }
 
     @Override
-    public boolean isPermitted(Entity entity, ConstraintOperationType operationType) {
+    public boolean isPermitted(JmixEntity entity, ConstraintOperationType operationType) {
         return false;
     }
 
     @Override
-    public boolean isPermitted(Entity entity, String customCode) {
+    public boolean isPermitted(JmixEntity entity, String customCode) {
         return false;
     }
 
@@ -108,7 +108,7 @@ public class CustomSecurityImpl implements Security {
     }
 
     @Override
-    public Object evaluateConstraintScript(Entity entity, String groovyScript) {
+    public Object evaluateConstraintScript(JmixEntity entity, String groovyScript) {
         return null;
     }
 }

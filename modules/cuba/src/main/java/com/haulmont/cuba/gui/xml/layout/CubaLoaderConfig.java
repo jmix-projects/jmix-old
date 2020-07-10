@@ -17,7 +17,10 @@
 package com.haulmont.cuba.gui.xml.layout;
 
 import com.haulmont.cuba.gui.components.*;
+import com.haulmont.cuba.gui.components.FileMultiUploadField;
+import com.haulmont.cuba.gui.components.FileUploadField;
 import com.haulmont.cuba.gui.xml.layout.loaders.*;
+import io.jmix.ui.component.*;
 import io.jmix.ui.component.Calendar;
 import io.jmix.ui.component.CheckBox;
 import io.jmix.ui.component.CheckBoxGroup;
@@ -26,6 +29,7 @@ import io.jmix.ui.component.CurrencyField;
 import io.jmix.ui.component.DataGrid;
 import io.jmix.ui.component.DateField;
 import io.jmix.ui.component.DatePicker;
+import io.jmix.ui.component.GroupBoxLayout;
 import io.jmix.ui.component.GroupTable;
 import io.jmix.ui.component.Image;
 import io.jmix.ui.component.Label;
@@ -37,6 +41,7 @@ import io.jmix.ui.component.ResizableTextArea;
 import io.jmix.ui.component.RichTextArea;
 import io.jmix.ui.component.Slider;
 import io.jmix.ui.component.SourceCodeEditor;
+import io.jmix.ui.component.SplitPanel;
 import io.jmix.ui.component.SuggestionField;
 import io.jmix.ui.component.Table;
 import io.jmix.ui.component.TextArea;
@@ -50,8 +55,11 @@ import io.jmix.ui.component.TwinColumn;
 import io.jmix.ui.xml.layout.BaseLoaderConfig;
 import io.jmix.ui.xml.layout.ComponentLoader;
 import io.jmix.ui.xml.layout.LoaderConfig;
+import io.jmix.ui.xml.layout.loader.ButtonLoader;
 import io.jmix.ui.xml.layout.loader.FileMultiUploadFieldLoader;
+import io.jmix.ui.xml.layout.loader.FragmentLoader;
 import io.jmix.ui.xml.layout.loader.GridLayoutLoader;
+import io.jmix.ui.xml.layout.loader.WindowLoader;
 import org.dom4j.Element;
 import org.springframework.stereotype.Component;
 
@@ -60,6 +68,9 @@ import org.springframework.stereotype.Component;
 public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
 
     public static final String NAME = "cuba_LegacyLoaderConfig";
+
+    protected Class<? extends WindowLoader> windowLoader = CubaWindowLoader.class;
+    protected Class<? extends FragmentLoader> fragmentLoader = CubaFragmentLoader.class;
 
     @Override
     public boolean supports(Element element) {
@@ -75,7 +86,15 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
     @Override
     public Class<? extends ComponentLoader> getFragmentLoader(Element root) {
         if (isLegacyScreen(root))
-            return CubaFragmentLoader.class;
+            return fragmentLoader;
+
+        return null;
+    }
+
+    @Override
+    public Class<? extends ComponentLoader> getWindowLoader(Element root) {
+        if (isLegacyScreen(root))
+            return windowLoader;
 
         return null;
     }
@@ -98,6 +117,7 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
         loaders.put(Image.NAME, CubaImageLoader.class);
         loaders.put(SearchPickerField.NAME, CubaSearchPickerFieldLoader.class);
         loaders.put(SearchField.NAME, CubaSearchFieldLoader.class);
+        loaders.put(Button.NAME, CubaButtonLoader.class);
         loaders.put(CheckBox.NAME, CubaCheckBoxLoader.class);
         loaders.put(Label.NAME, CubaLabelLoader.class);
         loaders.put(CheckBoxGroup.NAME, CubaCheckBoxGroupLoader.class);
@@ -128,6 +148,8 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
         loaders.put("grid", GridLayoutLoader.class);
         loaders.put(FileUploadField.NAME, CubaFileUploadFieldLoader.class);
         loaders.put(FileMultiUploadField.NAME, FileMultiUploadFieldLoader.class);
+        loaders.put(GroupBoxLayout.NAME, CubaGroupBoxLayoutLoader.class);
+        loaders.put(SplitPanel.NAME, CubaSplitPanelLoader.class);
     }
 
     protected boolean isLegacyScreen(Element element) {

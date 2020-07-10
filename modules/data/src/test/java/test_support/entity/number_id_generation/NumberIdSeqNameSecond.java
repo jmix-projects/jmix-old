@@ -17,18 +17,19 @@
 package test_support.entity.number_id_generation;
 
 
-import io.jmix.core.entity.annotation.JmixGeneratedId;
+import io.jmix.core.JmixEntity;
+import io.jmix.core.entity.annotation.JmixGeneratedValue;
 
 import javax.persistence.*;
 
 @DiscriminatorValue("R")
 @Table(name = "TEST_NUMBER_ID_SEQ_NAME_SECOND")
 @Entity(name = "test$NumberIdSeqNameSecond")
-public class NumberIdSeqNameSecond implements io.jmix.core.Entity {
+public class NumberIdSeqNameSecond implements JmixEntity {
 
     @Id
     @Column(name = "ID")
-    @JmixGeneratedId(sequenceName = "seq_number_id_name")
+    @JmixGeneratedValue(sequenceName = "seq_number_id_name")
     protected Long id;
 
     @Column(name = "NAME")

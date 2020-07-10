@@ -56,28 +56,24 @@ import io.jmix.ui.component.data.aggregation.Aggregations;
 import io.jmix.ui.component.data.meta.ContainerDataUnit;
 import io.jmix.ui.component.data.meta.EmptyDataUnit;
 import io.jmix.ui.component.data.meta.EntityTableItems;
-import io.jmix.ui.component.presentation.TablePresentations;
+import io.jmix.ui.component.presentation.TablePresentationsLayout;
 import io.jmix.ui.component.table.*;
 import io.jmix.ui.icon.IconResolver;
 import io.jmix.ui.model.*;
+import io.jmix.ui.presentation.TablePresentations;
 import io.jmix.ui.presentation.model.TablePresentation;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.InstallTargetHandler;
 import io.jmix.ui.screen.ScreenContext;
 import io.jmix.ui.screen.UiControllerUtils;
-import io.jmix.ui.screen.compatibility.CubaLegacySettings;
-import io.jmix.ui.settings.ScreenSettings;
 import io.jmix.ui.settings.SettingsHelper;
-import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
-import io.jmix.ui.settings.compatibility.converter.LegacyTableSettingsConverter;
+import io.jmix.ui.settings.UserSettingsTools;
 import io.jmix.ui.settings.component.ComponentSettings;
 import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.component.TableSettings;
 import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
-import io.jmix.ui.settings.component.binder.DataLoadingSettingsBinder;
 import io.jmix.ui.settings.component.binder.TableSettingsBinder;
-import io.jmix.ui.sys.PersistenceHelper;
 import io.jmix.ui.sys.PersistenceManagerClient;
 import io.jmix.ui.sys.ShowInfoAction;
 import io.jmix.ui.theme.ThemeConstants;
@@ -90,7 +86,6 @@ import io.jmix.ui.widget.compatibility.JmixValueChangeEvent;
 import io.jmix.ui.widget.data.AggregationContainer;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -109,7 +104,7 @@ import java.util.stream.Collectors;
 import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
 @SuppressWarnings("deprecation")
-public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEnhancedTable, E extends Entity>
+public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEnhancedTable, E extends JmixEntity>
         extends WebAbstractActionsHolderComponent<T>
         implements Table<E>, TableItemsEventsDelegate<E>, LookupSelectionChangeNotifier<E>,
         HasInnerComponents, InstallTargetHandler, InitializingBean, ColumnManager {
@@ -146,6 +141,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     protected DatatypeRegistry datatypeRegistry;
     protected DataComponents dataComponents;
     protected FetchPlanRepository viewRepository;
+    protected UserSettingsTools userSettingsTools;
+    protected EntityStates entityStates;
 
     protected Locale locale;
 
@@ -168,7 +165,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     @Nullable
     protected Map<Table.Column, String> requiredColumns; // lazily initialized Map
     @Nullable
-    protected Map<Entity, Object> fieldDatasources; // lazily initialized WeakHashMap;
+    protected Map<JmixEntity, Object> fieldDatasources; // lazily initialized WeakHashMap;
 
     protected TableComposition componentComposition;
 
@@ -181,10 +178,9 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     protected Map<Table.Column, String> aggregationCells = null;
 
     protected boolean usePresentations;
-    protected io.jmix.ui.presentation.TablePresentations presentations;
+    protected TablePresentations presentations;
 
     protected TableSettings defaultTableSettings;
-    protected LegacySettingsConverter settingsConverter;
 
     protected com.vaadin.v7.ui.Table.ColumnCollapseListener columnCollapseListener;
 
@@ -193,8 +189,6 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     // Map column id to Printable representation
     // todo this functionality should be moved to Excel action
     protected Map<String, Printable> printables; // lazily initialized Map
-
-    protected boolean settingsEnabled = true;
 
     protected TableDataContainer<E> dataBinding;
 
@@ -271,6 +265,16 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     @Autowired
     public void setViewRepository(FetchPlanRepository viewRepository) {
         this.viewRepository = viewRepository;
+    }
+
+    @Autowired(required = false)
+    public void setUserSettingsTools(UserSettingsTools userSettingsTools) {
+        this.userSettingsTools = userSettingsTools;
+    }
+
+    @Autowired
+    public void setEntityStates(EntityStates entityStates) {
+        this.entityStates = entityStates;
     }
 
     @Override
@@ -366,7 +370,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
             setSelectedIds(Collections.singletonList(EntityValues.getId(item)));
         } else {
             Set<Object> itemIds = new LinkedHashSet<>();
-            for (Entity item : items) {
+            for (JmixEntity item : items) {
                 if (tableItems.getItem(EntityValues.getId(item)) == null) {
                     throw new IllegalArgumentException("Datasource doesn't contain item to select: " + item);
                 }
@@ -962,7 +966,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         component.setTabIndex(tabIndex);
     }
 
-    protected void setTablePresentationsLayout(TablePresentations tablePresentations) {
+    protected void setTablePresentationsLayout(TablePresentationsLayout tablePresentations) {
         component.setPresentationsLayout(tablePresentations);
     }
 
@@ -1069,8 +1073,6 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
 
         setClientCaching();
         initEmptyState();
-
-        settingsConverter = createSettingsConverter();
     }
 
     protected void onAfterUnregisterComponent(Component component) {
@@ -1641,7 +1643,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         }
 
         // detach instance containers from entities explicitly
-        for (Map.Entry<Entity, Object> entry : fieldDatasources.entrySet()) {
+        for (Map.Entry<JmixEntity, Object> entry : fieldDatasources.entrySet()) {
             if (entry.getValue() instanceof InstanceContainer) {
                 InstanceContainer container = (InstanceContainer) entry.getValue();
                 container.setItem(null);
@@ -2006,68 +2008,6 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     @Override
     public void setRowHeaderWidth(int width) {
         component.setColumnWidth(ROW_HEADER_PROPERTY_ID, width);
-    }
-
-    @Override
-    public void applySettings(Element element) {
-        if (!isSettingsEnabled()) {
-            return;
-        }
-
-        TableSettings settings = settingsConverter.convertToComponentSettings(element);
-
-        ComponentSettingsBinder worker = getSettingsBinder();
-        if (defaultTableSettings == null) {
-            defaultTableSettings = (TableSettings) worker.getSettings(this);
-        }
-
-        worker.applySettings(this, new SettingsWrapperImpl(settings));
-    }
-
-    @Override
-    public void applyDataLoadingSettings(Element element) {
-        if (!isSettingsEnabled()) {
-            return;
-        }
-
-        ComponentSettings settings = settingsConverter.convertToComponentSettings(element);
-
-        DataLoadingSettingsBinder settingsBinder = (DataLoadingSettingsBinder) getSettingsBinder();
-        settingsBinder.applyDataLoadingSettings(this, new SettingsWrapperImpl(settings));
-    }
-
-    @Override
-    public boolean saveSettings(Element element) {
-        if (!isSettingsEnabled()) {
-            return false;
-        }
-
-        TableSettings tableSettings = settingsConverter.convertToComponentSettings(element);
-
-        boolean modified = getSettingsBinder().saveSettings(this, new SettingsWrapperImpl(tableSettings));
-
-        if (modified)
-            settingsConverter.copyToElement(tableSettings, element);
-
-        return modified;
-    }
-
-    protected ComponentSettingsBinder getSettingsBinder() {
-        return beanLocator.get(TableSettingsBinder.NAME);
-    }
-
-    protected LegacySettingsConverter createSettingsConverter() {
-        return new LegacyTableSettingsConverter();
-    }
-
-    @Override
-    public boolean isSettingsEnabled() {
-        return settingsEnabled;
-    }
-
-    @Override
-    public void setSettingsEnabled(boolean settingsEnabled) {
-        this.settingsEnabled = settingsEnabled;
     }
 
     @Override
@@ -2612,26 +2552,28 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
 
     protected boolean handleSpecificVariables(Map<String, Object> variables) {
         if (isUsePresentations() && presentations != null) {
-            io.jmix.ui.presentation.TablePresentations p = getPresentations();
+            TablePresentations p = getPresentations();
 
             if (p.getCurrent() != null && p.isAutoSave(p.getCurrent()) && needUpdatePresentation(variables)) {
-                if (getFrame().getFrameOwner() instanceof CubaLegacySettings) {
-                    Element e = p.getSettings(p.getCurrent());
-                    saveSettings(e);
-                    p.setSettings(p.getCurrent(), e);
-                } else {
-                    ComponentSettings settings = getSettingsFromPresentation(p.getCurrent());
-                    getSettingsBinder().saveSettings(this, new SettingsWrapperImpl(settings));
-
-                    ScreenSettings screenSettings = beanLocator.getPrototype(ScreenSettings.NAME, getFrame().getId());
-                    String rawSettings = screenSettings.toSettingsString(settings);
-
-                    p.setSettings(p.getCurrent(), rawSettings);
-                }
+                updatePresentationSettings(p);
             }
         }
 
         return false;
+    }
+
+    protected void updatePresentationSettings(TablePresentations p) {
+        if (userSettingsTools != null) {
+            ComponentSettings settings = getSettingsFromPresentation(p.getCurrent());
+            getSettingsBinder().saveSettings(this, new SettingsWrapperImpl(settings));
+
+            String rawSettings = userSettingsTools.toSettingsString(settings);
+            p.setSettings(p.getCurrent(), rawSettings);
+        }
+    }
+
+    protected ComponentSettingsBinder getSettingsBinder() {
+        return beanLocator.get(TableSettingsBinder.NAME);
     }
 
     protected boolean needUpdatePresentation(Map<String, Object> variables) {
@@ -2681,16 +2623,16 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     @Override
     public void loadPresentations() {
         if (isUsePresentations()) {
-            presentations = beanLocator.getPrototype(io.jmix.ui.presentation.TablePresentations.NAME, this);
+            presentations = createTablePresentations();
 
-            setTablePresentationsLayout(new TablePresentations(this, getSettingsBinder()));
+            setTablePresentationsLayout(createTablePresentationsLayout());
         } else {
             throw new UnsupportedOperationException("Component doesn't use presentations");
         }
     }
 
     @Override
-    public io.jmix.ui.presentation.TablePresentations getPresentations() {
+    public TablePresentations getPresentations() {
         if (isUsePresentations()) {
             return presentations;
         } else {
@@ -2723,33 +2665,38 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
 
     protected void applyPresentation(TablePresentation p) {
         if (presentations != null) {
-            if (getFrame().getFrameOwner() instanceof CubaLegacySettings) {
-                Element settingsElement = presentations.getSettings(p);
-                applySettings(settingsElement);
-            } else {
-                ComponentSettings settings = getSettingsFromPresentation(p);
-                getSettingsBinder().applySettings(this, new SettingsWrapperImpl(settings));
-            }
+            applyPresentationSettings(p);
 
             presentations.setCurrent(p);
             component.markAsDirty();
         }
     }
 
+    protected void applyPresentationSettings(TablePresentation p) {
+        ComponentSettings settings = getSettingsFromPresentation(p);
+        getSettingsBinder().applySettings(this, new SettingsWrapperImpl(settings));
+    }
+
     protected ComponentSettings getSettingsFromPresentation(TablePresentation p) {
         Class<? extends ComponentSettings> settingsClass = getSettingsBinder().getSettingsClass();
-        ComponentSettings settings = SettingsHelper.createSettings(settingsClass);
-        settings.setId(getId());
+        ComponentSettings settings = SettingsHelper.createSettings(settingsClass, getId());
 
         String settingsString = presentations.getSettingsString(p);
-        if (settingsString != null) {
-            ScreenSettings screenSettings = beanLocator.getPrototype(ScreenSettings.NAME, getFrame().getId());
-            ComponentSettings convertedSettings = screenSettings.toComponentSettings(settingsString, settingsClass);
+        if (settingsString != null && userSettingsTools != null) {
+            ComponentSettings convertedSettings = userSettingsTools.toComponentSettings(settingsString, settingsClass);
             if (convertedSettings != null) {
                 settings = convertedSettings;
             }
         }
         return settings;
+    }
+
+    protected TablePresentationsLayout createTablePresentationsLayout() {
+        return new TablePresentationsLayout(this, getSettingsBinder(), beanLocator);
+    }
+
+    protected TablePresentations createTablePresentations() {
+        return beanLocator.getPrototype(TablePresentations.NAME, this);
     }
 
     @Override
@@ -2986,7 +2933,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
                         && column.getType() == Boolean.class
                         && column.getFormatter() == null) {
 
-                    Entity item = dataBinding.getTableItems().getItem(itemId);
+                    JmixEntity item = dataBinding.getTableItems().getItem(itemId);
                     if (item != null) {
                         Boolean value = (Boolean) column.getValueProvider().apply(item);
                         if (BooleanUtils.isTrue(value)) {
@@ -3015,7 +2962,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
                 if (propertyPath.getRangeJavaClass() == Boolean.class
                         && column.getFormatter() == null
                         && dataBinding != null) {
-                    Entity item = dataBinding.getTableItems().getItem(itemId);
+                    JmixEntity item = dataBinding.getTableItems().getItem(itemId);
                     if (item != null) {
                         Boolean value = EntityValues.getValueEx(item, propertyPath);
                         if (BooleanUtils.isTrue(value)) {
@@ -3148,15 +3095,15 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         }
     }
 
-    protected Object getValueExIgnoreUnfetched(Entity instance, String[] properties) {
+    protected Object getValueExIgnoreUnfetched(JmixEntity instance, String[] properties) {
         Object currentValue = null;
-        Entity currentInstance = instance;
+        JmixEntity currentInstance = instance;
         for (String property : properties) {
             if (currentInstance == null) {
                 break;
             }
 
-            if (!PersistenceHelper.isLoaded(currentInstance, property)) {
+            if (!entityStates.isLoaded(currentInstance, property)) {
                 LoggerFactory.getLogger(WebAbstractTable.class)
                         .warn("Ignored unfetched attribute {} of instance {} in Table cell",
                                 property, currentInstance);
@@ -3168,7 +3115,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
                 break;
             }
 
-            currentInstance = currentValue instanceof Entity ? (Entity) currentValue : null;
+            currentInstance = currentValue instanceof JmixEntity ? (JmixEntity) currentValue : null;
         }
         return currentValue;
     }
@@ -3238,7 +3185,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         }
 
         @Override
-        public String getStyleName(Entity entity, @Nullable String property) {
+        public String getStyleName(JmixEntity entity, @Nullable String property) {
             try {
                 return (String) method.invoke(frameOwner, entity, property);
             } catch (IllegalAccessException | InvocationTargetException e) {

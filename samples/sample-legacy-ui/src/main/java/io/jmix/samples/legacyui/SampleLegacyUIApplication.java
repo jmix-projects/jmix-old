@@ -16,11 +16,7 @@
 
 package io.jmix.samples.legacyui;
 
-import com.haulmont.cuba.core.global.Configuration;
-import io.jmix.core.security.Security;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -28,19 +24,10 @@ import org.springframework.context.annotation.Bean;
 import javax.sql.DataSource;
 
 @SpringBootApplication
-public class SampleLegacyUIApplication implements CommandLineRunner {
+public class SampleLegacyUIApplication {
 
-	@Autowired
-	private Configuration configuration;
-	@Autowired
-	private Security security;
-
-	public static void main(String[] args) {
-		SpringApplication.run(SampleLegacyUIApplication.class, args);
-	}
-
-	@Override
-	public void run(String... args) {
+    public static void main(String[] args) {
+ 		SpringApplication.run(SampleLegacyUIApplication.class, args);
 	}
 
 	@Bean

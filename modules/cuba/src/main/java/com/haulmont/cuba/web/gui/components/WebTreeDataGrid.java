@@ -18,11 +18,13 @@ package com.haulmont.cuba.web.gui.components;
 
 import com.haulmont.cuba.gui.components.DataGrid;
 import com.haulmont.cuba.gui.components.TreeDataGrid;
-import com.haulmont.cuba.settings.CubaTreeDataGridSettingsBinder;
+import com.haulmont.cuba.settings.binder.CubaTreeDataGridSettingsBinder;
+import com.haulmont.cuba.settings.component.LegacySettingsDelegate;
+import com.haulmont.cuba.settings.converter.LegacyTreeDataGridSettingsConverter;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.ui.Grid;
 import io.jmix.core.DevelopmentException;
-import io.jmix.core.Entity;
+import io.jmix.core.JmixEntity;
 import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
 import io.jmix.core.common.util.Preconditions;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -32,6 +34,7 @@ import io.jmix.ui.component.impl.WebAbstractDataGrid;
 import io.jmix.ui.component.valueprovider.FormatterBasedValueProvider;
 import io.jmix.ui.component.valueprovider.StringPresentationValueProvider;
 import io.jmix.ui.component.valueprovider.YesNoIconPresentationValueProvider;
+import org.dom4j.Element;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -39,10 +42,43 @@ import java.util.Collection;
 import java.util.function.Function;
 
 @Deprecated
-public class WebTreeDataGrid<E extends Entity> extends io.jmix.ui.component.impl.WebTreeDataGrid<E>
+public class WebTreeDataGrid<E extends JmixEntity> extends io.jmix.ui.component.impl.WebTreeDataGrid<E>
         implements TreeDataGrid<E> {
 
+    protected LegacySettingsDelegate settingsDelegate;
+
     @Override
+    public void afterPropertiesSet() throws Exception {
+        super.afterPropertiesSet();
+
+        settingsDelegate = createSettingsDelegate();
+    }
+
+    @Override
+    public void applyDataLoadingSettings(Element element) {
+        settingsDelegate.applyDataLoadingSettings(element);
+    }
+
+    @Override
+    public void applySettings(Element element) {
+        settingsDelegate.applySettings(element);
+    }
+
+    @Override
+    public boolean saveSettings(Element element) {
+        return settingsDelegate.saveSettings(element);
+    }
+
+    @Override
+    public boolean isSettingsEnabled() {
+        return settingsDelegate.isSettingsEnabled();
+    }
+
+    @Override
+    public void setSettingsEnabled(boolean settingsEnabled) {
+        settingsDelegate.setSettingsEnabled(settingsEnabled);
+    }
+
     protected ComponentSettingsBinder getSettingsBinder() {
         return beanLocator.get(CubaTreeDataGridSettingsBinder.NAME);
     }
@@ -175,5 +211,10 @@ public class WebTreeDataGrid<E extends Entity> extends io.jmix.ui.component.impl
                 && metaProperty != null
                 ? new com.vaadin.ui.renderers.HtmlRenderer()
                 : new com.vaadin.ui.renderers.TextRenderer();
+    }
+
+    protected LegacySettingsDelegate createSettingsDelegate() {
+        return beanLocator.getPrototype(LegacySettingsDelegate.NAME,
+                this, new LegacyTreeDataGridSettingsConverter(), getSettingsBinder());
     }
 }

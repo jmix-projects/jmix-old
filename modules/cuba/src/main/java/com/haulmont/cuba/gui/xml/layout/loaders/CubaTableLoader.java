@@ -18,12 +18,23 @@ package com.haulmont.cuba.gui.xml.layout.loaders;
 
 import com.haulmont.cuba.gui.components.Table;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
+import com.haulmont.cuba.gui.xml.data.ComponentLoaderHelper;
 import com.haulmont.cuba.gui.xml.data.DatasourceLoaderHelper;
 import io.jmix.dynattrui.DynAttrEmbeddingStrategies;
 import org.dom4j.Element;
 
+import java.util.List;
+
 @SuppressWarnings("rawtypes")
 public class CubaTableLoader extends io.jmix.ui.xml.layout.loader.TableLoader {
+
+    @Override
+    public void loadComponent() {
+        super.loadComponent();
+
+        ComponentLoaderHelper.loadSettingsEnabled((Table) resultComponent, element);
+        ComponentLoaderHelper.loadTableValidators(resultComponent, element, context, getHotDeployManager());
+    }
 
     @Override
     protected CubaTableDataHolder initTableDataHolder() {
@@ -44,8 +55,6 @@ public class CubaTableLoader extends io.jmix.ui.xml.layout.loader.TableLoader {
         return holder;
     }
 
-
-
     @Override
     protected void setupDataContainer(TableDataHolder holder) {
         CollectionDatasource datasource = ((CubaTableDataHolder) holder).getDatasource();
@@ -56,6 +65,16 @@ public class CubaTableLoader extends io.jmix.ui.xml.layout.loader.TableLoader {
 
         DynAttrEmbeddingStrategies embeddingStrategies = beanLocator.get(DynAttrEmbeddingStrategies.class);
         embeddingStrategies.embedAttributes(resultComponent, getComponentContext().getFrame());
+    }
+
+    @Override
+    protected void loadTableData() {
+        super.loadTableData();
+
+        List<io.jmix.ui.component.Table.Column> columns = resultComponent.getColumns();
+        for (io.jmix.ui.component.Table.Column column : columns) {
+            ComponentLoaderHelper.loadTableColumnValidators(resultComponent, column, context, getHotDeployManager(), getMessages());
+        }
     }
 
     protected static class CubaTableDataHolder extends TableDataHolder {

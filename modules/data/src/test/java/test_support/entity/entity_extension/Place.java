@@ -16,7 +16,8 @@
 
 package test_support.entity.entity_extension;
 
-import io.jmix.core.entity.annotation.JmixGeneratedId;
+import io.jmix.core.JmixEntity;
+import io.jmix.core.entity.annotation.JmixGeneratedValue;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,11 +27,11 @@ import java.util.UUID;
 
 @Entity(name = "exttest_Place")
 @Table(name = "EXTTEST_PLACE")
-public class Place implements io.jmix.core.Entity {
+public class Place implements JmixEntity {
 
     @Id
     @Column(name = "ID")
-    @JmixGeneratedId
+    @JmixGeneratedValue
     protected UUID id;
 
     @Column(name = "NAME")

@@ -16,14 +16,13 @@
 
 package io.jmix.ui.component.impl;
 
-import com.google.common.base.Strings;
 import com.vaadin.data.TreeData;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.TreeDataProvider;
 import com.vaadin.shared.Registration;
 import com.vaadin.ui.Grid;
 import io.jmix.core.common.event.Subscription;
-import io.jmix.core.Entity;
+import io.jmix.core.JmixEntity;
 import io.jmix.core.common.util.Preconditions;
 import io.jmix.ui.component.TreeDataGrid;
 import io.jmix.ui.component.data.BindingState;
@@ -31,10 +30,6 @@ import io.jmix.ui.component.data.DataGridItems;
 import io.jmix.ui.component.data.TreeDataGridItems;
 import io.jmix.ui.component.datagrid.DataGridDataProvider;
 import io.jmix.ui.component.datagrid.HierarchicalDataGridDataProvider;
-import io.jmix.ui.settings.compatibility.converter.LegacySettingsConverter;
-import io.jmix.ui.settings.compatibility.converter.LegacyTreeDataGridSettingsConverter;
-import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
-import io.jmix.ui.settings.component.binder.TreeDataGridSettingsBinder;
 import io.jmix.ui.widget.JmixTreeGrid;
 
 import javax.annotation.Nullable;
@@ -46,7 +41,7 @@ import java.util.stream.Stream;
 
 import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
-public class WebTreeDataGrid<E extends Entity> extends WebAbstractDataGrid<JmixTreeGrid<E>, E>
+public class WebTreeDataGrid<E extends JmixEntity> extends WebAbstractDataGrid<JmixTreeGrid<E>, E>
         implements TreeDataGrid<E> {
 
     protected Predicate<E> itemCollapseAllowedProvider = t -> true;
@@ -268,16 +263,6 @@ public class WebTreeDataGrid<E extends Entity> extends WebAbstractDataGrid<JmixT
         CollapseEvent<E> event = new CollapseEvent<>(WebTreeDataGrid.this,
                 e.getCollapsedItem(), e.isUserOriginated());
         publish(CollapseEvent.class, event);
-    }
-
-    @Override
-    protected ComponentSettingsBinder getSettingsBinder() {
-        return beanLocator.get(TreeDataGridSettingsBinder.NAME);
-    }
-
-    @Override
-    protected LegacySettingsConverter createSettingsConverter() {
-        return new LegacyTreeDataGridSettingsConverter();
     }
 
     @Override

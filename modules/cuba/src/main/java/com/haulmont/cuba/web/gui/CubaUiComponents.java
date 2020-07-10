@@ -18,6 +18,8 @@ package com.haulmont.cuba.web.gui;
 
 import com.haulmont.cuba.gui.components.*;
 import com.haulmont.cuba.web.gui.components.*;
+import io.jmix.ui.component.BrowserFrame;
+import io.jmix.ui.component.Accordion;
 import io.jmix.ui.component.Calendar;
 import io.jmix.ui.component.CheckBox;
 import io.jmix.ui.component.CheckBoxGroup;
@@ -26,6 +28,7 @@ import io.jmix.ui.component.CurrencyField;
 import io.jmix.ui.component.DataGrid;
 import io.jmix.ui.component.DateField;
 import io.jmix.ui.component.DatePicker;
+import io.jmix.ui.component.GroupBoxLayout;
 import io.jmix.ui.component.GroupTable;
 import io.jmix.ui.component.Image;
 import io.jmix.ui.component.Label;
@@ -38,8 +41,10 @@ import io.jmix.ui.component.RichTextArea;
 import io.jmix.ui.component.RowsCount;
 import io.jmix.ui.component.Slider;
 import io.jmix.ui.component.SourceCodeEditor;
+import io.jmix.ui.component.SplitPanel;
 import io.jmix.ui.component.SuggestionField;
 import io.jmix.ui.component.Table;
+import io.jmix.ui.component.TabSheet;
 import io.jmix.ui.component.TextArea;
 import io.jmix.ui.component.TextField;
 import io.jmix.ui.component.TimeField;
@@ -67,6 +72,7 @@ public class CubaUiComponents extends WebUiComponents {
         classes.put(TokenList.NAME, WebTokenList.class);
         classes.put(TwinColumn.NAME, WebTwinColumn.class);
         classes.put(Image.NAME, WebImage.class);
+        classes.put(BrowserFrame.NAME, WebBrowserFrame.class);
         classes.put(CheckBoxGroup.NAME, WebCheckBoxGroup.class);
         classes.put(RadioButtonGroup.NAME, WebRadioButtonGroup.class);
         classes.put(SuggestionPickerField.NAME, WebSuggestionPickerField.class);
@@ -100,5 +106,10 @@ public class CubaUiComponents extends WebUiComponents {
 
         classes.put(Filter.NAME, WebFilter.class);
         classes.put("grid", WebGridLayout.class);
+
+        classes.put(SplitPanel.NAME, WebSplitPanel.class);
+        classes.put(GroupBoxLayout.NAME, WebGroupBox.class);
+        classes.put(TabSheet.NAME, WebTabSheet.class);
+        classes.put(Accordion.NAME, WebAccordion.class);
     }
 }

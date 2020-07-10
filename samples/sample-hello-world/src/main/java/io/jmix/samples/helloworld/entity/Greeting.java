@@ -16,18 +16,34 @@
 
 package io.jmix.samples.helloworld.entity;
 
-import io.jmix.data.entity.StandardEntity;
+import io.jmix.core.JmixEntity;
+import io.jmix.core.entity.annotation.JmixGeneratedValue;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.UUID;
 
-@Entity
+@Entity(name = "sample_Greeting")
 @Table(name = "GREETING")
-public class Greeting extends StandardEntity {
+public class Greeting implements JmixEntity {
+
+    @Id
+    @Column(name = "ID", nullable = false)
+    @JmixGeneratedValue
+    private UUID id;
 
     @Column(name = "TEXT_")
     private String text;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public String getText() {
         return text;

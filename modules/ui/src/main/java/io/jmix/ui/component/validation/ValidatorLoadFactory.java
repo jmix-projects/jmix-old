@@ -22,10 +22,10 @@ import io.jmix.core.BeanLocator;
 import io.jmix.core.MessageTools;
 import io.jmix.core.common.util.Preconditions;
 import org.dom4j.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -42,11 +42,13 @@ public class ValidatorLoadFactory {
 
     protected final Map<String, BiFunction<Element, String, AbstractValidator>> validatorsMap
             = ImmutableMap.<String, BiFunction<Element, String, AbstractValidator>>builder()
+            .put("custom", this::loadCustomValidator)
             .put("decimalMin", this::loadDecimalMinValidator)
             .put("decimalMax", this::loadDecimalMaxValidator)
             .put("doubleMin", this::loadDoubleMinValidator)
             .put("doubleMax", this::loadDoubleMaxValidator)
             .put("digits", this::loadDigitsValidator)
+            .put("email", this::loadValidatorWithoutAttributes)
             .put("future", this::loadFutureValidator)
             .put("futureOrPresent", this::loadFutureOrPresentValidator)
             .put("max", this::loadMaxValidator)
@@ -61,6 +63,7 @@ public class ValidatorLoadFactory {
             .put("positiveOrZero", this::loadValidatorWithoutAttributes)
             .put("positive", this::loadValidatorWithoutAttributes)
             .put("regexp", this::loadRegexpValidator)
+            .put("script", this::loadScriptValidator)
             .put("size", this::loadSizeValidator)
             .build();
 
@@ -88,6 +91,19 @@ public class ValidatorLoadFactory {
             return function.apply(element, messagePack);
         }
         return null;
+    }
+
+    protected AbstractValidator loadCustomValidator(Element element, String messagePack) {
+        String beanName = element.attributeValue("bean");
+        if (Strings.isNullOrEmpty(beanName)) {
+            throw new IllegalArgumentException("Bean name is not defined");
+        }
+
+        AbstractValidator validator = beanLocator.getPrototype(beanName);
+
+        validator.setMessage(loadMessage(element, messagePack));
+
+        return validator;
     }
 
     protected AbstractValidator loadDecimalMinValidator(Element element, String messagePack) {
@@ -252,6 +268,9 @@ public class ValidatorLoadFactory {
     protected AbstractValidator loadValidatorWithoutAttributes(Element element, String messagePack) {
         AbstractValidator validator;
         switch (element.getName()) {
+            case "email":
+                validator = beanLocator.getPrototype(EmailValidator.NAME);
+                break;
             case "negativeOrZero":
                 validator = beanLocator.getPrototype(NegativeOrZeroValidator.NAME);
                 break;
@@ -288,6 +307,23 @@ public class ValidatorLoadFactory {
         RegexpValidator validator = beanLocator.getPrototype(RegexpValidator.NAME, regexp);
         validator.setMessage(loadMessage(element, messagePack));
 
+        return validator;
+    }
+
+    protected AbstractValidator loadScriptValidator(Element element, String messagePack) {
+        GroovyScriptValidator validator = beanLocator.getPrototype(GroovyScriptValidator.NAME);
+
+        String script = element.getText();
+        if (script != null) {
+            validator.setValidatorGroovyScript(script);
+        }
+
+        String scriptPath = element.attributeValue("path");
+        if (scriptPath != null) {
+            validator.setScriptPath(scriptPath);
+        }
+
+        validator.setMessage(loadMessage(element, messagePack));
         return validator;
     }
 
