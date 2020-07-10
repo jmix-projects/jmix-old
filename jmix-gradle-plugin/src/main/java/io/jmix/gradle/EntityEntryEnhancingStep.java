@@ -133,16 +133,22 @@ public class EntityEntryEnhancingStep extends BaseEnhancingStep {
     protected CtField findGeneratedIdField(AnnotationsInfo info) {
         CtField primaryKeyField = info.getPrimaryKey();
         List<CtField> generatedValueFields = info.getAnnotatedFields(JMIX_GENERATED_VALUE);
-        for (CtField field : generatedValueFields) {
-            try {
-                if (field.equals(primaryKeyField) || field.getType().getName().equals("java.util.UUID")) {
-                    return field;
-                }
-            } catch (NotFoundException e) {
-                // ignore
-            }
+        return generatedValueFields.stream()
+                .filter(ctField -> ctField.equals(primaryKeyField))
+                .findFirst()
+                .orElseGet(() -> generatedValueFields.stream()
+                        .filter(this::isFieldOfUuidType)
+                        .findFirst()
+                        .orElse(null));
+    }
+
+    protected boolean isFieldOfUuidType(CtField ctField) {
+        try {
+            return ctField.getType().getName().equals("java.util.UUID");
+        } catch (NotFoundException e) {
+            // ignore
         }
-        return null;
+        return false;
     }
 
     protected void setupAuditing(CtClass nestedClass, CtClass ctClass, AnnotationsInfo info) throws NotFoundException, CannotCompileException {
