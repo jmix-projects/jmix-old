@@ -97,8 +97,9 @@ public class FetchGroupManager {
 
         FetchGroupDescription description = calculateFetchGroup(queryString, fetchPlan, singleResultExpected, useFetchGroup);
 
-        if (attrGroup instanceof FetchGroup)
-            ((FetchGroup) attrGroup).setShouldLoadAll(true);
+//        ToDo: magical flag?
+//        if (attrGroup instanceof FetchGroup)
+//            ((FetchGroup) attrGroup).setShouldLoadAll(true);
 
         if (log.isTraceEnabled())
             log.trace((useFetchGroup ? "Fetch" : "Load") + " group for " + fetchPlan + ":\n" + description.getAttributes().stream().collect(Collectors.joining("\n")));
@@ -154,6 +155,9 @@ public class FetchGroupManager {
             List<FetchGroupField> joinFields = new ArrayList<>();
 
             for (FetchGroupField refField : refFields) {
+                if (refField.lazyLoad) {
+                    continue;
+                }
                 if (refField.fetchMode == FetchMode.UNDEFINED) {
                     if (refField.metaProperty.getRange().getCardinality().isMany()) {
                         List<String> masterAttributes = getMasterEntityAttributes(fetchGroupFields, refField, useFetchGroup);
@@ -425,6 +429,13 @@ public class FetchGroupManager {
                 }
             }
         }
+
+        for (MetaProperty metaProperty : entityMetaClass.getProperties()) {
+            if (metaProperty.getRange().isClass() && !metadataTools.isEmbedded(metaProperty)
+                    && !fetchPlan.containsProperty(metaProperty.getName())) {
+                fetchGroupFields.add(createFetchGroupField(entityClass, parentField, metaProperty.getName(), FetchMode.AUTO, true));
+            }
+        }
     }
 
     private List<String> getInterfaceProperties(Class<?> intf) {
@@ -447,12 +458,21 @@ public class FetchGroupManager {
                                                   FetchGroupField parentField,
                                                   String property,
                                                   FetchMode fetchMode) {
+        return createFetchGroupField(entityClass, parentField, property, fetchMode, false);
+    }
+
+    private FetchGroupField createFetchGroupField(Class<? extends JmixEntity> entityClass,
+                                                  FetchGroupField parentField,
+                                                  String property,
+                                                  FetchMode fetchMode,
+                                                  boolean lazyLoad) {
         MetaClass metaClass = metadata.getClass(entityClass);
 
         MetaProperty metaProperty = metaClass.getProperty(property);
         MetaClass fetchMetaClass = metaProperty.getRange().isClass() ? metaProperty.getRange().asClass() : metaClass;
 
-        return new FetchGroupField(metaClass, parentField, property, getFetchMode(fetchMetaClass, fetchMode), metadataTools.isCacheable(metaClass));
+        return new FetchGroupField(metaClass, parentField, property, getFetchMode(fetchMetaClass, fetchMode),
+                metadataTools.isCacheable(metaClass), lazyLoad);
     }
 
     private FetchMode getFetchMode(MetaClass metaClass, FetchMode fetchMode) {
@@ -465,8 +485,15 @@ public class FetchGroupManager {
         private final MetaProperty metaProperty;
         private final MetaPropertyPath metaPropertyPath;
         private final boolean cacheable;
+        private final boolean lazyLoad;
 
-        public FetchGroupField(MetaClass metaClass, FetchGroupField parentField, String property, FetchMode fetchMode, boolean cacheable) {
+        public FetchGroupField(MetaClass metaClass, FetchGroupField parentField, String property, FetchMode fetchMode,
+                               boolean cacheable) {
+            this(metaClass, parentField, property, fetchMode, cacheable, false);
+        }
+
+        public FetchGroupField(MetaClass metaClass, FetchGroupField parentField, String property, FetchMode fetchMode,
+                               boolean cacheable, boolean lazyLoad) {
             this.metaClass = metaClass;
             this.fetchMode = fetchMode;
             this.metaProperty = metaClass.getProperty(property);
@@ -474,6 +501,7 @@ public class FetchGroupManager {
                     new MetaPropertyPath(metaClass, metaProperty) :
                     new MetaPropertyPath(parentField.metaPropertyPath, metaProperty);
             this.cacheable = cacheable;
+            this.lazyLoad = lazyLoad;
         }
 
         public String path() {

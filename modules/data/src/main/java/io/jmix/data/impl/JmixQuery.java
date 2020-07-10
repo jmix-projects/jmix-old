@@ -31,6 +31,7 @@ import io.jmix.data.EntityFetcher;
 import io.jmix.data.PersistenceHints;
 import io.jmix.data.impl.entitycache.QueryCacheManager;
 import io.jmix.data.impl.entitycache.QueryKey;
+import io.jmix.data.impl.lazyloading.LazyLoadingHelper;
 import io.jmix.data.persistence.DbmsFeatures;
 import io.jmix.data.persistence.DbmsSpecifics;
 import org.eclipse.persistence.config.CascadePolicy;
@@ -69,6 +70,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
     protected PersistenceSupport support;
     protected FetchGroupManager fetchGroupMgr;
     protected EntityFetcher entityFetcher;
+    protected LazyLoadingHelper lazyLoadingHelper;
     protected QueryCacheManager queryCacheMgr;
     protected QueryTransformerFactory queryTransformerFactory;
     protected QueryHintsProcessor hintsProcessor;
@@ -104,6 +106,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
         support = beanLocator.get(PersistenceSupport.NAME);
         fetchGroupMgr = beanLocator.get(FetchGroupManager.NAME);
         entityFetcher = beanLocator.get(EntityFetcher.NAME);
+        lazyLoadingHelper = beanLocator.get(LazyLoadingHelper.NAME);;
         queryCacheMgr = beanLocator.get(QueryCacheManager.NAME);
         queryTransformerFactory = beanLocator.get(QueryTransformerFactory.NAME);
         hintsProcessor = beanLocator.get(QueryHintsProcessor.NAME);
@@ -127,6 +130,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
                 for (FetchPlan fetchPlan : fetchPlans) {
                     entityFetcher.fetch((JmixEntity) item, fetchPlan);
                 }
+                lazyLoadingHelper.replaceValueHolders((JmixEntity) item, fetchPlans);
             });
         });
         return resultList;
@@ -148,6 +152,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
                 for (FetchPlan fetchPlan : fetchPlans) {
                     entityFetcher.fetch((JmixEntity) obj, fetchPlan);
                 }
+                lazyLoadingHelper.replaceValueHolders((JmixEntity) obj, fetchPlans);
             }
         });
         return result;
