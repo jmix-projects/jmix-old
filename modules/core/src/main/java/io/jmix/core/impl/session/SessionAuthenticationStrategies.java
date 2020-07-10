@@ -27,7 +27,7 @@ import java.util.List;
 
 public class SessionAuthenticationStrategies implements SessionAuthenticationStrategy {
 
-    private CompositeSessionAuthenticationStrategy compositeStrategy;
+    private final CompositeSessionAuthenticationStrategy compositeStrategy;
 
     public SessionAuthenticationStrategies(SessionRegistry sessionRegistry, int maximumUserSessions) {
         compositeStrategy = new CompositeSessionAuthenticationStrategy(strategies(sessionRegistry, maximumUserSessions));
@@ -46,7 +46,7 @@ public class SessionAuthenticationStrategies implements SessionAuthenticationStr
 
         List<SessionAuthenticationStrategy> strategies = new LinkedList<>();
 
-        strategies.add(sessionFixationProtectionStrategy);
+//        strategies.add(sessionFixationProtectionStrategy);
         strategies.add(registerSessionAuthenticationStrategy);
         strategies.add(concurrentSessionControlStrategy);
         strategies.add(new SessionDataAuthenticationStrategy());

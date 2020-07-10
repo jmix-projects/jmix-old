@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.jmix.core.impl.session.web;
+package io.jmix.audit.sessions;
 
-import io.jmix.core.session.AuthTokenStore;
+import io.jmix.audit.entity.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
@@ -28,31 +28,29 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-@Component(HttpSessionStore.NAME)
-public class HttpSessionStore implements AuthTokenStore<HttpSessionWrapper> {
-
-    public static final String NAME = "core_WebSessionStore";
+@Component(UserSessions.NAME)
+public class UserSessionsImps implements UserSessions {
 
     @Autowired
     protected SessionRegistry sessionRegistry;
 
     @Override
-    public Stream<HttpSessionWrapper> tokensStream() {
+    public Stream<UserSession> sessions() {
         return sessionRegistry.getAllPrincipals().stream()
                 .flatMap(p -> sessionRegistry.getAllSessions(p, false).stream())
                 .filter(distinctByKey(SessionInformation::getSessionId))
-                .map(HttpSessionWrapper::new);
+                .map(UserSession::new);
     }
 
     @Override
-    public Stream<HttpSessionWrapper> tokensStream(Object principal) {
+    public Stream<UserSession> sessions(Object principal) {
         return sessionRegistry.getAllSessions(principal, false).stream()
-                .map(HttpSessionWrapper::new);
+                .map(UserSession::new);
     }
 
     @Override
-    public HttpSessionWrapper get(String id) {
-        return new HttpSessionWrapper(sessionRegistry.getSessionInformation(id));
+    public UserSession get(String id) {
+        return new UserSession(sessionRegistry.getSessionInformation(id));
     }
 
     public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
@@ -61,7 +59,7 @@ public class HttpSessionStore implements AuthTokenStore<HttpSessionWrapper> {
     }
 
     @Override
-    public void invalidate(HttpSessionWrapper token) {
-        token.getDelegate().expireNow();
+    public void invalidate(UserSession session) {
+        session.getSessionInformation().expireNow();
     }
 }

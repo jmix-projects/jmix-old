@@ -14,38 +14,46 @@
  * limitations under the License.
  */
 
-package io.jmix.core.impl.session.web;
+package io.jmix.audit.entity;
 
-import io.jmix.core.session.AuthToken;
+import io.jmix.core.entity.annotation.SystemLevel;
+import io.jmix.core.metamodel.annotation.ModelObject;
+import io.jmix.core.metamodel.annotation.ModelProperty;
+import io.jmix.data.entity.BaseUuidEntity;
+import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.session.SessionInformation;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class HttpSessionWrapper implements AuthToken<SessionInformation>, Serializable {
+@ModelObject(name = "core_UserSession")
+@SystemLevel
+public class UserSession extends BaseUuidEntity {
 
     protected SessionInformation sessionInformation;
 
-    public HttpSessionWrapper(SessionInformation sessionInformation) {
+    public UserSession(SessionInformation sessionInformation) {
         this.sessionInformation = sessionInformation;
     }
 
-    @Override
-    public SessionInformation getDelegate() {
+    public SessionInformation getSessionInformation() {
         return sessionInformation;
     }
 
-    @Override
-    public String getId() {
+    @ModelProperty
+    public String getSessionId() {
         return sessionInformation.getSessionId();
     }
 
-    @Override
     public Object getPrincipal() {
         return sessionInformation.getPrincipal();
     }
 
-    @Override
+    @ModelProperty
+    public String getPrincipalName(){
+        return new TestingAuthenticationToken(getPrincipal(), null).getName();
+    }
+
+    @ModelProperty
     public Date getLastRequest() {
         return sessionInformation.getLastRequest();
     }

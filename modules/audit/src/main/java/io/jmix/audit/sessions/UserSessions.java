@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package io.jmix.core.session;
+package io.jmix.audit.sessions;
+import io.jmix.audit.entity.UserSession;
 
-import java.util.Date;
+import java.util.stream.Stream;
 
-public interface AuthToken<S> {
+public interface UserSessions {
 
-    S getDelegate();
+    String NAME = "core_UserSessions";
 
-    String getId();
+    Stream<UserSession> sessions();
 
-    Object getPrincipal();
+    Stream<UserSession> sessions(Object principal);
 
-    Date getLastRequest();
+    UserSession get(String id);
+
+    void invalidate(UserSession session);
 
 }
