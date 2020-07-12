@@ -17,8 +17,9 @@
 package io.jmix.samples.rest.entity.driver;
 
 import io.jmix.core.UuidProvider;
+import io.jmix.core.annotation.DeletedBy;
+import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.HasUuid;
-import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.entity.Versioned;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.data.entity.BaseLongIdEntity;
@@ -35,7 +36,7 @@ import java.util.UUID;
 
 @Entity(name = "ref$Seller")
 @Table(name = "REF_SELLER")
-public class Seller extends BaseLongIdEntity implements Versioned, SoftDelete, HasUuid {
+public class Seller extends BaseLongIdEntity implements Versioned, HasUuid {
 
     private static final long serialVersionUID = 3238417347166814388L;
 
@@ -62,9 +63,11 @@ public class Seller extends BaseLongIdEntity implements Versioned, SoftDelete, H
     @Column(name = "UPDATED_BY", length = 50)
     protected String updatedBy;
 
+    @DeletedDate
     @Column(name = "DELETE_TS")
     protected Date deleteTs;
 
+    @DeletedBy
     @Column(name = "DELETED_BY", length = 50)
     protected String deletedBy;
 
@@ -124,27 +127,22 @@ public class Seller extends BaseLongIdEntity implements Versioned, SoftDelete, H
         this.updatedBy = updatedBy;
     }
 
-    @Override
     public Boolean isDeleted() {
         return deletedBy != null;
     }
 
-    @Override
     public Date getDeleteTs() {
         return deleteTs;
     }
 
-    @Override
     public void setDeleteTs(Date deleteTs) {
         this.deleteTs = deleteTs;
     }
 
-    @Override
     public String getDeletedBy() {
         return deletedBy;
     }
 
-    @Override
     public void setDeletedBy(String deletedBy) {
         this.deletedBy = deletedBy;
     }

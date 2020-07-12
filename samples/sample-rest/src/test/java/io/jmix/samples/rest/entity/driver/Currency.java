@@ -18,8 +18,9 @@ package io.jmix.samples.rest.entity.driver;
 
 import io.jmix.core.JmixEntity;
 import io.jmix.core.UuidProvider;
+import io.jmix.core.annotation.DeletedBy;
+import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.HasUuid;
-import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.entity.Versioned;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.validation.group.RestApiChecks;
@@ -38,7 +39,7 @@ import java.util.UUID;
 @TestCurrencyClassConstraint(groups = RestApiChecks.class)
 @Entity(name = "ref$Currency")
 @Table(name = "REF_CURRENCY")
-public class Currency implements JmixEntity, Versioned, SoftDelete, HasUuid {
+public class Currency implements JmixEntity, Versioned, HasUuid {
     private static final long serialVersionUID = 6912352294666689769L;
 
     @Id
@@ -71,9 +72,11 @@ public class Currency implements JmixEntity, Versioned, SoftDelete, HasUuid {
     @Column(name = "UPDATED_BY", length = 50)
     protected String updatedBy;
 
+    @DeletedDate
     @Column(name = "DELETE_TS")
     protected Date deleteTs;
 
+    @DeletedBy
     @Column(name = "DELETED_BY", length = 50)
     protected String deletedBy;
 
@@ -142,27 +145,22 @@ public class Currency implements JmixEntity, Versioned, SoftDelete, HasUuid {
         this.updatedBy = updatedBy;
     }
 
-    @Override
     public Boolean isDeleted() {
         return deleteTs != null;
     }
 
-    @Override
     public Date getDeleteTs() {
         return deleteTs;
     }
 
-    @Override
     public void setDeleteTs(Date deleteTs) {
         this.deleteTs = deleteTs;
     }
 
-    @Override
     public String getDeletedBy() {
         return deletedBy;
     }
 
-    @Override
     public void setDeletedBy(String deletedBy) {
         this.deletedBy = deletedBy;
     }
