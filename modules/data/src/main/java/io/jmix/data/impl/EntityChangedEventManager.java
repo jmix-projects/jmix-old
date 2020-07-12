@@ -18,8 +18,8 @@ package io.jmix.data.impl;
 
 import io.jmix.core.Events;
 import io.jmix.core.Id;
-import io.jmix.core.Metadata;
 import io.jmix.core.JmixEntity;
+import io.jmix.core.Metadata;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.annotation.PublishEntityChangedEvents;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -33,10 +33,10 @@ import org.eclipse.persistence.sessions.changesets.ChangeRecord;
 import org.eclipse.persistence.sessions.changesets.ObjectChangeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,6 +49,8 @@ public class EntityChangedEventManager {
 
     @Autowired
     private Metadata metadata;
+    @Autowired
+    protected PersistenceSupport persistenceSupport;
 
     @Autowired
     private Events eventPublisher;
@@ -107,7 +109,7 @@ public class EntityChangedEventManager {
                             log.warn("Cannot publish EntityChangedEvent for {} because its AttributeChangeListener is null", entity);
                             continue;
                         }
-                        if (info.onDeleted && PersistenceSupport.isDeleted(entity, changeListener)) {
+                        if (info.onDeleted && persistenceSupport.isDeleted(entity, changeListener)) {
                             type = EntityChangedEvent.Type.DELETED;
                             attributeChanges = getEntityAttributeChanges(entity, true);
                         } else if (info.onUpdated && changeListener.hasChanges()) {

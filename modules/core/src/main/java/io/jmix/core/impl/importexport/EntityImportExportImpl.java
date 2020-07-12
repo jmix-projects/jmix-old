@@ -17,9 +17,9 @@
 package io.jmix.core.impl.importexport;
 
 import io.jmix.core.*;
+import io.jmix.core.entity.EntityEntrySoftDelete;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.SecurityState;
-import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Range;
@@ -30,11 +30,11 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
@@ -237,8 +237,9 @@ public class EntityImportExportImpl implements EntityImportExport {
 
         for (JmixEntity commitInstance : saveContext.getEntitiesToSave()) {
             if (!entityStates.isNew(commitInstance)) {
-                if (commitInstance instanceof SoftDelete && ((SoftDelete) commitInstance).isDeleted()) {
-                    ((SoftDelete) commitInstance).setDeleteTs(null);
+                if (commitInstance.__getEntityEntry() instanceof EntityEntrySoftDelete
+                        && ((EntityEntrySoftDelete) commitInstance.__getEntityEntry()).isDeleted()) {
+                    ((EntityEntrySoftDelete) commitInstance.__getEntityEntry()).setDeletedDate(null);
                 }
             }
             //todo dynamicAttributesManagerAPI

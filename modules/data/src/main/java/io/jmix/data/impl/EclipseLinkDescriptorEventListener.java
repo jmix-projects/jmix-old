@@ -17,13 +17,14 @@
 package io.jmix.data.impl;
 
 import io.jmix.core.JmixEntity;
+import io.jmix.core.MetadataTools;
 import io.jmix.core.TimeSource;
 import io.jmix.core.entity.BaseUser;
 import io.jmix.core.entity.EntityEntryAuditable;
-import io.jmix.core.entity.SoftDelete;
+import io.jmix.core.entity.EntityEntrySoftDelete;
 import io.jmix.data.AuditInfoProvider;
 import io.jmix.data.PersistenceTools;
-import io.jmix.data.impl.converters.AuditConvertionService;
+import io.jmix.data.impl.converters.AuditConversionService;
 import org.eclipse.persistence.descriptors.DescriptorEvent;
 import org.eclipse.persistence.descriptors.DescriptorEventListener;
 import org.eclipse.persistence.descriptors.DescriptorEventManager;
@@ -50,6 +51,8 @@ public class EclipseLinkDescriptorEventListener implements DescriptorEventListen
 
     @Autowired
     protected PersistenceTools persistenceTools;
+    @Autowired
+    protected MetadataTools metadataTools;
 
     @Autowired
     protected AuditInfoProvider auditInfoProvider;
@@ -61,10 +64,14 @@ public class EclipseLinkDescriptorEventListener implements DescriptorEventListen
     protected PersistenceSupport support;
 
     @Autowired
-    protected AuditConvertionService conversionService;
+    protected AuditConversionService conversionService;
 
-    protected boolean justDeleted(SoftDelete entity) {
-        return entity.isDeleted() && persistenceTools.getDirtyFields((JmixEntity) entity).contains("deleteTs");
+    protected boolean isJustSoftDeleted(JmixEntity entity) {
+        if (entity.__getEntityEntry() instanceof EntityEntrySoftDelete) {
+            EntityEntrySoftDelete entry = (EntityEntrySoftDelete) entity.__getEntityEntry();
+            return entry.isDeleted() && persistenceTools.isDirty(entity, metadataTools.getDeletedDatePropertyNN(entity));
+        }
+        return false;
     }
 
     @Override
@@ -147,7 +154,7 @@ public class EclipseLinkDescriptorEventListener implements DescriptorEventListen
     public void postUpdate(DescriptorEvent event) {
         String storeName = support.getStorageName(event.getSession());
         JmixEntity entity = (JmixEntity) event.getSource();
-        if (entity instanceof SoftDelete && persistenceTools.isDirty(entity, "deleteTs") && ((SoftDelete) entity).isDeleted()) {
+        if (isJustSoftDeleted(entity)) {
             manager.fireListener(entity, EntityListenerType.AFTER_DELETE, storeName);
         } else {
             manager.fireListener(entity, EntityListenerType.AFTER_UPDATE, storeName);
@@ -185,8 +192,7 @@ public class EclipseLinkDescriptorEventListener implements DescriptorEventListen
     @Override
     public void preUpdate(DescriptorEvent event) {
         JmixEntity entity = (JmixEntity) event.getObject();
-        if (!((entity instanceof SoftDelete) && justDeleted((SoftDelete) entity))
-                && entity.__getEntityEntry() instanceof EntityEntryAuditable) {
+        if (!(isJustSoftDeleted(entity)) && entity.__getEntityEntry() instanceof EntityEntryAuditable) {
             setUpdateInfo((EntityEntryAuditable) entity.__getEntityEntry(),
                     timeSource.currentTimestamp(),
                     auditInfoProvider.getCurrentUser(),

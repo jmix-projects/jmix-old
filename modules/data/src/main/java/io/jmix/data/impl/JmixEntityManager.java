@@ -17,15 +17,15 @@
 package io.jmix.data.impl;
 
 import com.google.common.collect.Sets;
-import io.jmix.core.JmixEntity;
 import io.jmix.core.*;
 import io.jmix.core.common.util.Preconditions;
+import io.jmix.core.entity.EntityEntrySoftDelete;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.data.AuditInfoProvider;
 import io.jmix.data.PersistenceHints;
+import io.jmix.data.impl.converters.AuditConversionService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.eclipse.persistence.internal.helper.CubaUtil;
@@ -58,6 +58,7 @@ public class JmixEntityManager implements EntityManager {
     private EntityPersistingEventManager entityPersistingEventMgr;
     private TimeSource timeSource;
     private AuditInfoProvider auditInfoProvider;
+    private AuditConversionService entityControlService;
 
     private static final Logger log = LoggerFactory.getLogger(JmixEntityManager.class);
 
@@ -74,6 +75,7 @@ public class JmixEntityManager implements EntityManager {
         entityPersistingEventMgr = beanLocator.get(EntityPersistingEventManager.NAME);
         timeSource = beanLocator.get(TimeSource.NAME);
         auditInfoProvider = beanLocator.get(AuditInfoProvider.NAME);
+        entityControlService = beanLocator.get(AuditConversionService.NAME);
     }
 
     @Override
@@ -129,9 +131,11 @@ public class JmixEntityManager implements EntityManager {
         if (entityStates.isDetached(entity)) {
             entity = internalMerge(entity);
         }
-        if (entity instanceof SoftDelete && PersistenceHints.isSoftDeletion(delegate)) {
-            ((SoftDelete) entity).setDeleteTs(timeSource.currentTimestamp());
-            ((SoftDelete) entity).setDeletedBy(auditInfoProvider.getCurrentUserUsername());
+
+        if (entity.__getEntityEntry() instanceof EntityEntrySoftDelete && PersistenceHints.isSoftDeletion(delegate)) {
+            entityControlService.setDeletedDate((EntityEntrySoftDelete) entity.__getEntityEntry(), timeSource.currentTimestamp());
+            entityControlService.setDeletedBy((EntityEntrySoftDelete) entity.__getEntityEntry(), auditInfoProvider.getCurrentUser());
+
         } else {
             delegate.remove(entity);
             entity.__getEntityEntry().setRemoved(true);
@@ -431,7 +435,8 @@ public class JmixEntityManager implements EntityManager {
         Class<T> javaClass = metaClass.getJavaClass();
 
         T entity = delegate.find(javaClass, realId, lockMode, properties);
-        if (entity instanceof SoftDelete && ((SoftDelete) entity).isDeleted() && isSoftDeletion(properties))
+
+        if (entity != null && metadataTools.isSoftDeleted((JmixEntity) entity) && isSoftDeletion(properties))
             return null; // in case of entity cache
         else
             return entity;

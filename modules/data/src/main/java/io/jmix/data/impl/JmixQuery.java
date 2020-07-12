@@ -19,12 +19,10 @@ package io.jmix.data.impl;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import io.jmix.core.JmixEntity;
 import io.jmix.core.Id;
 import io.jmix.core.*;
 import io.jmix.core.common.util.ReflectionHelper;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.datatype.impl.EnumClass;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.data.EntityFetcher;
@@ -270,7 +268,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
         boolean enableDeleteInSoftDeleteMode =
                 Boolean.parseBoolean(environment.getProperty("jmix.data.enableDeleteStatementInSoftDeleteMode"));
         if (!enableDeleteInSoftDeleteMode && PersistenceHints.isSoftDeletion(entityManager) && isDeleteQuery) {
-            if (SoftDelete.class.isAssignableFrom(referenceClass)) {
+            if (metadataTools.isSoftDeleted(referenceClass)) {
                 throw new UnsupportedOperationException("Delete queries are not supported with enabled soft deletion. " +
                         "Use 'cuba.enableDeleteStatementInSoftDeleteMode' application property to roll back to legacy behavior.");
             }
