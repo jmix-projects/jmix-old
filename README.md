@@ -19,7 +19,7 @@ In order to publish artifacts to the local Maven repo, execute the following com
 
 ```
 ./gradlew publishToMavenLocal install
-./gradlew -b jmix-gradle-plugin/build.gradle publishToMavenLocal
+./gradlew -b gradle-plugin/build.gradle publishToMavenLocal
 ./gradlew -b templates/studio/build.gradle publishToMavenLocal
 ```
 
