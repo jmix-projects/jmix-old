@@ -17,6 +17,7 @@
 rootProject.name = 'jmix'
 
 includeBuild 'jmix-gradle-plugin'
+includeBuild 'templates/studio'
 
 include 'jmix-platform'
 
