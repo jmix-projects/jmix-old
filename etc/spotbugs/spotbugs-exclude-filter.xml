@@ -88,6 +88,28 @@
         <Class name="io.jmix.data.impl.JmixTransactionManager"/>
     </Match>
 
+    <Match>
+        <Bug pattern="MS_PKGPROTECT"/>
+        <Class name="io.jmix.ui.navigation.CrockfordUuidEncoder"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+        <Class name="io.jmix.ui.sys.WebFragments"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="NP_NONNULL_PARAM_VIOLATION"/>
+        <Class name="io.jmix.ui.component.impl.WebAbstractDataGrid$ActionMenuItemWrapper"/>
+        <Method name="performAction"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="NP_NONNULL_PARAM_VIOLATION"/>
+        <Class name="io.jmix.ui.component.presentation.TablePresentations"/>
+        <Method name="setPopupButtonAction"/>
+    </Match>
+
     <!--  todo fix  -->
     <Match>
         <Bug pattern="NP_EQUALS_SHOULD_HANDLE_NULL_ARGUMENT"/>

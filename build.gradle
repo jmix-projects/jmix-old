@@ -114,7 +114,8 @@ configure(subprojects.findAll { !it.name.startsWith('sample-') }) {
     }
 }
 
-configure([project(':modules:core'), project(':modules:data'), project(':modules:security'), project(':modules:audit')]) {
+configure([project(':modules:core'), project(':modules:data'), project(':modules:security'), project(':modules:audit'),
+        project(':modules:ui')]) {
     if (rootProject.hasProperty('spotbugsEnabled')) {
         apply plugin: 'com.github.spotbugs'
 
