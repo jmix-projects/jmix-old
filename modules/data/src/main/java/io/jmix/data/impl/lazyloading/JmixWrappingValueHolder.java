@@ -30,10 +30,6 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class JmixWrappingValueHolder extends JmixAbstractValueHolder {
-
-    protected DataManager dataManager = AppBeans.get(DataManager.NAME);
-    protected Metadata metadata = AppBeans.get(Metadata.NAME);
-    protected MetadataTools metadataTools = AppBeans.get(MetadataTools.NAME);
     protected volatile UnitOfWorkQueryValueHolder originalValueHolder;
 
     public JmixWrappingValueHolder(UnitOfWorkQueryValueHolder originalValueHolder) {
@@ -44,6 +40,9 @@ public class JmixWrappingValueHolder extends JmixAbstractValueHolder {
     public Object getValue() {
         if (!isInstantiated) {
             synchronized (this) {
+                DataManager dataManager = AppBeans.get(DataManager.NAME);
+                Metadata metadata = AppBeans.get(Metadata.NAME);
+                MetadataTools metadataTools = AppBeans.get(MetadataTools.NAME);
                 Class refClass = ((ForeignReferenceMapping) originalValueHolder.getMapping()).getReferenceClass();
                 MetaClass metaClass = metadata.getClass(refClass);
                 MetaProperty idProperty = metadataTools.getPrimaryKeyProperty(metaClass);

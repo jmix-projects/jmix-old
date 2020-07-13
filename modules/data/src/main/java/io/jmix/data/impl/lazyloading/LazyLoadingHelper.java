@@ -20,7 +20,7 @@ import io.jmix.core.*;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import org.eclipse.persistence.indirection.IndirectList;
+import org.eclipse.persistence.indirection.IndirectCollection;
 import org.eclipse.persistence.internal.indirection.UnitOfWorkQueryValueHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,10 +69,17 @@ public class LazyLoadingHelper {
                     Field declaredField = instance.getClass().getDeclaredField("_persistence_" + property.getName() + "_vh");
                     boolean accessible = declaredField.isAccessible();
                     declaredField.setAccessible(true);
+                    Object fieldInstance = declaredField.get(instance);
+                    if (fieldInstance instanceof JmixAbstractValueHolder) {
+                        declaredField.setAccessible(accessible);
+                        return;
+                    }
                     if (metadataTools.isOwningSide(property)) {
-                        declaredField.set(instance, new JmixWrappingValueHolder((UnitOfWorkQueryValueHolder) declaredField.get(instance)));
+                        declaredField.set(instance, new JmixWrappingValueHolder((UnitOfWorkQueryValueHolder) fieldInstance));
                     } else {
-                        declaredField.set(instance, new JmixSingleValueHolder(property, instance.__getEntityEntry().getEntityId()));
+                        MetaProperty inverseProperty = property.getInverse();
+                        declaredField.set(instance, new JmixSingleValueHolder(inverseProperty.getName(),
+                                instance.getClass(), instance.__getEntityEntry().getEntityId()));
                     }
                     declaredField.setAccessible(accessible);
                 } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -85,7 +92,12 @@ public class LazyLoadingHelper {
                     Field declaredField = instance.getClass().getDeclaredField("_persistence_" + property.getName() + "_vh");
                     boolean accessible = declaredField.isAccessible();
                     declaredField.setAccessible(true);
-                    declaredField.set(instance, new JmixWrappingValueHolder((UnitOfWorkQueryValueHolder) declaredField.get(instance)));
+                    Object fieldInstance = declaredField.get(instance);
+                    if (fieldInstance instanceof JmixAbstractValueHolder) {
+                        declaredField.setAccessible(accessible);
+                        return;
+                    }
+                    declaredField.set(instance, new JmixWrappingValueHolder((UnitOfWorkQueryValueHolder) fieldInstance));
                     declaredField.setAccessible(accessible);
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     log.warn("Could not find value holder field for property {} in {} entity object",
@@ -94,10 +106,13 @@ public class LazyLoadingHelper {
                 break;
             case ONE_TO_MANY:
             case MANY_TO_MANY:
-                IndirectList fieldValue = instance.__getEntityEntry().getAttributeValue(property.getName());
-                fieldValue.setValueHolder(new JmixListValueHolder(
+                IndirectCollection fieldValue = instance.__getEntityEntry().getAttributeValue(property.getName());
+                if (fieldValue == null || fieldValue.getValueHolder() instanceof JmixAbstractValueHolder) {
+                    return;
+                }
+                fieldValue.setValueHolder(new JmixCollectionValueHolder(
                         property.getName(),
-                        metadata.getClass(instance.getClass()),
+                        instance.getClass(),
                         instance.__getEntityEntry().getEntityId()));
                 break;
         }

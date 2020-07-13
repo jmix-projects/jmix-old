@@ -21,17 +21,15 @@ import io.jmix.core.DataManager;
 import io.jmix.core.LoadContext;
 import io.jmix.core.Metadata;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.metamodel.model.MetaProperty;
 
 public class JmixSingleValueHolder extends JmixAbstractValueHolder {
-
-    protected DataManager dataManager = AppBeans.get(DataManager.NAME);
-    protected Metadata metadata = AppBeans.get(Metadata.NAME);
     protected Object entityId;
-    protected MetaProperty property;
+    protected String propertyName;
+    protected Class valueClass;
 
-    public JmixSingleValueHolder(MetaProperty property, Object entityId) {
-        this.property = property;
+    public JmixSingleValueHolder(String propertyName, Class valueClass, Object entityId) {
+        this.propertyName = propertyName;
+        this.valueClass = valueClass;
         this.entityId = entityId;
     }
 
@@ -39,11 +37,12 @@ public class JmixSingleValueHolder extends JmixAbstractValueHolder {
     public Object getValue() {
         if (!isInstantiated) {
             synchronized (this) {
-                MetaProperty inverseProperty = property.getInverse();
-                MetaClass metaClass = inverseProperty.getDomain();
+                DataManager dataManager = AppBeans.get(DataManager.NAME);
+                Metadata metadata = AppBeans.get(Metadata.NAME);
+                MetaClass metaClass = metadata.getClass(valueClass);
                 LoadContext lc = new LoadContext(metaClass);
                 lc.setQueryString(String.format("select e from %s e where e.%s.id = :entityId",
-                        metaClass.getName(), inverseProperty.getName()));
+                        metaClass.getName(), propertyName));
                 lc.getQuery().setParameter("entityId", entityId);
                 value = dataManager.load(lc);
                 isInstantiated = true;
@@ -54,6 +53,6 @@ public class JmixSingleValueHolder extends JmixAbstractValueHolder {
 
     @Override
     public Object clone() {
-        return new JmixSingleValueHolder(property, entityId);
+        return new JmixSingleValueHolder(propertyName, valueClass, entityId);
     }
 }

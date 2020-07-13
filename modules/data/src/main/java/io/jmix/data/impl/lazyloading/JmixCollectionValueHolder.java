@@ -17,18 +17,14 @@
 package io.jmix.data.impl.lazyloading;
 
 import io.jmix.core.*;
-import io.jmix.core.metamodel.model.MetaClass;
-import org.eclipse.persistence.indirection.IndirectList;
+import org.eclipse.persistence.indirection.IndirectCollection;
 
-public class JmixListValueHolder extends JmixAbstractValueHolder {
-
-    protected DataManager dataManager = AppBeans.get(DataManager.NAME);
-    protected Metadata metadata = AppBeans.get(Metadata.NAME);
-    protected MetaClass ownerClass;
+public class JmixCollectionValueHolder extends JmixAbstractValueHolder {
+    protected Class ownerClass;
     protected Object entityId;
     protected String propertyName;
 
-    public JmixListValueHolder(String propertyName, MetaClass ownerClass, Object entityId) {
+    public JmixCollectionValueHolder(String propertyName, Class ownerClass, Object entityId) {
         this.propertyName = propertyName;
         this.ownerClass = ownerClass;
         this.entityId = entityId;
@@ -38,7 +34,8 @@ public class JmixListValueHolder extends JmixAbstractValueHolder {
     public Object getValue() {
         if (!isInstantiated) {
             synchronized (this) {
-                FetchPlanBuilder fetchPlanBuilder = AppBeans.getPrototype(FetchPlanBuilder.NAME, ownerClass.getJavaClass());
+                DataManager dataManager = AppBeans.get(DataManager.NAME);
+                FetchPlanBuilder fetchPlanBuilder = AppBeans.getPrototype(FetchPlanBuilder.NAME, ownerClass);
                 LoadContext lc = new LoadContext(ownerClass);
                 lc.setFetchPlan(fetchPlanBuilder
                         .build()
@@ -47,7 +44,7 @@ public class JmixListValueHolder extends JmixAbstractValueHolder {
 
                 JmixEntity result = dataManager.load(lc);
 
-                this.value = ((IndirectList) result.__getEntityEntry().getAttributeValue(propertyName))
+                this.value = ((IndirectCollection) result.__getEntityEntry().getAttributeValue(propertyName))
                         .getValueHolder()
                         .getValue();
                 isInstantiated = true;
@@ -58,6 +55,6 @@ public class JmixListValueHolder extends JmixAbstractValueHolder {
 
     @Override
     public Object clone() {
-        return new JmixListValueHolder(propertyName, ownerClass, entityId);
+        return new JmixCollectionValueHolder(propertyName, ownerClass, entityId);
     }
 }
