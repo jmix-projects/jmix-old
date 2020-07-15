@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.persistence.exceptions.QueryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -132,6 +133,12 @@ public class OrmDataStore implements DataStore {
     @Autowired
     private EntityReferencesNormalizer entityReferencesNormalizer;
 
+    @Autowired
+    protected BeanFactory beanFactory;
+
+    @Autowired
+    protected ExtendedEntities extendedEntities;
+
     protected String storeName;
 
     protected static final AtomicLong txCount = new AtomicLong();
@@ -153,7 +160,7 @@ public class OrmDataStore implements DataStore {
             log.debug("load: store={}, metaClass={}, id={}, view={}", storeName, context.getMetaClass(), context.getId(), context.getFetchPlan());
         }
 
-        final MetaClass metaClass = metadata.getSession().getClass(context.getMetaClass());
+        final MetaClass metaClass = getEffectiveMetaClassFromContext(context);
         if (isAuthorizationRequired(context) && !isEntityOpPermitted(metaClass, EntityOp.READ)) {
             log.debug("reading of {} not permitted, returning null", metaClass);
             return null;
@@ -231,7 +238,7 @@ public class OrmDataStore implements DataStore {
                     + (context.getQuery() == null || context.getQuery().getFirstResult() == 0 ? "" : ", first=" + context.getQuery().getFirstResult())
                     + (context.getQuery() == null || context.getQuery().getMaxResults() == 0 ? "" : ", max=" + context.getQuery().getMaxResults()));
 
-        MetaClass metaClass = metadata.getClass(context.getMetaClass());
+        MetaClass metaClass = getEffectiveMetaClassFromContext(context);
 
         if (isAuthorizationRequired(context) && !isEntityOpPermitted(metaClass, EntityOp.READ)) {
             log.debug("reading of {} not permitted, returning empty list", metaClass);
@@ -307,6 +314,10 @@ public class OrmDataStore implements DataStore {
         return resultList;
     }
 
+    protected <E extends JmixEntity> MetaClass getEffectiveMetaClassFromContext(LoadContext<E> context) {
+        return extendedEntities.getEffectiveMetaClass(context.getMetaClass());
+    }
+
     protected boolean entityHasEmbeddedId(MetaClass metaClass) {
         MetaProperty pkProperty = metadataTools.getPrimaryKeyProperty(metaClass);
         return pkProperty == null || pkProperty.getRange().isClass();
@@ -365,7 +376,7 @@ public class OrmDataStore implements DataStore {
                     + (context.getPreviousQueries().isEmpty() ? "" : ", from selected")
                     + ", query=" + context.getQuery());
 
-        MetaClass metaClass = metadata.getClass(context.getMetaClass());
+        MetaClass metaClass = getEffectiveMetaClassFromContext(context);
 
         if (isAuthorizationRequired(context) && !isEntityOpPermitted(metaClass, EntityOp.READ)) {
             log.debug("reading of {} not permitted, returning 0", metaClass);
@@ -391,7 +402,7 @@ public class OrmDataStore implements DataStore {
 
                 boolean ensureDistinct = false;
                 if (properties.isInMemoryDistinct() && context.getQuery() != null) {
-                    QueryTransformer transformer = QueryTransformerFactory.createTransformer(
+                    QueryTransformer transformer = queryTransformerFactory.transformer(
                             context.getQuery().getQueryString());
                     ensureDistinct = transformer.removeDistinct();
                     if (ensureDistinct) {
@@ -413,7 +424,7 @@ public class OrmDataStore implements DataStore {
             commitTransaction(txStatus);
             return resultList.size();
         } else {
-            QueryTransformer transformer = QueryTransformerFactory.createTransformer(context.getQuery().getQueryString());
+            QueryTransformer transformer = queryTransformerFactory.transformer(context.getQuery().getQueryString());
             transformer.replaceWithCount();
             context.getQuery().setQueryString(transformer.getResult());
 
@@ -696,7 +707,7 @@ public class OrmDataStore implements DataStore {
 
             List<String> keys = context.getProperties();
 
-            JpqlQueryBuilder queryBuilder = AppBeans.get(JpqlQueryBuilder.NAME);
+            JpqlQueryBuilder queryBuilder = beanFactory.getBean(JpqlQueryBuilder.class);
 
             queryBuilder.setValueProperties(context.getProperties())
                     .setQueryString(contextQuery.getQueryString())
@@ -787,11 +798,13 @@ public class OrmDataStore implements DataStore {
     protected Query createQuery(EntityManager em, LoadContext<?> context, boolean singleResult, boolean countQuery) {
         LoadContext.Query contextQuery = context.getQuery();
 
-        JpqlQueryBuilder queryBuilder = AppBeans.get(JpqlQueryBuilder.NAME);
+        JpqlQueryBuilder queryBuilder = beanFactory.getBean(JpqlQueryBuilder.class);
+
+        MetaClass metaClass = getEffectiveMetaClassFromContext(context);
 
         queryBuilder.setId(context.getId())
                 .setIds(context.getIds())
-                .setEntityName(context.getMetaClass())
+                .setEntityName(metaClass.getName())
                 .setSingleResult(singleResult);
 
         if (contextQuery != null) {
@@ -831,8 +844,9 @@ public class OrmDataStore implements DataStore {
     }
 
     protected FetchPlan createRestrictedFetchPlan(LoadContext<?> context) {
+        MetaClass metaClass = getEffectiveMetaClassFromContext(context);
         FetchPlan fetchPlan = context.getFetchPlan() != null ? context.getFetchPlan() :
-                fetchPlanRepository.getFetchPlan(metadata.getClass(context.getMetaClass()), FetchPlan.BASE);
+                fetchPlanRepository.getFetchPlan(metaClass, FetchPlan.BASE);
 
         FetchPlan copy = FetchPlan.copy(isAuthorizationRequired(context) ? attributeSecurity.createRestrictedFetchPlan(fetchPlan) : fetchPlan);
         if (context.isLoadPartialEntities()
@@ -1086,7 +1100,8 @@ public class OrmDataStore implements DataStore {
     }
 
     protected boolean needToFilterByInMemoryReadConstraints(LoadContext context) {
-        return security.hasConstraints() && security.hasInMemoryConstraints(metadata.getClass(context.getMetaClass()),
+        MetaClass metaClass = getEffectiveMetaClassFromContext(context);
+        return security.hasConstraints() && security.hasInMemoryConstraints(metaClass,
                 ConstraintOperationType.READ, ConstraintOperationType.ALL);
     }
 
@@ -1098,7 +1113,7 @@ public class OrmDataStore implements DataStore {
 
     protected boolean needToApplyByPredicate(LoadContext context, Predicate<MetaClass> hasConstraints) {
         if (context.getFetchPlan() == null) {
-            MetaClass metaClass = metadata.getSession().getClass(context.getMetaClass());
+            MetaClass metaClass = getEffectiveMetaClassFromContext(context);
             return hasConstraints.test(metaClass);
         }
 

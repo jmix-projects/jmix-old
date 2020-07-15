@@ -19,7 +19,6 @@ package io.jmix.data.impl;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import io.jmix.core.JmixEntity;
 import io.jmix.core.Id;
 import io.jmix.core.*;
 import io.jmix.core.common.util.ReflectionHelper;
@@ -61,6 +60,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
     private final EntityManager entityManager;
     private Class<E> resultClass;
 
+    protected BeanLocator beanLocator;
     protected Environment environment;
     protected Metadata metadata;
     protected MetadataTools metadataTools;
@@ -92,6 +92,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
     public JmixQuery(EntityManager entityManager, BeanLocator beanLocator, boolean isNative, String qlString,
                      @Nullable Class<E> resultClass) {
         this.entityManager = entityManager;
+        this.beanLocator = beanLocator;
         this.isNative = isNative;
         this.queryString = qlString;
         this.resultClass = resultClass;
@@ -728,7 +729,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
         boolean useQueryCache = cacheable && !isNative && queryCacheMgr.isEnabled() && lockMode == null;
         Object result;
         if (useQueryCache) {
-            QueryParser parser = QueryTransformerFactory.createParser(transformedQueryString);
+            QueryParser parser = beanLocator.get(QueryTransformerFactory.class).parser(transformedQueryString);
             String entityName = parser.getEntityName();
             useQueryCache = parser.isEntitySelect(entityName);
             QueryKey queryKey = null;

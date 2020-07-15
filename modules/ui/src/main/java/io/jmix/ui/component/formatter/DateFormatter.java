@@ -18,8 +18,8 @@ package io.jmix.ui.component.formatter;
 import io.jmix.core.BeanLocator;
 import io.jmix.core.LocaleResolver;
 import io.jmix.core.Messages;
-import io.jmix.core.metamodel.datatype.Datatypes;
 import io.jmix.core.metamodel.datatype.FormatStrings;
+import io.jmix.core.metamodel.datatype.FormatStringsRegistry;
 import io.jmix.core.security.CurrentAuthentication;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
@@ -61,6 +61,8 @@ public class DateFormatter implements Formatter<Date> {
     protected CurrentAuthentication currentAuthentication;
     @Autowired
     protected Messages messages;
+    @Autowired
+    protected FormatStringsRegistry formatStringsRegistry;
 
     public DateFormatter(Element element) {
         this.element = element;
@@ -75,7 +77,7 @@ public class DateFormatter implements Formatter<Date> {
         if (StringUtils.isBlank(format)) {
             String type = element.attributeValue("type");
             if (type != null) {
-                FormatStrings formatStrings = Datatypes.getFormatStrings(currentAuthentication.getLocale());
+                FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(currentAuthentication.getLocale());
                 if (formatStrings == null)
                     throw new IllegalStateException("FormatStrings are not defined for " +
                             LocaleResolver.localeToString(currentAuthentication.getLocale()));

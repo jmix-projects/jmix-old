@@ -16,16 +16,16 @@
 
 package spec.haulmont.cuba.core.datatypes
 
+import com.haulmont.cuba.core.global.AppBeans
 import com.haulmont.cuba.core.model.LocalDateTimeEntity
 import com.haulmont.cuba.core.model.TestNumberValuesEntity
-import io.jmix.core.AppBeans
 import io.jmix.core.Metadata
 import io.jmix.core.metamodel.datatype.DatatypeRegistry
 import io.jmix.core.metamodel.datatype.impl.*
+import org.springframework.beans.factory.annotation.Autowired
 import spec.haulmont.cuba.core.CoreTestSpecification
 import spock.lang.Ignore
 
-import org.springframework.beans.factory.annotation.Autowired
 import java.text.ParseException
 import java.time.*
 

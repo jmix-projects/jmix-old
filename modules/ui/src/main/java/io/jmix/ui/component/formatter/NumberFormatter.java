@@ -19,8 +19,9 @@ import io.jmix.core.BeanLocator;
 import io.jmix.core.LocaleResolver;
 import io.jmix.core.Messages;
 import io.jmix.core.metamodel.datatype.Datatype;
-import io.jmix.core.metamodel.datatype.Datatypes;
+import io.jmix.core.metamodel.datatype.DatatypeRegistry;
 import io.jmix.core.metamodel.datatype.FormatStrings;
+import io.jmix.core.metamodel.datatype.FormatStringsRegistry;
 import io.jmix.core.security.CurrentAuthentication;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,10 @@ public class NumberFormatter implements Formatter<Number> {
     protected CurrentAuthentication currentAuthentication;
     @Autowired
     protected Messages messages;
+    @Autowired
+    protected DatatypeRegistry datatypeRegistry;
+    @Autowired
+    protected FormatStringsRegistry formatStringsRegistry;
 
     public NumberFormatter() {
     }
@@ -70,13 +75,13 @@ public class NumberFormatter implements Formatter<Number> {
         String pattern = element != null ? element.attributeValue("format") : null;
 
         if (pattern == null) {
-            Datatype datatype = Datatypes.getNN(value.getClass());
+            Datatype datatype = datatypeRegistry.get(value.getClass());
             return datatype.format(value, currentAuthentication.getLocale());
         } else {
             if (pattern.startsWith("msg://")) {
                 pattern = messages.getMessage(pattern.substring(6));
             }
-            FormatStrings formatStrings = Datatypes.getFormatStrings(currentAuthentication.getLocale());
+            FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(currentAuthentication.getLocale());
             if (formatStrings == null)
                 throw new IllegalStateException("FormatStrings are not defined for " +
                         LocaleResolver.localeToString(currentAuthentication.getLocale()));

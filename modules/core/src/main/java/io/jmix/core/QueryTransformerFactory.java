@@ -17,9 +17,9 @@ package io.jmix.core;
 
 import io.jmix.core.impl.jpql.DomainModel;
 import io.jmix.core.impl.jpql.DomainModelBuilder;
-import org.springframework.stereotype.Component;
-
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Factory to get {@link QueryParser} and {@link QueryTransformer} instances.
@@ -32,29 +32,21 @@ public class QueryTransformerFactory {
     protected volatile DomainModel domainModel;
 
     @Autowired
-    protected BeanLocator beanLocator;
-
-    public static QueryTransformer createTransformer(String query) {
-        return AppBeans.get(NAME, QueryTransformerFactory.class).transformer(query);
-    }
-
-    public static QueryParser createParser(String query) {
-        return AppBeans.get(NAME, QueryTransformerFactory.class).parser(query);
-    }
+    protected BeanFactory beanFactory;
 
     public QueryTransformer transformer(String query) {
         if (domainModel == null) {
-            DomainModelBuilder builder = beanLocator.get(DomainModelBuilder.NAME);
+            DomainModelBuilder builder = (DomainModelBuilder) beanFactory.getBean(DomainModelBuilder.NAME);
             domainModel = builder.produce();
         }
-        return beanLocator.getPrototype(QueryTransformer.NAME, domainModel, query);
+        return beanFactory.getBean(QueryTransformer.class, domainModel, query);
     }
 
     public QueryParser parser(String query) {
         if (domainModel == null) {
-            DomainModelBuilder builder = AppBeans.get(DomainModelBuilder.NAME);
+            DomainModelBuilder builder = (DomainModelBuilder) beanFactory.getBean(DomainModelBuilder.NAME);
             domainModel = builder.produce();
         }
-        return beanLocator.getPrototype(QueryParser.NAME, domainModel, query);
+        return beanFactory.getBean(QueryParser.class, domainModel, query);
     }
 }

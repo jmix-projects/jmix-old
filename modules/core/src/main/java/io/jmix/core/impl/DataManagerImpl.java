@@ -17,12 +17,14 @@
 package io.jmix.core.impl;
 
 import io.jmix.core.*;
+import io.jmix.core.common.util.Preconditions;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.KeyValueEntity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +51,12 @@ public class DataManagerImpl implements DataManager {
     @Autowired
     protected DataStoreFactory dataStoreFactory;
 
+    @Autowired
+    protected BeanFactory beanFactory;
+
+    @Autowired
+    protected ExtendedEntities extendedEntities;
+
     // todo entity log
 //    @Autowired
 //    protected EntityLogAPI entityLog;
@@ -56,7 +64,7 @@ public class DataManagerImpl implements DataManager {
     @Nullable
     @Override
     public <E extends JmixEntity> E load(LoadContext<E> context) {
-        MetaClass metaClass = metadata.getClass(context.getMetaClass());
+        MetaClass metaClass = getEffectiveMetaClassFromContext(context);
         DataStore storage = dataStoreFactory.get(getStoreName(metaClass));
         E entity = storage.load(context);
         if (entity != null)
@@ -66,7 +74,7 @@ public class DataManagerImpl implements DataManager {
 
     @Override
     public <E extends JmixEntity> List<E> loadList(LoadContext<E> context) {
-        MetaClass metaClass = metadata.getClass(context.getMetaClass());
+        MetaClass metaClass = getEffectiveMetaClassFromContext(context);
         DataStore storage = dataStoreFactory.get(getStoreName(metaClass));
         List<E> entities = storage.loadList(context);
         readCrossDataStoreReferences(entities, context.getFetchPlan(), metaClass, context.isJoinTransaction());
@@ -75,7 +83,7 @@ public class DataManagerImpl implements DataManager {
 
     @Override
     public long getCount(LoadContext<? extends JmixEntity> context) {
-        MetaClass metaClass = metadata.getClass(context.getMetaClass());
+        MetaClass metaClass = getEffectiveMetaClassFromContext(context);
         DataStore storage = dataStoreFactory.get(getStoreName(metaClass));
         return storage.getCount(context);
     }
@@ -95,6 +103,11 @@ public class DataManagerImpl implements DataManager {
     @Override
     public void remove(JmixEntity... entities) {
         save(new SaveContext().removing(entities));
+    }
+
+    @Override
+    public <E extends JmixEntity> void remove(Id<E> entityId) {
+        remove(getReference(entityId));
     }
 
     @Override
@@ -168,6 +181,27 @@ public class DataManagerImpl implements DataManager {
         return store.loadValues(context);
     }
 
+    @Override
+    public <E extends JmixEntity> FluentLoader<E> load(Class<E> entityClass) {
+        return beanFactory.getBean(FluentLoader.class, entityClass);
+    }
+
+    @Override
+    public <E extends JmixEntity> FluentLoader.ById<E> load(Id<E> entityId) {
+        return beanFactory.getBean(FluentLoader.class, entityId.getEntityClass())
+                .id(entityId.getValue());
+    }
+
+    @Override
+    public FluentValuesLoader loadValues(String queryString) {
+        return new FluentValuesLoader(queryString, this);
+    }
+
+    @Override
+    public <T> FluentValueLoader<T> loadValue(String queryString, Class<T> valueClass) {
+        return new FluentValueLoader<>(queryString, valueClass, this);
+    }
+
     protected SaveContext createSaveContext(SaveContext context) {
         SaveContext newCtx = new SaveContext();
         newCtx.setSoftDeletion(context.isSoftDeletion());
@@ -188,6 +222,12 @@ public class DataManagerImpl implements DataManager {
         EntityValues.setId(entity, id);
         entityStates.makePatch(entity);
         return entity;
+    }
+
+    @Override
+    public <T extends JmixEntity> T getReference(Id<T> entityId) {
+        Preconditions.checkNotNullArgument(entityId, "entityId is null");
+        return getReference(entityId.getEntityClass(), entityId.getValue());
     }
 
     protected boolean writeCrossDataStoreReferences(JmixEntity entity, Collection<JmixEntity> allEntities) {
@@ -246,7 +286,7 @@ public class DataManagerImpl implements DataManager {
         if (stores.getAdditional().isEmpty() || entities.isEmpty() || view == null)
             return;
 
-        CrossDataStoreReferenceLoader crossDataStoreReferenceLoader = AppBeans.getPrototype(
+        CrossDataStoreReferenceLoader crossDataStoreReferenceLoader = (CrossDataStoreReferenceLoader) beanFactory.getBean(
                 CrossDataStoreReferenceLoader.NAME, metaClass, view, joinTransaction);
         crossDataStoreReferenceLoader.processEntities(entities);
     }
@@ -257,5 +297,9 @@ public class DataManagerImpl implements DataManager {
 
     protected String getStoreName(@Nullable String storeName) {
         return storeName == null ? Stores.NOOP : storeName;
+    }
+
+    protected <E extends JmixEntity> MetaClass getEffectiveMetaClassFromContext(LoadContext<E> context) {
+        return extendedEntities.getEffectiveMetaClass(context.getMetaClass());
     }
 }

@@ -24,6 +24,7 @@ import io.jmix.data.persistence.DbTypeConverter;
 import io.jmix.data.persistence.DbmsSpecifics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -63,8 +63,14 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
     @Autowired
     private MetadataTools metadataTools;
 
+    @Autowired
+    private BeanLocator beanLocator;
+
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    protected QueryTransformerFactory queryTransformerFactory;
 
     protected JdbcTemplate jdbcTemplate;
 
@@ -94,9 +100,9 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
             return;
 
         LoadContext.Query contextQuery = prevQueries.get(prevQueries.size() - 1);
-        String entityName = loadContext.getMetaClass();
+        String entityName = loadContext.getMetaClass().getName();
 
-        QueryParser parser = QueryTransformerFactory.createParser(contextQuery.getQueryString());
+        QueryParser parser = queryTransformerFactory.parser(contextQuery.getQueryString());
         if (!parser.isEntitySelect(entityName))
             return;
 
@@ -108,7 +114,7 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
         List idList = transaction.execute(status -> {
             entityManager.setProperty(PersistenceHints.SOFT_DELETION, loadContext.isSoftDeletion());
 
-            QueryTransformer transformer = QueryTransformerFactory.createTransformer(contextQuery.getQueryString());
+            QueryTransformer transformer = queryTransformerFactory.transformer(contextQuery.getQueryString());
             String primaryKeyName = metadataTools.getPrimaryKeyName(metadata.getClass(entityName));
             if (primaryKeyName == null) {
                 throw new IllegalStateException("Cannot find primarykey name for " + entityName);
@@ -117,7 +123,7 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
             transformer.removeOrderBy();
             String queryString = transformer.getResult();
 
-            JpqlQueryBuilder queryBuilder = AppBeans.get(JpqlQueryBuilder.NAME);
+            JpqlQueryBuilder queryBuilder = beanLocator.get(JpqlQueryBuilder.NAME);
             queryBuilder.setQueryString(queryString)
                     .setEntityName(entityName)
                     .setCondition(contextQuery.getCondition())
