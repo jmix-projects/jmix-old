@@ -26,6 +26,7 @@ import io.jmix.core.*;
 import io.jmix.core.entity.HasUuid;
 import io.jmix.core.metamodel.datatype.Datatype;
 import io.jmix.core.metamodel.datatype.DatatypeRegistry;
+import io.jmix.core.metamodel.datatype.FormatStringsRegistry;
 import io.jmix.core.metamodel.datatype.impl.AdaptiveNumberDatatype;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.dynattr.AttributeType;
@@ -219,6 +220,8 @@ public class CategoryAttrsEdit extends StandardEditor<CategoryAttribute> {
     protected InstanceContainer<CategoryAttributeConfiguration> configurationDc;
     @Autowired
     protected DatatypeRegistry datatypeRegistry;
+    @Autowired
+    protected FormatStringsRegistry formatStringsRegistry;
     @Autowired
     protected JpqlSuggestionFactory jpqlSuggestionFactory;
 
@@ -511,7 +514,8 @@ public class CategoryAttrsEdit extends StandardEditor<CategoryAttribute> {
         String formatPattern = getEditedEntity().getConfiguration().getNumberFormatPattern();
         Datatype datatype;
         if (!Strings.isNullOrEmpty(formatPattern)) {
-            datatype = new AdaptiveNumberDatatype(BigDecimal.class, formatPattern, "", "");
+            datatype = new AdaptiveNumberDatatype(BigDecimal.class, formatPattern, "", "",
+                    formatStringsRegistry);
         } else {
             datatype = datatypeRegistry.find(BigDecimal.class);
         }
