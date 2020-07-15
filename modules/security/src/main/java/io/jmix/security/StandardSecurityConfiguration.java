@@ -17,6 +17,8 @@
 package io.jmix.security;
 
 import io.jmix.core.CoreProperties;
+import io.jmix.core.rememberme.RememberMeProperties;
+import io.jmix.core.security.LogoutRequestMatcher;
 import io.jmix.core.security.UserRepository;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
 import io.jmix.security.authentication.SecuredAuthenticationProvider;
@@ -35,6 +37,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @Configuration
 @ComponentScan
@@ -45,6 +51,9 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
 
     @Autowired
     private CoreProperties coreProperties;
+
+    @Autowired
+    private RememberMeProperties rememberMeProperties;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -76,7 +85,27 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
                     anonymousConfigurer.principal(userRepository.getAnonymousUser());
                 })
                 .csrf().disable()
+                .logout().logoutRequestMatcher(logoutRequestMatcher())
+                .and()
                 .headers().frameOptions().sameOrigin();
+
+        configureRememberMe(http);
+    }
+
+    private RequestMatcher logoutRequestMatcher() {
+        return new LogoutRequestMatcher();
+    }
+
+    protected HttpSecurity configureRememberMe(HttpSecurity http) throws Exception {
+        return http.rememberMe()
+                .key(rememberMeProperties.getKey())
+                .tokenValiditySeconds(rememberMeProperties.getTokenValiditySeconds())
+                .tokenRepository(rememberMeRepository())
+                .and();
+    }
+
+    protected PersistentTokenRepository rememberMeRepository() {
+        return new InMemoryTokenRepositoryImpl();
     }
 
     @Bean(name = "sec_AuthenticationManager")
