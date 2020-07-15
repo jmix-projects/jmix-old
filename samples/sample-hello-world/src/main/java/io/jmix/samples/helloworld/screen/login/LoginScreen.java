@@ -123,7 +123,7 @@ public class LoginScreen extends Screen {
             authenticationToken.setDetails(clientDetails);
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHelper.setAuthentication(authentication);
-            authenticationStrategy.onAuthentication(authentication, (VaadinServletRequest) VaadinService.getCurrentRequest(), (VaadinServletResponse) VaadinService.getCurrentResponse());
+            authenticationStrategy.onAuthentication(authentication, VaadinServletRequest.getCurrent(), VaadinServletResponse.getCurrent());
 
             String mainScreenId = uiProperties.getMainScreenId();
             screenBuilders.screen(this)
