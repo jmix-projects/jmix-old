@@ -6,11 +6,7 @@
         <collection id="customersDc"
                     class="io.jmix.samples.helloworld.entity.Customer">
             <fetchPlan extends="_local"/>
-            <loader id="customersDl">
-                <query>
-                    <![CDATA[select e from sample_Customer e]]>
-                </query>
-            </loader>
+            <loader id="customersDl"/>
         </collection>
     </data>
     <dialogMode height="600"

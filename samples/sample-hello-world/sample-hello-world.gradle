@@ -8,6 +8,10 @@ dependencies {
     implementation project(':starters:starter-standard')
     implementation project(':starters:starter-datatools-ui')
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation ('org.springframework.boot:spring-boot-starter-data-jpa') {
+        exclude group: 'org.hibernate', module: 'hibernate-core'
+        exclude group: 'org.hibernate', module: 'hibernate-entitymanager'
+    }
     implementation 'com.zaxxer:HikariCP'
     runtimeOnly 'org.hsqldb:hsqldb'
 

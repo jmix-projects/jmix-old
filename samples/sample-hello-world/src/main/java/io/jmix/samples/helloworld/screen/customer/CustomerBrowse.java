@@ -16,12 +16,34 @@
 
 package io.jmix.samples.helloworld.screen.customer;
 
+import io.jmix.core.LoadContext;
+import io.jmix.samples.helloworld.data.CustomersRepository;
+import io.jmix.samples.helloworld.data.api.ScreenDataRepository;
 import io.jmix.samples.helloworld.entity.Customer;
+import io.jmix.ui.Notifications;
 import io.jmix.ui.screen.*;
+
+import javax.inject.Inject;
+import java.util.List;
 
 @UiController("sample_Customer.browse")
 @UiDescriptor("customer-browse.xml")
 @LookupComponent("customersTable")
 @LoadDataBeforeShow
 public class CustomerBrowse extends StandardLookup<Customer> {
+
+    @Inject
+    CustomersRepository customersRepository;
+
+    Notifications notifications;
+
+    @Install(to = "customersDl", target = Target.DATA_LOADER)
+    public List<Customer> loadData(LoadContext<Customer> loadContext) {
+        List<Customer> customers = customersRepository.loadEntitiesList(loadContext);
+        customers.addAll(customersRepository.findAllCustomers());
+        return customers;
+    }
+
+
+
 }

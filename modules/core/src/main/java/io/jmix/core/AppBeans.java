@@ -16,7 +16,9 @@
 
 package io.jmix.core;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -26,9 +28,17 @@ import java.util.Map;
  *
  * @see BeanLocator
  */
+@Component
 public class AppBeans {
 
     private static ApplicationContext applicationContext;
+
+    private static BeanLocator beanLocator;
+
+    @Autowired
+    public AppBeans(BeanLocator beanLocator) {
+        this.beanLocator = beanLocator;
+    }
 
     /**
      * Return the bean instance that matches the given object type.
@@ -114,6 +124,9 @@ public class AppBeans {
     }
 
     private static BeanLocator getBeanLocator() {
+        if (beanLocator != null) {
+            return beanLocator;
+        }
         if (applicationContext == null)
             throw new IllegalStateException("ApplicationContext is not set");
         return applicationContext.getBean(BeanLocator.NAME, BeanLocator.class);
