@@ -16,14 +16,21 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
+import com.haulmont.cuba.gui.xml.DeclarativeTrackingAction;
+import com.haulmont.cuba.gui.xml.data.ComponentLoaderHelper;
+import io.jmix.ui.action.Action;
+import io.jmix.ui.component.ActionsHolder;
 import io.jmix.ui.component.Facet;
 import io.jmix.ui.component.Window;
 import io.jmix.ui.xml.FacetLoader;
 import io.jmix.ui.xml.layout.loader.WindowLoader;
+import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @ParametersAreNonnullByDefault
 public class CubaWindowLoader extends WindowLoader {
@@ -48,5 +55,24 @@ public class CubaWindowLoader extends WindowLoader {
                 resultComponent.addFacet(facet);
             }
         }
+    }
+
+    @Override
+    protected Action loadDeclarativeActionDefault(ActionsHolder actionsHolder, Element element) {
+        Action action = ComponentLoaderHelper.loadDeclarativeAction(
+                actionsHolder,
+                element,
+                loadActionId(element),
+                loadResourceString(element.attributeValue("caption")),
+                loadResourceString(element.attributeValue("description")),
+                getIconPath(element.attributeValue("icon")),
+                loadShortcut(trimToNull(element.attributeValue("shortcut"))))
+                .orElse(super.loadDeclarativeActionDefault(actionsHolder, element));
+
+        if (action instanceof DeclarativeTrackingAction) {
+            loadActionConstraint(action, element);
+        }
+
+        return action;
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.xml;
+package com.haulmont.cuba.gui.xml;
 
 import io.jmix.ui.action.BaseAction;
 import io.jmix.ui.component.ActionsHolder;

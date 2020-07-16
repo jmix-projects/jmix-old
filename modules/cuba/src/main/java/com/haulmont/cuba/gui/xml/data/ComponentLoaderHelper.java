@@ -20,21 +20,23 @@ import com.google.common.collect.ImmutableList;
 import com.haulmont.cuba.gui.components.HasSettings;
 import com.haulmont.cuba.gui.components.Field;
 import com.haulmont.cuba.gui.components.PickerField;
+import com.haulmont.cuba.gui.xml.DeclarativeAction;
+import com.haulmont.cuba.gui.xml.DeclarativeTrackingAction;
 import io.jmix.core.HotDeployManager;
 import io.jmix.core.BeanLocator;
-import io.jmix.core.HotDeployManager;
 import com.haulmont.cuba.gui.components.validators.DateValidator;
 import com.haulmont.cuba.gui.components.validators.DoubleValidator;
 import com.haulmont.cuba.gui.components.validators.IntegerValidator;
 import com.haulmont.cuba.gui.components.validators.LongValidator;
 import com.haulmont.cuba.gui.components.validators.ScriptValidator;
-import io.jmix.core.HotDeployManager;
 import io.jmix.core.Messages;
 import io.jmix.core.common.util.ReflectionHelper;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.action.Action;
+import io.jmix.ui.action.BaseAction;
+import io.jmix.ui.component.ActionsHolder;
 import io.jmix.ui.component.formatter.Formatter;
 import io.jmix.ui.component.DataGrid;
 import io.jmix.ui.gui.OpenType;
@@ -45,10 +47,8 @@ import org.dom4j.Element;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -292,5 +292,54 @@ public final class ComponentLoaderHelper {
         } else {
             return null;
         }
+    }
+
+    public static Optional<Action> loadDeclarativeAction(ActionsHolder actionsHolder,
+                                               Element element,
+                                               String id,
+                                               String caption,
+                                               String description,
+                                               String iconPath,
+                                               @Nullable String shortcut) {
+        String invokeMethod = element.attributeValue("invoke");
+        if (StringUtils.isEmpty(invokeMethod)) {
+            return Optional.empty();
+        }
+
+        String trackSelection = element.attributeValue("trackSelection");
+        boolean shouldTrackSelection = Boolean.parseBoolean(trackSelection);
+
+        BaseAction action;
+        if (shouldTrackSelection) {
+            action = new DeclarativeTrackingAction(
+                    id,
+                    caption,
+                    description,
+                    iconPath,
+                    element.attributeValue("enable"),
+                    element.attributeValue("visible"),
+                    invokeMethod,
+                    shortcut,
+                    actionsHolder
+            );
+
+            return Optional.of(action);
+        } else {
+            action = new DeclarativeAction(
+                    id,
+                    caption,
+                    description,
+                    iconPath,
+                    element.attributeValue("enable"),
+                    element.attributeValue("visible"),
+                    invokeMethod,
+                    shortcut,
+                    actionsHolder
+            );
+        }
+
+        action.setPrimary(Boolean.parseBoolean(element.attributeValue("primary")));
+
+        return Optional.of(action);
     }
 }

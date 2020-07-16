@@ -36,7 +36,6 @@ import io.jmix.ui.component.Component.Alignment;
 import io.jmix.ui.component.data.HasValueSource;
 import io.jmix.ui.component.data.value.ContainerValueSource;
 import io.jmix.ui.component.formatter.Formatter;
-import io.jmix.ui.component.validator.*;
 import io.jmix.ui.component.HasTablePresentations;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.model.CollectionContainer;
@@ -47,8 +46,6 @@ import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
-import io.jmix.ui.xml.DeclarativeAction;
-import io.jmix.ui.xml.DeclarativeTrackingAction;
 import io.jmix.ui.xml.layout.ComponentLoader;
 import io.jmix.ui.xml.layout.LayoutLoaderConfig;
 import io.jmix.ui.xml.layout.LoaderResolver;
@@ -59,16 +56,12 @@ import org.dom4j.Attribute;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkState;
 import static io.jmix.ui.icon.Icons.ICON_NAME_REGEX;
@@ -564,15 +557,20 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         String id = loadActionId(element);
 
         String trackSelection = element.attributeValue("trackSelection");
-
         boolean shouldTrackSelection = Boolean.parseBoolean(trackSelection);
-        String invokeMethod = element.attributeValue("invoke");
 
-        if (StringUtils.isEmpty(invokeMethod)) {
-            return loadStubAction(element, id, shouldTrackSelection);
+        Action targetAction;
+
+        if (shouldTrackSelection) {
+            targetAction = new ItemTrackingAction(id);
+            loadActionConstraint(targetAction, element);
+        } else {
+            targetAction = new BaseAction(id);
         }
 
-        return loadInvokeAction(actionsHolder, element, id, shouldTrackSelection, invokeMethod);
+        initAction(element, targetAction);
+
+        return targetAction;
     }
 
     protected String loadActionId(Element element) {
@@ -589,57 +587,6 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
                     "Component ID", component.attributeValue("id"));
         }
         return id;
-    }
-
-    protected Action loadInvokeAction(ActionsHolder actionsHolder, Element element, String id, boolean shouldTrackSelection, String invokeMethod) {
-        BaseAction action;
-        String shortcut = loadShortcut(trimToNull(element.attributeValue("shortcut")));
-        if (shouldTrackSelection) {
-            action = new DeclarativeTrackingAction(
-                    id,
-                    loadResourceString(element.attributeValue("caption")),
-                    loadResourceString(element.attributeValue("description")),
-                    getIconPath(element.attributeValue("icon")),
-                    element.attributeValue("enable"),
-                    element.attributeValue("visible"),
-                    invokeMethod,
-                    shortcut,
-                    actionsHolder
-            );
-
-            loadActionConstraint(action, element);
-
-            return action;
-        } else {
-            action = new DeclarativeAction(
-                    id,
-                    loadResourceString(element.attributeValue("caption")),
-                    loadResourceString(element.attributeValue("description")),
-                    getIconPath(element.attributeValue("icon")),
-                    element.attributeValue("enable"),
-                    element.attributeValue("visible"),
-                    invokeMethod,
-                    shortcut,
-                    actionsHolder
-            );
-        }
-        action.setPrimary(Boolean.parseBoolean(element.attributeValue("primary")));
-        return action;
-    }
-
-    protected Action loadStubAction(Element element, String id, boolean shouldTrackSelection) {
-        Action targetAction;
-
-        if (shouldTrackSelection) {
-            targetAction = new ItemTrackingAction(id);
-            loadActionConstraint(targetAction, element);
-        } else {
-            targetAction = new BaseAction(id);
-        }
-
-        initAction(element, targetAction);
-
-        return targetAction;
     }
 
     protected void initAction(Element element, Action targetAction) {
