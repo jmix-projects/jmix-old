@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.component;
+package io.jmix.ui.xml.layout.loader;
 
-import java.util.Collection;
+import io.jmix.ui.component.MultiSelectList;
 
-/**
- * List select component. Allows to select multiple values.
- *
- * @param <V> value and options type
- */
-public interface MultiOptionsList<V> extends OptionsList<Collection<V>, V> {
-    String NAME = "multiOptionsList";
+public class MultiSelectListLoader extends AbstractSelectListLoader<MultiSelectList> {
+    @Override
+    public void createComponent() {
+        resultComponent = factory.create(MultiSelectList.NAME);
+        loadId(resultComponent, element);
+    }
 }

@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package spec.haulmont.cuba.web.components.optionslist
+package spec.haulmont.cuba.web.components.selectlist
 
 import io.jmix.core.common.event.Subscription
 import io.jmix.ui.component.HasValue
-import io.jmix.ui.component.SingleOptionsList
+import io.jmix.ui.component.SingleSelectList
 import io.jmix.ui.screen.OpenMode
 import spec.haulmont.cuba.web.UiScreenSpec
-import spec.haulmont.cuba.web.components.optionslist.screens.SingleOptionsListTestScreen
+import spec.haulmont.cuba.web.components.selectlist.screens.SingleSelectListTestScreen
 
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Consumer
 
-class SingleOptionsListTest extends UiScreenSpec {
+class SingleSelectListTest extends UiScreenSpec {
 
     @SuppressWarnings(['GroovyAssignabilityCheck', 'GroovyAccessibility'])
     void setup() {
-        exportScreensPackages(['spec.haulmont.cuba.web.components.optionslist.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.haulmont.cuba.web.components.selectlist.screens', 'com.haulmont.cuba.web.app.main'])
     }
 
     def "Value is propagated to ValueSource from SingleOptionsList"() {
@@ -39,12 +39,12 @@ class SingleOptionsListTest extends UiScreenSpec {
         def mainWindow = screens.create('main', OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def screen = (SingleOptionsListTestScreen) screens.create(SingleOptionsListTestScreen)
+        def screen = (SingleSelectListTestScreen) screens.create(SingleSelectListTestScreen)
         screen.show()
 
         when: 'Set value to SingleOptionsList'
         def order = screen.ordersDc.items.get(0)
-        screen.singleOptionsList.setValue(order)
+        screen.singleSelectList.setValue(order)
 
         then: 'ValueSource is updated'
         screen.orderLineDc.item.order == order
@@ -56,7 +56,7 @@ class SingleOptionsListTest extends UiScreenSpec {
         def mainWindow = screens.create('main', OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def screen = (SingleOptionsListTestScreen) screens.create(SingleOptionsListTestScreen)
+        def screen = (SingleSelectListTestScreen) screens.create(SingleSelectListTestScreen)
         screen.show()
 
         when: 'Set value to ValueSource'
@@ -64,12 +64,12 @@ class SingleOptionsListTest extends UiScreenSpec {
         screen.orderLineDc.item.order = order
 
         then: 'SingleOptionsList is updated'
-        screen.singleOptionsList.value == order
+        screen.singleSelectList.value == order
     }
 
     def testSetToReadonly() {
         when:
-        def component = uiComponents.create(SingleOptionsList)
+        def component = uiComponents.create(SingleSelectList)
 
         component.setEditable(false)
 
@@ -88,7 +88,7 @@ class SingleOptionsListTest extends UiScreenSpec {
 
     def testSetToReadonlyFromValueListener() {
         when:
-        def component = uiComponents.create(SingleOptionsList)
+        def component = uiComponents.create(SingleSelectList)
 
         then:
         component.editable
@@ -106,7 +106,7 @@ class SingleOptionsListTest extends UiScreenSpec {
 
     def testValueChangeListener() {
         when:
-        def component = uiComponents.create(SingleOptionsList)
+        def component = uiComponents.create(SingleSelectList)
 
         final AtomicInteger counter = new AtomicInteger(0)
 

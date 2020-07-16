@@ -29,10 +29,10 @@ import io.jmix.core.FetchPlan
 import io.jmix.ui.component.Component
 import io.jmix.ui.screen.OpenMode
 import spec.haulmont.cuba.web.UiScreenSpec
-import spec.haulmont.cuba.web.components.optionslist.screens.LegacyOptionsListTestWindow
+import spec.haulmont.cuba.web.components.optionslist.screens.OptionsListTestWindow
 import spock.lang.Ignore
 
-class LegacyOptionsListTest extends UiScreenSpec {
+class OptionsListTest extends UiScreenSpec {
 
     @SuppressWarnings(['GroovyAssignabilityCheck', 'GroovyAccessibility'])
     void setup() {
@@ -291,7 +291,7 @@ class LegacyOptionsListTest extends UiScreenSpec {
         g2 == component.value
     }
 
-    protected LegacyOptionsListTestWindow createLegacyScreen() {
-        return screens.create("legacy-optionslist-test-screen", OpenMode.NEW_TAB)
+    protected OptionsListTestWindow createLegacyScreen() {
+        return screens.create("optionslist-test-screen", OpenMode.NEW_TAB)
     }
 }

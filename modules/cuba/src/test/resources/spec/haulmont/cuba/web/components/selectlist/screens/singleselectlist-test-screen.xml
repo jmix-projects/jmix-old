@@ -27,7 +27,7 @@
         </instance>
     </data>
     <layout>
-        <singleOptionsList id="singleOptionsList"
+        <singleSelectList id="singleSelectList"
                            dataContainer="orderLineDc" property="order"
                            optionsContainer="ordersDc"/>
     </layout>

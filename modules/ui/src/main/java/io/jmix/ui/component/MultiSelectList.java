@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Haulmont.
+ * Copyright 2019 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,13 @@
 
 package io.jmix.ui.component;
 
+import java.util.Collection;
+
 /**
- * List select component. Allows select only one item.
+ * List select component. Allows to select multiple values.
  *
  * @param <V> value and options type
  */
-public interface SingleOptionsList<V> extends OptionsList<V, V> {
-    String NAME = "singleOptionsList";
-
-    /**
-     * Sets visibility for first null element in list.
-     *
-     * @param nullOptionVisible whether null element should be visible
-     */
-    void setNullOptionVisible(boolean nullOptionVisible);
-
-    /**
-     * @return whether null element is currently visible
-     */
-    boolean isNullOptionVisible();
+public interface MultiSelectList<V> extends SelectList<Collection<V>, V> {
+    String NAME = "multiSelectList";
 }

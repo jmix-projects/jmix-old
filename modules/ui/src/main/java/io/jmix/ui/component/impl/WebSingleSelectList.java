@@ -16,13 +16,13 @@
 
 package io.jmix.ui.component.impl;
 
-import io.jmix.ui.component.SingleOptionsList;
+import io.jmix.ui.component.SingleSelectList;
 import io.jmix.ui.widget.listselect.JmixSingleListSelect;
 
 import java.util.*;
 
-public class WebSingleOptionsList<V> extends WebAbstractListSelect<V, V, JmixSingleListSelect<V>>
-        implements SingleOptionsList<V> {
+public class WebSingleSelectList<V> extends WebAbstractSelectList<V, V, JmixSingleListSelect<V>>
+        implements SingleSelectList<V> {
 
     @Override
     public void setNullOptionVisible(boolean nullOptionVisible) {

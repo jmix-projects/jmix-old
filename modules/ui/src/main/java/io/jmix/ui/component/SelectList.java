@@ -27,14 +27,14 @@ import java.util.function.Consumer;
  * @param <V> value type: single value or {@code Collection<I>}
  * @param <I> item type
  */
-public interface OptionsList<V, I> extends OptionsField<V, I>, Component.Focusable {
+public interface SelectList<V, I> extends OptionsField<V, I>, Component.Focusable {
 
     /**
      * Adds a listener that is fired when user double-clicks on a list item.
      *
      * @param listener a listener to add
      */
-    Subscription addDoubleClickListener(Consumer<DoubleClickEvent<V>> listener);
+    Subscription addDoubleClickListener(Consumer<DoubleClickEvent<I>> listener);
 
     /**
      * The event sent when the user double-clicks mouse on a list item.
@@ -44,14 +44,14 @@ public interface OptionsList<V, I> extends OptionsField<V, I>, Component.Focusab
     class DoubleClickEvent<I> extends EventObject {
         protected I item;
 
-        public DoubleClickEvent(OptionsList source, I item) {
+        public DoubleClickEvent(SelectList source, I item) {
             super(source);
             this.item = item;
         }
 
         @Override
-        public OptionsList getSource() {
-            return (OptionsList) super.getSource();
+        public SelectList getSource() {
+            return (SelectList) super.getSource();
         }
 
         public I getItem() {

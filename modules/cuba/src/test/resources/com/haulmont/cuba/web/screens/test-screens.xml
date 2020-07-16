@@ -15,6 +15,6 @@
   -->
 
 <screen-config xmlns="http://schemas.haulmont.com/cuba/screens.xsd">
-    <screen id="legacy-optionslist-test-screen"
-            template="spec/haulmont/cuba/web/components/optionslist/screens/legacy-optionslist-test-screen.xml"/>
+    <screen id="optionslist-test-screen"
+            template="spec/haulmont/cuba/web/components/optionslist/screens/optionslist-test-screen.xml"/>
 </screen-config>

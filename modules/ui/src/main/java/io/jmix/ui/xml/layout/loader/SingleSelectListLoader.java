@@ -16,13 +16,13 @@
 
 package io.jmix.ui.xml.layout.loader;
 
-import io.jmix.ui.component.SingleOptionsList;
+import io.jmix.ui.component.SingleSelectList;
 
-public class SingleOptionsListLoader extends AbstractOptionsListLoader<SingleOptionsList> {
+public class SingleSelectListLoader extends AbstractSelectListLoader<SingleSelectList> {
 
     @Override
     public void createComponent() {
-        resultComponent = factory.create(SingleOptionsList.NAME);
+        resultComponent = factory.create(SingleSelectList.NAME);
         loadId(resultComponent, element);
     }
 

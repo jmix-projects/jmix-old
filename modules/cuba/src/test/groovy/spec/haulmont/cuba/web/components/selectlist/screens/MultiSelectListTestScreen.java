@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package spec.haulmont.cuba.web.components.optionslist.screens;
+package spec.haulmont.cuba.web.components.selectlist.screens;
 
 import com.haulmont.cuba.core.model.sales.Catalog;
 import com.haulmont.cuba.core.model.sales.Order;
 import com.haulmont.cuba.core.model.sales.OrderLine;
 import com.haulmont.cuba.core.model.sales.Product;
 import io.jmix.core.Metadata;
-import io.jmix.ui.component.MultiOptionsList;
+import io.jmix.ui.component.MultiSelectList;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.model.InstancePropertyContainer;
@@ -36,8 +36,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @UiController
-@UiDescriptor("mutioptionslist-test-screen.xml")
-public class MultiOptionsListTestScreen extends Screen {
+@UiDescriptor("mutiselectlist-test-screen.xml")
+public class MultiSelectListTestScreen extends Screen {
 
     @Autowired
     private Metadata metadata;
@@ -60,11 +60,11 @@ public class MultiOptionsListTestScreen extends Screen {
     public InstanceContainer<Catalog> catalogDc;
 
     @Autowired
-    public MultiOptionsList<OrderLine> optionsList;
+    public MultiSelectList<OrderLine> selectList;
     @Autowired
-    public MultiOptionsList<OrderLine> requiredOptionsList;
+    public MultiSelectList<OrderLine> requiredSelectList;
     @Autowired
-    public MultiOptionsList<Product> setOptionsList;
+    public MultiSelectList<Product> setSelectList;
 
     @Subscribe
     private void onInit(InitEvent event) {

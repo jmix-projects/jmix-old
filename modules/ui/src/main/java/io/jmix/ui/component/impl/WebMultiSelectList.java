@@ -16,7 +16,7 @@
 
 package io.jmix.ui.component.impl;
 
-import io.jmix.ui.component.MultiOptionsList;
+import io.jmix.ui.component.MultiSelectList;
 import io.jmix.ui.widget.listselect.JmixMultiListSelect;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -24,8 +24,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class WebMultiOptionsList<V> extends WebAbstractListSelect<Collection<V>, V, JmixMultiListSelect<V>>
-        implements MultiOptionsList<V> {
+public class WebMultiSelectList<V> extends WebAbstractSelectList<Collection<V>, V, JmixMultiListSelect<V>>
+        implements MultiSelectList<V> {
 
     protected JmixMultiListSelect<V> createComponent() {
         return new JmixMultiListSelect<>();

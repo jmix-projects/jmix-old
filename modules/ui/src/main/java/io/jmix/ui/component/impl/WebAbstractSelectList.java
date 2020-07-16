@@ -19,7 +19,7 @@ package io.jmix.ui.component.impl;
 import com.vaadin.data.provider.ListDataProvider;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.common.event.Subscription;
-import io.jmix.ui.component.OptionsList;
+import io.jmix.ui.component.SelectList;
 import io.jmix.ui.component.data.DataAwareComponentsTools;
 import io.jmix.ui.component.data.Options;
 import io.jmix.ui.component.data.ValueSource;
@@ -47,9 +47,9 @@ import java.util.stream.Stream;
  * @param <I> item type
  * @param <T> Vaadin component type
  */
-public abstract class WebAbstractListSelect<V, I, T extends JmixAbstractListSelect<I>>
+public abstract class WebAbstractSelectList<V, I, T extends JmixAbstractListSelect<I>>
         extends WebV8AbstractField<T, Set<I>, V>
-        implements OptionsList<V, I>, InitializingBean {
+        implements SelectList<V, I>, InitializingBean {
 
     protected MetadataTools metadataTools;
 
@@ -57,7 +57,7 @@ public abstract class WebAbstractListSelect<V, I, T extends JmixAbstractListSele
 
     protected Function<? super I, String> optionCaptionProvider;
 
-    public WebAbstractListSelect() {
+    public WebAbstractSelectList() {
         component = createComponent();
         initComponent(component);
     }
@@ -98,7 +98,7 @@ public abstract class WebAbstractListSelect<V, I, T extends JmixAbstractListSele
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public Subscription addDoubleClickListener(Consumer<DoubleClickEvent<V>> listener) {
+    public Subscription addDoubleClickListener(Consumer<DoubleClickEvent<I>> listener) {
         return getEventHub().subscribe(DoubleClickEvent.class, (Consumer) listener);
     }
 
@@ -185,9 +185,9 @@ public abstract class WebAbstractListSelect<V, I, T extends JmixAbstractListSele
     }
 
     protected void onDoubleClick(I item) {
-        if (hasSubscriptions(OptionsList.DoubleClickEvent.class)) {
-            OptionsList.DoubleClickEvent<I> event = new OptionsList.DoubleClickEvent<>(this, item);
-            publish(OptionsList.DoubleClickEvent.class, event);
+        if (hasSubscriptions(SelectList.DoubleClickEvent.class)) {
+            SelectList.DoubleClickEvent<I> event = new SelectList.DoubleClickEvent<>(this, item);
+            publish(SelectList.DoubleClickEvent.class, event);
         }
     }
 }

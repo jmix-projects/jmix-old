@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2008-2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package spec.haulmont.cuba.web.components.optionslist
+package spec.haulmont.cuba.web.components.selectlist
 
 import com.haulmont.cuba.core.model.sales.OrderLine
 import com.haulmont.cuba.core.model.sales.Product
-import io.jmix.ui.component.MultiOptionsList
+import io.jmix.ui.component.MultiSelectList
 import io.jmix.ui.screen.OpenMode
 import spec.haulmont.cuba.web.UiScreenSpec
-import spec.haulmont.cuba.web.components.optionslist.screens.MultiOptionsListTestScreen
+import spec.haulmont.cuba.web.components.selectlist.screens.MultiSelectListTestScreen
 
 import java.util.function.Consumer
 
-class MultiOptionsListTest extends UiScreenSpec {
+class MultiSelectListTest extends UiScreenSpec {
 
     @SuppressWarnings(['GroovyAssignabilityCheck', 'GroovyAccessibility'])
     void setup() {
-        exportScreensPackages(['spec.haulmont.cuba.web.components.optionslist.screens', 'com.haulmont.cuba.web.app.main'])
+        exportScreensPackages(['spec.haulmont.cuba.web.components.selectlist.screens', 'com.haulmont.cuba.web.app.main'])
     }
 
     def 'List value is propagated to ValueSource from MultiOptionsList'() {
@@ -38,10 +38,10 @@ class MultiOptionsListTest extends UiScreenSpec {
         def mainWindow = screens.create('main', OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def screen = screens.create(MultiOptionsListTestScreen)
+        def screen = screens.create(MultiSelectListTestScreen)
         screen.show()
 
-        def optionsList = screen.optionsList as MultiOptionsList<OrderLine>
+        def optionsList = screen.selectList as MultiSelectList<OrderLine>
         def orderLine = screen.allOrderLinesDc.getItems().get(0)
         def orderLinesDc = screen.orderLinesDc
 
@@ -58,10 +58,10 @@ class MultiOptionsListTest extends UiScreenSpec {
         def mainWindow = screens.create('main', OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def screen = screens.create(MultiOptionsListTestScreen)
+        def screen = screens.create(MultiSelectListTestScreen)
         screen.show()
 
-        def optionsList = screen.optionsList as MultiOptionsList<OrderLine>
+        def optionsList = screen.selectList as MultiSelectList<OrderLine>
         def orderLine = screen.allOrderLinesDc.getItems().get(0)
 
         when: 'List value is set to ValueSource'
@@ -77,10 +77,10 @@ class MultiOptionsListTest extends UiScreenSpec {
         def mainWindow = screens.create('main', OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def screen = screens.create(MultiOptionsListTestScreen)
+        def screen = screens.create(MultiSelectListTestScreen)
         screen.show()
 
-        def optionsList = screen.setOptionsList as MultiOptionsList<Product>
+        def optionsList = screen.setSelectList as MultiSelectList<Product>
         def product = screen.allProductsDc.items.get(0)
         def catalog = screen.catalogDc.item
 
@@ -97,11 +97,11 @@ class MultiOptionsListTest extends UiScreenSpec {
         def mainWindow = screens.create('main', OpenMode.ROOT)
         screens.show(mainWindow)
 
-        def screen = screens.create(MultiOptionsListTestScreen)
+        def screen = screens.create(MultiSelectListTestScreen)
         screen.show()
 
-        def optionsList = screen.optionsList as MultiOptionsList<OrderLine>
-        def requiredOptionsList = screen.requiredOptionsList as MultiOptionsList<OrderLine>
+        def optionsList = screen.selectList as MultiSelectList<OrderLine>
+        def requiredOptionsList = screen.requiredSelectList as MultiSelectList<OrderLine>
 
         def valueChangeListener = Mock(Consumer)
         def requiredValueChangeListener = Mock(Consumer)

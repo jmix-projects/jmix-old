@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class LegacyOptionsListTestWindow extends AbstractWindow {
+public class OptionsListTestWindow extends AbstractWindow {
 
     @Autowired
     private Metadata metadata;

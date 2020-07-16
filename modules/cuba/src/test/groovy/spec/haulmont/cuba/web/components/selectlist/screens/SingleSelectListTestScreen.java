@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package spec.haulmont.cuba.web.components.optionslist.screens;
+package spec.haulmont.cuba.web.components.selectlist.screens;
 
 import com.haulmont.cuba.core.model.sales.Order;
 import com.haulmont.cuba.core.model.sales.OrderLine;
 import io.jmix.core.Metadata;
-import io.jmix.ui.component.SingleOptionsList;
+import io.jmix.ui.component.SingleSelectList;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.screen.Screen;
@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @UiController
-@UiDescriptor("singleoptionslist-test-screen.xml")
-public class SingleOptionsListTestScreen extends Screen {
+@UiDescriptor("singleselectlist-test-screen.xml")
+public class SingleSelectListTestScreen extends Screen {
 
     @Autowired
     private Metadata metadata;
@@ -46,7 +46,7 @@ public class SingleOptionsListTestScreen extends Screen {
     public InstanceContainer<OrderLine> orderLineDc;
 
     @Autowired
-    public SingleOptionsList<Order> singleOptionsList;
+    public SingleSelectList<Order> singleSelectList;
 
     @Subscribe
     public void onInit(InitEvent event) {

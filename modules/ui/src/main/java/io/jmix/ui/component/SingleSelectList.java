@@ -14,18 +14,25 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.xml.layout.loader;
+package io.jmix.ui.component;
 
-import io.jmix.ui.component.OptionsList;
+/**
+ * List select component. Allows select only one item.
+ *
+ * @param <V> value and options type
+ */
+public interface SingleSelectList<V> extends SelectList<V, V> {
+    String NAME = "singleSelectList";
 
-public abstract class AbstractOptionsListLoader<T extends OptionsList> extends AbstractOptionsBaseLoader<T> {
+    /**
+     * Sets visibility for first null element in list.
+     *
+     * @param nullOptionVisible whether null element should be visible
+     */
+    void setNullOptionVisible(boolean nullOptionVisible);
 
-    @Override
-    public void loadComponent() {
-        super.loadComponent();
-
-        loadCaptionProperty(resultComponent, element);
-        loadOptionsEnum(resultComponent, element);
-        loadTabIndex(resultComponent, element);
-    }
+    /**
+     * @return whether null element is currently visible
+     */
+    boolean isNullOptionVisible();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,16 @@
 
 package io.jmix.ui.xml.layout.loader;
 
-import io.jmix.ui.component.MultiOptionsList;
+import io.jmix.ui.component.SelectList;
 
-public class MultiOptionsListLoader extends AbstractOptionsListLoader<MultiOptionsList> {
+public abstract class AbstractSelectListLoader<T extends SelectList> extends AbstractOptionsBaseLoader<T> {
+
     @Override
-    public void createComponent() {
-        resultComponent = factory.create(MultiOptionsList.NAME);
-        loadId(resultComponent, element);
+    public void loadComponent() {
+        super.loadComponent();
+
+        loadCaptionProperty(resultComponent, element);
+        loadOptionsEnum(resultComponent, element);
+        loadTabIndex(resultComponent, element);
     }
 }

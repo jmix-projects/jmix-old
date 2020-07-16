@@ -17,7 +17,6 @@
 package com.haulmont.cuba.web.gui.components;
 
 import com.haulmont.cuba.gui.components.OptionsList;
-import io.jmix.ui.component.MultiOptionsList;
 import io.jmix.ui.widget.listselect.JmixListSelect;
 import com.vaadin.v7.data.util.IndexedContainer;
 import io.jmix.core.MetadataTools;
@@ -286,6 +285,6 @@ public class WebOptionsList<V, I> extends WebAbstractField<JmixListSelect, V>
     @SuppressWarnings("unchecked")
     @Override
     public Subscription addDoubleClickListener(Consumer<OptionsList.DoubleClickEvent<I>> listener) {
-        return getEventHub().subscribe(MultiOptionsList.DoubleClickEvent.class, (Consumer) listener);
+        return getEventHub().subscribe(OptionsList.DoubleClickEvent.class, (Consumer) listener);
     }
 }

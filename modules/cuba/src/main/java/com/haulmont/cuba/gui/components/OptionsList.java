@@ -18,8 +18,8 @@ package com.haulmont.cuba.gui.components;
 
 import io.jmix.core.common.event.Subscription;
 import io.jmix.ui.component.Component;
-import io.jmix.ui.component.MultiOptionsList;
-import io.jmix.ui.component.SingleOptionsList;
+import io.jmix.ui.component.MultiSelectList;
+import io.jmix.ui.component.SingleSelectList;
 
 import java.util.EventObject;
 import java.util.function.Consumer;
@@ -29,7 +29,7 @@ import java.util.function.Consumer;
  *
  * @param <V> value type: single type or {@code Collection<I>}
  * @param <I> item type
- * @deprecated Use {@link MultiOptionsList} or {@link SingleOptionsList} instead.
+ * @deprecated Use {@link MultiSelectList} or {@link SingleSelectList} instead.
  */
 @Deprecated
 public interface OptionsList<V, I> extends OptionsField<V, I>, Component.Focusable {
