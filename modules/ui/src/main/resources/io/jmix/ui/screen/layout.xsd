@@ -1494,7 +1494,6 @@
         <xs:attributeGroup ref="hasEnableProp"/>
         <xs:attributeGroup ref="hasVisibility"/>
         <xs:attributeGroup ref="hasIcon"/>
-        <xs:attribute name="invoke" type="xs:string"/>
         <xs:attribute name="type" type="xs:string"/>
     </xs:complexType>
 

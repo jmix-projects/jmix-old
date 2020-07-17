@@ -216,14 +216,6 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         return manager.getConstants();
     }
 
-    protected boolean isLegacyFrame() {
-        return false;
-        /*
-        TODO: legacy-ui
-        return context instanceof ComponentContext
-                && ((ComponentContext) context).getFrame().getFrameOwner() instanceof LegacyFrame;*/
-    }
-
     protected LayoutLoader getLayoutLoader() {
         return beanLocator.getPrototype(LayoutLoader.NAME, context);
     }
