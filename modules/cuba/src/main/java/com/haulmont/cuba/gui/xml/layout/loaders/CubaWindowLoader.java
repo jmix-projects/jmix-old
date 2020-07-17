@@ -24,12 +24,12 @@ import io.jmix.ui.component.Facet;
 import io.jmix.ui.component.Window;
 import io.jmix.ui.xml.FacetLoader;
 import io.jmix.ui.xml.layout.loader.WindowLoader;
-import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+import static com.haulmont.cuba.gui.xml.data.ComponentLoaderHelper.loadInvokeAction;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @ParametersAreNonnullByDefault
@@ -58,8 +58,8 @@ public class CubaWindowLoader extends WindowLoader {
     }
 
     @Override
-    protected Action loadDeclarativeActionDefault(ActionsHolder actionsHolder, Element element) {
-        Action action = ComponentLoaderHelper.loadDeclarativeAction(
+    protected Action loadDeclarativeAction(ActionsHolder actionsHolder, Element element) {
+        Action action = loadInvokeAction(
                 actionsHolder,
                 element,
                 loadActionId(element),
@@ -67,7 +67,8 @@ public class CubaWindowLoader extends WindowLoader {
                 loadResourceString(element.attributeValue("description")),
                 getIconPath(element.attributeValue("icon")),
                 loadShortcut(trimToNull(element.attributeValue("shortcut"))))
-                .orElse(super.loadDeclarativeActionDefault(actionsHolder, element));
+                .orElseGet(() ->
+                        super.loadDeclarativeAction(actionsHolder, element));
 
         if (action instanceof DeclarativeTrackingAction) {
             loadActionConstraint(action, element);

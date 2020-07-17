@@ -737,18 +737,15 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
     }
 
     protected Action loadEntityPickerDeclarativeAction(ActionsHolder actionsHolder, Element element) {
-        String id = loadActionId(element);
+        String type = element.attributeValue("type");
+        if (StringUtils.isNotEmpty(type)) {
+            Actions actions = beanLocator.get(Actions.NAME);
 
-        if (StringUtils.isBlank(element.attributeValue("invoke"))) {
-            String type = element.attributeValue("type");
-            if (StringUtils.isNotEmpty(type)) {
-                Actions actions = beanLocator.get(Actions.NAME);
+            String id = loadActionId(element);
+            Action action = actions.create(type, id);
+            initAction(element, action);
 
-                Action action = actions.create(type, id);
-                initAction(element, action);
-
-                return action;
-            }
+            return action;
         }
 
         return loadDeclarativeActionDefault(actionsHolder, element);

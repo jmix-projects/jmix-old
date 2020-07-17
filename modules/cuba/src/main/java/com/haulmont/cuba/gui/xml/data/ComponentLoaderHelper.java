@@ -294,13 +294,13 @@ public final class ComponentLoaderHelper {
         }
     }
 
-    public static Optional<Action> loadDeclarativeAction(ActionsHolder actionsHolder,
-                                               Element element,
-                                               String id,
-                                               String caption,
-                                               String description,
-                                               String iconPath,
-                                               @Nullable String shortcut) {
+    public static Optional<Action> loadInvokeAction(ActionsHolder actionsHolder,
+                                                    Element element,
+                                                    String id,
+                                                    String caption,
+                                                    String description,
+                                                    String iconPath,
+                                                    @Nullable String shortcut) {
         String invokeMethod = element.attributeValue("invoke");
         if (StringUtils.isEmpty(invokeMethod)) {
             return Optional.empty();
