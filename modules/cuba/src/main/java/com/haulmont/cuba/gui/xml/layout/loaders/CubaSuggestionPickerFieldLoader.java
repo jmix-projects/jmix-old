@@ -85,6 +85,7 @@ public class CubaSuggestionPickerFieldLoader extends EntitySuggestionFieldLoader
         }
 
         actionOpt = loadInvokeAction(
+                context,
                 actionsHolder,
                 element,
                 loadActionId(element),
@@ -93,12 +94,7 @@ public class CubaSuggestionPickerFieldLoader extends EntitySuggestionFieldLoader
                 getIconPath(element.attributeValue("icon")),
                 loadShortcut(trimToNull(element.attributeValue("shortcut"))));
 
-        if (actionOpt.isPresent()) {
-            Action action = actionOpt.get();
-            loadActionConstraint(action, element);
-            return action;
-        }
-
-        return super.loadDeclarativeAction(actionsHolder, element);
+        return actionOpt.orElseGet(() ->
+                super.loadDeclarativeAction(actionsHolder, element));
     }
 }

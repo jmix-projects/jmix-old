@@ -59,7 +59,8 @@ public class CubaWindowLoader extends WindowLoader {
 
     @Override
     protected Action loadDeclarativeAction(ActionsHolder actionsHolder, Element element) {
-        Action action = loadInvokeAction(
+        return loadInvokeAction(
+                context,
                 actionsHolder,
                 element,
                 loadActionId(element),
@@ -69,11 +70,5 @@ public class CubaWindowLoader extends WindowLoader {
                 loadShortcut(trimToNull(element.attributeValue("shortcut"))))
                 .orElseGet(() ->
                         super.loadDeclarativeAction(actionsHolder, element));
-
-        if (action instanceof DeclarativeTrackingAction) {
-            loadActionConstraint(action, element);
-        }
-
-        return action;
     }
 }

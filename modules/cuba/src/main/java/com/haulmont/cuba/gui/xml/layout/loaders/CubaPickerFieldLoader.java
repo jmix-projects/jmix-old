@@ -95,6 +95,7 @@ public class CubaPickerFieldLoader extends EntityPickerLoader {
         }
 
         actionOpt = loadInvokeAction(
+                context,
                 actionsHolder,
                 element,
                 loadActionId(element),
@@ -103,12 +104,7 @@ public class CubaPickerFieldLoader extends EntityPickerLoader {
                 getIconPath(element.attributeValue("icon")),
                 loadShortcut(trimToNull(element.attributeValue("shortcut"))));
 
-        if (actionOpt.isPresent()) {
-            Action action = actionOpt.get();
-            loadActionConstraint(action, element);
-            return action;
-        }
-
-        return super.loadDeclarativeAction(actionsHolder, element);
+        return actionOpt.orElseGet(() ->
+                super.loadDeclarativeAction(actionsHolder, element));
     }
 }
