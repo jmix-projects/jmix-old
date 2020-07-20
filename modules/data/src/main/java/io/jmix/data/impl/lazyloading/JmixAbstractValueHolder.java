@@ -63,6 +63,6 @@ public abstract class JmixAbstractValueHolder implements ValueHolderInterface, W
 
     @Override
     public void setValue(Object value) {
-
+        this.value = value;
     }
 }

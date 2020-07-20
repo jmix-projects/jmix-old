@@ -107,7 +107,6 @@ class LazyLoadingTest extends DataSpec {
 
         loadContext.setFetchPlan(fetchPlanRepository.getFetchPlan(ManyToOneEntity.class, "ManyToOneEntity"))
         manyToOneEntity = dataManager.loadList(loadContext).iterator().next()
-        System.out.println(manyToOneEntity.getOneToManyEntity().getManyToOneEntities())
 
         then:
 
