@@ -123,7 +123,6 @@ public class WebUiComponents implements UiComponents {
         classes.put(TokenList.NAME, WebTokenList.class);
         classes.put(TwinColumn.NAME, WebTwinColumn.class);
         classes.put(ProgressBar.NAME, WebProgressBar.class);
-        classes.put(RowsCount.NAME, WebRowsCount.class);
         classes.put(Pagination.NAME, WebPagination.class);
 //        classes.put(RelatedEntities.NAME, WebRelatedEntities.class); todo dynamic attributes
         classes.put(DatePicker.NAME, WebDatePicker.class);

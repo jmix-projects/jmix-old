@@ -23,7 +23,6 @@ import io.jmix.core.metamodel.model.Range;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.action.list.EditAction;
 import io.jmix.ui.component.ButtonsPanel;
-import io.jmix.ui.component.RowsCount;
 import io.jmix.ui.component.Table;
 import io.jmix.ui.component.data.table.ContainerTableItems;
 import io.jmix.ui.model.CollectionContainer;
@@ -132,10 +131,6 @@ public class InspectorTableBuilder {
             table.setButtonsPanel(uiComponents.create(ButtonsPanel.class));
             buttonsPanelInitializer.accept(table);
         }
-
-        RowsCount rowsCount = uiComponents.create(RowsCount.class);
-        rowsCount.setRowsCountTarget(table);
-        table.setRowsCount(rowsCount);
 
         if (table.getAction(EditAction.ID) != null) {
             table.setEnterPressAction(table.getAction(EditAction.ID));

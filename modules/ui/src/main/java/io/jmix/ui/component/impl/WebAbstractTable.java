@@ -175,8 +175,6 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
 
     protected ButtonsPanel buttonsPanel;
 
-    protected RowsCount rowsCount;
-
     protected Map<Table.Column, String> aggregationCells = null;
 
     protected boolean usePresentations;
@@ -841,38 +839,6 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
                 : null;
     }
 
-    @Nullable
-    @Override
-    public RowsCount getRowsCount() {
-        return rowsCount;
-    }
-
-    @Override
-    public void setRowsCount(@Nullable RowsCount rowsCount) {
-        if (this.rowsCount != null && topPanel != null) {
-            topPanel.removeComponent(this.rowsCount.unwrap(com.vaadin.ui.Component.class));
-        }
-        this.rowsCount = rowsCount;
-        if (rowsCount != null) {
-            if (topPanel == null) {
-                topPanel = createTopPanel();
-                topPanel.setWidth(100, Sizeable.Unit.PERCENTAGE);
-                componentComposition.addComponentAsFirst(topPanel);
-            }
-            rowsCount.setWidthAuto();
-            com.vaadin.ui.Component rc = rowsCount.unwrap(com.vaadin.ui.Component.class);
-            topPanel.addComponent(rc);
-
-            if (rowsCount instanceof VisibilityChangeNotifier) {
-                ((VisibilityChangeNotifier) rowsCount).addVisibilityChangeListener(event ->
-                        updateCompositionStylesTopPanelVisible()
-                );
-            }
-        }
-
-        updateCompositionStylesTopPanelVisible();
-    }
-
     // if buttons panel becomes hidden we need to set top panel height to 0
     protected void updateCompositionStylesTopPanelVisible() {
         if (topPanel != null) {
@@ -1439,10 +1405,6 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
                 if (getAction(ShowInfoAction.ACTION_ID) == null) {
                     addAction(new ShowInfoAction());
                 }
-            }
-
-            if (rowsCount != null) {
-                rowsCount.setRowsCountTarget(this);
             }
 
             if (!canBeSorted(tableItems)) {

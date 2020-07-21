@@ -132,8 +132,6 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
 
         loadButtonsPanel(resultComponent);
 
-        loadRowsCount(resultComponent, element); // must be before datasource setting
-
         loadTableData();
 
         String multiselect = element.attributeValue("multiselect");
@@ -295,21 +293,6 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
         String contextMenuEnabled = element.attributeValue("contextMenuEnabled");
         if (StringUtils.isNotEmpty(contextMenuEnabled)) {
             table.setContextMenuEnabled(Boolean.parseBoolean(contextMenuEnabled));
-        }
-    }
-
-    protected void loadRowsCount(Table table, Element element) {
-        Element rowsCountElement = element.element("rowsCount");
-        if (rowsCountElement != null) {
-            RowsCount rowsCount = factory.create(RowsCount.class);
-
-            String autoLoad = rowsCountElement.attributeValue("autoLoad");
-            if (StringUtils.isNotEmpty(autoLoad)) {
-                rowsCount.setAutoLoad(Boolean.parseBoolean(autoLoad));
-            }
-
-            rowsCount.setRowsCountTarget(table);
-            table.setRowsCount(rowsCount);
         }
     }
 

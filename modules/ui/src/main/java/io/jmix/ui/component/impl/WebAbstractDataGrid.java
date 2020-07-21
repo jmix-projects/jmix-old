@@ -150,7 +150,6 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     protected GridComposition componentComposition;
     protected HorizontalLayout topPanel;
     protected ButtonsPanel buttonsPanel;
-    protected RowsCount rowsCount;
 
     protected List<Function<? super E, String>> rowStyleProviders;
     protected List<CellStyleProvider<? super E>> cellStyleProviders;
@@ -910,10 +909,6 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             component.setColumnOrder(getColumnOrder());
 
             initShowInfoAction();
-
-            if (rowsCount != null) {
-                rowsCount.setRowsCountTarget(this);
-            }
 
             if (!canBeSorted(dataGridItems)) {
                 setSortable(false);
@@ -2113,43 +2108,6 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
                 );
             }
             panel.setParent(this);
-        }
-
-        updateCompositionStylesTopPanelVisible();
-    }
-
-    @Nullable
-    @Override
-    public RowsCount getRowsCount() {
-        return rowsCount;
-    }
-
-    @Override
-    public void setRowsCount(@Nullable RowsCount rowsCount) {
-        if (this.rowsCount != null && topPanel != null) {
-            topPanel.removeComponent(WebComponentsHelper.unwrap(this.rowsCount));
-            this.rowsCount.setParent(null);
-        }
-        this.rowsCount = rowsCount;
-        if (rowsCount != null) {
-            if (rowsCount.getParent() != null && rowsCount.getParent() != this) {
-                throw new IllegalStateException("Component already has parent");
-            }
-
-            if (topPanel == null) {
-                topPanel = createTopPanel();
-                topPanel.setWidth(100, Sizeable.Unit.PERCENTAGE);
-                componentComposition.addComponentAsFirst(topPanel);
-            }
-            rowsCount.setWidthAuto();
-            Component rc = WebComponentsHelper.unwrap(rowsCount);
-            topPanel.addComponent(rc);
-
-            if (rowsCount instanceof VisibilityChangeNotifier) {
-                ((VisibilityChangeNotifier) rowsCount).addVisibilityChangeListener(event ->
-                        updateCompositionStylesTopPanelVisible()
-                );
-            }
         }
 
         updateCompositionStylesTopPanelVisible();

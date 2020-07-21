@@ -147,8 +147,6 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
 
         loadButtonsPanel(resultComponent);
 
-        loadRowsCount(resultComponent, element); // must be before datasource setting
-
         loadDataGridData();
 
         loadSelectionMode(resultComponent, element);
@@ -396,21 +394,6 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
                 log.debug("The caption '{}' of ButtonsPanel inside of DataGrid will be ignored",
                         panel.getCaption());
             }
-        }
-    }
-
-    protected void loadRowsCount(DataGrid component, Element element) {
-        Element rowsCountElement = element.element("rowsCount");
-        if (rowsCountElement != null) {
-            RowsCount rowsCount = factory.create(RowsCount.class);
-
-            String autoLoad = rowsCountElement.attributeValue("autoLoad");
-            if (StringUtils.isNotEmpty(autoLoad)) {
-                rowsCount.setAutoLoad(Boolean.parseBoolean(autoLoad));
-            }
-
-            rowsCount.setRowsCountTarget(component);
-            component.setRowsCount(rowsCount);
         }
     }
 

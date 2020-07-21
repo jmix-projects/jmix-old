@@ -17,9 +17,7 @@
 package com.haulmont.cuba.gui.xml.data;
 
 import com.google.common.collect.ImmutableList;
-import com.haulmont.cuba.gui.components.HasSettings;
-import com.haulmont.cuba.gui.components.Field;
-import com.haulmont.cuba.gui.components.PickerField;
+import com.haulmont.cuba.gui.components.*;
 import io.jmix.core.ClassManager;
 import io.jmix.core.BeanLocator;
 import com.haulmont.cuba.gui.components.validators.DateValidator;
@@ -47,6 +45,7 @@ import java.util.List;
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public final class ComponentLoaderHelper {
 
@@ -287,6 +286,22 @@ public final class ComponentLoaderHelper {
             }
         } else {
             return null;
+        }
+    }
+
+    public static void loadRowsCount(RowsCount.RowsCountTarget listComponent, Element element,
+                                     Supplier<RowsCount> rowsCountCreator) {
+        Element rowsCountElement = element.element("rowsCount");
+        if (rowsCountElement != null) {
+            RowsCount rowsCount = rowsCountCreator.get();
+
+            String autoLoad = rowsCountElement.attributeValue("autoLoad");
+            if (StringUtils.isNotEmpty(autoLoad)) {
+                rowsCount.setAutoLoad(Boolean.parseBoolean(autoLoad));
+            }
+
+            rowsCount.setRowsCountTarget(listComponent);
+            ((HasRowsCount) listComponent).setRowsCount(rowsCount);
         }
     }
 }
