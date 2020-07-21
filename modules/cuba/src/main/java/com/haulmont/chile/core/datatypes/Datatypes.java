@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-package io.jmix.core.metamodel.datatype;
+package com.haulmont.chile.core.datatypes;
 
 import io.jmix.core.AppBeans;
+import io.jmix.core.metamodel.datatype.Datatype;
+import io.jmix.core.metamodel.datatype.DatatypeRegistry;
+import io.jmix.core.metamodel.datatype.FormatStrings;
+import io.jmix.core.metamodel.datatype.FormatStringsRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,7 +29,7 @@ import java.util.Set;
 
 /**
  * Utility class for accessing datatypes and format strings.
- * Consider using {@link DatatypeRegistry} and {@link FormatStringsRegistry} beans directly.
+ * Consider using {@link io.jmix.core.metamodel.datatype.DatatypeRegistry} and {@link FormatStringsRegistry} beans directly.
  */
 public class Datatypes {
 
@@ -85,7 +89,7 @@ public class Datatypes {
         return getDatatypeRegistry().getIds();
     }
 
-    private static DatatypeRegistry getDatatypeRegistry() {
+    private static io.jmix.core.metamodel.datatype.DatatypeRegistry getDatatypeRegistry() {
         return AppBeans.get(DatatypeRegistry.class);
     }
 
