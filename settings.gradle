@@ -63,6 +63,7 @@ include 'modules:ui-widgets'
 include 'modules:ui-widgets-compiled'
 include 'starters:starter-ui'
 include 'starters:starter-ui-data'
+include 'starters:starter-ui-export'
 
 include 'modules:datatools-ui'
 include 'starters:starter-datatools-ui'

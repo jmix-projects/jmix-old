@@ -18,16 +18,30 @@ package io.jmix.uiexport;
 
 import io.jmix.core.CoreConfiguration;
 import io.jmix.core.annotation.JmixModule;
+import io.jmix.core.impl.scanning.AnnotationScanMetadataReaderFactory;
 import io.jmix.ui.UiConfiguration;
+import io.jmix.ui.sys.ActionsConfiguration;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+
+import java.util.Collections;
 
 @Configuration
 @ComponentScan
 @PropertySource(name = "io.jmix.uiexport", value = "classpath:/io/jmix/uiexport/module.properties")
 @JmixModule(dependsOn = {CoreConfiguration.class, UiConfiguration.class})
 public class UiExportConfiguration {
+
+    @Bean("ui_UiExportActions")
+    public ActionsConfiguration actions(ApplicationContext applicationContext,
+                                        AnnotationScanMetadataReaderFactory metadataReaderFactory) {
+        ActionsConfiguration actionsConfiguration = new ActionsConfiguration(applicationContext, metadataReaderFactory);
+        actionsConfiguration.setBasePackages(Collections.singletonList("io.jmix.uiexport.action"));
+        return actionsConfiguration;
+    }
 
 }
 

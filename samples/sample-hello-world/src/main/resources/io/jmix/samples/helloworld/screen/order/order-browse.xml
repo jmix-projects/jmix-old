@@ -41,6 +41,8 @@
                 <action id="create" type="create"/>
                 <action id="edit" type="edit"/>
                 <action id="remove" type="remove"/>
+                <action id="excelExport" />
+                <action id="jsonExport" />
             </actions>
             <columns>
                 <column id="number"/>
@@ -53,6 +55,12 @@
                 <button id="createBtn" action="ordersTable.create"/>
                 <button id="editBtn" action="ordersTable.edit"/>
                 <button id="removeBtn" action="ordersTable.remove"/>
+                <popupButton id="exportBtn" caption="Export">
+                    <actions>
+                        <action id="excelExport"/>
+                        <action id="jsonExport"/>
+                    </actions>
+                </popupButton>
             </buttonsPanel>
         </groupTable>
         <hbox id="lookupActions" spacing="true" visible="false">

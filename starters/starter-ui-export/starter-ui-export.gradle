@@ -15,26 +15,18 @@
  */
 
 apply plugin: 'java'
-apply plugin: 'groovy'
 apply plugin: 'java-library'
-apply plugin: 'io.jmix'
 
-group = 'io.jmix.ui'
+group = 'io.jmix.starter.ui'
 
 dependencies {
-    api platform(project(':platform'))
+    api project(':modules:ui-export')
 
-    api project(':modules:ui')
-    implementation('org.apache.poi:poi:4.1.2')
-    implementation('org.apache.poi:poi-ooxml:4.1.2')
-    implementation('com.google.code.gson:gson')
-
-    testRuntimeOnly 'org.slf4j:slf4j-simple'
-    testRuntimeOnly 'org.hsqldb:hsqldb'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
 }
 
 jar {
-    archivesBaseName = 'jmix-ui-export'
+    archivesBaseName = 'jmix-starter-ui-export'
 }
 
 java {
@@ -48,7 +40,7 @@ artifacts {
 publishing {
     publications {
         javaMaven(MavenPublication) {
-            artifactId = 'jmix-ui-export'
+            artifactId = 'jmix-starter-ui-export'
             from components.java
         }
     }
