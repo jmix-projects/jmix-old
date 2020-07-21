@@ -24,6 +24,7 @@ import io.jmix.data.persistence.DbTypeConverter;
 import io.jmix.data.persistence.DbmsSpecifics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -64,7 +65,7 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
     private MetadataTools metadataTools;
 
     @Autowired
-    private BeanLocator beanLocator;
+    private BeanFactory beanFactory;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -100,7 +101,7 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
             return;
 
         LoadContext.Query contextQuery = prevQueries.get(prevQueries.size() - 1);
-        String entityName = loadContext.getMetaClass().getName();
+        String entityName = loadContext.getEntityMetaClass().getName();
 
         QueryParser parser = queryTransformerFactory.parser(contextQuery.getQueryString());
         if (!parser.isEntitySelect(entityName))
@@ -123,7 +124,7 @@ public class QueryResultsManagerImpl implements QueryResultsManager {
             transformer.removeOrderBy();
             String queryString = transformer.getResult();
 
-            JpqlQueryBuilder queryBuilder = beanLocator.get(JpqlQueryBuilder.NAME);
+            JpqlQueryBuilder queryBuilder = (JpqlQueryBuilder) beanFactory.getBean(JpqlQueryBuilder.NAME);
             queryBuilder.setQueryString(queryString)
                     .setEntityName(entityName)
                     .setCondition(contextQuery.getCondition())

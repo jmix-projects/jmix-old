@@ -75,7 +75,7 @@ public class LoadContext<E extends JmixEntity> implements DataLoadContext, Seria
     /**
      * @return metaclass of the loaded entities
      */
-    public MetaClass getMetaClass() {
+    public MetaClass getEntityMetaClass() {
         return metaClass;
     }
 

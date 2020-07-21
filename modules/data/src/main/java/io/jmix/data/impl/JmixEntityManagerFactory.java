@@ -16,7 +16,7 @@
 
 package io.jmix.data.impl;
 
-import io.jmix.core.BeanLocator;
+import org.springframework.context.ApplicationContext;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -27,15 +27,15 @@ public class JmixEntityManagerFactory implements EntityManagerFactory {
 
     private EntityManagerFactory delegate;
 
-    private BeanLocator beanLocator;
+    private ApplicationContext applicationContext;
 
-    public JmixEntityManagerFactory(EntityManagerFactory delegate, BeanLocator beanLocator) {
+    public JmixEntityManagerFactory(EntityManagerFactory delegate, ApplicationContext applicationContext) {
         this.delegate = delegate;
-        this.beanLocator = beanLocator;
+        this.applicationContext = applicationContext;
     }
 
     private EntityManager createJmixEntityManager(EntityManager delegate) {
-        return new JmixEntityManager(delegate, beanLocator);
+        return new JmixEntityManager(delegate, applicationContext);
     }
 
     @Override

@@ -157,7 +157,7 @@ public class OrmDataStore implements DataStore {
     @Override
     public <E extends JmixEntity> E load(LoadContext<E> context) {
         if (log.isDebugEnabled()) {
-            log.debug("load: store={}, metaClass={}, id={}, view={}", storeName, context.getMetaClass(), context.getId(), context.getFetchPlan());
+            log.debug("load: store={}, metaClass={}, id={}, view={}", storeName, context.getEntityMetaClass(), context.getId(), context.getFetchPlan());
         }
 
         final MetaClass metaClass = getEffectiveMetaClassFromContext(context);
@@ -232,7 +232,7 @@ public class OrmDataStore implements DataStore {
     @SuppressWarnings("unchecked")
     public <E extends JmixEntity> List<E> loadList(LoadContext<E> context) {
         if (log.isDebugEnabled())
-            log.debug("loadList: store=" + storeName + ", metaClass=" + context.getMetaClass() + ", view=" + context.getFetchPlan()
+            log.debug("loadList: store=" + storeName + ", metaClass=" + context.getEntityMetaClass() + ", view=" + context.getFetchPlan()
                     + (context.getPreviousQueries().isEmpty() ? "" : ", from selected")
                     + ", query=" + context.getQuery()
                     + (context.getQuery() == null || context.getQuery().getFirstResult() == 0 ? "" : ", first=" + context.getQuery().getFirstResult())
@@ -315,7 +315,7 @@ public class OrmDataStore implements DataStore {
     }
 
     protected <E extends JmixEntity> MetaClass getEffectiveMetaClassFromContext(LoadContext<E> context) {
-        return extendedEntities.getEffectiveMetaClass(context.getMetaClass());
+        return extendedEntities.getEffectiveMetaClass(context.getEntityMetaClass());
     }
 
     protected boolean entityHasEmbeddedId(MetaClass metaClass) {
@@ -372,7 +372,7 @@ public class OrmDataStore implements DataStore {
     @Override
     public long getCount(LoadContext<? extends JmixEntity> context) {
         if (log.isDebugEnabled())
-            log.debug("getCount: store=" + storeName + ", metaClass=" + context.getMetaClass()
+            log.debug("getCount: store=" + storeName + ", metaClass=" + context.getEntityMetaClass()
                     + (context.getPreviousQueries().isEmpty() ? "" : ", from selected")
                     + ", query=" + context.getQuery());
 

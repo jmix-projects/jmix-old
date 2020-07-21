@@ -28,6 +28,7 @@ import io.jmix.core.querycondition.ConditionJpqlGenerator;
 import io.jmix.data.PersistenceSecurity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -87,7 +88,7 @@ public class JpqlQueryBuilder {
     protected MetadataTools metadataTools;
 
     @Autowired
-    protected BeanLocator beanLocator;
+    protected BeanFactory beanFactory;
 
     public JpqlQueryBuilder setId(Object id) {
         this.id = id;
@@ -255,7 +256,8 @@ public class JpqlQueryBuilder {
     }
 
     protected void replaceParamsInMacros(JmixQuery query) {
-        Collection<QueryMacroHandler> handlers = beanLocator.getAll(QueryMacroHandler.class).values();
+        Collection<QueryMacroHandler> handlers = beanFactory.getBeanProvider(QueryMacroHandler.class).stream()
+                .collect(Collectors.toList());
         String modifiedQuery = query.getQueryString();
         for (QueryMacroHandler handler : handlers) {
             modifiedQuery = handler.replaceQueryParams(modifiedQuery, queryParameters);

@@ -300,6 +300,6 @@ public class DataManagerImpl implements DataManager {
     }
 
     protected <E extends JmixEntity> MetaClass getEffectiveMetaClassFromContext(LoadContext<E> context) {
-        return extendedEntities.getEffectiveMetaClass(context.getMetaClass());
+        return extendedEntities.getEffectiveMetaClass(context.getEntityMetaClass());
     }
 }

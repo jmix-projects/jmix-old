@@ -52,7 +52,7 @@ public class TestInMemoryDataStore implements DataStore {
     @Nullable
     @Override
     public <E extends JmixEntity> E load(LoadContext<E> context) {
-        Map<Object, JmixEntity> instances = entities.get(context.getMetaClass().getName());
+        Map<Object, JmixEntity> instances = entities.get(context.getEntityMetaClass().getName());
         if (instances == null)
             return null;
         else
@@ -61,7 +61,7 @@ public class TestInMemoryDataStore implements DataStore {
 
     @Override
     public <E extends JmixEntity> List<E> loadList(LoadContext<E> context) {
-        Map<Object, JmixEntity> instances = entities.get(context.getMetaClass().getName());
+        Map<Object, JmixEntity> instances = entities.get(context.getEntityMetaClass().getName());
         if (instances == null)
             return Collections.emptyList();
         else
@@ -70,7 +70,7 @@ public class TestInMemoryDataStore implements DataStore {
 
     @Override
     public long getCount(LoadContext<? extends JmixEntity> context) {
-        Map<Object, JmixEntity> instances = entities.get(context.getMetaClass().getName());
+        Map<Object, JmixEntity> instances = entities.get(context.getEntityMetaClass().getName());
         if (instances == null)
             return 0;
         else
