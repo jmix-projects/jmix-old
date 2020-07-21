@@ -18,7 +18,7 @@ package io.jmix.ui.xml.layout.loader;
 
 import com.google.common.base.Strings;
 import io.jmix.core.BeanLocator;
-import io.jmix.core.HotDeployManager;
+import io.jmix.core.ClassManager;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
 import io.jmix.core.common.util.ReflectionHelper;
@@ -36,8 +36,8 @@ import io.jmix.ui.component.Component.Alignment;
 import io.jmix.ui.component.data.HasValueSource;
 import io.jmix.ui.component.data.value.ContainerValueSource;
 import io.jmix.ui.component.formatter.Formatter;
-import io.jmix.ui.component.validator.*;
 import io.jmix.ui.component.HasTablePresentations;
+import io.jmix.ui.component.formatter.FormatterLoadFactory;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
@@ -59,16 +59,12 @@ import org.dom4j.Attribute;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkState;
 import static io.jmix.ui.icon.Icons.ICON_NAME_REGEX;
@@ -206,8 +202,8 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         return beanLocator.get(MessageTools.NAME);
     }
 
-    protected HotDeployManager getHotDeployManager() {
-        return beanLocator.get(HotDeployManager.NAME);
+    protected ClassManager getClassManager() {
+        return beanLocator.get(ClassManager.NAME);
     }
 
     protected UiProperties getProperties() {
@@ -632,6 +628,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
 
         if (shouldTrackSelection) {
             targetAction = new ItemTrackingAction(id);
+            loadActionConstraint(targetAction, element);
         } else {
             targetAction = new BaseAction(id);
         }
@@ -808,37 +805,13 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
 
     @Nullable
     protected Formatter<?> loadFormatter(Element element) {
-        Element formatterElement = element.element("formatter");
-        if (formatterElement != null) {
-            String name = formatterElement.attributeValue("name");
-
-            if (StringUtils.isNotEmpty(name)) {
-                try {
-                    return (Formatter<?>) beanLocator.getPrototype(name, formatterElement);
-                } catch (BeanCreationException e) {
-                    return (Formatter<?>) beanLocator.getPrototype(name);
-                }
+        FormatterLoadFactory loadFactory = beanLocator.get(FormatterLoadFactory.NAME);
+        for (Element childElement : element.elements()) {
+            if (loadFactory.isFormatter(childElement)) {
+                return loadFactory.createFormatter(childElement);
             }
-
-            String className = formatterElement.attributeValue("class");
-
-            if (StringUtils.isEmpty(className)) {
-                throw new GuiDevelopmentException("Formatter's attributes 'name' and 'class' are not specified", context);
-            }
-
-            Class<?> aClass = getHotDeployManager().findClass(className);
-            if (aClass == null) {
-                throw new GuiDevelopmentException(String.format("Class %s is not found", className), context);
-            }
-
-            try {
-                return (Formatter<?>) beanLocator.getPrototype(aClass, formatterElement);
-            } catch (BeanCreationException e) {
-                return (Formatter<?>) beanLocator.getPrototype(aClass);
-            }
-        } else {
-            return null;
         }
+        return null;
     }
 
     protected void loadOrientation(HasOrientation component, Element element) {
