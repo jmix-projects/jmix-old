@@ -19,7 +19,6 @@ package io.jmix.data.impl;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import io.jmix.core.JmixEntity;
 import io.jmix.core.Id;
 import io.jmix.core.*;
 import io.jmix.core.common.util.ReflectionHelper;
@@ -106,7 +105,8 @@ public class JmixQuery<E> implements TypedQuery<E> {
         support = beanLocator.get(PersistenceSupport.NAME);
         fetchGroupMgr = beanLocator.get(FetchGroupManager.NAME);
         entityFetcher = beanLocator.get(EntityFetcher.NAME);
-        lazyLoadingHelper = beanLocator.get(LazyLoadingHelper.NAME);;
+        lazyLoadingHelper = beanLocator.get(LazyLoadingHelper.NAME);
+        ;
         queryCacheMgr = beanLocator.get(QueryCacheManager.NAME);
         queryTransformerFactory = beanLocator.get(QueryTransformerFactory.NAME);
         hintsProcessor = beanLocator.get(QueryHintsProcessor.NAME);
@@ -130,6 +130,8 @@ public class JmixQuery<E> implements TypedQuery<E> {
                 for (FetchPlan fetchPlan : fetchPlans) {
                     entityFetcher.fetch((JmixEntity) item, fetchPlan);
                 }
+            });
+            ((List) obj).stream().filter(item -> item instanceof JmixEntity).forEach(item -> {
                 lazyLoadingHelper.replaceValueHolders((JmixEntity) item, fetchPlans);
             });
         });
@@ -402,6 +404,7 @@ public class JmixQuery<E> implements TypedQuery<E> {
                         for (FetchPlan fetchPlan : fetchPlans) {
                             entityFetcher.fetch((JmixEntity) item, fetchPlan);
                         }
+                        lazyLoadingHelper.replaceValueHolders((JmixEntity) item, fetchPlans);
                     }
                 }
             });

@@ -40,30 +40,34 @@ public class JmixWrappingValueHolder extends JmixAbstractValueHolder {
     public Object getValue() {
         if (!isInstantiated) {
             synchronized (this) {
-                DataManager dataManager = AppBeans.get(DataManager.NAME);
-                Metadata metadata = AppBeans.get(Metadata.NAME);
-                MetadataTools metadataTools = AppBeans.get(MetadataTools.NAME);
-                Class refClass = ((ForeignReferenceMapping) originalValueHolder.getMapping()).getReferenceClass();
-                MetaClass metaClass = metadata.getClass(refClass);
-                MetaProperty idProperty = metadataTools.getPrimaryKeyProperty(metaClass);
-                LoadContext lc = new LoadContext(metaClass);
-                AtomicReference<String> fieldName = new AtomicReference<>();
-                ExpressionIterator iterator = new ExpressionIterator() {
-                    @Override
-                    public void iterate(Expression each) {
-                        if (each instanceof ParameterExpression) {
-                            fieldName.set(((ParameterExpression) each).getField().getQualifiedName());
+                if (originalValueHolder.isInstantiated()) {
+                    this.value = originalValueHolder.getValue();
+                } else {
+                    DataManager dataManager = AppBeans.get(DataManager.NAME);
+                    Metadata metadata = AppBeans.get(Metadata.NAME);
+                    MetadataTools metadataTools = AppBeans.get(MetadataTools.NAME);
+                    Class refClass = ((ForeignReferenceMapping) originalValueHolder.getMapping()).getReferenceClass();
+                    MetaClass metaClass = metadata.getClass(refClass);
+                    MetaProperty idProperty = metadataTools.getPrimaryKeyProperty(metaClass);
+                    LoadContext lc = new LoadContext(metaClass);
+                    AtomicReference<String> fieldName = new AtomicReference<>();
+                    ExpressionIterator iterator = new ExpressionIterator() {
+                        @Override
+                        public void iterate(Expression each) {
+                            if (each instanceof ParameterExpression) {
+                                fieldName.set(((ParameterExpression) each).getField().getQualifiedName());
+                            }
                         }
+                    };
+                    QueryBasedValueHolder wrappedValueHolder = (QueryBasedValueHolder) originalValueHolder.getWrappedValueHolder();
+                    iterator.iterateOn(wrappedValueHolder.getQuery().getSelectionCriteria());
+                    Object id = originalValueHolder.getRow().get(fieldName.get());
+                    if (idProperty.getJavaType() == UUID.class) {
+                        id = UUID.fromString((String) id);
                     }
-                };
-                QueryBasedValueHolder wrappedValueHolder = (QueryBasedValueHolder) originalValueHolder.getWrappedValueHolder();
-                iterator.iterateOn(wrappedValueHolder.getQuery().getSelectionCriteria());
-                Object id = originalValueHolder.getRow().get(fieldName.get());
-                if (idProperty.getJavaType() == UUID.class) {
-                    id = UUID.fromString((String) id);
+                    lc.setId(id);
+                    value = dataManager.load(lc);
                 }
-                lc.setId(id);
-                value = dataManager.load(lc);
                 isInstantiated = true;
             }
         }

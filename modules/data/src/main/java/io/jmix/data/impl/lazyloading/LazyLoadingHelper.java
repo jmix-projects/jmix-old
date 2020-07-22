@@ -24,9 +24,9 @@ import org.eclipse.persistence.indirection.IndirectCollection;
 import org.eclipse.persistence.internal.indirection.UnitOfWorkQueryValueHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
 import javax.persistence.Basic;
 import javax.persistence.FetchType;
 import java.lang.reflect.AnnotatedElement;
@@ -40,10 +40,12 @@ public class LazyLoadingHelper {
 
     private static final Logger log = LoggerFactory.getLogger(LazyLoadingHelper.class);
 
-    @Inject
+    @Autowired
     protected Metadata metadata;
-    @Inject
+    @Autowired
     protected MetadataTools metadataTools;
+    @Autowired
+    protected EntityStates entityStates;
 
     public void replaceValueHolders(JmixEntity instance, List<FetchPlan> fetchPlans) {
         Map<JmixEntity, Set<FetchPlan>> collectedFetchPlans = new HashMap<>();
@@ -63,6 +65,9 @@ public class LazyLoadingHelper {
     }
 
     protected void replaceValueHoldersInternal(JmixEntity instance, MetaProperty property) {
+        if (entityStates.isLoaded(instance, property.getName())) {
+            return;
+        }
         switch (property.getRange().getCardinality()) {
             case ONE_TO_ONE:
                 try {
