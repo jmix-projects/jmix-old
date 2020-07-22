@@ -84,7 +84,7 @@ public class LazyLoadingHelper {
                     } else {
                         MetaProperty inverseProperty = property.getInverse();
                         declaredField.set(instance, new JmixSingleValueHolder(inverseProperty.getName(),
-                                instance.getClass(), instance.__getEntityEntry().getEntityId()));
+                                property.getJavaType(), instance.__getEntityEntry().getEntityId()));
                     }
                     declaredField.setAccessible(accessible);
                 } catch (NoSuchFieldException | IllegalAccessException e) {

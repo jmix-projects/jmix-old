@@ -42,7 +42,7 @@ class LazyLoadingTest extends DataSpec {
 
         OneToOneFieldEntity fieldEntity = metadata.create(OneToOneFieldEntity.class)
         fieldEntity.setName("Field name")
-        fieldEntity.setEntityField(noFieldEntity)
+        fieldEntity.setOneToOneNoFieldEntity(noFieldEntity)
         dataManager.save(fieldEntity)
         UUID id = fieldEntity.getId()
 
@@ -57,7 +57,7 @@ class LazyLoadingTest extends DataSpec {
         then:
 
         fieldEntity.getName() == "Field name"
-        fieldEntity.getEntityField() == noFieldEntity
+        fieldEntity.getOneToOneNoFieldEntity() == noFieldEntity
     }
 
     def "OneToOne without field test"() {
@@ -69,7 +69,7 @@ class LazyLoadingTest extends DataSpec {
 
         OneToOneFieldEntity fieldEntity = metadata.create(OneToOneFieldEntity.class)
         fieldEntity.setName("Field name")
-        fieldEntity.setEntityField(noFieldEntity)
+        fieldEntity.setOneToOneNoFieldEntity(noFieldEntity)
         dataManager.save(fieldEntity)
         UUID id = noFieldEntity.getId()
 

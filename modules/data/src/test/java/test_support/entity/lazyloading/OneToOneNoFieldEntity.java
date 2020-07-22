@@ -26,7 +26,7 @@ public class OneToOneNoFieldEntity extends StandardEntity {
     @Column(name = "NAME")
     protected String name;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "entityField")
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "oneToOneNoFieldEntity")
     protected OneToOneFieldEntity oneToOneFieldEntity;
 
     public OneToOneFieldEntity getOneToOneFieldEntity() {

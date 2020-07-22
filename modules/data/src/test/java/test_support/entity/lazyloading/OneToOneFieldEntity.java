@@ -27,15 +27,15 @@ public class OneToOneFieldEntity extends StandardEntity {
     protected String name;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ENTITY_FIELD_ID")
-    protected OneToOneNoFieldEntity entityField;
+    @JoinColumn(name = "TEST_ONE_TO_ONE_NO_FIELD_ENTITY_ID")
+    protected OneToOneNoFieldEntity oneToOneNoFieldEntity;
 
-    public OneToOneNoFieldEntity getEntityField() {
-        return entityField;
+    public OneToOneNoFieldEntity getOneToOneNoFieldEntity() {
+        return oneToOneNoFieldEntity;
     }
 
-    public void setEntityField(OneToOneNoFieldEntity entityField) {
-        this.entityField = entityField;
+    public void setOneToOneNoFieldEntity(OneToOneNoFieldEntity oneToOneNoFieldEntity) {
+        this.oneToOneNoFieldEntity = oneToOneNoFieldEntity;
     }
 
     public String getName() {
