@@ -23,5 +23,8 @@ import java.lang.annotation.Target;
 @Target({java.lang.annotation.ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ModelObject {
+
     String name();
+
+    boolean annotatedPropertiesOnly() default false;
 }

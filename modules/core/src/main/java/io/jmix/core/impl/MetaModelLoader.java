@@ -39,11 +39,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.lang.annotation.Annotation;
@@ -238,7 +238,7 @@ public class MetaModelLoader {
 
             final String fieldName = field.getName();
 
-            if (isMetaPropertyField(field)) {
+            if (isMetaPropertyField(field) || (useNonAnnotatedProperties(clazz) && isFieldWithGetter(field, clazz))) {
                 MetaPropertyImpl property = (MetaPropertyImpl) metaClass.findProperty(fieldName);
                 if (property == null) {
                     MetadataObjectInfo<MetaProperty> info;
@@ -294,6 +294,21 @@ public class MetaModelLoader {
                 }
             }
         }
+    }
+
+    private boolean useNonAnnotatedProperties(Class<?> javaClass) {
+        ModelObject modelObjectAnnotation = javaClass.getAnnotation(ModelObject.class);
+        return modelObjectAnnotation != null && !modelObjectAnnotation.annotatedPropertiesOnly();
+    }
+
+    private boolean isFieldWithGetter(Field field, Class<?> javaClass) {
+        for (Method method : javaClass.getDeclaredMethods()) {
+            if (method.getName().equals("get" + StringUtils.capitalize(field.getName()))
+                && method.getReturnType().equals(field.getType())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected boolean isMetaPropertyField(Field field) {
@@ -559,11 +574,7 @@ public class MetaModelLoader {
             Class<?> type = field.getType();
             if (Collection.class.isAssignableFrom(type)) {
                 return Range.Cardinality.ONE_TO_MANY;
-            } else if (type.isPrimitive()
-                    || type.equals(String.class)
-                    || Number.class.isAssignableFrom(type)
-                    || Date.class.isAssignableFrom(type)
-                    || UUID.class.isAssignableFrom(type)) {
+            } else if (type.isPrimitive() || datatypes.find(type) != null) {
                 return Range.Cardinality.NONE;
             } else
                 return Range.Cardinality.MANY_TO_ONE;
