@@ -16,32 +16,26 @@
 
 package io.jmix.ui.action.list;
 
+import io.jmix.core.AccessManager;
 import io.jmix.core.JmixEntity;
 import io.jmix.core.security.ConstraintOperationType;
-import io.jmix.core.security.Security;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.action.ListAction;
 import io.jmix.ui.component.ListComponent;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Action that changes its {@code enabled} property depending on a selected item in a bound {@link ListComponent}.
  */
 public abstract class SecuredListAction extends ListAction implements Action.HasSecurityConstraint {
+    @Autowired
+    protected AccessManager accessManager;
 
     protected ConstraintOperationType constraintOperationType;
     protected String constraintCode;
 
-    protected Security security;
-
     protected SecuredListAction(String id) {
         super(id);
-    }
-
-    @Autowired
-    protected void setSecurity(Security security) {
-        this.security = security;
     }
 
     @Override
@@ -62,17 +56,18 @@ public abstract class SecuredListAction extends ListAction implements Action.Has
             return false;
         }
 
-        if (constraintOperationType != null) {
-            boolean isPermitted;
-            if (constraintCode != null) {
-                isPermitted = security.isPermitted(singleSelected, constraintCode);
-            } else {
-                isPermitted = security.isPermitted(singleSelected, constraintOperationType);
-            }
-            if (!isPermitted) {
-                return false;
-            }
-        }
+        //TODO: access manager
+//        if (constraintOperationType != null) {
+//            boolean isPermitted;
+//            if (constraintCode != null) {
+//                isPermitted = security.isPermitted(singleSelected, constraintCode);
+//            } else {
+//                isPermitted = security.isPermitted(singleSelected, constraintOperationType);
+//            }
+//            if (!isPermitted) {
+//                return false;
+//            }
+//        }
 
         return super.isPermitted();
     }

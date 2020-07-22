@@ -24,8 +24,6 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Range;
 import io.jmix.core.metamodel.model.Session;
-import io.jmix.core.security.EntityOp;
-import io.jmix.core.security.Security;
 import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorFetchPlanBuilder;
 import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorTableBuilder;
 import io.jmix.ui.Actions;
@@ -40,6 +38,7 @@ import io.jmix.ui.action.list.RefreshAction;
 import io.jmix.ui.action.list.RemoveAction;
 import io.jmix.ui.component.LookupComponent;
 import io.jmix.ui.component.*;
+import io.jmix.ui.context.UiEntityContext;
 import io.jmix.ui.download.ByteArrayDataProvider;
 import io.jmix.ui.download.DownloadFormat;
 import io.jmix.ui.download.Downloader;
@@ -83,7 +82,7 @@ public class EntityInspectorBrowser extends StandardLookup<JmixEntity> {
     @Autowired
     protected MessageTools messageTools;
     @Autowired
-    protected Security security;
+    protected AccessManager accessManager;
     @Autowired
     protected DataComponents dataComponents;
 
@@ -401,11 +400,8 @@ public class EntityInspectorBrowser extends StandardLookup<JmixEntity> {
     }
 
     protected boolean readPermitted(MetaClass metaClass) {
-        return entityOpPermitted(metaClass, EntityOp.READ);
-    }
-
-    protected boolean entityOpPermitted(MetaClass metaClass, EntityOp entityOp) {
-        return security.isEntityOpPermitted(metaClass, entityOp);
+        UiEntityContext entityContext = accessManager.applyRegisteredConstraints(new UiEntityContext(metaClass));
+        return entityContext.isViewPermitted();
     }
 
     protected class ExportAction extends ItemTrackingAction {

@@ -16,10 +16,8 @@
 
 package io.jmix.ui.action;
 
-import io.jmix.core.AppBeans;
 import io.jmix.core.JmixEntity;
 import io.jmix.core.security.ConstraintOperationType;
-import io.jmix.core.security.Security;
 import io.jmix.ui.component.ListComponent;
 
 import javax.annotation.Nullable;
@@ -42,8 +40,6 @@ public class ItemTrackingAction extends ListAction implements Action.HasSecurity
 
     protected ConstraintOperationType constraintOperationType;
     protected String constraintCode;
-
-    protected Security security = AppBeans.get(Security.NAME);
 
     public ItemTrackingAction(String id) {
         this(null, id);
@@ -72,17 +68,18 @@ public class ItemTrackingAction extends ListAction implements Action.HasSecurity
             return false;
         }
 
-        if (constraintOperationType != null) {
-            boolean isPermitted;
-            if (constraintCode != null) {
-                isPermitted = security.isPermitted(singleSelected, constraintCode);
-            } else {
-                isPermitted = security.isPermitted(singleSelected, constraintOperationType);
-            }
-            if (!isPermitted) {
-                return false;
-            }
-        }
+        //TODO: access manager
+//        if (constraintOperationType != null) {
+//            boolean isPermitted;
+//            if (constraintCode != null) {
+//                isPermitted = security.isPermitted(singleSelected, constraintCode);
+//            } else {
+//                isPermitted = security.isPermitted(singleSelected, constraintOperationType);
+//            }
+//            if (!isPermitted) {
+//                return false;
+//            }
+//        }
 
         return true;
     }

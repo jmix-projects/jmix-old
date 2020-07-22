@@ -16,11 +16,11 @@
 
 package io.jmix.ui.action.list;
 
-import io.jmix.core.Messages;
+import io.jmix.core.AccessManager;
 import io.jmix.core.JmixEntity;
+import io.jmix.core.Messages;
+import io.jmix.core.constraint.AccessConstraint;
 import io.jmix.core.metamodel.model.MetaClass;
-import io.jmix.core.security.EntityOp;
-import io.jmix.core.security.Security;
 import io.jmix.ui.ScreenBuilders;
 import io.jmix.ui.UiProperties;
 import io.jmix.ui.action.Action;
@@ -29,15 +29,17 @@ import io.jmix.ui.action.ListAction;
 import io.jmix.ui.builder.EditorBuilder;
 import io.jmix.ui.component.Component;
 import io.jmix.ui.component.data.meta.EntityDataUnit;
-import io.jmix.ui.icon.JmixIcon;
+import io.jmix.ui.context.UiEntityContext;
 import io.jmix.ui.icon.Icons;
+import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.meta.StudioAction;
 import io.jmix.ui.meta.StudioPropertiesItem;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.sys.ActionScreenInitializer;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -56,14 +58,15 @@ import static io.jmix.ui.screen.FrameOwner.WINDOW_COMMIT_AND_CLOSE_ACTION;
  */
 @StudioAction(category = "List Actions", description = "Creates an entity instance using its editor screen")
 @ActionType(CreateAction.ID)
-public class CreateAction<E extends JmixEntity> extends ListAction implements Action.DisabledWhenScreenReadOnly {
+public class CreateAction<E extends JmixEntity> extends ListAction implements Action.DisabledWhenScreenReadOnly,
+        Action.HasAccessConstraint {
 
     public static final String ID = "create";
 
     @Autowired
     protected ScreenBuilders screenBuilders;
     @Autowired
-    protected Security security;
+    protected AccessManager accessManager;
 
     protected ActionScreenInitializer screenInitializer = new ActionScreenInitializer();
 
@@ -71,6 +74,8 @@ public class CreateAction<E extends JmixEntity> extends ListAction implements Ac
     protected Consumer<E> initializer;
     protected Consumer<E> afterCommitHandler;
     protected Function<E, E> transformation;
+
+    protected Collection<AccessConstraint<?>> accessConstraints;
 
     public CreateAction() {
         this(ID);
@@ -244,6 +249,11 @@ public class CreateAction<E extends JmixEntity> extends ListAction implements Ac
         this.transformation = transformation;
     }
 
+    @Override
+    public void setAccessConstraints(Collection<AccessConstraint<?>> constraints) {
+        this.accessConstraints = constraints;
+    }
+
     @Autowired
     protected void setMessages(Messages messages) {
         this.caption = messages.getMessage("actions.Create");
@@ -270,8 +280,8 @@ public class CreateAction<E extends JmixEntity> extends ListAction implements Ac
             return true;
         }
 
-        boolean createPermitted = security.isEntityOpPermitted(metaClass, EntityOp.CREATE);
-        if (!createPermitted) {
+        UiEntityContext entityContext = accessManager.applyConstraints(new UiEntityContext(metaClass), accessConstraints);
+        if (!entityContext.isCreatePermitted()) {
             return false;
         }
 

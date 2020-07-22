@@ -16,11 +16,12 @@
 
 package io.jmix.ui.action.list;
 
-import io.jmix.core.Messages;
+import io.jmix.core.AccessManager;
 import io.jmix.core.JmixEntity;
+import io.jmix.core.Messages;
+import io.jmix.core.constraint.AccessConstraint;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.security.Security;
 import io.jmix.ui.ScreenBuilders;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.action.ActionType;
@@ -28,16 +29,17 @@ import io.jmix.ui.action.ListAction;
 import io.jmix.ui.builder.LookupBuilder;
 import io.jmix.ui.component.Component;
 import io.jmix.ui.component.data.meta.ContainerDataUnit;
-import io.jmix.ui.icon.JmixIcon;
+import io.jmix.ui.context.UiEntityAttributeContext;
 import io.jmix.ui.icon.Icons;
+import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.meta.StudioAction;
 import io.jmix.ui.meta.StudioPropertiesItem;
 import io.jmix.ui.model.Nested;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.sys.ActionScreenInitializer;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -56,19 +58,22 @@ import java.util.function.Supplier;
  */
 @StudioAction(category = "List Actions", description = "Adds entities to the list using a lookup screen")
 @ActionType(AddAction.ID)
-public class AddAction<E extends JmixEntity> extends ListAction implements Action.DisabledWhenScreenReadOnly {
+public class AddAction<E extends JmixEntity> extends ListAction implements Action.DisabledWhenScreenReadOnly,
+        Action.HasAccessConstraint {
 
     public static final String ID = "add";
 
     @Autowired
-    protected Security security;
-    @Autowired
     protected ScreenBuilders screenBuilders;
+    @Autowired
+    protected AccessManager accessManager;
 
     protected ActionScreenInitializer screenInitializer = new ActionScreenInitializer();
 
     protected Predicate<LookupScreen.ValidationContext<E>> selectValidator;
     protected Function<Collection<E>, Collection<E>> transformation;
+
+    protected Collection<AccessConstraint<?>> accessConstraints;
 
     public AddAction() {
         super(ID);
@@ -208,6 +213,11 @@ public class AddAction<E extends JmixEntity> extends ListAction implements Actio
         this.transformation = transformation;
     }
 
+    @Override
+    public void setAccessConstraints(Collection<AccessConstraint<?>> constraints) {
+        this.accessConstraints = constraints;
+    }
+
     @Autowired
     protected void setIcons(Icons icons) {
         this.icon = icons.get(JmixIcon.ADD_ACTION);
@@ -237,7 +247,10 @@ public class AddAction<E extends JmixEntity> extends ListAction implements Actio
             MetaClass masterMetaClass = nestedContainer.getMaster().getEntityMetaClass();
             MetaProperty metaProperty = masterMetaClass.getProperty(nestedContainer.getProperty());
 
-            boolean attrPermitted = security.isEntityAttrUpdatePermitted(masterMetaClass, metaProperty.getName());
+            UiEntityAttributeContext attributeContext = accessManager.applyConstraints(
+                    new UiEntityAttributeContext(masterMetaClass, metaProperty.getName()), accessConstraints);
+
+            boolean attrPermitted = attributeContext.isModifyPermitted();
             if (!attrPermitted) {
                 return false;
             }

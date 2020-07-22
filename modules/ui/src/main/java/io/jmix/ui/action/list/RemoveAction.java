@@ -16,27 +16,28 @@
 
 package io.jmix.ui.action.list;
 
-import io.jmix.core.Messages;
 import io.jmix.core.JmixEntity;
+import io.jmix.core.Messages;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.security.EntityOp;
 import io.jmix.ui.RemoveOperation;
 import io.jmix.ui.UiProperties;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.action.ActionType;
 import io.jmix.ui.component.Component;
 import io.jmix.ui.component.data.meta.ContainerDataUnit;
-import io.jmix.ui.icon.JmixIcon;
+import io.jmix.ui.context.UiEntityAttributeContext;
+import io.jmix.ui.context.UiEntityContext;
 import io.jmix.ui.icon.Icons;
+import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.meta.StudioAction;
 import io.jmix.ui.meta.StudioPropertiesItem;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.Nested;
 import io.jmix.ui.screen.Install;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.function.Consumer;
 
 /**
@@ -187,8 +188,9 @@ public class RemoveAction<E extends JmixEntity> extends SecuredListAction implem
             return false;
         }
 
-        boolean entityOpPermitted = security.isEntityOpPermitted(metaClass, EntityOp.DELETE);
-        if (!entityOpPermitted) {
+        UiEntityContext entityContext = accessManager.applyRegisteredConstraints(new UiEntityContext(metaClass));
+
+        if (!entityContext.isRemovePermitted()) {
             return false;
         }
 
@@ -198,8 +200,10 @@ public class RemoveAction<E extends JmixEntity> extends SecuredListAction implem
             MetaClass masterMetaClass = nestedContainer.getMaster().getEntityMetaClass();
             MetaProperty metaProperty = masterMetaClass.getProperty(nestedContainer.getProperty());
 
-            boolean attrPermitted = security.isEntityAttrUpdatePermitted(masterMetaClass, metaProperty.getName());
-            if (!attrPermitted) {
+            UiEntityAttributeContext entityAttributeContext = accessManager.applyRegisteredConstraints(
+                    new UiEntityAttributeContext(masterMetaClass, metaProperty.getName()));
+
+            if (!entityAttributeContext.isModifyPermitted()) {
                 return false;
             }
         }

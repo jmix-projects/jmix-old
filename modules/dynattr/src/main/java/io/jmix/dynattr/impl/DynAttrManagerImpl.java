@@ -21,15 +21,15 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import io.jmix.core.*;
 import io.jmix.core.common.util.ReflectionHelper;
+import io.jmix.core.constraint.AccessConstraint;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.HasUuid;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
-import io.jmix.core.security.EntityOp;
-import io.jmix.core.security.Security;
 import io.jmix.data.PersistenceHints;
 import io.jmix.data.StoreAwareLocator;
 import io.jmix.data.entity.BaseUuidEntity;
+import io.jmix.data.impl.context.CRUDEntityContext;
 import io.jmix.dynattr.*;
 import io.jmix.dynattr.impl.model.CategoryAttribute;
 import io.jmix.dynattr.impl.model.CategoryAttributeValue;
@@ -62,8 +62,6 @@ public class DynAttrManagerImpl implements DynAttrManager {
     @Autowired
     protected ExtendedEntities extendedEntities;
     @Autowired
-    protected Security security;
-    @Autowired
     protected ReferenceToEntitySupport referenceToEntitySupport;
     @Autowired
     protected EntityStates entityStates;
@@ -72,34 +70,36 @@ public class DynAttrManagerImpl implements DynAttrManager {
     @Autowired
     protected FetchPlanRepository fetchPlanRepository;
     @Autowired
-    FetchPlans fetchPlans;
+    protected FetchPlans fetchPlans;
+    @Autowired
+    protected AccessManager accessManager;
 
     protected String dynamicAttributesStore = Stores.MAIN;
 
     @Override
-    public void storeValues(Collection<JmixEntity> entities) {
+    public void storeValues(Collection<JmixEntity> entities, Collection<AccessConstraint<?>> accessConstraints) {
         storeAwareLocator.getTransactionTemplate(dynamicAttributesStore)
                 .executeWithoutResult(status -> {
                     for (JmixEntity entity : entities) {
-                        doStoreValues(entity);
+                        doStoreValues(entity, accessConstraints);
                     }
                 });
     }
 
-    public void loadValues(Collection<JmixEntity> entities, @Nullable FetchPlan fetchPlan) {
+    public void loadValues(Collection<JmixEntity> entities, @Nullable FetchPlan fetchPlan, Collection<AccessConstraint<?>> accessConstraints) {
         Multimap<MetaClass, JmixEntity> entitiesToLoad = collectEntitiesToLoad(entities, fetchPlan);
         if (!entitiesToLoad.isEmpty()) {
             storeAwareLocator.getTransactionTemplate(dynamicAttributesStore)
                     .executeWithoutResult(status -> {
                         for (MetaClass entityClass : entitiesToLoad.keySet()) {
-                            doFetchValues(entityClass, entitiesToLoad.get(entityClass));
+                            doFetchValues(entityClass, entitiesToLoad.get(entityClass), accessConstraints);
                         }
                     });
         }
     }
 
     @SuppressWarnings("unchecked")
-    protected void doStoreValues(JmixEntity entity) {
+    protected void doStoreValues(JmixEntity entity, Collection<AccessConstraint<?>> accessConstraints) {
         DynamicAttributesState state = (DynamicAttributesState)
                 entity.__getEntityEntry().getExtraState(DynamicAttributesState.class);
         if (state != null && state.getDynamicAttributes() != null) {
@@ -111,7 +111,8 @@ public class DynAttrManagerImpl implements DynAttrManager {
             if (changes.hasChanges()) {
 
                 MetaClass metaClass = metadata.getClass(entity.getClass());
-                List<CategoryAttributeValue> attributeValues = loadValues(metaClass, Collections.singletonList(referenceToEntitySupport.getReferenceId(entity)));
+                List<CategoryAttributeValue> attributeValues = loadValues(metaClass, accessConstraints,
+                        Collections.singletonList(referenceToEntitySupport.getReferenceId(entity)));
 
                 for (CategoryAttributeValue attributeValue : attributeValues) {
                     String attributeName = attributeValue.getCode();
@@ -187,7 +188,7 @@ public class DynAttrManagerImpl implements DynAttrManager {
         }
     }
 
-    protected void doFetchValues(MetaClass metaClass, Collection<JmixEntity> entities) {
+    protected void doFetchValues(MetaClass metaClass, Collection<JmixEntity> entities, Collection<AccessConstraint<?>> accessConstraints) {
         if (dynAttrMetadata.getAttributes(metaClass).isEmpty() ||
                 metadataTools.hasCompositePrimaryKey(metaClass) && !HasUuid.class.isAssignableFrom(metaClass.getJavaClass())) {
             for (JmixEntity entity : entities) {
@@ -205,14 +206,14 @@ public class DynAttrManagerImpl implements DynAttrManager {
             for (Object id : ids) {
                 currentIds.add(id);
                 if (currentIds.size() >= MAX_ENTITIES_FOR_ATTRIBUTE_VALUES_BATCH) {
-                    for (CategoryAttributeValue attributeValue : loadValues(metaClass, currentIds)) {
+                    for (CategoryAttributeValue attributeValue : loadValues(metaClass, accessConstraints, currentIds)) {
                         allAttributeValues.put(attributeValue.getObjectEntityId(), attributeValue);
                     }
                     currentIds = new ArrayList<>();
                 }
             }
             if (!currentIds.isEmpty()) {
-                for (CategoryAttributeValue attributeValue : loadValues(metaClass, currentIds)) {
+                for (CategoryAttributeValue attributeValue : loadValues(metaClass, accessConstraints, currentIds)) {
                     allAttributeValues.put(attributeValue.getObjectEntityId(), attributeValue);
                 }
             }
@@ -236,7 +237,8 @@ public class DynAttrManagerImpl implements DynAttrManager {
         }
     }
 
-    protected List<CategoryAttributeValue> loadValues(MetaClass metaClass, List<Object> entityIds) {
+    protected List<CategoryAttributeValue> loadValues(MetaClass metaClass, Collection<AccessConstraint<?>> accessConstraints,
+                                                      List<Object> entityIds) {
 
         List<CategoryAttributeValue> mainAttributeValues = findValuesByEntityIds(metaClass, entityIds);
 
@@ -249,7 +251,7 @@ public class DynAttrManagerImpl implements DynAttrManager {
                 .collect(Collectors.toList());
 
         if (collectionValues.isEmpty()) {
-            fetchEntityValues(entityValues);
+            fetchEntityValues(accessConstraints, entityValues);
 
             return mainAttributeValues;
         } else {
@@ -266,7 +268,7 @@ public class DynAttrManagerImpl implements DynAttrManager {
                     }
                 }
             }
-            fetchEntityValues(entityValues);
+            fetchEntityValues(accessConstraints, entityValues);
 
             for (CategoryAttributeValue value : reloadedCollectionValues) {
                 if (value.getChildValues() != null) {
@@ -329,7 +331,7 @@ public class DynAttrManagerImpl implements DynAttrManager {
      * property of the {@code CategoryAttributeValue} entity.
      */
     @SuppressWarnings("unchecked")
-    protected void fetchEntityValues(List<CategoryAttributeValue> values) {
+    protected void fetchEntityValues(Collection<AccessConstraint<?>> accessConstraints, List<CategoryAttributeValue> values) {
         Multimap<MetaClass, Object> entityIds = HashMultimap.create();
         Multimap<MetaClass, CategoryAttributeValue> valuesByType = HashMultimap.create();
 
@@ -338,7 +340,8 @@ public class DynAttrManagerImpl implements DynAttrManager {
             try {
                 Class<?> aClass = ReflectionHelper.loadClass(className);
                 MetaClass metaClass = metadata.getClass(aClass);
-                if (security.isEntityOpPermitted(metaClass, EntityOp.READ)) {
+                CRUDEntityContext crudEntityContext = accessManager.applyConstraints(new CRUDEntityContext(metaClass), accessConstraints);
+                if (crudEntityContext.isReadPermitted()) {
                     entityIds.put(metaClass, value.getObjectEntityValueId());
                     valuesByType.put(metaClass, value);
                 }

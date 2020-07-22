@@ -17,6 +17,7 @@
 package io.jmix.security.authentication;
 
 import io.jmix.core.entity.BaseUser;
+import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.security.authentication.CoreAuthenticationToken;
 import io.jmix.security.model.ResourcePolicy;
 import io.jmix.security.model.RowLevelPolicy;
@@ -43,8 +44,19 @@ public class SecuredAuthenticationToken extends CoreAuthenticationToken implemen
     }
 
     @Override
+    public Collection<ResourcePolicy> getPoliciesByResourceAndType(String resource, String type) {
+        return null;
+    }
+
+
+    @Override
     public Collection<RowLevelPolicy> getRowLevelPolicies() {
         return rowLevelPolicies;
+    }
+
+    @Override
+    public Collection<RowLevelPolicy> getRowLevelPoliciesByEntity(MetaClass metaClass) {
+        return null;
     }
 
     public void setRowLevelPolicies(Collection<RowLevelPolicy> rowLevelPolicies) {

@@ -32,12 +32,12 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.StyleGenerator;
 import com.vaadin.ui.components.grid.MultiSelectionModel;
+import io.jmix.core.AccessManager;
+import io.jmix.core.JmixEntity;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.common.event.Subscription;
-import io.jmix.core.JmixEntity;
 import io.jmix.core.entity.EntityValues;
-import io.jmix.core.security.Security;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.action.BaseAction;
@@ -48,6 +48,7 @@ import io.jmix.ui.component.data.TreeItems;
 import io.jmix.ui.component.data.meta.EntityTreeItems;
 import io.jmix.ui.component.tree.TreeDataProvider;
 import io.jmix.ui.component.tree.TreeSourceEventsDelegate;
+import io.jmix.ui.context.UiShowEntityInfoContext;
 import io.jmix.ui.icon.IconResolver;
 import io.jmix.ui.sys.ShortcutsDelegate;
 import io.jmix.ui.sys.ShowInfoAction;
@@ -64,9 +65,9 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -99,7 +100,7 @@ public class WebTree<E extends JmixEntity>
 
     /* Beans */
     protected Metadata metadata;
-    protected Security security;
+    protected AccessManager accessManager;
     protected IconResolver iconResolver;
     protected MetadataTools metadataTools;
 
@@ -239,8 +240,8 @@ public class WebTree<E extends JmixEntity>
     }
 
     @Autowired
-    public void setSecurity(Security security) {
-        this.security = security;
+    public void setAccessManager(AccessManager accessManager) {
+        this.accessManager = accessManager;
     }
 
     @Autowired
@@ -400,7 +401,7 @@ public class WebTree<E extends JmixEntity>
     }
 
     protected void initShowInfoAction() {
-        if (security.isSpecificPermitted(ShowInfoAction.ACTION_PERMISSION)) {
+        if (accessManager.applyRegisteredConstraints(new UiShowEntityInfoContext()).isPermitted()) {
             if (getAction(ShowInfoAction.ACTION_ID) == null) {
                 addAction(new ShowInfoAction());
             }
@@ -750,7 +751,7 @@ public class WebTree<E extends JmixEntity>
 
     @Override
     public void setLookupSelectHandler(Consumer<Collection<E>> selectHandler) {
-        Consumer<Action.ActionPerformedEvent> actionHandler = event ->  {
+        Consumer<Action.ActionPerformedEvent> actionHandler = event -> {
             Set<E> selected = getSelected();
             selectHandler.accept(selected);
         };

@@ -15,6 +15,7 @@
  */
 package io.jmix.ui.action;
 
+import io.jmix.core.constraint.AccessConstraint;
 import io.jmix.core.security.ConstraintOperationType;
 import io.jmix.ui.component.ActionOwner;
 import io.jmix.ui.component.Component;
@@ -43,12 +44,12 @@ public interface Action {
     String PROP_VISIBLE = "visible";
 
     /**
-     * @return  action's identifier
+     * @return action's identifier
      */
     String getId();
 
     /**
-     * @return  action's caption
+     * @return action's caption
      */
     @Nullable
     String getCaption();
@@ -56,14 +57,14 @@ public interface Action {
     void setCaption(@Nullable String caption);
 
     /**
-     * @return  action's description
+     * @return action's description
      */
     @Nullable
     String getDescription();
+
     void setDescription(@Nullable String description);
 
     /**
-     *
      * @return action's keyboard shortcut
      */
     @Nullable
@@ -79,26 +80,30 @@ public interface Action {
     void setShortcut(@Nullable String shortcut);
 
     /**
-     * @return  action's icon
+     * @return action's icon
      */
     @Nullable
     String getIcon();
+
     void setIcon(@Nullable String icon);
+
     /**
      * Set an icon from an icon set.
      */
     void setIconFromSet(Icons.Icon icon);
 
     /**
-     * @return  whether the action is currently enabled
+     * @return whether the action is currently enabled
      */
     boolean isEnabled();
+
     void setEnabled(boolean enabled);
 
     /**
-     * @return  whether the action is currently visible
+     * @return whether the action is currently visible
      */
     boolean isVisible();
+
     void setVisible(boolean visible);
 
     /**
@@ -112,7 +117,7 @@ public interface Action {
     void refreshState();
 
     /**
-     * @return  a single component owning the action. If there are several owners, first will be returned.
+     * @return a single component owning the action. If there are several owners, first will be returned.
      */
     @Nullable
     ActionOwner getOwner();
@@ -164,6 +169,7 @@ public interface Action {
     @Deprecated
     interface HasOpenType extends Action {
         OpenType getOpenType();
+
         void setOpenType(OpenType openType);
     }
 
@@ -172,9 +178,11 @@ public interface Action {
      */
     interface SecuredAction extends Action {
         boolean isEnabledByUiPermissions();
+
         void setEnabledByUiPermissions(boolean enabledByUiPermissions);
 
         boolean isVisibleByUiPermissions();
+
         void setVisibleByUiPermissions(boolean visibleByUiPermissions);
     }
 
@@ -191,6 +199,7 @@ public interface Action {
     interface BeforeActionPerformedHandler {
         /**
          * Invoked by the action before execution.
+         *
          * @return true to continue execution, false to abort
          */
         boolean beforeActionPerformed();
@@ -201,6 +210,7 @@ public interface Action {
      */
     interface HasBeforeActionPerformedHandler extends Action {
         BeforeActionPerformedHandler getBeforeActionPerformedHandler();
+
         void setBeforeActionPerformedHandler(BeforeActionPerformedHandler handler);
     }
 
@@ -209,10 +219,19 @@ public interface Action {
      */
     interface HasSecurityConstraint {
         void setConstraintOperationType(ConstraintOperationType constraintOperationType);
+
         ConstraintOperationType getConstraintOperationType();
 
         String getConstraintCode();
+
         void setConstraintCode(String constraintCode);
+    }
+
+    /**
+     * Interface defining constraintOperationType and constraintCode options.
+     */
+    interface HasAccessConstraint {
+        void setAccessConstraints(Collection<AccessConstraint<?>> constraints);
     }
 
     /**

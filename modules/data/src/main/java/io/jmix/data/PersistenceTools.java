@@ -18,7 +18,8 @@ package io.jmix.data;
 
 import io.jmix.core.*;
 import io.jmix.core.common.util.Preconditions;
-import io.jmix.core.entity.*;
+import io.jmix.core.entity.EntityValues;
+import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.datatype.impl.EnumClass;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
@@ -38,11 +39,11 @@ import org.eclipse.persistence.queries.FetchGroupTracker;
 import org.eclipse.persistence.sessions.Session;
 import org.eclipse.persistence.sessions.changesets.ChangeRecord;
 import org.eclipse.persistence.sessions.changesets.CollectionChangeRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
@@ -285,14 +286,6 @@ public class PersistenceTools {
 
         if (!entityStates.isManaged(entity))
             throw new IllegalStateException("Entity must be in managed state");
-
-        EntityEntry entityEntry = entity.__getEntityEntry();
-        if (entityEntry.getSecurityState().getInaccessibleAttributes() != null) {
-            for (String inaccessibleAttr : entityEntry.getSecurityState().getInaccessibleAttributes()) {
-                if (inaccessibleAttr.equals(property))
-                    return RefId.createNotLoaded(property);
-            }
-        }
 
         if (entity instanceof FetchGroupTracker) {
             FetchGroup fetchGroup = ((FetchGroupTracker) entity)._persistence_getFetchGroup();

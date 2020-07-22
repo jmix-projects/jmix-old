@@ -21,10 +21,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.jmix.core.*;
+import io.jmix.core.context.UpdateEntityAttributeContext;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.Range;
-import io.jmix.core.security.Security;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,7 +48,10 @@ public class EntityImportViewJsonBuilderImpl implements EntityImportViewJsonBuil
     protected Metadata metadata;
 
     @Autowired
-    protected Security security;
+    protected ObjectProvider<UpdateEntityAttributeContext> contextProvider;
+
+    @Autowired
+    protected AccessManager accessManager;
 
     @Autowired
     protected EntityImportViews entityImportViews;
@@ -72,7 +76,8 @@ public class EntityImportViewJsonBuilderImpl implements EntityImportViewJsonBuil
                 Range propertyRange = metaProperty.getRange();
                 Class<?> propertyType = metaProperty.getJavaType();
                 if (propertyRange.isDatatype() || propertyRange.isEnum()) {
-                    if (security.isEntityAttrUpdatePermitted(metaClass, propertyName))
+                    UpdateEntityAttributeContext attrUpdateContext = contextProvider.getObject(metaClass, propertyName);
+                    if (accessManager.applyRegisteredConstraints(attrUpdateContext).isPermitted())
                         viewBuilder.addLocalProperty(propertyName);
                 } else if (propertyRange.isClass()) {
                     if (JmixEntity.class.isAssignableFrom(propertyType)) {
@@ -82,7 +87,8 @@ public class EntityImportViewJsonBuilderImpl implements EntityImportViewJsonBuil
                             if (!propertyJsonObject.isJsonObject()) {
                                 throw new RuntimeException("JsonObject was expected for property " + propertyName);
                             }
-                            if (security.isEntityAttrUpdatePermitted(metaClass, propertyName)) {
+                            UpdateEntityAttributeContext attrUpdateContext = contextProvider.getObject(metaClass, propertyName);
+                            if (accessManager.applyRegisteredConstraints(attrUpdateContext).isPermitted()) {
                                 EntityImportView propertyImportView = buildFromJsonObject(propertyJsonObject.getAsJsonObject(), propertyMetaClass);
                                 viewBuilder.addEmbeddedProperty(propertyName, propertyImportView);
                             }
@@ -90,7 +96,8 @@ public class EntityImportViewJsonBuilderImpl implements EntityImportViewJsonBuil
                             MetaClass propertyMetaClass = metadata.getClass(propertyType);
                             if (metaProperty.getType() == MetaProperty.Type.COMPOSITION) {
                                 JsonElement propertyJsonObject = entry.getValue();
-                                if (security.isEntityAttrUpdatePermitted(metaClass, propertyName)) {
+                                UpdateEntityAttributeContext attrUpdateContext = contextProvider.getObject(metaClass, propertyName);
+                                if (accessManager.applyRegisteredConstraints(attrUpdateContext).isPermitted()) {
                                     if (propertyJsonObject.isJsonNull()) {
                                         //in case of null we must add such import behavior to update the reference with null value later
                                         if (metaProperty.getRange().getCardinality() == Range.Cardinality.MANY_TO_ONE) {
@@ -111,7 +118,8 @@ public class EntityImportViewJsonBuilderImpl implements EntityImportViewJsonBuil
                                     }
                                 }
                             } else {
-                                if (security.isEntityAttrUpdatePermitted(metaClass, propertyName))
+                                UpdateEntityAttributeContext attrUpdateContext = contextProvider.getObject(metaClass, propertyName);
+                                if (accessManager.applyRegisteredConstraints(attrUpdateContext).isPermitted())
                                     if (metaProperty.getRange().getCardinality() == Range.Cardinality.MANY_TO_ONE) {
                                         viewBuilder.addManyToOneProperty(propertyName, ReferenceImportBehaviour.ERROR_ON_MISSING);
                                     } else {
@@ -122,22 +130,26 @@ public class EntityImportViewJsonBuilderImpl implements EntityImportViewJsonBuil
                     } else if (Collection.class.isAssignableFrom(propertyType)) {
                         MetaClass propertyMetaClass = metaProperty.getRange().asClass();
                         switch (metaProperty.getRange().getCardinality()) {
-                            case MANY_TO_MANY:
-                                if (security.isEntityAttrUpdatePermitted(metaClass, propertyName))
+                            case MANY_TO_MANY: {
+                                UpdateEntityAttributeContext attrUpdateContext = contextProvider.getObject(metaClass, propertyName);
+                                if (accessManager.applyRegisteredConstraints(attrUpdateContext).isPermitted())
                                     viewBuilder.addManyToManyProperty(propertyName, ReferenceImportBehaviour.ERROR_ON_MISSING,
                                             CollectionImportPolicy.REMOVE_ABSENT_ITEMS);
                                 break;
-                            case ONE_TO_MANY:
+                            }
+                            case ONE_TO_MANY: {
                                 if (metaProperty.getType() == MetaProperty.Type.COMPOSITION) {
                                     JsonElement compositionJsonArray = entry.getValue();
                                     if (!compositionJsonArray.isJsonArray()) {
                                         throw new RuntimeException("JsonArray was expected for property " + propertyName);
                                     }
                                     EntityImportView propertyImportView = buildFromJsonArray(compositionJsonArray.getAsJsonArray(), propertyMetaClass);
-                                    if (security.isEntityAttrUpdatePermitted(metaClass, propertyName))
+                                    UpdateEntityAttributeContext attrUpdateContext = contextProvider.getObject(metaClass, propertyName);
+                                    if (accessManager.applyRegisteredConstraints(attrUpdateContext).isPermitted())
                                         viewBuilder.addOneToManyProperty(propertyName, propertyImportView, CollectionImportPolicy.REMOVE_ABSENT_ITEMS);
                                 }
                                 break;
+                            }
                             default:
                                 // ignore other options
                                 break;

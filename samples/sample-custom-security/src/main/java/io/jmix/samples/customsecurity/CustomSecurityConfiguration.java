@@ -59,5 +59,4 @@ public class CustomSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public UserRepository userRepository() {
         return new CustomUserRepository();
     }
-
 }

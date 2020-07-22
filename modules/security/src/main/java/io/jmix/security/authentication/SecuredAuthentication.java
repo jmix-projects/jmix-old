@@ -16,6 +16,7 @@
 
 package io.jmix.security.authentication;
 
+import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.security.authentication.CoreAuthentication;
 import io.jmix.security.model.ResourcePolicy;
 import io.jmix.security.model.RowLevelPolicy;
@@ -32,5 +33,9 @@ public interface SecuredAuthentication extends CoreAuthentication {
 
     Collection<ResourcePolicy> getResourcePolicies();
 
+    Collection<ResourcePolicy> getPoliciesByResourceAndType(String resource, String type);
+
     Collection<RowLevelPolicy> getRowLevelPolicies();
+
+    Collection<RowLevelPolicy> getRowLevelPoliciesByEntity(MetaClass metaClass);
 }
