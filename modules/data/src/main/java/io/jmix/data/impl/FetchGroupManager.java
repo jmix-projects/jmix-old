@@ -432,7 +432,8 @@ public class FetchGroupManager {
 
         if (useFetchGroup) {
             for (MetaProperty metaProperty : entityMetaClass.getProperties()) {
-                if (metaProperty.getRange().isClass() && !metadataTools.isEmbedded(metaProperty)
+                if (metaProperty.getRange().isClass()  && metadataTools.isPersistent(metaProperty)
+                        && !metadataTools.isEmbedded(metaProperty)
                         && !fetchPlan.containsProperty(metaProperty.getName())) {
                     fetchGroupFields.add(createFetchGroupField(entityClass, parentField, metaProperty.getName(), FetchMode.AUTO, true));
                 }
