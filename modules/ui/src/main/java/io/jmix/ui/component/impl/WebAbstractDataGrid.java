@@ -150,6 +150,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     protected GridComposition componentComposition;
     protected HorizontalLayout topPanel;
     protected ButtonsPanel buttonsPanel;
+    protected TablePagination pagination;
 
     protected List<Function<? super E, String>> rowStyleProviders;
     protected List<CellStyleProvider<? super E>> cellStyleProviders;
@@ -909,6 +910,10 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             component.setColumnOrder(getColumnOrder());
 
             initShowInfoAction();
+
+            if (pagination != null) {
+                pagination.setTablePaginationTarget(this);
+            }
 
             if (!canBeSorted(dataGridItems)) {
                 setSortable(false);
@@ -2108,6 +2113,43 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
                 );
             }
             panel.setParent(this);
+        }
+
+        updateCompositionStylesTopPanelVisible();
+    }
+
+    @Nullable
+    @Override
+    public TablePagination getPagination() {
+        return pagination;
+    }
+
+    @Override
+    public void setPagination(@Nullable TablePagination pagination) {
+        if (this.pagination != null && topPanel != null) {
+            topPanel.removeComponent(WebComponentsHelper.unwrap(this.pagination));
+            this.pagination.setParent(null);
+        }
+        this.pagination = pagination;
+        if (pagination != null) {
+            if (pagination.getParent() != null && pagination.getParent() != this) {
+                throw new IllegalStateException("Component already has parent");
+            }
+
+            if (topPanel == null) {
+                topPanel = createTopPanel();
+                topPanel.setWidth(100, Sizeable.Unit.PERCENTAGE);
+                componentComposition.addComponentAsFirst(topPanel);
+            }
+            pagination.setWidthAuto();
+            Component rc = WebComponentsHelper.unwrap(pagination);
+            topPanel.addComponent(rc);
+
+            if (pagination instanceof VisibilityChangeNotifier) {
+                ((VisibilityChangeNotifier) pagination).addVisibilityChangeListener(event ->
+                        updateCompositionStylesTopPanelVisible()
+                );
+            }
         }
 
         updateCompositionStylesTopPanelVisible();

@@ -35,6 +35,7 @@ import io.jmix.ui.widget.JmixPagination;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
@@ -45,7 +46,7 @@ import java.util.function.Function;
 
 import static io.jmix.core.common.util.Preconditions.checkNotNullArgument;
 
-public class WebPagination extends WebAbstractComponent<JmixPagination> implements Pagination {
+public class WebPagination extends WebAbstractComponent<JmixPagination> implements Pagination, InitializingBean {
 
     protected static final String PAGINATION_STYLENAME = "c-pagination";
     protected static final String PAGINATION_COUNT_NUMBER_STYLENAME = "c-pagination-count-number";
@@ -55,6 +56,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     protected Messages messages;
     protected DataManager dataManager;
     protected BackgroundWorker backgroundWorker;
+    protected IconResolver iconResolver;
 
     protected WebPagination.Adapter adapter;
     protected BaseCollectionLoader loader;
@@ -77,15 +79,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     protected Function<DataLoadContext, Long> totalCountDelegate;
 
     public WebPagination() {
-        component = new JmixPagination();
-        component.setStyleName(PAGINATION_STYLENAME);
-
-        //hide all buttons. They will become visible after data is loaded
-        component.getCountButton().setVisible(false);
-        component.getPrevButton().setVisible(false);
-        component.getNextButton().setVisible(false);
-        component.getFirstButton().setVisible(false);
-        component.getLastButton().setVisible(false);
+        component = createComponent();
     }
 
     @Autowired
@@ -95,10 +89,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
 
     @Autowired
     public void setIconResolver(IconResolver iconResolver) {
-        component.getFirstButton().setIcon(iconResolver.getIconResource(JmixIcon.ANGLE_DOUBLE_LEFT.source()));
-        component.getPrevButton().setIcon(iconResolver.getIconResource(JmixIcon.ANGLE_LEFT.source()));
-        component.getNextButton().setIcon(iconResolver.getIconResource(JmixIcon.ANGLE_RIGHT.source()));
-        component.getLastButton().setIcon(iconResolver.getIconResource(JmixIcon.ANGLE_DOUBLE_RIGHT.source()));
+        this.iconResolver = iconResolver;
     }
 
     @Autowired
@@ -109,6 +100,11 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     @Autowired
     public void setDataManager(DataManager dataManager) {
         this.dataManager = dataManager;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        initComponent();
     }
 
     @Override
@@ -126,7 +122,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
             adapter.unbind();
         }
 
-        adapter = createAdapter();
+        adapter = createAdapter(loader);
 
         initButtonListeners();
     }
@@ -173,6 +169,26 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         return component.getButtonsAlignment();
     }
 
+    protected JmixPagination createComponent() {
+        return new JmixPagination();
+    }
+
+    protected void initComponent() {
+        component.setStyleName(PAGINATION_STYLENAME);
+
+        //hide all buttons. They will become visible after data is loaded
+        component.getCountButton().setVisible(false);
+        component.getPrevButton().setVisible(false);
+        component.getNextButton().setVisible(false);
+        component.getFirstButton().setVisible(false);
+        component.getLastButton().setVisible(false);
+
+        component.getFirstButton().setIcon(iconResolver.getIconResource(JmixIcon.ANGLE_DOUBLE_LEFT.source()));
+        component.getPrevButton().setIcon(iconResolver.getIconResource(JmixIcon.ANGLE_LEFT.source()));
+        component.getNextButton().setIcon(iconResolver.getIconResource(JmixIcon.ANGLE_RIGHT.source()));
+        component.getLastButton().setIcon(iconResolver.getIconResource(JmixIcon.ANGLE_DOUBLE_RIGHT.source()));
+    }
+
     protected void initButtonListeners() {
         unregisterListeners();
         onLinkClickRegistration = component.getCountButton().addClickListener(event -> onLinkClick());
@@ -199,7 +215,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
             onLastClickRegistration.remove();
     }
 
-    protected Adapter createAdapter() {
+    protected Adapter createAdapter(BaseCollectionLoader loader) {
         return new LoaderAdapter(loader);
     }
 
@@ -211,12 +227,8 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         int firstResult = adapter.getFirstResult();
         int newStart = adapter.getFirstResult() - adapter.getMaxResults();
         adapter.setFirstResult(newStart < 0 ? 0 : newStart);
-        if (refreshData()) {
-            // todo rp table scroll to first item
-            /*if (target instanceof WebAbstractTable) {
-                resetCurrentDataPage((Table) target);
-            }*/
-        } else {
+
+        if (!refreshData()) {
             adapter.setFirstResult(firstResult);
         }
     }
@@ -232,10 +244,6 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
                 refreshData();
                 adapter.setMaxResults(maxResults);
             }
-            // todo rp table scroll to first item
-            /*if (target instanceof WebAbstractTable) {
-                resetCurrentDataPage((Table) target);
-            }*/
         } else {
             adapter.setFirstResult(firstResult);
         }
@@ -244,12 +252,8 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     protected void onFirstClick() {
         int firstResult = adapter.getFirstResult();
         adapter.setFirstResult(0);
-        if (refreshData()) {
-            // todo rp table scroll to first item
-            /*if (target instanceof WebAbstractTable) {
-                resetCurrentDataPage((Table) target);
-            }*/
-        } else {
+
+        if (!refreshData()) {
             adapter.setFirstResult(firstResult);
         }
     }
@@ -261,12 +265,8 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
 
         int firstResult = adapter.getFirstResult();
         adapter.setFirstResult(count - itemsToDisplay);
-        if (refreshData()) {
-            // todo rp table scroll to first item
-            /*if (target instanceof WebAbstractTable) {
-                resetCurrentDataPage((Table) target);
-            }*/
-        } else {
+
+        if (!refreshData()) {
             adapter.setFirstResult(firstResult);
         }
     }
@@ -483,10 +483,14 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
 
         protected BaseCollectionLoader loader;
 
-        @SuppressWarnings("unchecked")
         public LoaderAdapter(BaseCollectionLoader loader) {
+            this(loader.getContainer(), loader);
+        }
+
+        @SuppressWarnings("unchecked")
+        public LoaderAdapter(CollectionContainer container, @Nullable BaseCollectionLoader loader) {
             this.loader = loader;
-            this.container = loader.getContainer();
+            this.container = container;
 
             containerCollectionChangeListener = e -> {
                 samePage = CollectionChangeType.REFRESH != e.getChangeType();
@@ -506,7 +510,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
 
         @Override
         public int getFirstResult() {
-            return loader.getFirstResult();
+            return loader != null ? loader.getFirstResult() : 0;
         }
 
         @Override

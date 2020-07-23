@@ -49,7 +49,7 @@ public interface Table<E extends JmixEntity>
         extends
             ListComponent<E>, Component.Editable, HasButtonsPanel, HasTablePresentations, Component.HasCaption,
             HasContextHelp, Component.HasIcon, LookupComponent<E>, Component.Focusable, HasSubParts, HasHtmlCaption,
-            HasHtmlDescription, HasHtmlSanitizer {
+            HasHtmlDescription, HasHtmlSanitizer, HasTablePagination {
 
     enum ColumnAlignment {
         LEFT,

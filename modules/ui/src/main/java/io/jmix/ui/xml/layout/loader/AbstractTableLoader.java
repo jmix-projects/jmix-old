@@ -29,6 +29,7 @@ import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.component.AggregationInfo;
 import io.jmix.ui.component.ButtonsPanel;
 import io.jmix.ui.component.Table;
+import io.jmix.ui.component.TablePagination;
 import io.jmix.ui.component.data.TableItems;
 import io.jmix.ui.component.data.aggregation.AggregationStrategy;
 import io.jmix.ui.component.data.table.ContainerTableItems;
@@ -130,6 +131,7 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
         }
 
         loadButtonsPanel(resultComponent);
+        loadPagination(resultComponent, element);
 
         loadTableData();
 
@@ -292,6 +294,21 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
         String contextMenuEnabled = element.attributeValue("contextMenuEnabled");
         if (StringUtils.isNotEmpty(contextMenuEnabled)) {
             table.setContextMenuEnabled(Boolean.parseBoolean(contextMenuEnabled));
+        }
+    }
+
+    protected void loadPagination(Table table, Element element) {
+        Element paginationElement = element.element("pagination");
+        if (paginationElement != null) {
+            TablePagination pagination = factory.create(TablePagination.class);
+
+            String autoLoad = paginationElement.attributeValue("autoLoad");
+            if (StringUtils.isNotEmpty(autoLoad)) {
+                pagination.setAutoLoad(Boolean.parseBoolean(autoLoad));
+            }
+
+            pagination.setTablePaginationTarget(table);
+            table.setPagination(pagination);
         }
     }
 

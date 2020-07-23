@@ -25,7 +25,10 @@ import java.util.EventObject;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public interface Pagination extends Component {
+/**
+ * Component that makes a data binding to load data by pages.
+ */
+public interface Pagination extends Component.BelongToFrame {
     String NAME = "pagination";
 
     enum State {
@@ -33,6 +36,10 @@ public interface Pagination extends Component {
         FIRST_INCOMPLETE,   // "1-100 rows of [?] >"
         MIDDLE,             // "< 101-200 rows of [?] >"
         LAST                // "< 201-252 rows"
+    }
+
+    enum ButtonsAlignment {
+        LEFT, RIGHT
     }
 
     /**
@@ -58,15 +65,22 @@ public interface Pagination extends Component {
      */
     void setTotalCountDelegate(Function<DataLoadContext, Long> delegate);
 
+    /**
+     * Sets a loader that should be used for pagination.
+     *
+     * @param loader loader to set
+     */
     void setLoaderTarget(BaseCollectionLoader loader);
 
+    /**
+     * @return a loader that is used for pagination.
+     */
     @Nullable
     BaseCollectionLoader getLoaderTarget();
 
-    Subscription addBeforeRefreshListener(Consumer<Pagination.BeforeRefreshEvent> listener);
-
     /**
      * Sets buttons alignment inside Pagination component. Position is LEFT by default.
+     *
      * @param alignment buttons alignment
      */
     void setButtonsAlignment(ButtonsAlignment alignment);
@@ -76,18 +90,21 @@ public interface Pagination extends Component {
      */
     ButtonsAlignment getButtonsAlignment();
 
-    // TODO rp rework with DataContainer
     /**
-     * Event that is fired before refreshing the datasource when the user clicks next, previous, etc.
+     * @param listener listener to add
+     * @return a registration object for removing an event listener
+     */
+    Subscription addBeforeRefreshListener(Consumer<Pagination.BeforeRefreshEvent> listener);
+
+    /**
+     * Event that is fired before refreshing the data container when the user clicks next, previous, etc.
      * <br>
-     * You can prevent the datasource refresh by invoking {@link Pagination.BeforeRefreshEvent#preventRefresh()},
+     * You can prevent the data container refresh by invoking {@link Pagination.BeforeRefreshEvent#preventRefresh()},
      * for example:
      * <pre>{@code
-     * table.getRowsCount().addBeforeDatasourceRefreshListener(event -> {
-     *     if (event.getDatasource().isModified()) {
-     *         showNotification("Save changes before going to another page");
-     *         event.preventRefresh();
-     *     }
+     * usersTable.getPagination().addBeforeRefreshListener(refreshEvent -> {
+     *     // check modified data and prevent refresh
+     *     refreshEvent.preventRefresh();
      * });
      * }</pre>
      */
@@ -99,7 +116,7 @@ public interface Pagination extends Component {
         }
 
         /**
-         * If invoked, the component will not refresh the datasource.
+         * If invoked, the component will not refresh the data container.
          */
         public void preventRefresh() {
             refreshPrevented = true;
@@ -108,9 +125,5 @@ public interface Pagination extends Component {
         public boolean isRefreshPrevented() {
             return refreshPrevented;
         }
-    }
-
-    enum ButtonsAlignment {
-        LEFT, RIGHT
     }
 }

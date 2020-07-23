@@ -174,6 +174,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     protected HorizontalLayout topPanel;
 
     protected ButtonsPanel buttonsPanel;
+    protected TablePagination pagination;
 
     protected Map<Table.Column, String> aggregationCells = null;
 
@@ -839,6 +840,38 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
                 : null;
     }
 
+    @Nullable
+    @Override
+    public TablePagination getPagination() {
+        return pagination;
+    }
+
+    @Override
+    public void setPagination(@Nullable TablePagination pagination) {
+        if (this.pagination != null && topPanel != null) {
+            topPanel.removeComponent(this.pagination.unwrap(com.vaadin.ui.Component.class));
+        }
+        this.pagination = pagination;
+        if (pagination != null) {
+            if (topPanel == null) {
+                topPanel = createTopPanel();
+                topPanel.setWidth(100, Sizeable.Unit.PERCENTAGE);
+                componentComposition.addComponentAsFirst(topPanel);
+            }
+            pagination.setWidthAuto();
+            com.vaadin.ui.Component rc = pagination.unwrap(com.vaadin.ui.Component.class);
+            topPanel.addComponent(rc);
+
+            if (pagination instanceof VisibilityChangeNotifier) {
+                ((VisibilityChangeNotifier) pagination).addVisibilityChangeListener(event ->
+                        updateCompositionStylesTopPanelVisible()
+                );
+            }
+        }
+
+        updateCompositionStylesTopPanelVisible();
+    }
+
     // if buttons panel becomes hidden we need to set top panel height to 0
     protected void updateCompositionStylesTopPanelVisible() {
         if (topPanel != null) {
@@ -1405,6 +1438,10 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
                 if (getAction(ShowInfoAction.ACTION_ID) == null) {
                     addAction(new ShowInfoAction());
                 }
+            }
+
+            if (pagination != null) {
+                pagination.setTablePaginationTarget(this);
             }
 
             if (!canBeSorted(tableItems)) {

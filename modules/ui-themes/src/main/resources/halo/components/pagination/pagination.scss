@@ -21,10 +21,6 @@
    height: $v-unit-size;
  }
 
- .#{$primary-stylename}-wrapper.page-right-align {
-   text-align: right;
- }
-
  .#{$primary-stylename}-wrapper > * {
    vertical-align: middle;
    margin-right: round($v-layout-spacing-horizontal/2);
@@ -48,6 +44,14 @@
 
  .#{$primary-stylename}-count {
    height: round($v-unit-size/1.5);
+ }
+
+ .#{$primary-stylename}.c-table-pagination {
+   padding-left: round($v-layout-spacing-horizontal/2);
+ }
+
+ .#{$primary-stylename}-wrapper.page-right-align {
+   text-align: right;
  }
 
  .v-button.v-button-link.#{$primary-stylename}-count-number {

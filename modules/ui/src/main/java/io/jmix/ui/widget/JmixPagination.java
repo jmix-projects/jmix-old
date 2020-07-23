@@ -37,8 +37,6 @@ public class JmixPagination extends JmixCssActionsLayout {
     protected Button countButton;
 
     public JmixPagination() {
-        setStyleName("c-pagination");
-
         contentLayout = createContentLayout();
         contentLayout.setWidth(100, Unit.PERCENTAGE);
 

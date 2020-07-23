@@ -512,11 +512,6 @@ public class WebRowsCount extends WebAbstractComponent<JmixRowsCount> implements
     }
 
     @Override
-    public void removeVisibilityChangeListener(Consumer<VisibilityChangeNotifier.VisibilityChangeEvent> listener) {
-        unsubscribe(VisibilityChangeNotifier.VisibilityChangeEvent.class, listener);
-    }
-
-    @Override
     public boolean getAutoLoad() {
         return autoLoad;
     }

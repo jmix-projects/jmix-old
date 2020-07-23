@@ -146,6 +146,7 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
         loadAggregationPosition(resultComponent, element);
 
         loadButtonsPanel(resultComponent);
+        loadPagination(resultComponent, element);
 
         loadDataGridData();
 
@@ -394,6 +395,21 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
                 log.debug("The caption '{}' of ButtonsPanel inside of DataGrid will be ignored",
                         panel.getCaption());
             }
+        }
+    }
+
+    protected void loadPagination(DataGrid component, Element element) {
+        Element paginationElement = element.element("pagination");
+        if (paginationElement != null) {
+            TablePagination pagination = factory.create(TablePagination.class);
+
+            String autoLoad = paginationElement.attributeValue("autoLoad");
+            if (StringUtils.isNotEmpty(autoLoad)) {
+                pagination.setAutoLoad(Boolean.parseBoolean(autoLoad));
+            }
+
+            pagination.setTablePaginationTarget(component);
+            component.setPagination(pagination);
         }
     }
 
