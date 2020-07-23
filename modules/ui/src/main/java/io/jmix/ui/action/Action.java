@@ -228,13 +228,6 @@ public interface Action {
     }
 
     /**
-     * Interface defining constraintOperationType and constraintCode options.
-     */
-    interface HasAccessConstraint {
-        void setAccessConstraints(Collection<AccessConstraint<?>> constraints);
-    }
-
-    /**
      * Marker interface that indicates that the implementing action will
      * change its 'enabled' state according to the screen read-only mode.
      */

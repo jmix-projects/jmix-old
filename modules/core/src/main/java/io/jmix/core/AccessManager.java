@@ -27,11 +27,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-@Component
+@Component()
 public class AccessManager {
+    public static final String NAME = "core_AccessManager";
 
     @Autowired
-    private AccessConstraintsRegistry registry;
+    protected AccessConstraintsRegistry registry;
 
     public class ConstraintsBuilder {
 

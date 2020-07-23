@@ -19,7 +19,6 @@ package io.jmix.ui.action.list;
 import io.jmix.core.AccessManager;
 import io.jmix.core.JmixEntity;
 import io.jmix.core.Messages;
-import io.jmix.core.constraint.AccessConstraint;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.ScreenBuilders;
@@ -58,8 +57,7 @@ import java.util.function.Supplier;
  */
 @StudioAction(category = "List Actions", description = "Adds entities to the list using a lookup screen")
 @ActionType(AddAction.ID)
-public class AddAction<E extends JmixEntity> extends ListAction implements Action.DisabledWhenScreenReadOnly,
-        Action.HasAccessConstraint {
+public class AddAction<E extends JmixEntity> extends ListAction implements Action.DisabledWhenScreenReadOnly {
 
     public static final String ID = "add";
 
@@ -72,8 +70,6 @@ public class AddAction<E extends JmixEntity> extends ListAction implements Actio
 
     protected Predicate<LookupScreen.ValidationContext<E>> selectValidator;
     protected Function<Collection<E>, Collection<E>> transformation;
-
-    protected Collection<AccessConstraint<?>> accessConstraints;
 
     public AddAction() {
         super(ID);
@@ -213,11 +209,6 @@ public class AddAction<E extends JmixEntity> extends ListAction implements Actio
         this.transformation = transformation;
     }
 
-    @Override
-    public void setAccessConstraints(Collection<AccessConstraint<?>> constraints) {
-        this.accessConstraints = constraints;
-    }
-
     @Autowired
     protected void setIcons(Icons icons) {
         this.icon = icons.get(JmixIcon.ADD_ACTION);
@@ -247,11 +238,10 @@ public class AddAction<E extends JmixEntity> extends ListAction implements Actio
             MetaClass masterMetaClass = nestedContainer.getMaster().getEntityMetaClass();
             MetaProperty metaProperty = masterMetaClass.getProperty(nestedContainer.getProperty());
 
-            UiEntityAttributeContext attributeContext = accessManager.applyConstraints(
-                    new UiEntityAttributeContext(masterMetaClass, metaProperty.getName()), accessConstraints);
+            UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(
+                    new UiEntityAttributeContext(masterMetaClass, metaProperty.getName()));
 
-            boolean attrPermitted = attributeContext.isModifyPermitted();
-            if (!attrPermitted) {
+            if (!attributeContext.isModifyPermitted()) {
                 return false;
             }
         }

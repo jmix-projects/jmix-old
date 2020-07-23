@@ -18,17 +18,20 @@ package io.jmix.ui.context;
 
 import io.jmix.core.context.AccessContext;
 
-
 public class UiShowScreenContext implements AccessContext {
-
-
     protected final String screen;
+
+    protected boolean permitted = true;
 
     public UiShowScreenContext(String screen) {
         this.screen = screen;
     }
 
+    public void setDenied() {
+        permitted = false;
+    }
+
     public boolean isPermitted() {
-        return false;
+        return permitted;
     }
 }

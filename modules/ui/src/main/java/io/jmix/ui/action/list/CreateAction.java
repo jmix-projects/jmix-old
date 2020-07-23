@@ -58,8 +58,7 @@ import static io.jmix.ui.screen.FrameOwner.WINDOW_COMMIT_AND_CLOSE_ACTION;
  */
 @StudioAction(category = "List Actions", description = "Creates an entity instance using its editor screen")
 @ActionType(CreateAction.ID)
-public class CreateAction<E extends JmixEntity> extends ListAction implements Action.DisabledWhenScreenReadOnly,
-        Action.HasAccessConstraint {
+public class CreateAction<E extends JmixEntity> extends ListAction implements Action.DisabledWhenScreenReadOnly {
 
     public static final String ID = "create";
 
@@ -74,8 +73,6 @@ public class CreateAction<E extends JmixEntity> extends ListAction implements Ac
     protected Consumer<E> initializer;
     protected Consumer<E> afterCommitHandler;
     protected Function<E, E> transformation;
-
-    protected Collection<AccessConstraint<?>> accessConstraints;
 
     public CreateAction() {
         this(ID);
@@ -249,11 +246,6 @@ public class CreateAction<E extends JmixEntity> extends ListAction implements Ac
         this.transformation = transformation;
     }
 
-    @Override
-    public void setAccessConstraints(Collection<AccessConstraint<?>> constraints) {
-        this.accessConstraints = constraints;
-    }
-
     @Autowired
     protected void setMessages(Messages messages) {
         this.caption = messages.getMessage("actions.Create");
@@ -280,7 +272,7 @@ public class CreateAction<E extends JmixEntity> extends ListAction implements Ac
             return true;
         }
 
-        UiEntityContext entityContext = accessManager.applyConstraints(new UiEntityContext(metaClass), accessConstraints);
+        UiEntityContext entityContext = accessManager.applyRegisteredConstraints(new UiEntityContext(metaClass));
         if (!entityContext.isCreatePermitted()) {
             return false;
         }
