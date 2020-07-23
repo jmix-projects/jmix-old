@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Haulmont.
+ * Copyright 2020 Haulmont.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.jmix.ui.widget;
 
-import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
+import io.jmix.ui.component.Pagination;
 
-/**
- * Is used for supporting RowsCount component in compatibility module.
- */
-public class JmixRowsCount extends JmixCssActionsLayout {
+public class JmixPagination extends JmixCssActionsLayout {
 
+    public static final String PAGE_RIGHT_ALIGN_STYLE = "page-right-align";
+
+    protected Pagination.ButtonsAlignment buttonsAlignment = Pagination.ButtonsAlignment.LEFT;
+
+    protected ComponentContainer contentLayout;
     protected Button prevButton;
     protected Button nextButton;
     protected Button firstButton;
@@ -33,51 +36,68 @@ public class JmixRowsCount extends JmixCssActionsLayout {
     protected Label label;
     protected Button countButton;
 
-    public JmixRowsCount() {
-        setStyleName("c-paging");
-        setMargin(new MarginInfo(false, false, false, true));
+    public JmixPagination() {
+        setStyleName("c-pagination");
 
-        ComponentContainer contentLayout = createContentLayout();
+        contentLayout = createContentLayout();
+        contentLayout.setWidth(100, Unit.PERCENTAGE);
+
         addComponent(contentLayout);
+    }
 
-        setWidth(100, Unit.PERCENTAGE);
+    public Pagination.ButtonsAlignment getButtonsAlignment() {
+        return buttonsAlignment;
+    }
+
+    public void setButtonsAlignment(Pagination.ButtonsAlignment buttonsAlignment) {
+        if (this.buttonsAlignment != buttonsAlignment) {
+            this.buttonsAlignment = buttonsAlignment;
+
+            if (buttonsAlignment == Pagination.ButtonsAlignment.LEFT) {
+                contentLayout.removeStyleName(PAGE_RIGHT_ALIGN_STYLE);
+            } else {
+                contentLayout.addStyleName(PAGE_RIGHT_ALIGN_STYLE);
+            }
+
+            markAsDirty();
+        }
     }
 
     protected ComponentContainer createContentLayout() {
         JmixCssActionsLayout contentLayout = new JmixCssActionsLayout();
-        contentLayout.setStyleName("c-paging-wrap");
+        contentLayout.setStyleName("c-pagination-wrapper");
         contentLayout.setSpacing(true);
 
         firstButton = new JmixButton();
-        firstButton.setStyleName("c-paging-change-page");
-        firstButton.addStyleName("c-paging-first");
+        firstButton.setStyleName("c-pagination-change-page");
+        firstButton.addStyleName("c-pagination-first");
         contentLayout.addComponent(firstButton);
 
         prevButton = new JmixButton();
-        prevButton.setStyleName("c-paging-change-page");
-        prevButton.addStyleName("c-paging-prev");
+        prevButton.setStyleName("c-pagination-change-page");
+        prevButton.addStyleName("c-pagination-prev");
         contentLayout.addComponent(prevButton);
 
         label = new Label();
         label.setWidthUndefined();
-        label.setStyleName("c-paging-status");
+        label.setStyleName("c-pagination-status");
         contentLayout.addComponent(label);
 
         countButton = new JmixButton("[?]");
         countButton.setWidthUndefined();
         countButton.setStyleName(ValoTheme.BUTTON_LINK);
-        countButton.addStyleName("c-paging-count");
+        countButton.addStyleName("c-pagination-count");
         countButton.setTabIndex(-1);
         contentLayout.addComponent(countButton);
 
         nextButton = new JmixButton();
-        nextButton.setStyleName("c-paging-change-page");
-        nextButton.addStyleName("c-paging-next");
+        nextButton.setStyleName("c-pagination-change-page");
+        nextButton.addStyleName("c-pagination-next");
         contentLayout.addComponent(nextButton);
 
         lastButton = new JmixButton();
-        lastButton.setStyleName("c-paging-change-page");
-        lastButton.addStyleName("c-paging-last");
+        lastButton.setStyleName("c-pagination-change-page");
+        lastButton.addStyleName("c-pagination-last");
         contentLayout.addComponent(lastButton);
 
         return contentLayout;

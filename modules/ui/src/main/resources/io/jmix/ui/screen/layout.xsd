@@ -344,6 +344,13 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="paginationButtonsAlignment">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="LEFT"/>
+            <xs:enumeration value="RIGHT"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="maskedFieldValueMode">
         <xs:restriction base="xs:string">
             <xs:enumeration value="masked"/>
@@ -2390,6 +2397,21 @@
         </xs:complexContent>
     </xs:complexType>
 
+    <!-- Pagination -->
+    <xs:complexType name="paginationComponent">
+        <xs:attributeGroup ref="hasId"/>
+        <xs:attributeGroup ref="hasSize"/>
+        <xs:attributeGroup ref="hasStyle"/>
+        <xs:attributeGroup ref="hasVisibility"/>
+        <xs:attributeGroup ref="hasAlign"/>
+        <xs:attributeGroup ref="hasCss"/>
+
+        <xs:attribute name="buttonsAlignment" type="paginationButtonsAlignment"/>
+
+        <xs:attribute name="dataLoader" type="xs:string"/>
+        <xs:attribute name="autoLoad" type="xs:boolean"/>
+    </xs:complexType>
+
     <!-- ButtonsPanel -->
     <xs:complexType name="buttonsPanelComponent">
         <xs:complexContent>
@@ -3738,6 +3760,7 @@
                 <xs:element name="dataGrid" type="dataGridComponent"/>
                 <xs:element name="treeDataGrid" type="treeDataGridComponent"/>
                 <xs:element name="buttonsPanel" type="buttonsPanelComponent"/>
+                <xs:element name="pagination" type="paginationComponent"/>
                 <xs:element name="calendar" type="calendarComponent"/>
 
                 <xs:element name="filter" type="filterComponent"/>

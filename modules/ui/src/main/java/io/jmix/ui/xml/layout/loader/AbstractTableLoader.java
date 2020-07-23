@@ -28,7 +28,6 @@ import io.jmix.core.metamodel.model.MetadataObject;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.component.AggregationInfo;
 import io.jmix.ui.component.ButtonsPanel;
-import io.jmix.ui.component.RowsCount;
 import io.jmix.ui.component.Table;
 import io.jmix.ui.component.data.TableItems;
 import io.jmix.ui.component.data.aggregation.AggregationStrategy;
