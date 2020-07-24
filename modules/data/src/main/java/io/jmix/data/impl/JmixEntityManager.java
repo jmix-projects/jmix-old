@@ -58,7 +58,7 @@ public class JmixEntityManager implements EntityManager {
     private EntityPersistingEventManager entityPersistingEventMgr;
     private TimeSource timeSource;
     private AuditInfoProvider auditInfoProvider;
-    private AuditConversionService entityControlService;
+    private AuditConversionService auditConverter;
 
     private static final Logger log = LoggerFactory.getLogger(JmixEntityManager.class);
 
@@ -75,7 +75,7 @@ public class JmixEntityManager implements EntityManager {
         entityPersistingEventMgr = beanLocator.get(EntityPersistingEventManager.NAME);
         timeSource = beanLocator.get(TimeSource.NAME);
         auditInfoProvider = beanLocator.get(AuditInfoProvider.NAME);
-        entityControlService = beanLocator.get(AuditConversionService.NAME);
+        auditConverter = beanLocator.get(AuditConversionService.NAME);
     }
 
     @Override
@@ -133,9 +133,17 @@ public class JmixEntityManager implements EntityManager {
         }
 
         if (entity.__getEntityEntry() instanceof EntityEntrySoftDelete && PersistenceHints.isSoftDeletion(delegate)) {
-            entityControlService.setDeletedDate((EntityEntrySoftDelete) entity.__getEntityEntry(), timeSource.currentTimestamp());
-            entityControlService.setDeletedBy((EntityEntrySoftDelete) entity.__getEntityEntry(), auditInfoProvider.getCurrentUser());
+            EntityEntrySoftDelete softDeleteEntry = (EntityEntrySoftDelete) entity.__getEntityEntry();
 
+            softDeleteEntry.setDeletedDate(auditConverter.convert(
+                    timeSource.currentTimestamp(),
+                    softDeleteEntry.getDeletedDateClass()));
+
+            if (softDeleteEntry.getDeletedByClass() != null) {
+                softDeleteEntry.setDeletedBy(auditConverter.convert(
+                        auditInfoProvider.getCurrentUser(),
+                        softDeleteEntry.getDeletedByClass()));
+            }
         } else {
             delegate.remove(entity);
             entity.__getEntityEntry().setRemoved(true);

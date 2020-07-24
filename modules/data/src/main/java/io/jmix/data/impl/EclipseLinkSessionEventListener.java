@@ -100,7 +100,7 @@ public class EclipseLinkSessionEventListener extends SessionEventAdapter {
 
                 Class<? extends JmixEntity> entityClass = desc.getJavaClass();
 
-                if (metadataTools.isSoftDeleted(entityClass)) {
+                if (metadataTools.isSoftDeletable(entityClass)) {
                     String fieldName = metadataTools.getDeletedDateProperty(entityClass);
                     desc.getQueryManager().setAdditionalCriteria("this." + fieldName + " is null");
 
@@ -148,14 +148,14 @@ public class EclipseLinkSessionEventListener extends SessionEventAdapter {
                 if (mapping.isOneToManyMapping()) {
                     OneToManyMapping oneToManyMapping = (OneToManyMapping) mapping;
                     Class referenceClass = oneToManyMapping.getReferenceClass();
-                    if (metadataTools.isSoftDeleted(referenceClass)) {
+                    if (metadataTools.isSoftDeletable(referenceClass)) {
                         oneToManyMapping.setAdditionalJoinCriteria(new ExpressionBuilder().get(metadataTools.getDeletedDateProperty(referenceClass)).isNull());
                     }
                 }
 
                 if (mapping.isOneToOneMapping()) {
                     OneToOneMapping oneToOneMapping = (OneToOneMapping) mapping;
-                    if (metadataTools.isSoftDeleted(oneToOneMapping.getReferenceClass())) {
+                    if (metadataTools.isSoftDeletable(oneToOneMapping.getReferenceClass())) {
                         if (mapping.isManyToOneMapping()) {
                             oneToOneMapping.setSoftDeletionForBatch(false);
                             oneToOneMapping.setSoftDeletionForValueHolder(false);

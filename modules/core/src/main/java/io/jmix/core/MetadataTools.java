@@ -19,7 +19,10 @@ package io.jmix.core;
 import com.google.common.collect.ImmutableList;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
-import io.jmix.core.entity.*;
+import io.jmix.core.entity.EntityEntrySoftDelete;
+import io.jmix.core.entity.EntityValues;
+import io.jmix.core.entity.HasUuid;
+import io.jmix.core.entity.Versioned;
 import io.jmix.core.entity.annotation.IgnoreUserTimeZone;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.annotation.InstanceName;
@@ -69,10 +72,9 @@ public class MetadataTools {
     public static final String DELETED_DATE_ANN_NAME = DeletedDate.class.getName();
     public static final String DELETED_BY_ANN_NAME = DeletedBy.class.getName();
 
-    public static final List<Class> SYSTEM_INTERFACES = ImmutableList.of(//todo taimanov exclude SoftDelete from system
+    public static final List<Class> SYSTEM_INTERFACES = ImmutableList.of(
             JmixEntity.class,
             Versioned.class,
-            SoftDelete.class,
             HasUuid.class
     );
 
@@ -302,19 +304,18 @@ public class MetadataTools {
      * Determine whether the entity supports <em>Soft Deletion</em>.
      *
      * @param entityClass entity class
-     * @return {@code true} if the entity implements {@link SoftDelete}
+     * @return {@code true} if the entity has @{@link DeletedDate} field
      */
-    public boolean isSoftDeleted(Class<? extends JmixEntity> entityClass) {
-        return SoftDelete.class.isAssignableFrom(entityClass)//todo move to CubaMetadataTools
-                || getDeletedDateProperty(entityClass) != null;
+    public boolean isSoftDeletable(Class<? extends JmixEntity> entityClass) {
+        return getDeletedDateProperty(entityClass) != null;
     }
 
     /**
      * Determine whether the given property is system-level. A property is considered system if it is defined not
      * in an entity class but in one of its base interfaces:
-     * {@link JmixEntity}, {@link SoftDelete}, {@link Versioned}, {@link HasUuid}
+     * {@link JmixEntity}, {@link Versioned}, {@link HasUuid}
      */
-    public boolean isSystem(MetaProperty metaProperty) {//todo taimanov exclude SoftDelete from system
+    public boolean isSystem(MetaProperty metaProperty) {
         Objects.requireNonNull(metaProperty, "metaProperty is null");
         return Boolean.TRUE.equals(metaProperty.getAnnotations().get(SYSTEM_ANN_NAME));
     }
@@ -738,8 +739,7 @@ public class MetadataTools {
 
     /**
      * @return field annotated with @DeletedDate
-     * @throws IllegalArgumentException if entity neither have @{@link DeletedDate} field
-     *                                  nor implement SoftDelete interface
+     * @throws IllegalArgumentException if entity has no @{@link DeletedDate} field
      */
     public String getDeletedDatePropertyNN(JmixEntity entity) throws IllegalArgumentException {
         String result = getDeletedDateProperty(entity.getClass());
@@ -756,10 +756,6 @@ public class MetadataTools {
      */
     @Nullable
     public String getDeletedDateProperty(Class<? extends JmixEntity> clazz) {
-        if (SoftDelete.class.isAssignableFrom(clazz)) {//todo taimanov move to extended CubaMetadataTools
-            return "deleteTs";
-        }
-
         return findPropertyByAnnotation(clazz, DELETED_DATE_ANN_NAME);
     }
 
@@ -768,10 +764,6 @@ public class MetadataTools {
      */
     @Nullable
     public String getDeletedByProperty(Class<? extends JmixEntity> clazz) {
-        if (SoftDelete.class.isAssignableFrom(clazz)) {//todo taimanov move to extended CubaMetadataTools
-            return "deletedBy";
-        }
-
         return findPropertyByAnnotation(clazz, DELETED_BY_ANN_NAME);
     }
 
@@ -793,10 +785,6 @@ public class MetadataTools {
      * @return list contains @{@link DeletedDate}, @{@link DeletedBy} property names if present.
      */
     public List<String> getSoftDeleteProperties(Class<? extends JmixEntity> clazz) {
-        if (SoftDelete.class.isAssignableFrom(clazz)) {//todo taimanov move to extended CubaMetadataTools
-            return Arrays.asList("deleteTs", "deletedBy");
-        }
-
         LinkedList<String> result = new LinkedList<>();
 
         Optional.ofNullable(getDeletedDateProperty(clazz)).ifPresent(result::add);
@@ -805,9 +793,9 @@ public class MetadataTools {
         return result;
     }
 
-    public boolean isSoftDeleted(JmixEntity entity) {
-        return entity.__getEntityEntry() instanceof EntityEntrySoftDelete
-                && ((EntityEntrySoftDelete) entity.__getEntityEntry()).isDeleted();
+    public boolean isSoftDeleted(JmixEntity instance) {
+        return instance.__getEntityEntry() instanceof EntityEntrySoftDelete
+                && ((EntityEntrySoftDelete) instance.__getEntityEntry()).isDeleted();
 
     }
 
