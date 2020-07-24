@@ -16,12 +16,16 @@
 
 package io.jmix.ui.component;
 
-import java.util.function.Function;
+import io.jmix.ui.component.formatter.Formatter;
+
+import javax.annotation.Nullable;
 
 /**
  * Object having a formatter.
  */
 public interface HasFormatter<V> {
-    Function<V, String> getFormatter();
-    void setFormatter(Function<? super V, String> formatter);
+    @Nullable
+    Formatter<V> getFormatter();
+
+    void setFormatter(@Nullable Formatter<? super V> formatter);
 }

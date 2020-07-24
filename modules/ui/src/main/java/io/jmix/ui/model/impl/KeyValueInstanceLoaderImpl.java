@@ -61,7 +61,7 @@ public class KeyValueInstanceLoaderImpl implements KeyValueInstanceLoader {
     }
 
     @Override
-    public void setDataContext(DataContext dataContext) {
+    public void setDataContext(@Nullable DataContext dataContext) {
         this.dataContext = dataContext;
     }
 
@@ -145,6 +145,7 @@ public class KeyValueInstanceLoaderImpl implements KeyValueInstanceLoader {
         this.query = query;
     }
 
+    @Nullable
     @Override
     public Condition getCondition() {
         return condition;

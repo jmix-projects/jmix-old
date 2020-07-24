@@ -33,6 +33,7 @@ import io.jmix.ui.component.data.meta.EntityValueSource;
 import io.jmix.ui.widget.JmixImage;
 import org.springframework.beans.factory.InitializingBean;
 
+import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.util.function.Consumer;
 
@@ -66,7 +67,7 @@ public class WebImage<T> extends WebAbstractResourceView<JmixImage> implements I
     }
 
     @Override
-    public void setValueSource(ValueSource<T> valueSource) {
+    public void setValueSource(@Nullable ValueSource<T> valueSource) {
         if (this.valueSource == valueSource) {
             return;
         }
@@ -110,6 +111,7 @@ public class WebImage<T> extends WebAbstractResourceView<JmixImage> implements I
         }
     }
 
+    @Nullable
     @Override
     public ValueSource<T> getValueSource() {
         return valueSource;
@@ -123,7 +125,8 @@ public class WebImage<T> extends WebAbstractResourceView<JmixImage> implements I
     }
 
     @SuppressWarnings("unchecked")
-    protected Resource createImageResource(final Object resourceObject) {
+    @Nullable
+    protected Resource createImageResource(@Nullable final Object resourceObject) {
         if (resourceObject == null) {
             return null;
         }

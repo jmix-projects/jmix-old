@@ -15,57 +15,76 @@
  */
 package io.jmix.ui.component.formatter;
 
-import io.jmix.core.AppBeans;
+import io.jmix.core.BeanLocator;
 import io.jmix.core.LocaleResolver;
 import io.jmix.core.Messages;
 import io.jmix.core.metamodel.datatype.Datatype;
-import io.jmix.core.metamodel.datatype.Datatypes;
+import io.jmix.core.metamodel.datatype.DatatypeRegistry;
 import io.jmix.core.metamodel.datatype.FormatStrings;
+import io.jmix.core.metamodel.datatype.FormatStringsRegistry;
 import io.jmix.core.security.CurrentAuthentication;
-import org.dom4j.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import java.text.DecimalFormat;
-import java.util.function.Function;
 
 /**
  * Number formatter to be used in screen descriptors and controllers.
- * <br> If defined in XML together with {@code format} attribute, uses this format, otherwise formats by means of
- * {@link Datatype#format(Object, java.util.Locale)}.
+ * <p>
+ * This formatter formats the {@link Number} value into a string depending on the format string.
+ * <p>
+ * Use {@link BeanLocator} when creating the formatter programmatically.
  */
-public class NumberFormatter implements Function<Number, String> {
+@Component(NumberFormatter.NAME)
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
+public class NumberFormatter implements Formatter<Number> {
 
-    private Element element;
+    public static final String NAME = "ui_NumberFormatter";
 
-    protected CurrentAuthentication currentAuthentication = AppBeans.get(CurrentAuthentication.NAME);
-    protected Messages messages = AppBeans.get(Messages.NAME);
+    protected String format;
 
-    public NumberFormatter() {
+    @Autowired
+    protected CurrentAuthentication currentAuthentication;
+    @Autowired
+    protected Messages messages;
+    @Autowired
+    protected DatatypeRegistry datatypeRegistry;
+    @Autowired
+    protected FormatStringsRegistry formatStringsRegistry;
+
+    /**
+     * Sets the format string describing the number format which will be used to create {@link DecimalFormat} instance.
+     * It can be either a format string, or a key in message pack.
+     *
+     * @param format a format string or a key in message pack
+     */
+    public void setFormat(String format) {
+        this.format = format;
     }
 
-    public NumberFormatter(Element element) {
-        this.element = element;
-    }
-
+    @Nullable
     @Override
-    public String apply(Number value) {
+    public String apply(@Nullable Number value) {
         if (value == null) {
             return null;
         }
-        String pattern = element != null ? element.attributeValue("format") : null;
 
-        if (pattern == null) {
-            Datatype datatype = Datatypes.getNN(value.getClass());
+        if (format == null) {
+            Datatype datatype = datatypeRegistry.get(value.getClass());
             return datatype.format(value, currentAuthentication.getLocale());
         } else {
-            if (pattern.startsWith("msg://")) {
-                pattern = messages.getMessage(pattern.substring(6, pattern.length()));
+            if (format.startsWith("msg://")) {
+                format = messages.getMessage(format.substring(6));
             }
-            FormatStrings formatStrings = Datatypes.getFormatStrings(currentAuthentication.getLocale());
+            FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(currentAuthentication.getLocale());
             if (formatStrings == null)
                 throw new IllegalStateException("FormatStrings are not defined for " +
                         LocaleResolver.localeToString(currentAuthentication.getLocale()));
-            DecimalFormat format = new DecimalFormat(pattern, formatStrings.getFormatSymbols());
-            return format.format(value);
+            DecimalFormat decimalFormat = new DecimalFormat(format, formatStrings.getFormatSymbols());
+            return decimalFormat.format(value);
         }
     }
 }

@@ -16,6 +16,7 @@
 
 package io.jmix.core;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
@@ -732,7 +733,7 @@ public class MetadataTools {
         String relatedProperties = (String) metaProperty.getAnnotations().get("relatedProperties");
         List<String> result = Collections.emptyList();
         if (relatedProperties != null) {
-            result = Arrays.asList(relatedProperties.split(","));
+            result = Splitter.on(',').omitEmptyStrings().trimResults().splitToList(relatedProperties);
         }
         return result;
     }

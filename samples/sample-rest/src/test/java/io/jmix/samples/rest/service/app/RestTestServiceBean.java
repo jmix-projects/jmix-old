@@ -5,17 +5,20 @@
 
 package io.jmix.samples.rest.service.app;
 
-import io.jmix.core.*;
+import io.jmix.core.DataManager;
+import io.jmix.core.FetchPlan;
+import io.jmix.core.FetchPlanRepository;
+import io.jmix.core.Metadata;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.validation.CustomValidationException;
 import io.jmix.samples.rest.entity.driver.Car;
 import io.jmix.samples.rest.entity.driver.NotPersistentStringIdEntity;
 import io.jmix.samples.rest.exception.CustomHttpClientErrorException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -197,10 +200,10 @@ public class RestTestServiceBean implements RestTestService {
 
     @Override
     public List<PojoWithNestedEntity> getPojosWithNestedEntity() {
-        LoadContext<Car> ctx = new LoadContext(Car.class)
-                .setFetchPlan(fetchPlanRepository.getFetchPlan(Car.class, FetchPlan.LOCAL))
-                .setQuery(new LoadContext.Query("select c from ref_Car c order by c.vin"));
-        List<Car> cars = dataManager.loadList(ctx);
+        List<Car> cars = dataManager.load(Car.class)
+                .fetchPlan(FetchPlan.LOCAL)
+                .query("select c from ref_Car c order by c.vin")
+                .list();
         final int[] counter = {1};
         return cars.stream()
                 .map(car -> new PojoWithNestedEntity(car, counter[0]++))
@@ -209,10 +212,10 @@ public class RestTestServiceBean implements RestTestService {
 
     @Override
     public List<PojoWithNestedEntity> getPojosWithNestedEntityWithView() {
-        LoadContext<Car> ctx = new LoadContext(Car.class)
-                .setFetchPlan(fetchPlanRepository.getFetchPlan(Car.class, "car-with-colour"))
-                .setQuery(new LoadContext.Query("select c from ref_Car c order by c.vin"));
-        List<Car> cars = dataManager.loadList(ctx);
+        List<Car> cars = dataManager.load(Car.class)
+                .fetchPlan("car-with-colour")
+                .query("select c from ref_Car c order by c.vin")
+                .list();
         final int[] counter = {1};
         return cars.stream()
                 .map(car -> new PojoWithNestedEntity(car, counter[0]++))

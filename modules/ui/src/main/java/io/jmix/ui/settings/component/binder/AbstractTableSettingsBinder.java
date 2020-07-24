@@ -118,6 +118,11 @@ public abstract class AbstractTableSettingsBinder implements DataLoadingSettings
                             }
                         }
                     }
+                } else if (table.getSortInfo() != null) {
+                    TableItems tableItems = table.getItems();
+                    if (tableItems instanceof TableItems.Sortable) {
+                        ((TableItems.Sortable) tableItems).resetSortOrder();
+                    }
                 }
             }
         }
@@ -290,7 +295,9 @@ public abstract class AbstractTableSettingsBinder implements DataLoadingSettings
             return true;
         }
 
-        settingsSortAscending = settingsSortAscending == null ? true : settingsSortAscending;
+        if (settingsSortAscending == null) {
+            settingsSortAscending = true;
+        }
 
         return sortInfo.getAscending() != settingsSortAscending;
     }

@@ -95,13 +95,14 @@ public class StandardLookup<T extends JmixEntity> extends Screen implements Look
         }
     }
 
+    @Nullable
     @Override
     public Consumer<Collection<T>> getSelectHandler() {
         return selectHandler;
     }
 
     @Override
-    public void setSelectHandler(Consumer<Collection<T>> selectHandler) {
+    public void setSelectHandler(@Nullable Consumer<Collection<T>> selectHandler) {
         this.selectHandler = selectHandler;
 
         Component lookupActionsLayout = getLookupActionsLayout();
@@ -182,7 +183,7 @@ public class StandardLookup<T extends JmixEntity> extends Screen implements Look
 
     @Override
     public void setLookupComponentMultiSelect(boolean multiSelect) {
-        LookupComponent<T> lookupComponent = getLookupComponent();
+        // LookupComponent<T> lookupComponent = getLookupComponent();
 
         // todo implement
         /*if (lookupComponent instanceof Table) {

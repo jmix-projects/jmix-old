@@ -24,6 +24,8 @@ import io.jmix.ui.component.mainwindow.TimeZoneIndicator;
 import org.apache.commons.lang3.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.Nullable;
 import java.util.TimeZone;
 
 public class WebTimeZoneIndicator extends WebAbstractComponent<Label> implements TimeZoneIndicator {
@@ -40,8 +42,8 @@ public class WebTimeZoneIndicator extends WebAbstractComponent<Label> implements
     public void setBeanLocator(BeanLocator beanLocator) {
         super.setBeanLocator(beanLocator);
 
-        CurrentAuthentication currentAuthentication = beanLocator.get(CurrentAuthentication.NAME);
-        TimeZone timeZone = currentAuthentication.getTimeZone();
+        // CurrentAuthentication currentAuthentication = beanLocator.get(CurrentAuthentication.NAME);
+        // TimeZone timeZone = currentAuthentication.getTimeZone();
         // todo TimeZones
 //        TimeZones timeZones = beanLocator.get(TimeZones.NAME);
 //        component.setValue(timeZones.getDisplayNameShort(timeZone));
@@ -57,7 +59,7 @@ public class WebTimeZoneIndicator extends WebAbstractComponent<Label> implements
     }
 
     @Override
-    public void setStyleName(String styleName) {
+    public void setStyleName(@Nullable String styleName) {
         super.setStyleName(styleName);
 
         component.addStyleName(USER_TIMEZONE_LABEL_STYLENAME);

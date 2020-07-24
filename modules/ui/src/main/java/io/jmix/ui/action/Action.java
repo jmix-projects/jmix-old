@@ -23,6 +23,7 @@ import io.jmix.ui.component.ListComponent;
 import io.jmix.ui.gui.OpenType;
 import io.jmix.ui.icon.Icons;
 
+import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import java.util.EventObject;
@@ -49,38 +50,40 @@ public interface Action {
     /**
      * @return  action's caption
      */
+    @Nullable
     String getCaption();
-    void setCaption(String caption);
+
+    void setCaption(@Nullable String caption);
 
     /**
      * @return  action's description
      */
+    @Nullable
     String getDescription();
-    void setDescription(String description);
+    void setDescription(@Nullable String description);
 
     /**
      *
      * @return action's keyboard shortcut
      */
+    @Nullable
     KeyCombination getShortcutCombination();
-    void setShortcutCombination(KeyCombination shortcut);
+
+    void setShortcutCombination(@Nullable KeyCombination shortcut);
 
     /**
      * Set shortcut from string representation.
      *
      * @param shortcut string of type "Modifiers-Key", e.g. "Alt-N". Case-insensitive.
      */
-    void setShortcut(String shortcut);
+    void setShortcut(@Nullable String shortcut);
 
     /**
      * @return  action's icon
      */
+    @Nullable
     String getIcon();
-    void setIcon(String icon);
-    /**
-     * Set an icon from an icon set.
-     */
-    void setIconFromSet(Icons.Icon icon);
+    void setIcon(@Nullable String icon);
 
     /**
      * @return  whether the action is currently enabled
@@ -107,6 +110,7 @@ public interface Action {
     /**
      * @return  a single component owning the action. If there are several owners, first will be returned.
      */
+    @Nullable
     ActionOwner getOwner();
 
     /**
@@ -171,9 +175,10 @@ public interface Action {
     }
 
     interface HasTarget extends Action {
+        @Nullable
         ListComponent getTarget();
 
-        void setTarget(ListComponent target);
+        void setTarget(@Nullable ListComponent target);
     }
 
     /**
@@ -199,11 +204,13 @@ public interface Action {
      * Interface defining constraintOperationType and constraintCode options.
      */
     interface HasSecurityConstraint {
-        void setConstraintOperationType(ConstraintOperationType constraintOperationType);
+        void setConstraintOperationType(@Nullable ConstraintOperationType constraintOperationType);
+        @Nullable
         ConstraintOperationType getConstraintOperationType();
 
+        @Nullable
         String getConstraintCode();
-        void setConstraintCode(String constraintCode);
+        void setConstraintCode(@Nullable String constraintCode);
     }
 
     /**

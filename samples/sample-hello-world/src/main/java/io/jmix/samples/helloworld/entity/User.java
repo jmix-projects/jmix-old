@@ -16,24 +16,31 @@
 
 package io.jmix.samples.helloworld.entity;
 
+import io.jmix.core.JmixEntity;
 import io.jmix.core.entity.BaseUser;
+import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.entity.annotation.SystemLevel;
 import io.jmix.core.metamodel.annotation.InstanceName;
-import io.jmix.data.entity.StandardEntity;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
 @Entity
 @Table(name = "SEC_USER")
-public class User extends StandardEntity implements BaseUser {
+public class User implements JmixEntity, BaseUser {
 
-    private static final long serialVersionUID = 5007187642916030394L;
+    @Id
+    @Column(name = "ID")
+    @JmixGeneratedValue
+    private UUID id;
+
+    @Version
+    @Column(name = "VERSION")
+    private Integer version;
 
     @Column(name = "USERNAME", nullable = false)
     protected String username;
@@ -54,6 +61,22 @@ public class User extends StandardEntity implements BaseUser {
 
     @Column(name = "ENABLED")
     protected Boolean enabled = true;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
     public String getPassword() {
         return password;

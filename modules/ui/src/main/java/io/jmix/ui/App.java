@@ -359,6 +359,7 @@ public abstract class App {
      * @deprecated Get screens API from {@link AppUI} instead.
      */
     @Deprecated
+    @Nullable
     public WebScreens getWindowManager() {
         AppUI ui = AppUI.getCurrent();
         if (ui == null) {
@@ -382,6 +383,7 @@ public abstract class App {
         return exceptionHandlers;
     }
 
+    @Nullable
     public String getCookieValue(String name) {
         return cookies.getCookieValue(name);
     }

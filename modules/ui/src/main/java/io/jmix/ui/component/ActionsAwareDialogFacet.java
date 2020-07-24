@@ -16,6 +16,7 @@
 
 package io.jmix.ui.component;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.function.Consumer;
 
@@ -34,11 +35,12 @@ public interface ActionsAwareDialogFacet<T> {
      *
      * @param actions actions
      */
-    void setActions(Collection<DialogAction<T>> actions);
+    void setActions(@Nullable Collection<DialogAction<T>> actions);
 
     /**
      * @return dialog actions
      */
+    @Nullable
     Collection<DialogAction<T>> getActions();
 
     /**
@@ -76,7 +78,7 @@ public interface ActionsAwareDialogFacet<T> {
 
         protected Consumer<DialogActionPerformedEvent<T>> actionHandler;
 
-        public DialogAction(String id, String caption, String description, String icon, boolean primary) {
+        public DialogAction(String id, @Nullable String caption, @Nullable String description, @Nullable String icon, boolean primary) {
             this.id = id;
             this.caption = caption;
             this.description = description;
@@ -88,14 +90,17 @@ public interface ActionsAwareDialogFacet<T> {
             return id;
         }
 
+        @Nullable
         public String getCaption() {
             return caption;
         }
 
+        @Nullable
         public String getDescription() {
             return description;
         }
 
+        @Nullable
         public String getIcon() {
             return icon;
         }
@@ -104,6 +109,7 @@ public interface ActionsAwareDialogFacet<T> {
             return primary;
         }
 
+        @Nullable
         public Consumer<DialogActionPerformedEvent<T>> getActionHandler() {
             return actionHandler;
         }

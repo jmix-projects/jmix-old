@@ -18,6 +18,7 @@ package io.jmix.ui.component;
 
 import io.jmix.core.common.event.Subscription;
 
+import javax.annotation.Nullable;
 import java.util.EventObject;
 import java.util.function.Consumer;
 
@@ -56,10 +57,11 @@ public interface PopupView extends Component.HasCaption, Component.BelongToFrame
      *
      * @param popupContent popup component.
      */
-    void setPopupContent(Component popupContent);
+    void setPopupContent(@Nullable Component popupContent);
     /**
      * @return popup content component.
      */
+    @Nullable
     Component getPopupContent();
 
     /**
@@ -121,11 +123,12 @@ public interface PopupView extends Component.HasCaption, Component.BelongToFrame
      *
      * @param position the popup position
      */
-    void setPopupPosition(PopupPosition position);
+    void setPopupPosition(@Nullable PopupPosition position);
 
     /**
      * return {@code PopupPosition} or {@code null} if position is set via {@link #setPopupPosition(PopupPosition)}
      */
+    @Nullable
     PopupPosition getPopupPosition();
 
     /**
@@ -149,6 +152,7 @@ public interface PopupView extends Component.HasCaption, Component.BelongToFrame
         BOTTOM_CENTER,
         BOTTOM_RIGHT;
 
+        @Nullable
         public static PopupPosition fromId(String position) {
             for (PopupPosition popupPosition : values()) {
                 if (popupPosition.name().equals(position)) {

@@ -48,7 +48,10 @@ public class ComponentSamples extends Screen {
     private TwinColumn<String> twinColumn;
 
     @Autowired
-    private OptionsList<List, String> optionsList;
+    private MultiSelectList<String> multiSelectList;
+
+    @Autowired
+    private SingleSelectList<String> singleSelectList;
 
     @Autowired
     private RadioButtonGroup<String> radioButtonGroup;
@@ -73,13 +76,16 @@ public class ComponentSamples extends Screen {
         List<String> options = Arrays.asList("Value 1", "Value 2", "Value 3", "Value 4");
         checkBoxGroup.setOptionsList(options);
         twinColumn.setOptionsList(options);
-        optionsList.setOptionsList(options);
+        multiSelectList.setOptionsList(options);
+        singleSelectList.setOptionsList(options);
         radioButtonGroup.setOptionsList(options);
 
 //        listEditor = uiComponents.create(ListEditor.NAME);
 //        listEditor.setOptionsList(options);
 //        listEditor.setCaption("ListEditor");
 //        othersVBox.add(listEditor);
+        multiSelectList.addDoubleClickListener(event -> notifications.create().withCaption("DoubleClick: " + event.getItem()).show());
+        singleSelectList.addDoubleClickListener(event -> notifications.create().withCaption("DoubleClick: " + event.getItem()).show());
     }
 
     @Subscribe("inputDialogBtn")

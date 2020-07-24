@@ -41,6 +41,7 @@ import io.jmix.core.metamodel.model.Range;
 import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
+import io.jmix.ui.Actions;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.UiProperties;
@@ -56,6 +57,7 @@ import io.jmix.ui.component.data.aggregation.Aggregations;
 import io.jmix.ui.component.data.meta.ContainerDataUnit;
 import io.jmix.ui.component.data.meta.EmptyDataUnit;
 import io.jmix.ui.component.data.meta.EntityTableItems;
+import io.jmix.ui.component.formatter.Formatter;
 import io.jmix.ui.component.presentation.TablePresentationsLayout;
 import io.jmix.ui.component.table.*;
 import io.jmix.ui.icon.IconResolver;
@@ -73,9 +75,10 @@ import io.jmix.ui.settings.component.SettingsWrapper;
 import io.jmix.ui.settings.component.SettingsWrapperImpl;
 import io.jmix.ui.settings.component.TableSettings;
 import io.jmix.ui.settings.component.binder.ComponentSettingsBinder;
+import io.jmix.ui.settings.component.binder.DataLoadingSettingsBinder;
 import io.jmix.ui.settings.component.binder.TableSettingsBinder;
 import io.jmix.ui.sys.PersistenceManagerClient;
-import io.jmix.ui.sys.ShowInfoAction;
+import io.jmix.ui.action.ShowInfoAction;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
 import io.jmix.ui.widget.JmixButton;
@@ -143,6 +146,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     protected FetchPlanRepository viewRepository;
     protected UserSettingsTools userSettingsTools;
     protected EntityStates entityStates;
+    protected Actions actions;
 
     protected Locale locale;
 
@@ -277,6 +281,11 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         this.entityStates = entityStates;
     }
 
+    @Autowired
+    public void setActions(Actions actions) {
+        this.actions = actions;
+    }
+
     @Override
     public Collection<io.jmix.ui.component.Component> getInnerComponents() {
         if (buttonsPanel != null) {
@@ -286,6 +295,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     @SuppressWarnings("unchecked")
+    @Nullable
     protected Set<Object> getSelectedItemIds() {
         Object value = component.getValue();
         if (value == null) {
@@ -344,7 +354,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     @Override
-    public void setSelected(E item) {
+    public void setSelected(@Nullable E item) {
         if (item == null) {
             component.setValue(null);
         } else {
@@ -426,6 +436,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         return requiredColumns;
     }
 
+    @Nullable
     @Override
     public Table.Column<E> getColumn(String id) {
         for (Table.Column<E> column : columnsOrder) {
@@ -537,9 +548,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
 
     @Override
     public void removeColumn(Table.Column column) {
-        if (column == null) {
-            return;
-        }
+        Preconditions.checkNotNullArgument(column);
 
         component.removeContainerProperty(column.getId());
         columns.remove(column.getId());
@@ -713,7 +722,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
             }
 
             Column column = getColumn(propertyId.toString());
-            if (BooleanUtils.isTrue(column.isEditable())) {
+            if (column != null && BooleanUtils.isTrue(column.isEditable())) {
                 com.vaadin.v7.ui.Table.ColumnGenerator generator = component.getColumnGenerator(column.getId());
                 if (generator != null) {
                     if (generator instanceof SystemTableColumnGenerator) {
@@ -837,13 +846,14 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
                 : null;
     }
 
+    @Nullable
     @Override
     public RowsCount getRowsCount() {
         return rowsCount;
     }
 
     @Override
-    public void setRowsCount(RowsCount rowsCount) {
+    public void setRowsCount(@Nullable RowsCount rowsCount) {
         if (this.rowsCount != null && topPanel != null) {
             topPanel.removeComponent(this.rowsCount.unwrap(com.vaadin.ui.Component.class));
         }
@@ -1133,6 +1143,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         publish(SelectionEvent.class, event);
     }
 
+    @Nullable
     protected String formatCellValue(Object rowId, Object colId, @Nullable Property<?> property) {
         TableItems<E> tableItems = getItems();
         if (tableItems == null
@@ -1144,10 +1155,10 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         if (column != null && column.getValueProvider() != null) {
             E item = tableItems.getItem(rowId);
             Object generatedValue = column.getValueProvider().apply(item);
-            Function<Object, String> formatter = column.getFormatter();
+            Formatter formatter = column.getFormatter();
 
             if (formatter != null) {
-                return column.getFormatter().apply(generatedValue);
+                return (String) formatter.apply(generatedValue);
             }
 
             return metadataTools.format(generatedValue);
@@ -1169,7 +1180,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
 
             if (column != null) {
                 if (column.getFormatter() != null) {
-                    return column.getFormatter().apply(cellValue);
+                    return (String) column.getFormatter().apply(cellValue);
                 } else if (column.getXmlDescriptor() != null) {
                     // vaadin8 move to Column
                     String captionProperty = column.getXmlDescriptor().attributeValue("captionProperty");
@@ -1228,7 +1239,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     @SuppressWarnings("unchecked")
-    protected String getGeneratedCellStyle(Object itemId, Object propertyId) {
+    @Nullable
+    protected String getGeneratedCellStyle(Object itemId, @Nullable Object propertyId) {
         if (styleProviders == null) {
             return null;
         }
@@ -1249,7 +1261,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         return Strings.emptyToNull(joinedStyle);
     }
 
-    protected String generateCellDescription(Object itemId, Object propertyId) {
+    @Nullable
+    protected String generateCellDescription(Object itemId, @Nullable Object propertyId) {
         if (itemDescriptionProvider == null) {
             return null;
         }
@@ -1340,6 +1353,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         return getSelected();
     }
 
+    @Nullable
     protected Action getEnterAction() {
         for (Action action : getActions()) {
             KeyCombination kc = action.getShortcutCombination();
@@ -1381,13 +1395,14 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         }
     }
 
+    @Nullable
     @Override
     public TableItems<E> getItems() {
         return this.dataBinding != null ? this.dataBinding.getTableItems() : null;
     }
 
     @Override
-    public void setItems(TableItems<E> tableItems) {
+    public void setItems(@Nullable TableItems<E> tableItems) {
         if (this.dataBinding != null) {
             this.dataBinding.unbind();
             this.dataBinding = null;
@@ -1427,7 +1442,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
 
             if (security.isSpecificPermitted(ShowInfoAction.ACTION_PERMISSION)) {
                 if (getAction(ShowInfoAction.ACTION_ID) == null) {
-                    addAction(new ShowInfoAction());
+                    addAction(actions.create(ShowInfoAction.ACTION_ID));
                 }
             }
 
@@ -1792,7 +1807,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     @Override
-    public void setDebugId(String id) {
+    public void setDebugId(@Nullable String id) {
         super.setDebugId(id);
 
         AppUI ui = AppUI.getCurrent();
@@ -1802,7 +1817,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     @Override
-    public void setId(String id) {
+    public void setId(@Nullable String id) {
         super.setId(id);
 
         AppUI ui = AppUI.getCurrent();
@@ -1911,7 +1926,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     @Override
-    public void setStyleName(String name) {
+    public void setStyleName(@Nullable String name) {
         super.setStyleName(name);
 
         for (String internalStyle : internalStyles) {
@@ -1959,7 +1974,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     @Override
-    public void setIconProvider(Function<? super E, String> iconProvider) {
+    public void setIconProvider(@Nullable Function<? super E, String> iconProvider) {
         this.iconProvider = iconProvider;
         if (iconProvider != null) {
             setRowHeaderMode(RowHeaderMode.ICON);
@@ -1970,6 +1985,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     // For vaadin component extensions
+    @Nullable
     protected Resource getItemIcon(Object itemId) {
         if (iconProvider == null
                 || getItems() == null) {
@@ -2010,6 +2026,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         component.setColumnWidth(ROW_HEADER_PROPERTY_ID, width);
     }
 
+    @Nullable
     @Override
     public Action getEnterPressAction() {
         return enterPressAction;
@@ -2020,6 +2037,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         enterPressAction = action;
     }
 
+    @Nullable
     @Override
     public Action getItemClickAction() {
         return itemClickAction;
@@ -2036,13 +2054,14 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         }
     }
 
+    @Nullable
     @Override
     public String getCaption() {
         return getComposition().getCaption();
     }
 
     @Override
-    public void setCaption(String caption) {
+    public void setCaption(@Nullable String caption) {
         getComposition().setCaption(caption);
     }
 
@@ -2056,13 +2075,14 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         ((com.vaadin.ui.AbstractComponent) getComposition()).setCaptionAsHtml(captionAsHtml);
     }
 
+    @Nullable
     @Override
     public ButtonsPanel getButtonsPanel() {
         return buttonsPanel;
     }
 
     @Override
-    public void setButtonsPanel(ButtonsPanel panel) {
+    public void setButtonsPanel(@Nullable ButtonsPanel panel) {
         if (buttonsPanel != null && topPanel != null) {
             topPanel.removeComponent(buttonsPanel.unwrap(Component.class));
             buttonsPanel.setParent(null);
@@ -2138,6 +2158,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         component.addGeneratedColumn(
                 generatedColumnId,
                 new CustomColumnGenerator(generator, associatedRuntimeColumn) {
+                    @Nullable
                     @Override
                     public Object generateCell(com.vaadin.v7.ui.Table source, Object itemId, Object columnId) {
                         EntityTableItems<E> entityTableSource = (EntityTableItems<E>) getItems();
@@ -2246,7 +2267,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     @Override
-    public void setColumnCaption(String columnId, String caption) {
+    public void setColumnCaption(String columnId, @Nullable String caption) {
         Column column = getColumn(columnId);
         if (column == null) {
             throw new IllegalStateException(String.format("Column with id '%s' not found", columnId));
@@ -2256,7 +2277,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     @Override
-    public void setColumnCaption(Column column, String caption) {
+    public void setColumnCaption(Column column, @Nullable String caption) {
         checkNotNullArgument(column, "column must be non null");
 
         if (!Objects.equals(column.getCaption(), caption)) {
@@ -2266,7 +2287,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     @Override
-    public void setColumnDescription(String columnId, String description) {
+    public void setColumnDescription(String columnId, @Nullable String description) {
         Column column = getColumn(columnId);
         if (column == null) {
             throw new IllegalStateException(String.format("Column with id '%s' not found", columnId));
@@ -2276,7 +2297,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     @Override
-    public void setColumnDescription(Column column, String description) {
+    public void setColumnDescription(Column column, @Nullable String description) {
         checkNotNullArgument(column, "column must be non null");
 
         if (!Objects.equals(column.getDescription(), description)) {
@@ -2397,7 +2418,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     @Deprecated
     @Override
     public void refresh() {
-        TableItems<E> tableItems = getItems();
+        // TableItems<E> tableItems = getItems();
         /*
         TODO: legacy-ui
         if (tableItems instanceof DatasourceTableItems) {
@@ -2513,7 +2534,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         return results;
     }
 
-    protected String getFormattedValue(Column<E> column, Object value) {
+    protected String getFormattedValue(Column<E> column, @Nullable Object value) {
         String cellText;
         if (value == null) {
             cellText = "";
@@ -2610,10 +2631,14 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         return usePresentations;
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void resetPresentation() {
         if (defaultTableSettings != null) {
-            getSettingsBinder().applySettings(this, new SettingsWrapperImpl(defaultTableSettings));
+            DataLoadingSettingsBinder binder = (DataLoadingSettingsBinder) getSettingsBinder();
+            binder.applySettings(this, new SettingsWrapperImpl(defaultTableSettings));
+            binder.applyDataLoadingSettings(this, new SettingsWrapperImpl(defaultTableSettings));
+
             if (presentations != null) {
                 presentations.setCurrent(null);
             }
@@ -2631,6 +2656,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         }
     }
 
+    @Nullable
     @Override
     public TablePresentations getPresentations() {
         if (isUsePresentations()) {
@@ -2644,7 +2670,9 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     public void applyPresentation(Object id) {
         if (isUsePresentations() && presentations != null) {
             TablePresentation p = presentations.getPresentation(id);
-            applyPresentation(p);
+            if (p != null) {
+                applyPresentation(p);
+            }
         } else {
             throw new UnsupportedOperationException("Component doesn't use presentations");
         }
@@ -2672,9 +2700,12 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         }
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     protected void applyPresentationSettings(TablePresentation p) {
         ComponentSettings settings = getSettingsFromPresentation(p);
-        getSettingsBinder().applySettings(this, new SettingsWrapperImpl(settings));
+        DataLoadingSettingsBinder binder = (DataLoadingSettingsBinder) getSettingsBinder();
+        binder.applySettings(this, new SettingsWrapperImpl(settings));
+        binder.applyDataLoadingSettings(this, new SettingsWrapperImpl(settings));
     }
 
     protected ComponentSettings getSettingsFromPresentation(TablePresentation p) {
@@ -2699,6 +2730,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         return beanLocator.getPrototype(TablePresentations.NAME, this);
     }
 
+    @Nullable
     @Override
     public Object getDefaultPresentationId() {
         if (presentations == null) {
@@ -2878,7 +2910,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         return component.getColumnExpandRatio(column.getId());
     }
 
-    protected String generateCellStyle(Object itemId, Object propertyId) {
+    @Nullable
+    protected String generateCellStyle(@Nullable Object itemId, @Nullable Object propertyId) {
         String style = null;
         if (propertyId != null && itemId != null
                 && !component.isColumnEditable(propertyId)
@@ -2919,6 +2952,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
                 || component.getColumnGenerator(propertyId) == VALUE_PROVIDER_GENERATOR;
     }
 
+    @Nullable
     protected String generateDefaultCellStyle(Object itemId, Object propertyId,
                                               @Nullable MetaPropertyPath propertyPath) {
         String style = null;
@@ -2948,11 +2982,11 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
                         null : column.getXmlDescriptor().attributeValue("link");
 
                 if (propertyPath.getRange().isClass()) {
-                    if (StringUtils.isNotEmpty(isLink) && Boolean.valueOf(isLink)) {
+                    if (StringUtils.isNotEmpty(isLink) && Boolean.parseBoolean(isLink)) {
                         style = "c-table-cell-link";
                     }
                 } else if (propertyPath.getRange().isDatatype()) {
-                    if (StringUtils.isNotEmpty(isLink) && Boolean.valueOf(isLink)) {
+                    if (StringUtils.isNotEmpty(isLink) && Boolean.parseBoolean(isLink)) {
                         style = "c-table-cell-link";
                     } else if (column.getMaxTextLength() != null) {
                         style = generateClickableCellStyles(itemId, column, propertyPath);
@@ -2977,6 +3011,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         return style;
     }
 
+    @Nullable
     protected String generateClickableCellStyles(Object itemId, Column column, MetaPropertyPath propertyPath) {
         EntityTableItems<E> entityTableSource = (EntityTableItems<E>) getItems();
         if (entityTableSource == null) {
@@ -3002,7 +3037,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     @Override
-    public void setAggregationDistributionProvider(AggregationDistributionProvider<E> distributionProvider) {
+    public void setAggregationDistributionProvider(@Nullable AggregationDistributionProvider<E> distributionProvider) {
         this.distributionProvider = distributionProvider;
 
         component.setAggregationDistributionProvider(this::distributeAggregation);
@@ -3034,6 +3069,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         return true;
     }
 
+    @Nullable
     @Override
     public AggregationDistributionProvider<E> getAggregationDistributionProvider() {
         return distributionProvider;
@@ -3075,6 +3111,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     protected class StyleGeneratorAdapter implements com.vaadin.v7.ui.Table.CellStyleGenerator {
         protected boolean exceptionHandled = false;
 
+        @Nullable
         @Override
         public String getStyle(com.vaadin.v7.ui.Table source, Object itemId, Object propertyId) {
             if (exceptionHandled) {
@@ -3095,7 +3132,8 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         }
     }
 
-    protected Object getValueExIgnoreUnfetched(JmixEntity instance, String[] properties) {
+    @Nullable
+    protected Object getValueExIgnoreUnfetched(@Nullable JmixEntity instance, String[] properties) {
         Object currentValue = null;
         JmixEntity currentInstance = instance;
         for (String property : properties) {
@@ -3142,34 +3180,37 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
     }
 
     @Override
-    public void setEmptyStateMessage(String message) {
+    public void setEmptyStateMessage(@Nullable String message) {
         component.setEmptyStateMessage(message);
 
         showEmptyStateIfPossible();
     }
 
+    @Nullable
     @Override
     public String getEmptyStateMessage() {
         return component.getEmptyStateMessage();
     }
 
     @Override
-    public void setEmptyStateLinkMessage(String linkMessage) {
+    public void setEmptyStateLinkMessage(@Nullable String linkMessage) {
         component.setEmptyStateLinkMessage(linkMessage);
 
         showEmptyStateIfPossible();
     }
 
+    @Nullable
     @Override
     public String getEmptyStateLinkMessage() {
         return component.getEmptyStateLinkMessage();
     }
 
     @Override
-    public void setEmptyStateLinkClickHandler(Consumer<EmptyStateClickEvent<E>> handler) {
+    public void setEmptyStateLinkClickHandler(@Nullable Consumer<EmptyStateClickEvent<E>> handler) {
         this.emptyStateClickLinkHandler = handler;
     }
 
+    @Nullable
     @Override
     public Consumer<EmptyStateClickEvent<E>> getEmptyStateLinkClickHandler() {
         return emptyStateClickLinkHandler;
@@ -3280,6 +3321,7 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
             this.itemDescriptionProvider = itemDescriptionProvider;
         }
 
+        @Nullable
         @Override
         public String generateDescription(Component source, Object itemId, Object propertyId) {
 

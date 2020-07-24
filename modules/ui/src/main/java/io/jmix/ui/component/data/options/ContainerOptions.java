@@ -29,6 +29,7 @@ import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.DataLoader;
 import io.jmix.ui.model.HasLoader;
 
+import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -72,13 +73,14 @@ public class ContainerOptions<E extends JmixEntity> implements Options<E>, Entit
         events.publish(OptionsChangeEvent.class, new OptionsChangeEvent(this));
     }
 
+    @Nullable
     @Override
     public MetaClass getEntityMetaClass() {
         return container.getEntityMetaClass();
     }
 
     @Override
-    public void setSelectedItem(E item) {
+    public void setSelectedItem(@Nullable E item) {
         if (item == null) {
             container.setItem(null);
         } else {
@@ -94,7 +96,7 @@ public class ContainerOptions<E extends JmixEntity> implements Options<E>, Entit
     }
 
     @Override
-    public boolean containsItem(E item) {
+    public boolean containsItem(@Nullable E item) {
         return item != null && container.containsItem(EntityValues.getId(item));
     }
 

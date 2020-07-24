@@ -32,6 +32,7 @@ import org.eclipse.persistence.internal.helper.CubaUtil;
 import org.eclipse.persistence.sessions.UnitOfWork;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
 
 import javax.annotation.Nullable;
 import javax.persistence.*;
@@ -47,7 +48,7 @@ public class JmixEntityManager implements EntityManager {
 
     private EntityManager delegate;
 
-    private BeanLocator beanLocator;
+    private BeanFactory beanFactory;
 
     private PersistenceSupport support;
     private ExtendedEntities extendedEntities;
@@ -62,20 +63,20 @@ public class JmixEntityManager implements EntityManager {
 
     private static final Logger log = LoggerFactory.getLogger(JmixEntityManager.class);
 
-    public JmixEntityManager(EntityManager delegate, BeanLocator beanLocator) {
+    public JmixEntityManager(EntityManager delegate, BeanFactory beanFactory) {
         this.delegate = delegate;
-        this.beanLocator = beanLocator;
+        this.beanFactory = beanFactory;
 
-        support = beanLocator.get(PersistenceSupport.NAME);
-        extendedEntities = beanLocator.get(ExtendedEntities.NAME);
-        metadataTools = beanLocator.get(MetadataTools.NAME);
-        metadata = beanLocator.get(Metadata.NAME);
-        entityStates = beanLocator.get(EntityStates.NAME);
-        entityListenerMgr = beanLocator.get(EntityListenerManager.NAME);
-        entityPersistingEventMgr = beanLocator.get(EntityPersistingEventManager.NAME);
-        timeSource = beanLocator.get(TimeSource.NAME);
-        auditInfoProvider = beanLocator.get(AuditInfoProvider.NAME);
-        auditConverter = beanLocator.get(AuditConversionService.NAME);
+        support = (PersistenceSupport) beanFactory.getBean(PersistenceSupport.NAME);
+        extendedEntities = (ExtendedEntities) beanFactory.getBean(ExtendedEntities.NAME);
+        metadataTools = (MetadataTools) beanFactory.getBean(MetadataTools.NAME);
+        metadata = (Metadata) beanFactory.getBean(Metadata.NAME);
+        entityStates = (EntityStates) beanFactory.getBean(EntityStates.NAME);
+        entityListenerMgr = (EntityListenerManager) beanFactory.getBean(EntityListenerManager.NAME);
+        entityPersistingEventMgr = (EntityPersistingEventManager) beanFactory.getBean(EntityPersistingEventManager.NAME);
+        timeSource = (TimeSource) beanFactory.getBean(TimeSource.NAME);
+        auditInfoProvider = (AuditInfoProvider) beanFactory.getBean(AuditInfoProvider.NAME);
+        auditConverter =  (AuditConversionService) beanFactory.getBean(AuditConversionService.NAME);
     }
 
     @Override
@@ -270,7 +271,7 @@ public class JmixEntityManager implements EntityManager {
 
     @Override
     public Query createQuery(String qlString) {
-        return new JmixQuery(delegate, beanLocator, false, qlString, null);
+        return new JmixQuery(delegate, beanFactory, false, qlString, null);
     }
 
     @Override
@@ -290,7 +291,7 @@ public class JmixEntityManager implements EntityManager {
 
     @Override
     public <T> TypedQuery<T> createQuery(String qlString, Class<T> resultClass) {
-        return new JmixQuery<T>(delegate, beanLocator, false, qlString, resultClass);
+        return new JmixQuery<T>(delegate, beanFactory, false, qlString, resultClass);
     }
 
     @Override
@@ -305,12 +306,12 @@ public class JmixEntityManager implements EntityManager {
 
     @Override
     public Query createNativeQuery(String sqlString) {
-        return new JmixQuery(delegate, beanLocator, true, sqlString, null);
+        return new JmixQuery(delegate, beanFactory, true, sqlString, null);
     }
 
     @Override
     public Query createNativeQuery(String sqlString, Class resultClass) {
-        return new JmixQuery(delegate, beanLocator, true, sqlString, resultClass);
+        return new JmixQuery(delegate, beanFactory, true, sqlString, resultClass);
     }
 
     @Override

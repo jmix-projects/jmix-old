@@ -191,11 +191,12 @@ public class JmixSideMenu extends AbstractComponent implements Component.Focusab
         return getState(false).singleExpandedMenu;
     }
 
+    @Nullable
     public MenuItem getSelectedItem() {
         return selectedItem;
     }
 
-    public void setSelectedItem(MenuItem selectedItem) {
+    public void setSelectedItem(@Nullable MenuItem selectedItem) {
         if (this.selectedItem != selectedItem) {
             this.selectedItem = selectedItem;
             markAsDirty();
@@ -351,6 +352,8 @@ public class JmixSideMenu extends AbstractComponent implements Component.Focusab
             case MENU_ITEM_EXPANDED:
                 markMenuStructureAsDirty();
                 break;
+            default:
+                break;
         }
     }
 
@@ -443,11 +446,12 @@ public class JmixSideMenu extends AbstractComponent implements Component.Focusab
             this.command = command;
         }
 
+        @Nullable
         public String getCaption() {
             return caption;
         }
 
-        public void setCaption(String caption) {
+        public void setCaption(@Nullable String caption) {
             if (!Objects.equals(this.caption, caption)) {
                 String oldCaption = this.caption;
                 this.caption = caption;
@@ -455,11 +459,12 @@ public class JmixSideMenu extends AbstractComponent implements Component.Focusab
             }
         }
 
+        @Nullable
         public String getDescription() {
             return description;
         }
 
-        public void setDescription(String description) {
+        public void setDescription(@Nullable String description) {
             if (!Objects.equals(this.description, description)) {
                 String oldDescription = this.description;
                 this.description = description;
@@ -467,11 +472,12 @@ public class JmixSideMenu extends AbstractComponent implements Component.Focusab
             }
         }
 
+        @Nullable
         public Resource getIcon() {
             return icon;
         }
 
-        public void setIcon(Resource icon) {
+        public void setIcon(@Nullable Resource icon) {
             if (this.icon != icon) {
                 Resource oldIcon = this.icon;
                 this.icon = icon;
@@ -523,7 +529,7 @@ public class JmixSideMenu extends AbstractComponent implements Component.Focusab
             return s;
         }
 
-        public void setStyleName(String style) {
+        public void setStyleName(@Nullable String style) {
             String oldStyleName = this.getStyleName();
 
             if (style == null || "".equals(style)) {
@@ -552,6 +558,7 @@ public class JmixSideMenu extends AbstractComponent implements Component.Focusab
             }
         }
 
+        @Nullable
         public String getJTestId() {
             return cubaId;
         }
@@ -564,11 +571,12 @@ public class JmixSideMenu extends AbstractComponent implements Component.Focusab
             }
         }
 
+        @Nullable
         public String getBadgeText() {
             return badgeText;
         }
 
-        public void setBadgeText(String badgeText) {
+        public void setBadgeText(@Nullable String badgeText) {
             if (!Objects.equals(this.badgeText, badgeText)) {
                 String oldBadgeText = this.badgeText;
                 this.badgeText = badgeText;
@@ -576,11 +584,12 @@ public class JmixSideMenu extends AbstractComponent implements Component.Focusab
             }
         }
 
+        @Nullable
         public Consumer<MenuItemTriggeredEvent> getCommand() {
             return command;
         }
 
-        public void setCommand(Consumer<MenuItemTriggeredEvent> command) {
+        public void setCommand(@Nullable Consumer<MenuItemTriggeredEvent> command) {
             if (this.command != command) {
                 Consumer<MenuItemTriggeredEvent> oldCommand = this.command;
                 this.command = command;
@@ -649,11 +658,12 @@ public class JmixSideMenu extends AbstractComponent implements Component.Focusab
             return !children.isEmpty();
         }
 
+        @Nullable
         public MenuItem getParent() {
             return parent;
         }
 
-        public void setParent(MenuItem parent) {
+        public void setParent(@Nullable MenuItem parent) {
             this.parent = parent;
         }
 

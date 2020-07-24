@@ -38,11 +38,12 @@ public interface Field<V> extends HasValueSource<V>, Component.HasCaption,
     boolean isRequired();
     void setRequired(boolean required);
 
+    @Nullable
     String getRequiredMessage();
     /**
      * A message that will be displayed to user if the field is required but has null value
      */
-    void setRequiredMessage(String msg);
+    void setRequiredMessage(@Nullable String msg);
 
     /**
      * Add validator instance.
@@ -67,6 +68,7 @@ public interface Field<V> extends HasValueSource<V>, Component.HasCaption,
      * @deprecated Use {@link #getValueSource()} instead
      */
     @Deprecated
+    @Nullable
     default MetaProperty getMetaProperty() {
         ValueSource<V> valueSource = getValueSource();
         if (valueSource instanceof ContainerValueSource) {
@@ -81,6 +83,7 @@ public interface Field<V> extends HasValueSource<V>, Component.HasCaption,
      * @deprecated Use {@link #getValueSource()} instead
      */
     @Deprecated
+    @Nullable
     default MetaPropertyPath getMetaPropertyPath() {
         ValueSource<V> valueSource = getValueSource();
         if (valueSource instanceof ContainerValueSource) {

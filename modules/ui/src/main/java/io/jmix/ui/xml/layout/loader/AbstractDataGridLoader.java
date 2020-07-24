@@ -32,6 +32,7 @@ import io.jmix.ui.component.data.DataGridItems;
 import io.jmix.ui.component.data.aggregation.AggregationStrategy;
 import io.jmix.ui.component.data.datagrid.ContainerDataGridItems;
 import io.jmix.ui.component.data.datagrid.EmptyDataGridItems;
+import io.jmix.ui.component.formatter.Formatter;
 import io.jmix.ui.model.*;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.UiControllerUtils;
@@ -46,7 +47,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -172,7 +172,7 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
         if (columnsElement != null) {
             FetchPlan fetchPlan = holder.getFetchPlan();
             if (fetchPlan == null) {
-                getViewRepository().getFetchPlan(holder.getMetaClass(), FetchPlan.LOCAL);
+                fetchPlan = getViewRepository().getFetchPlan(holder.getMetaClass(), FetchPlan.LOCAL);
             }
 
             loadColumns(resultComponent, columnsElement, holder.getMetaClass(), fetchPlan);
@@ -633,6 +633,7 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
         }
     }
 
+    @Nullable
     protected String loadCaption(Element element) {
         if (element.attribute("caption") != null) {
             String caption = element.attributeValue("caption");
@@ -678,7 +679,7 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
         }
     }
 
-    protected Collection<String> getAppliedProperties(Element columnsElement, FetchPlan fetchPlan, MetaClass metaClass) {
+    protected Collection<String> getAppliedProperties(Element columnsElement, @Nullable FetchPlan fetchPlan, MetaClass metaClass) {
         String exclude = columnsElement.attributeValue("exclude");
         List<String> excludes = StringUtils.isEmpty(exclude) ? Collections.emptyList() :
                 Splitter.on(",").omitEmptyStrings().trimResults().splitToList(exclude);
@@ -734,14 +735,14 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
     protected void loadEmptyStateMessage(DataGrid dataGrid, Element element) {
         String emptyStateMessage = element.attributeValue("emptyStateMessage");
         if (StringUtils.isNotBlank(emptyStateMessage)) {
-            dataGrid.setEmptyStateMessage(emptyStateMessage);
+            dataGrid.setEmptyStateMessage(loadResourceString(emptyStateMessage));
         }
     }
 
     protected void loadEmptyStateLinkMessage(DataGrid dataGrid, Element element) {
         String emptyStateLinkMessage = element.attributeValue("emptyStateLinkMessage");
         if (StringUtils.isNotBlank(emptyStateLinkMessage)) {
-            dataGrid.setEmptyStateLinkMessage(emptyStateLinkMessage);
+            dataGrid.setEmptyStateLinkMessage(loadResourceString(emptyStateLinkMessage));
         }
     }
 
@@ -770,8 +771,8 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
 
             loadValueDescription(column, aggregationElement);
 
-            Function formatter = loadFormatter(aggregationElement);
-            aggregation.setFormatter(formatter == null ? column.getDescriptionProvider() : formatter);
+            Formatter formatter = loadFormatter(aggregationElement);
+            aggregation.setFormatter(formatter == null ? (Formatter<Object>) column.getDescriptionProvider() : formatter);
             column.setAggregation(aggregation);
 
             loadStrategyClass(aggregation, aggregationElement);
@@ -799,7 +800,7 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
     protected void loadStrategyClass(AggregationInfo aggregation, Element aggregationElement) {
         String strategyClass = aggregationElement.attributeValue("strategyClass");
         if (StringUtils.isNotEmpty(strategyClass)) {
-            Class<?> aggregationClass = getHotDeployManager().findClass(strategyClass);
+            Class<?> aggregationClass = getClassManager().findClass(strategyClass);
             if (aggregationClass == null) {
                 throw new GuiDevelopmentException(String.format("Class %s is not found", strategyClass), context);
             }
@@ -827,6 +828,7 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
         public DataGridDataHolder() {
         }
 
+        @Nullable
         public MetaClass getMetaClass() {
             return metaClass;
         }
@@ -835,6 +837,7 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
             this.metaClass = metaClass;
         }
 
+        @Nullable
         public CollectionContainer getContainer() {
             return container;
         }
@@ -843,6 +846,7 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
             this.container = container;
         }
 
+        @Nullable
         public DataLoader getDataLoader() {
             return dataLoader;
         }
@@ -851,6 +855,7 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
             this.dataLoader = dataLoader;
         }
 
+        @Nullable
         public FetchPlan getFetchPlan() {
             return fetchPlan;
         }

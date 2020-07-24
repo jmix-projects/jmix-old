@@ -16,10 +16,7 @@
 
 package io.jmix.data.impl;
 
-import io.jmix.core.Events;
-import io.jmix.core.Id;
-import io.jmix.core.JmixEntity;
-import io.jmix.core.Metadata;
+import io.jmix.core.*;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.annotation.PublishEntityChangedEvents;
 import io.jmix.core.metamodel.model.MetaClass;
@@ -55,24 +52,30 @@ public class EntityChangedEventManager {
     @Autowired
     private Events eventPublisher;
 
+    @Autowired
+    private ExtendedEntities extendedEntities;
+
     private static class PublishingInfo {
         final boolean publish;
         final boolean onCreated;
         final boolean onUpdated;
         final boolean onDeleted;
+        final MetaClass originalMetaClass;
 
         public PublishingInfo() {
             publish = false;
             onCreated = false;
             onUpdated = false;
             onDeleted = false;
+            originalMetaClass = null;
         }
 
-        public PublishingInfo(boolean onCreated, boolean onUpdated, boolean onDeleted) {
+        public PublishingInfo(boolean onCreated, boolean onUpdated, boolean onDeleted, MetaClass originalMetaClass) {
             this.publish = true;
             this.onCreated = onCreated;
             this.onUpdated = onUpdated;
             this.onDeleted = onDeleted;
+            this.originalMetaClass = originalMetaClass;
         }
     }
 
@@ -84,12 +87,14 @@ public class EntityChangedEventManager {
 
             PublishingInfo info = infoCache.computeIfAbsent(entity.getClass(), aClass -> {
                 MetaClass metaClass = metadata.getClass(entity.getClass());
+                MetaClass originalMetaClass = extendedEntities.getOriginalOrThisMetaClass(metaClass);
                 Map attrMap = (Map) metaClass.getAnnotations().get(PublishEntityChangedEvents.class.getName());
                 if (attrMap != null) {
                     return new PublishingInfo(
                             Boolean.TRUE.equals(attrMap.get("created")),
                             Boolean.TRUE.equals(attrMap.get("updated")),
-                            Boolean.TRUE.equals(attrMap.get("deleted")));
+                            Boolean.TRUE.equals(attrMap.get("deleted")),
+                            originalMetaClass);
                 }
                 return new PublishingInfo();
             });
@@ -120,7 +125,8 @@ public class EntityChangedEventManager {
                 }
                 if (type != null && attributeChanges != null) {
                     @SuppressWarnings("unchecked")
-                    EntityChangedEvent event = new EntityChangedEvent(this, Id.of(entity), type, attributeChanges);
+                    EntityChangedEvent event = new EntityChangedEvent(this, Id.of(entity), type, attributeChanges,
+                            info.originalMetaClass);
                     list.add(event);
                 }
             }

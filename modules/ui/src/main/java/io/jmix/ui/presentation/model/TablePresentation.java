@@ -19,6 +19,8 @@ package io.jmix.ui.presentation.model;
 import io.jmix.core.JmixEntity;
 import io.jmix.ui.presentation.TablePresentations;
 
+import javax.annotation.Nullable;
+
 /**
  * Base interface for Presentation entity.
  * <p>
@@ -30,25 +32,30 @@ import io.jmix.ui.presentation.TablePresentations;
  */
 public interface TablePresentation extends JmixEntity {
 
+    @Nullable
     String getName();
 
-    void setName(String name);
+    void setName(@Nullable String name);
 
+    @Nullable
     String getSettings();
 
-    void setSettings(String settings);
+    void setSettings(@Nullable String settings);
 
+    @Nullable
     String getUserLogin();
 
-    void setUserLogin(String userLogin);
+    void setUserLogin(@Nullable String userLogin);
 
+    @Nullable
     Boolean getDefault();
 
-    void setDefault(Boolean isDefault);
+    void setDefault(@Nullable Boolean isDefault);
 
+    @Nullable
     Boolean getAutoSave();
 
-    void setAutoSave(Boolean autoSave);
+    void setAutoSave(@Nullable Boolean autoSave);
 
     void setComponentId(String componentId);
 

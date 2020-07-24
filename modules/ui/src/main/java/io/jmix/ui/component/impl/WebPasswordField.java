@@ -27,6 +27,8 @@ import io.jmix.ui.widget.JmixPasswordField;
 import com.vaadin.shared.ui.ValueChangeMode;
 import org.springframework.beans.factory.InitializingBean;
 
+import javax.annotation.Nullable;
+
 import static com.google.common.base.Strings.emptyToNull;
 import static com.google.common.base.Strings.nullToEmpty;
 
@@ -67,12 +69,13 @@ public class WebPasswordField extends WebV8AbstractField<JmixPasswordField, Stri
     }
 
     @Override
-    protected String convertToPresentation(String modelValue) throws ConversionException {
+    protected String convertToPresentation(@Nullable String modelValue) throws ConversionException {
         return nullToEmpty(super.convertToPresentation(modelValue));
     }
 
+    @Nullable
     @Override
-    protected String convertToModel(String componentRawValue) throws ConversionException {
+    protected String convertToModel(@Nullable String componentRawValue) throws ConversionException {
         String value = emptyToNull(componentRawValue);
         return super.convertToModel(value);
     }
@@ -143,7 +146,7 @@ public class WebPasswordField extends WebV8AbstractField<JmixPasswordField, Stri
     }
 
     @Override
-    public void setCapsLockIndicator(CapsLockIndicator capsLockIndicator) {
+    public void setCapsLockIndicator(@Nullable CapsLockIndicator capsLockIndicator) {
         this.capsLockIndicator = capsLockIndicator;
 
         if (capsLockIndicator != null) {
@@ -153,26 +156,29 @@ public class WebPasswordField extends WebV8AbstractField<JmixPasswordField, Stri
         }
     }
 
+    @Nullable
     @Override
     public CapsLockIndicator getCapsLockIndicator() {
         return capsLockIndicator;
     }
 
+    @Nullable
     @Override
     public String getInputPrompt() {
         return component.getPlaceholder();
     }
 
     @Override
-    public void setInputPrompt(String inputPrompt) {
+    public void setInputPrompt(@Nullable String inputPrompt) {
         component.setPlaceholder(inputPrompt);
     }
 
     @Override
-    public void setHtmlName(String htmlName) {
+    public void setHtmlName(@Nullable String htmlName) {
         component.setHtmlName(htmlName);
     }
 
+    @Nullable
     @Override
     public String getHtmlName() {
         return component.getHtmlName();

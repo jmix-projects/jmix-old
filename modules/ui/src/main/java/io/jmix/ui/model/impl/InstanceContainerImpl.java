@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
@@ -68,7 +67,6 @@ public class InstanceContainerImpl<E extends JmixEntity> implements InstanceCont
         return item;
     }
 
-    @Nonnull
     @Override
     public E getItem() {
         E item = getItemOrNull();
@@ -159,7 +157,7 @@ public class InstanceContainerImpl<E extends JmixEntity> implements InstanceCont
         this.loader = loader;
     }
 
-    protected void fireItemChanged(E prevItem) {
+    protected void fireItemChanged(@Nullable E prevItem) {
         if (!listenersEnabled) {
             return;
         }

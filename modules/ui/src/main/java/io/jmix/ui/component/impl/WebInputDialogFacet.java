@@ -60,17 +60,18 @@ public class WebInputDialogFacet extends WebAbstractFacet implements InputDialog
     protected InputDialog inputDialog;
 
     @Override
-    public void setCaption(String caption) {
+    public void setCaption(@Nullable String caption) {
         this.caption = caption;
     }
 
+    @Nullable
     @Override
     public String getCaption() {
         return caption;
     }
 
     @Override
-    public void setWidth(String width) {
+    public void setWidth(@Nullable String width) {
         this.width = SizeWithUnit.parseStringSize(width);
     }
 
@@ -85,7 +86,7 @@ public class WebInputDialogFacet extends WebAbstractFacet implements InputDialog
     }
 
     @Override
-    public void setHeight(String height) {
+    public void setHeight(@Nullable String height) {
         this.height = SizeWithUnit.parseStringSize(height);
     }
 
@@ -99,31 +100,34 @@ public class WebInputDialogFacet extends WebAbstractFacet implements InputDialog
         return height.getUnit();
     }
 
+    @Nullable
     @Override
     public String getActionTarget() {
         return actionId;
     }
 
     @Override
-    public void setActionTarget(String actionId) {
+    public void setActionTarget(@Nullable String actionId) {
         this.actionId = actionId;
     }
 
+    @Nullable
     @Override
     public String getButtonTarget() {
         return buttonId;
     }
 
     @Override
-    public void setButtonTarget(String buttonId) {
+    public void setButtonTarget(@Nullable String buttonId) {
         this.buttonId = buttonId;
     }
 
     @Override
-    public void setDialogActions(DialogActions dialogActions) {
+    public void setDialogActions(@Nullable DialogActions dialogActions) {
         this.dialogActions = dialogActions;
     }
 
+    @Nullable
     @Override
     public DialogActions getDialogActions() {
         return dialogActions;
@@ -135,10 +139,11 @@ public class WebInputDialogFacet extends WebAbstractFacet implements InputDialog
     }
 
     @Override
-    public void setActions(Collection<DialogAction<InputDialogFacet>> actions) {
+    public void setActions(@Nullable Collection<DialogAction<InputDialogFacet>> actions) {
         this.actions = actions;
     }
 
+    @Nullable
     @Override
     public Collection<DialogAction<InputDialogFacet>> getActions() {
         return actions;
@@ -275,7 +280,7 @@ public class WebInputDialogFacet extends WebAbstractFacet implements InputDialog
                 show());
     }
 
-    protected InputDialogAction[] createActions(Collection<DialogAction<InputDialogFacet>> actions) {
+    protected InputDialogAction[] createActions(@Nullable Collection<DialogAction<InputDialogFacet>> actions) {
         if (actions == null) {
             return new InputDialogAction[]{};
         }

@@ -226,7 +226,7 @@ public class WebUrlRouting implements UrlRouting {
         return state.toString();
     }
 
-    protected String buildSubRoute(String prevSubRoute, Screen screen) {
+    protected String buildSubRoute(@Nullable String prevSubRoute, Screen screen) {
         String screenRoute = getRoute(screen);
 
         String parentPrefix = getParentPrefix(screen);
@@ -280,6 +280,7 @@ public class WebUrlRouting implements UrlRouting {
         return params;
     }
 
+    @Nullable
     protected String getParentPrefix(Screen screen) {
         String parentPrefix = null;
 
@@ -319,7 +320,8 @@ public class WebUrlRouting implements UrlRouting {
                 : "";
     }
 
-    protected RouteDefinition getRouteDef(Screen screen) {
+    @Nullable
+    protected RouteDefinition getRouteDef(@Nullable Screen screen) {
         return screen == null
                 ? null
                 : getScreenContext(screen).getWindowInfo().getRouteDefinition();
@@ -333,7 +335,7 @@ public class WebUrlRouting implements UrlRouting {
                 : NavigationState.EMPTY.getStateMark();
     }
 
-    protected boolean externalNavigation(NavigationState currentState, NavigationState newState) {
+    protected boolean externalNavigation(@Nullable NavigationState currentState, NavigationState newState) {
         if (currentState == null) {
             return false;
         }
@@ -354,6 +356,7 @@ public class WebUrlRouting implements UrlRouting {
         return notInHistory && sameRoot && sameNestedRoute && sameParams;
     }
 
+    @Nullable
     protected Screen findActiveScreenByState(NavigationState requestedState) {
         WebAppWorkArea workArea = ((WebScreens) ui.getScreens()).getConfiguredWorkAreaOrNull();
 

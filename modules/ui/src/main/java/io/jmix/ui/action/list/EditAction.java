@@ -30,7 +30,6 @@ import io.jmix.ui.component.data.meta.EntityDataUnit;
 import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.meta.StudioAction;
-import io.jmix.ui.meta.StudioDelegate;
 import io.jmix.ui.meta.StudioPropertiesItem;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.sys.ActionScreenInitializer;
@@ -59,7 +58,6 @@ public class EditAction<E extends JmixEntity> extends SecuredListAction implemen
 
     public static final String ID = "edit";
 
-    @Autowired
     protected ScreenBuilders screenBuilders;
 
     protected ActionScreenInitializer screenInitializer = new ActionScreenInitializer();
@@ -143,7 +141,6 @@ public class EditAction<E extends JmixEntity> extends SecuredListAction implemen
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setScreenOptionsSupplier(Supplier<ScreenOptions> screenOptionsSupplier) {
         screenInitializer.setScreenOptionsSupplier(screenOptionsSupplier);
     }
@@ -160,7 +157,6 @@ public class EditAction<E extends JmixEntity> extends SecuredListAction implemen
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setScreenConfigurer(Consumer<Screen> screenConfigurer) {
         screenInitializer.setScreenConfigurer(screenConfigurer);
     }
@@ -178,7 +174,6 @@ public class EditAction<E extends JmixEntity> extends SecuredListAction implemen
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setAfterCloseHandler(Consumer<Screen.AfterCloseEvent> afterCloseHandler) {
         screenInitializer.setAfterCloseHandler(afterCloseHandler);
     }
@@ -194,7 +189,6 @@ public class EditAction<E extends JmixEntity> extends SecuredListAction implemen
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setAfterCommitHandler(Consumer<E> afterCommitHandler) {
         this.afterCommitHandler = afterCommitHandler;
     }
@@ -230,8 +224,13 @@ public class EditAction<E extends JmixEntity> extends SecuredListAction implemen
         setShortcut(properties.getTableEditShortcut());
     }
 
+    @Autowired
+    public void setScreenBuilders(ScreenBuilders screenBuilders) {
+        this.screenBuilders = screenBuilders;
+    }
+
     @Override
-    public void setCaption(String caption) {
+    public void setCaption(@Nullable String caption) {
         super.setCaption(caption);
 
         this.captionInitialized = true;

@@ -16,7 +16,8 @@
 
 package io.jmix.core.common.xmlparsing;
 
-import io.jmix.core.AppBeans;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -24,9 +25,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class Dom4jToolsShutdownListener {
 
+    @Autowired
+    protected BeanFactory beanFactory;
+
     @EventListener(ContextClosedEvent.class)
     public void appContextStopped() {
-        AppBeans.get(Dom4jTools.class).shutdown();
+        ((Dom4jTools) beanFactory.getBean(Dom4jTools.NAME)).shutdown();
     }
 
 }

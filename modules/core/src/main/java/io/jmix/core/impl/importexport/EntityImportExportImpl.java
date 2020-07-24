@@ -136,7 +136,7 @@ public class EntityImportExportImpl implements EntityImportExport {
         MetaClass metaClass = metadata.getClass(view.getEntityClass());
         LoadContext.Query query = new LoadContext.Query("select e from " + metaClass.getName() + " e where e.id in :ids")
                 .setParameter("ids", ids);
-        LoadContext<? extends JmixEntity> ctx = new LoadContext(view.getEntityClass())
+        LoadContext<? extends JmixEntity> ctx = new LoadContext(metadata.getClass(view.getEntityClass()))
                 .setQuery(query)
                 .setFetchPlan(view);
 
@@ -215,7 +215,7 @@ public class EntityImportExportImpl implements EntityImportExport {
         for (JmixEntity srcEntity : entities) {
             FetchPlan regularView = buildViewFromImportView(importView);
             //set softDeletion to false because we can import deleted entity, so we'll restore it and update
-            LoadContext<? extends JmixEntity> ctx = new LoadContext(srcEntity.getClass())
+            LoadContext<? extends JmixEntity> ctx = new LoadContext(metadata.getClass(srcEntity.getClass()))
                     .setSoftDeletion(false)
                     .setFetchPlan(regularView)
                     .setLoadDynamicAttributes(true)
@@ -731,7 +731,7 @@ public class EntityImportExportImpl implements EntityImportExport {
                 .filter(item -> item.equals(entity))
                 .findFirst().orElse(null);
         if (result == null) {
-            LoadContext<? extends JmixEntity> ctx = new LoadContext(entity.getClass())
+            LoadContext<? extends JmixEntity> ctx = new LoadContext(metadata.getClass(entity.getClass()))
                     .setSoftDeletion(false)
                     .setFetchPlan(new FetchPlan(metadata.getClass(entity).getJavaClass(), false))
                     .setId(EntityValues.getId(entity));

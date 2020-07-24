@@ -29,7 +29,6 @@ import io.jmix.ui.component.data.meta.ContainerDataUnit;
 import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.meta.StudioAction;
-import io.jmix.ui.meta.StudioDelegate;
 import io.jmix.ui.meta.StudioPropertiesItem;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.Nested;
@@ -53,7 +52,6 @@ public class ExcludeAction<E extends JmixEntity> extends SecuredListAction imple
 
     public static final String ID = "exclude";
 
-    @Autowired
     protected RemoveOperation removeOperation;
 
     protected Boolean confirmation;
@@ -132,7 +130,6 @@ public class ExcludeAction<E extends JmixEntity> extends SecuredListAction imple
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setAfterActionPerformedHandler(Consumer<RemoveOperation.AfterActionPerformedEvent<E>> afterActionPerformedHandler) {
         this.afterActionPerformedHandler = afterActionPerformedHandler;
     }
@@ -148,7 +145,6 @@ public class ExcludeAction<E extends JmixEntity> extends SecuredListAction imple
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setActionCancelledHandler(Consumer<RemoveOperation.ActionCancelledEvent<E>> actionCancelledHandler) {
         this.actionCancelledHandler = actionCancelledHandler;
     }
@@ -166,6 +162,11 @@ public class ExcludeAction<E extends JmixEntity> extends SecuredListAction imple
     @Autowired
     protected void setUiProperties(UiProperties properties) {
         setShortcut(properties.getTableRemoveShortcut());
+    }
+
+    @Autowired
+    public void setRemoveOperation(RemoveOperation removeOperation) {
+        this.removeOperation = removeOperation;
     }
 
     @Override

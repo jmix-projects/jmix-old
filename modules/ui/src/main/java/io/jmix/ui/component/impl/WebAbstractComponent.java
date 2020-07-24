@@ -97,13 +97,14 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
         return false;
     }
 
+    @Nullable
     @Override
     public Frame getFrame() {
         return frame;
     }
 
     @Override
-    public void setFrame(Frame frame) {
+    public void setFrame(@Nullable Frame frame) {
         this.frame = frame;
 
         if (frame instanceof FrameImplementation) {
@@ -133,13 +134,14 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
         }
     }
 
+    @Nullable
     @Override
     public String getId() {
         return id;
     }
 
     @Override
-    public void setId(String id) {
+    public void setId(@Nullable String id) {
         if (!Objects.equals(this.id, id)) {
             if (frame != null) {
                 ((FrameImplementation) frame).unregisterComponent(this);
@@ -185,13 +187,14 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
         }
     }
 
+    @Nullable
     @Override
     public Component getParent() {
         return parent;
     }
 
     @Override
-    public void setParent(Component parent) {
+    public void setParent(@Nullable Component parent) {
         if (this.parent != parent) {
             if (isAttached()) {
                 detached();
@@ -241,13 +244,14 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
         return getEventHub().subscribe(DetachEvent.class, listener);
     }
 
+    @Nullable
     @Override
     public String getDebugId() {
         return component.getId();
     }
 
     @Override
-    public void setDebugId(String id) {
+    public void setDebugId(@Nullable String id) {
         component.setId(id);
     }
 
@@ -257,7 +261,7 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
     }
 
     @Override
-    public void setStyleName(String name) {
+    public void setStyleName(@Nullable String name) {
         getComposition().setStyleName(name);
     }
 
@@ -306,13 +310,14 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
         return icon;
     }
 
+    @Nullable
     @Override
     public String getCaption() {
         return component.getCaption();
     }
 
     @Override
-    public void setCaption(String caption) {
+    public void setCaption(@Nullable String caption) {
         if (isCaptionAsHtml()) {
             caption = sanitize(caption);
         }
@@ -334,13 +339,14 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
         }
     }
 
+    @Nullable
     @Override
     public String getDescription() {
         return component.getDescription();
     }
 
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         if (isDescriptionAsHtml()) {
             description = sanitize(description);
         }
@@ -365,7 +371,7 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
     }
 
     @Override
-    public void setIcon(String icon) {
+    public void setIcon(@Nullable String icon) {
         this.icon = icon;
 
         if (StringUtils.isNotEmpty(icon)) {
@@ -379,16 +385,18 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
     }
 
     @Override
-    public void setIconFromSet(Icons.Icon icon) {
+    public void setIconFromSet(@Nullable Icons.Icon icon) {
         String iconName = getIconName(icon);
         setIcon(iconName);
     }
 
+    @Nullable
     protected Resource getIconResource(String icon) {
         return beanLocator.get(IconResolver.class).getIconResource(icon);
     }
 
-    protected String getIconName(Icons.Icon icon) {
+    @Nullable
+    protected String getIconName(@Nullable Icons.Icon icon) {
         return beanLocator.get(Icons.class).get(icon);
     }
 
@@ -403,7 +411,7 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
     }
 
     @Override
-    public void setHeight(String height) {
+    public void setHeight(@Nullable String height) {
         // do not try to parse string if constant passed
         if (Component.AUTO_SIZE.equals(height)) {
             getComposition().setHeight(-1, Sizeable.Unit.PIXELS);
@@ -425,7 +433,7 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
     }
 
     @Override
-    public void setWidth(String width) {
+    public void setWidth(@Nullable String width) {
         // do not try to parse string if constant passed
         if (Component.AUTO_SIZE.equals(width)) {
             getComposition().setWidth(-1, Sizeable.Unit.PIXELS);
@@ -464,23 +472,25 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
         return component;
     }
 
+    @Nullable
     @Override
     public Element getXmlDescriptor() {
         return element;
     }
 
     @Override
-    public void setXmlDescriptor(Element element) {
+    public void setXmlDescriptor(@Nullable Element element) {
         this.element = element;
     }
 
+    @Nullable
     @Override
     public String getContextHelpText() {
         return ((AbstractComponent) getComposition()).getContextHelpText();
     }
 
     @Override
-    public void setContextHelpText(String contextHelpText) {
+    public void setContextHelpText(@Nullable String contextHelpText) {
         if (isContextHelpTextHtmlEnabled()) {
             contextHelpText = sanitize(contextHelpText);
         }
@@ -502,13 +512,14 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
         }
     }
 
+    @Nullable
     @Override
     public Consumer<ContextHelpIconClickEvent> getContextHelpIconClickHandler() {
         return contextHelpIconClickHandler;
     }
 
     @Override
-    public void setContextHelpIconClickHandler(Consumer<ContextHelpIconClickEvent> handler) {
+    public void setContextHelpIconClickHandler(@Nullable Consumer<ContextHelpIconClickEvent> handler) {
         if (!Objects.equals(this.contextHelpIconClickHandler, handler)) {
             this.contextHelpIconClickHandler = handler;
 
@@ -577,7 +588,7 @@ public abstract class WebAbstractComponent<T extends com.vaadin.ui.Component>
         return false;
     }
 
-    protected void setValidationError(String errorMessage) {
+    protected void setValidationError(@Nullable String errorMessage) {
         if (getComposition() instanceof AbstractComponent) {
             AbstractComponent composition = (AbstractComponent) getComposition();
             if (errorMessage == null) {

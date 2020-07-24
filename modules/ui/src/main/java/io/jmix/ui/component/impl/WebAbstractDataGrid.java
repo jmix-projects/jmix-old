@@ -46,6 +46,7 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.security.Security;
+import io.jmix.ui.Actions;
 import io.jmix.ui.App;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.action.Action;
@@ -66,6 +67,7 @@ import io.jmix.ui.component.datagrid.DataGridDataProvider;
 import io.jmix.ui.component.datagrid.DataGridItemsEventsDelegate;
 import io.jmix.ui.component.datagrid.SortableDataGridDataProvider;
 import io.jmix.ui.component.formatter.CollectionFormatter;
+import io.jmix.ui.component.formatter.Formatter;
 import io.jmix.ui.component.renderer.*;
 import io.jmix.ui.component.valueprovider.*;
 import io.jmix.ui.icon.IconResolver;
@@ -73,7 +75,7 @@ import io.jmix.ui.model.*;
 import io.jmix.ui.screen.ScreenValidation;
 import io.jmix.ui.sys.PersistenceManagerClient;
 import io.jmix.ui.sys.ShortcutsDelegate;
-import io.jmix.ui.sys.ShowInfoAction;
+import io.jmix.ui.action.ShowInfoAction;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
 import io.jmix.ui.widget.JmixCssActionsLayout;
@@ -121,6 +123,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     protected PersistenceManagerClient persistenceManagerClient;
     protected ApplicationContext applicationContext;
     protected ScreenValidation screenValidation;
+    protected Actions actions;
 
     // Style names used by grid itself
     protected final List<String> internalStyles = new ArrayList<>(2);
@@ -278,6 +281,11 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     @Autowired
     protected void setScreenValidation(ScreenValidation screenValidation) {
         this.screenValidation = screenValidation;
+    }
+
+    @Autowired
+    public void setActions(Actions actions) {
+        this.actions = actions;
     }
 
     @SuppressWarnings("unchecked")
@@ -599,6 +607,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         return getSelected();
     }
 
+    @Nullable
     protected Action getEnterAction() {
         for (Action action : getActions()) {
             KeyCombination kc = action.getShortcutCombination();
@@ -656,12 +665,12 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     @Override
-    public Column<E> addColumn(String id, MetaPropertyPath propertyPath) {
+    public Column<E> addColumn(String id, @Nullable MetaPropertyPath propertyPath) {
         return addColumn(id, propertyPath, columnsOrder.size());
     }
 
     @Override
-    public Column<E> addColumn(String id, MetaPropertyPath propertyPath, int index) {
+    public Column<E> addColumn(String id, @Nullable MetaPropertyPath propertyPath, int index) {
         ColumnImpl<E> column = createColumn(id, propertyPath, this);
         addColumnInternal(column, index);
         return column;
@@ -749,10 +758,11 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         ((ColumnImpl<E>) column).setGridColumn(gridColumn);
     }
 
+    @Nullable
     protected ValueProvider getColumnPresentationValueProvider(Column<E> column) {
         Function presentationProvider = column.getPresentationProvider();
         Converter converter = column.getConverter();
-        Function<?, String> formatter = column.getFormatter();
+        Formatter<?> formatter = column.getFormatter();
         Renderer renderer = column.getRenderer();
         // The following priority is used to determine a value provider:
         // a presentation provider > a converter > a formatter > a renderer's presentation provider >
@@ -784,7 +794,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             return new FormatterBasedValueProvider<>(column.getFormatter());
         } else if (metaProperty != null) {
             if (Collection.class.isAssignableFrom(metaProperty.getJavaType())) {
-                return new FormatterBasedValueProvider<>(new CollectionFormatter(metadataTools));
+                return new FormatterBasedValueProvider<>(beanLocator.getPrototype(CollectionFormatter.class));
             }
             if (metaProperty.getJavaType() == Boolean.class) {
                 return new YesNoIconPresentationValueProvider();
@@ -820,7 +830,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     @Override
-    public void removeColumn(Column<E> column) {
+    public void removeColumn(@Nullable Column<E> column) {
         if (column == null) {
             return;
         }
@@ -859,6 +869,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         return dataGridItems;
     }
 
+    @Nullable
     protected EntityDataGridItems<E> getEntityDataGridItems() {
         return getItems() != null ? (EntityDataGridItems<E>) getItems() : null;
     }
@@ -868,7 +879,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     @Override
-    public void setItems(DataGridItems<E> dataGridItems) {
+    public void setItems(@Nullable DataGridItems<E> dataGridItems) {
         if (dataGridItems != null && !(dataGridItems instanceof EntityDataGridItems)) {
             throw new IllegalArgumentException("DataGrid supports only EntityDataGridItems");
         }
@@ -1077,18 +1088,19 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     protected void initShowInfoAction() {
         if (security.isSpecificPermitted(ShowInfoAction.ACTION_PERMISSION)) {
             if (getAction(ShowInfoAction.ACTION_ID) == null) {
-                addAction(new ShowInfoAction());
+                addAction(actions.create(ShowInfoAction.ACTION_ID));
             }
         }
     }
 
+    @Nullable
     @Override
     public String getCaption() {
         return getComposition().getCaption();
     }
 
     @Override
-    public void setCaption(String caption) {
+    public void setCaption(@Nullable String caption) {
         getComposition().setCaption(caption);
     }
 
@@ -1454,7 +1466,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         return instanceContainer;
     }
 
-    protected void clearFieldDatasources(E item) {
+    protected void clearFieldDatasources(@Nullable E item) {
         if (itemDatasources == null) {
             return;
         }
@@ -1509,6 +1521,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             this.fieldFactory = fieldFactory;
         }
 
+        @Nullable
         @Override
         public JmixEditorField<?> createField(E bean, Grid.Column<E, ?> gridColumn) {
             ColumnImpl<E> column = dataGrid.getColumnByGridColumn(gridColumn);
@@ -1926,7 +1939,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     @Override
-    public void removeAction(@Nullable Action action) {
+    public void removeAction(Action action) {
         if (actionList.remove(action)) {
             ActionMenuItemWrapper menuItemWrapper = null;
             for (ActionMenuItemWrapper menuItem : contextMenuItems) {
@@ -1946,7 +1959,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     @Override
-    public void removeAction(@Nullable String id) {
+    public void removeAction(String id) {
         Action action = getAction(id);
         if (action != null) {
             removeAction(action);
@@ -2046,7 +2059,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     @Override
-    public void setDebugId(String id) {
+    public void setDebugId(@Nullable String id) {
         super.setDebugId(id);
 
         AppUI ui = AppUI.getCurrent();
@@ -2056,7 +2069,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     @Override
-    public void setId(String id) {
+    public void setId(@Nullable String id) {
         super.setId(id);
 
         AppUI ui = AppUI.getCurrent();
@@ -2068,20 +2081,21 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     @Override
-    public void setStyleName(String name) {
+    public void setStyleName(@Nullable String name) {
         super.setStyleName(name);
 
         internalStyles.forEach(internalStyle ->
                 componentComposition.addStyleName(internalStyle));
     }
 
+    @Nullable
     @Override
     public ButtonsPanel getButtonsPanel() {
         return buttonsPanel;
     }
 
     @Override
-    public void setButtonsPanel(ButtonsPanel panel) {
+    public void setButtonsPanel(@Nullable ButtonsPanel panel) {
         if (buttonsPanel != null && topPanel != null) {
             topPanel.removeComponent(WebComponentsHelper.unwrap(buttonsPanel));
             buttonsPanel.setParent(null);
@@ -2112,13 +2126,14 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         updateCompositionStylesTopPanelVisible();
     }
 
+    @Nullable
     @Override
     public RowsCount getRowsCount() {
         return rowsCount;
     }
 
     @Override
-    public void setRowsCount(RowsCount rowsCount) {
+    public void setRowsCount(@Nullable RowsCount rowsCount) {
         if (this.rowsCount != null && topPanel != null) {
             topPanel.removeComponent(WebComponentsHelper.unwrap(this.rowsCount));
             this.rowsCount.setParent(null);
@@ -2183,23 +2198,25 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         }
     }
 
+    @Nullable
     @Override
     public Action getEnterPressAction() {
         return enterPressAction;
     }
 
     @Override
-    public void setEnterPressAction(Action action) {
+    public void setEnterPressAction(@Nullable Action action) {
         enterPressAction = action;
     }
 
+    @Nullable
     @Override
     public Action getItemClickAction() {
         return itemClickAction;
     }
 
     @Override
-    public void setItemClickAction(Action action) {
+    public void setItemClickAction(@Nullable Action action) {
         if (itemClickAction != null) {
             removeAction(itemClickAction);
         }
@@ -2276,30 +2293,32 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     @SuppressWarnings("unchecked")
+    @Nullable
     @Override
     public CellDescriptionProvider<E> getCellDescriptionProvider() {
         return (CellDescriptionProvider<E>) cellDescriptionProvider;
     }
 
     @Override
-    public void setCellDescriptionProvider(CellDescriptionProvider<? super E> provider) {
+    public void setCellDescriptionProvider(@Nullable CellDescriptionProvider<? super E> provider) {
         this.cellDescriptionProvider = provider;
         repaint();
     }
 
     @SuppressWarnings("unchecked")
+    @Nullable
     @Override
     public Function<E, String> getRowDescriptionProvider() {
         return (Function<E, String>) rowDescriptionProvider;
     }
 
     @Override
-    public void setRowDescriptionProvider(Function<? super E, String> provider) {
+    public void setRowDescriptionProvider(@Nullable Function<? super E, String> provider) {
         setRowDescriptionProvider(provider, ContentMode.PREFORMATTED);
     }
 
     @Override
-    public void setRowDescriptionProvider(Function<? super E, String> provider, ContentMode contentMode) {
+    public void setRowDescriptionProvider(@Nullable Function<? super E, String> provider, ContentMode contentMode) {
         this.rowDescriptionProvider = provider;
 
         if (provider != null) {
@@ -2310,6 +2329,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         }
     }
 
+    @Nullable
     protected String getRowDescription(E item) {
         String rowDescription = rowDescriptionProvider.apply(item);
         return WebWrapperUtils.toContentMode(component.getRowDescriptionContentMode()) == ContentMode.HTML
@@ -2367,6 +2387,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         };
     }
 
+    @Nullable
     @Override
     public Function<ColumnGeneratorEvent<E>, ?> getColumnGenerator(String columnId) {
         return columnGenerators.get(columnId);
@@ -2561,6 +2582,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         unsubscribe(LookupSelectionChangeEvent.class, (Consumer) listener);
     }
 
+    @Nullable
     @Override
     public HeaderRow getHeaderRow(int index) {
         checkHeaderIndexInRange(index, true);
@@ -2616,7 +2638,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     @Override
-    public void removeHeaderRow(HeaderRow headerRow) {
+    public void removeHeaderRow(@Nullable HeaderRow headerRow) {
         if (headerRow == null || !headerRows.contains(headerRow)) {
             return;
         }
@@ -2631,6 +2653,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         removeHeaderRow(headerRow);
     }
 
+    @Nullable
     @Override
     public HeaderRow getDefaultHeaderRow() {
         return getHeaderRowByGridRow(component.getDefaultHeaderRow());
@@ -2647,6 +2670,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         return isAggregated ? headerRows.size() - 1 : headerRows.size();
     }
 
+    @Nullable
     @Override
     public FooterRow getFooterRow(int index) {
         index = calculateFooterIndex(index);
@@ -2702,7 +2726,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     @Override
-    public void removeFooterRow(FooterRow footerRow) {
+    public void removeFooterRow(@Nullable FooterRow footerRow) {
         if (footerRow == null || !footerRows.contains(footerRow)) {
             return;
         }
@@ -2730,11 +2754,12 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     @Override
-    public void setDetailsGenerator(DetailsGenerator<E> detailsGenerator) {
+    public void setDetailsGenerator(@Nullable DetailsGenerator<E> detailsGenerator) {
         this.detailsGenerator = detailsGenerator;
         component.setDetailsGenerator(detailsGenerator != null ? this::getRowDetails : null);
     }
 
+    @Nullable
     protected Component getRowDetails(E item) {
         io.jmix.ui.component.Component component = detailsGenerator.getDetails(item);
         return component != null ? component.unwrapComposition(Component.class) : null;
@@ -2788,34 +2813,37 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     @Override
-    public void setEmptyStateMessage(String message) {
+    public void setEmptyStateMessage(@Nullable String message) {
         component.setEmptyStateMessage(message);
 
         showEmptyStateIfPossible();
     }
 
+    @Nullable
     @Override
     public String getEmptyStateMessage() {
         return component.getEmptyStateMessage();
     }
 
     @Override
-    public void setEmptyStateLinkMessage(String linkMessage) {
+    public void setEmptyStateLinkMessage(@Nullable String linkMessage) {
         component.setEmptyStateLinkMessage(linkMessage);
 
         showEmptyStateIfPossible();
     }
 
+    @Nullable
     @Override
     public String getEmptyStateLinkMessage() {
         return component.getEmptyStateLinkMessage();
     }
 
     @Override
-    public void setEmptyStateLinkClickHandler(Consumer<EmptyStateClickEvent<E>> handler) {
+    public void setEmptyStateLinkClickHandler(@Nullable Consumer<EmptyStateClickEvent<E>> handler) {
         this.emptyStateClickEventHandler = handler;
     }
 
+    @Nullable
     @Override
     public Consumer<EmptyStateClickEvent<E>> getEmptyStateLinkClickHandler() {
         return emptyStateClickEventHandler;
@@ -3011,6 +3039,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         }
     }
 
+    @Nullable
     protected String validateCrossFieldRules(Map<String, Object> properties) {
         E item = getEditedItem();
         if (item == null) {
@@ -3130,6 +3159,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             this.column = column;
         }
 
+        @Nullable
         @Override
         public String apply(T item) {
             //noinspection unchecked
@@ -3137,6 +3167,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         }
     }
 
+    @Nullable
     protected String getGeneratedCellDescription(E item, Column<E> column) {
         if (column.getDescriptionProvider() != null) {
             String cellDescription = column.getDescriptionProvider().apply(item);
@@ -3174,6 +3205,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
 
         protected abstract com.vaadin.ui.renderers.Renderer<V> createImplementation();
 
+        @Nullable
         public ValueProvider<?, V> getPresentationValueProvider() {
             // Some renderers need specific presentation ValueProvider to be set at the same time
             // (see com.vaadin.ui.Grid.Column.setRenderer(com.vaadin.data.ValueProvider<V,P>,
@@ -3187,11 +3219,12 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             renderer = null;
         }
 
+        @Nullable
         protected WebAbstractDataGrid<?, T> getDataGrid() {
             return dataGrid;
         }
 
-        protected void setDataGrid(WebAbstractDataGrid<?, T> dataGrid) {
+        protected void setDataGrid(@Nullable WebAbstractDataGrid<?, T> dataGrid) {
             this.dataGrid = dataGrid;
         }
 
@@ -3233,7 +3266,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         protected boolean resizable;
         protected boolean editable;
         protected boolean generated;
-        protected Function<?, String> formatter;
+        protected Formatter formatter;
         protected AggregationInfo aggregation;
         protected String valueDescription;
 
@@ -3299,6 +3332,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             return propertyPath != null ? propertyPath : id;
         }
 
+        @Nullable
         @Override
         public String getCaption() {
             if (gridColumn != null) {
@@ -3324,7 +3358,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         }
 
         @Override
-        public void setCollapsingToggleCaption(String collapsingToggleCaption) {
+        public void setCollapsingToggleCaption(@Nullable String collapsingToggleCaption) {
             this.collapsingToggleCaption = collapsingToggleCaption;
             if (gridColumn != null) {
                 gridColumn.setHidingToggleCaption(collapsingToggleCaption);
@@ -3517,13 +3551,14 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             }
         }
 
+        @Nullable
         @Override
-        public Function getFormatter() {
+        public Formatter getFormatter() {
             return formatter;
         }
 
         @Override
-        public void setFormatter(Function formatter) {
+        public void setFormatter(@Nullable Formatter formatter) {
             this.formatter = formatter;
             updateRendererInternal();
         }
@@ -3535,28 +3570,30 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
                     : null;
         }
 
+        @Nullable
         @Override
         public Element getXmlDescriptor() {
             return element;
         }
 
         @Override
-        public void setXmlDescriptor(Element element) {
+        public void setXmlDescriptor(@Nullable Element element) {
             this.element = element;
         }
 
+        @Nullable
         @Override
         public Renderer getRenderer() {
             return renderer;
         }
 
         @Override
-        public void setRenderer(Renderer renderer) {
+        public void setRenderer(@Nullable Renderer renderer) {
             setRenderer(renderer, null);
         }
 
         @Override
-        public void setRenderer(Renderer renderer, Function presentationProvider) {
+        public void setRenderer(@Nullable Renderer renderer, @Nullable Function presentationProvider) {
             if (renderer == null && this.renderer != null) {
                 this.renderer.resetImplementation();
                 this.renderer.setDataGrid(null);
@@ -3583,18 +3620,20 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             }
         }
 
+        @Nullable
         @Override
         public Function getPresentationProvider() {
             return presentationProvider;
         }
 
+        @Nullable
         @Override
         public Converter<?, ?> getConverter() {
             return converter;
         }
 
         @Override
-        public void setConverter(Converter<?, ?> converter) {
+        public void setConverter(@Nullable Converter<?, ?> converter) {
             this.converter = converter;
             updateRendererInternal();
         }
@@ -3653,53 +3692,57 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             }
         }
 
+        @Nullable
         @Override
         public ColumnEditorFieldGenerator getEditorFieldGenerator() {
             return fieldGenerator;
         }
 
         @Override
-        public void setEditorFieldGenerator(ColumnEditorFieldGenerator fieldFactory) {
+        public void setEditorFieldGenerator(@Nullable ColumnEditorFieldGenerator fieldFactory) {
             this.fieldGenerator = fieldFactory;
             updateEditable();
         }
 
+        @Nullable
         @Override
         public Function<EditorFieldGenerationContext<E>, Field<?>> getEditFieldGenerator() {
             return generator;
         }
 
         @Override
-        public void setEditFieldGenerator(Function<EditorFieldGenerationContext<E>, Field<?>> generator) {
+        public void setEditFieldGenerator(@Nullable Function<EditorFieldGenerationContext<E>, Field<?>> generator) {
             this.generator = generator;
             updateEditable();
         }
 
         @SuppressWarnings("unchecked")
+        @Nullable
         @Override
         public Function<E, String> getStyleProvider() {
             return (Function<E, String>) styleProvider;
         }
 
         @Override
-        public void setStyleProvider(Function<? super E, String> styleProvider) {
+        public void setStyleProvider(@Nullable Function<? super E, String> styleProvider) {
             this.styleProvider = styleProvider;
             owner.repaint();
         }
 
         @SuppressWarnings("unchecked")
+        @Nullable
         @Override
         public Function<E, String> getDescriptionProvider() {
             return (Function<E, String>) descriptionProvider;
         }
 
         @Override
-        public void setDescriptionProvider(Function<? super E, String> descriptionProvider) {
+        public void setDescriptionProvider(@Nullable Function<? super E, String> descriptionProvider) {
             setDescriptionProvider(descriptionProvider, ContentMode.PREFORMATTED);
         }
 
         @Override
-        public void setDescriptionProvider(Function<? super E, String> descriptionProvider,
+        public void setDescriptionProvider(@Nullable Function<? super E, String> descriptionProvider,
                                            ContentMode contentMode) {
             this.descriptionProvider = descriptionProvider;
             this.descriptionContentMode = contentMode;
@@ -3719,7 +3762,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             return gridColumn;
         }
 
-        public void setGridColumn(Grid.Column<E, ?> gridColumn) {
+        public void setGridColumn(@Nullable Grid.Column<E, ?> gridColumn) {
             AppUI current = AppUI.getCurrent();
             if (gridColumn == null
                     && this.gridColumn != null
@@ -3731,14 +3774,19 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             this.gridColumn = gridColumn;
         }
 
+        @Nullable
         @Override
         public DataGrid<E> getOwner() {
             return owner;
         }
 
         @Override
-        public void setOwner(DataGrid<E> owner) {
-            this.owner = (WebAbstractDataGrid<?, E>) owner;
+        public void setOwner(@Nullable DataGrid<E> owner) {
+            if (owner != null) {
+                this.owner = (WebAbstractDataGrid<?, E>) owner;
+            } else {
+                this.owner = null;
+            }
         }
 
         @Override
@@ -3761,13 +3809,14 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             return id == null ? super.toString() : id;
         }
 
+        @Nullable
         @Override
         public AggregationInfo getAggregation() {
             return aggregation;
         }
 
         @Override
-        public void setAggregation(AggregationInfo info) {
+        public void setAggregation(@Nullable AggregationInfo info) {
             this.aggregation = info;
 
             if (owner != null && id != null) {
@@ -3775,13 +3824,14 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             }
         }
 
+        @Nullable
         @Override
         public String getValueDescription() {
             return valueDescription;
         }
 
         @Override
-        public void setValueDescription(String valueDescription) {
+        public void setValueDescription(@Nullable String valueDescription) {
             this.valueDescription = valueDescription;
         }
     }
@@ -3796,13 +3846,14 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             this.gridRow = gridRow;
         }
 
+        @Nullable
         @Override
         public String getStyleName() {
             return gridRow.getStyleName();
         }
 
         @Override
-        public void setStyleName(String styleName) {
+        public void setStyleName(@Nullable String styleName) {
             gridRow.setStyleName(styleName);
         }
 
@@ -3813,6 +3864,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
 
         protected abstract T joinInternal(String... columnIds);
 
+        @Nullable
         @Override
         public T getCell(String columnId) {
             ColumnImpl column = (ColumnImpl) dataGrid.getColumnNN(columnId);
@@ -3913,13 +3965,14 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             return (HeaderRow) super.getRow();
         }
 
+        @Nullable
         @Override
         public String getStyleName() {
             return gridCell.getStyleName();
         }
 
         @Override
-        public void setStyleName(String styleName) {
+        public void setStyleName(@Nullable String styleName) {
             gridCell.setStyleName(styleName);
         }
 
@@ -3934,6 +3987,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             gridCell.setComponent(component.unwrap(Component.class));
         }
 
+        @Nullable
         @Override
         public String getHtml() {
             return gridCell.getHtml();
@@ -3944,6 +3998,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             gridCell.setHtml(html);
         }
 
+        @Nullable
         @Override
         public String getText() {
             return gridCell.getText();
@@ -3969,13 +4024,14 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             return (FooterRow) super.getRow();
         }
 
+        @Nullable
         @Override
         public String getStyleName() {
             return gridCell.getStyleName();
         }
 
         @Override
-        public void setStyleName(String styleName) {
+        public void setStyleName(@Nullable String styleName) {
             gridCell.setStyleName(styleName);
         }
 
@@ -3990,6 +4046,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             gridCell.setComponent(component.unwrap(Component.class));
         }
 
+        @Nullable
         @Override
         public String getHtml() {
             return gridCell.getHtml();
@@ -4000,6 +4057,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             gridCell.setHtml(html);
         }
 
+        @Nullable
         @Override
         public String getText() {
             return gridCell.getText();
@@ -4042,7 +4100,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             return action;
         }
 
-        public void setAction(Action action) {
+        public void setAction(@Nullable Action action) {
             if (this.action != action) {
                 if (this.action != null) {
                     this.action.removePropertyChangeListener(actionPropertyChangeListener);
@@ -4087,7 +4145,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             menuItem.setVisible(visible);
         }
 
-        public void setIcon(String icon) {
+        public void setIcon(@Nullable String icon) {
             if (showIconsForPopupMenuActions) {
                 if (!StringUtils.isEmpty(icon)) {
                     menuItem.setIcon(AppBeans.get(IconResolver.class).getIconResource(icon));
@@ -4097,7 +4155,7 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
             }
         }
 
-        public void setCaption(String caption) {
+        public void setCaption(@Nullable String caption) {
             if (action.getShortcutCombination() != null) {
                 StringBuilder sb = new StringBuilder();
                 sb.append(caption);

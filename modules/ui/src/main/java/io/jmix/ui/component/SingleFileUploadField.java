@@ -69,31 +69,34 @@ public interface SingleFileUploadField extends UploadField, Component.Focusable,
     /**
      * Setup caption of upload button.
      */
-    void setUploadButtonCaption(String caption);
+    void setUploadButtonCaption(@Nullable String caption);
 
     /**
      * @return upload button caption.
      */
+    @Nullable
     String getUploadButtonCaption();
 
     /**
      * Setup upload button icon.
      */
-    void setUploadButtonIcon(String icon);
+    void setUploadButtonIcon(@Nullable String icon);
 
     /**
      * @return upload button icon.
      */
+    @Nullable
     String getUploadButtonIcon();
 
     /**
      * Setup upload button description.
      */
-    void setUploadButtonDescription(String description);
+    void setUploadButtonDescription(@Nullable String description);
 
     /**
      * @return upload button description.
      */
+    @Nullable
     String getUploadButtonDescription();
 
     /**
@@ -109,21 +112,23 @@ public interface SingleFileUploadField extends UploadField, Component.Focusable,
     /**
      * Setup clear button caption.
      */
-    void setClearButtonCaption(String caption);
+    void setClearButtonCaption(@Nullable String caption);
 
     /**
      * @return clear button caption.
      */
+    @Nullable
     String getClearButtonCaption();
 
     /**
      * Setup clear button icon.
      */
-    void setClearButtonIcon(String icon);
+    void setClearButtonIcon(@Nullable String icon);
 
     /**
      * @return clear button icon.
      */
+    @Nullable
     String getClearButtonIcon();
 
     /**
@@ -241,11 +246,12 @@ public interface SingleFileUploadField extends UploadField, Component.Focusable,
      *
      * @param contentProvider content provider
      */
-    void setContentProvider(Supplier<InputStream> contentProvider);
+    void setContentProvider(@Nullable Supplier<InputStream> contentProvider);
 
     /**
      * @return FileContentProvider which can be used to read data from field
      */
+    @Nullable
     Supplier<InputStream> getContentProvider();
 
     /**

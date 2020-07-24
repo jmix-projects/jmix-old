@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,7 +152,7 @@ public class WebDialogWindow extends WebWindow implements DialogWindow, Initiali
     }
 
     @Override
-    public void setIcon(String icon) {
+    public void setIcon(@Nullable String icon) {
         super.setIcon(icon);
 
         if (icon == null) {
@@ -162,14 +164,14 @@ public class WebDialogWindow extends WebWindow implements DialogWindow, Initiali
     }
 
     @Override
-    public void setCaption(String caption) {
+    public void setCaption(@Nullable String caption) {
         super.setCaption(caption);
 
         this.dialogWindow.setCaption(caption);
     }
 
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         super.setDescription(description);
 
         this.dialogWindow.setDescription(description);
@@ -181,7 +183,7 @@ public class WebDialogWindow extends WebWindow implements DialogWindow, Initiali
     }
 
     @Override
-    public void setDialogWidth(String dialogWidth) {
+    public void setDialogWidth(@Nullable String dialogWidth) {
         dialogWindow.setWidth(WebWrapperUtils.toVaadinSize(dialogWidth));
 
         if (dialogWindow.getWidth() < 0) {
@@ -202,7 +204,7 @@ public class WebDialogWindow extends WebWindow implements DialogWindow, Initiali
     }
 
     @Override
-    public void setDialogHeight(String dialogHeight) {
+    public void setDialogHeight(@Nullable String dialogHeight) {
         dialogWindow.setHeight(WebWrapperUtils.toVaadinSize(dialogHeight));
 
         if (dialogWindow.getHeight() < 0) {
@@ -223,10 +225,11 @@ public class WebDialogWindow extends WebWindow implements DialogWindow, Initiali
     }
 
     @Override
-    public void setDialogStylename(String stylename) {
+    public void setDialogStylename(@Nullable String stylename) {
         dialogWindow.setStyleName(stylename);
     }
 
+    @Nullable
     @Override
     public String getDialogStylename() {
         return dialogWindow.getStyleName();

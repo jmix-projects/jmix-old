@@ -21,17 +21,21 @@ import io.jmix.ui.meta.StudioFacet;
 import io.jmix.ui.meta.StudioProperties;
 import io.jmix.ui.meta.StudioProperty;
 
+import javax.annotation.Nullable;
+
 /**
  * Prepares and shows message dialogs.
  */
 @StudioFacet(
+        xmlElement = "messageDialog",
         caption = "Message Dialog",
         description = "Prepares and shows message dialogs",
-        defaultProperty = "message"
+        defaultProperty = "message",
+        category = "Non-visual"
 )
 @StudioProperties(
         properties = {
-                @StudioProperty(name = "id", required = true)
+                @StudioProperty(name = "id", type = PropertyType.COMPONENT_ID, required = true)
         }
 )
 public interface MessageDialogFacet extends Facet {
@@ -41,11 +45,12 @@ public interface MessageDialogFacet extends Facet {
      * @param caption caption
      */
     @StudioProperty(type = PropertyType.LOCALIZED_STRING)
-    void setCaption(String caption);
+    void setCaption(@Nullable String caption);
 
     /**
      * @return dialog caption
      */
+    @Nullable
     String getCaption();
 
     /**
@@ -53,11 +58,12 @@ public interface MessageDialogFacet extends Facet {
      * @param message message
      */
     @StudioProperty(type = PropertyType.LOCALIZED_STRING)
-    void setMessage(String message);
+    void setMessage(@Nullable String message);
 
     /**
      * @return dialog message
      */
+    @Nullable
     String getMessage();
 
     /**
@@ -106,6 +112,7 @@ public interface MessageDialogFacet extends Facet {
     /**
      * @return dialog style name
      */
+    @Nullable
     String getStyleName();
 
     /**
@@ -113,7 +120,7 @@ public interface MessageDialogFacet extends Facet {
      * @param width width
      */
     @StudioProperty(type = PropertyType.SIZE)
-    void setWidth(String width);
+    void setWidth(@Nullable String width);
 
     /**
      * @return dialog width
@@ -130,7 +137,7 @@ public interface MessageDialogFacet extends Facet {
      * @param height height
      */
     @StudioProperty(type = PropertyType.SIZE)
-    void setHeight(String height);
+    void setHeight(@Nullable String height);
 
     /**
      * @return dialog height
@@ -148,12 +155,13 @@ public interface MessageDialogFacet extends Facet {
      *
      * @param actionId action id
      */
-    @StudioProperty(type = PropertyType.COMPONENT_ID)
-    void setActionTarget(String actionId);
+    @StudioProperty(type = PropertyType.COMPONENT_REF)
+    void setActionTarget(@Nullable String actionId);
 
     /**
      * @return id of action that triggers dialog
      */
+    @Nullable
     String getActionTarget();
 
     /**
@@ -162,12 +170,13 @@ public interface MessageDialogFacet extends Facet {
      *
      * @param buttonId button id
      */
-    @StudioProperty(type = PropertyType.COMPONENT_ID)
-    void setButtonTarget(String buttonId);
+    @StudioProperty(type = PropertyType.COMPONENT_REF)
+    void setButtonTarget(@Nullable String buttonId);
 
     /**
      * @return id of button that triggers dialog
      */
+    @Nullable
     String getButtonTarget();
 
     /**

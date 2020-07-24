@@ -116,7 +116,7 @@ public abstract class WebAbstractBox<T extends AbstractOrderedLayout>
     }
 
     @Override
-    public void setFrame(Frame frame) {
+    public void setFrame(@Nullable Frame frame) {
         super.setFrame(frame);
 
         if (frame != null) {
@@ -129,6 +129,7 @@ public abstract class WebAbstractBox<T extends AbstractOrderedLayout>
         }
     }
 
+    @Nullable
     @Override
     public Component getOwnComponent(String id) {
         checkNotNullArgument(id);
@@ -232,6 +233,7 @@ public abstract class WebAbstractBox<T extends AbstractOrderedLayout>
         return getEventHub().subscribe(LayoutClickEvent.class, listener);
     }
 
+    @Nullable
     protected Component findChildComponent(com.vaadin.ui.Component childComponent) {
         for (Component component : getComponents()) {
             if (component.unwrapComposition(com.vaadin.ui.Component.class) == childComponent) {
