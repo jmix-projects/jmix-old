@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.xml;
+package com.haulmont.cuba.gui.xml;
 
-import io.jmix.ui.action.ActionType;
 import io.jmix.ui.action.BaseAction;
 import io.jmix.ui.component.ActionsHolder;
 import io.jmix.ui.component.Component;
@@ -28,23 +27,41 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 
-@ActionType(DeclarativeAction.ID)
 public class DeclarativeAction extends BaseAction {
-
-    public static final String ID = "declarative";
 
     private Frame frame;
     private String methodName;
 
-    public DeclarativeAction(String id) {
-        super(id);
-    }
+    public DeclarativeAction(String id, String caption, String description, String icon, @Nullable String enable,
+                             @Nullable String visible, String methodName, @Nullable String shortcut, ActionsHolder holder) {
+        super(id, shortcut);
+        this.caption = caption;
+        this.description = description;
+        this.icon = icon;
 
-    public void setMethodName(String methodName) {
+        setEnabled(enable == null || Boolean.parseBoolean(enable));
+        setVisible(visible == null || Boolean.parseBoolean(visible));
+
         this.methodName = methodName;
+        checkActionsHolder(holder);
     }
 
-    public void checkActionsHolder(@Nullable ActionsHolder holder) {
+    public DeclarativeAction(String id, String caption, String description, String icon, boolean enabled, boolean visible,
+                             String methodName, ActionsHolder holder) {
+        super(id);
+
+        this.caption = caption;
+        this.description = description;
+        this.icon = icon;
+
+        setEnabled(enabled);
+        setVisible(visible);
+
+        this.methodName = methodName;
+        checkActionsHolder(holder);
+    }
+
+    protected void checkActionsHolder(ActionsHolder holder) {
         if (holder instanceof Frame) {
             frame = (Frame) holder;
         } else if (holder instanceof Component.BelongToFrame) {
