@@ -21,7 +21,6 @@ import com.google.common.collect.Sets;
 import io.jmix.core.*;
 import io.jmix.core.common.util.StackTrace;
 import io.jmix.core.entity.EntityEntrySoftDelete;
-import io.jmix.core.entity.SoftDelete;
 import io.jmix.data.EntityChangeType;
 import io.jmix.data.StoreAwareLocator;
 import io.jmix.data.event.EntityChangedEvent;

@@ -64,13 +64,11 @@ public class JmixEclipseLinkDescriptorEventListener implements DescriptorEventLi
     protected MetadataTools metadataTools;
 
     @Autowired
-    protected AuditConvertionService auditConversionService;
+    protected AuditConversionService auditConversionService;
     @Autowired
     protected TimeSource timeSource;
     @Autowired
     protected PersistenceSupport persistenceSupport;
-    @Autowired
-    protected PersistenceTools persistenceTools;
     @Autowired
     protected EntityStates entityStates;
 
