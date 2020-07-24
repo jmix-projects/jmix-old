@@ -66,6 +66,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     protected Pagination.State lastState;
     protected int start;
     protected int size;
+    protected int count = -1; // temporal, is set only if last button is clicked then value is reset
     protected boolean samePage;
 
     protected boolean autoLoad;
@@ -228,7 +229,9 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         int newStart = adapter.getFirstResult() - adapter.getMaxResults();
         adapter.setFirstResult(newStart < 0 ? 0 : newStart);
 
-        if (!refreshData()) {
+        if (refreshData()) {
+            onSuccessfulDataRefresh();
+        } else {
             adapter.setFirstResult(firstResult);
         }
     }
@@ -244,6 +247,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
                 refreshData();
                 adapter.setMaxResults(maxResults);
             }
+            onSuccessfulDataRefresh();
         } else {
             adapter.setFirstResult(firstResult);
         }
@@ -253,20 +257,24 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         int firstResult = adapter.getFirstResult();
         adapter.setFirstResult(0);
 
-        if (!refreshData()) {
+        if (refreshData()) {
+            onSuccessfulDataRefresh();
+        } else {
             adapter.setFirstResult(firstResult);
         }
     }
 
     protected void onLastClick() {
-        int count = adapter.getCount();
+        count = adapter.getCount();
         int itemsToDisplay = count % adapter.getMaxResults();
         if (itemsToDisplay == 0) itemsToDisplay = adapter.getMaxResults();
 
         int firstResult = adapter.getFirstResult();
         adapter.setFirstResult(count - itemsToDisplay);
 
-        if (!refreshData()) {
+        if (refreshData()) {
+            onSuccessfulDataRefresh();
+        } else {
             adapter.setFirstResult(firstResult);
         }
     }
@@ -286,10 +294,14 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         try {
             adapter.refresh();
         } finally {
+            count = -1;
             refreshing = false;
         }
 
         return true;
+    }
+
+    protected void onSuccessfulDataRefresh() {
     }
 
     protected void onCollectionChanged() {
@@ -313,11 +325,11 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         } else if (size == adapter.getMaxResults() && adapter.getFirstResult() == 0) {
             state = Pagination.State.FIRST_INCOMPLETE;
             lastState = state;
-        } else if (size == adapter.getMaxResults() && adapter.getFirstResult() > 0) {
+        } else if (size == adapter.getMaxResults() && adapter.getFirstResult() > 0 && count == -1) {
             state = Pagination.State.MIDDLE;
             start = adapter.getFirstResult();
             lastState = state;
-        } else if (size < adapter.getMaxResults() && adapter.getFirstResult() > 0) {
+        } else if (size <= adapter.getMaxResults() && adapter.getFirstResult() > 0) {
             state = Pagination.State.LAST;
             start = adapter.getFirstResult();
             lastState = state;

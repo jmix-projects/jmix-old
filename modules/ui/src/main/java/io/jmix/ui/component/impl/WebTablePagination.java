@@ -81,45 +81,13 @@ public class WebTablePagination extends WebPagination implements TablePagination
     }
 
     @Override
-    protected void onPrevClick() {
-        super.onPrevClick();
+    protected void onSuccessfulDataRefresh() {
+        super.onSuccessfulDataRefresh();
 
-        if (refreshData() && target instanceof WebAbstractTable) {
-            resetCurrentDataPage((Table) target);
+        if (target instanceof WebAbstractTable) {
+            target.withUnwrapped(com.vaadin.v7.ui.Table.class, vTable ->
+                    vTable.setCurrentPageFirstItemIndex(0));
         }
-    }
-
-    @Override
-    protected void onNextClick() {
-        super.onNextClick();
-
-        if (refreshData() && target instanceof WebAbstractTable) {
-            resetCurrentDataPage((Table) target);
-        }
-    }
-
-    @Override
-    protected void onFirstClick() {
-        super.onFirstClick();
-
-        if (refreshData() && target instanceof WebAbstractTable) {
-            resetCurrentDataPage((Table) target);
-        }
-    }
-
-    @Override
-    protected void onLastClick() {
-        super.onLastClick();
-
-        if (refreshData() && target instanceof WebAbstractTable) {
-            resetCurrentDataPage((Table) target);
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    protected void resetCurrentDataPage(Table table) {
-        table.withUnwrapped(com.vaadin.v7.ui.Table.class, vTable ->
-                vTable.setCurrentPageFirstItemIndex(0));
     }
 
     protected Adapter createAdapter(ListComponent target) {
