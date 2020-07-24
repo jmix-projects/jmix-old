@@ -18,18 +18,31 @@ package test_support.app.entity.model_objects;
 
 import io.jmix.core.EntityEntry;
 import io.jmix.core.JmixEntity;
-import io.jmix.core.entity.NoIdEntityEntry;
+import io.jmix.core.entity.BaseEntityEntry;
+import io.jmix.core.entity.annotation.JmixGeneratedValue;
+import io.jmix.core.entity.annotation.JmixId;
 import io.jmix.core.impl.EntityInternals;
 import io.jmix.core.metamodel.annotation.ModelObject;
-import io.jmix.core.metamodel.annotation.ModelProperty;
 
-@ModelObject(name = "test_CustomerObject", annotatedPropertiesOnly = true)
-public class CustomerObject implements JmixEntity {
+import javax.annotation.Nullable;
+import java.util.UUID;
 
-    @ModelProperty(mandatory = true)
+@ModelObject
+public class CustomerObjectWithGeneratedId implements JmixEntity {
+
+    @JmixId
+    @JmixGeneratedValue
+    private UUID id;
+
     private String name;
 
-    private Object anObject;
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -39,17 +52,32 @@ public class CustomerObject implements JmixEntity {
         this.name = name;
     }
 
-    public Object getAnObject() {
-        return anObject;
-    }
-
-    public void setAnObject(Object anObject) {
-        this.anObject = anObject;
-    }
-
     // TODO Replace with enhancing - begin
 
-    private EntityEntry _jmixEntityEntry = new NoIdEntityEntry(this);
+    private static class JmixEntityEntry extends BaseEntityEntry {
+        public JmixEntityEntry(JmixEntity source) {
+            super(source);
+        }
+
+        @Nullable
+        @Override
+        public Object getEntityId() {
+            return ((CustomerObjectWithGeneratedId) getSource()).getId();
+        }
+
+        @Override
+        public void setEntityId(@Nullable Object id) {
+            ((CustomerObjectWithGeneratedId) getSource()).setId((UUID) id);
+        }
+
+        @Nullable
+        @Override
+        public Object getGeneratedIdOrNull() {
+            return ((CustomerObjectWithGeneratedId) getSource()).getId();
+        }
+    }
+
+    private EntityEntry _jmixEntityEntry = new JmixEntityEntry(this);
 
     @Override
     public EntityEntry __getEntityEntry() {
@@ -58,7 +86,7 @@ public class CustomerObject implements JmixEntity {
 
     @Override
     public void __copyEntityEntry() {
-        NoIdEntityEntry newEntry = new NoIdEntityEntry(this);
+        JmixEntityEntry newEntry = new JmixEntityEntry(this);
         newEntry.copy(_jmixEntityEntry);
         _jmixEntityEntry = newEntry;
     }

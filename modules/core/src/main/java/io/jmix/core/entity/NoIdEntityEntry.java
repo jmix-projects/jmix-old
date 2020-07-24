@@ -22,14 +22,19 @@ import io.jmix.core.JmixEntity;
 import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * An {@link EntityEntry} implementation for model objects without identifiers.
+ * <p>
+ * Such entities should not be saved in any persistent storage.
+ */
 @SuppressWarnings("unused")
-public class ModelObjectEntityEntry extends BaseEntityEntry {
+public class NoIdEntityEntry extends BaseEntityEntry {
 
     private long generatedId;
 
     private static final AtomicLong idGenerator = new AtomicLong(0);
 
-    public ModelObjectEntityEntry(JmixEntity source) {
+    public NoIdEntityEntry(JmixEntity source) {
         super(source);
         generatedId = idGenerator.incrementAndGet();
     }
@@ -57,8 +62,8 @@ public class ModelObjectEntityEntry extends BaseEntityEntry {
     @Override
     public void copy(EntityEntry entry) {
         super.copy(entry);
-        if (entry instanceof ModelObjectEntityEntry) {
-            generatedId = ((ModelObjectEntityEntry) entry).generatedId;
+        if (entry instanceof NoIdEntityEntry) {
+            generatedId = ((NoIdEntityEntry) entry).generatedId;
         }
     }
 }

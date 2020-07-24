@@ -14,58 +14,42 @@
  * limitations under the License.
  */
 
-package test_support.app.entity.model_objects;
+package test_support.entity.model_objects;
 
 import io.jmix.core.EntityEntry;
 import io.jmix.core.JmixEntity;
 import io.jmix.core.entity.NoIdEntityEntry;
 import io.jmix.core.impl.EntityInternals;
+import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.ModelObject;
+import io.jmix.core.metamodel.annotation.ModelProperty;
 
-import java.time.LocalDate;
-import java.util.List;
+import javax.validation.constraints.NotNull;
 
-@ModelObject(name = "test_OrderObject")
-public class OrderObject implements JmixEntity {
+@ModelObject(name = "test_CustomerObject", annotatedPropertiesOnly = true)
+public class CustomerObject implements JmixEntity {
 
-    private LocalDate date;
+    @ModelProperty(mandatory = true)
+    @InstanceName
+    @NotNull
+    private String name;
 
-    private String number;
+    private Object anObject;
 
-    private CustomerObject customer;
-
-    private List<OrderLineObject> lines;
-
-    public LocalDate getDate() {
-        return date;
+    public String getName() {
+        return name;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getNumber() {
-        return number;
+    public Object getAnObject() {
+        return anObject;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public CustomerObject getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(CustomerObject customer) {
-        this.customer = customer;
-    }
-
-    public List<OrderLineObject> getLines() {
-        return lines;
-    }
-
-    public void setLines(List<OrderLineObject> lines) {
-        this.lines = lines;
+    public void setAnObject(Object anObject) {
+        this.anObject = anObject;
     }
 
     // TODO Replace with enhancing - begin

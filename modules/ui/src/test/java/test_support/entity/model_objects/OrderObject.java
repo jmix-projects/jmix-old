@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package test_support.app.entity.model_objects;
+package test_support.entity.model_objects;
 
 import io.jmix.core.EntityEntry;
 import io.jmix.core.JmixEntity;
 import io.jmix.core.entity.NoIdEntityEntry;
 import io.jmix.core.impl.EntityInternals;
+import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.ModelObject;
 
 import java.time.LocalDate;
@@ -34,6 +35,7 @@ public class OrderObject implements JmixEntity {
 
     private CustomerObject customer;
 
+    @Composition
     private List<OrderLineObject> lines;
 
     public LocalDate getDate() {

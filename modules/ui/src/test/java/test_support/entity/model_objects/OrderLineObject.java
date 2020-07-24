@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package test_support.app.entity.model_objects;
+package test_support.entity.model_objects;
 
 import io.jmix.core.EntityEntry;
 import io.jmix.core.JmixEntity;
@@ -22,50 +22,37 @@ import io.jmix.core.entity.NoIdEntityEntry;
 import io.jmix.core.impl.EntityInternals;
 import io.jmix.core.metamodel.annotation.ModelObject;
 
-import java.time.LocalDate;
-import java.util.List;
+@ModelObject(name = "test_OrderLineObject")
+public class OrderLineObject implements JmixEntity {
 
-@ModelObject(name = "test_OrderObject")
-public class OrderObject implements JmixEntity {
+    private OrderObject order;
 
-    private LocalDate date;
+    private String product;
 
-    private String number;
+    private Double quantity;
 
-    private CustomerObject customer;
-
-    private List<OrderLineObject> lines;
-
-    public LocalDate getDate() {
-        return date;
+    public OrderObject getOrder() {
+        return order;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setOrder(OrderObject order) {
+        this.order = order;
     }
 
-    public String getNumber() {
-        return number;
+    public String getProduct() {
+        return product;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setProduct(String product) {
+        this.product = product;
     }
 
-    public CustomerObject getCustomer() {
-        return customer;
+    public Double getQuantity() {
+        return quantity;
     }
 
-    public void setCustomer(CustomerObject customer) {
-        this.customer = customer;
-    }
-
-    public List<OrderLineObject> getLines() {
-        return lines;
-    }
-
-    public void setLines(List<OrderLineObject> lines) {
-        this.lines = lines;
+    public void setQuantity(Double quantity) {
+        this.quantity = quantity;
     }
 
     // TODO Replace with enhancing - begin

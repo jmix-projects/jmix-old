@@ -21,6 +21,7 @@ import io.jmix.core.JmixEntity;
 import io.jmix.core.MetadataTools;
 import io.jmix.core.Stores;
 import io.jmix.core.common.util.ReflectionHelper;
+import io.jmix.core.entity.annotation.JmixId;
 import io.jmix.core.entity.annotation.MetaAnnotation;
 import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.ModelObject;
@@ -599,7 +600,9 @@ public class MetaModelLoader {
     }
 
     protected boolean isPrimaryKey(Field field) {
-        return field.isAnnotationPresent(Id.class) || field.isAnnotationPresent(EmbeddedId.class);
+        return field.isAnnotationPresent(Id.class)
+                || field.isAnnotationPresent(EmbeddedId.class)
+                || field.isAnnotationPresent(JmixId.class);
     }
 
     protected boolean isEmbedded(Field field) {

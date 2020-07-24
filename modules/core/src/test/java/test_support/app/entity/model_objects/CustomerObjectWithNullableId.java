@@ -18,59 +18,57 @@ package test_support.app.entity.model_objects;
 
 import io.jmix.core.EntityEntry;
 import io.jmix.core.JmixEntity;
-import io.jmix.core.entity.NoIdEntityEntry;
+import io.jmix.core.entity.NullableIdEntityEntry;
+import io.jmix.core.entity.annotation.JmixId;
 import io.jmix.core.impl.EntityInternals;
 import io.jmix.core.metamodel.annotation.ModelObject;
 
-import java.time.LocalDate;
-import java.util.List;
+import javax.annotation.Nullable;
 
-@ModelObject(name = "test_OrderObject")
-public class OrderObject implements JmixEntity {
+@ModelObject
+public class CustomerObjectWithNullableId implements JmixEntity {
 
-    private LocalDate date;
+    @JmixId
+    private String id;
 
-    private String number;
+    private String name;
 
-    private CustomerObject customer;
-
-    private List<OrderLineObject> lines;
-
-    public LocalDate getDate() {
-        return date;
+    public String getId() {
+        return id;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getNumber() {
-        return number;
+    public String getName() {
+        return name;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public CustomerObject getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(CustomerObject customer) {
-        this.customer = customer;
-    }
-
-    public List<OrderLineObject> getLines() {
-        return lines;
-    }
-
-    public void setLines(List<OrderLineObject> lines) {
-        this.lines = lines;
+    public void setName(String name) {
+        this.name = name;
     }
 
     // TODO Replace with enhancing - begin
 
-    private EntityEntry _jmixEntityEntry = new NoIdEntityEntry(this);
+    private static class JmixEntityEntry extends NullableIdEntityEntry {
+        public JmixEntityEntry(JmixEntity source) {
+            super(source);
+        }
+
+        @Nullable
+        @Override
+        public Object getEntityId() {
+            return ((CustomerObjectWithNullableId) getSource()).getId();
+        }
+
+        @Override
+        public void setEntityId(@Nullable Object id) {
+            ((CustomerObjectWithNullableId) getSource()).setId((String) id);
+        }
+    }
+
+    private EntityEntry _jmixEntityEntry = new JmixEntityEntry(this);
 
     @Override
     public EntityEntry __getEntityEntry() {
@@ -79,7 +77,7 @@ public class OrderObject implements JmixEntity {
 
     @Override
     public void __copyEntityEntry() {
-        NoIdEntityEntry newEntry = new NoIdEntityEntry(this);
+        JmixEntityEntry newEntry = new JmixEntityEntry(this);
         newEntry.copy(_jmixEntityEntry);
         _jmixEntityEntry = newEntry;
     }

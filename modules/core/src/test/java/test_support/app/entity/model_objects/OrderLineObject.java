@@ -18,10 +18,11 @@ package test_support.app.entity.model_objects;
 
 import io.jmix.core.EntityEntry;
 import io.jmix.core.JmixEntity;
-import io.jmix.core.entity.ModelObjectEntityEntry;
+import io.jmix.core.entity.NoIdEntityEntry;
+import io.jmix.core.impl.EntityInternals;
 import io.jmix.core.metamodel.annotation.ModelObject;
 
-@ModelObject(name = "test_OrderLineObject")
+@ModelObject
 public class OrderLineObject implements JmixEntity {
 
     private OrderObject order;
@@ -56,7 +57,7 @@ public class OrderLineObject implements JmixEntity {
 
     // TODO Replace with enhancing - begin
 
-    private EntityEntry _jmixEntityEntry = new ModelObjectEntityEntry(this);
+    private EntityEntry _jmixEntityEntry = new NoIdEntityEntry(this);
 
     @Override
     public EntityEntry __getEntityEntry() {
@@ -65,9 +66,21 @@ public class OrderLineObject implements JmixEntity {
 
     @Override
     public void __copyEntityEntry() {
-        ModelObjectEntityEntry newEntry = new ModelObjectEntityEntry(this);
+        NoIdEntityEntry newEntry = new NoIdEntityEntry(this);
         newEntry.copy(_jmixEntityEntry);
         _jmixEntityEntry = newEntry;
+    }
+
+    public boolean equals(Object var1) {
+        return EntityInternals.equals(this, var1);
+    }
+
+    public int hashCode() {
+        return EntityInternals.hashCode(this);
+    }
+
+    public String toString() {
+        return EntityInternals.toString(this);
     }
 
     // TODO Replace with enhancing - end

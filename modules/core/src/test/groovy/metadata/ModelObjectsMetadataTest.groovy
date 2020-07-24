@@ -18,8 +18,12 @@ package metadata
 
 import io.jmix.core.CoreConfiguration
 import io.jmix.core.Metadata
+import io.jmix.core.MetadataTools
 import io.jmix.core.entity.EntityPropertyChangeListener
+import io.jmix.core.entity.EntityValues
 import io.jmix.core.metamodel.datatype.DatatypeRegistry
+import io.jmix.core.metamodel.model.MetaClass
+import io.jmix.core.metamodel.model.MetaProperty
 import io.jmix.core.metamodel.model.Range
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.context.ContextConfiguration
@@ -30,6 +34,8 @@ import test_support.AppContextTestExecutionListener
 import test_support.addon1.TestAddon1Configuration
 import test_support.app.TestAppConfiguration
 import test_support.app.entity.model_objects.CustomerObject
+import test_support.app.entity.model_objects.CustomerObjectWithGeneratedId
+import test_support.app.entity.model_objects.CustomerObjectWithNullableId
 import test_support.app.entity.model_objects.OrderLineObject
 import test_support.app.entity.model_objects.OrderObject
 
@@ -45,7 +51,17 @@ class ModelObjectsMetadataTest extends Specification {
     @Autowired
     Metadata metadata
     @Autowired
+    MetadataTools metadataTools
+    @Autowired
     DatatypeRegistry datatypeRegistry
+
+    def "model object without explicit name"() {
+        when:
+        def metaClass = metadata.getClass(OrderLineObject)
+
+        then:
+        metaClass.getName() == 'OrderLineObject'
+    }
 
     def "mandatory property"() {
         when:
@@ -126,5 +142,47 @@ class ModelObjectsMetadataTest extends Specification {
         def metaProperty = metaClass.findProperty('anObject')
         metaProperty == null
 
+    }
+
+    def "nullable id"() {
+        when:
+        def metaClass = metadata.getClass(CustomerObjectWithNullableId)
+        def idProperty = metadataTools.getPrimaryKeyProperty(metaClass)
+
+        then:
+        idProperty != null
+        idProperty.name == 'id'
+        idProperty.range.asDatatype().javaClass == String
+
+        when:
+        def customer = metadata.create(CustomerObjectWithNullableId)
+        customer.setId('abc')
+
+        then:
+        EntityValues.getId(customer) == 'abc'
+
+        when:
+        EntityValues.setId(customer, 'def')
+
+        then:
+        customer.getId() == 'def'
+    }
+
+    def "generated id"() {
+        when:
+        def metaClass = metadata.getClass(CustomerObjectWithGeneratedId)
+        def idProperty = metadataTools.getPrimaryKeyProperty(metaClass)
+
+        then:
+        idProperty != null
+        idProperty.name == 'id'
+        idProperty.range.asDatatype().javaClass == UUID
+
+        when:
+        def customer = metadata.create(CustomerObjectWithGeneratedId)
+
+        then:
+        customer.getId() != null
+        EntityValues.getId(customer) == customer.getId()
     }
 }
