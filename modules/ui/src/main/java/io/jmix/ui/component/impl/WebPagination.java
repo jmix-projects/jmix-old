@@ -20,7 +20,9 @@ import com.vaadin.shared.Registration;
 import io.jmix.core.*;
 import io.jmix.core.common.event.Subscription;
 import io.jmix.core.entity.KeyValueEntity;
+import io.jmix.ui.UiProperties;
 import io.jmix.ui.component.*;
+import io.jmix.ui.component.pagination.PaginationDelegate;
 import io.jmix.ui.executor.BackgroundTask;
 import io.jmix.ui.executor.BackgroundTaskHandler;
 import io.jmix.ui.executor.BackgroundWorker;
@@ -31,6 +33,9 @@ import io.jmix.ui.model.*;
 import io.jmix.ui.model.impl.WeakCollectionChangeListener;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiControllerUtils;
+import io.jmix.ui.sys.PersistenceManagerClient;
+import io.jmix.ui.theme.ThemeConstants;
+import io.jmix.ui.theme.ThemeConstantsManager;
 import io.jmix.ui.widget.JmixPagination;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -57,6 +62,10 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     protected DataManager dataManager;
     protected BackgroundWorker backgroundWorker;
     protected IconResolver iconResolver;
+    protected UiProperties uiProperties;
+    protected ThemeConstantsManager themeConstantsManager;
+    protected PaginationDelegate paginationDelegate;
+    protected PersistenceManagerClient persistenceManager;
 
     protected WebPagination.Adapter adapter;
     protected BaseCollectionLoader loader;
@@ -77,6 +86,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     protected Registration onNextClickRegistration;
     protected Registration onFirstClickRegistration;
     protected Registration onLastClickRegistration;
+    protected Registration maxResultsValueChangeRegistration;
     protected Function<DataLoadContext, Long> totalCountDelegate;
 
     public WebPagination() {
@@ -103,6 +113,26 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         this.dataManager = dataManager;
     }
 
+    @Autowired
+    public void setUiProperties(UiProperties uiProperties) {
+        this.uiProperties = uiProperties;
+    }
+
+    @Autowired
+    public void setThemeConstantsManager(ThemeConstantsManager themeConstantsManager) {
+        this.themeConstantsManager = themeConstantsManager;
+    }
+
+    @Autowired
+    public void setPaginationDelegate(PaginationDelegate paginationDelegate) {
+        this.paginationDelegate = paginationDelegate;
+    }
+
+    @Autowired
+    public void setPersistenceManager(PersistenceManagerClient persistenceManager) {
+        this.persistenceManager = persistenceManager;
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
         initComponent();
@@ -125,7 +155,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
 
         adapter = createAdapter(loader);
 
-        initButtonListeners();
+        initListeners();
     }
 
     @Nullable
@@ -174,10 +204,20 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         return new JmixPagination();
     }
 
+    @Override
+    public boolean isShowMaxResults() {
+        return component.getMaxResultsLayout().isVisible();
+    }
+
+    @Override
+    public void setShowMaxResults(boolean showMaxResults) {
+        component.getMaxResultsLayout().setVisible(showMaxResults);
+    }
+
     protected void initComponent() {
         component.setStyleName(PAGINATION_STYLENAME);
 
-        //hide all buttons. They will become visible after data is loaded
+        // hide all buttons. They will become visible after data is loaded
         component.getCountButton().setVisible(false);
         component.getPrevButton().setVisible(false);
         component.getNextButton().setVisible(false);
@@ -188,15 +228,24 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         component.getPrevButton().setIcon(iconResolver.getIconResource(JmixIcon.ANGLE_LEFT.source()));
         component.getNextButton().setIcon(iconResolver.getIconResource(JmixIcon.ANGLE_RIGHT.source()));
         component.getLastButton().setIcon(iconResolver.getIconResource(JmixIcon.ANGLE_DOUBLE_RIGHT.source()));
+
+        component.getMaxResultsLabel().setValue(messages.getMessage("", "pagination.maxResults.label.value"));
+
+        ThemeConstants theme = themeConstantsManager.getConstants();
+        component.getMaxResultsComboBox().setWidth(theme.get("jmix.ui.pagination.maxResults.width"));
+        component.getMaxResultsComboBox().setEmptySelectionAllowed(paginationDelegate.isNullOptionVisible());
+        component.getMaxResultsComboBox().setItems(paginationDelegate.getMaxResultsOptions());
     }
 
-    protected void initButtonListeners() {
+    protected void initListeners() {
         unregisterListeners();
         onLinkClickRegistration = component.getCountButton().addClickListener(event -> onLinkClick());
         onPrevClickRegistration = component.getPrevButton().addClickListener(event -> onPrevClick());
         onNextClickRegistration = component.getNextButton().addClickListener(event -> onNextClick());
         onFirstClickRegistration = component.getFirstButton().addClickListener(event -> onFirstClick());
         onLastClickRegistration = component.getLastButton().addClickListener(event -> onLastClick());
+        maxResultsValueChangeRegistration = component.getMaxResultsComboBox()
+                .addValueChangeListener(event -> onMaxResultsValueChange(event.getValue()));
     }
 
     protected void unregisterListeners() {
@@ -214,6 +263,10 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
 
         if (onLastClickRegistration != null)
             onLastClickRegistration.remove();
+
+        if (maxResultsValueChangeRegistration != null) {
+            maxResultsValueChangeRegistration.remove();
+        }
     }
 
     protected Adapter createAdapter(BaseCollectionLoader loader) {
@@ -277,6 +330,17 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         } else {
             adapter.setFirstResult(firstResult);
         }
+    }
+
+    protected void onMaxResultsValueChange(@Nullable Integer value) {
+        if (value == null) {
+            // todo rp
+            adapter.setMaxResults(Integer.MAX_VALUE);
+        } else {
+            adapter.setMaxResults(value);
+        }
+
+        adapter.refresh();
     }
 
     protected boolean refreshData() {

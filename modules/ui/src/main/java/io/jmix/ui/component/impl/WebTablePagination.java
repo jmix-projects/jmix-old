@@ -18,7 +18,6 @@ package io.jmix.ui.component.impl;
 
 import io.jmix.core.common.event.Subscription;
 import io.jmix.ui.component.ListComponent;
-import io.jmix.ui.component.Table;
 import io.jmix.ui.component.TablePagination;
 import io.jmix.ui.component.VisibilityChangeNotifier;
 import io.jmix.ui.component.data.DataUnit;
@@ -57,7 +56,7 @@ public class WebTablePagination extends WebPagination implements TablePagination
             adapter = createAdapter(target);
         }
 
-        initButtonListeners();
+        initListeners();
     }
 
     @Override

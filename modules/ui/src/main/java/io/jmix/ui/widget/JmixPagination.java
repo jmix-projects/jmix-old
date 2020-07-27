@@ -17,6 +17,7 @@
 package io.jmix.ui.widget;
 
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.themes.ValoTheme;
@@ -36,6 +37,10 @@ public class JmixPagination extends JmixCssActionsLayout {
     protected Label label;
     protected Button countButton;
 
+    protected ComponentContainer maxResultsLayout;
+    protected Label maxResultsLabel;
+    protected ComboBox<Integer> maxResultsComboBox;
+
     public JmixPagination() {
         contentLayout = createContentLayout();
         contentLayout.setWidth(100, Unit.PERCENTAGE);
@@ -43,28 +48,13 @@ public class JmixPagination extends JmixCssActionsLayout {
         addComponent(contentLayout);
     }
 
-    public Pagination.ButtonsAlignment getButtonsAlignment() {
-        return buttonsAlignment;
-    }
-
-    public void setButtonsAlignment(Pagination.ButtonsAlignment buttonsAlignment) {
-        if (this.buttonsAlignment != buttonsAlignment) {
-            this.buttonsAlignment = buttonsAlignment;
-
-            if (buttonsAlignment == Pagination.ButtonsAlignment.LEFT) {
-                contentLayout.removeStyleName(PAGE_RIGHT_ALIGN_STYLE);
-            } else {
-                contentLayout.addStyleName(PAGE_RIGHT_ALIGN_STYLE);
-            }
-
-            markAsDirty();
-        }
-    }
-
     protected ComponentContainer createContentLayout() {
         JmixCssActionsLayout contentLayout = new JmixCssActionsLayout();
         contentLayout.setStyleName("c-pagination-wrapper");
         contentLayout.setSpacing(true);
+
+        maxResultsLayout = createMaxResultsLayout();
+        contentLayout.addComponent(maxResultsLayout);
 
         firstButton = new JmixButton();
         firstButton.setStyleName("c-pagination-change-page");
@@ -101,6 +91,24 @@ public class JmixPagination extends JmixCssActionsLayout {
         return contentLayout;
     }
 
+    public Pagination.ButtonsAlignment getButtonsAlignment() {
+        return buttonsAlignment;
+    }
+
+    public void setButtonsAlignment(Pagination.ButtonsAlignment buttonsAlignment) {
+        if (this.buttonsAlignment != buttonsAlignment) {
+            this.buttonsAlignment = buttonsAlignment;
+
+            if (buttonsAlignment == Pagination.ButtonsAlignment.LEFT) {
+                contentLayout.removeStyleName(PAGE_RIGHT_ALIGN_STYLE);
+            } else {
+                contentLayout.addStyleName(PAGE_RIGHT_ALIGN_STYLE);
+            }
+
+            markAsDirty();
+        }
+    }
+
     public Label getLabel() {
         return label;
     }
@@ -123,5 +131,34 @@ public class JmixPagination extends JmixCssActionsLayout {
 
     public Button getLastButton() {
         return lastButton;
+    }
+
+    public Label getMaxResultsLabel() {
+        return maxResultsLabel;
+    }
+
+    public ComboBox<Integer> getMaxResultsComboBox() {
+        return maxResultsComboBox;
+    }
+
+    public ComponentContainer getMaxResultsLayout() {
+        return maxResultsLayout;
+    }
+
+    protected ComponentContainer createMaxResultsLayout() {
+        JmixCssActionsLayout maxResultsLayout = new JmixCssActionsLayout();
+        maxResultsLayout.setStyleName("c-pagination-maxresults-layout");
+
+        maxResultsLabel = new JmixLabel();
+        maxResultsLabel.setStyleName("c-pagination-maxresults-label");
+        maxResultsLayout.addComponent(maxResultsLabel);
+
+        maxResultsComboBox = new JmixComboBox<>();
+        maxResultsComboBox.setStyleName("c-pagination-maxresults-options");
+        maxResultsComboBox.setEmptySelectionAllowed(false);
+        maxResultsComboBox.setTextInputAllowed(false);
+        maxResultsLayout.addComponent(maxResultsComboBox);
+
+        return maxResultsLayout;
     }
 }

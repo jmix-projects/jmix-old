@@ -79,6 +79,7 @@ public class UiProperties {
     int saveExportedByteArrayDataThresholdBytes;
     long webJarResourcesCacheTime;
     boolean productionMode;
+    String paginationMaxResults;
 
     public UiProperties(
             boolean testMode,
@@ -129,7 +130,8 @@ public class UiProperties {
             @DefaultValue("htm,html,jpg,png,jpeg,pdf") List<String> viewFileExtensions,
             @DefaultValue("102400") int saveExportedByteArrayDataThresholdBytes,
             @DefaultValue("31536000") long webJarResourcesCacheTime, // 60 * 60 * 24 * 365
-            @DefaultValue("true") boolean productionMode
+            @DefaultValue("true") boolean productionMode,
+            @DefaultValue("NULL, 20, 50, 100, 500, 1000, 5000") String paginationMaxResults
     ) {
         this.testMode = testMode;
         this.performanceTestMode = performanceTestMode;
@@ -180,6 +182,7 @@ public class UiProperties {
         this.saveExportedByteArrayDataThresholdBytes = saveExportedByteArrayDataThresholdBytes;
         this.webJarResourcesCacheTime = webJarResourcesCacheTime;
         this.productionMode = productionMode;
+        this.paginationMaxResults = paginationMaxResults;
     }
 
     public boolean isCreateActionAddsFirst() {
@@ -435,5 +438,12 @@ public class UiProperties {
 
     public boolean isProductionMode() {
         return productionMode;
+    }
+
+    /**
+     * @return string that contains separated by comma options for max rows per page in Pagination component.
+     */
+    public String getPaginationMaxResults() {
+        return paginationMaxResults;
     }
 }

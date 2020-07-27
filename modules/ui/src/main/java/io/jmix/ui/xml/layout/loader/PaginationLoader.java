@@ -43,6 +43,8 @@ public class PaginationLoader extends AbstractComponentLoader<Pagination> {
         loadAlign(resultComponent, element);
         loadCss(resultComponent, element);
 
+        loadShowMaxResults(element)
+                .ifPresent(resultComponent::setShowMaxResults);
         loadButtonsAlignment(element)
                 .ifPresent(resultComponent::setButtonsAlignment);
 
@@ -76,6 +78,14 @@ public class PaginationLoader extends AbstractComponentLoader<Pagination> {
         String alignment = element.attributeValue("buttonsAlignment");
         if (StringUtils.isNotEmpty(alignment)) {
             return Optional.of(Pagination.ButtonsAlignment.valueOf(alignment));
+        }
+        return Optional.empty();
+    }
+
+    protected Optional<Boolean> loadShowMaxResults(Element element) {
+        String maxResults = element.attributeValue("showMaxResults");
+        if (StringUtils.isNotEmpty(maxResults)) {
+            return Optional.of(Boolean.parseBoolean(maxResults));
         }
         return Optional.empty();
     }

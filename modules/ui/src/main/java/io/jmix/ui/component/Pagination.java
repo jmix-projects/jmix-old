@@ -90,6 +90,10 @@ public interface Pagination extends Component.BelongToFrame {
      */
     ButtonsAlignment getButtonsAlignment();
 
+    boolean isShowMaxResults();
+
+    void setShowMaxResults(boolean showMaxResults);
+
     /**
      * @param listener listener to add
      * @return a registration object for removing an event listener

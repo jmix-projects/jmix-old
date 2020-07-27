@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+$c-pagination-wrapper-margin-right: round($v-layout-spacing-horizontal/2) !default;
+$c-pagination-wrapper-margin-bottom: round($v-layout-spacing-vertical/2) !default;
+
 @mixin halo-pagination($primary-stylename: c-pagination) {
 
  .#{$primary-stylename},
@@ -23,8 +26,12 @@
 
  .#{$primary-stylename}-wrapper > * {
    vertical-align: middle;
-   margin-right: round($v-layout-spacing-horizontal/2);
-   margin-bottom: round($v-layout-spacing-vertical/2);
+   margin-right: $c-pagination-wrapper-margin-right;
+   margin-bottom: $c-pagination-wrapper-margin-bottom;
+ }
+
+ .#{$primary-stylename}-wrapper.page-right-align {
+   text-align: right;
  }
 
  .v-button.#{$primary-stylename}-change-page {
@@ -50,8 +57,11 @@
    padding-left: round($v-layout-spacing-horizontal/2);
  }
 
- .#{$primary-stylename}-wrapper.page-right-align {
-   text-align: right;
+ .#{$primary-stylename}-maxresults-layout {
+    .#{$primary-stylename}-maxresults-label {
+      line-height: $v-unit-size;
+      margin-right: $c-pagination-wrapper-margin-right;
+    }
  }
 
  .v-button.v-button-link.#{$primary-stylename}-count-number {

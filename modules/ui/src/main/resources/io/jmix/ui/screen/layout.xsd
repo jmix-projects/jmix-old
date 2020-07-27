@@ -2406,6 +2406,7 @@
         <xs:attributeGroup ref="hasAlign"/>
         <xs:attributeGroup ref="hasCss"/>
 
+        <xs:attribute name="showMaxResults" type="xs:boolean"/>
         <xs:attribute name="buttonsAlignment" type="paginationButtonsAlignment"/>
 
         <xs:attribute name="dataLoader" type="xs:string"/>
