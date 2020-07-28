@@ -90,8 +90,16 @@ public interface Pagination extends Component.BelongToFrame {
      */
     ButtonsAlignment getButtonsAlignment();
 
+    /**
+     * @return true if ComboBox with max results is shown
+     */
     boolean isShowMaxResults();
 
+    /**
+     * Shows or hides ComboBox with max results. True by default.
+     *
+     * @param showMaxResults whether show max results or not
+     */
     void setShowMaxResults(boolean showMaxResults);
 
     /**

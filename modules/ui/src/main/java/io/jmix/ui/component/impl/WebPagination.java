@@ -20,6 +20,7 @@ import com.vaadin.shared.Registration;
 import io.jmix.core.*;
 import io.jmix.core.common.event.Subscription;
 import io.jmix.core.entity.KeyValueEntity;
+import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.UiProperties;
 import io.jmix.ui.component.*;
 import io.jmix.ui.component.pagination.PaginationDelegate;
@@ -33,7 +34,6 @@ import io.jmix.ui.model.*;
 import io.jmix.ui.model.impl.WeakCollectionChangeListener;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiControllerUtils;
-import io.jmix.ui.sys.PersistenceManagerClient;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
 import io.jmix.ui.widget.JmixPagination;
@@ -64,8 +64,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     protected IconResolver iconResolver;
     protected UiProperties uiProperties;
     protected ThemeConstantsManager themeConstantsManager;
-    protected PaginationDelegate paginationDelegate;
-    protected PersistenceManagerClient persistenceManager;
+    protected PaginationDelegate delegate;
 
     protected WebPagination.Adapter adapter;
     protected BaseCollectionLoader loader;
@@ -77,6 +76,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     protected int size;
     protected int count = -1; // temporal, is set only if last button is clicked then value is reset
     protected boolean samePage;
+    protected List<Integer> options = Collections.emptyList();
 
     protected boolean autoLoad;
     protected BackgroundTaskHandler<Integer> rowsCountTaskHandler;
@@ -124,13 +124,8 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     }
 
     @Autowired
-    public void setPaginationDelegate(PaginationDelegate paginationDelegate) {
-        this.paginationDelegate = paginationDelegate;
-    }
-
-    @Autowired
-    public void setPersistenceManager(PersistenceManagerClient persistenceManager) {
-        this.persistenceManager = persistenceManager;
+    public void setDelegate(PaginationDelegate delegate) {
+        this.delegate = delegate;
     }
 
     @Override
@@ -155,6 +150,8 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
 
         adapter = createAdapter(loader);
 
+        updateMaxResultOptions();
+        initStartMaxResultValue();
         initListeners();
     }
 
@@ -233,8 +230,8 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
 
         ThemeConstants theme = themeConstantsManager.getConstants();
         component.getMaxResultsComboBox().setWidth(theme.get("jmix.ui.pagination.maxResults.width"));
-        component.getMaxResultsComboBox().setEmptySelectionAllowed(paginationDelegate.isNullOptionVisible());
-        component.getMaxResultsComboBox().setItems(paginationDelegate.getMaxResultsOptions());
+        component.getMaxResultsComboBox().setEmptySelectionAllowed(delegate.isNullOptionVisible());
+        component.getMaxResultsComboBox().setItems(delegate.getPropertiesMaxResults());
     }
 
     protected void initListeners() {
@@ -333,14 +330,34 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     }
 
     protected void onMaxResultsValueChange(@Nullable Integer value) {
-        if (value == null) {
-            // todo rp
-            adapter.setMaxResults(Integer.MAX_VALUE);
-        } else {
-            adapter.setMaxResults(value);
+        checkState();
+
+        Integer maxResult = value;
+        if (maxResult == null) {
+            maxResult = delegate.getMaxFetchValue(adapter.getEntityMetaClass());
         }
 
+        adapter.setMaxResults(maxResult);
         adapter.refresh();
+    }
+
+    protected void updateMaxResultOptions() {
+        checkState();
+
+        options = delegate.updateOptionsWithMaxFetch(adapter.getMaxResults(), adapter.getEntityMetaClass());
+        component.getMaxResultsComboBox().setItems(options);
+    }
+
+    protected void initStartMaxResultValue() {
+        checkState();
+
+        Integer maxResult = delegate.getAllowedOption(options, adapter.getMaxResults(), adapter.getEntityMetaClass());
+        // if loader's max result is not in bounds
+        if (adapter.getMaxResults() != maxResult) {
+            adapter.setMaxResults(maxResult);
+        }
+
+        component.getMaxResultsComboBox().setValue(maxResult);
     }
 
     protected boolean refreshData() {
@@ -531,6 +548,12 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         component.getCountButton().setEnabled(false);
     }
 
+    protected void checkState() {
+        if (adapter == null) {
+            throw new IllegalStateException("Pagination component is not bound with DataLoader or CollectionContainer");
+        }
+    }
+
     public interface Adapter {
         void unbind();
 
@@ -543,6 +566,8 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         void setMaxResults(int maxResults);
 
         int getCount();
+
+        MetaClass getEntityMetaClass();
 
         int size();
 
@@ -638,6 +663,11 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
                 log.warn("Unsupported loader type: {}", loader.getClass().getName());
                 return 0;
             }
+        }
+
+        @Override
+        public MetaClass getEntityMetaClass() {
+            return container.getEntityMetaClass();
         }
 
         @Override

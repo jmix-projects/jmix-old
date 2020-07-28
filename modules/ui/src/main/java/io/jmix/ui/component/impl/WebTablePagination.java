@@ -54,9 +54,11 @@ public class WebTablePagination extends WebPagination implements TablePagination
                 adapter.unbind();
             }
             adapter = createAdapter(target);
-        }
 
-        initListeners();
+            updateMaxResultOptions();
+            initStartMaxResultValue();
+            initListeners();
+        }
     }
 
     @Override

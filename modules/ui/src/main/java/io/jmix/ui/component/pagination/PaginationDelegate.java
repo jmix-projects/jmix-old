@@ -17,13 +17,15 @@
 package io.jmix.ui.component.pagination;
 
 import com.google.common.base.Splitter;
+import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.UiProperties;
+import io.jmix.ui.sys.PersistenceManagerClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component(PaginationDelegate.NAME)
@@ -31,10 +33,16 @@ public class PaginationDelegate {
     public static final String NAME = "ui_PaginationDelegate";
 
     protected UiProperties uiProperties;
+    protected PersistenceManagerClient persistenceManager;
 
     @Autowired
     public void setUiProperties(UiProperties uiProperties) {
         this.uiProperties = uiProperties;
+    }
+
+    @Autowired
+    public void setPersistenceManager(PersistenceManagerClient persistenceManager) {
+        this.persistenceManager = persistenceManager;
     }
 
     public int findClosestValue(int maxResults, List<Integer> optionsList) {
@@ -52,7 +60,7 @@ public class PaginationDelegate {
         return closest;
     }
 
-    public List<Integer> getMaxResultsOptions() {
+    public List<Integer> getPropertiesMaxResults() {
         String maxResultsProperty = uiProperties.getPaginationMaxResults();
         Iterable<String> split = Splitter.on(",").trimResults().split(maxResultsProperty);
 
@@ -60,8 +68,10 @@ public class PaginationDelegate {
         for (String option : split) {
             if (!"NULL".equals(option)) {
                 try {
-                    Integer value = Integer.valueOf(option);
-                    result.add(value);
+                    int value = Integer.parseInt(option);
+                    if (value > 0) {
+                        result.add(value);
+                    }
                 } catch (NumberFormatException ignored) {
                 }
             }
@@ -73,5 +83,64 @@ public class PaginationDelegate {
     public boolean isNullOptionVisible() {
         String maxResultsProperty = uiProperties.getPaginationMaxResults();
         return maxResultsProperty.startsWith("NULL");
+    }
+
+    /**
+     * Filters, sort options and adds max fetch value if options list contains a greater value.
+     *
+     * @param loaderMaxResult loader's max result
+     * @param metaClass       entity's MetaClass
+     * @return filtered and sorted options
+     */
+    public List<Integer> updateOptionsWithMaxFetch(@Nullable Integer loaderMaxResult, MetaClass metaClass) {
+        Integer maxFetch = persistenceManager.getMaxFetchUI(metaClass.getName());
+
+        List<Integer> result = new ArrayList<>();
+        for (Integer option : getPropertiesMaxResults()) {
+            if (option > 0 || option < maxFetch) {
+                result.add(option);
+            }
+
+            if (option >= maxFetch && !result.contains(maxFetch)) {
+                result.add(maxFetch);
+            }
+        }
+
+        // if loader's max result is not in bounds
+        if (loaderMaxResult != null
+                && loaderMaxResult != Integer.MAX_VALUE
+                && loaderMaxResult >= maxFetch
+                && !result.contains(maxFetch)) {
+            result.add(maxFetch);
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
+    /**
+     * Checks if expected value exist in options. If no it will find the closest value from them.
+     *
+     * @param options       max result options
+     * @param expectedValue value that is probably exist in options
+     * @param metaClass     entity's MetaClass
+     * @return value from options
+     */
+    public Integer getAllowedOption(List<Integer> options, Integer expectedValue, MetaClass metaClass) {
+        // default loader's value
+        if (expectedValue == Integer.MAX_VALUE) {
+            return findClosestValue(persistenceManager.getFetchUI(metaClass.getName()), options);
+        }
+
+        if (!options.contains(expectedValue)) {
+            return findClosestValue(expectedValue, options);
+        }
+
+        return expectedValue;
+    }
+
+    public Integer getMaxFetchValue(MetaClass metaClass) {
+        return persistenceManager.getMaxFetchUI(metaClass.getName());
     }
 }
