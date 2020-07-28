@@ -1,5 +1,5 @@
 plugins {
-    id 'io.jmix' version '$project_baseProjectsGroup_version'
+    id 'io.jmix' version '0.1.10'
     id 'java'
 }
 
