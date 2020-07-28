@@ -22,6 +22,7 @@ import io.jmix.ui.model.BaseCollectionLoader;
 
 import javax.annotation.Nullable;
 import java.util.EventObject;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -101,6 +102,31 @@ public interface Pagination extends Component.BelongToFrame {
      * @param showMaxResults whether show max results or not
      */
     void setShowMaxResults(boolean showMaxResults);
+
+    /**
+     * @return true if null option should be visible in the max results ComboBox.
+     */
+    boolean isShowNullMaxResult();
+
+    /**
+     * Sets null option visible or hidden in the max results ComboBox. True by default.
+     *
+     * @param showNullMaxResult whether null option visible or not
+     */
+    void setShowNullMaxResult(boolean showNullMaxResult);
+
+    /**
+     * @return max results options
+     */
+    List<Integer> getMaxResultOptions();
+
+    /**
+     * Sets max results options which should be used in the ComboBox. Values less than or equal to 0 is not allowed and
+     * will be removed.
+     *
+     * @param maxResults max result options
+     */
+    void setMaxResultOptions(List<Integer> maxResults);
 
     /**
      * @param listener listener to add

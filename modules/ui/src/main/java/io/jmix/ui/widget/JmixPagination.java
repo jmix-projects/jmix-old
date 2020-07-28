@@ -37,9 +37,9 @@ public class JmixPagination extends JmixCssActionsLayout {
     protected Label label;
     protected Button countButton;
 
-    protected ComponentContainer maxResultsLayout;
-    protected Label maxResultsLabel;
-    protected ComboBox<Integer> maxResultsComboBox;
+    protected ComponentContainer maxResultLayout;
+    protected Label maxResultLabel;
+    protected ComboBox<Integer> maxResultComboBox;
 
     public JmixPagination() {
         contentLayout = createContentLayout();
@@ -53,8 +53,8 @@ public class JmixPagination extends JmixCssActionsLayout {
         contentLayout.setStyleName("c-pagination-wrapper");
         contentLayout.setSpacing(true);
 
-        maxResultsLayout = createMaxResultsLayout();
-        contentLayout.addComponent(maxResultsLayout);
+        maxResultLayout = createMaxResultLayout();
+        contentLayout.addComponent(maxResultLayout);
 
         firstButton = new JmixButton();
         firstButton.setStyleName("c-pagination-change-page");
@@ -133,31 +133,31 @@ public class JmixPagination extends JmixCssActionsLayout {
         return lastButton;
     }
 
-    public Label getMaxResultsLabel() {
-        return maxResultsLabel;
+    public Label getMaxResultLabel() {
+        return maxResultLabel;
     }
 
-    public ComboBox<Integer> getMaxResultsComboBox() {
-        return maxResultsComboBox;
+    public ComboBox<Integer> getMaxResultComboBox() {
+        return maxResultComboBox;
     }
 
-    public ComponentContainer getMaxResultsLayout() {
-        return maxResultsLayout;
+    public ComponentContainer getMaxResultLayout() {
+        return maxResultLayout;
     }
 
-    protected ComponentContainer createMaxResultsLayout() {
+    protected ComponentContainer createMaxResultLayout() {
         JmixCssActionsLayout maxResultsLayout = new JmixCssActionsLayout();
-        maxResultsLayout.setStyleName("c-pagination-maxresults-layout");
+        maxResultsLayout.setStyleName("c-pagination-maxresult-layout");
 
-        maxResultsLabel = new JmixLabel();
-        maxResultsLabel.setStyleName("c-pagination-maxresults-label");
-        maxResultsLayout.addComponent(maxResultsLabel);
+        maxResultLabel = new JmixLabel();
+        maxResultLabel.setStyleName("c-pagination-maxresult-label");
+        maxResultsLayout.addComponent(maxResultLabel);
 
-        maxResultsComboBox = new JmixComboBox<>();
-        maxResultsComboBox.setStyleName("c-pagination-maxresults-options");
-        maxResultsComboBox.setEmptySelectionAllowed(false);
-        maxResultsComboBox.setTextInputAllowed(false);
-        maxResultsLayout.addComponent(maxResultsComboBox);
+        maxResultComboBox = new JmixComboBox<>();
+        maxResultComboBox.setStyleName("c-pagination-maxresult-options");
+        maxResultComboBox.setEmptySelectionAllowed(false);
+        maxResultComboBox.setTextInputAllowed(false);
+        maxResultsLayout.addComponent(maxResultComboBox);
 
         return maxResultsLayout;
     }

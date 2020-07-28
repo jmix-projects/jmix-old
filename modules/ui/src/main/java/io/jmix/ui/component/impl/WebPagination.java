@@ -37,6 +37,7 @@ import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
 import io.jmix.ui.widget.JmixPagination;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +77,8 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     protected int size;
     protected int count = -1; // temporal, is set only if last button is clicked then value is reset
     protected boolean samePage;
+
+    protected List<Integer> maxResultOptions;
     protected List<Integer> options = Collections.emptyList();
 
     protected boolean autoLoad;
@@ -203,12 +206,37 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
 
     @Override
     public boolean isShowMaxResults() {
-        return component.getMaxResultsLayout().isVisible();
+        return component.getMaxResultLayout().isVisible();
     }
 
     @Override
     public void setShowMaxResults(boolean showMaxResults) {
-        component.getMaxResultsLayout().setVisible(showMaxResults);
+        component.getMaxResultLayout().setVisible(showMaxResults);
+    }
+
+    @Override
+    public boolean isShowNullMaxResult() {
+        return component.getMaxResultComboBox().isEmptySelectionAllowed();
+    }
+
+    @Override
+    public void setShowNullMaxResult(boolean showNullMaxResult) {
+        component.getMaxResultComboBox().setEmptySelectionAllowed(showNullMaxResult);
+    }
+
+    @Override
+    public List<Integer> getMaxResultOptions() {
+        if (maxResultOptions == null) {
+            return Collections.emptyList();
+        }
+        return maxResultOptions;
+    }
+
+    @Override
+    public void setMaxResultOptions(List<Integer> maxResults) {
+        this.maxResultOptions = maxResults;
+
+        component.getMaxResultComboBox().setEmptySelectionAllowed(maxResults.contains(-1));
     }
 
     protected void initComponent() {
@@ -226,12 +254,12 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         component.getNextButton().setIcon(iconResolver.getIconResource(JmixIcon.ANGLE_RIGHT.source()));
         component.getLastButton().setIcon(iconResolver.getIconResource(JmixIcon.ANGLE_DOUBLE_RIGHT.source()));
 
-        component.getMaxResultsLabel().setValue(messages.getMessage("", "pagination.maxResults.label.value"));
+        component.getMaxResultLabel().setValue(messages.getMessage("", "pagination.maxResult.label.value"));
 
         ThemeConstants theme = themeConstantsManager.getConstants();
-        component.getMaxResultsComboBox().setWidth(theme.get("jmix.ui.pagination.maxResults.width"));
-        component.getMaxResultsComboBox().setEmptySelectionAllowed(delegate.isNullOptionVisible());
-        component.getMaxResultsComboBox().setItems(delegate.getPropertiesMaxResults());
+        component.getMaxResultComboBox().setWidth(theme.get("jmix.ui.pagination.maxResult.width"));
+        component.getMaxResultComboBox().setEmptySelectionAllowed(true);
+        component.getMaxResultComboBox().setItems(delegate.getMaxResultsFromProperty());
     }
 
     protected void initListeners() {
@@ -241,7 +269,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         onNextClickRegistration = component.getNextButton().addClickListener(event -> onNextClick());
         onFirstClickRegistration = component.getFirstButton().addClickListener(event -> onFirstClick());
         onLastClickRegistration = component.getLastButton().addClickListener(event -> onLastClick());
-        maxResultsValueChangeRegistration = component.getMaxResultsComboBox()
+        maxResultsValueChangeRegistration = component.getMaxResultComboBox()
                 .addValueChangeListener(event -> onMaxResultsValueChange(event.getValue()));
     }
 
@@ -344,8 +372,13 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     protected void updateMaxResultOptions() {
         checkState();
 
-        options = delegate.updateOptionsWithMaxFetch(adapter.getMaxResults(), adapter.getEntityMetaClass());
-        component.getMaxResultsComboBox().setItems(options);
+        if (CollectionUtils.isNotEmpty(maxResultOptions)) {
+            options = delegate.filterOptions(maxResultOptions, adapter.getMaxResults(), adapter.getEntityMetaClass());
+        } else {
+            options = delegate.filterPropertyOptions(adapter.getMaxResults(), adapter.getEntityMetaClass());
+        }
+
+        component.getMaxResultComboBox().setItems(options);
     }
 
     protected void initStartMaxResultValue() {
@@ -357,7 +390,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
             adapter.setMaxResults(maxResult);
         }
 
-        component.getMaxResultsComboBox().setValue(maxResult);
+        component.getMaxResultComboBox().setValue(maxResult);
     }
 
     protected boolean refreshData() {
@@ -382,6 +415,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         return true;
     }
 
+    // hook for TablePagination
     protected void onSuccessfulDataRefresh() {
     }
 

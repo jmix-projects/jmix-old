@@ -19,7 +19,7 @@ package io.jmix.ui.component;
 import javax.annotation.Nullable;
 
 /**
- * Component that makes a data binding to load data by pages. Usually used with {@link Table} or {@link DataGrid}.
+ * Pagination component for using inside of {@link Table} or {@link DataGrid}.
  */
 public interface TablePagination extends Pagination {
     String NAME = "tablePagination";

@@ -398,15 +398,17 @@ public abstract class AbstractDataGridLoader<T extends DataGrid> extends Actions
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void loadPagination(DataGrid component, Element element) {
         Element paginationElement = element.element("pagination");
         if (paginationElement != null) {
-            TablePagination pagination = factory.create(TablePagination.class);
 
-            String autoLoad = paginationElement.attributeValue("autoLoad");
-            if (StringUtils.isNotEmpty(autoLoad)) {
-                pagination.setAutoLoad(Boolean.parseBoolean(autoLoad));
-            }
+            ComponentLoader<TablePagination> loader = getLayoutLoader()
+                    .getLoader(paginationElement, TablePagination.NAME);
+            loader.createComponent();
+            loader.loadComponent();
+
+            TablePagination pagination = loader.getResultComponent();
 
             pagination.setTablePaginationTarget(component);
             component.setPagination(pagination);

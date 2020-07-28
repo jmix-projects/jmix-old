@@ -19,6 +19,7 @@ package io.jmix.ui.component.pagination;
 import com.google.common.base.Splitter;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.UiProperties;
+import io.jmix.ui.component.Pagination;
 import io.jmix.ui.sys.PersistenceManagerClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Utility class for {@link Pagination} component. Performs operation on max result options.
+ */
 @Component(PaginationDelegate.NAME)
 public class PaginationDelegate {
     public static final String NAME = "ui_PaginationDelegate";
@@ -60,63 +64,52 @@ public class PaginationDelegate {
         return closest;
     }
 
-    public List<Integer> getPropertiesMaxResults() {
+    public List<Integer> getMaxResultsFromProperty() {
         String maxResultsProperty = uiProperties.getPaginationMaxResults();
-        Iterable<String> split = Splitter.on(",").trimResults().split(maxResultsProperty);
+        return parseMaxResultsOptions(maxResultsProperty);
+    }
+
+    public List<Integer> parseMaxResultsOptions(String maxResults) {
+        Iterable<String> split = Splitter.on(",").trimResults().split(maxResults);
 
         List<Integer> result = new ArrayList<>();
         for (String option : split) {
-            if (!"NULL".equals(option)) {
-                try {
-                    int value = Integer.parseInt(option);
-                    if (value > 0) {
-                        result.add(value);
-                    }
-                } catch (NumberFormatException ignored) {
+            try {
+                int value = Integer.parseInt(option);
+                if (value > 0) {
+                    result.add(value);
                 }
+            } catch (NumberFormatException ignored) {
             }
         }
 
         return result;
     }
 
-    public boolean isNullOptionVisible() {
-        String maxResultsProperty = uiProperties.getPaginationMaxResults();
-        return maxResultsProperty.startsWith("NULL");
-    }
-
     /**
-     * Filters, sort options and adds max fetch value if options list contains a greater value.
+     * Filters, sorts options that is provided by {@link UiProperties#getPaginationMaxResults()}. Adds max fetch value
+     * if options list contains a greater value.
      *
      * @param loaderMaxResult loader's max result
      * @param metaClass       entity's MetaClass
      * @return filtered and sorted options
      */
-    public List<Integer> updateOptionsWithMaxFetch(@Nullable Integer loaderMaxResult, MetaClass metaClass) {
+    public List<Integer> filterPropertyOptions(@Nullable Integer loaderMaxResult, MetaClass metaClass) {
         Integer maxFetch = persistenceManager.getMaxFetchUI(metaClass.getName());
+        return doFilter(getMaxResultsFromProperty(), loaderMaxResult, maxFetch);
+    }
 
-        List<Integer> result = new ArrayList<>();
-        for (Integer option : getPropertiesMaxResults()) {
-            if (option > 0 || option < maxFetch) {
-                result.add(option);
-            }
-
-            if (option >= maxFetch && !result.contains(maxFetch)) {
-                result.add(maxFetch);
-            }
-        }
-
-        // if loader's max result is not in bounds
-        if (loaderMaxResult != null
-                && loaderMaxResult != Integer.MAX_VALUE
-                && loaderMaxResult >= maxFetch
-                && !result.contains(maxFetch)) {
-            result.add(maxFetch);
-        }
-
-        Collections.sort(result);
-
-        return result;
+    /**
+     * Filters, sorts options. Adds max fetch value if options list contains a greater value.
+     *
+     * @param options         max result options
+     * @param loaderMaxResult loader's max result
+     * @param metaClass       entity's MetaClass
+     * @return filtered and sorted options
+     */
+    public List<Integer> filterOptions(List<Integer> options, @Nullable Integer loaderMaxResult, MetaClass metaClass) {
+        Integer maxFetch = persistenceManager.getMaxFetchUI(metaClass.getName());
+        return doFilter(options, loaderMaxResult, maxFetch);
     }
 
     /**
@@ -142,5 +135,30 @@ public class PaginationDelegate {
 
     public Integer getMaxFetchValue(MetaClass metaClass) {
         return persistenceManager.getMaxFetchUI(metaClass.getName());
+    }
+
+    protected List<Integer> doFilter(List<Integer> options, @Nullable Integer loaderMaxResult, Integer maxFetch) {
+        List<Integer> result = new ArrayList<>();
+        for (Integer option : options) {
+            if (option > 0 && option < maxFetch) {
+                result.add(option);
+            }
+
+            if (option >= maxFetch && !result.contains(maxFetch)) {
+                result.add(maxFetch);
+            }
+        }
+
+        // if loader's max result is not in bounds
+        if (loaderMaxResult != null
+                && loaderMaxResult != Integer.MAX_VALUE
+                && loaderMaxResult >= maxFetch
+                && !result.contains(maxFetch)) {
+            result.add(maxFetch);
+        }
+
+        Collections.sort(result);
+
+        return result;
     }
 }

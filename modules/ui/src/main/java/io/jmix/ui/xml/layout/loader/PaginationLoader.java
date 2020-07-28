@@ -18,12 +18,14 @@ package io.jmix.ui.xml.layout.loader;
 
 import io.jmix.ui.component.Frame;
 import io.jmix.ui.component.Pagination;
+import io.jmix.ui.component.pagination.PaginationDelegate;
 import io.jmix.ui.model.BaseCollectionLoader;
 import io.jmix.ui.model.ScreenData;
 import io.jmix.ui.screen.UiControllerUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 
+import java.util.List;
 import java.util.Optional;
 
 public class PaginationLoader extends AbstractComponentLoader<Pagination> {
@@ -31,11 +33,14 @@ public class PaginationLoader extends AbstractComponentLoader<Pagination> {
     @Override
     public void createComponent() {
         resultComponent = factory.create(Pagination.NAME);
+        loadId(resultComponent, element);
     }
 
     @Override
     public void loadComponent() {
-        loadId(resultComponent, element);
+        assignXmlDescriptor(resultComponent, element);
+        assignFrame(resultComponent);
+
         loadWidth(resultComponent, element);
         loadHeight(resultComponent, element);
         loadStyleName(resultComponent, element);
@@ -45,8 +50,12 @@ public class PaginationLoader extends AbstractComponentLoader<Pagination> {
 
         loadShowMaxResults(element)
                 .ifPresent(resultComponent::setShowMaxResults);
+        loadShowNullMaxResult(element)
+                .ifPresent(resultComponent::setShowNullMaxResult);
         loadButtonsAlignment(element)
                 .ifPresent(resultComponent::setButtonsAlignment);
+        loadMaxResults(element)
+                .ifPresent(resultComponent::setMaxResultOptions);
 
         loadAutoLoad(element)
                 .ifPresent(resultComponent::setAutoLoad);
@@ -86,6 +95,23 @@ public class PaginationLoader extends AbstractComponentLoader<Pagination> {
         String maxResults = element.attributeValue("showMaxResults");
         if (StringUtils.isNotEmpty(maxResults)) {
             return Optional.of(Boolean.parseBoolean(maxResults));
+        }
+        return Optional.empty();
+    }
+
+    protected Optional<List<Integer>> loadMaxResults(Element element) {
+        String maxResults = element.attributeValue("maxResultValues");
+        if (StringUtils.isNotEmpty(maxResults)) {
+            PaginationDelegate delegate = beanLocator.get(PaginationDelegate.NAME);
+            return Optional.of(delegate.parseMaxResultsOptions(maxResults));
+        }
+        return Optional.empty();
+    }
+
+    protected Optional<Boolean> loadShowNullMaxResult(Element element) {
+        String showNullMaxResult = element.attributeValue("showNullMaxResult");
+        if (StringUtils.isNotEmpty(showNullMaxResult)) {
+            return Optional.of(Boolean.parseBoolean(showNullMaxResult));
         }
         return Optional.empty();
     }
