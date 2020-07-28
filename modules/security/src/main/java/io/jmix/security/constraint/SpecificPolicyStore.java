@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.context;
+package io.jmix.security.constraint;
 
-import io.jmix.core.context.SpecificOperationAccessContext;
+import io.jmix.security.model.ResourcePolicy;
 
-public class UiShowEntityInfoContext extends SpecificOperationAccessContext {
+import java.util.Collection;
+
+public interface SpecificPolicyStore {
+    Collection<ResourcePolicy> getSpecificResourcePolicies(String resourceName);
 }

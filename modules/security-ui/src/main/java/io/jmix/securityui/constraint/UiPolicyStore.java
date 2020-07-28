@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.context;
+package io.jmix.securityui.constraint;
 
-import io.jmix.core.context.SpecificOperationAccessContext;
+import io.jmix.security.model.ResourcePolicy;
 
-public class UiShowEntityInfoContext extends SpecificOperationAccessContext {
+import java.util.Collection;
+
+public interface UiPolicyStore {
+    Collection<ResourcePolicy> getScreenResourcePolicies(String windowId);
+
+    Collection<ResourcePolicy> getMenuResourcePolicies(String menuId);
 }

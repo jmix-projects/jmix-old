@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.context;
+package io.jmix.security.authentication;
 
-import io.jmix.core.context.SpecificOperationAccessContext;
+import io.jmix.security.model.RowLevelPolicy;
 
-public class UiShowEntityInfoContext extends SpecificOperationAccessContext {
+import java.util.Collection;
+
+public interface RowLevelPolicyIndex {
+    void indexAll(Collection<RowLevelPolicy> rowLevelPolicies);
 }

@@ -17,7 +17,6 @@
 package io.jmix.core;
 
 import io.jmix.core.constraint.AccessConstraint;
-import io.jmix.core.constraint.AccessConstraintsRegistry;
 import io.jmix.core.context.AccessContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,9 +24,10 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
-@Component()
+@Component(AccessManager.NAME)
 public class AccessManager {
     public static final String NAME = "core_AccessManager";
 
@@ -36,7 +36,7 @@ public class AccessManager {
 
     public class ConstraintsBuilder {
 
-        List<AccessConstraint<?>> constraints;
+        protected List<AccessConstraint<?>> constraints;
 
         public ConstraintsBuilder withAllRegistered() {
             constraints.addAll(registry.getConstraints());
@@ -48,18 +48,13 @@ public class AccessManager {
             return this;
         }
 
-        public ConstraintsBuilder withConstraint(Class<? extends AccessConstraint<?>> accessConstraintClass) {
-            constraints.add(instantiateConstraint(accessConstraintClass));
-            return this;
-        }
-
         public ConstraintsBuilder withConstraintInstance(AccessConstraint<?> constraint) {
             constraints.add(constraint);
             return this;
         }
 
-        public <C extends AccessContext> ConstraintsBuilder withConstraint(Class<C> contextClass, Function<C, Boolean> constraintFunction) {
-            constraints.add(instantiateConstraint(contextClass, constraintFunction));
+        public <C extends AccessContext> ConstraintsBuilder withConstraint(Class<C> contextClass, Consumer<C> constraintConsumer) {
+
             return this;
         }
 
@@ -68,23 +63,12 @@ public class AccessManager {
         }
     }
 
-    private AccessConstraint instantiateConstraint(Class<?> accessConstraintClass) {
-        try {
-            return (AccessConstraint) accessConstraintClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private <T extends AccessContext> AccessConstraint<T> instantiateConstraint(Class<T> contextClass, Function<T, Boolean> constraintFunction) {
-        return null;
-    }
-
     public ConstraintsBuilder constraintsBuilder() {
         return new ConstraintsBuilder();
     }
 
     public <T extends AccessContext> T applyConstraints(T context, Collection<AccessConstraint<?>> constraints) {
+        //noinspection unchecked
         constraints.stream()
                 .filter(constraint -> Objects.equals(constraint.getContextType(), context.getClass()))
                 .map(constraint -> (AccessConstraint<T>) constraint)

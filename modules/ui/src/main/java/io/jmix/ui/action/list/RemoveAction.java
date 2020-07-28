@@ -190,7 +190,7 @@ public class RemoveAction<E extends JmixEntity> extends SecuredListAction implem
 
         UiEntityContext entityContext = accessManager.applyRegisteredConstraints(new UiEntityContext(metaClass));
 
-        if (!entityContext.isRemovePermitted()) {
+        if (!entityContext.isDeletePermitted()) {
             return false;
         }
 

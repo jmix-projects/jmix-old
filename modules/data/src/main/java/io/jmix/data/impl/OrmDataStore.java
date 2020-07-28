@@ -33,7 +33,7 @@ import io.jmix.data.*;
 import io.jmix.data.event.EntityChangedEvent;
 import io.jmix.data.impl.context.CRUDEntityContext;
 import io.jmix.data.impl.context.InMemoryCRUDEntityContext;
-import io.jmix.data.impl.context.LoadValuesQueryContext;
+import io.jmix.data.impl.context.LoadValuesAccessContext;
 import io.jmix.data.impl.context.ReadEntityQueryContext;
 import io.jmix.data.persistence.DbmsSpecifics;
 import org.apache.commons.lang3.StringUtils;
@@ -217,9 +217,10 @@ public class OrmDataStore implements DataStore {
         } catch (RuntimeException e) {
             rollbackTransaction(txStatus);
             throw e;
-        } finally {
-            commitTransaction(txStatus);
         }
+
+        commitTransaction(txStatus);
+
 
         if (result != null) {
             entityAttributesEraser.eraseReferences(referencesCollector);
@@ -307,9 +308,10 @@ public class OrmDataStore implements DataStore {
         } catch (RuntimeException e) {
             rollbackTransaction(txStatus);
             throw e;
-        } finally {
-            commitTransaction(txStatus);
         }
+
+        commitTransaction(txStatus);
+
 
         if (referencesCollector != null) {
             entityAttributesEraser.eraseReferences(referencesCollector);
@@ -698,7 +700,8 @@ public class OrmDataStore implements DataStore {
                     + (contextQuery.getFirstResult() == 0 ? "" : ", first=" + contextQuery.getFirstResult())
                     + (contextQuery.getMaxResults() == 0 ? "" : ", max=" + contextQuery.getMaxResults()));
 
-        LoadValuesQueryContext queryContext = accessManager.applyConstraints(new LoadValuesQueryContext(contextQuery.getQueryString()), accessConstraints);
+        LoadValuesAccessContext queryContext = accessManager.applyConstraints(
+                new LoadValuesAccessContext(contextQuery.getQueryString(), queryTransformerFactory, metadata), accessConstraints);
         if (!queryContext.isPermitted()) {
             return Collections.emptyList();
         }
@@ -812,7 +815,7 @@ public class OrmDataStore implements DataStore {
 
         JmixQuery<?> query = queryBuilder.getQuery(em);
 
-        query = accessManager.applyConstraints(beanLocator.getPrototype(ReadEntityQueryContext.class, query, metaClass),
+        query = accessManager.applyConstraints(new ReadEntityQueryContext(query, metaClass, queryTransformerFactory),
                 context.getConstraints()).getResultQuery();
 
         if (contextQuery != null) {

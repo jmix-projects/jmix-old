@@ -17,7 +17,7 @@
 package io.jmix.dynattrui.impl;
 
 import io.jmix.core.*;
-import io.jmix.core.constraint.AccessConstraintsRegistry;
+import io.jmix.core.AccessConstraintsRegistry;
 import io.jmix.dynattr.DynAttrManager;
 import io.jmix.dynattr.DynamicAttributesState;
 import io.jmix.ui.builder.EditedEntityTransformer;

@@ -26,7 +26,7 @@ import io.jmix.ui.component.Frame;
 import io.jmix.ui.component.KeyCombination;
 import io.jmix.ui.component.Window;
 import io.jmix.ui.component.mainwindow.AppMenu;
-import io.jmix.ui.context.UiMenuItemContext;
+import io.jmix.ui.context.UiMenuContext;
 import io.jmix.ui.screen.FrameOwner;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -239,7 +239,7 @@ public class MenuBuilder {
         if (Strings.isNullOrEmpty(item.getId()) || item.isSeparator()) {
             return true;
         }
-        UiMenuItemContext menuItemContext = accessManager.applyRegisteredConstraints(new UiMenuItemContext(item));
+        UiMenuContext menuItemContext = accessManager.applyRegisteredConstraints(new UiMenuContext(item));
         return menuItemContext.isPermitted();
     }
 

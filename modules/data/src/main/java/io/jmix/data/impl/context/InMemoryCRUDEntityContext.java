@@ -38,6 +38,30 @@ public class InMemoryCRUDEntityContext implements AccessContext {
         return entityClass;
     }
 
+    public boolean isCreatePermitted(JmixEntity entity) {
+        return createPredicate == null || createPredicate.test(entity);
+    }
+
+    public Predicate<JmixEntity> createPredicate() {
+        return createPredicate;
+    }
+
+    public void addCreatePredicate(Predicate<JmixEntity> predicate) {
+        if (this.createPredicate == null) {
+            this.createPredicate = predicate;
+        } else {
+            this.createPredicate = this.createPredicate.and(predicate);
+        }
+    }
+
+    public boolean isReadPermitted(JmixEntity entity) {
+        return readPredicate == null || readPredicate.test(entity);
+    }
+
+    public Predicate<JmixEntity> readPredicate() {
+        return readPredicate;
+    }
+
     public void addReadPredicate(Predicate<JmixEntity> predicate) {
         if (this.readPredicate == null) {
             this.readPredicate = predicate;
@@ -46,35 +70,26 @@ public class InMemoryCRUDEntityContext implements AccessContext {
         }
     }
 
-    public Predicate<JmixEntity> createPredicate() {
-        return createPredicate;
-    }
-
-    public boolean isCreatePermitted(JmixEntity entity) {
-        return createPredicate == null || createPredicate.test(entity);
-    }
-
-    public Predicate<JmixEntity> readPredicate() {
-        return readPredicate;
-    }
-
-    public boolean isReadPermitted(JmixEntity entity) {
-        return readPredicate == null || readPredicate.test(entity);
+    public boolean isUpdatePermitted(JmixEntity entity) {
+        return updatePredicate == null || updatePredicate.test(entity);
     }
 
     public Predicate<JmixEntity> updatePredicate() {
         return updatePredicate;
     }
 
-    public boolean isUpdatePermitted(JmixEntity entity) {
-        return updatePredicate == null || updatePredicate.test(entity);
+    public void addUpdatePredicate(Predicate<JmixEntity> predicate) {
+
+    }
+
+    public boolean isDeletePermitted(JmixEntity entity) {
+        return deletePredicate == null || deletePredicate.test(entity);
     }
 
     public Predicate<JmixEntity> deletePredicate() {
         return deletePredicate;
     }
 
-    public boolean isDeletePermitted(JmixEntity entity) {
-        return deletePredicate == null || deletePredicate.test(entity);
+    public void addDeletePredicate(Predicate<JmixEntity> predicate) {
     }
 }

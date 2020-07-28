@@ -24,23 +24,49 @@ import io.jmix.core.metamodel.model.MetaClass;
 //security.isEntityOpPermitted(metaClass, EntityOp.CREATE);
 public class UiEntityContext implements AccessContext {
 
+    protected final MetaClass entityClass;
+    protected boolean createPermitted = true;
+    protected boolean viewPermitted = true;
+    protected boolean editPermitted = true;
+    protected boolean deletePermitted = true;
+
     public UiEntityContext(MetaClass entityClass) {
-
+        this.entityClass = entityClass;
     }
 
-    public boolean isViewPermitted() {
-        return false;
-    }
-
-    public boolean isEditPermitted() {
-        return false;
-    }
-
-    public boolean isRemovePermitted() {
-        return false;
+    public MetaClass getEntityClass() {
+        return entityClass;
     }
 
     public boolean isCreatePermitted() {
-        return false;
+        return createPermitted;
+    }
+
+    public void setCreateDenied() {
+        this.createPermitted = false;
+    }
+
+    public boolean isViewPermitted() {
+        return viewPermitted;
+    }
+
+    public void setViewDenied() {
+        this.viewPermitted = false;
+    }
+
+    public boolean isEditPermitted() {
+        return editPermitted;
+    }
+
+    public void setEditDenied() {
+        this.editPermitted = false;
+    }
+
+    public boolean isDeletePermitted() {
+        return deletePermitted;
+    }
+
+    public void setDeleteDenied() {
+        this.deletePermitted = false;
     }
 }

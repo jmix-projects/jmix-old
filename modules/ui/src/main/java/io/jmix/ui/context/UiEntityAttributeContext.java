@@ -20,28 +20,37 @@ import io.jmix.core.context.AccessContext;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 
-//security.isEntityAttrUpdatePermitted(metaPropertyPath)
-//security.isEntityAttrUpdatePermitted(metaClass, propertyId.toString()))
-
-//security.isEntityAttrReadPermitted(metaPropertyPath)
-//security.isEntityAttrReadPermitted(metaPropertyPath)
-//security.isEntityAttrReadPermitted(masterContainer.getEntityMetaClass(), property)
-//security.isEntityAttrReadPermitted(masterContainer.getEntityMetaClass(), property)
-//isEntityAttrReadPermitted(metaClass, propertyPath.toString()
 public class UiEntityAttributeContext implements AccessContext {
-    public UiEntityAttributeContext(MetaPropertyPath metaPropertyPath) {
+    protected final MetaPropertyPath propertyPath;
 
+    protected boolean viewPermitted = true;
+    protected boolean modifyPermitted = true;
+
+    public UiEntityAttributeContext(MetaPropertyPath propertyPath) {
+        this.propertyPath = propertyPath;
     }
 
-    public UiEntityAttributeContext(MetaClass metaClass, String property) {
+    public UiEntityAttributeContext(MetaClass metaClass, String attribute) {
+        this(metaClass.getPropertyPath(attribute));
+    }
 
+    public MetaPropertyPath getPropertyPath() {
+        return propertyPath;
     }
 
     public boolean isModifyPermitted() {
-        return false;
+        return modifyPermitted;
+    }
+
+    public void setModifyDenied() {
+        this.modifyPermitted = false;
     }
 
     public boolean isViewPermitted() {
-        return false;
+        return viewPermitted;
+    }
+
+    public void setViewDenied() {
+        this.viewPermitted = false;
     }
 }

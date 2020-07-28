@@ -16,6 +16,9 @@
 
 package io.jmix.data.impl.context;
 
+import io.jmix.core.Metadata;
+import io.jmix.core.QueryParser;
+import io.jmix.core.QueryTransformerFactory;
 import io.jmix.core.context.AccessContext;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
@@ -23,30 +26,39 @@ import io.jmix.core.metamodel.model.MetaPropertyPath;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-public class LoadValuesQueryContext implements AccessContext {
-    protected final String queryString;
+public class LoadValuesAccessContext implements AccessContext {
+    protected final QueryParser queryParser;
+    protected final Metadata metadata;
 
     protected boolean permitted = true;
     protected List<Integer> deniedSelectedIndexes;
 
-    public LoadValuesQueryContext(String queryString) {
-        this.queryString = queryString;
+    public LoadValuesAccessContext(String queryString,
+                                   QueryTransformerFactory transformerFactory,
+                                   Metadata metadata) {
+        this.queryParser = transformerFactory.parser(queryString);
+        this.metadata = metadata;
     }
 
     public Collection<MetaClass> getEntityClasses() {
         return null;
-
     }
 
     public Collection<MetaPropertyPath> getSelectedPropertyPaths() {
-        return null;
-
+        return queryParser.getQueryPaths().stream()
+                .filter(QueryParser.QueryPath::isSelectedPath)
+                .map(path -> metadata.getClass(path.getEntityName()).getPropertyPath(path.getPropertyPath()))
+                .collect(Collectors.toList());
     }
 
     public Collection<MetaPropertyPath> getAllPropertyPaths() {
-        return null;
-
+        return queryParser.getQueryPaths().stream()
+                .filter(path -> !path.isSelectedPath())
+                .map(path -> metadata.getClass(path.getEntityName()).getPropertyPath(path.getPropertyPath()))
+                .collect(Collectors.toList());
     }
 
     public void setDenied() {
@@ -61,8 +73,20 @@ public class LoadValuesQueryContext implements AccessContext {
         return deniedSelectedIndexes;
     }
 
-    public int getSelectedIndex(MetaPropertyPath propertyPath) {
-        return 0;
+    public List<Integer> getSelectedIndexes(MetaPropertyPath propertyPath) {
+        List<Integer> indexes = new ArrayList<>();
+        int index = 0;
+        for (QueryParser.QueryPath path : queryParser.getQueryPaths()) {
+            if (path.isSelectedPath()) {
+                MetaPropertyPath currentPropertyPath =
+                        metadata.getClass(path.getEntityName()).getPropertyPath(path.getPropertyPath());
+                if (Objects.equals(propertyPath, currentPropertyPath)) {
+                    indexes.add(index);
+                }
+                index++;
+            }
+        }
+        return indexes;
     }
 
     public void addDeniedSelectedIndex(int index) {
@@ -71,16 +95,6 @@ public class LoadValuesQueryContext implements AccessContext {
         }
         deniedSelectedIndexes.add(index);
     }
-
-    //        queryParser.getQueryPaths().stream()
-//                .filter(path -> !path.isSelectedPath())
-//                .forEach(path -> {
-//                    MetaClass metaClass = metadata.getClass(path.getEntityName());
-//                    MetaPropertyPath propertyPath = metaClass.getPropertyPath(path.getPropertyPath());
-//                    if (propertyPath == null) {
-//                        throw new IllegalStateException(String.format("query path '%s' is unresolved", path.getFullPath()));
-//                    }
-
 
 //    List<Integer> indexes = new ArrayList<>();
 

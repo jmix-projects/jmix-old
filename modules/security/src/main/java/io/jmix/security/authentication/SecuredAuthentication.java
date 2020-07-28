@@ -16,12 +16,12 @@
 
 package io.jmix.security.authentication;
 
-import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.security.authentication.CoreAuthentication;
 import io.jmix.security.model.ResourcePolicy;
 import io.jmix.security.model.RowLevelPolicy;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 /**
  * An authentication that stores security policies.
@@ -33,9 +33,11 @@ public interface SecuredAuthentication extends CoreAuthentication {
 
     Collection<ResourcePolicy> getResourcePolicies();
 
-    Collection<ResourcePolicy> getPoliciesByResourceAndType(String resource, String type);
-
     Collection<RowLevelPolicy> getRowLevelPolicies();
 
-    Collection<RowLevelPolicy> getRowLevelPoliciesByEntity(MetaClass metaClass);
+    <I extends ResourcePolicyIndex> Collection<ResourcePolicy> getResourcePoliciesByIndex(
+            Class<I> indexClass, Function<I, Collection<ResourcePolicy>> extractor);
+
+    <I extends RowLevelPolicyIndex> Collection<RowLevelPolicy> getRowLevelPoliciesByIndex(
+            Class<I> indexClass, Function<I, Collection<RowLevelPolicy>> extractor);
 }

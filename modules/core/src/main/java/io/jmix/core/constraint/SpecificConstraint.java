@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.context;
+package io.jmix.core.constraint;
 
-import io.jmix.core.context.SpecificOperationAccessContext;
+import io.jmix.core.context.AccessContext;
 
-public class UiShowEntityInfoContext extends SpecificOperationAccessContext {
+public interface SpecificConstraint<T extends AccessContext> extends AccessConstraint<T> {
 }

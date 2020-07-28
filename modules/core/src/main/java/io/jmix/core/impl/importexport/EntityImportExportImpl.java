@@ -17,7 +17,7 @@
 package io.jmix.core.impl.importexport;
 
 import io.jmix.core.*;
-import io.jmix.core.constraint.AccessConstraintsRegistry;
+import io.jmix.core.AccessConstraintsRegistry;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.entity.SecurityState;
 import io.jmix.core.entity.SoftDelete;

@@ -17,19 +17,15 @@
 package io.jmix.core.context;
 
 import io.jmix.core.metamodel.model.MetaClass;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component(UpdateEntityAttributeContext.NAME)
-@Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class UpdateEntityAttributeContext implements AccessContext {
-    public static final String NAME = "core_UpdateEntityAttributeContext";
+import java.util.HashSet;
+import java.util.Set;
 
+public class ImportEntityContext implements AccessContext {
     protected final MetaClass entityClass;
-    protected boolean permitted = true;
+    protected Set<String> deniedAttributes;
 
-    public UpdateEntityAttributeContext(MetaClass entityClass, String attribute) {
+    public ImportEntityContext(MetaClass entityClass) {
         this.entityClass = entityClass;
     }
 
@@ -37,11 +33,14 @@ public class UpdateEntityAttributeContext implements AccessContext {
         return entityClass;
     }
 
-    public boolean isPermitted() {
-        return permitted;
+    public boolean isImportPermitted(String attribute) {
+        return deniedAttributes == null || !deniedAttributes.contains(attribute);
     }
 
-    public void setDenied() {
-        this.permitted = false;
+    public void addDeniedAttribute(String name) {
+        if (deniedAttributes == null) {
+            deniedAttributes = new HashSet<>();
+        }
+        deniedAttributes.add(name);
     }
 }

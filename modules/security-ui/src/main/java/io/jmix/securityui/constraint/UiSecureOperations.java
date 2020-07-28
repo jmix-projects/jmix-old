@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.context;
+package io.jmix.securityui.constraint;
 
-import io.jmix.core.context.SpecificOperationAccessContext;
+public interface UiSecureOperations {
+    String NAME = "sec_UiSecureOperations";
 
-public class UiShowEntityInfoContext extends SpecificOperationAccessContext {
+    boolean isScreenPermitted(String windowId, UiPolicyStore policyStore);
+
+    boolean isMenuItemPermitted(String menuId, UiPolicyStore policyStore);
 }

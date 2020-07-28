@@ -26,7 +26,7 @@ import io.jmix.ui.component.ComponentsHelper;
 import io.jmix.ui.component.KeyCombination;
 import io.jmix.ui.component.Window;
 import io.jmix.ui.component.mainwindow.SideMenu;
-import io.jmix.ui.context.UiMenuItemContext;
+import io.jmix.ui.context.UiMenuContext;
 import io.jmix.ui.screen.FrameOwner;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -74,7 +74,7 @@ public class SideMenuBuilder {
 
         for (MenuItem menuItem : rootItems) {
             // AppMenu does not support separators
-            UiMenuItemContext menuItemContext = accessManager.applyRegisteredConstraints(new UiMenuItemContext(menuItem));
+            UiMenuContext menuItemContext = accessManager.applyRegisteredConstraints(new UiMenuContext(menuItem));
             if (menuItemContext.isPermitted() && !menuItem.isSeparator()) {
                 createMenuBarItem(window, menu, menuItem);
             }
@@ -221,7 +221,7 @@ public class SideMenuBuilder {
         if (Strings.isNullOrEmpty(item.getId()) || item.isSeparator()) {
             return true;
         }
-        UiMenuItemContext menuItemContext = accessManager.applyRegisteredConstraints(new UiMenuItemContext(item));
+        UiMenuContext menuItemContext = accessManager.applyRegisteredConstraints(new UiMenuContext(item));
         return menuItemContext.isPermitted();
     }
 

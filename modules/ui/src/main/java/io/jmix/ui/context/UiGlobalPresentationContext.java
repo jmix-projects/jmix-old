@@ -16,15 +16,7 @@
 
 package io.jmix.ui.context;
 
-import io.jmix.core.context.AccessContext;
+import io.jmix.core.context.SpecificOperationAccessContext;
 
-//isSpecificPermitted("cuba.gui.presentations.global")
-public class UiGlobalPresentationContext implements AccessContext {
-    protected boolean permitted = true;
-
-    public boolean isPermitted() {
-        return false;
-    }
-
-
+public class UiGlobalPresentationContext extends SpecificOperationAccessContext {
 }

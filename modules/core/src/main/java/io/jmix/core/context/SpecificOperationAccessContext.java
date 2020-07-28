@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.context;
+package io.jmix.core.context;
 
-import io.jmix.core.context.SpecificOperationAccessContext;
+public abstract class SpecificOperationAccessContext implements AccessContext {
+    protected boolean permitted = true;
 
-public class UiShowEntityInfoContext extends SpecificOperationAccessContext {
+    public void setDenied() {
+        permitted = false;
+    }
+
+    public boolean isPermitted() {
+        return permitted;
+    }
 }

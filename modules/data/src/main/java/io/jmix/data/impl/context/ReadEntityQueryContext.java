@@ -20,7 +20,7 @@ import java.util.function.Function;
  */
 public class ReadEntityQueryContext implements AccessContext {
 
-    protected QueryTransformerFactory queryTransformerFactory;
+    protected final QueryTransformerFactory queryTransformerFactory;
 
     protected final JmixQuery<?> originalQuery;
     protected final MetaClass entityClass;
@@ -40,9 +40,10 @@ public class ReadEntityQueryContext implements AccessContext {
         }
     }
 
-    public ReadEntityQueryContext(JmixQuery<?> originalQuery, MetaClass entityClass) {
+    public ReadEntityQueryContext(JmixQuery<?> originalQuery, MetaClass entityClass, QueryTransformerFactory transformerFactory) {
         this.originalQuery = originalQuery;
         this.entityClass = entityClass;
+        this.queryTransformerFactory = transformerFactory;
         this.singleResult = false;
     }
 

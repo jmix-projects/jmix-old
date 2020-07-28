@@ -20,10 +20,12 @@ import io.jmix.core.context.AccessContext;
 import io.jmix.core.metamodel.model.MetaClass;
 
 public class CRUDEntityContext implements AccessContext {
-    public static final String NAME = "data_ReadEntityContext";
 
     protected final MetaClass entityClass;
+    protected boolean createPermitted = true;
     protected boolean readPermitted = true;
+    protected boolean updatePermitted = true;
+    protected boolean deletePermitted = true;
 
     public CRUDEntityContext(MetaClass entityClass) {
         this.entityClass = entityClass;
@@ -34,10 +36,11 @@ public class CRUDEntityContext implements AccessContext {
     }
 
     public boolean isCreatePermitted() {
-        return false;
+        return createPermitted;
     }
 
     public void setCreateDenied() {
+        this.createPermitted = false;
     }
 
     public boolean isReadPermitted() {
@@ -49,13 +52,18 @@ public class CRUDEntityContext implements AccessContext {
     }
 
     public boolean isUpdatePermitted() {
-        return false;
+        return updatePermitted;
     }
 
     public void setUpdateDenied() {
+        this.updatePermitted = false;
     }
 
     public boolean isDeletePermitted() {
-        return false;
+        return deletePermitted;
+    }
+
+    public void setDeleteDenied() {
+        this.deletePermitted = false;
     }
 }

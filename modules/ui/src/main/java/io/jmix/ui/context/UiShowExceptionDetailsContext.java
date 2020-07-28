@@ -16,11 +16,7 @@
 
 package io.jmix.ui.context;
 
-import io.jmix.core.context.AccessContext;
+import io.jmix.core.context.SpecificOperationAccessContext;
 
-//security.isSpecificPermitted("cuba.gui.showExceptionDetails")
-public class UiShowExceptionDetailsContext implements AccessContext {
-    public boolean isPermitted() {
-        return true;
-    }
+public class UiShowExceptionDetailsContext extends SpecificOperationAccessContext {
 }

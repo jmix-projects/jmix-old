@@ -16,8 +16,8 @@
 
 package io.jmix.security.constraint;
 
-import io.jmix.core.constraint.EntityOperationConstraint;
-import io.jmix.data.impl.context.CRUDEntityContext;
+import io.jmix.core.constraint.SpecificConstraint;
+import io.jmix.core.context.SpecificOperationAccessContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -25,15 +25,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class CRUDEntityConstraint implements EntityOperationConstraint<CRUDEntityContext> {
-    public static final String NAME = "sec_CRUDEntityConstraint";
+public class SpecificConstraintImpl<T extends SpecificOperationAccessContext> implements SpecificConstraint<T> {
+    public static final String NAME = "sec_CommonSpecificConstraint";
 
-    protected EntityPolicyStore policyStore;
+    protected final Class<T> contextClass;
+    protected final String resourceName;
+
     protected SecureOperations secureOperations;
+    protected SpecificPolicyStore policyStore;
 
-    @Autowired
-    public void setPolicyStore(EntityPolicyStore policyStore) {
-        this.policyStore = policyStore;
+    public SpecificConstraintImpl(Class<T> contextClass, String resourceName) {
+        this.contextClass = contextClass;
+        this.resourceName = resourceName;
     }
 
     @Autowired
@@ -41,24 +44,20 @@ public class CRUDEntityConstraint implements EntityOperationConstraint<CRUDEntit
         this.secureOperations = secureOperations;
     }
 
-    @Override
-    public Class<CRUDEntityContext> getContextType() {
-        return CRUDEntityContext.class;
+    @Autowired
+    public void setPolicyStore(SpecificPolicyStore policyStore) {
+        this.policyStore = policyStore;
     }
 
     @Override
-    public void applyTo(CRUDEntityContext context) {
-        if (!secureOperations.isEntityCreatePermitted(context.getEntityClass(), policyStore)) {
-            context.setCreateDenied();
-        }
-        if (!secureOperations.isEntityReadPermitted(context.getEntityClass(), policyStore)) {
-            context.setReadDenied();
-        }
-        if (!secureOperations.isEntityUpdatePermitted(context.getEntityClass(), policyStore)) {
-            context.setUpdateDenied();
-        }
-        if (!secureOperations.isEntityDeletePermitted(context.getEntityClass(), policyStore)) {
-            context.setDeleteDenied();
+    public Class<T> getContextType() {
+        return contextClass;
+    }
+
+    @Override
+    public void applyTo(T context) {
+        if (secureOperations.isSpecificPermitted(resourceName, policyStore)) {
+            context.setDenied();
         }
     }
 }

@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-package io.jmix.security.constraint;
+package io.jmix.securityui.constraint;
 
 import io.jmix.core.constraint.EntityOperationConstraint;
-import io.jmix.data.impl.context.CRUDEntityContext;
+import io.jmix.security.constraint.SecureOperations;
+import io.jmix.security.constraint.EntityPolicyStore;
+import io.jmix.ui.context.UiEntityAttributeContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component(UiEntityAttributeConstraint.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class CRUDEntityConstraint implements EntityOperationConstraint<CRUDEntityContext> {
-    public static final String NAME = "sec_CRUDEntityConstraint";
+public class UiEntityAttributeConstraint implements EntityOperationConstraint<UiEntityAttributeContext> {
+    public static final String NAME = "sec_UiEntityAttributeConstraint";
 
     protected EntityPolicyStore policyStore;
-    protected SecureOperations secureOperations;
+    protected SecureOperations entityOperations;
 
     @Autowired
     public void setPolicyStore(EntityPolicyStore policyStore) {
@@ -37,28 +39,22 @@ public class CRUDEntityConstraint implements EntityOperationConstraint<CRUDEntit
     }
 
     @Autowired
-    public void setSecureOperations(SecureOperations secureOperations) {
-        this.secureOperations = secureOperations;
+    public void setEntityOperations(SecureOperations entityOperations) {
+        this.entityOperations = entityOperations;
     }
 
     @Override
-    public Class<CRUDEntityContext> getContextType() {
-        return CRUDEntityContext.class;
+    public Class<UiEntityAttributeContext> getContextType() {
+        return UiEntityAttributeContext.class;
     }
 
     @Override
-    public void applyTo(CRUDEntityContext context) {
-        if (!secureOperations.isEntityCreatePermitted(context.getEntityClass(), policyStore)) {
-            context.setCreateDenied();
+    public void applyTo(UiEntityAttributeContext context) {
+        if (!entityOperations.isEntityAttrUpdatePermitted(context.getPropertyPath(), policyStore)) {
+            context.setModifyDenied();
         }
-        if (!secureOperations.isEntityReadPermitted(context.getEntityClass(), policyStore)) {
-            context.setReadDenied();
-        }
-        if (!secureOperations.isEntityUpdatePermitted(context.getEntityClass(), policyStore)) {
-            context.setUpdateDenied();
-        }
-        if (!secureOperations.isEntityDeletePermitted(context.getEntityClass(), policyStore)) {
-            context.setDeleteDenied();
+        if (!entityOperations.isEntityAttrReadPermitted(context.getPropertyPath(), policyStore)) {
+            context.setViewDenied();
         }
     }
 }

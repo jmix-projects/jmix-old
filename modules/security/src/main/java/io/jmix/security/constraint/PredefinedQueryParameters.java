@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-package io.jmix.security.impl;
+package io.jmix.security.constraint;
 
 
 import io.jmix.core.security.CurrentAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
+@Component(PredefinedQueryParameters.NAME)
 public class PredefinedQueryParameters {
-    @Autowired
-    protected CurrentAuthentication currentAuthentication;
+    public static final String NAME = "sec_PredefinedQueryParameters";
 
     public static final String PARAM_SESSION_ATTR = "session$";
     public static final String PARAM_USER_LOGIN = "userLogin";
     public static final String PARAM_USER_ID = "userId";
+
+    @Autowired
+    protected CurrentAuthentication currentAuthentication;
 
     /**
      * Get a value of the query parameter provided by security authentication.
