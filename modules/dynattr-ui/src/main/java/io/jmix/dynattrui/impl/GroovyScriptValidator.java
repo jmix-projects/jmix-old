@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.component.validation;
+package io.jmix.dynattrui.impl;
 
 import io.jmix.core.BeanLocator;
 import io.jmix.core.Messages;
-import io.jmix.core.Resources;
 import io.jmix.core.common.util.ParamsMap;
 import io.jmix.core.metamodel.datatype.DatatypeRegistry;
 import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.ui.component.ValidationException;
+import io.jmix.ui.component.validation.AbstractValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scripting.ScriptEvaluator;
-import org.springframework.scripting.support.ResourceScriptSource;
 import org.springframework.scripting.support.StaticScriptSource;
 import org.springframework.stereotype.Component;
 
@@ -52,13 +51,9 @@ import java.util.Collections;
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class GroovyScriptValidator<T> extends AbstractValidator<T> {
 
-    public static final String NAME = "ui_GroovyScriptValidator";
-
-    protected Resources resources;
+    public static final String NAME = "dynattrui_GroovyScriptValidator";
 
     protected String validatorGroovyScript;
-
-    protected String scriptPath;
 
     protected ScriptEvaluator scriptEvaluator;
 
@@ -94,11 +89,6 @@ public class GroovyScriptValidator<T> extends AbstractValidator<T> {
         this.scriptEvaluator = scriptEvaluator;
     }
 
-    @Autowired
-    public void setResources(Resources resources) {
-        this.resources = resources;
-    }
-
     /**
      * @return a Groovy script
      */
@@ -115,37 +105,14 @@ public class GroovyScriptValidator<T> extends AbstractValidator<T> {
         this.validatorGroovyScript = validatorGroovyScript;
     }
 
-    /**
-     * @return a path to Groovy script
-     */
-    public String getScriptPath() {
-        return scriptPath;
-    }
-
-    /**
-     * Sets a path to Groovy script
-     *
-     * @param scriptPath path to Groovy script
-     */
-    public void setScriptPath(String scriptPath) {
-        this.scriptPath = scriptPath;
-    }
-
     @Override
     public void accept(T value) throws ValidationException {
         // consider null value is valid
         if (value == null) {
             return;
         }
-        Object scriptResult = null;
-        if (validatorGroovyScript != null) {
-            scriptResult = scriptEvaluator.evaluate(new StaticScriptSource(validatorGroovyScript),
-                    Collections.singletonMap("value", value));
-        } else if (scriptPath != null) {
-            scriptResult = scriptEvaluator.evaluate(new ResourceScriptSource(resources.getResource(scriptPath)),
-                    Collections.singletonMap("value", value));
-        }
-
+        Object scriptResult = scriptEvaluator.evaluate(new StaticScriptSource(validatorGroovyScript),
+                Collections.singletonMap("value", value));
         if (scriptResult != null) {
             setMessage(scriptResult.toString());
             fireValidationException(value);
