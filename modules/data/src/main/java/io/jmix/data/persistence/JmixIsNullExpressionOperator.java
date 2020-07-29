@@ -25,6 +25,7 @@ import org.eclipse.persistence.internal.helper.ClassConstants;
 import org.eclipse.persistence.internal.helper.CubaUtil;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Vector;
 
 public class JmixIsNullExpressionOperator extends ExpressionOperator {
@@ -46,14 +47,12 @@ public class JmixIsNullExpressionOperator extends ExpressionOperator {
 
     @Override
     public void printCollection(Vector items, ExpressionSQLPrinter printer) {
-        if (items.size() == 1
-                && items.get(0) instanceof QueryKeyExpression
-        ) {
+        if (items.size() == 1 && items.get(0) instanceof QueryKeyExpression && !CubaUtil.isSoftDeletion()) {
             //noinspection unchecked
             Class<? extends JmixEntity> clazz = ((QueryKeyExpression) items.get(0)).getContainingDescriptor().getJavaClass();
 
             String deletedDateFieldName = metadataTools.getDeletedDateProperty(clazz);
-            if (deletedDateFieldName != null && deletedDateFieldName.equals(((QueryKeyExpression) items.get(0)).getName()) && !CubaUtil.isSoftDeletion()) {
+            if (Objects.equals(deletedDateFieldName, ((QueryKeyExpression) items.get(0)).getName())) {
                 try {
                     printer.getWriter().write("(0=0)");
                     return;

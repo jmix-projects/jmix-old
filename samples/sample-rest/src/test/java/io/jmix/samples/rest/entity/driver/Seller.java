@@ -16,11 +16,10 @@
 
 package io.jmix.samples.rest.entity.driver;
 
-import io.jmix.core.UuidProvider;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
-import io.jmix.core.entity.HasUuid;
 import io.jmix.core.entity.Versioned;
+import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.data.entity.BaseLongIdEntity;
 import org.springframework.data.annotation.CreatedBy;
@@ -36,12 +35,13 @@ import java.util.UUID;
 
 @Entity(name = "ref$Seller")
 @Table(name = "REF_SELLER")
-public class Seller extends BaseLongIdEntity implements Versioned, HasUuid {
+public class Seller extends BaseLongIdEntity implements Versioned {
 
     private static final long serialVersionUID = 3238417347166814388L;
 
     @Column(name = "UUID")
-    private UUID uuid = UuidProvider.createUuid();
+    @JmixGeneratedValue
+    private UUID uuid;
 
     @Version
     @Column(name = "VERSION")
@@ -171,12 +171,10 @@ public class Seller extends BaseLongIdEntity implements Versioned, HasUuid {
         this.contractEndDate = contractEndDate;
     }
 
-    @Override
     public UUID getUuid() {
         return uuid;
     }
 
-    @Override
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
