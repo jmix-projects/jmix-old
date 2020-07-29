@@ -20,14 +20,13 @@ import io.jmix.core.session.SessionData;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.Enumeration;
 
 @Component(SessionData.NAME)
 @Scope(value = WebApplicationContext.SCOPE_SESSION)

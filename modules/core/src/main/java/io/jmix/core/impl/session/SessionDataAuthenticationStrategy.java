@@ -38,7 +38,7 @@ public class SessionDataAuthenticationStrategy implements SessionAuthenticationS
             sessionData.setAuthentication(authentication);
 
             sessionData.setSessionId(session.getId());
-            sessionData.setAttribute(SessionData.NAME, sessionData);
+            session.setAttribute(SessionData.NAME, sessionData);
         }
     }
 }
