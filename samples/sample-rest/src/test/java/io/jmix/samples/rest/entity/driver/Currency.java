@@ -17,11 +17,10 @@
 package io.jmix.samples.rest.entity.driver;
 
 import io.jmix.core.JmixEntity;
-import io.jmix.core.UuidProvider;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
-import io.jmix.core.entity.HasUuid;
 import io.jmix.core.entity.Versioned;
+import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.validation.group.RestApiChecks;
 import io.jmix.samples.rest.validation.TestCurrencyClassConstraint;
@@ -39,7 +38,7 @@ import java.util.UUID;
 @TestCurrencyClassConstraint(groups = RestApiChecks.class)
 @Entity(name = "ref$Currency")
 @Table(name = "REF_CURRENCY")
-public class Currency implements JmixEntity, Versioned, HasUuid {
+public class Currency implements JmixEntity, Versioned {
     private static final long serialVersionUID = 6912352294666689769L;
 
     @Id
@@ -50,7 +49,8 @@ public class Currency implements JmixEntity, Versioned, HasUuid {
     protected String code;
 
     @Column(name = "UUID")
-    private UUID uuid = UuidProvider.createUuid();
+    @JmixGeneratedValue
+    private UUID uuid;
 
     @Version
     @Column(name = "VERSION")
@@ -93,12 +93,10 @@ public class Currency implements JmixEntity, Versioned, HasUuid {
         code = id;
     }
 
-    @Override
     public UUID getUuid() {
         return uuid;
     }
 
-    @Override
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
