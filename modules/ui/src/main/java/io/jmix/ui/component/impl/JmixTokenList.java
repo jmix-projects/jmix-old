@@ -30,6 +30,7 @@ import io.jmix.ui.widget.JmixScrollBoxLayout;
 import io.jmix.ui.widget.JmixTokenListLabel;
 import org.apache.commons.collections4.CollectionUtils;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class JmixTokenList<T extends JmixEntity> extends CustomField<Collection<T>> {
@@ -48,11 +49,14 @@ public class JmixTokenList<T extends JmixEntity> extends CustomField<Collection<
     protected static final String POSITION_TOP_STYLENAME = "position-top";
     protected static final String POSITION_BOTTOM_STYLENAME = "position-bottom";
 
-    protected WebTokenList<T> owner;
+    @SuppressWarnings("UnusedAssignment")
+    protected WebTokenList<T> owner = null;
 
-    protected CssLayout composition;
+    @SuppressWarnings("UnusedAssignment")
+    protected CssLayout composition = null;
     protected CssLayout tokenContainerWrapper;
-    protected JmixScrollBoxLayout tokenContainer;
+    @SuppressWarnings("UnusedAssignment")
+    protected JmixScrollBoxLayout tokenContainer = null;
     protected CssLayout editor;
 
     protected Map<T, JmixTokenListLabel> itemComponents = new HashMap<>();
@@ -118,7 +122,7 @@ public class JmixTokenList<T extends JmixEntity> extends CustomField<Collection<
         super.setWidth(width, unit);
 
         // workaround for custom field call from constructor
-        if (composition != null && tokenContainer != null) {
+        if (owner != null && composition != null && tokenContainer != null) {
             if (width > 0) {
                 composition.setWidth("100%");
                 editor.setWidth("100%");
@@ -265,7 +269,7 @@ public class JmixTokenList<T extends JmixEntity> extends CustomField<Collection<
         }
     }
 
-    public void refreshTokens(Collection<T> newValue) {
+    public void refreshTokens(@Nullable Collection<T> newValue) {
         tokenContainer.removeAllComponents();
 
         if (newValue == null) {
@@ -349,7 +353,7 @@ public class JmixTokenList<T extends JmixEntity> extends CustomField<Collection<
         }
     }
 
-    public void refreshClickListeners(TokenList.ItemClickListener listener) {
+    public void refreshClickListeners(@Nullable TokenList.ItemClickListener listener) {
         Collection<T> value;
 
         if (owner.getValueSource() != null) {
@@ -417,8 +421,8 @@ public class JmixTokenList<T extends JmixEntity> extends CustomField<Collection<
         }
     }
 
-    protected void setTokenStyle(JmixTokenListLabel label, Object itemId) {
-        if (owner.tokenStyleGenerator != null) {
+    protected void setTokenStyle(JmixTokenListLabel label, @Nullable Object itemId) {
+        if (owner.getTokenStyleGenerator() != null) {
             String styleName = owner.getTokenStyleGenerator().apply(itemId);
             if (styleName != null && !styleName.isEmpty()) {
                 label.setStyleName(styleName);

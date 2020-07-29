@@ -18,13 +18,13 @@
 package com.haulmont.cuba.gui.components.filter.condition;
 
 import com.google.common.base.Strings;
+import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.Messages;
 import com.haulmont.cuba.gui.components.filter.ConditionParamBuilder;
 import com.haulmont.cuba.gui.components.filter.Param;
 import com.haulmont.cuba.gui.components.filter.descriptor.AbstractConditionDescriptor;
 import com.haulmont.cuba.gui.components.filter.operationedit.AbstractOperationEditor;
 import com.haulmont.cuba.gui.components.filter.operationedit.DynamicAttributesOperationEditor;
-import io.jmix.core.AppBeans;
 import io.jmix.core.MessageTools;
 import io.jmix.core.QueryUtils;
 import io.jmix.core.entity.EntityValues;
@@ -48,7 +48,7 @@ import java.util.regex.Pattern;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-@ModelObject(name = "sec$DynamicAttributesCondition")
+@ModelObject(name = "sec$DynamicAttributesCondition", annotatedPropertiesOnly = true)
 @SystemLevel
 public class DynamicAttributesCondition extends AbstractCondition {
 

@@ -39,7 +39,6 @@ import io.jmix.ui.widget.data.AggregationContainer;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.text.ParseException;
 import java.util.*;
@@ -64,7 +63,7 @@ public class WebGroupTable<E extends JmixEntity> extends WebAbstractTable<JmixGr
     }
 
     @Override
-    public void setItems(TableItems<E> tableItems) {
+    public void setItems(@Nullable TableItems<E> tableItems) {
         if (tableItems != null &&
                 !(tableItems instanceof GroupTableItems)) {
             throw new IllegalArgumentException("GroupTable supports only GroupTableItems data binding");
@@ -291,7 +290,7 @@ public class WebGroupTable<E extends JmixEntity> extends WebAbstractTable<JmixGr
         groupBy(new Object[]{});
     }
 
-    protected boolean uselessGrouping(Object[] newGroupProperties) {
+    protected boolean uselessGrouping(@Nullable Object[] newGroupProperties) {
         return (newGroupProperties == null || newGroupProperties.length == 0) &&
                 component.getGroupProperties().isEmpty();
     }
@@ -302,7 +301,6 @@ public class WebGroupTable<E extends JmixEntity> extends WebAbstractTable<JmixGr
         setColumnGroupAllowed(column, allowed);
     }
 
-    @Nonnull
     protected Column getColumnNN(String columnId) {
         Column column = getColumn(columnId);
         if (column == null) {
@@ -397,8 +395,9 @@ public class WebGroupTable<E extends JmixEntity> extends WebAbstractTable<JmixGr
         this.showItemsCountForGroup = showItemsCountForGroup;
     }
 
+    @Nullable
     @Override
-    protected String getGeneratedCellStyle(Object itemId, Object propertyId) {
+    protected String getGeneratedCellStyle(Object itemId, @Nullable Object propertyId) {
         if (itemId instanceof GroupInfo) {
             GroupInfo groupInfo = (GroupInfo) itemId;
 
@@ -466,7 +465,7 @@ public class WebGroupTable<E extends JmixEntity> extends WebAbstractTable<JmixGr
     }
 
     @Override
-    public void setAggregationDistributionProvider(AggregationDistributionProvider<E> distributionProvider) {
+    public void setAggregationDistributionProvider(@Nullable AggregationDistributionProvider<E> distributionProvider) {
         this.distributionProvider = distributionProvider;
 
         component.setAggregationDistributionProvider(this::distributeGroupAggregation);
@@ -531,6 +530,7 @@ public class WebGroupTable<E extends JmixEntity> extends WebAbstractTable<JmixGr
         }
     }
 
+    @Nullable
     protected String formatGroupPropertyValue(GroupInfo<MetaPropertyPath> groupId, @Nullable Object value) {
         if (value == null) {
             return "";
@@ -540,7 +540,7 @@ public class WebGroupTable<E extends JmixEntity> extends WebAbstractTable<JmixGr
         Table.Column<E> column = columns.get(propertyPath);
         if (column != null) {
             if (column.getFormatter() != null) {
-                return column.getFormatter().apply(value);
+                return (String) column.getFormatter().apply(value);
             } else if (column.getXmlDescriptor() != null) {
                 String captionProperty = column.getXmlDescriptor().attributeValue("captionProperty"); // vaadin8 move to Column
                 if (StringUtils.isNotEmpty(captionProperty)) {

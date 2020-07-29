@@ -33,6 +33,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.LegacyComponent;
 import com.vaadin.v7.ui.VerticalLayout;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -71,8 +72,7 @@ public class DDVerticalLayout extends VerticalLayout
             // Get over which component (if any) the drop was made and the
             // index of it
             if (getData(Constants.DROP_DETAIL_TO) != null) {
-                index = Integer
-                        .valueOf(getData(Constants.DROP_DETAIL_TO).toString());
+                index = Integer.parseInt(getData(Constants.DROP_DETAIL_TO).toString());
                 if (index >= 0 && index < components.size()) {
                     over = components.get(index);
                 }
@@ -275,11 +275,12 @@ public class DDVerticalLayout extends VerticalLayout
     }
 
     @Override
-    public void setDragImageProvider(DragImageProvider provider) {
+    public void setDragImageProvider(@Nullable DragImageProvider provider) {
         this.dragImageProvider = provider;
         markAsDirty();
     }
 
+    @Nullable
     @Override
     public DragImageProvider getDragImageProvider() {
         return this.dragImageProvider;

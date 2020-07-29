@@ -16,6 +16,7 @@
 
 package io.jmix.ui.settings.component;
 
+import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
@@ -35,14 +36,16 @@ public class TableSettings implements ComponentSettings, ComponentSettings.HasSe
     public TableSettings() {
     }
 
+    @Nullable
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@Nullable String id) {
         this.id = id;
     }
 
+    @Nullable
     public Boolean getTextSelection() {
         return textSelection;
     }
@@ -51,19 +54,21 @@ public class TableSettings implements ComponentSettings, ComponentSettings.HasSe
         this.textSelection = textPresentation;
     }
 
+    @Nullable
     public String getSortProperty() {
         return sortProperty;
     }
 
-    public void setSortProperty(String sortProperty) {
+    public void setSortProperty(@Nullable String sortProperty) {
         this.sortProperty = sortProperty;
     }
 
+    @Nullable
     public Boolean getSortAscending() {
         return sortAscending;
     }
 
-    public void setSortAscending(Boolean sortAscending) {
+    public void setSortAscending(@Nullable Boolean sortAscending) {
         this.sortAscending = sortAscending;
     }
 
@@ -76,6 +81,7 @@ public class TableSettings implements ComponentSettings, ComponentSettings.HasSe
         this.presentationId = presentationId;
     }
 
+    @Nullable
     public List<ColumnSettings> getColumns() {
         return columns;
     }
@@ -98,6 +104,7 @@ public class TableSettings implements ComponentSettings, ComponentSettings.HasSe
             this.id = id;
         }
 
+        @Nullable
         public Integer getWidth() {
             return width;
         }
@@ -106,6 +113,7 @@ public class TableSettings implements ComponentSettings, ComponentSettings.HasSe
             this.width = width;
         }
 
+        @Nullable
         public Boolean getVisible() {
             return visible;
         }

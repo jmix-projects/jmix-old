@@ -16,18 +16,18 @@
 
 package io.jmix.ui.action;
 
-import io.jmix.core.AppBeans;
 import io.jmix.core.JmixEntity;
-import io.jmix.core.security.ConstraintOperationType;
-import io.jmix.core.security.Security;
+import io.jmix.ui.action.list.SecuredListAction;
 import io.jmix.ui.component.ListComponent;
+
+import javax.annotation.Nullable;
 
 /**
  * Standard action that changes enabled property depending on selection of a bound {@link ListComponent}.
  * <br>
  * You can use fluent API to create instances of ItemTrackingAction and assign handlers to them:
  * <pre>{@code
- *     Action action = new ItemTrackingAction("moveToTrash")
+ *     Action action = actions.create(ItemTrackingAction.class, "moveToTrash")
  *             .withCaption("Move to trash")
  *             .withIcon("icons/trash.png")
  *             .withHandler(event -> {
@@ -36,19 +36,21 @@ import io.jmix.ui.component.ListComponent;
  *     docsTable.addAction(action);
  * }</pre>
  */
-public class ItemTrackingAction extends ListAction implements Action.HasSecurityConstraint {
+@ActionType(ItemTrackingAction.ID)
+public class ItemTrackingAction extends SecuredListAction {
 
-    protected ConstraintOperationType constraintOperationType;
-    protected String constraintCode;
+    public static final String ID = "itemTracking";
 
-    protected Security security = AppBeans.get(Security.NAME);
+    public ItemTrackingAction() {
+        this(ID);
+    }
 
     public ItemTrackingAction(String id) {
         this(null, id);
     }
 
-    public ItemTrackingAction(ListComponent target, String id) {
-        super(id, null);
+    public ItemTrackingAction(@Nullable ListComponent target, String id) {
+        super(id);
 
         this.target = target;
     }
@@ -77,31 +79,9 @@ public class ItemTrackingAction extends ListAction implements Action.HasSecurity
             } else {
                 isPermitted = security.isPermitted(singleSelected, constraintOperationType);
             }
-            if (!isPermitted) {
-                return false;
-            }
+            return isPermitted;
         }
 
         return true;
-    }
-
-    @Override
-    public void setConstraintOperationType(ConstraintOperationType constraintOperationType) {
-        this.constraintOperationType = constraintOperationType;
-    }
-
-    @Override
-    public ConstraintOperationType getConstraintOperationType() {
-        return constraintOperationType;
-    }
-
-    @Override
-    public void setConstraintCode(String constraintCode) {
-        this.constraintCode = constraintCode;
-    }
-
-    @Override
-    public String getConstraintCode() {
-        return constraintCode;
     }
 }

@@ -33,7 +33,7 @@ public class EmptyGroupTableItems<E extends JmixEntity> extends EmptyTableItems<
     }
 
     @Override
-    public void groupBy(Object[] properties) {
+    public void groupBy(@Nullable Object[] properties) {
         // do nothing
     }
 
@@ -73,11 +73,13 @@ public class EmptyGroupTableItems<E extends JmixEntity> extends EmptyTableItems<
         return Collections.emptyList();
     }
 
+    @Nullable
     @Override
     public Object getGroupProperty(GroupInfo groupId) {
         return null;
     }
 
+    @Nullable
     @Override
     public Object getGroupPropertyValue(GroupInfo groupId) {
         return null;
@@ -108,33 +110,37 @@ public class EmptyGroupTableItems<E extends JmixEntity> extends EmptyTableItems<
         return false;
     }
 
+    @Nullable
     @Override
-    public Object nextItemId(Object itemId) {
+    public Object nextItemId(@Nullable Object itemId) {
         return null;
     }
 
+    @Nullable
     @Override
-    public Object prevItemId(Object itemId) {
+    public Object prevItemId(@Nullable Object itemId) {
         return null;
     }
 
+    @Nullable
     @Override
     public Object firstItemId() {
         return null;
     }
 
+    @Nullable
     @Override
     public Object lastItemId() {
         return null;
     }
 
     @Override
-    public boolean isFirstId(Object itemId) {
+    public boolean isFirstId(@Nullable Object itemId) {
         return false;
     }
 
     @Override
-    public boolean isLastId(Object itemId) {
+    public boolean isLastId(@Nullable Object itemId) {
         return false;
     }
 

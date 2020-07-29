@@ -23,8 +23,11 @@
                     allowCommit="false"
                     view="_local"/>
     </dsContext>
-    <layout>
+    <layout expand="expander" spacing="true">
         <textField datasource="userDs"
                    property="name"/>
+        <button id="btButton" caption="Run Background Task" invoke="runBackgroundTask"/>
+        <button id="btpButton" caption="Run Background Task With Progress" invoke="runBackgroundTaskWithProgress"/>
+        <vbox id="expander"/>
     </layout>
 </window>

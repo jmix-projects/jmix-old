@@ -74,13 +74,15 @@ public interface Tree<E extends JmixEntity> extends ListComponent<E>, HasButtons
     String getHierarchyProperty();
 
     @Override
+    @Nullable
     TreeItems<E> getItems();
-    void setItems(TreeItems<E> treeItems);
+    void setItems(@Nullable TreeItems<E> treeItems);
 
     /**
      * Assign action to be executed on double click inside a tree node.
      */
-    void setItemClickAction(Action action);
+    void setItemClickAction(@Nullable Action action);
+    @Nullable
     Action getItemClickAction();
 
     /**
@@ -128,7 +130,7 @@ public interface Tree<E extends JmixEntity> extends ListComponent<E>, HasButtons
     /**
      * Set the icon provider for the tree.
      */
-    void setIconProvider(Function<? super E, String> iconProvider);
+    void setIconProvider(@Nullable Function<? super E, String> iconProvider);
 
     /**
      * Repaint UI representation of the tree including style providers and icon providers without refreshing the tree data.
@@ -138,10 +140,11 @@ public interface Tree<E extends JmixEntity> extends ListComponent<E>, HasButtons
     /**
      * Set action to be executed on Enter key press.
      */
-    void setEnterPressAction(Action action);
+    void setEnterPressAction(@Nullable Action action);
     /**
      * @return Enter key press action.
      */
+    @Nullable
     Action getEnterPressAction();
 
     /**
@@ -188,7 +191,7 @@ public interface Tree<E extends JmixEntity> extends ListComponent<E>, HasButtons
      * @param provider the description generator to use or {@code null} to remove a
      *                  previously set provider if any
      */
-    void setDescriptionProvider(Function<? super E, String> provider);
+    void setDescriptionProvider(@Nullable Function<? super E, String> provider);
 
     /**
      * Sets the description generator that is used for generating HTML tooltip
@@ -198,13 +201,14 @@ public interface Tree<E extends JmixEntity> extends ListComponent<E>, HasButtons
      *                    previously set provider if any
      * @param contentMode the content mode for row tooltips
      */
-    void setDescriptionProvider(Function<? super E, String> provider, ContentMode contentMode);
+    void setDescriptionProvider(@Nullable Function<? super E, String> provider, ContentMode contentMode);
 
     /**
      * Gets the item description generator.
      *
      * @return the item description generator
      */
+    @Nullable
     Function<E, String> getDescriptionProvider();
 
     /**
@@ -238,7 +242,7 @@ public interface Tree<E extends JmixEntity> extends ListComponent<E>, HasButtons
      *
      * @param generator the details generator to set
      */
-    void setDetailsGenerator(Tree.DetailsGenerator<? super E> generator);
+    void setDetailsGenerator(@Nullable Tree.DetailsGenerator<? super E> generator);
 
     /**
      * Checks whether details are visible for the given item.

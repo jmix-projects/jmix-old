@@ -15,8 +15,6 @@
  */
 package io.jmix.ui.component.impl;
 
-import io.jmix.core.DataManager;
-import io.jmix.core.LoadContext;
 import com.vaadin.shared.Registration;
 import io.jmix.core.*;
 import io.jmix.core.common.event.Subscription;
@@ -36,9 +34,9 @@ import io.jmix.ui.widget.JmixRowsCount;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -61,6 +59,9 @@ public class WebRowsCount extends WebAbstractComponent<JmixRowsCount> implements
 
     @Autowired
     protected DataManager dataManager;
+
+    @Autowired
+    protected QueryTransformerFactory queryTransformerFactory;
 
     protected boolean refreshing;
     protected State state;
@@ -143,6 +144,7 @@ public class WebRowsCount extends WebAbstractComponent<JmixRowsCount> implements
             onLastClickRegistration.remove();
     }
 
+    @Nullable
     @Override
     public ListComponent getOwner() {
         if (target instanceof ListComponent) {
@@ -152,12 +154,13 @@ public class WebRowsCount extends WebAbstractComponent<JmixRowsCount> implements
     }
 
     @Override
-    public void setOwner(ListComponent owner) {
+    public void setOwner(@Nullable ListComponent owner) {
         if (owner instanceof RowsCountTarget) {
             this.target = (RowsCountTarget) owner;
         }
     }
 
+    @Nullable
     @Override
     public RowsCountTarget getRowsCountTarget() {
         return target;
@@ -211,13 +214,14 @@ public class WebRowsCount extends WebAbstractComponent<JmixRowsCount> implements
         initButtonListeners();
     }
 
+    @Nullable
     @Override
     public Function<DataLoadContext, Long> getTotalCountDelegate() {
         return totalCountDelegate;
     }
 
     @Override
-    public void setTotalCountDelegate(Function<DataLoadContext, Long> countDelegate) {
+    public void setTotalCountDelegate(@Nullable Function<DataLoadContext, Long> countDelegate) {
         this.totalCountDelegate = countDelegate;
     }
 
@@ -590,7 +594,7 @@ public class WebRowsCount extends WebAbstractComponent<JmixRowsCount> implements
             } else if (loader instanceof KeyValueCollectionLoader) {
                 ValueLoadContext context = ((KeyValueCollectionLoader) loader).createLoadContext();
                 if (totalCountDelegate == null) {
-                    QueryTransformer transformer = QueryTransformerFactory.createTransformer(context.getQuery().getQueryString());
+                    QueryTransformer transformer = queryTransformerFactory.transformer(context.getQuery().getQueryString());
                     // TODO it doesn't work for query containing scalars in select
                     transformer.replaceWithCount();
                     context.getQuery().setQueryString(transformer.getResult());

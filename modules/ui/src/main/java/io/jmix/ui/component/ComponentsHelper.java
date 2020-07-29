@@ -22,7 +22,6 @@ import io.jmix.ui.sys.ValuePathHelper;
 import org.apache.commons.collections4.iterators.ReverseListIterator;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
@@ -169,6 +168,7 @@ public abstract class ComponentsHelper {
         return getComponentByIterationInternal(container.getOwnComponents(), id);
     }
 
+    @Nullable
     private static Component getComponentByIterationInternal(Collection<Component> components, String id) {
         for (Component component : components) {
             if (id.equals(component.getId())) {
@@ -266,7 +266,9 @@ public abstract class ComponentsHelper {
                 if (workArea.getState() == AppWorkArea.State.INITIAL_LAYOUT) {
                     VBoxLayout initialLayout = workArea.getInitialLayout();
 
-                    __walkComponents(initialLayout, visitor, path);
+                    if (initialLayout != null) {
+                        __walkComponents(initialLayout, visitor, path);
+                    }
                 }
             }
         }
@@ -321,7 +323,6 @@ public abstract class ComponentsHelper {
         return null;
     }
 
-    @Nonnull
     public static Window getWindowNN(Component.BelongToFrame component) {
         Window window = getWindow(component);
 

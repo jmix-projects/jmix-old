@@ -17,6 +17,7 @@ package io.jmix.ui.component;
 
 import io.jmix.core.DataLoadContext;
 
+import javax.annotation.Nullable;
 import java.util.EventObject;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -51,16 +52,18 @@ public interface RowsCount extends Component.BelongToFrame {
      * @return a component that displays data from the same datasource, usually a {@link Table}. Can be null.
      */
     @Deprecated
+    @Nullable
     ListComponent getOwner();
     /**
      * @deprecated Use {@link #setRowsCountTarget(RowsCountTarget)} instead.
      */
     @Deprecated
-    void setOwner(ListComponent owner);
+    void setOwner(@Nullable ListComponent owner);
 
     /**
      * @return a component that displays data, usually a {@link Table}. Can be null.
      */
+    @Nullable
     RowsCountTarget getRowsCountTarget();
     void setRowsCountTarget(RowsCountTarget target);
 
@@ -70,12 +73,13 @@ public interface RowsCount extends Component.BelongToFrame {
     /**
      * @return delegate which is used to get the total number of rows when user clicks "total count" or "last page".
      */
+    @Nullable
     Function<DataLoadContext, Long> getTotalCountDelegate();
 
     /**
      * Sets delegate which is used to get the total number of rows when user clicks "total count" or "last page".
      */
-    void setTotalCountDelegate(Function<DataLoadContext, Long> delegate);
+    void setTotalCountDelegate(@Nullable Function<DataLoadContext, Long> delegate);
 
     /**
      * Event that is fired before refreshing the datasource when the user clicks next, previous, etc.

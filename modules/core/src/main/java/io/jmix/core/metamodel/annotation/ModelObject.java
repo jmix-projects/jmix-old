@@ -20,8 +20,21 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Indicates that the annotated class must be represented in the metadata.
+ */
 @Target({java.lang.annotation.ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ModelObject {
-    String name();
+
+    /**
+     * Name of the class in the metadata.
+     */
+    String name() default "";
+
+    /**
+     * By default, all properties of the class are included in metadata. Set this attribute to true in order to include
+     * only properties explicitly annotated with {@link ModelProperty}.
+     */
+    boolean annotatedPropertiesOnly() default false;
 }

@@ -75,6 +75,7 @@ public class ContainerTableItems<E extends JmixEntity> implements EntityTableIte
                 return ContainerTableItems.this.getItem(itemId);
             }
 
+            @Nullable
             @Override
             public Object getItemValue(MetaPropertyPath property, Object itemId) {
                 return ContainerTableItems.this.getItemValue(itemId, property);
@@ -130,6 +131,7 @@ public class ContainerTableItems<E extends JmixEntity> implements EntityTableIte
         }
     }
 
+    @Nullable
     @Override
     public Object getItemValue(Object itemId, Object propertyId) {
         MetaPropertyPath propertyPath = (MetaPropertyPath) propertyId;
@@ -196,13 +198,15 @@ public class ContainerTableItems<E extends JmixEntity> implements EntityTableIte
         return events.subscribe(SelectedItemChangeEvent.class, (Consumer) listener);
     }
 
+    @Nullable
     @Override
     public MetaClass getEntityMetaClass() {
         return container.getEntityMetaClass();
     }
 
+    @Nullable
     @Override
-    public Object nextItemId(Object itemId) {
+    public Object nextItemId(@Nullable Object itemId) {
         if (itemId == null)
             return null;
         List<E> items = container.getItems();
@@ -210,20 +214,23 @@ public class ContainerTableItems<E extends JmixEntity> implements EntityTableIte
         return index == items.size() - 1 ? null : EntityValues.getIdOrEntity(items.get(index + 1));
     }
 
+    @Nullable
     @Override
-    public Object prevItemId(Object itemId) {
+    public Object prevItemId(@Nullable Object itemId) {
         if (itemId == null)
             return null;
         int index = container.getItemIndex(itemId);
         return index <= 0 ? null : EntityValues.getIdOrEntity(container.getItems().get(index - 1));
     }
 
+    @Nullable
     @Override
     public Object firstItemId() {
         List<E> items = container.getItems();
         return items.isEmpty() ? null : EntityValues.getIdOrEntity(items.get(0));
     }
 
+    @Nullable
     @Override
     public Object lastItemId() {
         List<E> items = container.getItems();
@@ -234,7 +241,7 @@ public class ContainerTableItems<E extends JmixEntity> implements EntityTableIte
     }
 
     @Override
-    public boolean isFirstId(Object itemId) {
+    public boolean isFirstId(@Nullable Object itemId) {
         if (itemId == null)
             return false;
         int index = container.getItemIndex(itemId);
@@ -242,7 +249,7 @@ public class ContainerTableItems<E extends JmixEntity> implements EntityTableIte
     }
 
     @Override
-    public boolean isLastId(Object itemId) {
+    public boolean isLastId(@Nullable Object itemId) {
         if (itemId == null)
             return false;
         int index = container.getItemIndex(itemId);
@@ -293,13 +300,13 @@ public class ContainerTableItems<E extends JmixEntity> implements EntityTableIte
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<AggregationInfo, String> aggregate(AggregationInfo[] aggregationInfos, Collection<?> itemIds) {
+    public Map<AggregationInfo, String> aggregate(@Nullable AggregationInfo[] aggregationInfos, Collection<?> itemIds) {
         return aggregatableDelegate.aggregate(aggregationInfos, itemIds);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Map<AggregationInfo, Object> aggregateValues(AggregationInfo[] aggregationInfos, Collection<?> itemIds) {
+    public Map<AggregationInfo, Object> aggregateValues(@Nullable AggregationInfo[] aggregationInfos, Collection<?> itemIds) {
         return aggregatableDelegate.aggregateValues(aggregationInfos, itemIds);
     }
 

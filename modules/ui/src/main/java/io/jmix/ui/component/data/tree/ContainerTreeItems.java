@@ -61,6 +61,7 @@ public class ContainerTreeItems<E extends JmixEntity> implements EntityTreeItems
                 e.getItem(), e.getProperty(), e.getPrevValue(), e.getValue()));
     }
 
+    @Nullable
     @Override
     public MetaClass getEntityMetaClass() {
         return container.getEntityMetaClass();
@@ -82,11 +83,13 @@ public class ContainerTreeItems<E extends JmixEntity> implements EntityTreeItems
         return BindingState.ACTIVE;
     }
 
+    @Nullable
     @Override
     public Object getItemId(E item) {
         return EntityValues.getId(item);
     }
 
+    @Nullable
     @Override
     public E getItem(@Nullable Object itemId) {
         return itemId == null ? null : container.getItemOrNull(itemId);
@@ -113,7 +116,7 @@ public class ContainerTreeItems<E extends JmixEntity> implements EntityTreeItems
     }
 
     @Override
-    public Stream<E> getChildren(E item) {
+    public Stream<E> getChildren(@Nullable E item) {
         if (item == null) {
             // root items
             return container.getItems().stream()

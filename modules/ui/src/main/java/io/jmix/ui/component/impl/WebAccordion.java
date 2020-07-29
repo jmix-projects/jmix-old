@@ -18,17 +18,14 @@ package io.jmix.ui.component.impl;
 
 import com.vaadin.server.Resource;
 import com.vaadin.ui.AbstractComponent;
-import io.jmix.core.AppBeans;
 import io.jmix.core.common.event.Subscription;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.UiComponents;
-import io.jmix.ui.component.ComponentsHelper;
 import io.jmix.ui.component.*;
 import io.jmix.ui.icon.IconResolver;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.security.UiPermissionDescriptor;
 import io.jmix.ui.security.UiPermissionValue;
-import io.jmix.ui.settings.SettingsHelper;
 import io.jmix.ui.settings.UserSettingsTools;
 import io.jmix.ui.sys.TestIdManager;
 import io.jmix.ui.widget.JmixAccordion;
@@ -50,6 +47,15 @@ public class WebAccordion extends WebAbstractComponent<JmixAccordion>
 
     @Autowired(required = false)
     protected UserSettingsTools userSettingsTools;
+
+    @Autowired
+    protected UiComponents uiComponents;
+
+    @Autowired
+    protected IconResolver iconResolver;
+
+    @Autowired
+    protected Icons icons;
 
     protected boolean postInitTaskAdded;
     protected boolean componentTabChangeListenerInitialized;
@@ -91,6 +97,7 @@ public class WebAccordion extends WebAbstractComponent<JmixAccordion>
         throw new UnsupportedOperationException();
     }
 
+    @Nullable
     @Override
     public Component getOwnComponent(String id) {
         checkNotNullArgument(id);
@@ -128,13 +135,14 @@ public class WebAccordion extends WebAbstractComponent<JmixAccordion>
         return ComponentsHelper.getComponents(this);
     }
 
+    @Nullable
     @Override
     public String getDescription() {
         return getComposition().getDescription();
     }
 
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         if (getComposition() instanceof AbstractComponent) {
             ((AbstractComponent) getComposition()).setDescription(description);
         }
@@ -244,25 +252,27 @@ public class WebAccordion extends WebAbstractComponent<JmixAccordion>
         }
 
         @Override
-        public void setStyleName(String styleName) {
+        public void setStyleName(@Nullable String styleName) {
             getVaadinTab().setStyleName(styleName);
         }
 
+        @Nullable
         @Override
         public String getStyleName() {
             return getVaadinTab().getStyleName();
         }
 
+        @Nullable
         @Override
         public String getIcon() {
             return icon;
         }
 
         @Override
-        public void setIcon(String icon) {
+        public void setIcon(@Nullable String icon) {
             this.icon = icon;
             if (!StringUtils.isEmpty(icon)) {
-                Resource iconResource = AppBeans.get(IconResolver.class)
+                Resource iconResource = iconResolver
                         .getIconResource(this.icon);
                 getVaadinTab().setIcon(iconResource);
             } else {
@@ -271,8 +281,8 @@ public class WebAccordion extends WebAbstractComponent<JmixAccordion>
         }
 
         @Override
-        public void setIconFromSet(Icons.Icon icon) {
-            String iconPath = AppBeans.get(Icons.class)
+        public void setIconFromSet(@Nullable Icons.Icon icon) {
+            String iconPath = icons
                     .get(icon);
             setIcon(iconPath);
         }
@@ -326,11 +336,11 @@ public class WebAccordion extends WebAbstractComponent<JmixAccordion>
         tabMapping.put(tabComponent, new ComponentDescriptor(name, childComponent));
         com.vaadin.ui.Accordion.Tab tabControl = this.component.addTab(tabComponent);
 
-        if (getDebugId() != null) {
+        if (AppUI.getCurrent() != null && getDebugId() != null) {
             this.component.setTestId(tabControl,
                     AppUI.getCurrent().getTestIdManager().getTestId(getDebugId() + "." + name));
         }
-        if (AppUI.getCurrent().isTestMode()) {
+        if (AppUI.getCurrent() != null && AppUI.getCurrent().isTestMode()) {
             this.component.setJTestId(tabControl, name);
         }
 
@@ -349,7 +359,7 @@ public class WebAccordion extends WebAbstractComponent<JmixAccordion>
     }
 
     @Override
-    public void setDebugId(String id) {
+    public void setDebugId(@Nullable String id) {
         super.setDebugId(id);
 
         String debugId = getDebugId();
@@ -372,7 +382,6 @@ public class WebAccordion extends WebAbstractComponent<JmixAccordion>
     public Accordion.Tab addLazyTab(String name,
                                    Element descriptor,
                                    ComponentLoader loader) {
-        UiComponents uiComponents = AppBeans.get(UiComponents.NAME);
         CssLayout tabContent = uiComponents.create(CssLayout.NAME);
         tabContent.setStyleName("c-tabsheet-lazytab");
         tabContent.setSizeFull();
@@ -395,11 +404,11 @@ public class WebAccordion extends WebAbstractComponent<JmixAccordion>
             postInitTaskAdded = true;
         }
 
-        if (getDebugId() != null) {
+        if (AppUI.getCurrent() != null && getDebugId() != null) {
             this.component.setTestId(tabControl,
                     AppUI.getCurrent().getTestIdManager().getTestId(getDebugId() + "." + name));
         }
-        if (AppUI.getCurrent().isTestMode()) {
+        if (AppUI.getCurrent() != null && AppUI.getCurrent().isTestMode()) {
             this.component.setJTestId(tabControl, name);
         }
 
@@ -414,7 +423,7 @@ public class WebAccordion extends WebAbstractComponent<JmixAccordion>
     }
 
     @Override
-    public void setFrame(Frame frame) {
+    public void setFrame(@Nullable Frame frame) {
         super.setFrame(frame);
 
         if (frame != null) {
@@ -428,6 +437,7 @@ public class WebAccordion extends WebAbstractComponent<JmixAccordion>
         }
     }
 
+    @Nullable
     @Override
     public Tab getSelectedTab() {
         com.vaadin.ui.Component component = this.component.getSelectedTab();
@@ -454,6 +464,7 @@ public class WebAccordion extends WebAbstractComponent<JmixAccordion>
         this.component.setSelectedTab(WebComponentsHelper.unwrap(tab.getComponent()));
     }
 
+    @Nullable
     @Override
     public Accordion.Tab getTab(String name) {
         return tabs.get(name);
@@ -595,7 +606,7 @@ public class WebAccordion extends WebAbstractComponent<JmixAccordion>
             }
         }
 
-        protected void applySettings(Window window) {
+        protected void applySettings(@Nullable Window window) {
             if (window != null && userSettingsTools != null) {
                 userSettingsTools.applyLazyTabSettings(window, WebAccordion.this, tabContent);
             }

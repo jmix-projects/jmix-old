@@ -27,6 +27,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -61,11 +62,11 @@ public class WebNumberRenderer extends WebAbstractDataGrid.AbstractRenderer<Jmix
         this(formatString, null);
     }
 
-    public WebNumberRenderer(String formatString, Locale locale) throws IllegalArgumentException {
+    public WebNumberRenderer(String formatString, @Nullable Locale locale) throws IllegalArgumentException {
         this(formatString, locale, "");
     }
 
-    public WebNumberRenderer(String formatString, Locale locale, String nullRepresentation) {
+    public WebNumberRenderer(String formatString, @Nullable Locale locale, String nullRepresentation) {
         super(nullRepresentation);
 
         this.formatString = formatString;
@@ -116,6 +117,7 @@ public class WebNumberRenderer extends WebAbstractDataGrid.AbstractRenderer<Jmix
         this.locale = locale;
     }
 
+    @Nullable
     @Override
     public NumberFormat getNumberFormat() {
         return numberFormat;
@@ -128,6 +130,7 @@ public class WebNumberRenderer extends WebAbstractDataGrid.AbstractRenderer<Jmix
         this.formatString = null;
     }
 
+    @Nullable
     @Override
     public String getFormatString() {
         return formatString;

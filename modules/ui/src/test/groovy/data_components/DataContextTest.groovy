@@ -470,10 +470,10 @@ class DataContextTest extends DataContextSpec {
         def dataContext = factory.createDataContext()
 
         Order order1 = makeSaved(new Order(number: "111"))
-        ((FetchGroupTracker) order1)._persistence_setFetchGroup(new JmixEntityFetchGroup(['id', 'version', 'number']))
+        ((FetchGroupTracker) order1)._persistence_setFetchGroup(new JmixEntityFetchGroup(['id', 'version', 'number'], null))
 
         Order order2 = makeSaved(new Order(id: order1.id, number: "111", orderLines: []))
-        ((FetchGroupTracker) order2)._persistence_setFetchGroup(new JmixEntityFetchGroup(['id', 'version', 'number', 'orderLines']))
+        ((FetchGroupTracker) order2)._persistence_setFetchGroup(new JmixEntityFetchGroup(['id', 'version', 'number', 'orderLines'], null))
         OrderLine orderLine21 = makeSaved(new OrderLine(quantity: 10, order: order2))
         order2.orderLines.add(orderLine21)
 

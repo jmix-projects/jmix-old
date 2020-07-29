@@ -20,7 +20,7 @@ import io.jmix.core.*;
 import io.jmix.core.common.event.Subscription;
 import io.jmix.core.entity.SoftDelete;
 import io.jmix.core.metamodel.datatype.Datatype;
-import io.jmix.core.metamodel.datatype.Datatypes;
+import io.jmix.core.metamodel.datatype.DatatypeRegistry;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
@@ -70,6 +70,9 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
     protected Metadata metadata;
     protected MetadataTools metadataTools;
     protected ScreenBuilders screenBuilders;
+    protected DatatypeRegistry datatypeRegistry;
+    protected Messages messages;
+    protected WindowConfig windowConfig;
 
     public WebEntityLinkField() {
         component = createComponent();
@@ -89,6 +92,21 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
     @Autowired
     public void setSceenBuilders(ScreenBuilders screenBuilders) {
         this.screenBuilders = screenBuilders;
+    }
+
+    @Autowired
+    public void setDatatypeRegistry(DatatypeRegistry datatypeRegistry) {
+        this.datatypeRegistry = datatypeRegistry;
+    }
+
+    @Autowired
+    public void setMessages(Messages messages) {
+        this.messages = messages;
+    }
+
+    @Autowired
+    public void setWindowConfig(WindowConfig windowConfig) {
+        this.windowConfig = windowConfig;
     }
 
     protected JmixButtonField<V> createComponent() {
@@ -117,7 +135,7 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
                 return metadataTools.getInstanceName((JmixEntity) value);
             }
 
-            Datatype datatype = Datatypes.getNN(value.getClass());
+            Datatype datatype = datatypeRegistry.get(value.getClass());
 
             if (locale != null) {
                 return datatype.format(value, locale);
@@ -127,6 +145,7 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
         });
     }
 
+    @Nullable
     @Override
     public MetaClass getMetaClass() {
         MetaProperty metaProperty = getMetaPropertyForEditedValue();
@@ -137,7 +156,7 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
     }
 
     @Override
-    public void setMetaClass(MetaClass metaClass) {
+    public void setMetaClass(@Nullable MetaClass metaClass) {
         ValueSource<V> valueSource = getValueSource();
 
         if (valueSource instanceof EntityValueSource) {
@@ -146,6 +165,7 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
         this.metaClass = metaClass;
     }
 
+    @Nullable
     @Override
     public ListComponent getOwner() {
         return owner;
@@ -157,7 +177,7 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
     }
 
     @Override
-    public void setValue(V value) {
+    public void setValue(@Nullable V value) {
         super.setValue(value);
 
         if (value != null) {
@@ -200,13 +220,14 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
         this.screen = screen;
     }
 
+    @Nullable
     @Override
     public EntityLinkClickHandler getCustomClickHandler() {
         return clickHandler;
     }
 
     @Override
-    public void setCustomClickHandler(EntityLinkClickHandler clickHandler) {
+    public void setCustomClickHandler(@Nullable EntityLinkClickHandler clickHandler) {
         this.clickHandler = clickHandler;
     }
 
@@ -231,13 +252,14 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
         this.screenOpenMode = openMode;
     }
 
+    @Nullable
     @Override
     public Map<String, Object> getScreenParams() {
         return screenParams;
     }
 
     @Override
-    public void setScreenParams(Map<String, Object> screenParams) {
+    public void setScreenParams(@Nullable Map<String, Object> screenParams) {
         this.screenParams = screenParams;
     }
 
@@ -295,7 +317,6 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
 
         ScreenContext context = ComponentsHelper.getScreenContext(this);
         if (entity instanceof SoftDelete && ((SoftDelete) entity).isDeleted()) {
-            Messages messages = AppBeans.get(Messages.NAME);
             context.getNotifications().create(Notifications.NotificationType.HUMANIZED)
                     .withCaption(messages.getMessage("OpenAction.objectIsDeleted"))
                     .show();
@@ -309,7 +330,6 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
                 .one();
 
         String windowAlias = screen;
-        WindowConfig windowConfig = AppBeans.get(WindowConfig.NAME);
 
         MetaClass metaClass = metadata.getClass(entity);
         if (windowAlias == null) {
@@ -353,7 +373,7 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
         screenEditor.show();
     }
 
-    protected void fireEditorCloseEvent(EditorScreen editorScreen, String closeActionId) {
+    protected void fireEditorCloseEvent(@Nullable EditorScreen editorScreen, String closeActionId) {
         publish(EditorCloseEvent.class,
                 new EditorCloseEvent<>(this, editorScreen, closeActionId));
     }
@@ -431,6 +451,7 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
         }
     }
 
+    @Nullable
     protected CollectionContainer getCollectionContainerFromOwner() {
         if (owner != null && owner.getItems() != null) {
             if (owner.getItems() instanceof ContainerDataUnit) {
@@ -449,6 +470,7 @@ public class WebEntityLinkField<V> extends WebV8AbstractField<JmixButtonField<V>
         return null;
     }*/
 
+    @Nullable
     protected MetaProperty getMetaPropertyForEditedValue() {
         ValueSource<V> valueSource = getValueSource();
         if (valueSource instanceof EntityValueSource) {

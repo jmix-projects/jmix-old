@@ -24,7 +24,6 @@ import elemental.json.JsonArray;
 import elemental.json.JsonObject;
 import io.jmix.core.AppBeans;
 import io.jmix.core.Events;
-import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
 import io.jmix.ui.App;
 import io.jmix.ui.UiProperties;
@@ -36,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -75,7 +75,6 @@ public class JmixVaadinServletService extends SpringVaadinServletService
         performanceTestMode = uiProperties.isPerformanceTestMode();
 
         this.messages = AppBeans.get(Messages.NAME);
-        MessageTools messageTools = AppBeans.get(MessageTools.NAME);
 
         addSessionInitListener(event -> {
             WrappedSession wrappedSession = event.getSession().getSession();
@@ -211,6 +210,7 @@ public class JmixVaadinServletService extends SpringVaadinServletService
             return super.handleRequest(session, request, response);
         }
 
+        @Nullable
         @Override
         protected String getMainDivAdditionalClassName(BootstrapContext context) {
             VaadinRequest request = context.getRequest();

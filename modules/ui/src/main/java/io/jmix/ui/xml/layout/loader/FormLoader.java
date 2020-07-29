@@ -26,7 +26,6 @@ import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.ui.GuiDevelopmentException;
 import io.jmix.ui.component.*;
 import io.jmix.ui.component.data.HasValueSource;
-import io.jmix.ui.component.data.ValueSourceProvider;
 import io.jmix.ui.component.data.meta.EntityValueSource;
 import io.jmix.ui.component.data.options.ContainerOptions;
 import io.jmix.ui.component.data.value.ContainerValueSource;
@@ -99,7 +98,6 @@ public class FormLoader extends AbstractComponentLoader<Form> {
     }
 
     protected void loadColumns(Form resultComponent, Element element) {
-        ValueSourceProvider valueSourceProvider = resultComponent.getValueSourceProvider();
         if (element.elements("column").isEmpty()) {
             Iterable<ComponentPosition> rootComponents = loadComponents(element, null, null);
             for (ComponentPosition component : rootComponents) {
@@ -309,6 +307,11 @@ public class FormLoader extends AbstractComponentLoader<Form> {
             if (childCaptionWidth.startsWith(MessageTools.MARK)) {
                 childCaptionWidth = loadResourceString(childCaptionWidth);
             }
+
+            if ("auto".equalsIgnoreCase(childCaptionWidth)) {
+                childCaptionWidth = Component.AUTO_SIZE;
+            }
+
             if (childCaptionWidth.endsWith("px")) {
                 childCaptionWidth = childCaptionWidth.substring(0, childCaptionWidth.indexOf("px"));
             }

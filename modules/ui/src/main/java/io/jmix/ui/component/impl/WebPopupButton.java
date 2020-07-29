@@ -138,7 +138,7 @@ public class WebPopupButton extends WebAbstractComponent<JmixPopupButton> implem
     }
 
     @Override
-    public void setMenuWidth(String width) {
+    public void setMenuWidth(@Nullable String width) {
         vPopupComponent.setWidth(width);
     }
 
@@ -206,7 +206,7 @@ public class WebPopupButton extends WebAbstractComponent<JmixPopupButton> implem
     }
 
     @Override
-    public void setPopupContent(Component popupContent) {
+    public void setPopupContent(@Nullable Component popupContent) {
         this.popupComponent = popupContent;
 
         if (popupContent != null) {
@@ -217,6 +217,7 @@ public class WebPopupButton extends WebAbstractComponent<JmixPopupButton> implem
         this.component.setContent(vPopupComponent);
     }
 
+    @Nullable
     @Override
     public Component getPopupContent() {
         return popupComponent;
@@ -327,7 +328,7 @@ public class WebPopupButton extends WebAbstractComponent<JmixPopupButton> implem
         });
     }
 
-    protected void setPopupButtonIcon(Button button, String icon) {
+    protected void setPopupButtonIcon(Button button, @Nullable String icon) {
         if (!StringUtils.isEmpty(icon)) {
             Resource iconResource = getIconResource(icon);
             button.setIcon(iconResource);
@@ -358,7 +359,7 @@ public class WebPopupButton extends WebAbstractComponent<JmixPopupButton> implem
     }
 
     @Override
-    public void setDebugId(String id) {
+    public void setDebugId(@Nullable String id) {
         super.setDebugId(id);
 
         AppUI ui = AppUI.getCurrent();
@@ -375,8 +376,8 @@ public class WebPopupButton extends WebAbstractComponent<JmixPopupButton> implem
     }
 
     @Override
-    public void removeAction(@Nullable Action action) {
-        if (action != null && actionOrder.remove(action)) {
+    public void removeAction(Action action) {
+        if (actionOrder.remove(action)) {
             action.removePropertyChangeListener(actionPropertyChangeListener);
             Button button = actionButtons.remove(action);
 
@@ -387,7 +388,7 @@ public class WebPopupButton extends WebAbstractComponent<JmixPopupButton> implem
     }
 
     @Override
-    public void removeAction(@Nullable String id) {
+    public void removeAction(String id) {
         Action action = getAction(id);
         if (action != null) {
             removeAction(action);

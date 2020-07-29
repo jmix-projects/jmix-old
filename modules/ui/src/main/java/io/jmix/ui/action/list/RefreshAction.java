@@ -46,8 +46,6 @@ public class RefreshAction extends ListAction {
 
     public static final String ID = "refresh";
 
-    protected Messages messages;
-
     private static final Logger log = LoggerFactory.getLogger(RefreshAction.class);
 
     public RefreshAction() {
@@ -65,7 +63,6 @@ public class RefreshAction extends ListAction {
 
     @Autowired
     protected void setMessages(Messages messages) {
-        this.messages = messages;
         this.caption = messages.getMessage("actions.Refresh");
     }
 

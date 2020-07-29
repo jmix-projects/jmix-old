@@ -22,6 +22,7 @@ import io.jmix.ui.widget.JmixFileUpload;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.unit.DataSize;
 
+import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -62,8 +63,9 @@ public class WebFileUploadField extends WebAbstractSingleFileUploadField<byte[]>
         super.onUploadSucceeded(event);
     }
 
+    @Nullable
     @Override
-    protected String convertToPresentation(byte[] modelValue) throws ConversionException {
+    protected String convertToPresentation(@Nullable byte[] modelValue) throws ConversionException {
         if (modelValue == null) {
             return null;
         }
@@ -72,13 +74,14 @@ public class WebFileUploadField extends WebAbstractSingleFileUploadField<byte[]>
                 : fileName;
     }
 
+    @Nullable
     @Override
     public String getFileName() {
         return super.getFileName();
     }
 
     @Override
-    public void setFileName(String filename) {
+    public void setFileName(@Nullable String filename) {
         this.fileName = filename;
         setValueToPresentation(convertToPresentation(getValue()));
     }

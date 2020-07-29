@@ -206,7 +206,8 @@
                         <checkBoxGroup id="checkBoxGroup"/>
                         <twinColumn id="twinColumn"/>
                         <radioButtonGroup id="radioButtonGroup"/>
-                        <optionsList id="optionsList"/>
+                        <multiSelectList id="multiSelectList"/>
+                        <singleSelectList id="singleSelectList"/>
                     </hbox>
                     <popupButton caption="PopupButton">
                         <actions>

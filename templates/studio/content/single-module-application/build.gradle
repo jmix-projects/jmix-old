@@ -1,0 +1,32 @@
+plugins {
+    id 'io.jmix' version '0.1.10'
+    id 'java'
+}
+
+apply plugin: 'org.springframework.boot'
+
+group = 'com.company'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://nexus.jmix.io/repository/public'
+    }
+}
+
+dependencies {
+    implementation 'io.jmix.starter.standard:jmix-starter-standard'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    runtimeOnly 'org.hsqldb:hsqldb'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

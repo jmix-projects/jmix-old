@@ -30,7 +30,6 @@ import io.jmix.ui.component.data.meta.ContainerDataUnit;
 import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.meta.StudioAction;
-import io.jmix.ui.meta.StudioDelegate;
 import io.jmix.ui.meta.StudioPropertiesItem;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.Nested;
@@ -50,11 +49,10 @@ import java.util.function.Consumer;
  */
 @StudioAction(category = "List Actions", description = "Removes an entity instance from the list and from the database")
 @ActionType(RemoveAction.ID)
-public class RemoveAction<E extends JmixEntity> extends SecuredListAction implements Action.DisabledWhenScreenReadOnly {
+public class RemoveAction<E extends JmixEntity> extends SecuredListAction implements Action.AdjustWhenScreenReadOnly {
 
     public static final String ID = "remove";
 
-    @Autowired
     protected RemoveOperation removeOperation;
 
     protected Boolean confirmation;
@@ -133,7 +131,6 @@ public class RemoveAction<E extends JmixEntity> extends SecuredListAction implem
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setAfterActionPerformedHandler(Consumer<RemoveOperation.AfterActionPerformedEvent<E>> afterActionPerformedHandler) {
         this.afterActionPerformedHandler = afterActionPerformedHandler;
     }
@@ -149,7 +146,6 @@ public class RemoveAction<E extends JmixEntity> extends SecuredListAction implem
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setActionCancelledHandler(Consumer<RemoveOperation.ActionCancelledEvent<E>> actionCancelledHandler) {
         this.actionCancelledHandler = actionCancelledHandler;
     }
@@ -169,12 +165,13 @@ public class RemoveAction<E extends JmixEntity> extends SecuredListAction implem
         setShortcut(properties.getTableRemoveShortcut());
     }
 
+    @Autowired
+    public void setRemoveOperation(RemoveOperation removeOperation) {
+        this.removeOperation = removeOperation;
+    }
+
     @Override
     protected boolean isPermitted() {
-        if (target == null || !(target.getItems() instanceof ContainerDataUnit)) {
-            return false;
-        }
-
         if (!checkRemovePermission()) {
             return false;
         }
@@ -183,6 +180,10 @@ public class RemoveAction<E extends JmixEntity> extends SecuredListAction implem
     }
 
     protected boolean checkRemovePermission() {
+        if (target == null || !(target.getItems() instanceof ContainerDataUnit)) {
+            return false;
+        }
+
         ContainerDataUnit<E> containerDataUnit = (ContainerDataUnit) target.getItems();
 
         MetaClass metaClass = containerDataUnit.getEntityMetaClass();
@@ -201,10 +202,7 @@ public class RemoveAction<E extends JmixEntity> extends SecuredListAction implem
             MetaClass masterMetaClass = nestedContainer.getMaster().getEntityMetaClass();
             MetaProperty metaProperty = masterMetaClass.getProperty(nestedContainer.getProperty());
 
-            boolean attrPermitted = security.isEntityAttrUpdatePermitted(masterMetaClass, metaProperty.getName());
-            if (!attrPermitted) {
-                return false;
-            }
+            return security.isEntityAttrUpdatePermitted(masterMetaClass, metaProperty.getName());
         }
 
         return true;

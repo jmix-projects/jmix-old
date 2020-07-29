@@ -16,8 +16,8 @@
 
 package com.haulmont.cuba.gui.xml.layout.loaders;
 
+import com.haulmont.cuba.gui.xml.DeclarativeAction;
 import io.jmix.ui.component.Button;
-import io.jmix.ui.xml.DeclarativeAction;
 import io.jmix.ui.xml.layout.loader.ButtonLoader;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;

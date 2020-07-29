@@ -16,7 +16,6 @@
 
 buildscript {
     ext {
-        springBootVersion = '2.3.1.RELEASE'
         jmixPluginVersion = '1.0-SNAPSHOT'
     }
     repositories {
@@ -40,7 +39,6 @@ buildscript {
     }
     dependencies {
         classpath("io.jmix.gradle:jmix-gradle-plugin:${jmixPluginVersion}")
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.0.4")
     }
 }
@@ -114,7 +112,8 @@ configure(subprojects.findAll { !it.name.startsWith('sample-') }) {
     }
 }
 
-configure([project(':modules:core'), project(':modules:data'), project(':modules:security'), project(':modules:audit')]) {
+configure([project(':modules:core'), project(':modules:data'), project(':modules:security'), project(':modules:audit'),
+        project(':modules:ui')]) {
     if (rootProject.hasProperty('spotbugsEnabled')) {
         apply plugin: 'com.github.spotbugs'
 
@@ -123,7 +122,7 @@ configure([project(':modules:core'), project(':modules:data'), project(':modules
                 toolVersion = '4.0.1'
                 ignoreFailures = false
                 omitVisitors = ['FindDoubleCheck']
-                excludeFilter = rootProject.file("codequality/spotbugs-exclude-filter.xml")
+                excludeFilter = rootProject.file("etc/spotbugs/spotbugs-exclude-filter.xml")
                 effort = "max"
                 reportLevel = "medium"
             }
@@ -135,7 +134,7 @@ configure([project(':modules:core'), project(':modules:data'), project(':modules
                     xml.enabled = false
                     html {
                         enabled = true
-                        stylesheet = rootProject.resources.text.fromFile('codequality/spotbugs-fancy-hist.xsl')
+                        stylesheet = rootProject.resources.text.fromFile('etc/spotbugs/spotbugs-fancy-hist.xsl')
                         destination file("${project.buildDir}/reports/spotbugs/${project.name}.html")
                     }
                 }
@@ -148,7 +147,7 @@ configure([project(':modules:core'), project(':modules:data'), project(':modules
                     xml.enabled = false
                     html {
                         enabled = true
-                        stylesheet = project.resources.text.fromFile('codequality/spotbugs-fancy-hist.xsl')
+                        stylesheet = project.resources.text.fromFile('etc/spotbugs/spotbugs-fancy-hist.xsl')
                         destination file("${project.buildDir}/reports/spotbugs/test-${project.name}.html")
                     }
                 }

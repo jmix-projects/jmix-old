@@ -16,7 +16,7 @@
 package io.jmix.ui.gui.data.impl;
 
 import io.jmix.core.AppBeans;
-import io.jmix.core.metamodel.datatype.Datatypes;
+import io.jmix.core.metamodel.datatype.DatatypeRegistry;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 import io.jmix.core.metamodel.model.Range;
 import io.jmix.core.security.CurrentAuthentication;
@@ -25,11 +25,12 @@ import io.jmix.ui.component.data.aggregation.Aggregation;
 import io.jmix.ui.component.data.aggregation.AggregationStrategy;
 import io.jmix.ui.component.data.aggregation.Aggregations;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class AggregatableDelegate<K> {
-    public Map<AggregationInfo, String> aggregate(AggregationInfo[] aggregationInfos, Collection<K> itemIds) {
+    public Map<AggregationInfo, String> aggregate(@Nullable AggregationInfo[] aggregationInfos, Collection<K> itemIds) {
         if (aggregationInfos == null || aggregationInfos.length == 0) {
             throw new NullPointerException("Aggregation must be executed at least by one field");
         }
@@ -63,7 +64,8 @@ public abstract class AggregatableDelegate<K> {
 
                         CurrentAuthentication currentAuthentication = AppBeans.get(CurrentAuthentication.NAME);
                         Locale locale = currentAuthentication.getLocale();
-                        formattedValue = Datatypes.getNN(resultClass).format(value, locale);
+                        DatatypeRegistry datatypeRegistry = AppBeans.get(DatatypeRegistry.NAME);
+                        formattedValue = datatypeRegistry.get(resultClass).format(value, locale);
                     } else {
                         formattedValue = value.toString();
                     }
@@ -73,7 +75,8 @@ public abstract class AggregatableDelegate<K> {
 
                         CurrentAuthentication currentAuthentication = AppBeans.get(CurrentAuthentication.NAME);
                         Locale locale = currentAuthentication.getLocale();
-                        formattedValue = Datatypes.getNN(resultClass).format(value, locale);
+                        DatatypeRegistry datatypeRegistry = AppBeans.get(DatatypeRegistry.NAME);
+                        formattedValue = datatypeRegistry.get(resultClass).format(value, locale);
                     } else {
                         formattedValue = value.toString();
                     }
@@ -85,7 +88,7 @@ public abstract class AggregatableDelegate<K> {
         return aggregationResults;
     }
 
-    public Map<AggregationInfo, Object> aggregateValues(AggregationInfo[] aggregationInfos, Collection<K> itemIds) {
+    public Map<AggregationInfo, Object> aggregateValues(@Nullable AggregationInfo[] aggregationInfos, Collection<K> itemIds) {
         if (aggregationInfos == null || aggregationInfos.length == 0) {
             throw new NullPointerException("Aggregation must be executed at least by one field");
         }
@@ -152,5 +155,6 @@ public abstract class AggregatableDelegate<K> {
 
     public abstract Object getItem(K itemId);
 
+    @Nullable
     public abstract Object getItemValue(MetaPropertyPath property, K itemId);
 }

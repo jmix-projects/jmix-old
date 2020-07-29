@@ -20,16 +20,17 @@ import io.jmix.core.MetadataTools;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.ui.component.Label;
 import io.jmix.ui.component.data.meta.EntityValueSource;
+import io.jmix.ui.component.formatter.Formatter;
 import io.jmix.ui.widget.JmixLabel;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.function.Function;
+
+import javax.annotation.Nullable;
 
 public class WebLabel<V> extends WebAbstractViewComponent<com.vaadin.ui.Label, String, V> implements Label<V> {
 
     protected MetadataTools metadataTools;
 
-    protected Function<? super V, String> formatter;
+    protected Formatter<? super V> formatter;
 
     public WebLabel() {
         component = new JmixLabel();
@@ -42,7 +43,7 @@ public class WebLabel<V> extends WebAbstractViewComponent<com.vaadin.ui.Label, S
     }
 
     @Override
-    protected void setValueToPresentation(String value) {
+    protected void setValueToPresentation(@Nullable String value) {
         if (hasValidationError()) {
             setValidationError(null);
         }
@@ -50,7 +51,8 @@ public class WebLabel<V> extends WebAbstractViewComponent<com.vaadin.ui.Label, S
         component.setValue(value);
     }
 
-    protected String convertToPresentation(V modelValue) {
+    @Nullable
+    protected String convertToPresentation(@Nullable V modelValue) {
         String presentationValue;
         if (formatter != null) {
             presentationValue = formatter.apply(modelValue);
@@ -69,13 +71,14 @@ public class WebLabel<V> extends WebAbstractViewComponent<com.vaadin.ui.Label, S
     }
 
     @SuppressWarnings("unchecked")
+    @Nullable
     @Override
-    public Function<V, String> getFormatter() {
-        return (Function<V, String>) formatter;
+    public Formatter<V> getFormatter() {
+        return (Formatter<V>) formatter;
     }
 
     @Override
-    public void setFormatter(Function<? super V, String> formatter) {
+    public void setFormatter(@Nullable Formatter<? super V> formatter) {
         this.formatter = formatter;
     }
 

@@ -34,13 +34,14 @@ public class ListAction extends BaseAction implements Action.HasTarget {
         super(id, shortcut);
     }
 
+    @Nullable
     @Override
     public ListComponent getTarget() {
         return target;
     }
 
     @Override
-    public void setTarget(ListComponent target) {
+    public void setTarget(@Nullable ListComponent target) {
         this.target = target;
     }
 
@@ -50,7 +51,7 @@ public class ListAction extends BaseAction implements Action.HasTarget {
      * @param caption caption
      * @return current instance of action
      */
-    public ListAction withCaption(String caption) {
+    public ListAction withCaption(@Nullable String caption) {
         this.caption = caption;
         return this;
     }
@@ -61,7 +62,7 @@ public class ListAction extends BaseAction implements Action.HasTarget {
      * @param description description
      * @return current instance of action
      */
-    public ListAction withDescription(String description) {
+    public ListAction withDescription(@Nullable String description) {
         this.description = description;
         return this;
     }
@@ -72,7 +73,7 @@ public class ListAction extends BaseAction implements Action.HasTarget {
      * @param icon icon
      * @return current instance of action
      */
-    public ListAction withIcon(String icon) {
+    public ListAction withIcon(@Nullable String icon) {
         this.icon = icon;
         return this;
     }
@@ -83,7 +84,7 @@ public class ListAction extends BaseAction implements Action.HasTarget {
      * @param shortcut shortcut
      * @return current instance of action
      */
-    public ListAction withShortcut(String shortcut) {
+    public ListAction withShortcut(@Nullable String shortcut) {
         if (shortcut != null) {
             this.shortcut = KeyCombination.create(shortcut);
         }

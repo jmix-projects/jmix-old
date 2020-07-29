@@ -26,6 +26,7 @@ import io.jmix.core.metamodel.model.Range;
 import io.jmix.core.metamodel.model.Session;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.Security;
+import io.jmix.datatoolsui.action.ExportAction;
 import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorFetchPlanBuilder;
 import io.jmix.datatoolsui.screen.entityinspector.assistant.InspectorTableBuilder;
 import io.jmix.ui.Actions;
@@ -33,16 +34,12 @@ import io.jmix.ui.Notifications;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.UiProperties;
 import io.jmix.ui.action.Action;
-import io.jmix.ui.action.ItemTrackingAction;
 import io.jmix.ui.action.list.CreateAction;
 import io.jmix.ui.action.list.EditAction;
 import io.jmix.ui.action.list.RefreshAction;
 import io.jmix.ui.action.list.RemoveAction;
 import io.jmix.ui.component.LookupComponent;
 import io.jmix.ui.component.*;
-import io.jmix.ui.download.ByteArrayDataProvider;
-import io.jmix.ui.download.DownloadFormat;
-import io.jmix.ui.download.Downloader;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.model.CollectionContainer;
@@ -119,7 +116,7 @@ public class EntityInspectorBrowser extends StandardLookup<JmixEntity> {
     protected EntityImportExport entityImportExport;
 
     @Autowired
-    protected Downloader exportDisplay;
+    protected EntityImportViews entityImportViews;
 
     //TODO filter implementation component (Filter in Table/DataGrid #221)
     protected Component filter;
@@ -292,8 +289,18 @@ public class EntityInspectorBrowser extends StandardLookup<JmixEntity> {
         PopupButton exportPopupButton = uiComponents.create(PopupButton.class);
         exportPopupButton.setCaption(messages.getMessage(EntityInspectorBrowser.class, "export"));
         exportPopupButton.setIcon(icons.get(JmixIcon.DOWNLOAD));
-        exportPopupButton.addAction(new ExportAction("exportJSON", JSON));
-        exportPopupButton.addAction(new ExportAction("exportZIP", ZIP));
+
+        ExportAction exportJSONAction = (ExportAction) actions.create(ExportAction.ID, "exportJSON");
+        exportJSONAction.setFormat(JSON);
+        exportJSONAction.setTable(entitiesTable);
+        exportJSONAction.setMetaClass(selectedMeta);
+        exportPopupButton.addAction(exportJSONAction);
+
+        ExportAction exportZIPAction = (ExportAction) actions.create(ExportAction.ID, "exportZIP");
+        exportZIPAction.setFormat(ZIP);
+        exportZIPAction.setTable(entitiesTable);
+        exportZIPAction.setMetaClass(selectedMeta);
+        exportPopupButton.addAction(exportZIPAction);
 
         FileUploadField importUpload = uiComponents.create(FileUploadField.class);
         importUpload.setPasteZone(tableBox);
@@ -369,8 +376,7 @@ public class EntityInspectorBrowser extends StandardLookup<JmixEntity> {
     }
 
     protected EntityImportView createEntityImportView(MetaClass metaClass) {
-        Class<? extends JmixEntity> javaClass = metaClass.getJavaClass();
-        EntityImportView entityImportView = new EntityImportView(javaClass);
+        EntityImportViewBuilder viewBuilder = entityImportViews.builder(metaClass.getJavaClass());
 
         for (MetaProperty metaProperty : metaClass.getProperties()) {
             if (!metadataTools.isPersistent(metaProperty)) {
@@ -380,22 +386,22 @@ public class EntityInspectorBrowser extends StandardLookup<JmixEntity> {
             switch (metaProperty.getType()) {
                 case DATATYPE:
                 case ENUM:
-                    entityImportView.addLocalProperty(metaProperty.getName());
+                    viewBuilder.addLocalProperty(metaProperty.getName());
                     break;
                 case ASSOCIATION:
                 case COMPOSITION:
                     Range.Cardinality cardinality = metaProperty.getRange().getCardinality();
                     if (cardinality == Range.Cardinality.MANY_TO_ONE) {
-                        entityImportView.addManyToOneProperty(metaProperty.getName(), ReferenceImportBehaviour.IGNORE_MISSING);
+                        viewBuilder.addManyToOneProperty(metaProperty.getName(), ReferenceImportBehaviour.IGNORE_MISSING);
                     } else if (cardinality == Range.Cardinality.ONE_TO_ONE) {
-                        entityImportView.addOneToOneProperty(metaProperty.getName(), ReferenceImportBehaviour.IGNORE_MISSING);
+                        viewBuilder.addOneToOneProperty(metaProperty.getName(), ReferenceImportBehaviour.IGNORE_MISSING);
                     }
                     break;
                 default:
                     throw new IllegalStateException("unknown property type");
             }
         }
-        return entityImportView;
+        return viewBuilder.build();
     }
 
     protected boolean readPermitted(MetaClass metaClass) {
@@ -404,48 +410,5 @@ public class EntityInspectorBrowser extends StandardLookup<JmixEntity> {
 
     protected boolean entityOpPermitted(MetaClass metaClass, EntityOp entityOp) {
         return security.isEntityOpPermitted(metaClass, entityOp);
-    }
-
-    protected class ExportAction extends ItemTrackingAction {
-
-        private final DownloadFormat format;
-
-        public ExportAction(String id, DownloadFormat format) {
-            super(id);
-            this.format = format;
-        }
-
-        @Override
-        public void actionPerform(Component component) {
-            Collection<JmixEntity> selected = entitiesTable.getSelected();
-            if (selected.isEmpty()
-                    && entitiesTable.getItems() != null) {
-                selected = entitiesTable.getItems().getItems();
-            }
-
-            try {
-                if (format == ZIP) {
-                    byte[] data = entityImportExport.exportEntitiesToZIP(selected);
-                    String resourceName = selectedMeta.getJavaClass().getSimpleName() + ".zip";
-                    exportDisplay.download(new ByteArrayDataProvider(data), resourceName, ZIP);
-                } else if (format == JSON) {
-                    byte[] data = entityImportExport.exportEntitiesToJSON(selected)
-                            .getBytes(StandardCharsets.UTF_8);
-                    String resourceName = selectedMeta.getJavaClass().getSimpleName() + ".json";
-                    exportDisplay.download(new ByteArrayDataProvider(data), resourceName, JSON);
-                }
-            } catch (Exception e) {
-                notifications.create(Notifications.NotificationType.ERROR)
-                        .withCaption(messages.getMessage(EntityInspectorBrowser.class, "exportFailed"))
-                        .withDescription(e.getMessage())
-                        .show();
-                log.error("Entities export failed", e);
-            }
-        }
-
-        @Override
-        public String getCaption() {
-            return messages.getMessage(EntityInspectorBrowser.class, id);
-        }
     }
 }

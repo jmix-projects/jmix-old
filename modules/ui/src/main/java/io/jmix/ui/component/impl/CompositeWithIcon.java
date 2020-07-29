@@ -19,12 +19,15 @@ package io.jmix.ui.component.impl;
 import io.jmix.ui.component.Component;
 import io.jmix.ui.icon.Icons;
 
+import javax.annotation.Nullable;
+
 /**
  * {@link CompositeComponent} having an icon.
  * Default implementations delegate their execution to {@link CompositeComponent#getComposition()}.
  */
 public interface CompositeWithIcon extends Component.HasIcon {
 
+    @Nullable
     @Override
     default String getIcon() {
         Component.HasIcon hasIcon = (Component.HasIcon) ((CompositeComponent) this).getComposition();
@@ -32,13 +35,13 @@ public interface CompositeWithIcon extends Component.HasIcon {
     }
 
     @Override
-    default void setIcon(String icon) {
+    default void setIcon(@Nullable String icon) {
         Component.HasIcon hasIcon = (Component.HasIcon) ((CompositeComponent) this).getComposition();
         hasIcon.setIcon(icon);
     }
 
     @Override
-    default void setIconFromSet(Icons.Icon icon) {
+    default void setIconFromSet(@Nullable Icons.Icon icon) {
         Component.HasIcon hasIcon = (Component.HasIcon) ((CompositeComponent) this).getComposition();
         hasIcon.setIconFromSet(icon);
     }

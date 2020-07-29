@@ -36,12 +36,14 @@ public interface DataGridItems<T> extends DataUnit {
      * @param item the item for obtaining the id
      * @return the id on the given item
      */
+    @Nullable
     Object getItemId(T item);
 
     /**
      * @param itemId the item id
      * @return the item by the given id
      */
+    @Nullable
     T getItem(@Nullable Object itemId);
 
     /**
@@ -146,7 +148,7 @@ public interface DataGridItems<T> extends DataUnit {
         private final Object prevValue;
         private final Object value;
 
-        public ValueChangeEvent(DataGridItems<T> source, T item, String property, Object prevValue, Object value) {
+        public ValueChangeEvent(DataGridItems<T> source, T item, String property, @Nullable Object prevValue, @Nullable Object value) {
             super(source);
             this.item = item;
             this.property = property;
@@ -177,6 +179,7 @@ public interface DataGridItems<T> extends DataUnit {
         /**
          * @return a previous value of the item property
          */
+        @Nullable
         public Object getPrevValue() {
             return prevValue;
         }
@@ -184,6 +187,7 @@ public interface DataGridItems<T> extends DataUnit {
         /**
          * @return a new value of the item property
          */
+        @Nullable
         public Object getValue() {
             return value;
         }
@@ -214,7 +218,7 @@ public interface DataGridItems<T> extends DataUnit {
     class SelectedItemChangeEvent<T> extends EventObject {
         protected final T selectedItem;
 
-        public SelectedItemChangeEvent(DataGridItems<T> source, T selectedItem) {
+        public SelectedItemChangeEvent(DataGridItems<T> source, @Nullable T selectedItem) {
             super(source);
             this.selectedItem = selectedItem;
         }
@@ -228,6 +232,7 @@ public interface DataGridItems<T> extends DataUnit {
         /**
          * @return a new selected item
          */
+        @Nullable
         public T getSelectedItem() {
             return selectedItem;
         }

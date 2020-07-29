@@ -17,13 +17,10 @@ package io.jmix.ui.action;
 
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
-import io.jmix.core.AppBeans;
-import io.jmix.core.Messages;
 import io.jmix.core.common.event.EventHub;
 import io.jmix.ui.component.ActionOwner;
 import io.jmix.ui.component.Component;
 import io.jmix.ui.component.KeyCombination;
-import io.jmix.ui.icon.Icons;
 
 import javax.annotation.Nullable;
 import java.beans.PropertyChangeEvent;
@@ -35,7 +32,7 @@ import java.util.function.Consumer;
 /**
  * Abstract class for GUI actions.
  */
-public abstract class AbstractAction implements Action {
+public abstract class AbstractAction implements Action, Action.HasPrimaryState {
 
     protected String id;
 
@@ -54,17 +51,12 @@ public abstract class AbstractAction implements Action {
 
     protected EventHub eventHub;
 
-    // legacy field
-    @Deprecated
-    private Messages messages;
-
     protected AbstractAction() {
         // do not init messages here
     }
 
     protected AbstractAction(String id) {
         this.id = id;
-        this.messages = AppBeans.get(Messages.NAME); // legacy behaviour
     }
 
     protected AbstractAction(String id, @Nullable String shortcut) {
@@ -97,22 +89,14 @@ public abstract class AbstractAction implements Action {
         return id;
     }
 
+    @Nullable
     @Override
     public String getCaption() {
-        return caption == null ? getDefaultCaption() : caption;
-    }
-
-    protected String getDefaultCaption() {
-        if (messages != null) {
-            // legacy behaviour
-            return messages.getMessage(id);
-        } else {
-            return null;
-        }
+        return caption;
     }
 
     @Override
-    public void setCaption(String caption) {
+    public void setCaption(@Nullable String caption) {
         String oldValue = this.caption;
         if (!Objects.equals(oldValue, caption)) {
             this.caption = caption;
@@ -120,13 +104,14 @@ public abstract class AbstractAction implements Action {
         }
     }
 
+    @Nullable
     @Override
     public String getDescription() {
         return description;
     }
 
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         String oldValue = this.description;
         if (!Objects.equals(oldValue, description)) {
             this.description = description;
@@ -134,13 +119,14 @@ public abstract class AbstractAction implements Action {
         }
     }
 
+    @Nullable
     @Override
     public KeyCombination getShortcutCombination() {
         return shortcut;
     }
 
     @Override
-    public void setShortcutCombination(KeyCombination shortcut) {
+    public void setShortcutCombination(@Nullable KeyCombination shortcut) {
         KeyCombination oldValue = this.shortcut;
         if (!Objects.equals(oldValue, shortcut)) {
             this.shortcut = shortcut;
@@ -149,7 +135,7 @@ public abstract class AbstractAction implements Action {
     }
 
     @Override
-    public void setShortcut(String shortcut) {
+    public void setShortcut(@Nullable String shortcut) {
         if (shortcut != null) {
             setShortcutCombination(KeyCombination.create(shortcut));
         } else {
@@ -157,25 +143,19 @@ public abstract class AbstractAction implements Action {
         }
     }
 
+    @Nullable
     @Override
     public String getIcon() {
         return icon;
     }
 
     @Override
-    public void setIcon(String icon) {
+    public void setIcon(@Nullable String icon) {
         String oldValue = this.icon;
         if (!Objects.equals(oldValue, icon)) {
             this.icon = icon;
             firePropertyChange(PROP_ICON, oldValue, icon);
         }
-    }
-
-    @Override
-    public void setIconFromSet(Icons.Icon icon) {
-        String iconName = AppBeans.get(Icons.class)
-                .get(icon);
-        setIcon(iconName);
     }
 
     @Override
@@ -221,6 +201,7 @@ public abstract class AbstractAction implements Action {
         return owners;
     }
 
+    @Nullable
     @Override
     public ActionOwner getOwner() {
         return owners.isEmpty() ? null : owners.get(0);
@@ -279,18 +260,12 @@ public abstract class AbstractAction implements Action {
     public void refreshState() {
     }
 
-    /**
-     * @return true if action is primary or false otherwise
-     */
+    @Override
     public boolean isPrimary() {
         return primary;
     }
 
-    /**
-     * Sets whether action is primary or not.
-     *
-     * @param primary primary
-     */
+    @Override
     public void setPrimary(boolean primary) {
         this.primary = primary;
     }

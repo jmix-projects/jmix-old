@@ -21,7 +21,6 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.JmixEntity;
 import io.jmix.core.FetchPlan;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EventObject;
 import java.util.function.Consumer;
@@ -41,7 +40,6 @@ public interface InstanceContainer<E extends JmixEntity> {
      *
      * @throws IllegalStateException if there is no entity in the container
      */
-    @Nonnull
     E getItem();
 
     /**
@@ -120,7 +118,8 @@ public interface InstanceContainer<E extends JmixEntity> {
         private final Object prevValue;
         private final Object value;
 
-        public ItemPropertyChangeEvent(InstanceContainer<T> container, T item, String property, Object prevValue, Object value) {
+        public ItemPropertyChangeEvent(InstanceContainer<T> container, T item, String property,
+                                       @Nullable Object prevValue, @Nullable Object value) {
             super(container);
             this.item = item;
             this.property = property;
@@ -187,7 +186,7 @@ public interface InstanceContainer<E extends JmixEntity> {
         private final T prevItem;
         private final T item;
 
-        public ItemChangeEvent(InstanceContainer<T> container, T prevItem, T item) {
+        public ItemChangeEvent(InstanceContainer<T> container, @Nullable T prevItem, @Nullable T item) {
             super(container);
             this.prevItem = prevItem;
             this.item = item;

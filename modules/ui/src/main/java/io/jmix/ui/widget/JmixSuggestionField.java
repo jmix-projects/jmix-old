@@ -208,18 +208,19 @@ public class JmixSuggestionField<T> extends AbstractField<T> {
         return suggestionsLimit;
     }
 
+    @Nullable
     public String getInputPrompt() {
         return getState(false).inputPrompt;
     }
 
-    public void setInputPrompt(String inputPrompt) {
+    public void setInputPrompt(@Nullable String inputPrompt) {
         if (!Objects.equals(inputPrompt, getState(false).inputPrompt)) {
             getState().inputPrompt = inputPrompt;
         }
     }
 
     // copied from com.vaadin.ui.AbstractComponent#setStyleName
-    public void setPopupStyleName(String styleName) {
+    public void setPopupStyleName(@Nullable String styleName) {
         if (Strings.isNullOrEmpty(styleName)) {
             getState().popupStylename = null;
             return;
@@ -271,7 +272,7 @@ public class JmixSuggestionField<T> extends AbstractField<T> {
         }
     }
 
-    public void setPopupWidth(String popupWidth) {
+    public void setPopupWidth(@Nullable String popupWidth) {
         if (popupWidth == null || popupWidth.isEmpty()) {
             throw new IllegalArgumentException("Popup width cannot be empty");
         }

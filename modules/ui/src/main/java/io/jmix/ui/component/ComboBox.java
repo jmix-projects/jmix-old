@@ -18,6 +18,7 @@ package io.jmix.ui.component;
 
 import com.google.common.reflect.TypeToken;
 
+import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -79,6 +80,7 @@ public interface ComboBox<V> extends OptionsField<V, V>, HasInputPrompt, Buffere
     /**
      * @return current handler
      */
+    @Nullable
     Consumer<String> getNewOptionHandler();
 
     /**
@@ -86,7 +88,7 @@ public interface ComboBox<V> extends OptionsField<V, V>, HasInputPrompt, Buffere
      *
      * @param newOptionHandler handler instance
      */
-    void setNewOptionHandler(Consumer<String> newOptionHandler);
+    void setNewOptionHandler(@Nullable Consumer<String> newOptionHandler);
 
     /**
      * @return the page length of the suggestion popup.
@@ -114,11 +116,12 @@ public interface ComboBox<V> extends OptionsField<V, V>, HasInputPrompt, Buffere
      *
      * @param optionIconProvider provider which provides icons for options
      */
-    void setOptionIconProvider(Function<? super V, String> optionIconProvider);
+    void setOptionIconProvider(@Nullable Function<? super V, String> optionIconProvider);
 
     /**
      * @return icon provider of the LookupField.
      */
+    @Nullable
     Function<? super V, String> getOptionIconProvider();
 
     /**
@@ -127,11 +130,12 @@ public interface ComboBox<V> extends OptionsField<V, V>, HasInputPrompt, Buffere
      * @see Resource
      * @param optionImageProvider options image provider
      */
-    void setOptionImageProvider(Function<? super V, Resource> optionImageProvider);
+    void setOptionImageProvider(@Nullable Function<? super V, Resource> optionImageProvider);
 
     /**
      * @return options image provider.
      */
+    @Nullable
     Function<? super V, Resource> getOptionImageProvider();
 
     /**
@@ -139,11 +143,12 @@ public interface ComboBox<V> extends OptionsField<V, V>, HasInputPrompt, Buffere
      *
      * @param filterPredicate items filter predicate
      */
-    void setFilterPredicate(FilterPredicate filterPredicate);
+    void setFilterPredicate(@Nullable FilterPredicate filterPredicate);
 
     /**
      * @return items filter predicate
      */
+    @Nullable
     FilterPredicate getFilterPredicate();
 
     /**
@@ -152,6 +157,7 @@ public interface ComboBox<V> extends OptionsField<V, V>, HasInputPrompt, Buffere
      *
      * @return explicitly set popup width as size string or null if not set
      */
+    @Nullable
     String getPopupWidth();
 
     /**
@@ -165,7 +171,7 @@ public interface ComboBox<V> extends OptionsField<V, V>, HasInputPrompt, Buffere
      *
      * @param width the width
      */
-    void setPopupWidth(String width);
+    void setPopupWidth(@Nullable String width);
 
     /**
      * A predicate that tests whether an item with the given caption matches to the given search string.

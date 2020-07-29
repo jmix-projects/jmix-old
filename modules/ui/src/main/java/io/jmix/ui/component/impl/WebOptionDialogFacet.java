@@ -52,30 +52,33 @@ public class WebOptionDialogFacet extends WebAbstractFacet
     protected boolean htmlSanitizerEnabled;
 
     @Override
-    public void setActions(Collection<DialogAction<OptionDialogFacet>> actions) {
+    public void setActions(@Nullable Collection<DialogAction<OptionDialogFacet>> actions) {
         this.actions = actions;
     }
 
+    @Nullable
     @Override
     public Collection<DialogAction<OptionDialogFacet>> getActions() {
         return actions;
     }
 
     @Override
-    public void setCaption(String caption) {
+    public void setCaption(@Nullable String caption) {
         this.caption = caption;
     }
 
+    @Nullable
     @Override
     public String getCaption() {
         return caption;
     }
 
     @Override
-    public void setMessage(String message) {
+    public void setMessage(@Nullable String message) {
         this.message = message;
     }
 
+    @Nullable
     @Override
     public String getMessage() {
         return message;
@@ -106,13 +109,14 @@ public class WebOptionDialogFacet extends WebAbstractFacet
         this.styleName = styleName;
     }
 
+    @Nullable
     @Override
     public String getStyleName() {
         return styleName;
     }
 
     @Override
-    public void setWidth(String width) {
+    public void setWidth(@Nullable String width) {
         this.width = SizeWithUnit.parseStringSize(width);
     }
 
@@ -127,7 +131,7 @@ public class WebOptionDialogFacet extends WebAbstractFacet
     }
 
     @Override
-    public void setHeight(String height) {
+    public void setHeight(@Nullable String height) {
         this.height = SizeWithUnit.parseStringSize(height);
     }
 
@@ -141,23 +145,25 @@ public class WebOptionDialogFacet extends WebAbstractFacet
         return height.getUnit();
     }
 
+    @Nullable
     @Override
     public String getActionTarget() {
         return actionId;
     }
 
     @Override
-    public void setActionTarget(String actionId) {
+    public void setActionTarget(@Nullable String actionId) {
         this.actionId = actionId;
     }
 
+    @Nullable
     @Override
     public String getButtonTarget() {
         return buttonId;
     }
 
     @Override
-    public void setButtonTarget(String buttonId) {
+    public void setButtonTarget(@Nullable String buttonId) {
         this.buttonId = buttonId;
     }
 

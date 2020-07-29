@@ -25,6 +25,7 @@ import io.jmix.core.metamodel.datatype.Datatype;
 import io.jmix.core.metamodel.datatype.DatatypeRegistry;
 import io.jmix.ui.component.*;
 import io.jmix.ui.component.data.ConversionException;
+import io.jmix.ui.component.validation.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Base class for Vaadin 8 based input components.
@@ -46,7 +46,7 @@ public abstract class WebV8AbstractField<T extends com.vaadin.ui.Component & com
         extends WebAbstractValueComponent<T, P, V> implements Field<V> {
 
     protected static final int VALIDATORS_LIST_INITIAL_CAPACITY = 2;
-    protected List<Consumer<V>> validators; // lazily initialized list
+    protected List<Validator<V>> validators; // lazily initialized list
 
     protected boolean editable = true;
 
@@ -73,6 +73,7 @@ public abstract class WebV8AbstractField<T extends com.vaadin.ui.Component & com
         }
     }
 
+    @Nullable
     protected ErrorMessage getErrorMessage() {
         return (isEditableWithParent() && isRequired() && isEmpty())
                 ? new UserError(getRequiredMessage())
@@ -80,17 +81,18 @@ public abstract class WebV8AbstractField<T extends com.vaadin.ui.Component & com
     }
 
     @Override
-    public void setRequiredMessage(String msg) {
+    public void setRequiredMessage(@Nullable String msg) {
         ((AbstractComponent) component).setRequiredError(msg);
     }
 
+    @Nullable
     @Override
     public String getRequiredMessage() {
         return ((AbstractComponent) component).getRequiredError();
     }
 
     @Override
-    public void setParent(Component parent) {
+    public void setParent(@Nullable Component parent) {
         if (this.parent instanceof EditableChangeNotifier
                 && parentEditableChangeListener != null) {
             parentEditableChangeListener.remove();
@@ -147,25 +149,25 @@ public abstract class WebV8AbstractField<T extends com.vaadin.ui.Component & com
 
     @SuppressWarnings("unchecked")
     @Override
-    public void addValidator(Consumer<? super V> validator) {
+    public void addValidator(Validator<? super V> validator) {
         if (validators == null) {
             validators = new ArrayList<>(VALIDATORS_LIST_INITIAL_CAPACITY);
         }
-        //noinspection SuspiciousMethodCalls
+
         if (!validators.contains(validator)) {
-            validators.add((Consumer<V>) validator);
+            validators.add((Validator<V>) validator);
         }
     }
 
     @Override
-    public void removeValidator(Consumer<V> validator) {
+    public void removeValidator(Validator<V> validator) {
         if (validators != null) {
             validators.remove(validator);
         }
     }
 
     @Override
-    public Collection<Consumer<V>> getValidators() {
+    public Collection<Validator<V>> getValidators() {
         if (validators == null) {
             return Collections.emptyList();
         }
@@ -217,10 +219,10 @@ public abstract class WebV8AbstractField<T extends com.vaadin.ui.Component & com
         triggerValidators(value);
     }
 
-    protected void triggerValidators(V value) throws ValidationFailedException {
+    protected void triggerValidators(@Nullable V value) throws ValidationFailedException {
         if (validators != null) {
             try {
-                for (Consumer<V> validator : validators) {
+                for (Validator<V> validator : validators) {
                     validator.accept(value);
                 }
             } catch (ValidationException e) {
@@ -231,12 +233,12 @@ public abstract class WebV8AbstractField<T extends com.vaadin.ui.Component & com
         }
     }
 
-    protected boolean isEmpty(Object value) {
+    protected boolean isEmpty(@Nullable Object value) {
         return value == null;
     }
 
     @Nullable
-    protected String getDatatypeConversionErrorMsg(Datatype<V> datatype) {
+    protected String getDatatypeConversionErrorMsg(@Nullable Datatype<V> datatype) {
         if (datatype == null) {
             return null;
         }

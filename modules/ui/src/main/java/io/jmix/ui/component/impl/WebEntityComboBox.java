@@ -20,7 +20,6 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.server.Resource;
 import io.jmix.core.JmixEntity;
 import io.jmix.core.common.event.Subscription;
-import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.ui.UiProperties;
 import io.jmix.ui.component.EntityComboBox;
 import io.jmix.ui.component.SecuredActionsHolder;
@@ -39,7 +38,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.Locale;
+
+import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -68,8 +68,6 @@ public class WebEntityComboBox<V extends JmixEntity> extends WebEntityPicker<V>
 
     protected boolean refreshOptionsOnLookupClose = false;
 
-    protected Locale locale;
-
     public WebEntityComboBox() {
     }
 
@@ -81,11 +79,6 @@ public class WebEntityComboBox<V extends JmixEntity> extends WebEntityPicker<V>
     @Override
     public JmixComboBoxPickerField<V> getComponent() {
         return (JmixComboBoxPickerField<V>) super.getComponent();
-    }
-
-    @Autowired
-    public void setCurrentAuthentication(CurrentAuthentication currentAuthentication) {
-        this.locale = currentAuthentication.getLocale();
     }
 
     @Autowired
@@ -128,7 +121,7 @@ public class WebEntityComboBox<V extends JmixEntity> extends WebEntityPicker<V>
         return metadataTools.format(item);
     }
 
-    protected String generateItemCaption(V item) {
+    protected String generateItemCaption(@Nullable V item) {
         if (item == null) {
             return "";
         }
@@ -140,6 +133,7 @@ public class WebEntityComboBox<V extends JmixEntity> extends WebEntityPicker<V>
         return generateDefaultItemCaption(item);
     }
 
+    @Nullable
     protected String generateItemStylename(V item) {
         if (optionStyleProvider == null) {
             return null;
@@ -206,13 +200,14 @@ public class WebEntityComboBox<V extends JmixEntity> extends WebEntityPicker<V>
         return false;
     }
 
+    @Nullable
     @Override
     public Consumer<String> getNewOptionHandler() {
         return newOptionHandler;
     }
 
     @Override
-    public void setNewOptionHandler(Consumer<String> newOptionHandler) {
+    public void setNewOptionHandler(@Nullable Consumer<String> newOptionHandler) {
         this.newOptionHandler = newOptionHandler;
 
         if (newOptionHandler != null
@@ -250,7 +245,7 @@ public class WebEntityComboBox<V extends JmixEntity> extends WebEntityPicker<V>
 
     @SuppressWarnings("unchecked")
     @Override
-    public void setOptionIconProvider(Function<? super V, String> optionIconProvider) {
+    public void setOptionIconProvider(@Nullable Function<? super V, String> optionIconProvider) {
         if (this.optionIconProvider != optionIconProvider) {
             this.optionIconProvider = optionIconProvider;
 
@@ -262,12 +257,13 @@ public class WebEntityComboBox<V extends JmixEntity> extends WebEntityPicker<V>
         }
     }
 
+    @Nullable
     @Override
     public Function<? super V, String> getOptionIconProvider() {
         return optionIconProvider;
     }
 
-    protected Resource generateOptionIcon(V item) {
+    protected Resource generateOptionIcon(@Nullable V item) {
         String resourceId;
         try {
             resourceId = optionIconProvider.apply(item);
@@ -282,7 +278,7 @@ public class WebEntityComboBox<V extends JmixEntity> extends WebEntityPicker<V>
 
     @SuppressWarnings("unchecked")
     @Override
-    public void setOptionImageProvider(Function<? super V, io.jmix.ui.component.Resource> optionImageProvider) {
+    public void setOptionImageProvider(@Nullable Function<? super V, io.jmix.ui.component.Resource> optionImageProvider) {
         if (this.optionImageProvider != optionImageProvider) {
             this.optionImageProvider = optionImageProvider;
 
@@ -294,11 +290,13 @@ public class WebEntityComboBox<V extends JmixEntity> extends WebEntityPicker<V>
         }
     }
 
+    @Nullable
     @Override
     public Function<? super V, io.jmix.ui.component.Resource> getOptionImageProvider() {
         return optionImageProvider;
     }
 
+    @Nullable
     protected Resource generateOptionImage(V item) {
         io.jmix.ui.component.Resource resource;
         try {
@@ -315,45 +313,49 @@ public class WebEntityComboBox<V extends JmixEntity> extends WebEntityPicker<V>
     }
 
     @Override
-    public void setFilterPredicate(FilterPredicate filterPredicate) {
+    public void setFilterPredicate(@Nullable FilterPredicate filterPredicate) {
         this.filterPredicate = filterPredicate;
     }
 
+    @Nullable
     @Override
     public FilterPredicate getFilterPredicate() {
         return filterPredicate;
     }
 
+    @Nullable
     @Override
     public String getPopupWidth() {
         return getComponent().getPopupWidth();
     }
 
     @Override
-    public void setPopupWidth(String width) {
+    public void setPopupWidth(@Nullable String width) {
         getComponent().setPopupWidth(width);
     }
 
+    @Nullable
     @Override
     public String getInputPrompt() {
         return getComponent().getPlaceholder();
     }
 
     @Override
-    public void setInputPrompt(String inputPrompt) {
+    public void setInputPrompt(@Nullable String inputPrompt) {
         if (StringUtils.isNotBlank(inputPrompt)) {
             setNullSelectionCaption(generateItemCaption(null));
         }
         getComponent().setPlaceholder(inputPrompt);
     }
 
+    @Nullable
     @Override
     public Options<V> getOptions() {
         return optionsBinding != null ? optionsBinding.getSource() : null;
     }
 
     @Override
-    public void setOptions(Options<V> options) {
+    public void setOptions(@Nullable Options<V> options) {
         if (this.optionsBinding != null) {
             this.optionsBinding.unbind();
             this.optionsBinding = null;
@@ -390,18 +392,14 @@ public class WebEntityComboBox<V extends JmixEntity> extends WebEntityPicker<V>
         }
 
         if (filterMode == FilterMode.STARTS_WITH) {
-            return itemCaption
-                    .toLowerCase(locale)
-                    .startsWith(filterText.toLowerCase(locale));
+            return StringUtils.startsWithIgnoreCase(itemCaption, filterText);
         }
 
-        return itemCaption
-                .toLowerCase(locale)
-                .contains(filterText.toLowerCase(locale));
+        return StringUtils.containsIgnoreCase(itemCaption, filterText);
     }
 
     @Override
-    public void setOptionCaptionProvider(Function<? super V, String> optionCaptionProvider) {
+    public void setOptionCaptionProvider(@Nullable Function<? super V, String> optionCaptionProvider) {
         if (this.optionCaptionProvider != optionCaptionProvider) {
             this.optionCaptionProvider = optionCaptionProvider;
 
@@ -422,7 +420,7 @@ public class WebEntityComboBox<V extends JmixEntity> extends WebEntityPicker<V>
 
     @SuppressWarnings("unchecked")
     @Override
-    public void setOptionStyleProvider(Function<? super V, String> optionStyleProvider) {
+    public void setOptionStyleProvider(@Nullable Function<? super V, String> optionStyleProvider) {
         if (this.optionStyleProvider != optionStyleProvider) {
             this.optionStyleProvider = optionStyleProvider;
 
@@ -434,13 +432,14 @@ public class WebEntityComboBox<V extends JmixEntity> extends WebEntityPicker<V>
         }
     }
 
+    @Nullable
     @Override
     public Function<? super V, String> getOptionStyleProvider() {
         return optionStyleProvider;
     }
 
     @Override
-    protected void checkValueType(V value) {
+    protected void checkValueType(@Nullable V value) {
         // do not check
     }
 

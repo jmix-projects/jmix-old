@@ -43,6 +43,7 @@ public interface TableItems<I> extends DataUnit {
         return item;
     }
 
+    @Nullable
     Object getItemValue(Object itemId, Object propertyId);
 
     int size();
@@ -103,7 +104,8 @@ public interface TableItems<I> extends DataUnit {
          * @param itemId item id
          * @return ID of the next visible Item or <code>null</code>
          */
-        Object nextItemId(Object itemId);
+        @Nullable
+        Object nextItemId(@Nullable Object itemId);
 
         /**
          * Gets the ID of the item preceding the item that corresponds to <code>itemId</code>.
@@ -111,16 +113,19 @@ public interface TableItems<I> extends DataUnit {
          * @param itemId item id
          * @return ID of the previous visible item or <code>null</code>
          */
-        Object prevItemId(Object itemId);
+        @Nullable
+        Object prevItemId(@Nullable Object itemId);
 
         /**
          * @return ID of the first visible item
          */
+        @Nullable
         Object firstItemId();
 
         /**
          * @return ID of the last visible item
          */
+        @Nullable
         Object lastItemId();
 
         /**
@@ -129,7 +134,7 @@ public interface TableItems<I> extends DataUnit {
          * @param itemId item id
          * @return <code>true</code> if the item is first visible item, <code>false</code> if not
          */
-        boolean isFirstId(Object itemId);
+        boolean isFirstId(@Nullable Object itemId);
 
         /**
          * Tests if the item corresponding to the given item ID is the last item.
@@ -137,7 +142,7 @@ public interface TableItems<I> extends DataUnit {
          * @param itemId item id
          * @return <code>true</code> if the item is last visible item in the, <code>false</code> if not
          */
-        boolean isLastId(Object itemId);
+        boolean isLastId(@Nullable Object itemId);
     }
 
     /**

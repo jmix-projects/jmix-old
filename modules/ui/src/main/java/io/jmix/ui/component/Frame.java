@@ -20,7 +20,6 @@ import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.ScreenFragment;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Stream;
@@ -103,7 +102,6 @@ public interface Frame
      * @param id facet ID
      * @return facet instance
      */
-    @Nonnull
     default Facet getFacetNN(String id) {
         Facet facet = getFacet(id);
         if (facet == null) {
@@ -161,6 +159,7 @@ public interface Frame
             return messageMode;
         }
 
+        @Nullable
         public Float getWidth() {
             return width;
         }
@@ -227,6 +226,7 @@ public interface Frame
             return instance;
         }
 
+        @Nullable
         public Boolean getModal() {
             return modal;
         }
@@ -248,6 +248,7 @@ public interface Frame
         /**
          * @return true if a window can be closed by click on outside window area
          */
+        @Nullable
         public Boolean getCloseOnClickOutside() {
             return closeOnClickOutside;
         }
@@ -277,6 +278,7 @@ public interface Frame
         /**
          * @return true if a window is maximized across the screen.
          */
+        @Nullable
         public Boolean getMaximized() {
             return maximized;
         }

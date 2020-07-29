@@ -8,7 +8,7 @@ package io.jmix.samples.rest.tests.transform;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
-import io.jmix.core.AppBeans;
+import io.jmix.core.BeanLocator;
 import io.jmix.rest.api.config.RestJsonTransformations;
 import io.jmix.rest.api.transform.AbstractEntityJsonTransformer;
 import io.jmix.rest.api.transform.JsonTransformationDirection;
@@ -42,7 +42,7 @@ public class RestJsonTransformationTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Mocked
-    protected AppBeans appBeans;
+    protected BeanLocator beanLocator;
 
     @Mocked
     protected RestJsonTransformations restJsonTransformations;
@@ -129,10 +129,10 @@ public class RestJsonTransformationTest {
         initStandardTransformer(repairTransformer);
 
         new Expectations() {{
-            AppBeans.get(RestJsonTransformations.class);
+            beanLocator.get(RestJsonTransformations.class);
             result = restJsonTransformations;
             minTimes = 0;
-            AppBeans.get("jmix_RestJsonTransformations");
+            beanLocator.get("jmix_RestJsonTransformations");
             result = restJsonTransformations;
             minTimes = 0;
             restJsonTransformations.getTransformer("ref$OldRepair", "1.0", JsonTransformationDirection.FROM_VERSION);
