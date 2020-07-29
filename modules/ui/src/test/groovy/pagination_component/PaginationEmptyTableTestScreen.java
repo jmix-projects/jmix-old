@@ -16,21 +16,17 @@
 
 package pagination_component;
 
-import io.jmix.ui.component.Pagination;
-import io.jmix.ui.screen.LoadDataBeforeShow;
+import io.jmix.ui.component.Table;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import test_support.entity.sales.Customer;
 
 @UiController
-@UiDescriptor("pagination-component-test-screen.xml")
-@LoadDataBeforeShow
-public class PaginationComponentTestScreen extends Screen {
+@UiDescriptor("pagination-empty-table-test-screen.xml")
+public class PaginationEmptyTableTestScreen extends Screen {
 
     @Autowired
-    public Pagination pagination;
-
-    @Autowired
-    public Pagination paginationMaxResults;
+    public Table<Customer> customerTable;
 }

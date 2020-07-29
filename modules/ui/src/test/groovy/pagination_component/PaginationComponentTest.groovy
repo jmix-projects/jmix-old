@@ -16,6 +16,7 @@
 
 package pagination_component
 
+import com.vaadin.data.provider.Query
 import io.jmix.core.CoreConfiguration
 import io.jmix.core.DataManager
 import io.jmix.data.DataConfiguration
@@ -27,6 +28,8 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ContextConfiguration
 import test_support.DataContextTestConfiguration
 import test_support.entity.sales.Customer
+
+import java.util.stream.Collectors
 
 @ContextConfiguration(classes = [CoreConfiguration, UiConfiguration, DataConfiguration, DataContextTestConfiguration])
 class PaginationComponentTest extends ScreenSpecification {
@@ -50,7 +53,7 @@ class PaginationComponentTest extends ScreenSpecification {
     }
 
     def "Pagination click on next button"() {
-        given:"We have 3 pages"
+        given: "We have 3 pages"
         showTestMainScreen()
 
         when: "Click on 'next' button"
@@ -69,7 +72,7 @@ class PaginationComponentTest extends ScreenSpecification {
     }
 
     def "Pagination click on last button"() {
-        given:"We have 3 pages"
+        given: "We have 3 pages"
         showTestMainScreen()
 
         when: "Click on 'last' button"
@@ -88,7 +91,7 @@ class PaginationComponentTest extends ScreenSpecification {
     }
 
     def "Pagination click on first button"() {
-        given:"We have 3 pages"
+        given: "We have 3 pages"
         showTestMainScreen()
 
         when: "Set the last page on Pagination"
@@ -111,7 +114,7 @@ class PaginationComponentTest extends ScreenSpecification {
     }
 
     def "Pagination click on previous button"() {
-        given:"We have 3 pages"
+        given: "We have 3 pages"
         showTestMainScreen()
 
         when: "Click on 'next' button, then click on 'previous'"
@@ -125,5 +128,37 @@ class PaginationComponentTest extends ScreenSpecification {
         then: "First and previous buttons should be hidden"
         !vPagination.firstButton.isVisible()
         !vPagination.prevButton.isVisible()
+    }
+
+    def "Pagination with max result options"() {
+        showTestMainScreen()
+
+        when: "Load options with the order: 12, 9, 23, -6, 41, 0"
+        def screen = getScreens().create(PaginationComponentTestScreen)
+        screen.show()
+
+        def vPagination = screen.paginationMaxResults.unwrap(JmixPagination)
+        def maxResults = vPagination.maxResultComboBox.getDataProvider()
+                .fetch(new Query<Integer, ?>())
+                .collect(Collectors.toList())
+
+        def expectedMaxResults = [9, 12, 23, 41]
+
+        then: "Component should skip values less than or equal to 0"
+        maxResults == expectedMaxResults
+    }
+
+    def "TablePagination in empty table with MetaClass"() {
+        showTestMainScreen()
+
+        when: "Load empty table with MetaClass"
+        def screen = getScreens().create(PaginationEmptyTableTestScreen)
+        screen.show()
+
+        then: "No exception should be thrown and Pagination should be hidden"
+        noExceptionThrown()
+
+        def vPagination = screen.customerTable.getPagination().unwrap(JmixPagination)
+        !vPagination.maxResultComboBox.isEnabled()
     }
 }

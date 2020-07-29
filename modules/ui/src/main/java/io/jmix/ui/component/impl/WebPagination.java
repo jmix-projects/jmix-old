@@ -156,6 +156,8 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         updateMaxResultOptions();
         initStartMaxResultValue();
         initListeners();
+
+        updateComponentAvailability();
     }
 
     @Nullable
@@ -235,8 +237,6 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     @Override
     public void setMaxResultOptions(List<Integer> maxResults) {
         this.maxResultOptions = maxResults;
-
-        component.getMaxResultComboBox().setEmptySelectionAllowed(maxResults.contains(-1));
     }
 
     protected void initComponent() {
@@ -260,6 +260,8 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         component.getMaxResultComboBox().setWidth(theme.get("jmix.ui.pagination.maxResult.width"));
         component.getMaxResultComboBox().setEmptySelectionAllowed(true);
         component.getMaxResultComboBox().setItems(delegate.getMaxResultsFromProperty());
+
+        updateComponentAvailability();
     }
 
     protected void initListeners() {
@@ -291,6 +293,16 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
 
         if (maxResultsValueChangeRegistration != null) {
             maxResultsValueChangeRegistration.remove();
+        }
+    }
+
+    protected void updateComponentAvailability() {
+        boolean disabled = adapter == null;
+
+        getComponent().getMaxResultComboBox().setEnabled(!disabled);
+        if (disabled) {
+            getComponent().getLabel().setValue(
+                    messages.getMessage("", "pagination.status.label.disabledValue"));
         }
     }
 

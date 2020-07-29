@@ -17,11 +17,14 @@
 package io.jmix.ui.component.impl;
 
 import io.jmix.core.common.event.Subscription;
+import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.component.ListComponent;
 import io.jmix.ui.component.TablePagination;
 import io.jmix.ui.component.VisibilityChangeNotifier;
 import io.jmix.ui.component.data.DataUnit;
 import io.jmix.ui.component.data.meta.ContainerDataUnit;
+import io.jmix.ui.component.data.meta.EmptyDataUnit;
+import io.jmix.ui.component.data.meta.EntityDataUnit;
 import io.jmix.ui.model.BaseCollectionLoader;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.DataLoader;
@@ -58,6 +61,8 @@ public class WebTablePagination extends WebPagination implements TablePagination
             updateMaxResultOptions();
             initStartMaxResultValue();
             initListeners();
+
+            updateComponentAvailability();
         }
     }
 
@@ -88,27 +93,107 @@ public class WebTablePagination extends WebPagination implements TablePagination
         if (target instanceof WebAbstractTable) {
             target.withUnwrapped(com.vaadin.v7.ui.Table.class, vTable ->
                     vTable.setCurrentPageFirstItemIndex(0));
+        } else if (target instanceof WebAbstractDataGrid) {
+            ((WebAbstractDataGrid) target).scrollToStart();
         }
+    }
+
+    @Override
+    protected void initStartMaxResultValue() {
+        super.initStartMaxResultValue();
+
+        if (isComponentDisabled()) {
+            getComponent().getMaxResultComboBox().setValue(null);
+        }
+    }
+
+    protected void updateComponentAvailability() {
+        boolean disabled = isComponentDisabled();
+
+        getComponent().getMaxResultComboBox().setEnabled(!disabled);
+        if (disabled) {
+            getComponent().getLabel().setValue(
+                    messages.getMessage("", "pagination.status.label.disabledValue"));
+        }
+    }
+
+    protected boolean isComponentDisabled() {
+        return adapter == null || adapter instanceof EmptyAdapter;
     }
 
     protected Adapter createAdapter(ListComponent target) {
         DataUnit items = target.getItems();
 
-        if (!(items instanceof ContainerDataUnit)) {
-            throw new IllegalStateException("Unsupported data unit type: " + items);
-        }
+        if (items instanceof ContainerDataUnit) {
+            CollectionContainer container = ((ContainerDataUnit) items).getContainer();
 
-        CollectionContainer container = ((ContainerDataUnit) items).getContainer();
+            DataLoader loader = null;
+            if (container instanceof HasLoader) {
+                loader = ((HasLoader) container).getLoader();
 
-        DataLoader loader = null;
-        if (container instanceof HasLoader) {
-            loader = ((HasLoader) container).getLoader();
-
-            if (loader != null && !(loader instanceof BaseCollectionLoader)) {
-                throw new IllegalStateException("TablePagination component currently supports only BaseCollectionLoader");
+                if (loader != null && !(loader instanceof BaseCollectionLoader)) {
+                    throw new IllegalStateException("TablePagination component currently supports only BaseCollectionLoader");
+                }
             }
+
+            return new LoaderAdapter(container, (BaseCollectionLoader) loader);
         }
 
-        return new LoaderAdapter(container, (BaseCollectionLoader) loader);
+        if (items instanceof EmptyDataUnit
+                && items instanceof EntityDataUnit) {
+            return new EmptyAdapter(((EntityDataUnit) items).getEntityMetaClass());
+        }
+
+        throw new IllegalStateException("Unsupported data unit type: " + items);
+    }
+
+    protected class EmptyAdapter implements Adapter {
+
+        protected MetaClass metaClass;
+
+        public EmptyAdapter(MetaClass metaClass) {
+            this.metaClass = metaClass;
+        }
+
+        @Override
+        public void unbind() {
+        }
+
+        @Override
+        public int getFirstResult() {
+            return 0;
+        }
+
+        @Override
+        public int getMaxResults() {
+            return Integer.MAX_VALUE;
+        }
+
+        @Override
+        public void setFirstResult(int startPosition) {
+        }
+
+        @Override
+        public void setMaxResults(int maxResults) {
+        }
+
+        @Override
+        public int getCount() {
+            return 0;
+        }
+
+        @Override
+        public MetaClass getEntityMetaClass() {
+            return metaClass;
+        }
+
+        @Override
+        public int size() {
+            return 0;
+        }
+
+        @Override
+        public void refresh() {
+        }
     }
 }
