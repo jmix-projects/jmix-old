@@ -221,7 +221,6 @@ public class OrmDataStore implements DataStore {
 
         commitTransaction(txStatus);
 
-
         if (result != null) {
             entityAttributesEraser.eraseReferences(referencesCollector);
         }
@@ -283,6 +282,7 @@ public class OrmDataStore implements DataStore {
                 entities = loadListByBatchesOfIds(context, inMemoryEntityContext.readPredicate(), em, fetchPlan, maxIdsBatchSize);
             } else {
                 Query query = createQuery(em, context, false, false);
+                query.setHint(PersistenceHints.FETCH_PLAN, fetchPlan);
                 entities = getResultList(context, query, inMemoryEntityContext.readPredicate(), ensureDistinct);
             }
             if (context.getIds().isEmpty()) {

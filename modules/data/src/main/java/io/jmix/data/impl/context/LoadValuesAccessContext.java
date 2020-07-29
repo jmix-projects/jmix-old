@@ -23,10 +23,7 @@ import io.jmix.core.context.AccessContext;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaPropertyPath;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LoadValuesAccessContext implements AccessContext {
@@ -70,7 +67,7 @@ public class LoadValuesAccessContext implements AccessContext {
     }
 
     public List<Integer> getDeniedSelectedIndexes() {
-        return deniedSelectedIndexes;
+        return deniedSelectedIndexes == null ? Collections.emptyList() : deniedSelectedIndexes;
     }
 
     public List<Integer> getSelectedIndexes(MetaPropertyPath propertyPath) {

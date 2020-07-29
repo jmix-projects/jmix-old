@@ -21,11 +21,11 @@ import io.jmix.core.context.AccessContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 @Component(AccessManager.NAME)
 public class AccessManager {
@@ -35,8 +35,7 @@ public class AccessManager {
     protected AccessConstraintsRegistry registry;
 
     public class ConstraintsBuilder {
-
-        protected List<AccessConstraint<?>> constraints;
+        protected final List<AccessConstraint<?>> constraints = new ArrayList<>();
 
         public ConstraintsBuilder withAllRegistered() {
             constraints.addAll(registry.getConstraints());
@@ -77,6 +76,6 @@ public class AccessManager {
     }
 
     public <T extends AccessContext> T applyRegisteredConstraints(T context) {
-        return applyConstraints(context, constraintsBuilder().withAllRegistered().build());
+        return applyConstraints(context, registry.getConstraints());
     }
 }
