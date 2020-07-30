@@ -48,11 +48,12 @@ public class JmixIsNullExpressionOperator extends ExpressionOperator {
     @Override
     public void printCollection(Vector items, ExpressionSQLPrinter printer) {
         if (items.size() == 1 && items.get(0) instanceof QueryKeyExpression && !CubaUtil.isSoftDeletion()) {
+            QueryKeyExpression expression = (QueryKeyExpression) items.get(0);
             //noinspection unchecked
-            Class<? extends JmixEntity> clazz = ((QueryKeyExpression) items.get(0)).getContainingDescriptor().getJavaClass();
+            Class<? extends JmixEntity> clazz = expression.getContainingDescriptor().getJavaClass();
 
-            String deletedDateFieldName = metadataTools.getDeletedDateProperty(clazz);
-            if (Objects.equals(deletedDateFieldName, ((QueryKeyExpression) items.get(0)).getName())) {
+            String deletedDateFieldName = metadataTools.findDeletedDateProperty(clazz);
+            if (Objects.equals(deletedDateFieldName, expression.getName())) {
                 try {
                     printer.getWriter().write("(0=0)");
                     return;

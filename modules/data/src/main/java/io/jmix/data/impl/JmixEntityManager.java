@@ -76,7 +76,7 @@ public class JmixEntityManager implements EntityManager {
         entityPersistingEventMgr = (EntityPersistingEventManager) beanFactory.getBean(EntityPersistingEventManager.NAME);
         timeSource = (TimeSource) beanFactory.getBean(TimeSource.NAME);
         auditInfoProvider = (AuditInfoProvider) beanFactory.getBean(AuditInfoProvider.NAME);
-        auditConverter =  (AuditConversionService) beanFactory.getBean(AuditConversionService.NAME);
+        auditConverter = (AuditConversionService) beanFactory.getBean(AuditConversionService.NAME);
     }
 
     @Override
@@ -445,7 +445,9 @@ public class JmixEntityManager implements EntityManager {
 
         T entity = delegate.find(javaClass, realId, lockMode, properties);
 
-        if (entity != null && metadataTools.isSoftDeleted((JmixEntity) entity) && isSoftDeletion(properties))
+        if (entity != null && ((JmixEntity) entity).__getEntityEntry() instanceof EntityEntrySoftDelete
+                && ((EntityEntrySoftDelete) ((JmixEntity) entity).__getEntityEntry()).isDeleted()
+                && isSoftDeletion(properties))
             return null; // in case of entity cache
         else
             return entity;

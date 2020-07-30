@@ -933,7 +933,7 @@ public class EntityLogImpl implements EntityLog, OrmLifecycleListener {
 
     private boolean isSoftDeleteEntityRestored(JmixEntity entity, Set<String> dirty) {
         return ((entity.__getEntityEntry() instanceof EntityEntrySoftDelete)
-                && dirty.contains(metadataTools.getDeletedDatePropertyNN(entity))
+                && dirty.contains(metadataTools.getDeletedDateProperty(entity))
                 && !((EntityEntrySoftDelete) entity.__getEntityEntry()).isDeleted()
         );
     }
