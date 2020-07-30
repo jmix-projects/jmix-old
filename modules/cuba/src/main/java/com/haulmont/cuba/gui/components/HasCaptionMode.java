@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package io.jmix.ui.component;
+package com.haulmont.cuba.gui.components;
 
-import io.jmix.ui.component.compatibility.LegacyCaptionAdapter;
+import com.haulmont.cuba.gui.components.compatibility.LegacyCaptionAdapter;
+import io.jmix.ui.component.HasOptionCaptionProvider;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
