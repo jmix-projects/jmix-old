@@ -192,6 +192,11 @@
     </Match>
 
     <Match>
+        <Bug pattern="EQ_DOESNT_OVERRIDE_EQUALS"/>
+        <Class name="io.jmix.data.persistence.JmixIsNullExpressionOperator"/>
+    </Match>
+
+    <Match>
         <Bug pattern="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT"/> <!-- false positive -->
         <Class name="io.jmix.ui.component.impl.WebEditorScreenFacet"/>
     </Match>
