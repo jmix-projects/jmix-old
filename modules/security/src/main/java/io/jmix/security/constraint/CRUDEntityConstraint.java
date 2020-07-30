@@ -28,11 +28,11 @@ import org.springframework.stereotype.Component;
 public class CRUDEntityConstraint implements EntityOperationConstraint<CRUDEntityContext> {
     public static final String NAME = "sec_CRUDEntityConstraint";
 
-    protected EntityPolicyStore policyStore;
+    protected ResourcePolicyStore policyStore;
     protected SecureOperations secureOperations;
 
     @Autowired
-    public void setPolicyStore(EntityPolicyStore policyStore) {
+    public void setPolicyStore(ResourcePolicyStore policyStore) {
         this.policyStore = policyStore;
     }
 

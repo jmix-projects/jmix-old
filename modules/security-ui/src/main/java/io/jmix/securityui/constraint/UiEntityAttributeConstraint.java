@@ -18,7 +18,7 @@ package io.jmix.securityui.constraint;
 
 import io.jmix.core.constraint.EntityOperationConstraint;
 import io.jmix.security.constraint.SecureOperations;
-import io.jmix.security.constraint.EntityPolicyStore;
+import io.jmix.security.constraint.ResourcePolicyStore;
 import io.jmix.ui.context.UiEntityAttributeContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -30,17 +30,17 @@ import org.springframework.stereotype.Component;
 public class UiEntityAttributeConstraint implements EntityOperationConstraint<UiEntityAttributeContext> {
     public static final String NAME = "sec_UiEntityAttributeConstraint";
 
-    protected EntityPolicyStore policyStore;
-    protected SecureOperations entityOperations;
+    protected ResourcePolicyStore policyStore;
+    protected SecureOperations secureOperations;
 
     @Autowired
-    public void setPolicyStore(EntityPolicyStore policyStore) {
+    public void setPolicyStore(ResourcePolicyStore policyStore) {
         this.policyStore = policyStore;
     }
 
     @Autowired
-    public void setEntityOperations(SecureOperations entityOperations) {
-        this.entityOperations = entityOperations;
+    public void setSecureOperations(SecureOperations secureOperations) {
+        this.secureOperations = secureOperations;
     }
 
     @Override
@@ -50,10 +50,10 @@ public class UiEntityAttributeConstraint implements EntityOperationConstraint<Ui
 
     @Override
     public void applyTo(UiEntityAttributeContext context) {
-        if (!entityOperations.isEntityAttrUpdatePermitted(context.getPropertyPath(), policyStore)) {
+        if (!secureOperations.isEntityAttrUpdatePermitted(context.getPropertyPath(), policyStore)) {
             context.setModifyDenied();
         }
-        if (!entityOperations.isEntityAttrReadPermitted(context.getPropertyPath(), policyStore)) {
+        if (!secureOperations.isEntityAttrReadPermitted(context.getPropertyPath(), policyStore)) {
             context.setViewDenied();
         }
     }

@@ -31,11 +31,11 @@ import org.springframework.stereotype.Component;
 public class ReadEntityQueryConstraint implements RowLevelConstraint<ReadEntityQueryContext> {
     public static final String NAME = "sec_ReadEntityQueryConstraint";
 
-    protected EntityPolicyStore policyStore;
+    protected ResourcePolicyStore policyStore;
     protected PredefinedQueryParameters predefinedQueryParameters;
 
     @Autowired
-    public void setPolicyStore(EntityPolicyStore policyStore) {
+    public void setPolicyStore(ResourcePolicyStore policyStore) {
         this.policyStore = policyStore;
     }
 

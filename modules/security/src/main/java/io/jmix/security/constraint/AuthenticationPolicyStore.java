@@ -33,7 +33,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component(AuthenticationPolicyStore.NAME)
-public class AuthenticationPolicyStore implements EntityPolicyStore, SpecificPolicyStore {
+public class AuthenticationPolicyStore implements ResourcePolicyStore {
     public static final String NAME = "sec_AuthenticationPolicyStore";
 
     @Autowired

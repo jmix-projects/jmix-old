@@ -29,27 +29,27 @@ import java.util.Objects;
 @Component(SecureOperations.NAME)
 public class SecureOperationsImpl implements SecureOperations {
 
-    public boolean isEntityCreatePermitted(MetaClass metaClass, EntityPolicyStore policyStore) {
+    public boolean isEntityCreatePermitted(MetaClass metaClass, ResourcePolicyStore policyStore) {
         return isEntityOperationPermitted(metaClass, EntityPolicyAction.CREATE, policyStore);
     }
 
     @Override
-    public boolean isEntityReadPermitted(MetaClass metaClass, EntityPolicyStore policyStore) {
+    public boolean isEntityReadPermitted(MetaClass metaClass, ResourcePolicyStore policyStore) {
         return isEntityOperationPermitted(metaClass, EntityPolicyAction.READ, policyStore);
     }
 
     @Override
-    public boolean isEntityUpdatePermitted(MetaClass metaClass, EntityPolicyStore policyContainer) {
+    public boolean isEntityUpdatePermitted(MetaClass metaClass, ResourcePolicyStore policyContainer) {
         return isEntityOperationPermitted(metaClass, EntityPolicyAction.UPDATE, policyContainer);
     }
 
     @Override
-    public boolean isEntityDeletePermitted(MetaClass metaClass, EntityPolicyStore policyContainer) {
+    public boolean isEntityDeletePermitted(MetaClass metaClass, ResourcePolicyStore policyContainer) {
         return false;
     }
 
     protected boolean isEntityOperationPermitted(MetaClass metaClass, EntityPolicyAction entityPolicyAction,
-                                                 EntityPolicyStore policyStore) {
+                                                 ResourcePolicyStore policyStore) {
         return policyStore.getEntityResourcePolicies(metaClass).stream()
                 .anyMatch(policy -> Objects.equals(policy.getEffect(), ResourcePolicyEffect.ALLOW) &&
                         (Objects.equals(policy.getAction(), entityPolicyAction.getId()) ||
@@ -57,7 +57,7 @@ public class SecureOperationsImpl implements SecureOperations {
     }
 
     @Override
-    public boolean isEntityAttrReadPermitted(MetaPropertyPath metaPropertyPath, EntityPolicyStore policyStore) {
+    public boolean isEntityAttrReadPermitted(MetaPropertyPath metaPropertyPath, ResourcePolicyStore policyStore) {
         for (MetaProperty metaProperty : metaPropertyPath.getMetaProperties()) {
             if (!isEntityAttrPermitted(metaProperty.getDomain(), metaProperty.getName(),
                     EntityAttributePolicyAction.READ, policyStore)) {
@@ -68,7 +68,7 @@ public class SecureOperationsImpl implements SecureOperations {
     }
 
     @Override
-    public boolean isEntityAttrUpdatePermitted(MetaPropertyPath metaPropertyPath, EntityPolicyStore policyStore) {
+    public boolean isEntityAttrUpdatePermitted(MetaPropertyPath metaPropertyPath, ResourcePolicyStore policyStore) {
         for (MetaProperty metaProperty : metaPropertyPath.getMetaProperties()) {
             if (!isEntityAttrPermitted(metaProperty.getDomain(), metaProperty.getName(),
                     EntityAttributePolicyAction.UPDATE, policyStore)) {
@@ -81,7 +81,7 @@ public class SecureOperationsImpl implements SecureOperations {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     protected boolean isEntityAttrPermitted(MetaClass metaClass, String name,
                                             EntityAttributePolicyAction policyAction,
-                                            EntityPolicyStore policyStore) {
+                                            ResourcePolicyStore policyStore) {
 
         boolean result = policyStore.getEntityAttributesResourcePolicies(metaClass, name).stream()
                 .anyMatch(policy -> Objects.equals(policy.getAction(), policyAction.getId()) &&
@@ -96,7 +96,7 @@ public class SecureOperationsImpl implements SecureOperations {
     }
 
     @Override
-    public boolean isSpecificPermitted(String resourceName, SpecificPolicyStore policyStore) {
+    public boolean isSpecificPermitted(String resourceName, ResourcePolicyStore policyStore) {
         return policyStore.getSpecificResourcePolicies(resourceName).stream()
                 .anyMatch(policy -> Objects.equals(policy.getEffect(), ResourcePolicyEffect.ALLOW));
     }

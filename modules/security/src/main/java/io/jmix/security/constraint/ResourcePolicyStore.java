@@ -22,11 +22,13 @@ import io.jmix.security.model.RowLevelPolicy;
 
 import java.util.Collection;
 
-public interface EntityPolicyStore {
+public interface ResourcePolicyStore {
 
     Collection<RowLevelPolicy> getRowLevelPolicies(MetaClass entityClass);
 
     Collection<ResourcePolicy> getEntityResourcePolicies(MetaClass metaClass);
 
     Collection<ResourcePolicy> getEntityAttributesResourcePolicies(MetaClass metaClass, String attribute);
+
+    Collection<ResourcePolicy> getSpecificResourcePolicies(String resourceName);
 }

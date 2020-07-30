@@ -23,39 +23,37 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component(SpecificConstraintImpl.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class SpecificConstraintImpl<T extends SpecificOperationAccessContext> implements SpecificConstraint<T> {
-    public static final String NAME = "sec_CommonSpecificConstraint";
+public class SpecificConstraintImpl implements SpecificConstraint<SpecificOperationAccessContext> {
+    public static final String NAME = "sec_SpecificConstraintImpl";
 
-    protected final Class<T> contextClass;
+    protected final Class<SpecificOperationAccessContext> contextClass;
     protected final String resourceName;
 
     protected SecureOperations secureOperations;
-    protected SpecificPolicyStore policyStore;
+    protected ResourcePolicyStore policyStore;
 
-    public SpecificConstraintImpl(Class<T> contextClass, String resourceName) {
+    public SpecificConstraintImpl(Class<SpecificOperationAccessContext> contextClass, String resourceName) {
         this.contextClass = contextClass;
         this.resourceName = resourceName;
     }
 
-    @Autowired
     public void setSecureOperations(SecureOperations secureOperations) {
         this.secureOperations = secureOperations;
     }
 
-    @Autowired
-    public void setPolicyStore(SpecificPolicyStore policyStore) {
+    public void setPolicyStore(ResourcePolicyStore policyStore) {
         this.policyStore = policyStore;
     }
 
     @Override
-    public Class<T> getContextType() {
+    public Class<SpecificOperationAccessContext> getContextType() {
         return contextClass;
     }
 
     @Override
-    public void applyTo(T context) {
+    public void applyTo(SpecificOperationAccessContext context) {
         if (secureOperations.isSpecificPermitted(resourceName, policyStore)) {
             context.setDenied();
         }

@@ -18,23 +18,23 @@ package io.jmix.securityui.constraint;
 
 import io.jmix.core.constraint.EntityOperationConstraint;
 import io.jmix.security.constraint.SecureOperations;
-import io.jmix.security.constraint.EntityPolicyStore;
+import io.jmix.security.constraint.ResourcePolicyStore;
 import io.jmix.ui.context.UiEntityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component(UiEntityAttributeConstraint.NAME)
+@Component(UiEntityConstraint.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class UiEntityConstraint implements EntityOperationConstraint<UiEntityContext> {
     public static final String NAME = "sec_UiEntityConstraint";
 
-    protected EntityPolicyStore policyStore;
+    protected ResourcePolicyStore policyStore;
     protected SecureOperations entityOperations;
 
     @Autowired
-    public void setPolicyStore(EntityPolicyStore policyStore) {
+    public void setPolicyStore(ResourcePolicyStore policyStore) {
         this.policyStore = policyStore;
     }
 

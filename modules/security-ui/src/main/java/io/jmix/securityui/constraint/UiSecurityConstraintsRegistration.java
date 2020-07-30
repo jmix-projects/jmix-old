@@ -23,11 +23,9 @@ import io.jmix.ui.context.UiShowEntityInfoContext;
 import io.jmix.ui.context.UiShowExceptionDetailsContext;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-@Component(UiSecurityConstraintsRegistration.NAME)
 public class UiSecurityConstraintsRegistration {
     public static final String NAME = "sec_UiConstraintsRegistration";
 

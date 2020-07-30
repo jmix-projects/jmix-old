@@ -33,7 +33,7 @@ public class LoadValuesConstraint implements EntityOperationConstraint<LoadValue
     public static final String NAME = "sec_LoadValuesConstraint";
 
     protected SecureOperations secureOperations;
-    protected EntityPolicyStore policyStore;
+    protected ResourcePolicyStore policyStore;
 
     @Autowired
     public void setSecureOperations(SecureOperations secureOperations) {
@@ -41,7 +41,7 @@ public class LoadValuesConstraint implements EntityOperationConstraint<LoadValue
     }
 
     @Autowired
-    public void setPolicyStore(EntityPolicyStore policyStore) {
+    public void setPolicyStore(ResourcePolicyStore policyStore) {
         this.policyStore = policyStore;
     }
 

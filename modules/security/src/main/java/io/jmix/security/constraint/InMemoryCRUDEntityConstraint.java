@@ -31,10 +31,10 @@ import org.springframework.stereotype.Component;
 public class InMemoryCRUDEntityConstraint implements RowLevelConstraint<InMemoryCRUDEntityContext> {
     public static final String NAME = "sec_InMemoryCRUDEntityConstraint";
 
-    protected EntityPolicyStore policyStore;
+    protected ResourcePolicyStore policyStore;
 
     @Autowired
-    public void setPolicyStore(EntityPolicyStore policyStore) {
+    public void setPolicyStore(ResourcePolicyStore policyStore) {
         this.policyStore = policyStore;
     }
 

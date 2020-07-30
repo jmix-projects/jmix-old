@@ -16,7 +16,6 @@
 
 package io.jmix.samples.customsecurity
 
-import io.jmix.core.security.Security
 import io.jmix.core.security.UserRepository
 import io.jmix.core.security.authentication.CoreAuthentication
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,9 +28,6 @@ import spock.lang.Specification
 class CustomSecurityImplTest extends Specification {
 
     @Autowired
-    Security security
-
-    @Autowired
     UserRepository userRepository
 
     @Autowired
@@ -40,7 +36,6 @@ class CustomSecurityImplTest extends Specification {
     def "custom implementations are in use"() {
         expect:
 
-        security instanceof CustomSecurityImpl
         userRepository instanceof CustomUserRepository
         userRepository.loadUserByUsername('admin') instanceof CustomUser
     }
