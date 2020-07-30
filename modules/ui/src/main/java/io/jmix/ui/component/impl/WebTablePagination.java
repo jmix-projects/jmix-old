@@ -58,8 +58,11 @@ public class WebTablePagination extends WebPagination implements TablePagination
             }
             adapter = createAdapter(target);
 
-            updateMaxResultOptions();
-            setupMaxResultValue();
+            unregisterListeners();
+            
+            initMaxResultOptions();
+            initMaxResultValue();
+
             initListeners();
 
             updateComponentAvailability();
@@ -99,12 +102,12 @@ public class WebTablePagination extends WebPagination implements TablePagination
     }
 
     @Override
-    protected void setupMaxResultValue() {
-        super.setupMaxResultValue();
-
+    protected void initMaxResultValue() {
         if (isComponentDisabled()) {
-            getComponent().getMaxResultComboBox().setValue(null);
+            return;
         }
+
+        super.initMaxResultValue();
     }
 
     protected void updateComponentAvailability() {

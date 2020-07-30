@@ -153,8 +153,11 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
 
         adapter = createAdapter(loader);
 
-        updateMaxResultOptions();
-        setupMaxResultValue();
+        unregisterListeners();
+
+        initMaxResultOptions();
+        initMaxResultValue();
+
         initListeners();
 
         updateComponentAvailability();
@@ -215,7 +218,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     public void setShowMaxResults(boolean showMaxResults) {
         component.getMaxResultLayout().setVisible(showMaxResults);
 
-        setupMaxResultValue();
+        refreshMaxResultValue();
     }
 
     @Override
@@ -383,7 +386,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         adapter.refresh();
     }
 
-    protected void updateMaxResultOptions() {
+    protected void initMaxResultOptions() {
         checkState();
 
         if (CollectionUtils.isNotEmpty(maxResultOptions)) {
@@ -395,25 +398,53 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         component.getMaxResultComboBox().setItems(options);
     }
 
-    protected void setupMaxResultValue() {
-        if (adapter == null) {
-            return;
-        }
+    protected void initMaxResultValue() {
+        checkState();
 
         // use values from ComboBox
         if (isShowMaxResults()) {
             Integer maxResult = delegate.getAllowedOption(options, adapter.getMaxResults(), adapter.getEntityMetaClass());
-            if (maxResult.equals(component.getMaxResultComboBox().getValue())) {
-                onMaxResultsValueChange(maxResult);
-            }
-
+            adapter.setMaxResults(maxResult);
             component.getMaxResultComboBox().setValue(maxResult);
-        // otherwise from loader
-        } else {
-            int maxResult = adapter.getLoadedMaxResults();
-            if (maxResult != adapter.getMaxResults() && maxResult != -1) {
-                onMaxResultsValueChange(maxResult);
+
+            // if loader has items
+            if (adapter.size() > 0) {
+                onMaxResultsValueChange(maxResult); // reload it with value form ComboBox
             }
+        } else {
+            // otherwise from loader
+            int maxResultLoaded = adapter.getLoadedMaxResults();
+            int maxFetch = delegate.getMaxFetchValue(adapter.getEntityMetaClass());
+            adapter.setMaxResults(Math.min(maxResultLoaded, maxFetch));
+
+            // if loader has items
+            if (adapter.size() > 0) {
+                onCollectionChanged(); // update state
+            }
+        }
+    }
+
+    protected void refreshMaxResultValue() {
+        if (adapter == null) {
+            return;
+        }
+
+        if (isShowMaxResults()) {
+            Integer maxResult = delegate.getAllowedOption(options, adapter.getMaxResults(), adapter.getEntityMetaClass());
+            adapter.setMaxResults(maxResult);
+
+            Integer oldValue = component.getMaxResultComboBox().getValue();
+            component.getMaxResultComboBox().setValue(maxResult);
+
+            // if value the same, fire event manually
+            if (maxResult.equals(oldValue)) {
+                onMaxResultsValueChange(maxResult); // reload it with value form ComboBox
+            }
+        } else {
+            int maxResultLoaded = adapter.getLoadedMaxResults();
+            int maxFetch = delegate.getMaxFetchValue(adapter.getEntityMetaClass());
+            adapter.setMaxResults(Math.min(maxResultLoaded, maxFetch));
+            adapter.refresh();
         }
     }
 
@@ -665,8 +696,6 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
 
             weakContainerCollectionChangeListener = new WeakCollectionChangeListener(
                     container, containerCollectionChangeListener);
-
-            onCollectionChanged();
         }
 
         @Override

@@ -44,7 +44,7 @@ class PaginationComponentTest extends ScreenSpecification {
     void setup() {
         exportScreensPackages(["pagination_component"])
 
-        dataManager.save(metadata.create(Customer), metadata.create(Customer), metadata.create(Customer))
+        10.times { dataManager.save(metadata.create(Customer)) }
     }
 
     @Override
@@ -53,7 +53,7 @@ class PaginationComponentTest extends ScreenSpecification {
     }
 
     def "Pagination click on next button"() {
-        given: "We have 3 pages"
+        given: "We have 5 pages"
         showTestMainScreen()
 
         when: "Click on 'next' button"
@@ -72,7 +72,7 @@ class PaginationComponentTest extends ScreenSpecification {
     }
 
     def "Pagination click on last button"() {
-        given: "We have 3 pages"
+        given: "We have 5 pages"
         showTestMainScreen()
 
         when: "Click on 'last' button"
@@ -91,7 +91,7 @@ class PaginationComponentTest extends ScreenSpecification {
     }
 
     def "Pagination click on first button"() {
-        given: "We have 3 pages"
+        given: "We have 5 pages"
         showTestMainScreen()
 
         when: "Set the last page on Pagination"
@@ -114,7 +114,7 @@ class PaginationComponentTest extends ScreenSpecification {
     }
 
     def "Pagination click on previous button"() {
-        given: "We have 3 pages"
+        given: "We have 5 pages"
         showTestMainScreen()
 
         when: "Click on 'next' button, then click on 'previous'"
@@ -130,14 +130,14 @@ class PaginationComponentTest extends ScreenSpecification {
         !vPagination.prevButton.isVisible()
     }
 
-    def "Pagination with max result options"() {
+    def "Pagination with custom max result options"() {
         showTestMainScreen()
 
         when: "Load options with the order: 12, 9, 23, -6, 41, 0"
         def screen = getScreens().create(PaginationComponentTestScreen)
         screen.show()
 
-        def vPagination = screen.paginationMaxResults.unwrap(JmixPagination)
+        def vPagination = screen.paginationCustomMaxResults.unwrap(JmixPagination)
         def maxResults = vPagination.maxResultComboBox.getDataProvider()
                 .fetch(new Query<Integer, ?>())
                 .collect(Collectors.toList())
@@ -147,6 +147,38 @@ class PaginationComponentTest extends ScreenSpecification {
         then: "Component should skip values less than or equal to 0"
         maxResults == expectedMaxResults
     }
+
+    def "Change Pagination MaxResults visibility at runtime"() {
+        showTestMainScreen()
+
+        when: "Show screen"
+        def screen = getScreens().create(PaginationComponentTestScreen)
+        screen.show()
+
+        then: """
+              Pagination without MaxResults should load items according to Loader's maxResult.
+              Pagination with MaxResults should load according to option value from ComboBox.
+              """
+        // Firstly if Loader's value does not exist in MaxResult ComboBox
+        // component will find the nearest value for Loader's maxResult
+        screen.maxResultFalseCustomersLd.container.items.size() == 2
+        // just used value from loader
+        screen.maxResultTrueCustomersLd.container.items.size() == 1
+
+        when: "Show MaxResult in pagination"
+        screen.paginationMaxResultsFalse.setShowMaxResults(true)
+
+        then: "Value from MaxResult ComboBox should be used"
+        screen.maxResultFalseCustomersLd.container.items.size() == 1
+
+        when: "Hide MaxResult in pagination"
+        screen.paginationMaxResultsTrue.setShowMaxResults(false)
+
+        then: "Value from Loader's maxResult should be used"
+        screen.maxResultTrueCustomersLd.container.items.size() == 2
+    }
+
+    // TODO rp test postpone set Loader
 
     def "TablePagination in empty table with MetaClass"() {
         showTestMainScreen()
@@ -161,4 +193,6 @@ class PaginationComponentTest extends ScreenSpecification {
         def vPagination = screen.customerTable.getPagination().unwrap(JmixPagination)
         !vPagination.maxResultComboBox.isEnabled()
     }
+
+    // todo rp TablePagination works with simple loader
 }

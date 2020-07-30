@@ -16,22 +16,34 @@
 
 <window xmlns="http://jmix.io/schema/ui/window">
     <data>
-        <collection id="customersDc"
-                    class="test_support.entity.sales.Customer">
-            <fetchPlan/>
-            <loader id="customersDl" maxResults="1">
-                <query>
-                    <![CDATA[select e from test$Customer e]]>
-                </query>
+        <collection id="customersDc" class="test_support.entity.sales.Customer">
+            <loader id="customersLd" maxResults="2">
+                <query><![CDATA[select e from test$Customer e]]></query>
+            </loader>
+        </collection>
+        <collection id="customersDc1 " class="test_support.entity.sales.Customer">
+            <loader id="maxResultTrueCustomersLd" maxResults="2">
+                <query><![CDATA[select e from test$Customer e]]></query>
+            </loader>
+        </collection>
+        <collection id="customersDc2" class="test_support.entity.sales.Customer">
+            <loader id="maxResultFalseCustomersLd" maxResults="2">
+                <query><![CDATA[select e from test$Customer e]]></query>
             </loader>
         </collection>
     </data>
     <layout>
         <pagination id="pagination"
-                    dataLoader="customersDl"
-                    showMaxResults="false"/>
-        <pagination id="paginationMaxResults"
-                    dataLoader="customersDl"
+                    dataLoader="customersLd"/>
+        <pagination id="paginationCustomMaxResults"
+                    dataLoader="customersLd"
                     maxResultValues="12, 9, 23, -6, 41, 0"/>
+        <pagination id="paginationMaxResultsFalse"
+                    dataLoader="maxResultFalseCustomersLd"
+                    maxResultValues="1,5"/>
+        <pagination id="paginationMaxResultsTrue"
+                    dataLoader="maxResultTrueCustomersLd"
+                    showMaxResults="true"
+                    maxResultValues="1,5"/>
     </layout>
 </window>
