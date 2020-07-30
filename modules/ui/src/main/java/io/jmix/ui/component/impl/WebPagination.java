@@ -154,7 +154,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         adapter = createAdapter(loader);
 
         updateMaxResultOptions();
-        initStartMaxResultValue();
+        setupMaxResultValue();
         initListeners();
 
         updateComponentAvailability();
@@ -214,6 +214,8 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     @Override
     public void setShowMaxResults(boolean showMaxResults) {
         component.getMaxResultLayout().setVisible(showMaxResults);
+
+        setupMaxResultValue();
     }
 
     @Override
@@ -393,16 +395,26 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         component.getMaxResultComboBox().setItems(options);
     }
 
-    protected void initStartMaxResultValue() {
-        checkState();
-
-        Integer maxResult = delegate.getAllowedOption(options, adapter.getMaxResults(), adapter.getEntityMetaClass());
-        // if loader's max result is not in bounds
-        if (adapter.getMaxResults() != maxResult) {
-            adapter.setMaxResults(maxResult);
+    protected void setupMaxResultValue() {
+        if (adapter == null) {
+            return;
         }
 
-        component.getMaxResultComboBox().setValue(maxResult);
+        // use values from ComboBox
+        if (isShowMaxResults()) {
+            Integer maxResult = delegate.getAllowedOption(options, adapter.getMaxResults(), adapter.getEntityMetaClass());
+            if (maxResult.equals(component.getMaxResultComboBox().getValue())) {
+                onMaxResultsValueChange(maxResult);
+            }
+
+            component.getMaxResultComboBox().setValue(maxResult);
+        // otherwise from loader
+        } else {
+            int maxResult = adapter.getLoadedMaxResults();
+            if (maxResult != adapter.getMaxResults() && maxResult != -1) {
+                onMaxResultsValueChange(maxResult);
+            }
+        }
     }
 
     protected boolean refreshData() {
@@ -596,7 +608,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
 
     protected void checkState() {
         if (adapter == null) {
-            throw new IllegalStateException("Pagination component is not bound with DataLoader or CollectionContainer");
+            throw new IllegalStateException("Pagination component is not bound with DataLoader");
         }
     }
 
@@ -618,6 +630,8 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         int size();
 
         void refresh();
+
+        int getLoadedMaxResults();
     }
 
     @SuppressWarnings("rawtypes")
@@ -629,6 +643,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         protected WeakCollectionChangeListener weakContainerCollectionChangeListener;
 
         protected BaseCollectionLoader loader;
+        protected int loadedMaxResults = -1;
 
         public LoaderAdapter(BaseCollectionLoader loader) {
             this(loader.getContainer(), loader);
@@ -638,6 +653,10 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         public LoaderAdapter(CollectionContainer container, @Nullable BaseCollectionLoader loader) {
             this.loader = loader;
             this.container = container;
+
+            if (loader != null) {
+                loadedMaxResults = loader.getMaxResults();
+            }
 
             containerCollectionChangeListener = e -> {
                 samePage = CollectionChangeType.REFRESH != e.getChangeType();
@@ -725,6 +744,11 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
         public void refresh() {
             if (loader != null)
                 loader.load();
+        }
+
+        @Override
+        public int getLoadedMaxResults() {
+            return loadedMaxResults;
         }
     }
 }

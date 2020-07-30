@@ -54,6 +54,7 @@ public class JmixPagination extends JmixCssActionsLayout {
         contentLayout.setSpacing(true);
 
         maxResultLayout = createMaxResultLayout();
+        maxResultLayout.setVisible(false);
         contentLayout.addComponent(maxResultLayout);
 
         firstButton = new JmixButton();
