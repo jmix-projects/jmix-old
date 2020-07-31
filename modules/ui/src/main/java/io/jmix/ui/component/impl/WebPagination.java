@@ -517,21 +517,21 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
                 component.getFirstButton().setVisible(false);
                 component.getLastButton().setVisible(false);
                 if (size == 1) {
-                    msgKey = "table.rowsCount.msg2Singular1";
+                    msgKey = "pagination.msg2Singular1";
                 } else if (size % 100 > 10 && size % 100 < 20) {
-                    msgKey = "table.rowsCount.msg2Plural1";
+                    msgKey = "pagination.msg2Plural1";
                 } else {
                     switch (size % 10) {
                         case 1:
-                            msgKey = "table.rowsCount.msg2Singular";
+                            msgKey = "pagination.msg2Singular";
                             break;
                         case 2:
                         case 3:
                         case 4:
-                            msgKey = "table.rowsCount.msg2Plural2";
+                            msgKey = "pagination.msg2Plural2";
                             break;
                         default:
-                            msgKey = "table.rowsCount.msg2Plural1";
+                            msgKey = "pagination.msg2Plural1";
                     }
                 }
                 countValue = String.valueOf(size);
@@ -542,7 +542,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
                 component.getNextButton().setVisible(true);
                 component.getFirstButton().setVisible(false);
                 component.getLastButton().setVisible(true);
-                msgKey = "table.rowsCount.msg1";
+                msgKey = "pagination.msg1";
                 countValue = countValue(start, size);
                 break;
             case MIDDLE:
@@ -551,7 +551,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
                 component.getNextButton().setVisible(true);
                 component.getFirstButton().setVisible(true);
                 component.getLastButton().setVisible(true);
-                msgKey = "table.rowsCount.msg1";
+                msgKey = "pagination.msg1";
                 countValue = countValue(start, size);
                 break;
             case LAST:
@@ -560,7 +560,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
                 component.getNextButton().setVisible(false);
                 component.getFirstButton().setVisible(true);
                 component.getLastButton().setVisible(false);
-                msgKey = "table.rowsCount.msg2Plural2";
+                msgKey = "pagination.msg2Plural2";
                 countValue = countValue(start, size);
                 break;
             default:
@@ -574,7 +574,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
             if (autoLoad) {
                 loadRowsCount();
             } else {
-                component.getCountButton().setCaption(messages.getMessage("","table.rowsCount.msg3"));
+                component.getCountButton().setCaption(messages.getMessage("","pagination.msg3"));
                 component.getCountButton().removeStyleName(PAGINATION_COUNT_NUMBER_STYLENAME);
                 component.getCountButton().setEnabled(true);
             }

@@ -150,7 +150,7 @@ public class WebTablePagination extends WebPagination implements TablePagination
         throw new IllegalStateException("Unsupported data unit type: " + items);
     }
 
-    protected class EmptyAdapter implements Adapter {
+    protected static class EmptyAdapter implements Adapter {
 
         protected MetaClass metaClass;
 

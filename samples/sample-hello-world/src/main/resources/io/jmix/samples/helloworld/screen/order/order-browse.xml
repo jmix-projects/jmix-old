@@ -47,7 +47,7 @@
                 <column id="date"/>
                 <column id="customer"/>
             </columns>
-            <rowsCount/>
+            <pagination/>
             <buttonsPanel id="buttonsPanel"
                           alwaysVisible="true">
                 <button id="createBtn" action="ordersTable.create"/>

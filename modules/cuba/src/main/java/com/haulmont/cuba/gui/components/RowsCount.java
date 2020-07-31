@@ -21,6 +21,7 @@ import com.haulmont.cuba.gui.data.Datasource;
 import io.jmix.core.DataLoadContext;
 import io.jmix.ui.component.Component;
 import io.jmix.ui.component.ListComponent;
+import io.jmix.ui.component.Pagination;
 import io.jmix.ui.component.Table;
 
 import javax.annotation.Nullable;
@@ -31,7 +32,7 @@ import java.util.function.Function;
 /**
  * Component compatible with {@link Datasource}.
  *
- * @deprecated Use {@link io.jmix.ui.component.RowsCount} instead
+ * @deprecated Use {@link Pagination} instead
  */
 @SuppressWarnings("rawtypes")
 @Deprecated
