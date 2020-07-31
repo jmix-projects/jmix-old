@@ -24,6 +24,7 @@ import io.jmix.ui.UiComponents;
 import io.jmix.ui.action.list.EditAction;
 import io.jmix.ui.component.ButtonsPanel;
 import io.jmix.ui.component.Table;
+import io.jmix.ui.component.TablePagination;
 import io.jmix.ui.component.data.table.ContainerTableItems;
 import io.jmix.ui.model.CollectionContainer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +132,10 @@ public class InspectorTableBuilder {
             table.setButtonsPanel(uiComponents.create(ButtonsPanel.class));
             buttonsPanelInitializer.accept(table);
         }
+
+        TablePagination tablePagination = uiComponents.create(TablePagination.NAME);
+        table.setPagination(tablePagination);
+        tablePagination.setTablePaginationTarget(table);
 
         if (table.getAction(EditAction.ID) != null) {
             table.setEnterPressAction(table.getAction(EditAction.ID));
