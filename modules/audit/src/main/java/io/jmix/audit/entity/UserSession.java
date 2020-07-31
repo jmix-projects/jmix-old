@@ -23,12 +23,14 @@ import io.jmix.data.entity.BaseUuidEntity;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.session.SessionInformation;
 
+import javax.persistence.Transient;
 import java.util.Date;
 
 @ModelObject(name = "core_UserSession")
 @SystemLevel
 public class UserSession extends BaseUuidEntity {
 
+    @Transient
     protected SessionInformation sessionInformation;
 
     public UserSession(SessionInformation sessionInformation) {

@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package io.jmix.core.session;
+package io.jmix.rest.session;
 
-import javax.servlet.http.HttpSession;
-import java.io.Serializable;
-import java.util.Enumeration;
+import io.jmix.rest.session.OAuth2AccessTokenSessionIdResolver;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.session.web.http.HttpSessionIdResolver;
 
-public interface SessionData extends Serializable {
+@Configuration
+public class JmixRestSessionsConfiguration {
 
-    String NAME = "core_SessionData";
-
-    Enumeration<String> getAttributeNames();
-
-    Object getAttribute(String name);
-
-    void setAttribute(String name, Object attribute);
-
-    String getSessionId();
-
-    HttpSession getHttpSession();
+    @Primary
+    @Bean
+    public HttpSessionIdResolver sessionIdResolver() {
+        return new OAuth2AccessTokenSessionIdResolver();
+    }
 }
-

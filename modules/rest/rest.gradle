@@ -26,12 +26,15 @@ dependencies {
 
     api project(':modules:core')
     api project(':modules:data')
+    api project(':modules:sessions')
 
     api 'org.springframework.security:spring-security-core'
     api 'org.springframework.security:spring-security-config'
     api 'org.springframework.security:spring-security-web'
     api 'org.springframework:spring-webmvc'
     api 'org.springframework:spring-context'
+
+    api 'org.springframework.session:spring-session-core'
 
     implementation 'commons-fileupload:commons-fileupload'
 

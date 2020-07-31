@@ -21,6 +21,7 @@ import io.jmix.rest.property.RestProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -30,6 +31,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
@@ -58,12 +60,19 @@ public class JmixRestAuthorizationServerConfiguration extends AuthorizationServe
         return tokenStore;
     }
 
+    @Bean(name = "rest_tokenEnhancer")
+    public TokenEnhancer tokenEnhancer() {
+        return new ComplexTokenEnhancer();
+    }
+
     @Bean(name = "rest_tokenServices")
-    public AuthorizationServerTokenServices tokenServices() {
+    public AuthorizationServerTokenServices tokenServices(AuthorizationServerEndpointsConfigurer endpoints) {
         DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-        defaultTokenServices.setTokenStore(tokenStore());
+        defaultTokenServices.setTokenStore(endpoints.getTokenStore());
         defaultTokenServices.setSupportRefreshToken(restProperties.isSupportRefreshToken());
         defaultTokenServices.setReuseRefreshToken(restProperties.isReuseRefreshToken());
+        defaultTokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
+        defaultTokenServices.setClientDetailsService(endpoints.getClientDetailsService());
 //        defaultTokenServices.setTokenEnhancer(accessTokenConverter());
         return defaultTokenServices;
     }
@@ -100,7 +109,9 @@ public class JmixRestAuthorizationServerConfiguration extends AuthorizationServe
 //                        endpoints.getOAuth2RequestFactory()))
                 .pathMapping("/oauth/token", "/rest/oauth/token")
                 .authenticationManager(authenticationManager)
-                .tokenServices(tokenServices())
-                .tokenStore(tokenStore());
+                .tokenStore(endpoints.getTokenStore() != null ? endpoints.getTokenStore() : tokenStore())
+                .tokenEnhancer(endpoints.getTokenEnhancer() != null ? endpoints.getTokenEnhancer() : tokenEnhancer())
+                .tokenServices(tokenServices(endpoints));
+
     }
 }

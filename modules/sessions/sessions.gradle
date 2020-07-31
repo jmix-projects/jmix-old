@@ -22,11 +22,11 @@ apply plugin: 'io.jmix'
 group = 'io.jmix.sessions'
 
 dependencies {
-    api platform(project(':jmix-platform'))
+    api platform(project(':platform'))
 
     api project(':modules:core')
 
-    implementation 'org.springframework.session:spring-session-core'
+    api 'org.springframework.session:spring-session-core'
 
     testImplementation 'org.springframework:spring-test'
     testImplementation 'org.spockframework:spock-core'

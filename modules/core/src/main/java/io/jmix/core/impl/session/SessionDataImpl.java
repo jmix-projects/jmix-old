@@ -21,7 +21,6 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.lang.Nullable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -32,20 +31,10 @@ import java.util.Enumeration;
 @Scope(value = WebApplicationContext.SCOPE_SESSION)
 public class SessionDataImpl implements SessionData {
 
+    private static final long serialVersionUID = 229714256878675372L;
+
     @Autowired
     private ObjectFactory<HttpSession> httpSessionFactory;
-
-    private String sessionId;
-
-    private Authentication authentication;
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
-
-    public void setAuthentication(Authentication authentication) {
-        this.authentication = authentication;
-    }
 
     @Override
     public Enumeration<String> getAttributeNames() {
@@ -65,17 +54,7 @@ public class SessionDataImpl implements SessionData {
 
     @Override
     public String getSessionId() {
-        return sessionId;
-    }
-
-    @Override
-    public Object getPrincipal() {
-        return authentication.getPrincipal();
-    }
-
-    @Override
-    public Authentication getAuthentication() {
-        return authentication;
+        return getHttpSession().getId();
     }
 
     @Override

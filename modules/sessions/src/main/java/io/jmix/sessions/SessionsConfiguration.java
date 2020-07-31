@@ -27,12 +27,16 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
 import org.springframework.session.web.http.CookieHttpSessionIdResolver;
+import org.springframework.session.web.http.HttpSessionIdResolver;
 import org.springframework.session.web.http.SessionRepositoryFilter;
 
 @Configuration
 @ComponentScan
 @JmixModule(dependsOn = CoreConfiguration.class)
 public class SessionsConfiguration<S extends Session> {
+
+    @Autowired
+    protected HttpSessionIdResolver sessionIdResolver;
 
     @Primary
     @Bean("sessionRepositoryWrapper")
@@ -47,7 +51,12 @@ public class SessionsConfiguration<S extends Session> {
             @Autowired FindByIndexNameSessionRepository<S> sessionRepository) {
         SessionRepositoryFilter<SessionRepositoryWrapper<S>.SessionWrapper> sessionRepositoryFilter
                 = new SessionRepositoryFilter<>(sessionRepositoryWrapper(sessionRepository));
-        sessionRepositoryFilter.setHttpSessionIdResolver(new CookieHttpSessionIdResolver());
+        sessionRepositoryFilter.setHttpSessionIdResolver(sessionIdResolver);
         return sessionRepositoryFilter;
+    }
+
+    @Bean("sessions_sessionIdResolver")
+    public HttpSessionIdResolver sessionIdResolver() {
+        return new CookieHttpSessionIdResolver();
     }
 }
