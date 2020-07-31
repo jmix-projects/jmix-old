@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package pagination_component;
+package pagination_component.screen;
 
 import io.jmix.ui.component.Table;
+import io.jmix.ui.screen.LoadDataBeforeShow;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
@@ -24,8 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import test_support.entity.sales.Customer;
 
 @UiController
-@UiDescriptor("pagination-empty-table-test-screen.xml")
-public class PaginationEmptyTableTestScreen extends Screen {
+@UiDescriptor("table-pagination-test-screen.xml")
+@LoadDataBeforeShow
+public class TablePaginationTestScreen extends Screen {
 
     @Autowired
     public Table<Customer> customerTable;

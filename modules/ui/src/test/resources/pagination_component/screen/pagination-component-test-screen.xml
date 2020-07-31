@@ -22,12 +22,17 @@
             </loader>
         </collection>
         <collection id="customersDc1 " class="test_support.entity.sales.Customer">
-            <loader id="maxResultTrueCustomersLd" maxResults="2">
+            <loader id="customersLdSMR" maxResults="2">
                 <query><![CDATA[select e from test$Customer e]]></query>
             </loader>
         </collection>
         <collection id="customersDc2" class="test_support.entity.sales.Customer">
-            <loader id="maxResultFalseCustomersLd" maxResults="2">
+            <loader id="customersLdNoSMR" maxResults="2">
+                <query><![CDATA[select e from test$Customer e]]></query>
+            </loader>
+        </collection>
+        <collection id="customersDc3" class="test_support.entity.sales.Customer">
+            <loader id="customersLdPostponed" maxResults="2">
                 <query><![CDATA[select e from test$Customer e]]></query>
             </loader>
         </collection>
@@ -35,15 +40,18 @@
     <layout>
         <pagination id="pagination"
                     dataLoader="customersLd"/>
-        <pagination id="paginationCustomMaxResults"
+        <pagination id="paginationCustomSMR"
                     dataLoader="customersLd"
                     maxResultValues="12, 9, 23, -6, 41, 0"/>
-        <pagination id="paginationMaxResultsFalse"
-                    dataLoader="maxResultFalseCustomersLd"
+        <pagination id="paginationNoSMR"
+                    dataLoader="customersLdNoSMR"
                     maxResultValues="1,5"/>
-        <pagination id="paginationMaxResultsTrue"
-                    dataLoader="maxResultTrueCustomersLd"
+        <pagination id="paginationSMR"
+                    dataLoader="customersLdSMR"
                     showMaxResults="true"
                     maxResultValues="1,5"/>
+        <pagination id="postponedPaginationSMR"
+                    showMaxResults="true"/>
+        <pagination id="postponedPaginationNoSMR"/>
     </layout>
 </window>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pagination_component;
+package pagination_component.screen;
 
 import io.jmix.ui.component.Pagination;
 import io.jmix.ui.model.CollectionLoader;
@@ -34,20 +34,29 @@ public class PaginationComponentTestScreen extends Screen {
     public Pagination pagination;
 
     @Autowired
-    public Pagination paginationCustomMaxResults;
+    public Pagination paginationCustomSMR;
 
     @Autowired
-    public Pagination paginationMaxResultsFalse;
+    public Pagination paginationNoSMR;
 
     @Autowired
-    public Pagination paginationMaxResultsTrue;
+    public Pagination paginationSMR;
+
+    @Autowired
+    public Pagination postponedPaginationSMR;
+
+    @Autowired
+    public Pagination postponedPaginationNoSMR;
 
     @Autowired
     public CollectionLoader<Customer> customersLd;
 
     @Autowired
-    public CollectionLoader<Customer> maxResultFalseCustomersLd;
+    public CollectionLoader<Customer> customersLdNoSMR;
 
     @Autowired
-    public CollectionLoader<Customer> maxResultTrueCustomersLd;
+    public CollectionLoader<Customer> customersLdSMR;
+
+    @Autowired
+    public CollectionLoader<Customer> customersLdPostponed;
 }

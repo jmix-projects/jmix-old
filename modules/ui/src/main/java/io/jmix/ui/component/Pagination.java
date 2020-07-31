@@ -39,7 +39,7 @@ public interface Pagination extends Component.BelongToFrame {
         LAST                // "< 201-252 rows"
     }
 
-    enum ButtonsAlignment {
+    enum ContentAlignment {
         LEFT, RIGHT
     }
 
@@ -80,16 +80,16 @@ public interface Pagination extends Component.BelongToFrame {
     BaseCollectionLoader getLoaderTarget();
 
     /**
-     * Sets buttons alignment inside Pagination component. Position is LEFT by default.
+     * Sets content alignment inside Pagination component. Position is LEFT by default.
      *
      * @param alignment buttons alignment
      */
-    void setButtonsAlignment(ButtonsAlignment alignment);
+    void setContentAlignment(ContentAlignment alignment);
 
     /**
-     * @return buttons alignment inside Pagination component. Position is LEFT by default.
+     * @return content alignment inside Pagination component. Position is LEFT by default.
      */
-    ButtonsAlignment getButtonsAlignment();
+    ContentAlignment getContentAlignment();
 
     /**
      * @return true if ComboBox with max results is shown

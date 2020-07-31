@@ -25,9 +25,9 @@ import io.jmix.ui.component.Pagination;
 
 public class JmixPagination extends JmixCssActionsLayout {
 
-    public static final String PAGE_RIGHT_ALIGN_STYLE = "page-right-align";
+    public static final String CONTENT_RIGHT_ALIGN_STYLE = "content-right-align";
 
-    protected Pagination.ButtonsAlignment buttonsAlignment = Pagination.ButtonsAlignment.LEFT;
+    protected Pagination.ContentAlignment contentAlignment = Pagination.ContentAlignment.LEFT;
 
     protected ComponentContainer contentLayout;
     protected Button prevButton;
@@ -92,18 +92,18 @@ public class JmixPagination extends JmixCssActionsLayout {
         return contentLayout;
     }
 
-    public Pagination.ButtonsAlignment getButtonsAlignment() {
-        return buttonsAlignment;
+    public Pagination.ContentAlignment getContentAlignment() {
+        return contentAlignment;
     }
 
-    public void setButtonsAlignment(Pagination.ButtonsAlignment buttonsAlignment) {
-        if (this.buttonsAlignment != buttonsAlignment) {
-            this.buttonsAlignment = buttonsAlignment;
+    public void setContentAlignment(Pagination.ContentAlignment contentAlignment) {
+        if (this.contentAlignment != contentAlignment) {
+            this.contentAlignment = contentAlignment;
 
-            if (buttonsAlignment == Pagination.ButtonsAlignment.LEFT) {
-                contentLayout.removeStyleName(PAGE_RIGHT_ALIGN_STYLE);
+            if (contentAlignment == Pagination.ContentAlignment.LEFT) {
+                contentLayout.removeStyleName(CONTENT_RIGHT_ALIGN_STYLE);
             } else {
-                contentLayout.addStyleName(PAGE_RIGHT_ALIGN_STYLE);
+                contentLayout.addStyleName(CONTENT_RIGHT_ALIGN_STYLE);
             }
 
             markAsDirty();

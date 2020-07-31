@@ -196,13 +196,13 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
     }
 
     @Override
-    public void setButtonsAlignment(ButtonsAlignment position) {
-        component.setButtonsAlignment(position);
+    public void setContentAlignment(ContentAlignment position) {
+        component.setContentAlignment(position);
     }
 
     @Override
-    public ButtonsAlignment getButtonsAlignment() {
-        return component.getButtonsAlignment();
+    public ContentAlignment getContentAlignment() {
+        return component.getContentAlignment();
     }
 
     protected JmixPagination createComponent() {
@@ -574,7 +574,7 @@ public class WebPagination extends WebAbstractComponent<JmixPagination> implemen
             if (autoLoad) {
                 loadRowsCount();
             } else {
-                component.getCountButton().setCaption(messages.getMessage("table.rowsCount.msg3"));
+                component.getCountButton().setCaption(messages.getMessage("","table.rowsCount.msg3"));
                 component.getCountButton().removeStyleName(PAGINATION_COUNT_NUMBER_STYLENAME);
                 component.getCountButton().setEnabled(true);
             }

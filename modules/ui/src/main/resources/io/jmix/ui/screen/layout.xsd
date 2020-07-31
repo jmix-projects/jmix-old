@@ -344,7 +344,7 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="paginationButtonsAlignment">
+    <xs:simpleType name="paginationContentAlignment">
         <xs:restriction base="xs:string">
             <xs:enumeration value="LEFT"/>
             <xs:enumeration value="RIGHT"/>
@@ -2408,7 +2408,7 @@
                 <xs:attributeGroup ref="hasAlign"/>
                 <xs:attributeGroup ref="hasCss"/>
 
-                <xs:attribute name="buttonsAlignment" type="paginationButtonsAlignment"/>
+                <xs:attribute name="contentAlignment" type="paginationContentAlignment"/>
 
                 <xs:attribute name="dataLoader" type="xs:string"/>
             </xs:extension>

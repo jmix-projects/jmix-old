@@ -116,6 +116,8 @@ class CreateComponentTest extends UiScreenSpec {
                 TwinColumn.NAME,
                 ProgressBar.NAME,
                 RowsCount.NAME,
+                Pagination.NAME,
+                TablePagination.NAME,
                 RelatedEntities.NAME,
                 BulkEditor.NAME,
                 DatePicker.NAME,

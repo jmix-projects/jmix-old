@@ -16,7 +16,7 @@
 
 <window xmlns="http://jmix.io/schema/ui/window">
     <layout>
-        <table id="customerTable"
+        <table id="customerTableMetaClass"
                metaClass="test$Customer">
             <columns>
                 <column id="name"/>
