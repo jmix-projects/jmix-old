@@ -22,9 +22,12 @@ apply plugin: 'io.jmix'
 group = 'io.jmix.sample.ui'
 
 dependencies {
-    implementation project(':starters:starter-standard')
+    implementation project(':starters:starter-standard-nowidgets')
+    implementation project(':modules:ui-widgets-compiled')
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'org.apache.commons:commons-dbcp2'
+
     runtimeOnly 'org.hsqldb:hsqldb'
+
+    themes project(':modules:ui-themes')
 }

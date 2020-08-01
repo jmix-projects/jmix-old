@@ -1,0 +1,97 @@
+<window xmlns="http://jmix.io/schema/ui/window"
+        caption="msg://application.caption">
+    <layout>
+        <split id="mainSplit" width="100%"
+               maxSplitPosition="50%"
+               orientation="horizontal"
+               pos="400px"
+               settingsEnabled="false">
+
+            <vbox id="sideMenuBox"
+                  expand="sideMenu"
+                  height="100%"
+                  spacing="true"
+                  stylename="side-menu-box">
+                <hbox id="appTitleBox"
+                      spacing="true"
+                      stylename="c-sidemenu-title"
+                      width="100%">
+                    <label id="appTitleLabel"
+                           align="MIDDLE_CENTER"
+                           value="msg://menuBar.appTitle"/>
+                </hbox>
+                <cssLayout id="searchBox"
+                           stylename="v-component-group search-box"
+                           width="100%">
+                    <textField id="searchField"
+                               inputPrompt="msg://sideMenu.search"
+                               width="100%"/>
+                    <button id="searchButton"
+                            icon="font-icon:SEARCH"
+                            stylename="icon-only secondary"/>
+                </cssLayout>
+                <hbox id="menuHeaderBox"
+                      expand="menuCaptionLabel"
+                      margin="false,true,false,true"
+                      spacing="true"
+                      width="100%">
+                    <label id="menuCaptionLabel"
+                           stylename="cuba-folders-pane-caption"
+                           value="msg://sideMenu.menuCaption"/>
+                    <linkButton id="collapseAllBtn"
+                                align="MIDDLE_RIGHT"
+                                description="msg://sideMenu.collapseAll"
+                                icon="font-icon:COMPRESS"
+                                stylename="small-link dark"/>
+                    <linkButton id="expandAllBtn"
+                                align="MIDDLE_RIGHT"
+                                icon="font-icon:EXPAND"
+                                description="msg://sideMenu.expandAll"
+                                stylename="small-link dark"/>
+                </hbox>
+                <sideMenu id="sideMenu"
+                          width="100%"/>
+                <hbox id="localesBox"
+                      expand="spacer"
+                      margin="false,false,false,true"
+                      width="100%">
+                    <label id="themeLabel"
+                           align="MIDDLE_LEFT"
+                           stylename="bold"
+                           value="msg://theme.caption"/>
+                    <comboBox id="themeComboBox"
+                              align="MIDDLE_LEFT"
+                              nullOptionVisible="false"
+                              stylename="borderless"
+                              textInputAllowed="false"
+                              width="95px"/>
+
+                    <label id="spacer"/>
+
+                    <label id="localesLabel"
+                           align="MIDDLE_RIGHT"
+                           stylename="bold"
+                           value="msg://locales.caption"/>
+                    <comboBox id="localesComboBox"
+                              align="MIDDLE_RIGHT"
+                              nullOptionVisible="false"
+                              stylename="borderless"
+                              textInputAllowed="false"
+                              width="105px"/>
+                </hbox>
+            </vbox>
+
+            <workArea id="workArea"
+                      stylename="c-workarea"
+                      height="100%"
+                      width="100%">
+                <initialLayout spacing="true" margin="true">
+                    <fragment id="dashboardFragment"
+                              screen="sampler-main-dashboard-fragment"
+                              height="100%"
+                              width="100%"/>
+                </initialLayout>
+            </workArea>
+        </split>
+    </layout>
+</window>

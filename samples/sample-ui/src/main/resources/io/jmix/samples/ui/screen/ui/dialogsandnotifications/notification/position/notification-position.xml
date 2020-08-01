@@ -1,0 +1,49 @@
+<window xmlns="http://jmix.io/schema/ui/window">
+    <layout>
+        <gridLayout spacing="true">
+            <columns count="3"/>
+            <rows>
+                <row>
+                    <button id="defaultBtn"
+                            align="MIDDLE_CENTER"
+                            caption="Default"
+                            colspan="3"
+                            width="128px"/>
+                </row>
+                <row>
+                    <button id="topLeft"
+                            caption="Top Left"
+                            width="128px"/>
+                    <button id="topCenter"
+                            caption="Top Center"
+                            width="128px"/>
+                    <button id="topRight"
+                            caption="Top Right"
+                            width="128px"/>
+                </row>
+                <row>
+                    <button id="middleLeft"
+                            caption="Middle Left"
+                            width="128px"/>
+                    <button id="middleCenter"
+                            caption="Middle Center"
+                            width="128px"/>
+                    <button id="middleRight"
+                            caption="Middle Right"
+                            width="128px"/>
+                </row>
+                <row>
+                    <button id="bottomLeft"
+                            caption="Bottom Left"
+                            width="128px"/>
+                    <button id="bottomCenter"
+                            caption="Bottom Center"
+                            width="128px"/>
+                    <button id="bottomRight"
+                            caption="Bottom Right"
+                            width="128px"/>
+                </row>
+            </rows>
+        </gridLayout>
+    </layout>
+</window>

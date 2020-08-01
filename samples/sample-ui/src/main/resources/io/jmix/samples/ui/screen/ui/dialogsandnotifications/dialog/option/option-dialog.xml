@@ -1,0 +1,12 @@
+<window xmlns="http://jmix.io/schema/ui/window">
+    <layout>
+        <hbox spacing="true">
+            <button id="okAndCancel"
+                    caption="OK &amp; Cancel"/>
+            <button id="allActions"
+                    caption="All DialogActions"/>
+            <button id="customAction"
+                    caption="Custom Action"/>
+        </hbox>
+    </layout>
+</window>

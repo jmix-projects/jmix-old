@@ -1,0 +1,14 @@
+@mixin sampler-folderspane {
+  .v-tree-node-caption-bold {
+    font-weight: bold;
+  }
+
+  .cuba-folders-pane-caption {
+    word-wrap: normal;
+    overflow-wrap: normal;
+  }
+
+  .v-slot-cuba-folders-pane-caption {
+    min-width: 50px;
+  }
+}

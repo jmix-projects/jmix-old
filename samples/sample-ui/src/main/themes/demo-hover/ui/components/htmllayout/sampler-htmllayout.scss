@@ -1,0 +1,55 @@
+@mixin sampler-htmllayout($primary-stylename: v-html-layout) {
+  .box-container {
+    text-align: center;
+  }
+
+  .box-container .logo {
+    width: 500px;
+    margin: 50px auto;
+  }
+
+  .button-container {
+    width: 500px;
+    margin: 0 auto;
+  }
+
+  .button-container .sample-button {
+    width: 166px;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .box-container .button-container {
+    width: 500px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .html-sample {
+    white-space: nowrap;
+    position: relative;
+  }
+
+  .button-container .sample-button:first-child .v-widget {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-left: 3px;
+  }
+
+  .button-container .sample-button .v-widget {
+    vertical-align: middle;
+    margin-left: -1px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .button-container .sample-button ~ .sample-button:not(:last-child) .v-widget {
+    border-radius: 0;
+  }
+
+  .button-container .sample-button:last-child .v-widget {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -6px;
+  }
+}

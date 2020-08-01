@@ -1,0 +1,8 @@
+@import "demo-halo-defaults";
+@import "addons";
+@import "demo-halo";
+
+.demo-halo {
+  @include addons;
+  @include demo-halo;
+}

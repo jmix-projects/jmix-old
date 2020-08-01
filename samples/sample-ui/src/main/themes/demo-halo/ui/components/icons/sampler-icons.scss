@@ -1,0 +1,42 @@
+@mixin sampler-icons {
+
+  .name-label {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: text;
+  }
+
+  .source-label {
+    text-align: center;
+    font-size: 12px;
+    cursor: text;
+  }
+
+  .sampler-scroll {
+    height: inherit;
+  }
+
+  .sampler-scroll.v-slot {
+    height: inherit;
+  }
+
+  .v-slot-sampler-scroll {
+    height: inherit;
+  }
+
+  .vbox-icon {
+    padding: 10px 0 14px 0;
+  }
+
+  .vbox-icon:hover {
+    background-color: $v-focus-color;
+
+    $font-color: valo-font-color($v-selection-color, 0.9);
+    color: $font-color;
+
+    .icon-label > span {
+      color: $font-color;
+    }
+  }
+}

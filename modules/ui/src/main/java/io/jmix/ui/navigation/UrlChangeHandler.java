@@ -112,6 +112,7 @@ public class UrlChangeHandler implements InitializingBean {
         return screenNavigator;
     }
 
+    @Nullable
     public RedirectHandler getRedirectHandler() {
         return redirectHandler;
     }

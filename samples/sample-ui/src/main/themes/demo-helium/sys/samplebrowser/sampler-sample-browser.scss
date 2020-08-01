@@ -1,0 +1,19 @@
+@mixin sampler-sample-browser {
+  .AceEditorWidget-sample-browser.v-readonly {
+    background: var(--sourcecodeeditor-background-color);
+
+    .ace_content {
+      background: var(--sourcecodeeditor-background-color);
+    }
+  }
+
+  .description-box {
+    code {
+      padding: 2px 4px;
+      font-size: 90%;
+      color: #c7254e;
+      background-color: #f9f2f4;
+      border-radius: $v-border-radius / 2;
+    }
+  }
+}

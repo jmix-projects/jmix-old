@@ -1,0 +1,10 @@
+@mixin sampler-composite-component {
+  .stepper-field {
+    display: flex;
+
+    .stepper-btn {
+      width: $v-unit-size;
+      min-width: $v-unit-size;
+    }
+  }
+}

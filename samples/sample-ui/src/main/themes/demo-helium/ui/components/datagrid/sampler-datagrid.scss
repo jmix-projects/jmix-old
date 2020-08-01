@@ -1,0 +1,27 @@
+@mixin sampler-datagrid($primary-stylename: v-grid) {
+  .#{$primary-stylename} {
+    .active-customer {
+      font-weight: bold;
+    }
+
+    .#{$primary-stylename}-cell.premium-grade {
+      background-color: red;
+      color: white;
+    }
+
+    .#{$primary-stylename}-cell.high-grade {
+      background-color: green;
+      color: white;
+    }
+
+    .#{$primary-stylename}-cell.standard-grade {
+      background-color: blue;
+      color: white;
+    }
+
+    .#{$primary-stylename}-cell.center-bold {
+      font-weight: bold;
+      text-align: center;
+    }
+  }
+}

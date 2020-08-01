@@ -1,0 +1,10 @@
+<window xmlns="http://jmix.io/schema/ui/window">
+    <layout>
+        <hbox spacing="true">
+            <button id="showPlainText"
+                    caption="Plain text"/>
+            <button id="showHtmlContent"
+                    caption="HTML content"/>
+        </hbox>
+    </layout>
+</window>

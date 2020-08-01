@@ -33,6 +33,7 @@ import io.jmix.ui.event.UIRefreshEvent;
 import io.jmix.ui.exception.UiExceptionHandler;
 import io.jmix.ui.icon.IconResolver;
 import io.jmix.ui.navigation.*;
+import io.jmix.ui.settings.UserSettingsTools;
 import io.jmix.ui.sys.*;
 import io.jmix.ui.sys.event.UiEventsMulticaster;
 import io.jmix.ui.theme.ThemeConstantsRepository;
@@ -75,8 +76,8 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     @Autowired
     protected UiProperties uiProperties;
 
-//    @Autowired
-//    protected UserSettingsTools userSettingsTools;
+    @Autowired
+    protected UserSettingsTools userSettingsTools;
     @Autowired
     protected ThemeConstantsRepository themeConstantsRepository;
 
@@ -660,11 +661,10 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
     }
 
     protected void updateUiTheme() {
-//        UserSession userSession = userSessionSource.getUserSession();
-//
-//        if (userSession.isAuthenticated()) {
+        if (currentAuthentication.getAuthentication() != null
+                && currentAuthentication.getAuthentication().isAuthenticated()) {
             // load theme from user settings
-            /*String themeName = userSettingsTools.loadTheme();
+            String themeName = userSettingsTools.loadTheme();
 
             if (!Objects.equals(themeName, getTheme())) {
                 // check theme support
@@ -673,8 +673,8 @@ public class AppUI extends UI implements ErrorHandler, UiExceptionHandler.UiCont
                     app.applyTheme(themeName);
                     setTheme(themeName);
                 }
-            }*/
-//        }
+            }
+        }
     }
 
     public JmixFileDownloader getFileDownloader() {

@@ -1,0 +1,45 @@
+@import "../hover/hover";
+@import "sys/main/sampler-main-screen";
+@import "sys/maindashboard/sampler-main-dashboard-fragment";
+@import "sys/samplebrowser/sampler-sample-browser";
+@import "component/button/sampler-button";
+@import "component/folderspane/sampler-folderspane";
+@import "component/label/sampler-label";
+@import "component/popupview/sampler-popupview";
+@import "component/sidemenu/sampler-sidemenu";
+@import "ui/components/calendar/sampler-calendar";
+@import "ui/components/combobox/sampler-combobox-options-style-provider";
+@import "ui/components/composite/sampler-composite-component";
+@import "ui/components/datagrid/sampler-datagrid";
+@import "ui/components/htmllayout/sampler-htmllayout";
+@import "ui/components/icons/sampler-icons";
+@import "ui/components/table/sampler-table";
+@import "ui/components/twincolumn/sampler-twincolumn";
+@import "ui/containers/csslayout/sampler-csslayout";
+@import "ui/containers/layoutclick/sampler-layout-click";
+
+@mixin demo-hover {
+  @include hover;
+
+  @include sampler-main-screen;
+  @include sampler-main-dashboard-fragment;
+  @include sampler-sample-browser;
+
+  @include sampler-button;
+  @include sampler-folderspane;
+  @include sampler-label;
+  @include sampler-popupview;
+  @include sampler-sidemenu;
+
+  @include sampler-calendar;
+  @include sampler-combobox-options-style-provider;
+  @include sampler-composite-component;
+  @include sampler-datagrid;
+  @include sampler-htmllayout;
+  @include sampler-icons;
+  @include sampler-table;
+  @include sampler-twincolumn;
+
+  @include sampler-csslayout;
+  @include sampler-layout-click;
+}

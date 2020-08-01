@@ -1,0 +1,16 @@
+@mixin sampler-twincolumn {
+    option.premium-grade {
+        background-color: red;
+        color: white;
+    }
+
+    option.high-grade {
+        background-color: green;
+        color: white;
+    }
+
+    option.standard-grade {
+        background-color: blue;
+        color: white;
+    }
+}

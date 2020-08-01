@@ -1,0 +1,93 @@
+@mixin sampler-sidemenu($primary-stylename: c-sidemenu) {
+
+    .#{$primary-stylename} {
+        padding-left: 20px;
+    }
+
+    .#{$primary-stylename}-item {
+        padding: 0 30px 0 0;
+        text-shadow: 0 -2px 0 rgba(255,255,255,0.05);
+        font-size: $v-font-size;
+    }
+
+    .#{$primary-stylename}-item-caption {
+        max-width: initial;
+        padding-left: 15px;
+    }
+
+    .#{$primary-stylename}-item-header {
+        margin: 0;
+        border-bottom: 0;
+    }
+
+    .#{$primary-stylename}-submenu>* {
+        margin-left: 0;
+    }
+
+    .#{$primary-stylename}-submenu .#{$primary-stylename}-item {
+        padding-left: 0;
+    }
+
+    .#{$primary-stylename}-submenu-open {
+        max-height: 8000px;
+        padding-left: 10px;
+        margin-left: 5px;
+    }
+
+    .#{$primary-stylename}-submenu .#{$primary-stylename}-item-header {
+        margin-left: 0;
+    }
+
+    .#{$primary-stylename}-submenu .#{$primary-stylename}-submenu .#{$primary-stylename}-item {
+        padding-left: 0;
+    }
+
+    .#{$primary-stylename}-item [class*="caption"] {
+        max-width: initial;
+    }
+
+   .#{$primary-stylename}-submenu.c-sidemenu-submenu-open {
+        margin-left: 15px;
+    }
+
+    .#{$primary-stylename}-item-header-open::before {
+        content: "\f0da";
+        font-family: FontAwesome;
+        position: absolute;
+        display: -webkit-box;
+        width: inherit;
+        height: inherit;
+        padding-left: 3px;
+        margin-top: 3px;
+        cursor: pointer;
+        text-align: center;
+        -webkit-transition: all 100ms;
+        -moz-transition: all 100ms;
+        transition: all 100ms;
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .#{$primary-stylename}-item-header::before {
+        content: "\f0da";
+        font-family: FontAwesome;
+        position: absolute;
+        display: -webkit-box;
+        width: inherit;
+        height: inherit;
+        padding-left: 3px;
+        margin-top: 3px;
+        cursor: pointer;
+        text-align: center;
+        -webkit-transition: all 100ms;
+        -moz-transition: all 100ms;
+        transition: all 100ms;
+    }
+
+    .found-item {
+        font-weight: bold;
+    }
+}

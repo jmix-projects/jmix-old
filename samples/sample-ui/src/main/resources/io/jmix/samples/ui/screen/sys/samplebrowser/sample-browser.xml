@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        caption="msg://caption">
+    <data/>
+    <layout margin="true,false,false,false" spacing="true">
+    </layout>
+</window>

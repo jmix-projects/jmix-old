@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright 2020 Haulmont.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<xs:schema targetNamespace="io/jmix/samples/ui/menu/sampler-menu.xsd"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns="io/jmix/samples/ui/menu/sampler-menu.xsd"
+        elementFormDefault="qualified">
+
+    <xs:element name="menu-config" type="menuOrItem"/>
+
+    <xs:complexType name="menuOrItem">
+        <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element type="itemType" name="item" maxOccurs="unbounded" minOccurs="0"/>
+                <xs:element type="menuType" name="menu" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="itemType">
+        <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="otherFiles" type="otherFilesType" minOccurs="0"/>
+                <xs:element name="screenParams" type="screenParamsType" minOccurs="0"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="docUrlSuffix" type="xs:string"/>
+        <xs:attribute name="docPack" type="xs:string"/>
+        <xs:attribute name="splitEnabled" type="xs:boolean"/>
+        <xs:attribute name="image" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="menuType">
+        <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element type="menuType" name="menu" maxOccurs="unbounded" minOccurs="0"/>
+                <xs:element type="itemType" name="item" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="image" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="fileType">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="otherFilesType">
+        <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="file" type="fileType"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="paramType">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="value" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="screenParamsType">
+        <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="param" type="paramType"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

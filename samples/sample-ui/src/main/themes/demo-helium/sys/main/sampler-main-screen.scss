@@ -1,0 +1,31 @@
+@mixin sampler-main-screen {
+  .side-menu-box {
+    background: var(--sidemenu-background-color);
+  }
+
+  .search-box {
+    display: flex;
+    padding: round($v-unit-size/3);
+
+    .v-widget {
+      margin-left: 0;
+    }
+  }
+
+  .v-filterselect-item-selected-locale,
+  .v-filterselect-item-selected-theme {
+    text-decoration: underline;
+  }
+
+  .v-filterselect-borderless {
+    .v-filterselect-input {
+      border: none;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .v-filterselect-button {
+      border: none;
+    }
+  }
+}

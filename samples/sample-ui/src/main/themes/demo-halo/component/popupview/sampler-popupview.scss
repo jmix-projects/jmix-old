@@ -1,0 +1,10 @@
+@mixin sampler-popupview($primary-stylename: v-popupview) {
+  .#{$primary-stylename}-external-link {
+    font-family: FontAwesome;
+    text-decoration: none;
+  }
+
+  .#{$primary-stylename}-external-link:after {
+    content: "\f08e";
+  }
+}

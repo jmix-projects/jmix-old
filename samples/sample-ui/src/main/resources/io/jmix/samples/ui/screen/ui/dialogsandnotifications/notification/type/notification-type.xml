@@ -1,0 +1,16 @@
+<window xmlns="http://jmix.io/schema/ui/window">
+    <layout>
+        <hbox spacing="true">
+            <button id="tray"
+                    caption="Tray"/>
+            <button id="humanized"
+                    caption="Humanized"/>
+            <button id="warning"
+                    caption="Warning"/>
+            <button id="error"
+                    caption="Error"/>
+            <button id="system"
+                    caption="System"/>
+        </hbox>
+    </layout>
+</window>

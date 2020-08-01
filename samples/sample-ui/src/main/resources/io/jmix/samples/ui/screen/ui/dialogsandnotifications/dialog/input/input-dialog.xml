@@ -1,0 +1,14 @@
+<window xmlns="http://jmix.io/schema/ui/window">
+    <layout>
+        <hbox spacing="true">
+            <button id="standardDialogBtn"
+                    caption="Standard Params and Actions"/>
+            <button id="customParameterBtn"
+                    caption="Custom Parameter"/>
+            <button id="customActionsBtn"
+                    caption="Custom Actions"/>
+            <button id="validationBtn"
+                    caption="Validation"/>
+        </hbox>
+    </layout>
+</window>

@@ -1,0 +1,40 @@
+@mixin sampler-icons {
+
+  .name-label {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: text;
+  }
+
+  .source-label {
+    text-align: center;
+    font-size: 12px;
+    cursor: text;
+  }
+
+  .sampler-scroll {
+    height: inherit;
+  }
+
+  .sampler-scroll.v-slot {
+    height: inherit;
+  }
+
+  .v-slot-sampler-scroll {
+    height: inherit;
+  }
+
+  .vbox-icon {
+    padding: 10px 0 14px 0;
+  }
+
+  .vbox-icon:hover {
+    background-color: var(--primary-color);
+    color: var(--primary-contrast-text-color);
+
+    .icon-label > span {
+      color: var(--primary-contrast-text-color);
+    }
+  }
+}
