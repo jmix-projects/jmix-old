@@ -47,8 +47,6 @@ import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.screen.UiDescriptor;
 import io.jmix.ui.sys.ControllerUtils;
-import io.jmix.ui.widget.JmixSourceCodeEditor;
-import io.jmix.ui.widget.addon.aceeditor.AceMode;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -346,7 +344,6 @@ public class SampleBrowser extends Screen {
     protected void createMessagesContainers(String messagesPack) {
         Locale defaultLocale = messageTools.getDefaultLocale();
         for (Locale locale : coreProperties.getAvailableLocales().values()) {
-            SourceCodeEditor sourceCodeEditor = createSourceCodeEditor(AceMode.properties);
             String tabTitle;
             if (defaultLocale.equals(locale)) {
                 tabTitle = "messages.properties";
@@ -354,8 +351,10 @@ public class SampleBrowser extends Screen {
                 tabTitle = String.format("messages_%s.properties", locale.toString());
             }
 
-            String content = samplerHelper.getFileContent(samplerHelper.packageToPath(messagesPack) + "/" + tabTitle);
+            String src = samplerHelper.packageToPath(messagesPack) + "/" + tabTitle;
+            String content = samplerHelper.getFileContent(src);
             if (StringUtils.isNotBlank(content)) {
+                SourceCodeEditor sourceCodeEditor = createSourceCodeEditor(getAceMode(src));
                 sourceCodeEditor.setValue(content);
                 addTab(tabTitle, sourceCodeEditor);
             }
@@ -378,11 +377,11 @@ public class SampleBrowser extends Screen {
         }
     }
 
-    protected SourceCodeEditor createSourceCodeEditor(AceMode mode) {
+    protected SourceCodeEditor createSourceCodeEditor(SourceCodeEditor.Mode mode) {
         SourceCodeEditor editor = uiComponents.create(SourceCodeEditor.class);
         editor.setStyleName("sample-browser");
         editor.setShowPrintMargin(false);
-        editor.withUnwrapped(JmixSourceCodeEditor.class, codeEditor -> codeEditor.setMode(mode));
+        editor.setMode(mode);
         editor.setEditable(false);
         editor.setWidth("100%");
         editor.setHeight("100%");
@@ -390,12 +389,29 @@ public class SampleBrowser extends Screen {
         return editor;
     }
 
-    protected AceMode getAceMode(String src) {
+    protected SourceCodeEditor.Mode getAceMode(String src) {
         String fileExtension = samplerHelper.getFileExtension(src);
-        if ("xsd".equals(fileExtension)) {
-            fileExtension = "xml";
+
+        SourceCodeEditor.Mode mode = SourceCodeEditor.Mode.Text;
+        if (fileExtension != null) {
+            switch (fileExtension) {
+                case "xsd":
+                case "xml":
+                    mode = SourceCodeEditor.Mode.XML;
+                    break;
+                case "java":
+                    mode = SourceCodeEditor.Mode.Java;
+                    break;
+                case "js":
+                    mode = SourceCodeEditor.Mode.JavaScript;
+                    break;
+                case "properties":
+                    mode = SourceCodeEditor.Mode.Properties;
+                    break;
+            }
         }
-        return fileExtension != null ? AceMode.forFileEnding(fileExtension) : AceMode.text;
+
+        return mode;
     }
 
     protected Locale getUserLocale() {
