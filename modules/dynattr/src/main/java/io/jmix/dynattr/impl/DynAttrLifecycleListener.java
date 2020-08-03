@@ -37,12 +37,12 @@ public class DynAttrLifecycleListener implements OrmLifecycleListener {
     public void onLoad(Collection<JmixEntity> entities, LoadContext loadContext) {
         if (loadContext.isLoadDynamicAttributes()) {
             //noinspection unchecked
-            dynAttrManager.loadValues(entities, loadContext.getFetchPlan(), loadContext.getConstraints());
+            dynAttrManager.loadValues(entities, loadContext.getFetchPlan(), loadContext.getAccessConstraints());
         }
     }
 
     @Override
     public void onSave(Collection<JmixEntity> entities, SaveContext saveContext) {
-        dynAttrManager.storeValues(entities, saveContext.getConstraints());
+        dynAttrManager.storeValues(entities, saveContext.getAccessConstraints());
     }
 }

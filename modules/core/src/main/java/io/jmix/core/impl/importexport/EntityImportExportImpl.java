@@ -221,7 +221,7 @@ public class EntityImportExportImpl implements EntityImportExport {
                     .setFetchPlan(regularView)
                     .setLoadDynamicAttributes(true)
                     .setId(EntityValues.getId(srcEntity))
-                    .setConstraints(accessConstraintsRegistry.getConstraints());
+                    .setAccessConstraints(accessConstraintsRegistry.getConstraints());
             JmixEntity dstEntity = dataManager.load(ctx);
 
             importEntity(srcEntity, dstEntity, importView, regularView, saveContext, referenceInfoList, optimisticLocking);
@@ -263,7 +263,7 @@ public class EntityImportExportImpl implements EntityImportExport {
             saveContext.setSoftDeletion(true);
         }
 
-        saveContext.setConstraints(accessConstraintsRegistry.getConstraints());
+        saveContext.setAccessConstraints(accessConstraintsRegistry.getConstraints());
 
         return dataManager.save(saveContext);
     }

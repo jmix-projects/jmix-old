@@ -43,7 +43,7 @@ public class ValueLoadContext implements DataLoadContext, Serializable {
     protected boolean softDeletion = true;
     protected String idName;
     protected List<String> properties = new ArrayList<>();
-    protected List<AccessConstraint<?>> constraints;
+    protected List<AccessConstraint<?>> accessConstraints;
     protected boolean joinTransaction;
 
     /**
@@ -165,12 +165,12 @@ public class ValueLoadContext implements DataLoadContext, Serializable {
         return properties;
     }
 
-    public List<AccessConstraint<?>> getConstraints() {
-        return this.constraints == null ? Collections.emptyList() : this.constraints;
+    public List<AccessConstraint<?>> getAccessConstraints() {
+        return this.accessConstraints == null ? Collections.emptyList() : this.accessConstraints;
     }
 
-    public ValueLoadContext setConstraints(List<AccessConstraint<?>> constraints) {
-        this.constraints = constraints;
+    public ValueLoadContext setAccessConstraints(List<AccessConstraint<?>> accessConstraints) {
+        this.accessConstraints = accessConstraints;
         return this;
     }
 

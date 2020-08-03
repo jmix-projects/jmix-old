@@ -37,7 +37,7 @@ public class SaveContext implements Serializable {
     protected boolean softDeletion = true;
     protected boolean discardSaved;
     protected boolean joinTransaction = true;
-    protected List<AccessConstraint<?>> constraints;
+    protected List<AccessConstraint<?>> accessConstraints;
     protected Map<String, Object> dbHints = new HashMap<>();
 
     /**
@@ -167,12 +167,12 @@ public class SaveContext implements Serializable {
         return this;
     }
 
-    public List<AccessConstraint<?>> getConstraints() {
-        return this.constraints == null ? Collections.emptyList() : this.constraints;
+    public List<AccessConstraint<?>> getAccessConstraints() {
+        return this.accessConstraints == null ? Collections.emptyList() : this.accessConstraints;
     }
 
-    public SaveContext setConstraints(List<AccessConstraint<?>> constraints) {
-        this.constraints = constraints;
+    public SaveContext setAccessConstraints(List<AccessConstraint<?>> accessConstraints) {
+        this.accessConstraints = accessConstraints;
         return this;
     }
 

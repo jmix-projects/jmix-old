@@ -158,7 +158,7 @@ public class OrmDataStore implements DataStore {
         }
 
         final MetaClass metaClass = getEffectiveMetaClassFromContext(context);
-        final Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
+        final Collection<AccessConstraint<?>> accessConstraints = context.getAccessConstraints();
 
         CrudEntityContext entityContext = new CrudEntityContext(metaClass);
         accessManager.applyConstraints(entityContext, accessConstraints);
@@ -244,7 +244,7 @@ public class OrmDataStore implements DataStore {
                     + (context.getQuery() == null || context.getQuery().getMaxResults() == 0 ? "" : ", max=" + context.getQuery().getMaxResults()));
 
         MetaClass metaClass = getEffectiveMetaClassFromContext(context);
-        final Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
+        final Collection<AccessConstraint<?>> accessConstraints = context.getAccessConstraints();
 
 
         CrudEntityContext entityContext = new CrudEntityContext(metaClass);
@@ -406,7 +406,7 @@ public class OrmDataStore implements DataStore {
                     + ", query=" + context.getQuery());
 
         MetaClass metaClass = getEffectiveMetaClassFromContext(context);
-        Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
+        Collection<AccessConstraint<?>> accessConstraints = context.getAccessConstraints();
 
         CrudEntityContext entityContext = new CrudEntityContext(metaClass);
         accessManager.applyConstraints(entityContext, accessConstraints);
@@ -489,7 +489,7 @@ public class OrmDataStore implements DataStore {
     public Set<JmixEntity> save(SaveContext context) {
         log.debug("save: store={}, entitiesToSave={}, entitiesToRemove={}", storeName, context.getEntitiesToSave(), context.getEntitiesToRemove());
 
-        Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
+        Collection<AccessConstraint<?>> accessConstraints = context.getAccessConstraints();
 
         Set<JmixEntity> saved = new HashSet<>();
         List<JmixEntity> persisted = new ArrayList<>();
@@ -711,7 +711,7 @@ public class OrmDataStore implements DataStore {
         Preconditions.checkNotNullArgument(context.getQuery(), "query is null");
 
         ValueLoadContext.Query contextQuery = context.getQuery();
-        Collection<AccessConstraint<?>> accessConstraints = context.getConstraints();
+        Collection<AccessConstraint<?>> accessConstraints = context.getAccessConstraints();
 
         if (log.isDebugEnabled())
             log.debug("query: " + (JpqlQueryBuilder.printQuery(contextQuery.getQueryString()))
@@ -836,7 +836,7 @@ public class OrmDataStore implements DataStore {
         JmixQuery<?> query = queryBuilder.getQuery(em);
 
         ReadEntityQueryContext queryContext = new ReadEntityQueryContext(query, metaClass, queryTransformerFactory);
-        accessManager.applyConstraints(queryContext, context.getConstraints());
+        accessManager.applyConstraints(queryContext, context.getAccessConstraints());
 
         query = queryContext.getResultQuery();
 
@@ -986,7 +986,7 @@ public class OrmDataStore implements DataStore {
     }
 
     protected void checkCRUDConstraints(SaveContext context) {
-        if (context.getConstraints().isEmpty()) {
+        if (context.getAccessConstraints().isEmpty()) {
             return;
         }
 
@@ -1000,7 +1000,7 @@ public class OrmDataStore implements DataStore {
 
             CrudEntityContext entityContext = accessCache.computeIfAbsent(metaClass, key -> {
                 CrudEntityContext newEntityContext = new CrudEntityContext(key);
-                accessManager.applyConstraints(newEntityContext, context.getConstraints());
+                accessManager.applyConstraints(newEntityContext, context.getAccessConstraints());
                 return newEntityContext;
             });
 
@@ -1019,7 +1019,7 @@ public class OrmDataStore implements DataStore {
 
             CrudEntityContext entityContext = accessCache.computeIfAbsent(metaClass, key -> {
                 CrudEntityContext newEntityContext = new CrudEntityContext(key);
-                accessManager.applyConstraints(newEntityContext, context.getConstraints());
+                accessManager.applyConstraints(newEntityContext, context.getAccessConstraints());
                 return newEntityContext;
             });
 

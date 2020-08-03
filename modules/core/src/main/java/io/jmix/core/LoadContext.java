@@ -54,7 +54,7 @@ public class LoadContext<E extends JmixEntity> implements DataLoadContext, Seria
     protected List<Object> idList = new ArrayList<>(0);
     protected boolean softDeletion = true;
     protected List<Query> prevQueries = new ArrayList<>(0);
-    protected List<AccessConstraint<?>> constraints;
+    protected List<AccessConstraint<?>> accessConstraints;
     protected int queryKey;
 
     protected boolean loadDynamicAttributes;
@@ -249,12 +249,12 @@ public class LoadContext<E extends JmixEntity> implements DataLoadContext, Seria
         return this;
     }
 
-    public List<AccessConstraint<?>> getConstraints() {
-        return this.constraints == null ? Collections.emptyList() : this.constraints;
+    public List<AccessConstraint<?>> getAccessConstraints() {
+        return this.accessConstraints == null ? Collections.emptyList() : this.accessConstraints;
     }
 
-    public LoadContext<E> setConstraints(List<AccessConstraint<?>> constraints) {
-        this.constraints = constraints;
+    public LoadContext<E> setAccessConstraints(List<AccessConstraint<?>> accessConstraints) {
+        this.accessConstraints = accessConstraints;
         return this;
     }
 
