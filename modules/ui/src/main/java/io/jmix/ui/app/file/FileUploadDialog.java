@@ -17,15 +17,16 @@
 package io.jmix.ui.app.file;
 
 import io.jmix.ui.Notifications;
-import io.jmix.ui.component.FileStorageUploadField;
+import io.jmix.ui.component.FileUploadField;
 import io.jmix.ui.component.HBoxLayout;
 import io.jmix.ui.component.SingleFileUploadField.FileUploadSucceedEvent;
 import io.jmix.ui.component.UploadField.FileUploadErrorEvent;
 import io.jmix.ui.screen.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.util.UUID;
+import java.io.InputStream;
 
 @UiController("singleFileUploadDialog")
 @UiDescriptor("file-upload-dialog.xml")
@@ -33,7 +34,7 @@ import java.util.UUID;
 public class FileUploadDialog extends Screen {
 
     @Inject
-    protected FileStorageUploadField fileUpload;
+    protected FileUploadField fileUpload;
 
     @Inject
     protected HBoxLayout dropZone;
@@ -44,22 +45,24 @@ public class FileUploadDialog extends Screen {
     @Autowired
     protected MessageBundle messageBundle;
 
-    protected UUID fileId;
+    protected InputStream fileContent;
 
     protected String fileName;
 
-    public UUID getFileId() {
-        return fileId;
+    @Nullable
+    public InputStream getFileContent() {
+        return fileContent;
     }
 
+    @Nullable
     public String getFileName() {
         return fileName;
     }
 
     @Subscribe("fileUpload")
     protected void onFileUploadSucceedEvent(FileUploadSucceedEvent event) {
-        fileId = fileUpload.getFileId();
-        fileName = fileUpload.getFileName();
+        fileContent = fileUpload.getFileContent();
+        fileName = event.getFileName();
         close(StandardOutcome.COMMIT);
     }
 
