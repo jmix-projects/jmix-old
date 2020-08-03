@@ -15,54 +15,87 @@
  */
 package io.jmix.ui.component.formatter;
 
-import io.jmix.core.AppBeans;
+import io.jmix.core.BeanLocator;
 import io.jmix.core.LocaleResolver;
 import io.jmix.core.Messages;
-import io.jmix.core.metamodel.datatype.Datatypes;
 import io.jmix.core.metamodel.datatype.FormatStrings;
+import io.jmix.core.metamodel.datatype.FormatStringsRegistry;
 import io.jmix.core.security.CurrentAuthentication;
 import org.apache.commons.lang3.StringUtils;
-import org.dom4j.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.function.Function;
 
 /**
- * {@link Date} formatter to be used in screen descriptors.
- * <br> Either {@code format} or {@code type} attributes should be defined in the {@code formatter} element.
- * <ul>
- *     <li> {@code format} - format string for {@code SimpleDateFormat}</li>
- *     <li> {@code type} - {@code DATE} or {@code DATETIME} - if specified, the value will be formatted
- *     by means of {@code DateDatatype} or {@code DateTimeDatatype} respectively.</li>
- * </ul>
- * <br> Example usage:
- * <pre>
- * &lt;formatter class=&quot;com.haulmont.cuba.web.components.formatters.DateFormatter&quot; format=&quot;msg://dateFormat&quot;
- * </pre>
+ * {@link Date} formatter to be used in screen descriptors and controllers.
+ * <p>
+ * This formatter formats the {@link Date} value into a string depending on the format string.
+ * <p>
+ * Use {@link BeanLocator} when creating the formatter programmatically.
  */
-public class DateFormatter implements Function<Date, String> {
+@Component(DateFormatter.NAME)
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
+public class DateFormatter implements Formatter<Date> {
 
-    private Element element;
+    public static final String NAME = "ui_DateFormatter";
 
-    protected CurrentAuthentication currentAuthentication = AppBeans.get(CurrentAuthentication.NAME);
-    protected Messages messages = AppBeans.get(Messages.NAME);
+    @Autowired
+    protected CurrentAuthentication currentAuthentication;
+    @Autowired
+    protected Messages messages;
+    @Autowired
+    protected FormatStringsRegistry formatStringsRegistry;
 
-    public DateFormatter(Element element) {
-        this.element = element;
+    protected String format;
+    protected String type;
+    protected boolean useUserTimezone;
+
+    /**
+     * Sets the format string describing the date format which will be used to create {@link SimpleDateFormat} instance.
+     * It can be either a format string, or a key in message pack.
+     *
+     * @param format a format string or a key in message pack
+     */
+    public void setFormat(String format) {
+        this.format = format;
     }
 
+    /**
+     * Sets the formatter type, which can have a {@code DATE} or {@code DATETIME} value. If specified,
+     * the value will be formatted by means of {@code DateDatatype} or {@code DateTimeDatatype} respectively.
+     *
+     * @param type a formatter type
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
+     * Sets whether formatter should display the date and time in the current user's timezone.
+     *
+     * @param useUserTimezone {@code true} if the formatter displays the date and time in the current user's timezone,
+     *                        {@code false} otherwise
+     */
+    public void setUseUserTimezone(boolean useUserTimezone) {
+        this.useUserTimezone = useUserTimezone;
+    }
+
+    @Nullable
     @Override
-    public String apply(Date value) {
+    public String apply(@Nullable Date value) {
         if (value == null) {
             return null;
         }
-        String format = element.attributeValue("format");
+
         if (StringUtils.isBlank(format)) {
-            String type = element.attributeValue("type");
             if (type != null) {
-                FormatStrings formatStrings = Datatypes.getFormatStrings(currentAuthentication.getLocale());
+                FormatStrings formatStrings = formatStringsRegistry.getFormatStrings(currentAuthentication.getLocale());
                 if (formatStrings == null)
                     throw new IllegalStateException("FormatStrings are not defined for " +
                             LocaleResolver.localeToString(currentAuthentication.getLocale()));
@@ -83,12 +116,11 @@ public class DateFormatter implements Function<Date, String> {
             return value.toString();
         } else {
             if (format.startsWith("msg://")) {
-                format = messages.getMessage(format.substring(6, format.length()));
+                format = messages.getMessage(format.substring(6));
             }
             DateFormat df = new SimpleDateFormat(format);
 
-            if (Boolean.parseBoolean(element.attributeValue("useUserTimezone")) &&
-                    currentAuthentication.isSet()) {
+            if (useUserTimezone && currentAuthentication.isSet()) {
                 df.setTimeZone(currentAuthentication.getTimeZone());
             }
 

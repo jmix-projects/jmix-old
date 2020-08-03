@@ -25,6 +25,9 @@ import com.vaadin.v7.client.ui.VListSelect;
 
 import java.util.function.Consumer;
 
+/**
+ * Vaadin 7 component. Is used for supporting OptionsList component in compatibility module.
+ */
 public class JmixListSelectWidget extends VListSelect {
 
     protected Consumer<Integer> doubleClickListener;

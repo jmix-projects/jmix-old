@@ -21,26 +21,30 @@ import io.jmix.core.rememberme.RememberMeProperties;
 import io.jmix.core.security.LogoutRequestMatcher;
 import io.jmix.core.security.UserRepository;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
+import io.jmix.core.session.SessionProperties;
 import io.jmix.security.authentication.SecuredAuthenticationProvider;
 import io.jmix.security.role.RoleRepository;
 import io.jmix.security.role.assignment.RoleAssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.authentication.session.*;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Configuration
 @ComponentScan
@@ -51,6 +55,9 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
 
     @Autowired
     private CoreProperties coreProperties;
+
+    @Autowired
+    private SessionProperties sessionProperties;
 
     @Autowired
     private RememberMeProperties rememberMeProperties;
@@ -77,6 +84,7 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        SessionRegistry sessionRegistry = sessionRegistry();
         http.antMatcher("/**")
                 .authorizeRequests().anyRequest().permitAll()
                 .and()
@@ -106,6 +114,40 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
 
     protected PersistentTokenRepository rememberMeRepository() {
         return new InMemoryTokenRepositoryImpl();
+                .headers().frameOptions().sameOrigin()
+                .and()
+                .sessionManagement().sessionAuthenticationStrategy(sessionControlAuthenticationStrategy(sessionRegistry))
+                .maximumSessions(sessionProperties.getMaximumUserSessions()).sessionRegistry(sessionRegistry);
+    }
+
+    @Primary
+    @Bean
+    protected SessionAuthenticationStrategy sessionControlAuthenticationStrategy(SessionRegistry sessionRegistry) {
+        return new CompositeSessionAuthenticationStrategy(strategies(sessionRegistry, sessionProperties.getMaximumUserSessions()));
+    }
+
+    protected List<SessionAuthenticationStrategy> strategies(SessionRegistry sessionRegistry, int maximumUserSessions) {
+        SessionFixationProtectionStrategy sessionFixationProtectionStrategy
+                = new SessionFixationProtectionStrategy();
+        sessionFixationProtectionStrategy.setMigrateSessionAttributes(true);
+
+        RegisterSessionAuthenticationStrategy registerSessionAuthenticationStrategy
+                = new RegisterSessionAuthenticationStrategy(sessionRegistry);
+        ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlStrategy
+                = new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
+        concurrentSessionControlStrategy.setMaximumSessions(maximumUserSessions);
+
+        List<SessionAuthenticationStrategy> strategies = new LinkedList<>();
+
+//        strategies.add(sessionFixationProtectionStrategy);
+        strategies.add(registerSessionAuthenticationStrategy);
+        strategies.add(concurrentSessionControlStrategy);
+        return strategies;
+    }
+
+    @Bean
+    protected SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
     @Bean(name = "sec_AuthenticationManager")

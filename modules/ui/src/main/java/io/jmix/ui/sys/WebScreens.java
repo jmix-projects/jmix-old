@@ -65,7 +65,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -566,6 +565,7 @@ public class WebScreens implements Screens {
         }
     }
 
+    @Nullable
     protected Screen getAnyCurrentScreen() {
         Iterator<Screen> dialogsIterator = getOpenedScreens().getDialogScreens().iterator();
         if (dialogsIterator.hasNext()) {
@@ -763,6 +763,7 @@ public class WebScreens implements Screens {
         return workArea.getCurrentBreadcrumbs();
     }
 
+    @Nullable
     protected Screen getRootScreenOrNull() {
         RootWindow window = ui.getTopLevelWindow();
         if (window == null) {
@@ -802,7 +803,6 @@ public class WebScreens implements Screens {
      * @return workarea instance of the root screen
      * @throws IllegalStateException if there is no root screen or root screen does not have {@link AppWorkArea}
      */
-    @Nonnull
     public WebAppWorkArea getConfiguredWorkArea() {
         RootWindow topLevelWindow = ui.getTopLevelWindow();
         if (topLevelWindow == null) {
@@ -1369,6 +1369,7 @@ public class WebScreens implements Screens {
     protected static class TabWindowContainerImpl extends CssLayout implements TabWindowContainer {
         protected WindowBreadCrumbs breadCrumbs;
 
+        @Nullable
         @Override
         public WindowBreadCrumbs getBreadCrumbs() {
             return breadCrumbs;
@@ -1463,7 +1464,6 @@ public class WebScreens implements Screens {
 
     protected class OpenedScreensImpl implements OpenedScreens {
 
-        @Nonnull
         @Override
         public Screen getRootScreen() {
             RootWindow window = ui.getTopLevelWindow();

@@ -25,6 +25,8 @@ import io.jmix.ui.component.mainwindow.UserIndicator;
 import io.jmix.ui.widget.JmixComboBox;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.Nullable;
 import java.util.function.Function;
 
 import static com.vaadin.server.Sizeable.Unit;
@@ -38,7 +40,7 @@ public class WebUserIndicator extends WebAbstractComponent<CssLayout> implements
     protected Label userNameLabel;
     protected JmixComboBox<BaseUser> userComboBox;
 
-//    protected Function<? super BaseUser, String> userNameFormatter = DEFAULT_USER_NAME_FORMATTER;
+    protected Function<? super BaseUser, String> userNameFormatter;
 
     protected MetadataTools metadataTools;
 
@@ -184,14 +186,14 @@ public class WebUserIndicator extends WebAbstractComponent<CssLayout> implements
 //    }
 
     @Override
-    public void setWidth(String width) {
+    public void setWidth(@Nullable String width) {
         super.setWidth(width);
 
         adjustWidth();
     }
 
     @Override
-    public void setHeight(String height) {
+    public void setHeight(@Nullable String height) {
         super.setHeight(height);
 
         adjustHeight();
@@ -231,14 +233,13 @@ public class WebUserIndicator extends WebAbstractComponent<CssLayout> implements
 
     @Override
     public void setUserNameFormatter(Function<? super BaseUser, String> userNameFormatter) {
-//        this.userNameFormatter = userNameFormatter;
+        this.userNameFormatter = userNameFormatter;
 //        refreshUserSubstitutions();
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public Function<BaseUser, String> getUserNameFormatter() {
-//        return (Function<BaseUser, String>) userNameFormatter;
-        return null;
+        return (Function<BaseUser, String>) userNameFormatter;
     }
 }

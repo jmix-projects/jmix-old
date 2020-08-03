@@ -34,7 +34,6 @@ import io.jmix.ui.component.GroupTable;
 import io.jmix.ui.component.Image;
 import io.jmix.ui.component.Label;
 import io.jmix.ui.component.MaskedField;
-import io.jmix.ui.component.OptionsList;
 import io.jmix.ui.component.PasswordField;
 import io.jmix.ui.component.RadioButtonGroup;
 import io.jmix.ui.component.ResizableTextArea;
@@ -150,6 +149,7 @@ public class CubaLoaderConfig extends BaseLoaderConfig implements LoaderConfig {
         loaders.put(FileMultiUploadField.NAME, FileMultiUploadFieldLoader.class);
         loaders.put(GroupBoxLayout.NAME, CubaGroupBoxLayoutLoader.class);
         loaders.put(SplitPanel.NAME, CubaSplitPanelLoader.class);
+        loaders.put(PopupButton.NAME, CubaPopupButtonLoader.class);
     }
 
     protected boolean isLegacyScreen(Element element) {

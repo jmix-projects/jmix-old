@@ -21,17 +21,21 @@ import io.jmix.ui.meta.StudioFacet;
 import io.jmix.ui.meta.StudioProperties;
 import io.jmix.ui.meta.StudioProperty;
 
+import javax.annotation.Nullable;
+
 /**
  * Prepares and shows option dialogs.
  */
 @StudioFacet(
+        xmlElement = "optionDialog",
         caption = "Option Dialog",
         description = "Prepares and shows option dialogs",
-        defaultProperty = "message"
+        defaultProperty = "message",
+        category = "Non-visual"
 )
 @StudioProperties(
         properties = {
-                @StudioProperty(name = "id", required = true)
+                @StudioProperty(name = "id", type = PropertyType.COMPONENT_ID, required = true)
         }
 )
 public interface OptionDialogFacet extends Facet, ActionsAwareDialogFacet<OptionDialogFacet>, HasSubParts {
@@ -42,11 +46,12 @@ public interface OptionDialogFacet extends Facet, ActionsAwareDialogFacet<Option
      * @param caption caption
      */
     @StudioProperty(type = PropertyType.LOCALIZED_STRING)
-    void setCaption(String caption);
+    void setCaption(@Nullable String caption);
 
     /**
      * @return dialog caption
      */
+    @Nullable
     String getCaption();
 
     /**
@@ -55,11 +60,12 @@ public interface OptionDialogFacet extends Facet, ActionsAwareDialogFacet<Option
      * @param message message
      */
     @StudioProperty(type = PropertyType.LOCALIZED_STRING)
-    void setMessage(String message);
+    void setMessage(@Nullable String message);
 
     /**
      * @return dialog message
      */
+    @Nullable
     String getMessage();
 
     /**
@@ -99,6 +105,7 @@ public interface OptionDialogFacet extends Facet, ActionsAwareDialogFacet<Option
     /**
      * @return dialog style name
      */
+    @Nullable
     String getStyleName();
 
     /**
@@ -107,7 +114,7 @@ public interface OptionDialogFacet extends Facet, ActionsAwareDialogFacet<Option
      * @param width width
      */
     @StudioProperty
-    void setWidth(String width);
+    void setWidth(@Nullable String width);
 
     /**
      * @return dialog width
@@ -125,7 +132,7 @@ public interface OptionDialogFacet extends Facet, ActionsAwareDialogFacet<Option
      * @param height height
      */
     @StudioProperty
-    void setHeight(String height);
+    void setHeight(@Nullable String height);
 
     /**
      * @return dialog height
@@ -140,6 +147,7 @@ public interface OptionDialogFacet extends Facet, ActionsAwareDialogFacet<Option
     /**
      * @return id of action that triggers dialog
      */
+    @Nullable
     String getActionTarget();
 
     /**
@@ -148,12 +156,13 @@ public interface OptionDialogFacet extends Facet, ActionsAwareDialogFacet<Option
      *
      * @param actionId action id
      */
-    @StudioProperty(type = PropertyType.COMPONENT_ID)
-    void setActionTarget(String actionId);
+    @StudioProperty(type = PropertyType.COMPONENT_REF)
+    void setActionTarget(@Nullable String actionId);
 
     /**
      * @return id of button that triggers dialog
      */
+    @Nullable
     String getButtonTarget();
 
     /**
@@ -162,8 +171,8 @@ public interface OptionDialogFacet extends Facet, ActionsAwareDialogFacet<Option
      *
      * @param buttonId button id
      */
-    @StudioProperty(type = PropertyType.COMPONENT_ID)
-    void setButtonTarget(String buttonId);
+    @StudioProperty(type = PropertyType.COMPONENT_REF)
+    void setButtonTarget(@Nullable String buttonId);
 
     /**
      * Sets whether html sanitizer is enabled or not for dialog content.

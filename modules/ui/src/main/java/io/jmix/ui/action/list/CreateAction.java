@@ -32,7 +32,6 @@ import io.jmix.ui.component.data.meta.EntityDataUnit;
 import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.meta.StudioAction;
-import io.jmix.ui.meta.StudioDelegate;
 import io.jmix.ui.meta.StudioPropertiesItem;
 import io.jmix.ui.screen.*;
 import io.jmix.ui.sys.ActionScreenInitializer;
@@ -57,13 +56,11 @@ import static io.jmix.ui.screen.FrameOwner.WINDOW_COMMIT_AND_CLOSE_ACTION;
  */
 @StudioAction(category = "List Actions", description = "Creates an entity instance using its editor screen")
 @ActionType(CreateAction.ID)
-public class CreateAction<E extends JmixEntity> extends ListAction implements Action.DisabledWhenScreenReadOnly {
+public class CreateAction<E extends JmixEntity> extends ListAction implements Action.AdjustWhenScreenReadOnly {
 
     public static final String ID = "create";
 
-    @Autowired
     protected ScreenBuilders screenBuilders;
-    @Autowired
     protected Security security;
 
     protected ActionScreenInitializer screenInitializer = new ActionScreenInitializer();
@@ -145,7 +142,6 @@ public class CreateAction<E extends JmixEntity> extends ListAction implements Ac
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setScreenOptionsSupplier(Supplier<ScreenOptions> screenOptionsSupplier) {
         screenInitializer.setScreenOptionsSupplier(screenOptionsSupplier);
     }
@@ -162,7 +158,6 @@ public class CreateAction<E extends JmixEntity> extends ListAction implements Ac
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setScreenConfigurer(Consumer<Screen> screenConfigurer) {
         screenInitializer.setScreenConfigurer(screenConfigurer);
     }
@@ -180,7 +175,6 @@ public class CreateAction<E extends JmixEntity> extends ListAction implements Ac
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setAfterCloseHandler(Consumer<Screen.AfterCloseEvent> afterCloseHandler) {
         screenInitializer.setAfterCloseHandler(afterCloseHandler);
     }
@@ -198,7 +192,6 @@ public class CreateAction<E extends JmixEntity> extends ListAction implements Ac
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setNewEntitySupplier(Supplier<E> newEntitySupplier) {
         this.newEntitySupplier = newEntitySupplier;
     }
@@ -215,7 +208,6 @@ public class CreateAction<E extends JmixEntity> extends ListAction implements Ac
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setInitializer(Consumer<E> initializer) {
         this.initializer = initializer;
     }
@@ -231,7 +223,6 @@ public class CreateAction<E extends JmixEntity> extends ListAction implements Ac
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setAfterCommitHandler(Consumer<E> afterCommitHandler) {
         this.afterCommitHandler = afterCommitHandler;
     }
@@ -264,6 +255,16 @@ public class CreateAction<E extends JmixEntity> extends ListAction implements Ac
     @Autowired
     protected void setUiProperties(UiProperties properties) {
         setShortcut(properties.getTableInsertShortcut());
+    }
+
+    @Autowired
+    public void setScreenBuilders(ScreenBuilders screenBuilders) {
+        this.screenBuilders = screenBuilders;
+    }
+
+    @Autowired
+    public void setSecurity(Security security) {
+        this.security = security;
     }
 
     @Override

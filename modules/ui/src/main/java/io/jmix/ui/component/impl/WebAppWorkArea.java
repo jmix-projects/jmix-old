@@ -44,7 +44,6 @@ import io.jmix.ui.widget.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
@@ -104,7 +103,7 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
     }
 
     @Override
-    public void setStyleName(String name) {
+    public void setStyleName(@Nullable String name) {
         super.setStyleName(name);
 
         if (mode == Mode.TABBED) {
@@ -130,13 +129,13 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
     }
 
     @Override
-    public void setFrame(Frame frame) {
+    public void setFrame(@Nullable Frame frame) {
         super.setFrame(frame);
 
         initialLayout.setFrame(frame);
     }
 
-    @Nonnull
+    @Nullable
     @Override
     public VBoxLayout getInitialLayout() {
         return initialLayout;
@@ -266,23 +265,25 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
         Window selectedWindow = ((TabWindowContainer) selectedTab).getBreadCrumbs().getCurrentWindow();
         WebWindow webWindow = (WebWindow) selectedWindow;
 
-        NavigationState resolvedState = webWindow.getResolvedState();
-        if (resolvedState != null) {
-            int stateMark = generateUrlStateMark();
+        if (webWindow != null) {
+            NavigationState resolvedState = webWindow.getResolvedState();
+            if (resolvedState != null) {
+                int stateMark = generateUrlStateMark();
 
-            NavigationState newState = new NavigationState(
-                    resolvedState.getRoot(),
-                    String.valueOf(stateMark),
-                    resolvedState.getNestedRoute(),
-                    resolvedState.getParams());
-            webWindow.setResolvedState(newState);
+                NavigationState newState = new NavigationState(
+                        resolvedState.getRoot(),
+                        String.valueOf(stateMark),
+                        resolvedState.getNestedRoute(),
+                        resolvedState.getParams());
+                webWindow.setResolvedState(newState);
 
-            Screen screen = selectedWindow.getFrameOwner();
+                Screen screen = selectedWindow.getFrameOwner();
 
-            UrlRouting urlRouting = UiControllerUtils.getScreenContext(screen)
-                    .getUrlRouting();
+                UrlRouting urlRouting = UiControllerUtils.getScreenContext(screen)
+                        .getUrlRouting();
 
-            urlRouting.pushState(screen, newState.getParams());
+                urlRouting.pushState(screen, newState.getParams());
+            }
         }
     }
 
@@ -638,7 +639,7 @@ public class WebAppWorkArea extends WebAbstractComponent<CssLayout> implements A
             Iterator<WindowBreadCrumbs> it = getWindowStacks().iterator();
             if (it.hasNext()) {
                 Window currentWindow = it.next().getCurrentWindow();
-                if (!isWindowClosePrevented(currentWindow, CloseOriginType.SHORTCUT)) {
+                if (currentWindow != null && !isWindowClosePrevented(currentWindow, CloseOriginType.SHORTCUT)) {
                     ui.focus();
 
                     currentWindow.getFrameOwner()

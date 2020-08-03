@@ -15,24 +15,24 @@
  */
 package com.haulmont.cuba.gui.components.actions;
 
+import com.haulmont.cuba.core.global.AppBeans;
 import com.haulmont.cuba.core.global.Metadata;
 import com.haulmont.cuba.gui.components.ListComponent;
 import com.haulmont.cuba.gui.data.CollectionDatasource;
 import com.haulmont.cuba.gui.data.Datasource;
 import com.haulmont.cuba.gui.data.NestedDatasource;
 import com.haulmont.cuba.gui.data.PropertyDatasource;
-import io.jmix.core.AppBeans;
 import io.jmix.core.ExtendedEntities;
-import io.jmix.core.Messages;
 import io.jmix.core.JmixEntity;
+import io.jmix.core.Messages;
 import io.jmix.core.entity.EntityValues;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.core.security.EntityAttrAccess;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.component.Component;
-import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.icon.Icons;
+import io.jmix.ui.icon.JmixIcon;
 import org.springframework.context.annotation.Scope;
 
 import java.util.Set;
@@ -51,7 +51,7 @@ import java.util.Set;
 @org.springframework.stereotype.Component("cuba_ExcludeAction")
 @Scope("prototype")
 public class ExcludeAction extends RemoveAction
-        implements Action.DisabledWhenScreenReadOnly {
+        implements Action.AdjustWhenScreenReadOnly {
 
     public static final String ACTION_ID = ListActionType.EXCLUDE.getId();
 

@@ -20,6 +20,7 @@ import io.jmix.core.JmixEntity;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.ui.component.data.TreeTableItems;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -32,7 +33,7 @@ public class EmptyTreeTableItems<E extends JmixEntity> extends EmptyTableItems<E
 
     @Override
     public String getHierarchyPropertyName() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -40,6 +41,7 @@ public class EmptyTreeTableItems<E extends JmixEntity> extends EmptyTableItems<E
         return Collections.emptyList();
     }
 
+    @Nullable
     @Override
     public Object getParent(Object itemId) {
         return null;
@@ -60,33 +62,37 @@ public class EmptyTreeTableItems<E extends JmixEntity> extends EmptyTableItems<E
         return false;
     }
 
+    @Nullable
     @Override
-    public Object nextItemId(Object itemId) {
+    public Object nextItemId(@Nullable Object itemId) {
         return null;
     }
 
+    @Nullable
     @Override
-    public Object prevItemId(Object itemId) {
+    public Object prevItemId(@Nullable Object itemId) {
         return null;
     }
 
+    @Nullable
     @Override
     public Object firstItemId() {
         return null;
     }
 
+    @Nullable
     @Override
     public Object lastItemId() {
         return null;
     }
 
     @Override
-    public boolean isFirstId(Object itemId) {
+    public boolean isFirstId(@Nullable Object itemId) {
         return false;
     }
 
     @Override
-    public boolean isLastId(Object itemId) {
+    public boolean isLastId(@Nullable Object itemId) {
         return false;
     }
 

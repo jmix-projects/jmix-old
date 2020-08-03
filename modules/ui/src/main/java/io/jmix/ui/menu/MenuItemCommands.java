@@ -67,7 +67,7 @@ public class MenuItemCommands {
     @Autowired
     protected WindowConfig windowConfig;
     @Autowired
-    protected HotDeployManager hotDeployManager;
+    protected ClassManager classManager;
     @Autowired
     protected Metadata metadata;
     @Autowired
@@ -87,6 +87,7 @@ public class MenuItemCommands {
      * @param item menu item
      * @return command
      */
+    @Nullable
     public MenuItemCommand create(FrameOwner origin, MenuItem item) {
         Map<String, Object> params = loadParams(item);
         List<UiControllerProperty> properties = loadProperties(item.getDescriptor());
@@ -110,7 +111,7 @@ public class MenuItemCommands {
         return Collections.emptyMap();
     }
 
-    protected List<UiControllerProperty> loadProperties(Element menuItemDescriptor) {
+    protected List<UiControllerProperty> loadProperties(@Nullable Element menuItemDescriptor) {
         if (menuItemDescriptor == null) {
             return Collections.emptyList();
         }
@@ -286,7 +287,9 @@ public class MenuItemCommands {
                     screen, properties);
             propertyInjector.inject();
 
-            screens.showFromNavigation(screen);
+            if (screen != null) {
+                screens.showFromNavigation(screen);
+            }
 
             sample.stop(UiMonitoring.createMenuTimer(meterRegistry, item.getId()));
         }
@@ -425,7 +428,7 @@ public class MenuItemCommands {
 
             Timer.Sample sample = Timer.start(meterRegistry);
 
-            Class<?> clazz = hotDeployManager.findClass(runnableClass);
+            Class<?> clazz = classManager.findClass(runnableClass);
             if (clazz == null) {
                 throw new IllegalStateException(String.format("Can't load class: %s", runnableClass));
             }

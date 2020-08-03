@@ -27,6 +27,8 @@ import io.jmix.ui.component.data.meta.EntityOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -51,16 +53,17 @@ public class ListEntityOptions<E extends JmixEntity> extends ListOptions<E> impl
     }
 
     @Override
-    public void setSelectedItem(E item) {
+    public void setSelectedItem(@Nullable E item) {
         this.selectedItem = item;
     }
 
+    @Nullable
     public E getSelectedItem() {
         return selectedItem;
     }
 
     @Override
-    public boolean containsItem(E item) {
+    public boolean containsItem(@Nullable E item) {
         return getItemsCollection().contains(item);
     }
 
@@ -81,16 +84,20 @@ public class ListEntityOptions<E extends JmixEntity> extends ListOptions<E> impl
         return VoidSubscription.INSTANCE;
     }
 
+    @Nullable
     @Override
     public MetaClass getEntityMetaClass() {
         Metadata metadata = AppBeans.get(Metadata.NAME);
-        MetaClass metaClass = null;
+        MetaClass metaClass;
         if (selectedItem != null) {
             metaClass = metadata.getClass(selectedItem);
         } else {
             List<E> itemsCollection = getItemsCollection();
             if (!itemsCollection.isEmpty()) {
                 metaClass = metadata.getClass(itemsCollection.get(0));
+            } else {
+                Class<E> entityClass = (Class<E>) ((ParameterizedType) itemsCollection.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+                metaClass = metadata.getClass(entityClass);
             }
         }
         return metaClass;

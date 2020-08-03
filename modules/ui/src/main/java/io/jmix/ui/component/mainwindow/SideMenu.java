@@ -41,10 +41,11 @@ public interface SideMenu extends Component.BelongToFrame, Component.Focusable {
      *
      * @param button button that should trigger show/hide of side panel
      */
-    void setSidePanelToggleButton(Button button);
+    void setSidePanelToggleButton(@Nullable Button button);
     /**
      * @return side panel toggle button
      */
+    @Nullable
     Button getSidePanelToggleButton();
 
     /**
@@ -52,10 +53,11 @@ public interface SideMenu extends Component.BelongToFrame, Component.Focusable {
      *
      * @param sidePanel side panel
      */
-    void setSidePanel(Component sidePanel);
+    void setSidePanel(@Nullable Component sidePanel);
     /**
      * @return side panel
      */
+    @Nullable
     Component getSidePanel();
 
     /**
@@ -196,35 +198,38 @@ public interface SideMenu extends Component.BelongToFrame, Component.Focusable {
         /**
          * @return caption
          */
+        @Nullable
         String getCaption();
         /**
          * Set item caption.
          *
          * @param caption caption
          */
-        void setCaption(String caption);
+        void setCaption(@Nullable String caption);
 
         /**
          * @return description
          */
+        @Nullable
         String getDescription();
         /**
          * Set description.
          *
          * @param description description
          */
-        void setDescription(String description);
+        void setDescription(@Nullable String description);
 
         /**
          * @return icon name
          */
+        @Nullable
         String getIcon();
         /**
          * Set icon.
          *
          * @param icon icon name
          */
-        void setIcon(String icon);
+        void setIcon(@Nullable String icon);
 
         /**
          * @return true if caption is inserted to DOM as HTML
@@ -271,7 +276,7 @@ public interface SideMenu extends Component.BelongToFrame, Component.Focusable {
          *
          * @param styleName style name string
          */
-        void setStyleName(String styleName);
+        void setStyleName(@Nullable String styleName);
 
         /**
          * Adds one or more style names to this component. Multiple styles can be specified as a space-separated list
@@ -292,24 +297,26 @@ public interface SideMenu extends Component.BelongToFrame, Component.Focusable {
         /**
          * @return badge text
          */
+        @Nullable
         String getBadgeText();
         /**
          * Set badge text for item. Badges are shown as small widget on the right side of menu items.
          *
          * @param badgeText badge text
          */
-        void setBadgeText(String badgeText);
+        void setBadgeText(@Nullable String badgeText);
 
         /**
          * @return item command
          */
+        @Nullable
         Consumer<MenuItem> getCommand();
         /**
          * Set item command
          *
          * @param command item command
          */
-        void setCommand(Consumer<MenuItem> command);
+        void setCommand(@Nullable Consumer<MenuItem> command);
 
         /**
          * Add menu item to the end of children list.

@@ -4,10 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-    <!--
-    <changeSet author="${project_name}" id="1.0">
 
-    </changeSet>
-    -->
+    <includeAll path="/${project_rootPath}/liquibase/changelog"/>
 
 </databaseChangeLog>

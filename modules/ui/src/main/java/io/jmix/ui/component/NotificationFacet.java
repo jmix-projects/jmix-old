@@ -20,6 +20,7 @@ import io.jmix.core.common.event.Subscription;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.meta.*;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.EventObject;
 import java.util.function.Consumer;
@@ -29,14 +30,15 @@ import java.util.function.Supplier;
  * Prepares and shows notifications.
  */
 @StudioFacet(
+        xmlElement = "notification",
         caption = "Notification",
         description = "Prepares and shows notifications",
         defaultProperty = "caption",
-        defaultEvent = "CloseEvent"
+        category = "Non-visual"
 )
 @StudioProperties(
         properties = {
-                @StudioProperty(name = "id", required = true)
+                @StudioProperty(name = "id", type = PropertyType.COMPONENT_ID, required = true)
         }
 )
 public interface NotificationFacet extends Facet {
@@ -47,11 +49,12 @@ public interface NotificationFacet extends Facet {
      * @param caption caption
      */
     @StudioProperty(type = PropertyType.LOCALIZED_STRING)
-    void setCaption(String caption);
+    void setCaption(@Nullable String caption);
 
     /**
      * @return notification caption
      */
+    @Nullable
     String getCaption();
 
     /**
@@ -60,11 +63,12 @@ public interface NotificationFacet extends Facet {
      * @param description description
      */
     @StudioProperty(type = PropertyType.LOCALIZED_STRING)
-    void setDescription(String description);
+    void setDescription(@Nullable String description);
 
     /**
      * @return notification description
      */
+    @Nullable
     String getDescription();
 
     /**
@@ -118,6 +122,7 @@ public interface NotificationFacet extends Facet {
     /**
      * @return notification style name
      */
+    @Nullable
     String getStyleName();
 
     /**
@@ -136,6 +141,7 @@ public interface NotificationFacet extends Facet {
     /**
      * @return id of action that triggers notification
      */
+    @Nullable
     String getActionTarget();
 
     /**
@@ -144,12 +150,13 @@ public interface NotificationFacet extends Facet {
      *
      * @param actionId action id
      */
-    @StudioProperty(type = PropertyType.COMPONENT_ID)
-    void setActionTarget(String actionId);
+    @StudioProperty(type = PropertyType.COMPONENT_REF)
+    void setActionTarget(@Nullable String actionId);
 
     /**
      * @return id of button that triggers notification
      */
+    @Nullable
     String getButtonTarget();
 
     /**
@@ -158,8 +165,8 @@ public interface NotificationFacet extends Facet {
      *
      * @param buttonId button id
      */
-    @StudioProperty(type = PropertyType.COMPONENT_ID)
-    void setButtonTarget(String buttonId);
+    @StudioProperty(type = PropertyType.COMPONENT_REF)
+    void setButtonTarget(@Nullable String buttonId);
 
     /**
      * Sets whether html sanitizer is enabled or not for notification content.
@@ -184,12 +191,12 @@ public interface NotificationFacet extends Facet {
      *
      * @param captionProvider notification caption provider
      */
-    @StudioDelegate
-    void setCaptionProvider(Supplier<String> captionProvider);
+    void setCaptionProvider(@Nullable Supplier<String> captionProvider);
 
     /**
      * @return notification caption provider
      */
+    @Nullable
     Supplier<String> getCaptionProvider();
 
     /**
@@ -197,12 +204,12 @@ public interface NotificationFacet extends Facet {
      *
      * @param descriptionProvider notification description provider
      */
-    @StudioDelegate
-    void setDescriptionProvider(Supplier<String> descriptionProvider);
+    void setDescriptionProvider(@Nullable Supplier<String> descriptionProvider);
 
     /**
      * @return notification description provider
      */
+    @Nullable
     Supplier<String> getDescriptionProvider();
 
     /**
@@ -211,7 +218,6 @@ public interface NotificationFacet extends Facet {
      * @param listener close event listener
      * @return close event subscription
      */
-    @StudioEvent
     Subscription addCloseListener(Consumer<CloseEvent> listener);
 
     /**

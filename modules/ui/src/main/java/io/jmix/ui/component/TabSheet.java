@@ -19,6 +19,7 @@ import io.jmix.core.common.event.Subscription;
 import io.jmix.ui.xml.layout.ComponentLoader;
 import org.dom4j.Element;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.EventObject;
 import java.util.function.Consumer;
@@ -59,6 +60,7 @@ public interface TabSheet extends ComponentContainer, Component.BelongToFrame, C
     /**
      * Get selected tab. May be null if the tabsheet does not contain tabs at all.
      */
+    @Nullable
     Tab getSelectedTab();
     /**
      * Set selected tab.
@@ -103,6 +105,7 @@ public interface TabSheet extends ComponentContainer, Component.BelongToFrame, C
      * @param name tab id
      * @return tab instance
      */
+    @Nullable
     Tab getTab(String name);
 
     /**
@@ -183,7 +186,8 @@ public interface TabSheet extends ComponentContainer, Component.BelongToFrame, C
          * Set a handler that can override the close behavior if {@link #isClosable()} is true.
          * Default action just removes the tab.
          */
-        void setCloseHandler(TabCloseHandler tabCloseHandler);
+        void setCloseHandler(@Nullable TabCloseHandler tabCloseHandler);
+        @Nullable
         TabCloseHandler getCloseHandler();
 
         /**

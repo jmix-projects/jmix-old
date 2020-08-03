@@ -33,6 +33,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.LegacyComponent;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -57,21 +58,23 @@ public class DDGridLayout extends GridLayout
 
     private DragCaptionProvider dragCaptionProvider;
 
+    @Nullable
     @Override
     public DragGrabFilter getDragGrabFilter() {
         return dragGrabFilter;
     }
 
     @Override
-    public void setDragGrabFilter(DragGrabFilter dragGrabFilter) {
+    public void setDragGrabFilter(@Nullable DragGrabFilter dragGrabFilter) {
         this.dragGrabFilter = dragGrabFilter;
     }
 
     @Override
-    public void setDragCaptionProvider(DragCaptionProvider provider) {
+    public void setDragCaptionProvider(@Nullable DragCaptionProvider provider) {
         this.dragCaptionProvider = provider;
     }
 
+    @Nullable
     @Override
     public DragCaptionProvider getDragCaptionProvider() {
         return dragCaptionProvider;
@@ -92,15 +95,13 @@ public class DDGridLayout extends GridLayout
             super(rawDropData, DDGridLayout.this);
 
             if (getData(Constants.DROP_DETAIL_ROW) != null) {
-                row = Integer
-                        .valueOf(getData(Constants.DROP_DETAIL_ROW).toString());
+                row = Integer.parseInt(getData(Constants.DROP_DETAIL_ROW).toString());
             } else {
                 row = -1;
             }
 
             if (getData(Constants.DROP_DETAIL_COLUMN) != null) {
-                column = Integer.valueOf(
-                        getData(Constants.DROP_DETAIL_COLUMN).toString());
+                column = Integer.parseInt(getData(Constants.DROP_DETAIL_COLUMN).toString());
             } else {
                 column = -1;
             }
@@ -172,7 +173,7 @@ public class DDGridLayout extends GridLayout
          * @return
          */
         public boolean overEmptyCell() {
-            return Boolean.valueOf(
+            return Boolean.parseBoolean(
                     getData(Constants.DROP_DETAIL_EMPTY_CELL).toString());
         }
 
@@ -191,7 +192,7 @@ public class DDGridLayout extends GridLayout
     /**
      * Contains the transferable details when dragging from a GridLayout.
      */
-    public class GridLayoutTransferable extends LayoutBoundTransferable {
+    public static class GridLayoutTransferable extends LayoutBoundTransferable {
 
         /**
          * Constructor
@@ -212,8 +213,7 @@ public class DDGridLayout extends GridLayout
          * @return The row index
          */
         public int getSourceRow() {
-            return Integer
-                    .valueOf(getData(Constants.DROP_DETAIL_ROW).toString());
+            return Integer.parseInt(getData(Constants.DROP_DETAIL_ROW).toString());
         }
 
         /**
@@ -222,8 +222,7 @@ public class DDGridLayout extends GridLayout
          * @return The column index
          */
         public int getSourceColumn() {
-            return Integer
-                    .valueOf(getData(Constants.DROP_DETAIL_COLUMN).toString());
+            return Integer.parseInt(getData(Constants.DROP_DETAIL_COLUMN).toString());
         }
     }
 
@@ -405,11 +404,12 @@ public class DDGridLayout extends GridLayout
     }
 
     @Override
-    public void setDragImageProvider(DragImageProvider provider) {
+    public void setDragImageProvider(@Nullable DragImageProvider provider) {
         this.dragImageProvider = provider;
         markAsDirty();
     }
 
+    @Nullable
     @Override
     public DragImageProvider getDragImageProvider() {
         return this.dragImageProvider;

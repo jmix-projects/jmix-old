@@ -41,7 +41,6 @@ import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -81,7 +80,7 @@ public class WindowConfig {
     @Autowired
     protected Resources resources;
     @Autowired
-    protected HotDeployManager hotDeployManager;
+    protected ClassManager classManager;
     @Autowired
     protected Metadata metadata;
     @Autowired
@@ -115,7 +114,6 @@ public class WindowConfig {
             return resolveWindowInfo(windowInfo).getTemplate();
         }
 
-        @Nonnull
         @Override
         public Class<? extends FrameOwner> getControllerClass(WindowInfo windowInfo) {
             return resolveWindowInfo(windowInfo).getControllerClass();
@@ -201,7 +199,7 @@ public class WindowConfig {
 
     @SuppressWarnings("unchecked")
     protected Class<? extends FrameOwner> loadDefinedScreenClass(String className) {
-        return (Class<? extends FrameOwner>) hotDeployManager.loadClass(className);
+        return (Class<? extends FrameOwner>) classManager.loadClass(className);
     }
 
     protected void checkInitialized() {
@@ -304,6 +302,7 @@ public class WindowConfig {
         }
     }
 
+    @Nullable
     protected RouteDefinition loadRouteDefinition(Element screenElement) {
         String screenId = screenElement.attributeValue("id");
         String route = screenElement.attributeValue("route");
@@ -622,7 +621,7 @@ public class WindowConfig {
         protected final Type type;
 
         public ResolvedWindowInfo(WindowInfo windowInfo, Type type, Class<? extends FrameOwner> controllerClass,
-                                  String template) {
+                                  @Nullable String template) {
             super(windowInfo.getId(), null, windowInfo.getDescriptor(),
                     windowInfo.getControllerClassName(), windowInfo.getRouteDefinition());
 
@@ -643,7 +642,6 @@ public class WindowConfig {
             return type;
         }
 
-        @Nonnull
         @Override
         public Class<? extends FrameOwner> getControllerClass() {
             return controllerClass;

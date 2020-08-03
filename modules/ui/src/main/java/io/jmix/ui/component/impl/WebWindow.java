@@ -229,7 +229,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
     }
 
     @Override
-    public void setStyleName(String name) {
+    public void setStyleName(@Nullable String name) {
         getContainer().setStyleName(name);
 
         getContainer().addStyleName(C_WINDOW_LAYOUT);
@@ -326,6 +326,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
                 .setCssProperty(CSS.MIN_WIDTH, minWidth);
     }
 
+    @Nullable
     @Override
     public String getMinWidth() {
         return HtmlAttributesExtension.get(component)
@@ -338,6 +339,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
                 .setCssProperty(CSS.MAX_WIDTH, maxWidth);
     }
 
+    @Nullable
     @Override
     public String getMaxWidth() {
         return HtmlAttributesExtension.get(component)
@@ -350,6 +352,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
                 .setCssProperty(CSS.MIN_HEIGHT, minHeight);
     }
 
+    @Nullable
     @Override
     public String getMinHeight() {
         return HtmlAttributesExtension.get(component)
@@ -362,6 +365,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
                 .setCssProperty(CSS.MAX_HEIGHT, maxHeight);
     }
 
+    @Nullable
     @Override
     public String getMaxHeight() {
         return HtmlAttributesExtension.get(component)
@@ -397,12 +401,12 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
     }
 
     @Override
-    public void removeAction(@Nullable Action action) {
+    public void removeAction(Action action) {
         actionsHolder.removeAction(action);
     }
 
     @Override
-    public void removeAction(@Nullable String id) {
+    public void removeAction(String id) {
         actionsHolder.removeAction(id);
     }
 
@@ -527,6 +531,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
         this.context = (WindowContext) ctx;
     }
 
+    @Nullable
     protected Component.Focusable getComponentToFocus(Iterator<Component> componentsIterator) {
         while (componentsIterator.hasNext()) {
             Component child = componentsIterator.next();
@@ -576,7 +581,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
     }
 
     @Override
-    public void setFocusComponent(String componentId) {
+    public void setFocusComponent(@Nullable String componentId) {
         this.focusComponentId = componentId;
 
         if (componentId != null) {
@@ -619,13 +624,14 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
         publish(BeforeCloseEvent.class, event);
     }
 
+    @Nullable
     @Override
     public Element getXmlDescriptor() {
         return element;
     }
 
     @Override
-    public void setXmlDescriptor(Element element) {
+    public void setXmlDescriptor(@Nullable Element element) {
         this.element = element;
     }
 
@@ -734,13 +740,14 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
         return ComponentsHelper.getComponents(this);
     }
 
+    @Nullable
     @Override
     public String getId() {
         return id;
     }
 
     @Override
-    public void setId(String id) {
+    public void setId(@Nullable String id) {
         this.id = id;
 
         AppUI ui = AppUI.getCurrent();
@@ -750,13 +757,14 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
         }
     }
 
+    @Nullable
     @Override
     public Component getParent() {
         return null;
     }
 
     @Override
-    public void setParent(Component parent) {
+    public void setParent(@Nullable Component parent) {
     }
 
     @Override
@@ -812,7 +820,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
     }
 
     @Override
-    public void setHeight(String height) {
+    public void setHeight(@Nullable String height) {
         component.setHeight(height);
     }
 
@@ -827,7 +835,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
     }
 
     @Override
-    public void setWidth(String width) {
+    public void setWidth(@Nullable String width) {
         component.setWidth(width);
     }
 
@@ -836,6 +844,7 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
         return WebWrapperUtils.toSizeUnit(component.getWidthUnits());
     }
 
+    @Nullable
     @Override
     public Component getOwnComponent(String id) {
         Component nestedComponent = allComponents.get(id);
@@ -914,33 +923,36 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
         return false;
     }
 
+    @Nullable
     @Override
     public String getCaption() {
         return caption;
     }
 
     @Override
-    public void setCaption(String caption) {
+    public void setCaption(@Nullable String caption) {
         this.caption = caption;
     }
 
+    @Nullable
     @Override
     public String getDescription() {
         return description;
     }
 
     @Override
-    public void setDescription(String description) {
+    public void setDescription(@Nullable String description) {
         this.description = description;
     }
 
+    @Nullable
     @Override
     public Frame getFrame() {
         return this;
     }
 
     @Override
-    public void setFrame(Frame frame) {
+    public void setFrame(@Nullable Frame frame) {
         throw new UnsupportedOperationException();
     }
 
@@ -949,18 +961,19 @@ public abstract class WebWindow implements Window, Component.Wrapper, Component.
         return actionsPermissions;
     }
 
+    @Nullable
     @Override
     public String getIcon() {
         return icon;
     }
 
     @Override
-    public void setIcon(String icon) {
+    public void setIcon(@Nullable String icon) {
         this.icon = icon;
     }
 
     @Override
-    public void setIconFromSet(Icons.Icon icon) {
+    public void setIconFromSet(@Nullable Icons.Icon icon) {
         setIcon(icons.get(icon));
     }
 

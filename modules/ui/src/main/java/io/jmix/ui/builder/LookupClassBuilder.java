@@ -26,6 +26,7 @@ import io.jmix.ui.screen.OpenMode;
 import io.jmix.ui.screen.Screen;
 import io.jmix.ui.screen.ScreenOptions;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -70,7 +71,7 @@ public class LookupClassBuilder<E extends JmixEntity, S extends Screen & LookupS
     }
 
     @Override
-    public LookupClassBuilder<E, S> withSelectHandler(Consumer<Collection<E>> selectHandler) {
+    public LookupClassBuilder<E, S> withSelectHandler(@Nullable Consumer<Collection<E>> selectHandler) {
         super.withSelectHandler(selectHandler);
         return this;
     }
@@ -117,6 +118,7 @@ public class LookupClassBuilder<E extends JmixEntity, S extends Screen & LookupS
     /**
      * Returns lookup screen class.
      */
+    @Nullable
     public Class<S> getScreenClass() {
         return screenClass;
     }
@@ -124,6 +126,7 @@ public class LookupClassBuilder<E extends JmixEntity, S extends Screen & LookupS
     /**
      * Returns screen close listener.
      */
+    @Nullable
     public Consumer<AfterScreenCloseEvent<S>> getCloseListener() {
         return closeListener;
     }

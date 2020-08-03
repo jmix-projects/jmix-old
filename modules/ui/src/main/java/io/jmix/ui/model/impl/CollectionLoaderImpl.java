@@ -65,7 +65,7 @@ public class CollectionLoaderImpl<E extends JmixEntity> implements CollectionLoa
     }
 
     @Override
-    public void setDataContext(DataContext dataContext) {
+    public void setDataContext(@Nullable DataContext dataContext) {
         this.dataContext = dataContext;
     }
 
@@ -106,7 +106,7 @@ public class CollectionLoaderImpl<E extends JmixEntity> implements CollectionLoa
     public LoadContext<E> createLoadContext() {
         Class<E> entityClass = container.getEntityMetaClass().getJavaClass();
 
-        LoadContext<E> loadContext = new LoadContext<>(entityClass);
+        LoadContext<E> loadContext = new LoadContext<>(container.getEntityMetaClass());
 
         String queryString = queryStringProcessor.process(this.query, entityClass);
 
@@ -176,6 +176,7 @@ public class CollectionLoaderImpl<E extends JmixEntity> implements CollectionLoa
         this.query = query;
     }
 
+    @Nullable
     @Override
     public Condition getCondition() {
         return condition;
@@ -281,13 +282,14 @@ public class CollectionLoaderImpl<E extends JmixEntity> implements CollectionLoa
         this.fetchPlanName = fetchPlanName;
     }
 
+    @Nullable
     @Override
     public Sort getSort() {
         return sort;
     }
 
     @Override
-    public void setSort(Sort sort) {
+    public void setSort(@Nullable Sort sort) {
         if (sort == null || sort.getOrders().isEmpty()) {
             this.sort = null;
         } else {

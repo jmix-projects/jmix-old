@@ -34,6 +34,7 @@ import io.jmix.ui.component.data.TableItems;
 import io.jmix.ui.component.data.aggregation.AggregationStrategy;
 import io.jmix.ui.component.data.table.ContainerTableItems;
 import io.jmix.ui.component.data.table.EmptyTableItems;
+import io.jmix.ui.component.formatter.Formatter;
 import io.jmix.ui.model.*;
 import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.UiControllerUtils;
@@ -50,7 +51,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nullable;
 import java.lang.reflect.Constructor;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -563,7 +563,7 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
 
             String aggregationEditable = aggregationElement.attributeValue("editable");
             if (StringUtils.isNotEmpty(aggregationEditable)) {
-                aggregation.setEditable(Boolean.valueOf(aggregationEditable));
+                aggregation.setEditable(Boolean.parseBoolean(aggregationEditable));
             }
 
             String valueDescription = aggregationElement.attributeValue("valueDescription");
@@ -571,13 +571,13 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
                 column.setValueDescription(loadResourceString(valueDescription));
             }
 
-            Function formatter = loadFormatter(aggregationElement);
+            Formatter formatter = loadFormatter(aggregationElement);
             aggregation.setFormatter(formatter == null ? column.getFormatter() : formatter);
             column.setAggregation(aggregation);
 
             String strategyClass = aggregationElement.attributeValue("strategyClass");
             if (StringUtils.isNotEmpty(strategyClass)) {
-                Class<?> aggregationClass = getHotDeployManager().findClass(strategyClass);
+                Class<?> aggregationClass = getClassManager().findClass(strategyClass);
                 if (aggregationClass == null) {
                     throw new GuiDevelopmentException(String.format("Class %s is not found", strategyClass), context);
                 }
@@ -723,6 +723,7 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
         public TableDataHolder() {
         }
 
+        @Nullable
         public MetaClass getMetaClass() {
             return metaClass;
         }
@@ -731,6 +732,7 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
             this.metaClass = metaClass;
         }
 
+        @Nullable
         public CollectionContainer getContainer() {
             return container;
         }
@@ -739,6 +741,7 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
             this.container = container;
         }
 
+        @Nullable
         public DataLoader getDataLoader() {
             return dataLoader;
         }
@@ -747,6 +750,7 @@ public abstract class AbstractTableLoader<T extends Table> extends ActionsHolder
             this.dataLoader = dataLoader;
         }
 
+        @Nullable
         public FetchPlan getFetchPlan() {
             return fetchPlan;
         }

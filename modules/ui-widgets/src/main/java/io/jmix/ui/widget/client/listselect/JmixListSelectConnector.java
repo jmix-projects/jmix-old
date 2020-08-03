@@ -16,10 +16,13 @@
 
 package io.jmix.ui.widget.client.listselect;
 
-import io.jmix.ui.widget.JmixListSelect;
 import com.vaadin.shared.ui.Connect;
 import com.vaadin.v7.client.ui.listselect.ListSelectConnector;
+import io.jmix.ui.widget.listselect.JmixListSelect;
 
+/**
+ * Vaadin 7 component. Is used for supporting OptionsList component in compatibility module.
+ */
 @Connect(value = JmixListSelect.class)
 public class JmixListSelectConnector extends ListSelectConnector {
 

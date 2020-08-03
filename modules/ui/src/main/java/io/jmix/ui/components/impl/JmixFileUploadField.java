@@ -26,6 +26,7 @@ import io.jmix.ui.widget.JmixButton;
 import io.jmix.ui.widget.JmixFileUpload;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nullable;
 import java.util.Set;
 
 public class JmixFileUploadField extends CustomField<String> {
@@ -210,7 +211,7 @@ public class JmixFileUploadField extends CustomField<String> {
         updateComponentWidth();
     }
 
-    public void setFileNameButtonCaption(String title) {
+    public void setFileNameButtonCaption(@Nullable String title) {
         this.fileName = title;
 
         if (StringUtils.isNotEmpty(title)) {
@@ -242,28 +243,33 @@ public class JmixFileUploadField extends CustomField<String> {
         uploadButton.setEnabled(enabled);
     }
 
-    public void setUploadButtonDescription(String description) {
+    public void setUploadButtonDescription(@Nullable String description) {
         uploadButton.setDescription(description);
     }
 
+    @Nullable
     public String getUploadButtonDescription() {
         return uploadButton.getDescription();
     }
 
-    public void setUploadButtonCaption(String caption) {
+    public void setUploadButtonCaption(@Nullable String caption) {
         uploadButton.setCaption(caption);
     }
 
+    @Nullable
     public String getUploadButtonCaption() {
         return uploadButton.getCaption();
     }
 
-    public void setUploadButtonIcon(Resource icon) {
+    public void setUploadButtonIcon(@Nullable Resource icon) {
         uploadButton.setIcon(icon);
     }
 
+    @Nullable
     public String getUploadButtonIcon() {
-        return uploadButton.getIcon().toString();
+        return uploadButton.getIcon() != null
+                ? uploadButton.getIcon().toString()
+                : null;
     }
 
     public boolean isShowClearButton() {
@@ -277,18 +283,20 @@ public class JmixFileUploadField extends CustomField<String> {
         updateComponentWidth();
     }
 
-    public void setClearButtonCaption(String caption) {
+    public void setClearButtonCaption(@Nullable String caption) {
         clearButton.setCaption(caption);
     }
 
+    @Nullable
     public String getClearButtonCaption() {
         return clearButton.getCaption();
     }
 
-    public void setClearButtonIcon(Resource icon) {
+    public void setClearButtonIcon(@Nullable Resource icon) {
         clearButton.setIcon(icon);
     }
 
+    @Nullable
     public String getClearButtonIcon() {
         return clearButton.getIcon().toString();
     }
@@ -334,7 +342,7 @@ public class JmixFileUploadField extends CustomField<String> {
         uploadButton.setCancelButtonCaption(cancelButtonCaption);
     }
 
-    public void setDropZonePrompt(String dropZonePrompt) {
+    public void setDropZonePrompt(@Nullable String dropZonePrompt) {
         uploadButton.setDropZonePrompt(dropZonePrompt);
     }
 
@@ -370,19 +378,19 @@ public class JmixFileUploadField extends CustomField<String> {
         uploadButton.addFileExtensionNotAllowedListener(listener);
     }
 
-    public void setAccept(String accept) {
+    public void setAccept(@Nullable String accept) {
         uploadButton.setAccept(accept);
     }
 
-    public void setDropZone(Component component) {
+    public void setDropZone(@Nullable Component component) {
         uploadButton.setDropZone(component);
     }
 
-    public void setPasteZone(Component component) {
+    public void setPasteZone(@Nullable Component component) {
         uploadButton.setPasteZone(component);
     }
 
-    public void setPermittedExtensions(Set<String> permittedExtensions) {
+    public void setPermittedExtensions(@Nullable Set<String> permittedExtensions) {
         uploadButton.setPermittedExtensions(permittedExtensions);
     }
 }

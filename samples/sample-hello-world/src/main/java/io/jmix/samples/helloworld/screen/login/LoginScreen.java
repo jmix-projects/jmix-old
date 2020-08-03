@@ -17,6 +17,9 @@
 package io.jmix.samples.helloworld.screen.login;
 
 
+import com.vaadin.server.VaadinService;
+import com.vaadin.server.VaadinServletRequest;
+import com.vaadin.server.VaadinServletResponse;
 import io.jmix.core.CoreProperties;
 import io.jmix.core.Messages;
 import io.jmix.core.security.ClientDetails;
@@ -34,13 +37,14 @@ import io.jmix.ui.screen.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Locale;
 
 @Route(path = "login", root = true)
@@ -70,6 +74,9 @@ public class LoginScreen extends Screen {
 
     @Autowired
     protected AuthenticationManager authenticationManager;
+
+    @Autowired
+    protected SessionAuthenticationStrategy authenticationStrategy;
 
     @Autowired
     protected CoreProperties coreProperties;
@@ -121,6 +128,7 @@ public class LoginScreen extends Screen {
             authenticationToken.setDetails(clientDetails);
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHelper.setAuthentication(authentication);
+            authenticationStrategy.onAuthentication(authentication, VaadinServletRequest.getCurrent(), VaadinServletResponse.getCurrent());
 
             String mainScreenId = uiProperties.getMainScreenId();
             screenBuilders.screen(this)

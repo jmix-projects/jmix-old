@@ -20,6 +20,8 @@ import io.jmix.ui.component.autocomplete.AutoCompleteSupport;
 import io.jmix.ui.component.autocomplete.Suggester;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nullable;
+
 /**
  * Text area component with source code highlighting support.
  */
@@ -66,8 +68,9 @@ public interface SourceCodeEditor extends Field<String>, Component.Focusable {
     HighlightMode getMode();
     void setMode(HighlightMode mode);
 
+    @Nullable
     Suggester getSuggester();
-    void setSuggester(Suggester suggester);
+    void setSuggester(@Nullable Suggester suggester);
 
     AutoCompleteSupport getAutoCompleteSupport();
 
@@ -101,6 +104,7 @@ public interface SourceCodeEditor extends Field<String>, Component.Focusable {
      */
     boolean isHandleTabKey();
 
+    @Nullable
     @Override
     String getValue();
 

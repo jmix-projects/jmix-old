@@ -32,17 +32,18 @@ import io.jmix.ui.component.data.DataAwareComponentsTools;
 import io.jmix.ui.component.data.ValueConversionException;
 import io.jmix.ui.component.data.ValueSource;
 import io.jmix.ui.component.data.meta.EntityValueSource;
+import io.jmix.ui.component.formatter.Formatter;
 import io.jmix.ui.widget.JmixTextField;
 import io.jmix.ui.widget.ShortcutListenerDelegate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
-
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.Nullable;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.emptyToNull;
@@ -52,7 +53,7 @@ public class WebTextField<V> extends WebV8AbstractField<JmixTextField, String, V
         implements TextField<V>, InitializingBean {
 
     protected Datatype<V> datatype;
-    protected Function<? super V, String> formatter;
+    protected Formatter<? super V> formatter;
     protected Locale locale;
 
     protected boolean trimming = true;
@@ -106,7 +107,7 @@ public class WebTextField<V> extends WebV8AbstractField<JmixTextField, String, V
 
     @SuppressWarnings("unchecked")
     @Override
-    protected String convertToPresentation(V modelValue) throws ConversionException {
+    protected String convertToPresentation(@Nullable V modelValue) throws ConversionException {
         // Vaadin TextField does not permit `null` value
 
         if (formatter != null) {
@@ -148,8 +149,9 @@ public class WebTextField<V> extends WebV8AbstractField<JmixTextField, String, V
         return nullToEmpty(super.convertToPresentation(modelValue));
     }
 
+    @Nullable
     @Override
-    protected V convertToModel(String componentRawValue) throws ConversionException {
+    protected V convertToModel(@Nullable String componentRawValue) throws ConversionException {
         String value = emptyToNull(componentRawValue);
 
         if (isTrimming()) {
@@ -183,10 +185,11 @@ public class WebTextField<V> extends WebV8AbstractField<JmixTextField, String, V
     }
 
     @Override
-    public void setConversionErrorMessage(String conversionErrorMessage) {
+    public void setConversionErrorMessage(@Nullable String conversionErrorMessage) {
         this.conversionErrorMessage = conversionErrorMessage;
     }
 
+    @Nullable
     @Override
     public String getConversionErrorMessage() {
         return conversionErrorMessage;
@@ -236,6 +239,7 @@ public class WebTextField<V> extends WebV8AbstractField<JmixTextField, String, V
                 : TextField.super.isEmpty();
     }
 
+    @Nullable
     @Override
     public Datatype<V> getDatatype() {
         return datatype;
@@ -261,13 +265,14 @@ public class WebTextField<V> extends WebV8AbstractField<JmixTextField, String, V
     }
 
     @SuppressWarnings("unchecked")
+    @Nullable
     @Override
-    public Function<V, String> getFormatter() {
-        return (Function<V, String>) formatter;
+    public Formatter<V> getFormatter() {
+        return (Formatter<V>) formatter;
     }
 
     @Override
-    public void setFormatter(Function<? super V, String> formatter) {
+    public void setFormatter(@Nullable Formatter<? super V> formatter) {
         this.formatter = formatter;
     }
 
@@ -291,13 +296,14 @@ public class WebTextField<V> extends WebV8AbstractField<JmixTextField, String, V
         this.trimming = trimming;
     }
 
+    @Nullable
     @Override
     public String getInputPrompt() {
         return component.getPlaceholder();
     }
 
     @Override
-    public void setInputPrompt(String inputPrompt) {
+    public void setInputPrompt(@Nullable String inputPrompt) {
         component.setPlaceholder(inputPrompt);
     }
 
@@ -425,10 +431,11 @@ public class WebTextField<V> extends WebV8AbstractField<JmixTextField, String, V
     }
 
     @Override
-    public void setHtmlName(String htmlName) {
+    public void setHtmlName(@Nullable String htmlName) {
         component.setHtmlName(htmlName);
     }
 
+    @Nullable
     @Override
     public String getHtmlName() {
         return component.getHtmlName();

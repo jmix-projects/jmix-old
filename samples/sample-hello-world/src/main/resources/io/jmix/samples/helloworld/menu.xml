@@ -5,6 +5,8 @@
         <item screen="sample_Customer.browse" caption="msg://io.jmix.samples.helloworld/menu.sample_Customer.browse"/>
         <item screen="sample_Order.browse" caption="msg://io.jmix.samples.helloworld/menu.sample_Order.browse"/>
         <item screen="entityInspector.browse"/>
+        <item screen="userSessions.browse"/>
         <item screen="User.browse" caption="msg://io.jmix.samples.helloworld/menu.User.browse"/>
+        <item screen="themeSettingsScreen" caption="msg://io.jmix.samples.helloworld/menu.themeSettingsScreen"/>
     </menu>
 </menu-config>

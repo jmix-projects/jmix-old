@@ -31,7 +31,6 @@ import io.jmix.ui.component.data.meta.ContainerDataUnit;
 import io.jmix.ui.icon.JmixIcon;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.meta.StudioAction;
-import io.jmix.ui.meta.StudioDelegate;
 import io.jmix.ui.meta.StudioPropertiesItem;
 import io.jmix.ui.model.Nested;
 import io.jmix.ui.screen.*;
@@ -57,13 +56,11 @@ import java.util.function.Supplier;
  */
 @StudioAction(category = "List Actions", description = "Adds entities to the list using a lookup screen")
 @ActionType(AddAction.ID)
-public class AddAction<E extends JmixEntity> extends ListAction implements Action.DisabledWhenScreenReadOnly {
+public class AddAction<E extends JmixEntity> extends ListAction implements Action.AdjustWhenScreenReadOnly {
 
     public static final String ID = "add";
 
-    @Autowired
     protected Security security;
-    @Autowired
     protected ScreenBuilders screenBuilders;
 
     protected ActionScreenInitializer screenInitializer = new ActionScreenInitializer();
@@ -142,7 +139,6 @@ public class AddAction<E extends JmixEntity> extends ListAction implements Actio
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setScreenOptionsSupplier(Supplier<ScreenOptions> screenOptionsSupplier) {
         screenInitializer.setScreenOptionsSupplier(screenOptionsSupplier);
     }
@@ -159,7 +155,6 @@ public class AddAction<E extends JmixEntity> extends ListAction implements Actio
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setScreenConfigurer(Consumer<Screen> screenConfigurer) {
         screenInitializer.setScreenConfigurer(screenConfigurer);
     }
@@ -177,7 +172,6 @@ public class AddAction<E extends JmixEntity> extends ListAction implements Actio
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setAfterCloseHandler(Consumer<Screen.AfterCloseEvent> afterCloseHandler) {
         screenInitializer.setAfterCloseHandler(afterCloseHandler);
     }
@@ -193,7 +187,6 @@ public class AddAction<E extends JmixEntity> extends ListAction implements Actio
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setSelectValidator(Predicate<LookupScreen.ValidationContext<E>> selectValidator) {
         this.selectValidator = selectValidator;
     }
@@ -209,7 +202,6 @@ public class AddAction<E extends JmixEntity> extends ListAction implements Actio
      * }
      * </pre>
      */
-    @StudioDelegate
     public void setTransformation(Function<Collection<E>, Collection<E>> transformation) {
         this.transformation = transformation;
     }
@@ -222,6 +214,16 @@ public class AddAction<E extends JmixEntity> extends ListAction implements Actio
     @Autowired
     protected void setMessages(Messages messages) {
         this.caption = messages.getMessage("actions.Add");
+    }
+
+    @Autowired
+    public void setSecurity(Security security) {
+        this.security = security;
+    }
+
+    @Autowired
+    public void setScreenBuilders(ScreenBuilders screenBuilders) {
+        this.screenBuilders = screenBuilders;
     }
 
     @Override

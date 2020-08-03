@@ -22,6 +22,7 @@ import io.jmix.core.BeanLocator;
 import io.jmix.core.JmixEntity;
 import io.jmix.core.Messages;
 import io.jmix.core.Metadata;
+import io.jmix.core.metamodel.datatype.FormatStringsRegistry;
 import io.jmix.core.metamodel.datatype.impl.AdaptiveNumberDatatype;
 import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.dynattr.AttributeDefinition;
@@ -39,6 +40,7 @@ import io.jmix.ui.component.*;
 import io.jmix.ui.component.data.options.ListOptions;
 import io.jmix.ui.component.data.options.MapOptions;
 import io.jmix.ui.component.data.value.ContainerValueSource;
+import io.jmix.ui.component.validation.Validator;
 import io.jmix.ui.model.InstanceContainer;
 import io.jmix.ui.screen.OpenMode;
 import io.jmix.ui.sys.ScreensHelper;
@@ -65,6 +67,7 @@ public class DynAttrComponentGenerationStrategy implements ComponentGenerationSt
     protected ScreensHelper screensHelper;
     protected Actions actions;
     protected AttributeDependencies attributeDependencies;
+    protected FormatStringsRegistry formatStringsRegistry;
     protected BeanLocator beanLocator;
 
     @Autowired
@@ -77,6 +80,7 @@ public class DynAttrComponentGenerationStrategy implements ComponentGenerationSt
                                               ScreensHelper screensHelper,
                                               Actions actions,
                                               AttributeDependencies attributeDependencies,
+                                              FormatStringsRegistry formatStringsRegistry,
                                               BeanLocator beanLocator) {
         this.messages = messages;
         this.uiComponents = uiComponents;
@@ -88,6 +92,7 @@ public class DynAttrComponentGenerationStrategy implements ComponentGenerationSt
         this.screensHelper = screensHelper;
         this.actions = actions;
         this.attributeDependencies = attributeDependencies;
+        this.formatStringsRegistry = formatStringsRegistry;
         this.beanLocator = beanLocator;
     }
 
@@ -301,8 +306,8 @@ public class DynAttrComponentGenerationStrategy implements ComponentGenerationSt
     }
 
     protected void setValidators(Field field, AttributeDefinition attribute) {
-        Collection<Consumer<?>> validators = attributeValidators.getValidators(attribute);
-        for (Consumer<?> validator : validators) {
+        Collection<Validator<?>> validators = attributeValidators.getValidators(attribute);
+        for (Validator<?> validator : validators) {
             if (field instanceof ListEditor) {
                 //noinspection unchecked
                 ((ListEditor) field).addListItemValidator(validator);
@@ -318,7 +323,7 @@ public class DynAttrComponentGenerationStrategy implements ComponentGenerationSt
         if (!Strings.isNullOrEmpty(formatPattern)) {
             Class<?> type = attribute.getDataType() == DECIMAL ? BigDecimal.class : Number.class;
             //noinspection unchecked
-            field.setDatatype(new AdaptiveNumberDatatype(type, formatPattern, "", ""));
+            field.setDatatype(new AdaptiveNumberDatatype(type, formatPattern, "", "", formatStringsRegistry));
         }
     }
 

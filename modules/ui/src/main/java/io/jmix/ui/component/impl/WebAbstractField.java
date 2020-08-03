@@ -23,8 +23,10 @@ import io.jmix.ui.component.*;
 import io.jmix.ui.component.data.ValueSource;
 import io.jmix.ui.component.data.meta.ValueBinding;
 import io.jmix.ui.component.data.value.ValueBinder;
+import io.jmix.ui.component.validation.Validator;
 import io.jmix.ui.widget.compatibility.JmixValueChangeEvent;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,7 +38,7 @@ public abstract class WebAbstractField<T extends com.vaadin.v7.ui.AbstractField,
 
     protected static final int VALIDATORS_LIST_INITIAL_CAPACITY = 4;
 
-    protected List<Consumer> validators; // lazily initialized list
+    protected List<Validator<V>> validators; // lazily initialized list
 
     protected boolean editable = true;
 
@@ -45,13 +47,14 @@ public abstract class WebAbstractField<T extends com.vaadin.v7.ui.AbstractField,
 
     protected Subscription parentEditableChangeListener;
 
+    @Nullable
     @Override
     public ValueSource<V> getValueSource() {
         return valueBinding != null ? valueBinding.getSource() : null;
     }
 
     @Override
-    public void setValueSource(ValueSource<V> valueSource) {
+    public void setValueSource(@Nullable ValueSource<V> valueSource) {
         if (this.valueBinding != null) {
             valueBinding.unbind();
 
@@ -114,15 +117,17 @@ public abstract class WebAbstractField<T extends com.vaadin.v7.ui.AbstractField,
     }
 
     @Override
-    public void setRequiredMessage(String msg) {
+    public void setRequiredMessage(@Nullable String msg) {
         component.setRequiredError(msg);
     }
 
+    @Nullable
     @Override
     public String getRequiredMessage() {
         return component.getRequiredError();
     }
 
+    @Nullable
     @Override
     public V getValue() {
         //noinspection unchecked
@@ -130,12 +135,12 @@ public abstract class WebAbstractField<T extends com.vaadin.v7.ui.AbstractField,
     }
 
     @Override
-    public void setValue(V value) {
+    public void setValue(@Nullable V value) {
         setValueToPresentation(convertToPresentation(value));
     }
 
     @Override
-    public void setParent(Component parent) {
+    public void setParent(@Nullable Component parent) {
         if (this.parent instanceof EditableChangeNotifier
                 && parentEditableChangeListener != null) {
             parentEditableChangeListener.remove();
@@ -158,7 +163,7 @@ public abstract class WebAbstractField<T extends com.vaadin.v7.ui.AbstractField,
         }
     }
 
-    protected void setValueToPresentation(Object value) {
+    protected void setValueToPresentation(@Nullable Object value) {
         if (hasValidationError()) {
             setValidationError(null);
         }
@@ -220,39 +225,40 @@ public abstract class WebAbstractField<T extends com.vaadin.v7.ui.AbstractField,
         return (V) componentRawValue;
     }
 
-    protected Object convertToPresentation(V modelValue) {
+    @Nullable
+    protected Object convertToPresentation(@Nullable V modelValue) {
         return modelValue;
     }
 
-    protected boolean fieldValueEquals(V value, V oldValue) {
+    protected boolean fieldValueEquals(@Nullable V value, @Nullable V oldValue) {
         return EntityValues.propertyValueEquals(oldValue, value);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void addValidator(Consumer<? super V> validator) {
+    public void addValidator(Validator<? super V> validator) {
         if (validators == null) {
             validators = new ArrayList<>(VALIDATORS_LIST_INITIAL_CAPACITY);
         }
         if (!validators.contains(validator)) {
-            validators.add(validator);
+            validators.add((Validator<V>) validator);
         }
     }
 
     @Override
-    public void removeValidator(Consumer<V> validator) {
+    public void removeValidator(Validator<V> validator) {
         if (validators != null) {
             validators.remove(validator);
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Collection<Consumer<V>> getValidators() {
+    public Collection<Validator<V>> getValidators() {
         if (validators == null) {
             return Collections.emptyList();
         }
 
-        return (Collection) Collections.unmodifiableCollection(validators);
+        return Collections.unmodifiableCollection(validators);
     }
 
     @Override
@@ -275,7 +281,7 @@ public abstract class WebAbstractField<T extends com.vaadin.v7.ui.AbstractField,
             return;
         }
 
-        Object value = getValue();
+        V value = getValue();
         if (isEmpty(value) && isRequired()) {
             String requiredMessage = getRequiredMessage();
             if (requiredMessage == null) {
@@ -287,7 +293,7 @@ public abstract class WebAbstractField<T extends com.vaadin.v7.ui.AbstractField,
 
         if (validators != null) {
             try {
-                for (Consumer validator : validators) {
+                for (Validator<V> validator : validators) {
                     validator.accept(value);
                 }
             } catch (ValidationException e) {
@@ -318,7 +324,7 @@ public abstract class WebAbstractField<T extends com.vaadin.v7.ui.AbstractField,
         return component.isModified();
     }
 
-    protected boolean isEmpty(Object value) {
+    protected boolean isEmpty(@Nullable Object value) {
         return value == null;
     }
 }

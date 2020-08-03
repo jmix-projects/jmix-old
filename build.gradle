@@ -16,7 +16,6 @@
 
 buildscript {
     ext {
-        springBootVersion = '2.3.1.RELEASE'
         jmixPluginVersion = '1.0-SNAPSHOT'
     }
     repositories {
@@ -40,7 +39,6 @@ buildscript {
     }
     dependencies {
         classpath("io.jmix.gradle:jmix-gradle-plugin:${jmixPluginVersion}")
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.0.4")
     }
 }
@@ -114,7 +112,8 @@ configure(subprojects.findAll { !it.name.startsWith('sample-') }) {
     }
 }
 
-configure([project(':modules:core'), project(':modules:data'), project(':modules:security'), project(':modules:audit')]) {
+configure([project(':modules:core'), project(':modules:data'), project(':modules:security'), project(':modules:audit'),
+        project(':modules:ui')]) {
     if (rootProject.hasProperty('spotbugsEnabled')) {
         apply plugin: 'com.github.spotbugs'
 

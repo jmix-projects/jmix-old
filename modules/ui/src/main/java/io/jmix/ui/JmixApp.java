@@ -25,7 +25,9 @@ import io.jmix.core.WebFilterHelper;
 import io.jmix.core.security.LoginException;
 import io.jmix.core.security.LogoutRequestMatcher;
 import io.jmix.core.security.SecurityContextHelper;
+import io.jmix.core.security.SecurityContextHelper;
 import io.jmix.core.security.UserRepository;
+import io.jmix.core.session.SessionData;
 import io.jmix.ui.util.OperationResult;
 import org.atmosphere.util.AtmosphereFilterChain;
 import org.slf4j.Logger;
@@ -35,6 +37,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -53,6 +56,12 @@ public class JmixApp extends App {
 
     @Autowired
     protected WebFilterHelper webFilterHelper;
+
+    @Autowired
+    protected SessionRegistry sessionRegistry;
+
+    @Autowired
+    protected SessionData sessionData;
 
     @Override
     public void loginOnStart() throws LoginException {
@@ -87,6 +96,8 @@ public class JmixApp extends App {
             throw new RuntimeException();
         }
 
+        //TODO EZ handle session expiration
+        sessionRegistry.getSessionInformation(sessionData.getSessionId()).expireNow();
         //todo MG authorities
         AnonymousAuthenticationToken anonymousToken = new AnonymousAuthenticationToken(
                 coreProperties.getAnonymousAuthenticationTokenKey(),

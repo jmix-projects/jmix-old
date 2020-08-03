@@ -19,19 +19,27 @@ package io.jmix.core.security;
 import io.jmix.core.CoreProperties;
 import io.jmix.core.entity.BaseUser;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
+import io.jmix.core.session.SessionProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.session.*;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Configuration
 @Conditional(OnCoreSecurityImplementation.class)
@@ -44,6 +52,9 @@ public class CoreSecurityConfiguration extends WebSecurityConfigurerAdapter impl
 
     @Autowired
     private CoreProperties coreProperties;
+
+    @Autowired
+    private SessionProperties sessionProperties;
 
     @Autowired
     private UserRepository userRepository;
@@ -60,6 +71,7 @@ public class CoreSecurityConfiguration extends WebSecurityConfigurerAdapter impl
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        SessionRegistry sessionRegistry = sessionRegistry();
         http.antMatcher("/**")
                 .authorizeRequests().anyRequest().permitAll()
                 .and()
@@ -69,7 +81,40 @@ public class CoreSecurityConfiguration extends WebSecurityConfigurerAdapter impl
                     anonymousConfigurer.key(coreProperties.getAnonymousAuthenticationTokenKey());
                 })
                 .csrf().disable()
-                .headers().frameOptions().sameOrigin();
+                .headers().frameOptions().sameOrigin()
+                .and()
+                .sessionManagement().sessionAuthenticationStrategy(sessionControlAuthenticationStrategy(sessionRegistry))
+                .maximumSessions(sessionProperties.getMaximumUserSessions()).sessionRegistry(sessionRegistry);
+    }
+
+    @Primary
+    @Bean
+    protected SessionAuthenticationStrategy sessionControlAuthenticationStrategy(SessionRegistry sessionRegistry) {
+        return new CompositeSessionAuthenticationStrategy(strategies(sessionRegistry, sessionProperties.getMaximumUserSessions()));
+    }
+
+    protected List<SessionAuthenticationStrategy> strategies(SessionRegistry sessionRegistry, int maximumUserSessions) {
+        SessionFixationProtectionStrategy sessionFixationProtectionStrategy
+                = new SessionFixationProtectionStrategy();
+        sessionFixationProtectionStrategy.setMigrateSessionAttributes(true);
+
+        RegisterSessionAuthenticationStrategy registerSessionAuthenticationStrategy
+                = new RegisterSessionAuthenticationStrategy(sessionRegistry);
+        ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlStrategy
+                = new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
+        concurrentSessionControlStrategy.setMaximumSessions(maximumUserSessions);
+
+        List<SessionAuthenticationStrategy> strategies = new LinkedList<>();
+
+//        strategies.add(sessionFixationProtectionStrategy);
+        strategies.add(registerSessionAuthenticationStrategy);
+        strategies.add(concurrentSessionControlStrategy);
+        return strategies;
+    }
+
+    @Bean
+    protected SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
     //todo MG why?

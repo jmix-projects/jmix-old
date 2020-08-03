@@ -22,6 +22,8 @@ import io.jmix.ui.component.SizeUnit;
 import io.jmix.ui.component.SizeWithUnit;
 import io.jmix.ui.screen.OpenMode;
 
+import javax.annotation.Nullable;
+
 /**
  * How to open a screen: {@link #NEW_TAB}, {@link #THIS_TAB}, {@link #DIALOG}, {@link #NEW_WINDOW}.
  * <p>
@@ -94,6 +96,7 @@ public final class OpenType {
         return instance;
     }
 
+    @Nullable
     public SizeUnit getHeightUnit() {
         return heightUnit;
     }
@@ -104,6 +107,7 @@ public final class OpenType {
         return instance;
     }
 
+    @Nullable
     public Float getHeight() {
         return height;
     }
@@ -160,6 +164,7 @@ public final class OpenType {
         return instance;
     }
 
+    @Nullable
     public String getHeightString() {
         if (height == null) {
             return null;
@@ -168,6 +173,7 @@ public final class OpenType {
         return height + (heightUnit != null ? heightUnit.getSymbol() : "px");
     }
 
+    @Nullable
     public SizeUnit getWidthUnit() {
         return widthUnit;
     }
@@ -178,10 +184,12 @@ public final class OpenType {
         return instance;
     }
 
+    @Nullable
     public Float getWidth() {
         return width;
     }
 
+    @Nullable
     public String getWidthString() {
         if (width == null) {
             return null;
@@ -285,6 +293,7 @@ public final class OpenType {
         return instance;
     }
 
+    @Nullable
     public Boolean getResizable() {
         return resizable;
     }
@@ -303,6 +312,7 @@ public final class OpenType {
         return instance;
     }
 
+    @Nullable
     public Boolean getCloseable() {
         return closeable;
     }
@@ -321,6 +331,7 @@ public final class OpenType {
         return instance;
     }
 
+    @Nullable
     public Boolean getModal() {
         return modal;
     }
@@ -342,6 +353,7 @@ public final class OpenType {
     /**
      * @return true if a window can be closed by click on outside window area
      */
+    @Nullable
     public Boolean getCloseOnClickOutside() {
         return closeOnClickOutside;
     }
@@ -371,6 +383,7 @@ public final class OpenType {
     /**
      * @return true if a window is maximized across the screen.
      */
+    @Nullable
     public Boolean getMaximized() {
         return maximized;
     }

@@ -23,6 +23,7 @@ import io.jmix.ui.app.inputdialog.InputParameter;
 import io.jmix.ui.meta.*;
 import io.jmix.ui.screen.CloseAction;
 
+import javax.annotation.Nullable;
 import java.util.EventObject;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -32,14 +33,15 @@ import java.util.function.Function;
  * Prepares and shows input dialogs.
  */
 @StudioFacet(
+        xmlElement = "inputDialog",
         caption = "Input Dialog",
         description = "Prepares and shows input dialogs",
-        defaultProperty = "message",
-        defaultEvent = "CloseEvent"
+        defaultProperty = "caption",
+        category = "Non-visual"
 )
 @StudioProperties(
         properties = {
-                @StudioProperty(name = "id", required = true)
+                @StudioProperty(name = "id", type = PropertyType.COMPONENT_ID, required = true)
         }
 )
 public interface InputDialogFacet extends Facet, ActionsAwareDialogFacet<InputDialogFacet>, HasSubParts {
@@ -50,11 +52,12 @@ public interface InputDialogFacet extends Facet, ActionsAwareDialogFacet<InputDi
      * @param caption caption
      */
     @StudioProperty(type = PropertyType.LOCALIZED_STRING)
-    void setCaption(String caption);
+    void setCaption(@Nullable String caption);
 
     /**
      * @return dialog caption
      */
+    @Nullable
     String getCaption();
 
     /**
@@ -63,7 +66,7 @@ public interface InputDialogFacet extends Facet, ActionsAwareDialogFacet<InputDi
      * @param width width
      */
     @StudioProperty
-    void setWidth(String width);
+    void setWidth(@Nullable String width);
 
     /**
      * @return dialog width
@@ -81,7 +84,7 @@ public interface InputDialogFacet extends Facet, ActionsAwareDialogFacet<InputDi
      * @param height height
      */
     @StudioProperty
-    void setHeight(String height);
+    void setHeight(@Nullable String height);
 
     /**
      * @return dialog height
@@ -99,12 +102,13 @@ public interface InputDialogFacet extends Facet, ActionsAwareDialogFacet<InputDi
      *
      * @param actionId action id
      */
-    @StudioProperty(type = PropertyType.COMPONENT_ID)
-    void setActionTarget(String actionId);
+    @StudioProperty(type = PropertyType.COMPONENT_REF)
+    void setActionTarget(@Nullable String actionId);
 
     /**
      * @return id of action that triggers dialog
      */
+    @Nullable
     String getActionTarget();
 
     /**
@@ -113,12 +117,13 @@ public interface InputDialogFacet extends Facet, ActionsAwareDialogFacet<InputDi
      *
      * @param buttonId button id
      */
-    @StudioProperty(type = PropertyType.COMPONENT_ID)
-    void setButtonTarget(String buttonId);
+    @StudioProperty(type = PropertyType.COMPONENT_REF)
+    void setButtonTarget(@Nullable String buttonId);
 
     /**
      * @return id of button that triggers dialog
      */
+    @Nullable
     String getButtonTarget();
 
     /**
@@ -127,11 +132,12 @@ public interface InputDialogFacet extends Facet, ActionsAwareDialogFacet<InputDi
      * @param dialogActions one of {@link DialogActions} values
      */
     @StudioProperty(type = PropertyType.ENUMERATION)
-    void setDialogActions(DialogActions dialogActions);
+    void setDialogActions(@Nullable DialogActions dialogActions);
 
     /**
      * @return set of predefined actions used in dialog
      */
+    @Nullable
     DialogActions getDialogActions();
 
     /**
@@ -140,7 +146,6 @@ public interface InputDialogFacet extends Facet, ActionsAwareDialogFacet<InputDi
      * @param closeListener close listener
      * @return close event subscription
      */
-    @StudioEvent
     Subscription addCloseListener(Consumer<CloseEvent> closeListener);
 
     /**
@@ -148,7 +153,6 @@ public interface InputDialogFacet extends Facet, ActionsAwareDialogFacet<InputDi
      *
      * @param dialogResultHandler result handler
      */
-    @StudioDelegate
     void setDialogResultHandler(Consumer<InputDialog.InputDialogResult> dialogResultHandler);
 
     /**
@@ -157,7 +161,6 @@ public interface InputDialogFacet extends Facet, ActionsAwareDialogFacet<InputDi
      *
      * @param validator validator
      */
-    @StudioDelegate
     void setValidator(Function<InputDialog.ValidationContext, ValidationErrors> validator);
 
     /**

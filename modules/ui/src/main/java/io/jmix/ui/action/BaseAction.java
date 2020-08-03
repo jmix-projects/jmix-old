@@ -19,7 +19,6 @@ package io.jmix.ui.action;
 import io.jmix.core.common.event.Subscription;
 import io.jmix.ui.component.Component;
 import io.jmix.ui.component.KeyCombination;
-import io.jmix.ui.meta.StudioDelegate;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -182,7 +181,6 @@ public class BaseAction extends AbstractAction implements Action.SecuredAction {
      *
      * @param enabledRule boolean rule for the action enabled state
      */
-    @StudioDelegate
     public void addEnabledRule(EnabledRule enabledRule) {
         checkNotNullArgument(enabledRule);
 
@@ -234,7 +232,7 @@ public class BaseAction extends AbstractAction implements Action.SecuredAction {
      * @param caption caption
      * @return current instance of action
      */
-    public BaseAction withCaption(String caption) {
+    public BaseAction withCaption(@Nullable String caption) {
         this.caption = caption;
         return this;
     }
@@ -245,7 +243,7 @@ public class BaseAction extends AbstractAction implements Action.SecuredAction {
      * @param description description
      * @return current instance of action
      */
-    public BaseAction withDescription(String description) {
+    public BaseAction withDescription(@Nullable String description) {
         this.description = description;
         return this;
     }
@@ -256,7 +254,7 @@ public class BaseAction extends AbstractAction implements Action.SecuredAction {
      * @param icon icon
      * @return current instance of action
      */
-    public BaseAction withIcon(String icon) {
+    public BaseAction withIcon(@Nullable String icon) {
         this.icon = icon;
         return this;
     }
@@ -267,7 +265,7 @@ public class BaseAction extends AbstractAction implements Action.SecuredAction {
      * @param shortcut shortcut
      * @return current instance of action
      */
-    public BaseAction withShortcut(String shortcut) {
+    public BaseAction withShortcut(@Nullable String shortcut) {
         if (shortcut != null) {
             this.shortcut = KeyCombination.create(shortcut);
         }

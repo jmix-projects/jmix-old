@@ -37,6 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Objects;
@@ -160,6 +161,7 @@ public abstract class WebAbstractSingleFileUploadField<R> extends WebV8AbstractF
     protected void onFileNameClick(Button.ClickEvent e) {
     }
 
+    @Nullable
     public String getFileName() {
         if (fileName == null) {
             return null;
@@ -179,13 +181,14 @@ public abstract class WebAbstractSingleFileUploadField<R> extends WebV8AbstractF
         unsubscribe(SingleFileUploadField.FileUploadSucceedEvent.class, listener);
     }
 
+    @Nullable
     @Override
     public String getAccept() {
         return accept;
     }
 
     @Override
-    public void setAccept(String accept) {
+    public void setAccept(@Nullable String accept) {
         if (!Objects.equals(accept, getAccept())) {
             this.accept = accept;
             component.setAccept(convertToMIME(accept));
@@ -193,7 +196,7 @@ public abstract class WebAbstractSingleFileUploadField<R> extends WebV8AbstractF
     }
 
     @Override
-    public void setDropZone(DropZone dropZone) {
+    public void setDropZone(@Nullable DropZone dropZone) {
         this.dropZone = dropZone;
 
         if (dropZone == null) {
@@ -210,14 +213,14 @@ public abstract class WebAbstractSingleFileUploadField<R> extends WebV8AbstractF
     }
 
     @Override
-    public void setPasteZone(ComponentContainer pasteZone) {
+    public void setPasteZone(@Nullable ComponentContainer pasteZone) {
         this.pasteZone = pasteZone;
 
         component.setPasteZone(pasteZone != null ? pasteZone.unwrapComposition(Component.class) : null);
     }
 
     @Override
-    public void setDropZonePrompt(String dropZonePrompt) {
+    public void setDropZonePrompt(@Nullable String dropZonePrompt) {
         this.dropZonePrompt = dropZonePrompt;
 
         component.setDropZonePrompt(dropZonePrompt);
@@ -234,10 +237,11 @@ public abstract class WebAbstractSingleFileUploadField<R> extends WebV8AbstractF
         } else {
             int maxUploadSizeMb = beanLocator.get(UiProperties.class).getMaxUploadSizeMb();
 
-            return maxUploadSizeMb * BYTES_IN_MEGABYTE;
+            return (long) maxUploadSizeMb * BYTES_IN_MEGABYTE;
         }
     }
 
+    @Nullable
     @Override
     public Set<String> getPermittedExtensions() {
         return permittedExtensions;
@@ -265,16 +269,19 @@ public abstract class WebAbstractSingleFileUploadField<R> extends WebV8AbstractF
     protected void internalValueChanged(Object newValue) {
     }
 
+    @Nullable
     @Override
     public DropZone getDropZone() {
         return dropZone;
     }
 
+    @Nullable
     @Override
     public ComponentContainer getPasteZone() {
         return pasteZone;
     }
 
+    @Nullable
     @Override
     public String getDropZonePrompt() {
         return dropZonePrompt;
@@ -311,10 +318,11 @@ public abstract class WebAbstractSingleFileUploadField<R> extends WebV8AbstractF
     }
 
     @Override
-    public void setContentProvider(Supplier<InputStream> contentProvider) {
+    public void setContentProvider(@Nullable Supplier<InputStream> contentProvider) {
         this.contentProvider = contentProvider;
     }
 
+    @Nullable
     @Override
     public Supplier<InputStream> getContentProvider() {
         return contentProvider;
@@ -371,7 +379,7 @@ public abstract class WebAbstractSingleFileUploadField<R> extends WebV8AbstractF
     }
 
     @Override
-    public void setPermittedExtensions(Set<String> permittedExtensions) {
+    public void setPermittedExtensions(@Nullable Set<String> permittedExtensions) {
         if (permittedExtensions != null) {
             this.permittedExtensions = permittedExtensions.stream()
                     .map(String::toLowerCase)
@@ -393,17 +401,18 @@ public abstract class WebAbstractSingleFileUploadField<R> extends WebV8AbstractF
     }
 
     @Override
-    public void setClearButtonCaption(String caption) {
+    public void setClearButtonCaption(@Nullable String caption) {
         component.setClearButtonCaption(caption);
     }
 
+    @Nullable
     @Override
     public String getClearButtonCaption() {
         return component.getClearButtonCaption();
     }
 
     @Override
-    public void setClearButtonIcon(String icon) {
+    public void setClearButtonIcon(@Nullable String icon) {
         if (icon != null) {
             IconResolver iconResolver = beanLocator.get(IconResolver.NAME);
             Resource iconResource = iconResolver.getIconResource(icon);
@@ -413,6 +422,7 @@ public abstract class WebAbstractSingleFileUploadField<R> extends WebV8AbstractF
         }
     }
 
+    @Nullable
     @Override
     public String getClearButtonIcon() {
         return component.getClearButtonIcon();
@@ -449,17 +459,18 @@ public abstract class WebAbstractSingleFileUploadField<R> extends WebV8AbstractF
     }
 
     @Override
-    public void setUploadButtonCaption(String caption) {
+    public void setUploadButtonCaption(@Nullable String caption) {
         component.setUploadButtonCaption(caption);
     }
 
+    @Nullable
     @Override
     public String getUploadButtonCaption() {
         return component.getUploadButtonCaption();
     }
 
     @Override
-    public void setUploadButtonIcon(String icon) {
+    public void setUploadButtonIcon(@Nullable String icon) {
         if (!StringUtils.isEmpty(icon)) {
             IconResolver iconResolver = beanLocator.get(IconResolver.class);
             component.setUploadButtonIcon(iconResolver.getIconResource(icon));
@@ -468,16 +479,18 @@ public abstract class WebAbstractSingleFileUploadField<R> extends WebV8AbstractF
         }
     }
 
+    @Nullable
     @Override
     public String getUploadButtonIcon() {
         return component.getUploadButtonIcon();
     }
 
     @Override
-    public void setUploadButtonDescription(String description) {
+    public void setUploadButtonDescription(@Nullable String description) {
         component.setUploadButtonDescription(description);
     }
 
+    @Nullable
     @Override
     public String getUploadButtonDescription() {
         return component.getUploadButtonDescription();

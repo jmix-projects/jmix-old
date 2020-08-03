@@ -1,9 +1,9 @@
 plugins {
-    id 'org.springframework.boot' version '2.3.1.RELEASE'
-    id 'io.jmix' version '$project_baseProjectsGroup_version'
+    id 'io.jmix' version '0.1.10'
     id 'java'
 }
 
+apply plugin: 'org.springframework.boot'
 
 group = 'com.company'
 version = '0.0.1-SNAPSHOT'

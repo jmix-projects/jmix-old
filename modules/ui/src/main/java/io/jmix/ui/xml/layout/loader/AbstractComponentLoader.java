@@ -18,7 +18,7 @@ package io.jmix.ui.xml.layout.loader;
 
 import com.google.common.base.Strings;
 import io.jmix.core.BeanLocator;
-import io.jmix.core.HotDeployManager;
+import io.jmix.core.ClassManager;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
 import io.jmix.core.common.util.ReflectionHelper;
@@ -35,6 +35,9 @@ import io.jmix.ui.component.*;
 import io.jmix.ui.component.Component.Alignment;
 import io.jmix.ui.component.data.HasValueSource;
 import io.jmix.ui.component.data.value.ContainerValueSource;
+import io.jmix.ui.component.formatter.Formatter;
+import io.jmix.ui.component.HasTablePresentations;
+import io.jmix.ui.component.formatter.FormatterLoadFactory;
 import io.jmix.ui.icon.Icons;
 import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.model.InstanceContainer;
@@ -44,8 +47,6 @@ import io.jmix.ui.screen.FrameOwner;
 import io.jmix.ui.screen.UiControllerUtils;
 import io.jmix.ui.theme.ThemeConstants;
 import io.jmix.ui.theme.ThemeConstantsManager;
-import io.jmix.ui.xml.DeclarativeAction;
-import io.jmix.ui.xml.DeclarativeTrackingAction;
 import io.jmix.ui.xml.layout.ComponentLoader;
 import io.jmix.ui.xml.layout.LayoutLoaderConfig;
 import io.jmix.ui.xml.layout.LoaderResolver;
@@ -56,15 +57,12 @@ import org.dom4j.Attribute;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.core.env.Environment;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
-import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkState;
 import static io.jmix.ui.icon.Icons.ICON_NAME_REGEX;
@@ -202,8 +200,8 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         return beanLocator.get(MessageTools.NAME);
     }
 
-    protected HotDeployManager getHotDeployManager() {
-        return beanLocator.get(HotDeployManager.NAME);
+    protected ClassManager getClassManager() {
+        return beanLocator.get(ClassManager.NAME);
     }
 
     protected UiProperties getProperties() {
@@ -217,14 +215,6 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
     protected ThemeConstants getTheme() {
         ThemeConstantsManager manager = beanLocator.get(ThemeConstantsManager.NAME);
         return manager.getConstants();
-    }
-
-    protected boolean isLegacyFrame() {
-        return false;
-        /*
-        TODO: legacy-ui
-        return context instanceof ComponentContext
-                && ((ComponentContext) context).getFrame().getFrameOwner() instanceof LegacyFrame;*/
     }
 
     protected LayoutLoader getLayoutLoader() {
@@ -361,14 +351,15 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         return getMessageTools().loadString(context.getMessagesPack(), caption);
     }
 
-    protected String loadThemeString(String value) {
+    @Nullable
+    protected String loadThemeString(@Nullable String value) {
         if (value != null && value.startsWith(ThemeConstants.PREFIX)) {
             value = getTheme().get(value.substring(ThemeConstants.PREFIX.length()));
         }
         return value;
     }
 
-    protected int loadThemeInt(String value) {
+    protected int loadThemeInt(@Nullable String value) {
         if (value != null && value.startsWith(ThemeConstants.PREFIX)) {
             value = getTheme().get(value.substring(ThemeConstants.PREFIX.length()));
         }
@@ -520,7 +511,8 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         }
     }
 
-    protected String getIconPath(String icon) {
+    @Nullable
+    protected String getIconPath(@Nullable String icon) {
         if (icon == null || icon.isEmpty()) {
             return null;
         }
@@ -559,18 +551,22 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         String id = loadActionId(element);
 
         String trackSelection = element.attributeValue("trackSelection");
-
         boolean shouldTrackSelection = Boolean.parseBoolean(trackSelection);
-        String invokeMethod = element.attributeValue("invoke");
 
-        if (StringUtils.isEmpty(invokeMethod)) {
-            return loadStubAction(element, id, shouldTrackSelection);
+        Action targetAction;
+
+        if (shouldTrackSelection) {
+            targetAction = new ItemTrackingAction(id);
+            loadActionConstraint(targetAction, element);
+        } else {
+            targetAction = new BaseAction(id);
         }
 
-        return loadInvokeAction(actionsHolder, element, id, shouldTrackSelection, invokeMethod);
+        initAction(element, targetAction);
+
+        return targetAction;
     }
 
-    @Nonnull
     protected String loadActionId(Element element) {
         String id = element.attributeValue("id");
         if (id == null) {
@@ -585,56 +581,6 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
                     "Component ID", component.attributeValue("id"));
         }
         return id;
-    }
-
-    protected Action loadInvokeAction(ActionsHolder actionsHolder, Element element, String id, boolean shouldTrackSelection, String invokeMethod) {
-        BaseAction action;
-        String shortcut = loadShortcut(trimToNull(element.attributeValue("shortcut")));
-        if (shouldTrackSelection) {
-            action = new DeclarativeTrackingAction(
-                    id,
-                    loadResourceString(element.attributeValue("caption")),
-                    loadResourceString(element.attributeValue("description")),
-                    getIconPath(element.attributeValue("icon")),
-                    element.attributeValue("enable"),
-                    element.attributeValue("visible"),
-                    invokeMethod,
-                    shortcut,
-                    actionsHolder
-            );
-
-            loadActionConstraint(action, element);
-
-            return action;
-        } else {
-            action = new DeclarativeAction(
-                    id,
-                    loadResourceString(element.attributeValue("caption")),
-                    loadResourceString(element.attributeValue("description")),
-                    getIconPath(element.attributeValue("icon")),
-                    element.attributeValue("enable"),
-                    element.attributeValue("visible"),
-                    invokeMethod,
-                    shortcut,
-                    actionsHolder
-            );
-        }
-        action.setPrimary(Boolean.parseBoolean(element.attributeValue("primary")));
-        return action;
-    }
-
-    protected Action loadStubAction(Element element, String id, boolean shouldTrackSelection) {
-        Action targetAction;
-
-        if (shouldTrackSelection) {
-            targetAction = new ItemTrackingAction(id);
-        } else {
-            targetAction = new BaseAction(id);
-        }
-
-        initAction(element, targetAction);
-
-        return targetAction;
     }
 
     protected void initAction(Element element, Action targetAction) {
@@ -666,6 +612,13 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         String shortcut = trimToNull(element.attributeValue("shortcut"));
         if (shortcut != null) {
             targetAction.setShortcut(loadShortcut(shortcut));
+        }
+
+        if (targetAction instanceof Action.HasPrimaryState) {
+            String primary = element.attributeValue("primary");
+            if (!Strings.isNullOrEmpty(primary)) {
+                ((Action.HasPrimaryState) targetAction).setPrimary(Boolean.parseBoolean(primary));
+            }
         }
 
         Element propertiesEl = element.element("properties");
@@ -713,6 +666,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         return shortcut;
     }
 
+    @Nullable
     protected String loadShortcutFromFQNConfig(String shortcut) {
         if (shortcut.contains("#")) {
             String[] splittedShortcut = shortcut.split("#");
@@ -730,33 +684,29 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
             } catch (ClassNotFoundException e) {
                 throw new IllegalStateException(e);
             }
-            if (beanClass != null) {
-                //noinspection unchecked
-                Object bean = beanLocator.get(beanClass);
 
-                try {
-                    String shortcutValue = (String) MethodUtils.invokeMethod(bean, methodName);
-                    if (StringUtils.isNotEmpty(shortcutValue)) {
-                        return shortcutValue;
-                    }
-                } catch (NoSuchMethodException e) {
-                    String message = String.format("An error occurred while loading shortcut: " +
-                            "can't find method \"%s\" in \"%s\"", methodName, classFqn);
-                    throw new GuiDevelopmentException(message, context);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    String message = String.format("An error occurred while loading shortcut: " +
-                            "can't invoke method \"%s\" in \"%s\"", methodName, classFqn);
-                    throw new GuiDevelopmentException(message, context);
+            //noinspection unchecked
+            Object bean = beanLocator.get(beanClass);
+
+            try {
+                String shortcutValue = (String) MethodUtils.invokeMethod(bean, methodName);
+                if (StringUtils.isNotEmpty(shortcutValue)) {
+                    return shortcutValue;
                 }
-            } else {
+            } catch (NoSuchMethodException e) {
                 String message = String.format("An error occurred while loading shortcut: " +
-                        "can't find config interface \"%s\"", classFqn);
+                        "can't find method \"%s\" in \"%s\"", methodName, classFqn);
+                throw new GuiDevelopmentException(message, context);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                String message = String.format("An error occurred while loading shortcut: " +
+                        "can't invoke method \"%s\" in \"%s\"", methodName, classFqn);
                 throw new GuiDevelopmentException(message, context);
             }
         }
         return null;
     }
 
+    @Nullable
     protected String loadShortcutFromAlias(String shortcut) {
         // todo shortcuts https://github.com/jmix-framework/jmix/issues/312
 //        if (shortcut.endsWith("_SHORTCUT}")) {
@@ -772,6 +722,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         return null;
     }
 
+    @Nullable
     protected String loadShortcutFromConfig(String shortcut) {
         if (shortcut.contains(".")) {
             String shortcutPropertyKey = shortcut.substring(2, shortcut.length() - 1);
@@ -787,58 +738,29 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
     }
 
     protected Action loadEntityPickerDeclarativeAction(ActionsHolder actionsHolder, Element element) {
-        String id = loadActionId(element);
+        String type = element.attributeValue("type");
+        if (StringUtils.isNotEmpty(type)) {
+            Actions actions = beanLocator.get(Actions.NAME);
 
-        if (StringUtils.isBlank(element.attributeValue("invoke"))) {
-            String type = element.attributeValue("type");
-            if (StringUtils.isNotEmpty(type)) {
-                Actions actions = beanLocator.get(Actions.NAME);
+            String id = loadActionId(element);
+            Action action = actions.create(type, id);
+            initAction(element, action);
 
-                Action action = actions.create(type, id);
-                initAction(element, action);
-
-                return action;
-            }
+            return action;
         }
 
         return loadDeclarativeActionDefault(actionsHolder, element);
     }
 
-    protected Function<?, String> loadFormatter(Element element) {
-        Element formatterElement = element.element("formatter");
-        if (formatterElement != null) {
-            String className = formatterElement.attributeValue("class");
-
-            if (StringUtils.isEmpty(className)) {
-                throw new GuiDevelopmentException("Formatter's attribute 'class' is not specified", context);
+    @Nullable
+    protected Formatter<?> loadFormatter(Element element) {
+        FormatterLoadFactory loadFactory = beanLocator.get(FormatterLoadFactory.NAME);
+        for (Element childElement : element.elements()) {
+            if (loadFactory.isFormatter(childElement)) {
+                return loadFactory.createFormatter(childElement);
             }
-
-            Class<?> aClass = getHotDeployManager().findClass(className);
-            if (aClass == null) {
-                throw new GuiDevelopmentException(String.format("Class %s is not found", className), context);
-            }
-
-            try {
-                Constructor<?> constructor = aClass.getConstructor(Element.class);
-                try {
-                    //noinspection unchecked
-                    return (Function<?, String>) constructor.newInstance(formatterElement);
-                } catch (Throwable e) {
-                    throw new GuiDevelopmentException(
-                            String.format("Unable to instantiate class %s: %s", className, e.toString()), context);
-                }
-            } catch (NoSuchMethodException e) {
-                try {
-                    //noinspection unchecked
-                    return (Function<?, String>) aClass.getDeclaredConstructor().newInstance();
-                } catch (Exception e1) {
-                    throw new GuiDevelopmentException(
-                            String.format("Unable to instantiate class %s: %s", className, e1.toString()), context);
-                }
-            }
-        } else {
-            return null;
         }
+        return null;
     }
 
     protected void loadOrientation(HasOrientation component, Element element) {
@@ -884,7 +806,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         }
     }
 
-    protected Optional<InstanceContainer> loadContainer(Element element, String property) {
+    protected Optional<InstanceContainer> loadContainer(Element element, @Nullable String property) {
         String containerId = element.attributeValue("dataContainer");
 
         // In case a component has only a property,
@@ -925,6 +847,7 @@ public abstract class AbstractComponentLoader<T extends Component> implements Co
         return Optional.empty();
     }
 
+    @Nullable
     protected String getParentDataContainer(Element element) {
         Element parent = element.getParent();
         while (parent != null) {

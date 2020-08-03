@@ -20,14 +20,14 @@ plugins {
 
 group = 'io.jmix.bom'
 
-def vaadinVersion = '8.9.2-2-jmix'
+def vaadinVersion = '8.9.2-4-jmix'
 
 javaPlatform {
     allowDependencies()
 }
 
 dependencies {
-    api platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion")
+    api platform("org.springframework.boot:spring-boot-dependencies:2.3.1.RELEASE")
     
     constraints {
         api "io.jmix.audit:jmix-audit:$version"

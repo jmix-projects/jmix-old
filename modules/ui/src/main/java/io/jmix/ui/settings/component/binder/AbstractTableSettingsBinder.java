@@ -118,6 +118,11 @@ public abstract class AbstractTableSettingsBinder implements DataLoadingSettings
                             }
                         }
                     }
+                } else if (table.getSortInfo() != null) {
+                    TableItems tableItems = table.getItems();
+                    if (tableItems instanceof TableItems.Sortable) {
+                        ((TableItems.Sortable) tableItems).resetSortOrder();
+                    }
                 }
             }
         }
@@ -130,8 +135,9 @@ public abstract class AbstractTableSettingsBinder implements DataLoadingSettings
         boolean settingsChanged = false;
 
         if (table.isUsePresentations()) {
-            boolean textSelection = BooleanUtils.toBoolean(tableSettings.getTextSelection());
-            if (textSelection != table.isTextSelectionEnabled()) {
+            Boolean textSelection = tableSettings.getTextSelection();
+            if (textSelection == null
+                    || BooleanUtils.toBoolean(textSelection) != table.isTextSelectionEnabled()) {
                 tableSettings.setTextSelection(table.isTextSelectionEnabled());
 
                 settingsChanged = true;
@@ -290,7 +296,9 @@ public abstract class AbstractTableSettingsBinder implements DataLoadingSettings
             return true;
         }
 
-        settingsSortAscending = settingsSortAscending == null ? true : settingsSortAscending;
+        if (settingsSortAscending == null) {
+            settingsSortAscending = true;
+        }
 
         return sortInfo.getAscending() != settingsSortAscending;
     }

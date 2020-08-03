@@ -16,6 +16,7 @@
 
 package io.jmix.ui.settings.component;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class GroupTableSettings extends TableSettings {
@@ -25,6 +26,7 @@ public class GroupTableSettings extends TableSettings {
     public GroupTableSettings() {
     }
 
+    @Nullable
     public List<String> getGroupProperties() {
         return groupProperties;
     }

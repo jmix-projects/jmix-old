@@ -15,11 +15,11 @@
  */
 package io.jmix.ui.xml.layout.loader;
 
-import io.jmix.core.metamodel.datatype.Datatypes;
+import io.jmix.core.metamodel.datatype.DatatypeRegistry;
 import io.jmix.ui.component.Buffered;
 import io.jmix.ui.component.Field;
 import io.jmix.ui.component.HasDatatype;
-import io.jmix.ui.component.validation.AbstractValidator;
+import io.jmix.ui.component.validation.Validator;
 import io.jmix.ui.component.validation.ValidatorLoadFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Element;
@@ -80,7 +80,7 @@ public abstract class AbstractFieldLoader<T extends Field> extends AbstractCompo
             ValidatorLoadFactory loadFactory = beanLocator.get(ValidatorLoadFactory.NAME);
 
             for (Element validatorElem : validators) {
-                AbstractValidator validator = loadFactory.createValidator(validatorElem, context.getMessagesPack());
+                Validator validator = loadFactory.createValidator(validatorElem, context.getMessagesPack());
                 if (validator != null) {
                     component.addValidator(validator);
                 }
@@ -99,7 +99,8 @@ public abstract class AbstractFieldLoader<T extends Field> extends AbstractCompo
         String datatypeAttribute = element.attributeValue("datatype");
         if (StringUtils.isNotEmpty(datatypeAttribute)) {
             //noinspection unchecked
-            component.setDatatype(Datatypes.get(datatypeAttribute));
+            DatatypeRegistry datatypeRegistry = beanLocator.get(DatatypeRegistry.NAME);
+            component.setDatatype(datatypeRegistry.find(datatypeAttribute));
         }
     }
 }

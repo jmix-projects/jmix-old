@@ -40,6 +40,7 @@ import io.jmix.ui.widget.data.AggregationContainer;
 import io.jmix.ui.widget.data.TableSortableContainer;
 import org.apache.commons.collections4.CollectionUtils;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -304,13 +305,14 @@ public class JmixTable extends com.vaadin.v7.ui.Table implements TableSortableCo
         return getState(false).multiLineCells;
     }
 
+    @Nullable
     @Override
     public CellValueFormatter getCustomCellValueFormatter() {
         return customCellValueFormatter;
     }
 
     @Override
-    public void setCustomCellValueFormatter(CellValueFormatter customCellValueFormatter) {
+    public void setCustomCellValueFormatter(@Nullable CellValueFormatter customCellValueFormatter) {
         this.customCellValueFormatter = customCellValueFormatter;
     }
 
@@ -380,7 +382,7 @@ public class JmixTable extends com.vaadin.v7.ui.Table implements TableSortableCo
     @Override
     public Object[] getEditableColumns() {
         if (editableColumns == null) {
-            return null;
+            editableColumns = new ArrayList<>();
         }
         return editableColumns.toArray();
     }
@@ -959,7 +961,7 @@ public class JmixTable extends com.vaadin.v7.ui.Table implements TableSortableCo
     }
 
     @Override
-    public void setColumnDescription(Object columnId, String description) {
+    public void setColumnDescription(Object columnId, @Nullable String description) {
         if (description != null) {
             if (columnDescriptions == null) {
                 columnDescriptions = new HashMap<>();
@@ -976,6 +978,7 @@ public class JmixTable extends com.vaadin.v7.ui.Table implements TableSortableCo
         }
     }
 
+    @Nullable
     @Override
     public String getColumnDescription(Object columnId) {
         if (columnDescriptions != null) {
@@ -985,7 +988,7 @@ public class JmixTable extends com.vaadin.v7.ui.Table implements TableSortableCo
     }
 
     @Override
-    public void setAggregationDescription(Object columnId, String tooltip) {
+    public void setAggregationDescription(Object columnId, @Nullable String tooltip) {
         if (tooltip != null) {
             if (aggregationTooltips == null) {
                 aggregationTooltips = new HashMap<>();
@@ -1001,6 +1004,7 @@ public class JmixTable extends com.vaadin.v7.ui.Table implements TableSortableCo
         }
     }
 
+    @Nullable
     @Override
     public String getAggregationDescription(Object columnId) {
         if (aggregationTooltips != null) {
@@ -1017,20 +1021,22 @@ public class JmixTable extends com.vaadin.v7.ui.Table implements TableSortableCo
     }
 
     @Override
-    public void setEmptyStateMessage(String message) {
+    public void setEmptyStateMessage(@Nullable String message) {
         getState().emptyStateMessage = message;
     }
 
+    @Nullable
     @Override
     public String getEmptyStateMessage() {
         return getState(false).emptyStateMessage;
     }
 
     @Override
-    public void setEmptyStateLinkMessage(String linkMessage) {
+    public void setEmptyStateLinkMessage(@Nullable String linkMessage) {
         getState().emptyStateLinkMessage = linkMessage;
     }
 
+    @Nullable
     @Override
     public String getEmptyStateLinkMessage() {
         return getState(false).emptyStateLinkMessage;

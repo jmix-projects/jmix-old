@@ -49,7 +49,7 @@ public interface DataLoader {
     /**
      * Sets the data context for the loader. If the data context is set, all loaded instance will be merged into it.
      */
-    void setDataContext(DataContext dataContext);
+    void setDataContext(@Nullable DataContext dataContext);
 
     /**
      * Returns the query which is used for loading entities.
@@ -64,6 +64,7 @@ public interface DataLoader {
     /**
      * Returns the root condition which is used together with the query when loading entities.
      */
+    @Nullable
     Condition getCondition();
 
     /**

@@ -21,6 +21,7 @@ import io.jmix.ui.component.data.GroupTableItems;
 import io.jmix.ui.gui.data.GroupInfo;
 import io.jmix.ui.widget.data.GroupTableContainer;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class GroupTableDataContainer<I> extends SortableDataContainer<I> implements GroupTableContainer {
@@ -109,6 +110,7 @@ public class GroupTableDataContainer<I> extends SortableDataContainer<I> impleme
         return Collections.emptyList();
     }
 
+    @Nullable
     @Override
     public Object getGroupProperty(Object id) {
         if (isGroup(id)) {
@@ -117,6 +119,7 @@ public class GroupTableDataContainer<I> extends SortableDataContainer<I> impleme
         return null;
     }
 
+    @Nullable
     @Override
     public Object getGroupPropertyValue(Object id) {
         if (isGroup(id)) {
@@ -276,6 +279,7 @@ public class GroupTableDataContainer<I> extends SortableDataContainer<I> impleme
         return super.size();
     }
 
+    @Nullable
     @Override
     public Object firstItemId() {
         if (hasGroups()) {
@@ -284,6 +288,7 @@ public class GroupTableDataContainer<I> extends SortableDataContainer<I> impleme
         return super.firstItemId();
     }
 
+    @Nullable
     @Override
     public Object lastItemId() {
         if (hasGroups()) {
@@ -292,8 +297,9 @@ public class GroupTableDataContainer<I> extends SortableDataContainer<I> impleme
         return super.lastItemId();
     }
 
+    @Nullable
     @Override
-    public Object nextItemId(Object itemId) {
+    public Object nextItemId(@Nullable Object itemId) {
         if (hasGroups()) {
             if (itemId == null) {
                 return null;
@@ -309,8 +315,9 @@ public class GroupTableDataContainer<I> extends SortableDataContainer<I> impleme
         return super.nextItemId(itemId);
     }
 
+    @Nullable
     @Override
-    public Object prevItemId(Object itemId) {
+    public Object prevItemId(@Nullable Object itemId) {
         if (hasGroups()) {
             if (itemId == null) {
                 return null;
@@ -328,7 +335,7 @@ public class GroupTableDataContainer<I> extends SortableDataContainer<I> impleme
     }
 
     @Override
-    public boolean isFirstId(Object itemId) {
+    public boolean isFirstId(@Nullable Object itemId) {
         if (hasGroups()) {
             return itemId != null && itemId.equals(first);
         }
@@ -336,7 +343,7 @@ public class GroupTableDataContainer<I> extends SortableDataContainer<I> impleme
     }
 
     @Override
-    public boolean isLastId(Object itemId) {
+    public boolean isLastId(@Nullable Object itemId) {
         if (hasGroups()) {
             return itemId != null && itemId.equals(last);
         }
