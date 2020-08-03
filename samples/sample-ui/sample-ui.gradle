@@ -31,3 +31,9 @@ dependencies {
 
     themes project(':modules:ui-themes')
 }
+
+processResources {
+    with copySpec {
+        from sourceSets.main.allJava
+    }
+}
