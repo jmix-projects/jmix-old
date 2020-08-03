@@ -4,10 +4,190 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-    <!--
-    <changeSet author="sample" id="1.0">
+
+    <changeSet author="sampler" id="1.0">
+
+        <createTable tableName="SAMPLER_CUSTOMER">
+            <column name="ID" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="VERSION" type="int" defaultValue="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATE_TS" type="datetime"/>
+            <column name="CREATED_BY" type="varchar(50)"/>
+            <column name="UPDATE_TS" type="datetime"/>
+            <column name="UPDATED_BY" type="varchar(50)"/>
+            <column name="DELETE_TS" type="datetime"/>
+            <column name="DELETED_BY" type="varchar(50)"/>
+
+            <column name="NAME" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LAST_NAME" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AGE" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ACTIVE" type="boolean"/>
+            <column name="GRADE" type="int"/>
+        </createTable>
+
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="4d750fdb-8ed7-a4e4-88d2-40974615cab2"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Dora"/>
+            <column name="LAST_NAME" value="Abrams"/>
+            <column name="AGE" valueNumeric="47"/>
+            <column name="ACTIVE" valueBoolean="true"/>
+            <column name="GRADE" valueNumeric="20"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="cf8022a3-5b70-520a-d426-aa4614210f0e"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Peter"/>
+            <column name="LAST_NAME" value="Blakesly"/>
+            <column name="AGE" valueNumeric="28"/>
+            <column name="ACTIVE" valueBoolean="true"/>
+            <column name="GRADE" valueNumeric="30"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="e7e127d7-33b4-2bd9-d405-0f7923a8bec6"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Martin"/>
+            <column name="LAST_NAME" value="Briggs"/>
+            <column name="AGE" valueNumeric="23"/>
+            <column name="ACTIVE" valueBoolean="false"/>
+            <column name="GRADE" valueNumeric="30"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="48eda61c-4142-0e47-5ca8-f338c36cfb0e"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Philipp"/>
+            <column name="LAST_NAME" value="Brown"/>
+            <column name="AGE" valueNumeric="30"/>
+            <column name="ACTIVE" valueBoolean="true"/>
+            <column name="GRADE" valueNumeric="30"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="0c3be785-1125-b755-7e79-3cc136cc1b13"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="John"/>
+            <column name="LAST_NAME" value="Doe"/>
+            <column name="AGE" valueNumeric="39"/>
+            <column name="ACTIVE" valueBoolean="false"/>
+            <column name="GRADE" valueNumeric="30"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="71ffb579-1b01-614a-0aea-5897c8c3bb91"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Daniel"/>
+            <column name="LAST_NAME" value="Evans"/>
+            <column name="AGE" valueNumeric="18"/>
+            <column name="ACTIVE" valueBoolean="true"/>
+            <column name="GRADE" valueNumeric="10"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="6f218a4d-5ea9-dbf1-b958-c947130a714d"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="John"/>
+            <column name="LAST_NAME" value="Frost"/>
+            <column name="AGE" valueNumeric="50"/>
+            <column name="ACTIVE" valueBoolean="false"/>
+            <column name="GRADE" valueNumeric="20"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="38144502-b2fe-45ab-c183-116aead24aca"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Edward"/>
+            <column name="LAST_NAME" value="Harris"/>
+            <column name="AGE" valueNumeric="27"/>
+            <column name="ACTIVE" valueBoolean="true"/>
+            <column name="GRADE" valueNumeric="30"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="8f806608-208b-9deb-138b-9c1dce60d663"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="George"/>
+            <column name="LAST_NAME" value="Hughes"/>
+            <column name="AGE" valueNumeric="90"/>
+            <column name="ACTIVE" valueBoolean="true"/>
+            <column name="GRADE" valueNumeric="30"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="2d59c523-2dc8-7f80-8726-b7fa8caf1c29"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Andy"/>
+            <column name="LAST_NAME" value="Lewis"/>
+            <column name="AGE" valueNumeric="35"/>
+            <column name="ACTIVE" valueBoolean="false"/>
+            <column name="GRADE" valueNumeric="30"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="3fbd8a37-fb90-d5f0-e03e-ae53e41b9fed"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="George"/>
+            <column name="LAST_NAME" value="Moore"/>
+            <column name="AGE" valueNumeric="41"/>
+            <column name="ACTIVE" valueBoolean="true"/>
+            <column name="GRADE" valueNumeric="10"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="9d9f028c-eade-eee2-d4d8-e97ebb969c54"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Claire"/>
+            <column name="LAST_NAME" value="Morgan"/>
+            <column name="AGE" valueNumeric="25"/>
+            <column name="ACTIVE" valueBoolean="true"/>
+            <column name="GRADE" valueNumeric="10"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="068ff1ae-992e-51db-b20f-8e21bcd19bfc"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Katherine"/>
+            <column name="LAST_NAME" value="Potter"/>
+            <column name="AGE" valueNumeric="34"/>
+            <column name="ACTIVE" valueBoolean="true"/>
+            <column name="GRADE" valueNumeric="20"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="ee875696-0a4d-0d54-41c8-b3dea6e3e7d1"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="John"/>
+            <column name="LAST_NAME" value="Smith"/>
+            <column name="AGE" valueNumeric="32"/>
+            <column name="ACTIVE" valueBoolean="true"/>
+            <column name="GRADE" valueNumeric="30"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="94d50ae5-1830-174b-81d3-069f221eed3a"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Michael"/>
+            <column name="LAST_NAME" value="Taylor"/>
+            <column name="AGE" valueNumeric="75"/>
+            <column name="ACTIVE" valueBoolean="false"/>
+            <column name="GRADE" valueNumeric="10"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="b6b31099-d194-fb3e-dd51-89d085dcc11c"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="Joan"/>
+            <column name="LAST_NAME" value="Thompson"/>
+            <column name="AGE" valueNumeric="20"/>
+            <column name="ACTIVE" valueBoolean="true"/>
+            <column name="GRADE" valueNumeric="30"/>
+        </insert>
+        <insert tableName="SAMPLER_CUSTOMER">
+            <column name="ID" value="6e3008dd-1eb8-1faf-788d-b6df97130e8d"/>
+            <column name="VERSION" value="1"/>
+            <column name="NAME" value="James"/>
+            <column name="LAST_NAME" value="White"/>
+            <column name="AGE" valueNumeric="56"/>
+            <column name="ACTIVE" valueBoolean="true"/>
+            <column name="GRADE" valueNumeric="20"/>
+        </insert>
 
     </changeSet>
-    -->
 
 </databaseChangeLog>

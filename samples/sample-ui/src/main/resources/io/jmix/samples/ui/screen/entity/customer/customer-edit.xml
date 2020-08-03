@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        caption="msg://editorCaption"
+        focusComponent="form">
+    <data>
+        <instance id="customerDc"
+                  class="io.jmix.samples.ui.entity.Customer"
+                  fetchPlan="_local">
+            <loader/>
+        </instance>
+    </data>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="editActions" spacing="true">
+        <form id="form" dataContainer="customerDc">
+            <column width="250px">
+                <textField id="nameField" property="name"/>
+                <textField id="lastNameField" property="lastName"/>
+                <textField id="ageField" property="age"/>
+                <checkBox id="activeField" property="active"/>
+                <lookupField id="gradeField" property="grade"/>
+            </column>
+        </form>
+        <hbox id="editActions" spacing="true">
+            <button action="windowCommitAndClose"/>
+            <button action="windowClose"/>
+        </hbox>
+    </layout>
+</window>

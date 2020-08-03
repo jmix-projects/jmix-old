@@ -1,11 +1,23 @@
 package io.jmix.samples.ui.screen.ui.dialogsandnotifications.dialog.input;
 
+import com.google.common.base.Strings;
 import io.jmix.core.DataManager;
 import io.jmix.core.MetadataTools;
+import io.jmix.samples.ui.entity.Customer;
+import io.jmix.samples.ui.entity.CustomerGrade;
 import io.jmix.ui.Dialogs;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.UiComponents;
+import io.jmix.ui.app.inputdialog.DialogActions;
+import io.jmix.ui.app.inputdialog.InputDialog;
+import io.jmix.ui.app.inputdialog.InputParameter;
+import io.jmix.ui.component.Button;
+import io.jmix.ui.component.ComboBox;
+import io.jmix.ui.component.ContentMode;
+import io.jmix.ui.component.ValidationErrors;
+import io.jmix.ui.component.inputdialog.InputDialogAction;
 import io.jmix.ui.screen.ScreenFragment;
+import io.jmix.ui.screen.Subscribe;
 import io.jmix.ui.screen.UiController;
 import io.jmix.ui.screen.UiDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +37,7 @@ public class InputDialogSample extends ScreenFragment {
     @Autowired
     protected DataManager dataManager;
 
-/*    @Subscribe("standardDialogBtn")
+    @Subscribe("standardDialogBtn")
     protected void onStandardDialogBtnClick(Button.ClickEvent event) {
         dialogs.createInputDialog(this)
                 .withCaption("Enter values")
@@ -154,5 +166,5 @@ public class InputDialogSample extends ScreenFragment {
                     }
                 })
                 .show();
-    }*/
+    }
 }
