@@ -74,7 +74,8 @@ public class SideMenuBuilder {
 
         for (MenuItem menuItem : rootItems) {
             // AppMenu does not support separators
-            UiMenuContext menuItemContext = accessManager.applyRegisteredConstraints(new UiMenuContext(menuItem));
+            UiMenuContext menuItemContext = new UiMenuContext(menuItem);
+            accessManager.applyRegisteredConstraints(menuItemContext);
             if (menuItemContext.isPermitted() && !menuItem.isSeparator()) {
                 createMenuBarItem(window, menu, menuItem);
             }
@@ -221,7 +222,8 @@ public class SideMenuBuilder {
         if (Strings.isNullOrEmpty(item.getId()) || item.isSeparator()) {
             return true;
         }
-        UiMenuContext menuItemContext = accessManager.applyRegisteredConstraints(new UiMenuContext(item));
+        UiMenuContext menuItemContext = new UiMenuContext(item);
+        accessManager.applyRegisteredConstraints(menuItemContext);
         return menuItemContext.isPermitted();
     }
 

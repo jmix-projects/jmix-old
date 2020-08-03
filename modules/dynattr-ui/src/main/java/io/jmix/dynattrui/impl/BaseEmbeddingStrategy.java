@@ -123,6 +123,9 @@ public abstract class BaseEmbeddingStrategy implements EmbeddingStrategy {
         }
 
         MetaClass entityClass = metadata.getClass(attributeDefinition.getJavaType());
-        return accessManager.applyRegisteredConstraints(new UiEntityContext(entityClass)).isViewPermitted();
+
+        UiEntityContext uiEntityContext = new UiEntityContext(entityClass);
+        accessManager.applyRegisteredConstraints(uiEntityContext);
+        return uiEntityContext.isViewPermitted();
     }
 }

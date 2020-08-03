@@ -92,11 +92,12 @@ public class DataComponents {
                 metadata.getClass(entityClass), masterContainer, property);
         autowire(container);
 
-        UiEntityContext entityContext = accessManager.applyRegisteredConstraints(
-                new UiEntityContext(masterContainer.getEntityMetaClass()));
 
-        UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(
-                new UiEntityAttributeContext(masterContainer.getEntityMetaClass(), property));
+        UiEntityContext entityContext = new UiEntityContext(masterContainer.getEntityMetaClass());
+        accessManager.applyRegisteredConstraints(entityContext);
+
+        UiEntityAttributeContext attributeContext = new UiEntityAttributeContext(masterContainer.getEntityMetaClass(), property);
+        accessManager.applyRegisteredConstraints(attributeContext);
 
         if (entityContext.isViewPermitted()
                 && attributeContext.isViewPermitted()) {
@@ -137,11 +138,11 @@ public class DataComponents {
         autowire(container);
         container.setSorter(sorterFactory.createCollectionPropertyContainerSorter(container));
 
-        UiEntityContext entityContext = accessManager.applyRegisteredConstraints(
-                new UiEntityContext(masterContainer.getEntityMetaClass()));
+        UiEntityContext entityContext = new UiEntityContext(masterContainer.getEntityMetaClass());
+        accessManager.applyRegisteredConstraints(entityContext);
 
-        UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(
-                new UiEntityAttributeContext(masterContainer.getEntityMetaClass(), property));
+        UiEntityAttributeContext attributeContext = new UiEntityAttributeContext(masterContainer.getEntityMetaClass(), property);
+        accessManager.applyRegisteredConstraints(attributeContext);
 
         if (attributeContext.isViewPermitted()
                 && entityContext.isViewPermitted()) {

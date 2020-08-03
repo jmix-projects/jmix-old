@@ -17,7 +17,7 @@
 package io.jmix.security.constraint;
 
 import io.jmix.core.constraint.RowLevelConstraint;
-import io.jmix.data.impl.context.InMemoryCRUDEntityContext;
+import io.jmix.data.impl.context.InMemoryCrudEntityContext;
 import io.jmix.security.model.RowLevelPolicy;
 import io.jmix.security.model.RowLevelPolicyAction;
 import io.jmix.security.model.RowLevelPolicyType;
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 
 @Component(InMemoryCRUDEntityConstraint.NAME)
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class InMemoryCRUDEntityConstraint implements RowLevelConstraint<InMemoryCRUDEntityContext> {
+public class InMemoryCRUDEntityConstraint implements RowLevelConstraint<InMemoryCrudEntityContext> {
     public static final String NAME = "sec_InMemoryCRUDEntityConstraint";
 
     protected ResourcePolicyStore policyStore;
@@ -39,12 +39,12 @@ public class InMemoryCRUDEntityConstraint implements RowLevelConstraint<InMemory
     }
 
     @Override
-    public Class<InMemoryCRUDEntityContext> getContextType() {
-        return InMemoryCRUDEntityContext.class;
+    public Class<InMemoryCrudEntityContext> getContextType() {
+        return InMemoryCrudEntityContext.class;
     }
 
     @Override
-    public void applyTo(InMemoryCRUDEntityContext context) {
+    public void applyTo(InMemoryCrudEntityContext context) {
         for (RowLevelPolicy policy : policyStore.getRowLevelPolicies(context.getEntityClass())) {
             if (policy.getType() == RowLevelPolicyType.PREDICATE) {
                 if (policy.getAction() == RowLevelPolicyAction.CREATE) {

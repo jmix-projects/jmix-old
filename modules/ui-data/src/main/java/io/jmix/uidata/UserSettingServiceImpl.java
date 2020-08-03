@@ -26,7 +26,7 @@ import io.jmix.core.metamodel.model.MetaClass;
 import io.jmix.core.security.AccessDeniedException;
 import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.core.security.PermissionType;
-import io.jmix.data.impl.context.CRUDEntityContext;
+import io.jmix.data.impl.context.CrudEntityContext;
 import io.jmix.ui.settings.UserSettingService;
 import io.jmix.uidata.entity.UiSetting;
 import io.jmix.uidata.entity.UiTablePresentation;
@@ -120,7 +120,10 @@ public class UserSettingServiceImpl implements UserSettingService {
 
         MetaClass metaClass = metadata.getClass(UiSetting.class);
 
-        if (!accessManager.applyRegisteredConstraints(new CRUDEntityContext(metaClass)).isCreatePermitted()) {
+        CrudEntityContext entityContext = new CrudEntityContext(metaClass);
+        accessManager.applyRegisteredConstraints(entityContext);
+
+        if (!entityContext.isCreatePermitted()) {
             throw new AccessDeniedException(PermissionType.ENTITY_OP, metaClass.getName());
         }
 

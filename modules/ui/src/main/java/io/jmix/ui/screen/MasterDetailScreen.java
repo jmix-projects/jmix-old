@@ -288,8 +288,8 @@ public abstract class MasterDetailScreen<T extends JmixEntity> extends StandardL
         });
 
         MetaClass entityMetaClass = getBeanLocator().get(Metadata.class).getClass(getEntityClass());
-        UiEntityContext entityContext =
-                getBeanLocator().get(AccessManager.class).applyRegisteredConstraints(new UiEntityContext(entityMetaClass));
+        UiEntityContext entityContext = new UiEntityContext(entityMetaClass);
+        getBeanLocator().get(AccessManager.class).applyRegisteredConstraints(entityContext);
 
         editAction.addEnabledRule(() ->
                 table.getSelected().size() == 1

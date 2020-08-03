@@ -182,13 +182,15 @@ public class InspectorFormBuilder {
 
         boolean isRequired = isRequired(metaProperty);
 
-        UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(
-                new UiEntityAttributeContext(metaClass, metaProperty.getName()));
+        UiEntityAttributeContext attributeContext = new UiEntityAttributeContext(metaClass, metaProperty.getName());
+        accessManager.applyRegisteredConstraints(attributeContext);
 
         if (!attributeContext.isViewPermitted())
             return;
 
-        UiEntityContext entityContext = accessManager.applyRegisteredConstraints(new UiEntityContext(range.asClass()));
+        UiEntityContext entityContext = new UiEntityContext(range.asClass());
+        accessManager.applyRegisteredConstraints(entityContext);
+
         if (range.isClass() && !entityContext.isViewPermitted())
             return;
 

@@ -92,19 +92,4 @@ public class LoadValuesAccessContext implements AccessContext {
         }
         deniedSelectedIndexes.add(index);
     }
-
-//    List<Integer> indexes = new ArrayList<>();
-
-//    int index = 0;
-//        for (
-//    QueryParser.QueryPath path : queryParser.getQueryPaths()) {
-//        if (path.isSelectedPath()) {
-//            MetaClass metaClass = metadata.getClass(path.getEntityName());
-//            if (!Objects.equals(path.getPropertyPath(), path.getVariableName())
-//                    && !isEntityAttrViewPermitted(metaClass.getPropertyPath(path.getPropertyPath()))) {
-//                indexes.add(index);
-//            }
-//            index++;
-//        }
-//    }
 }

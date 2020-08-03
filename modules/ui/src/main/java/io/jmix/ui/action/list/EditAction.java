@@ -246,7 +246,9 @@ public class EditAction<E extends JmixEntity> extends SecuredListAction implemen
             return true;
         }
 
-        UiEntityContext entityContext = accessManager.applyRegisteredConstraints(new UiEntityContext(metaClass));
+        UiEntityContext entityContext = new UiEntityContext(metaClass);
+        accessManager.applyRegisteredConstraints(entityContext);
+
         if (!entityContext.isViewPermitted()) {
             return false;
         }
@@ -264,7 +266,10 @@ public class EditAction<E extends JmixEntity> extends SecuredListAction implemen
 
         if (!captionInitialized) {
             MetaClass metaClass = ((EntityDataUnit) target.getItems()).getEntityMetaClass();
-            UiEntityContext entityContext = accessManager.applyRegisteredConstraints(new UiEntityContext(metaClass));
+
+            UiEntityContext entityContext = new UiEntityContext(metaClass);
+            accessManager.applyRegisteredConstraints(entityContext);
+
             if (metaClass != null) {
                 if (entityContext.isEditPermitted()) {
                     setCaption(messages.getMessage("actions.Edit"));

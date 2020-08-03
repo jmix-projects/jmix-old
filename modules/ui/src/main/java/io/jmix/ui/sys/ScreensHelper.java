@@ -105,8 +105,9 @@ public class ScreensHelper {
         WindowInfo browseWindow = windowConfig.findWindowInfo(windowConfig.getBrowseScreenId(metaClass));
 
         if (browseWindow != null) {
-            UiShowScreenContext screenContext = accessManager.applyRegisteredConstraints(
-                    new UiShowScreenContext(browseWindow.getId()));
+            UiShowScreenContext screenContext = new UiShowScreenContext(browseWindow.getId());
+            accessManager.applyRegisteredConstraints(screenContext);
+
             if (screenContext.isPermitted()) {
                 return browseWindow;
             }
@@ -114,8 +115,9 @@ public class ScreensHelper {
 
         WindowInfo lookupWindow = windowConfig.findWindowInfo(windowConfig.getLookupScreenId(metaClass));
         if (lookupWindow != null) {
-            UiShowScreenContext screenContext = accessManager.applyRegisteredConstraints(
-                    new UiShowScreenContext(lookupWindow.getId()));
+            UiShowScreenContext screenContext = new UiShowScreenContext(lookupWindow.getId());
+            accessManager.applyRegisteredConstraints(screenContext);
+
             if (screenContext.isPermitted()) {
                 return lookupWindow;
             }

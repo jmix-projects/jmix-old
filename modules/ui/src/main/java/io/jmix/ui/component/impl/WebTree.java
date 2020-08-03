@@ -401,7 +401,9 @@ public class WebTree<E extends JmixEntity>
     }
 
     protected void initShowInfoAction() {
-        if (accessManager.applyRegisteredConstraints(new UiShowEntityInfoContext()).isPermitted()) {
+        UiShowEntityInfoContext showEntityInfoContext = new UiShowEntityInfoContext();
+        accessManager.applyRegisteredConstraints(showEntityInfoContext);
+        if (showEntityInfoContext.isPermitted()) {
             if (getAction(ShowInfoAction.ACTION_ID) == null) {
                 addAction(new ShowInfoAction());
             }

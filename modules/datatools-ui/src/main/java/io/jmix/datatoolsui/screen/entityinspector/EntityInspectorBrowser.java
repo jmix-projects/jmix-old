@@ -400,7 +400,8 @@ public class EntityInspectorBrowser extends StandardLookup<JmixEntity> {
     }
 
     protected boolean readPermitted(MetaClass metaClass) {
-        UiEntityContext entityContext = accessManager.applyRegisteredConstraints(new UiEntityContext(metaClass));
+        UiEntityContext entityContext = new UiEntityContext(metaClass);
+        accessManager.applyRegisteredConstraints(new UiEntityContext(metaClass));
         return entityContext.isViewPermitted();
     }
 

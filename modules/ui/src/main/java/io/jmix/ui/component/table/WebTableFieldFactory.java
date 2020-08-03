@@ -134,10 +134,12 @@ public class WebTableFieldFactory<E extends JmixEntity> extends AbstractFieldFac
             if (propertyPath != null) {
                 io.jmix.ui.component.Component.Editable editable =
                         (io.jmix.ui.component.Component.Editable) component;
-                UiEntityAttributeContext entityAttributeContext = accessManager.applyRegisteredConstraints(
-                        new UiEntityAttributeContext(propertyPath));
+
+                UiEntityAttributeContext attributeContext = new UiEntityAttributeContext(propertyPath);
+                accessManager.applyRegisteredConstraints(attributeContext);
+
                 editable.setEditable(editable.isEditable()
-                        && entityAttributeContext.isModifyPermitted());
+                        && attributeContext.isModifyPermitted());
             }
         }
     }

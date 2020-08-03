@@ -188,8 +188,10 @@ public class ExcludeAction<E extends JmixEntity> extends SecuredListAction imple
             MetaClass masterMetaClass = nestedContainer.getMaster().getEntityMetaClass();
             MetaProperty metaProperty = masterMetaClass.getProperty(nestedContainer.getProperty());
 
-            UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(new
-                    UiEntityAttributeContext(masterMetaClass, metaProperty.getName()));
+            UiEntityAttributeContext attributeContext =
+                    new UiEntityAttributeContext(masterMetaClass, metaProperty.getName());
+            accessManager.applyRegisteredConstraints(attributeContext);
+
             boolean attrPermitted = attributeContext.isModifyPermitted();
             if (!attrPermitted) {
                 return false;

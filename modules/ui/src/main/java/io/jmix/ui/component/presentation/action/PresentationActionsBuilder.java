@@ -152,7 +152,9 @@ public class PresentationActionsBuilder {
         TablePresentations presentations = table.getPresentations();
         TablePresentation presentation = presentations.getCurrent();
 
-        UiGlobalPresentationContext globalPresentationContext = accessManager.applyRegisteredConstraints(new UiGlobalPresentationContext());
+        UiGlobalPresentationContext globalPresentationContext = new UiGlobalPresentationContext();
+        accessManager.applyRegisteredConstraints(globalPresentationContext);
+
         return presentation != null && (!presentations.isGlobal(presentation) ||
                 globalPresentationContext.isPermitted());
     }

@@ -95,8 +95,10 @@ public class PresentationEditor extends JmixWindow implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         isNew = entityStates.isNew(presentation);
-        allowGlobalPresentations = accessManager.applyRegisteredConstraints(
-                new UiGlobalPresentationContext()).isPermitted();
+
+        UiGlobalPresentationContext globalPresentationContext = new UiGlobalPresentationContext();
+        accessManager.applyRegisteredConstraints(globalPresentationContext);
+        allowGlobalPresentations = globalPresentationContext.isPermitted();
 
         initWindow();
     }

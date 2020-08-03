@@ -122,8 +122,9 @@ public class ReadOnlyScreensSupport {
                     && ((EntityValueSource) valueSource).isDataModelSecurityEnabled()) {
                 MetaPropertyPath metaPropertyPath = ((EntityValueSource) valueSource).getMetaPropertyPath();
 
-                UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(
-                        new UiEntityAttributeContext(metaPropertyPath));
+                UiEntityAttributeContext attributeContext = new UiEntityAttributeContext(metaPropertyPath);
+                accessManager.applyRegisteredConstraints(attributeContext);
+
                 if (!attributeContext.isModifyPermitted()
                         || !attributeContext.isViewPermitted()) {
                     shouldBeEditable = false;

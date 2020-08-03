@@ -911,8 +911,9 @@ public class WebScreens implements Screens {
     protected void checkPermissions(LaunchMode launchMode, WindowInfo windowInfo) {
         // ROOT windows are always permitted
         if (launchMode != OpenMode.ROOT) {
-            UiShowScreenContext showScreenContext = accessManager.applyRegisteredConstraints(
-                    new UiShowScreenContext(windowInfo.getId()));
+            UiShowScreenContext showScreenContext = new UiShowScreenContext(windowInfo.getId());
+            accessManager.applyRegisteredConstraints(showScreenContext);
+
             if (!showScreenContext.isPermitted()) {
                 throw new AccessDeniedException(PermissionType.SCREEN, windowInfo.getId());
             }

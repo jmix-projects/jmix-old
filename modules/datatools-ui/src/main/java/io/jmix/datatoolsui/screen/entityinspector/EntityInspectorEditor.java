@@ -214,9 +214,14 @@ public class EntityInspectorEditor extends StandardEditor {
     protected void addTable(InstanceContainer parent, MetaProperty childMeta) {
         MetaClass meta = childMeta.getRange().asClass();
 
-        UiEntityContext entityContext = accessManager.applyRegisteredConstraints(new UiEntityContext(meta));
-        UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(
-                new UiEntityAttributeContext(parent.getEntityMetaClass(), childMeta.getName()));
+        UiEntityContext entityContext = new UiEntityContext(meta);
+        accessManager.applyRegisteredConstraints(entityContext);
+
+
+        UiEntityAttributeContext attributeContext =
+                new UiEntityAttributeContext(parent.getEntityMetaClass(), childMeta.getName());
+        accessManager.applyRegisteredConstraints(attributeContext);
+
         //don't show empty table if the user don't have permissions on the attribute or the entity
         if (!attributeContext.isViewPermitted() ||
                 !entityContext.isViewPermitted()) {

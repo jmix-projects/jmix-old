@@ -715,8 +715,10 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
 
         List<MetaPropertyPath> editableColumns = new ArrayList<>(propertyIds.size());
         for (MetaPropertyPath propertyId : propertyIds) {
-            UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(
-                    new UiEntityAttributeContext(metaClass, propertyId.toString()));
+            UiEntityAttributeContext attributeContext =
+                    new UiEntityAttributeContext(metaClass, propertyId.toString());
+            accessManager.applyRegisteredConstraints(attributeContext);
+
             if (!attributeContext.isModifyPermitted()) {
                 continue;
             }
@@ -1440,7 +1442,9 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
 
             setVisibleColumns(getInitialVisibleColumnIds(entityTableSource));
 
-            UiShowEntityInfoContext showInfoContext = accessManager.applyRegisteredConstraints(new UiShowEntityInfoContext());
+            UiShowEntityInfoContext showInfoContext = new UiShowEntityInfoContext();
+            accessManager.applyRegisteredConstraints(showInfoContext);
+
             if (showInfoContext.isPermitted()) {
                 if (getAction(ShowInfoAction.ACTION_ID) == null) {
                     addAction(new ShowInfoAction());
@@ -1499,8 +1503,10 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
                 .filter(c -> {
                     MetaPropertyPath propertyPath = c.getBoundProperty();
                     if (propertyPath != null) {
-                        UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(
-                                new UiEntityAttributeContext(entityMetaClass, propertyPath.toString()));
+                        UiEntityAttributeContext attributeContext =
+                                new UiEntityAttributeContext(entityMetaClass, propertyPath.toString());
+                        accessManager.applyRegisteredConstraints(attributeContext);
+
                         return attributeContext.isViewPermitted();
                     }
                     return false;
@@ -1531,8 +1537,9 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
                 if (column.isEditable() && (columnId instanceof MetaPropertyPath)) {
                     MetaPropertyPath propertyPath = ((MetaPropertyPath) columnId);
 
-                    UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(
-                            new UiEntityAttributeContext(metaClass, propertyPath.toString()));
+                    UiEntityAttributeContext attributeContext =
+                            new UiEntityAttributeContext(metaClass, propertyPath.toString());
+                    accessManager.applyRegisteredConstraints(attributeContext);
 
                     if (attributeContext.isModifyPermitted() && attributeContext.isViewPermitted()) {
                         if (editableColumns.isEmpty()) {
@@ -1546,10 +1553,11 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
                 }
 
                 if (column.isCollapsed() && component.isColumnCollapsingAllowed()) {
-                    UiEntityAttributeContext readAttributeContext = accessManager.applyRegisteredConstraints(
-                            new UiEntityAttributeContext(metaClass, columnId.toString()));
+                    UiEntityAttributeContext attributeContext =
+                            new UiEntityAttributeContext(metaClass, columnId.toString());
+                    accessManager.applyRegisteredConstraints(attributeContext);
 
-                    if (!(columnId instanceof MetaPropertyPath) || readAttributeContext.isViewPermitted()) {
+                    if (!(columnId instanceof MetaPropertyPath) || attributeContext.isViewPermitted()) {
                         component.setColumnCollapsed(column.getId(), true);
                     }
                 }
@@ -1564,7 +1572,10 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         }
 
         if (isEditable() && !editableColumns.isEmpty()) {
-            UiEntityContext entityContext = accessManager.applyRegisteredConstraints(new UiEntityContext(metaClass));
+
+            UiEntityContext entityContext = new UiEntityContext(metaClass);
+            accessManager.applyRegisteredConstraints(entityContext);
+
             if (entityContext.isViewPermitted() && entityContext.isEditPermitted()) {
                 setEditableColumns(editableColumns);
             } else {
@@ -1877,8 +1888,11 @@ public abstract class WebAbstractTable<T extends com.vaadin.v7.ui.Table & JmixEn
         for (Column column : columnsOrder) {
             if (column.getId() instanceof MetaPropertyPath) {
                 MetaPropertyPath propertyPath = (MetaPropertyPath) column.getId();
-                UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(
-                        new UiEntityAttributeContext(metaClass, propertyPath.toString()));
+
+                UiEntityAttributeContext attributeContext =
+                        new UiEntityAttributeContext(metaClass, propertyPath.toString());
+                accessManager.applyRegisteredConstraints(attributeContext);
+
                 if (attributeContext.isViewPermitted()) {
                     result.add(column.getId());
                 }

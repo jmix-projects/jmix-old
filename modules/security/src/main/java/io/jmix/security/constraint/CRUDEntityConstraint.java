@@ -17,7 +17,7 @@
 package io.jmix.security.constraint;
 
 import io.jmix.core.constraint.EntityOperationConstraint;
-import io.jmix.data.impl.context.CRUDEntityContext;
+import io.jmix.data.impl.context.CrudEntityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class CRUDEntityConstraint implements EntityOperationConstraint<CRUDEntityContext> {
+public class CRUDEntityConstraint implements EntityOperationConstraint<CrudEntityContext> {
     public static final String NAME = "sec_CRUDEntityConstraint";
 
     protected ResourcePolicyStore policyStore;
@@ -42,12 +42,12 @@ public class CRUDEntityConstraint implements EntityOperationConstraint<CRUDEntit
     }
 
     @Override
-    public Class<CRUDEntityContext> getContextType() {
-        return CRUDEntityContext.class;
+    public Class<CrudEntityContext> getContextType() {
+        return CrudEntityContext.class;
     }
 
     @Override
-    public void applyTo(CRUDEntityContext context) {
+    public void applyTo(CrudEntityContext context) {
         if (!secureOperations.isEntityCreatePermitted(context.getEntityClass(), policyStore)) {
             context.setCreateDenied();
         }

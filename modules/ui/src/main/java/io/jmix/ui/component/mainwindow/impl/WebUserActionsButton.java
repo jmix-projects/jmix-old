@@ -113,7 +113,9 @@ public class WebUserActionsButton extends WebAbstractComponent<JmixMenuBar>
         userMenuButton.setIcon(getIconResource(JmixIcon.USER));
         userMenuButton.setVisible(authenticated);
 
-        UiShowScreenContext showScreenContext = accessManager.applyRegisteredConstraints(new UiShowScreenContext("settings"));
+        UiShowScreenContext showScreenContext = new UiShowScreenContext("settings");
+        accessManager.applyRegisteredConstraints(showScreenContext);
+
         if (showScreenContext.isPermitted()) {
             userMenuButton.addItem(messages.getMessage("settings"),
                     getIconResource(JmixIcon.GEAR), item -> openSettings());

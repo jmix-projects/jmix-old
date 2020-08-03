@@ -29,7 +29,7 @@ import io.jmix.core.metamodel.model.MetaProperty;
 import io.jmix.data.PersistenceHints;
 import io.jmix.data.StoreAwareLocator;
 import io.jmix.data.entity.BaseUuidEntity;
-import io.jmix.data.impl.context.CRUDEntityContext;
+import io.jmix.data.impl.context.CrudEntityContext;
 import io.jmix.dynattr.*;
 import io.jmix.dynattr.impl.model.CategoryAttribute;
 import io.jmix.dynattr.impl.model.CategoryAttributeValue;
@@ -340,7 +340,10 @@ public class DynAttrManagerImpl implements DynAttrManager {
             try {
                 Class<?> aClass = ReflectionHelper.loadClass(className);
                 MetaClass metaClass = metadata.getClass(aClass);
-                CRUDEntityContext crudEntityContext = accessManager.applyConstraints(new CRUDEntityContext(metaClass), accessConstraints);
+
+                CrudEntityContext crudEntityContext = new CrudEntityContext(metaClass);
+                accessManager.applyConstraints(crudEntityContext, accessConstraints);
+
                 if (crudEntityContext.isReadPermitted()) {
                     entityIds.put(metaClass, value.getObjectEntityValueId());
                     valuesByType.put(metaClass, value);

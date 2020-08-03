@@ -22,7 +22,7 @@ import io.jmix.core.metamodel.model.MetaClass;
 
 import java.util.function.Predicate;
 
-public class InMemoryCRUDEntityContext implements AccessContext {
+public class InMemoryCrudEntityContext implements AccessContext {
     protected final MetaClass entityClass;
 
     protected Predicate<JmixEntity> createPredicate;
@@ -30,7 +30,7 @@ public class InMemoryCRUDEntityContext implements AccessContext {
     protected Predicate<JmixEntity> updatePredicate;
     protected Predicate<JmixEntity> deletePredicate;
 
-    public InMemoryCRUDEntityContext(MetaClass entityClass) {
+    public InMemoryCrudEntityContext(MetaClass entityClass) {
         this.entityClass = entityClass;
     }
 

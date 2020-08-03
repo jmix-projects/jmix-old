@@ -66,16 +66,15 @@ public class AccessManager {
         return new ConstraintsBuilder();
     }
 
-    public <T extends AccessContext> T applyConstraints(T context, Collection<AccessConstraint<?>> constraints) {
+    public <T extends AccessContext> void applyConstraints(T context, Collection<AccessConstraint<?>> constraints) {
         //noinspection unchecked
         constraints.stream()
                 .filter(constraint -> Objects.equals(constraint.getContextType(), context.getClass()))
                 .map(constraint -> (AccessConstraint<T>) constraint)
                 .forEach(constraint -> constraint.applyTo(context));
-        return context;
     }
 
-    public <T extends AccessContext> T applyRegisteredConstraints(T context) {
-        return applyConstraints(context, registry.getConstraints());
+    public <T extends AccessContext> void applyRegisteredConstraints(T context) {
+        applyConstraints(context, registry.getConstraints());
     }
 }

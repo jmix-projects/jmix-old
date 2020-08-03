@@ -19,7 +19,7 @@ package io.jmix.data.impl.context;
 import io.jmix.core.context.AccessContext;
 import io.jmix.core.metamodel.model.MetaClass;
 
-public class CRUDEntityContext implements AccessContext {
+public class CrudEntityContext implements AccessContext {
 
     protected final MetaClass entityClass;
     protected boolean createPermitted = true;
@@ -27,7 +27,7 @@ public class CRUDEntityContext implements AccessContext {
     protected boolean updatePermitted = true;
     protected boolean deletePermitted = true;
 
-    public CRUDEntityContext(MetaClass entityClass) {
+    public CrudEntityContext(MetaClass entityClass) {
         this.entityClass = entityClass;
     }
 

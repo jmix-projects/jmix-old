@@ -327,15 +327,15 @@ public class ScreenNavigationHandler implements NavigationHandler {
 
         MetaClass metaClass = metadata.getClass(entityClass);
 
-        UiEntityContext readEntityContext = accessManager.applyRegisteredConstraints(new UiEntityContext(metaClass));
-        if (!readEntityContext.isViewPermitted()) {
+        UiEntityContext entityContext = new UiEntityContext(metaClass);
+        accessManager.applyRegisteredConstraints(entityContext);
+
+        if (!entityContext.isViewPermitted()) {
             urlChangeHandler.revertNavigationState();
             throw new AccessDeniedException(PermissionType.ENTITY_OP, EntityOp.READ, entityClass.getSimpleName());
         }
 
         if (NEW_ENTITY_ID.equals(idParam)) {
-            UiEntityContext entityContext = accessManager.applyRegisteredConstraints(
-                    new UiEntityContext(metaClass));
             if (!entityContext.isCreatePermitted()) {
                 throw new AccessDeniedException(PermissionType.ENTITY_OP, EntityOp.CREATE, entityClass.getSimpleName());
             }

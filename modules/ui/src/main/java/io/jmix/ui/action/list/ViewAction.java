@@ -234,7 +234,9 @@ public class ViewAction<E extends JmixEntity> extends SecuredListAction {
             return true;
         }
 
-        UiEntityContext entityContext = accessManager.applyRegisteredConstraints(new UiEntityContext(metaClass));
+        UiEntityContext entityContext = new UiEntityContext(metaClass);
+        accessManager.applyRegisteredConstraints(entityContext);
+
         if (!entityContext.isViewPermitted()) {
             return false;
         }

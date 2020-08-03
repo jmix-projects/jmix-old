@@ -239,7 +239,9 @@ public class MenuBuilder {
         if (Strings.isNullOrEmpty(item.getId()) || item.isSeparator()) {
             return true;
         }
-        UiMenuContext menuItemContext = accessManager.applyRegisteredConstraints(new UiMenuContext(item));
+        UiMenuContext menuItemContext = new UiMenuContext(item);
+        accessManager.applyRegisteredConstraints(menuItemContext);
+
         return menuItemContext.isPermitted();
     }
 

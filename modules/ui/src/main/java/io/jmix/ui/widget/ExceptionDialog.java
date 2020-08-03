@@ -125,7 +125,7 @@ public class ExceptionDialog extends JmixWindow {
 
         boolean showExceptionDetails = false;
         if (currentAuthentication.isSet()) {
-            UiShowExceptionDetailsContext showExceptionDetailsContext =
+            UiShowExceptionDetailsContext showExceptionDetailsContext = new UiShowExceptionDetailsContext();
                     accessManager.applyRegisteredConstraints(new UiShowExceptionDetailsContext());
             showExceptionDetails = showExceptionDetailsContext.isPermitted();
         }

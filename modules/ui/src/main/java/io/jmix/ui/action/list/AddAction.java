@@ -238,8 +238,9 @@ public class AddAction<E extends JmixEntity> extends ListAction implements Actio
             MetaClass masterMetaClass = nestedContainer.getMaster().getEntityMetaClass();
             MetaProperty metaProperty = masterMetaClass.getProperty(nestedContainer.getProperty());
 
-            UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(
-                    new UiEntityAttributeContext(masterMetaClass, metaProperty.getName()));
+            UiEntityAttributeContext attributeContext =
+                    new UiEntityAttributeContext(masterMetaClass, metaProperty.getName());
+            accessManager.applyRegisteredConstraints(attributeContext);
 
             if (!attributeContext.isModifyPermitted()) {
                 return false;

@@ -176,8 +176,9 @@ public class UrlChangeHandler implements InitializingBean {
 
         boolean allowAnonymousAccess = uiProperties.isAllowAnonymousAccess();
 
-        UiShowScreenContext showScreenContext = accessManager.applyRegisteredConstraints(
-                new UiShowScreenContext(windowInfo.getId()));
+
+        UiShowScreenContext showScreenContext = new UiShowScreenContext(windowInfo.getId());
+        accessManager.applyRegisteredConstraints(showScreenContext);
 
         return !allowAnonymousAccess || !showScreenContext.isPermitted();
     }
@@ -196,8 +197,9 @@ public class UrlChangeHandler implements InitializingBean {
     }
 
     public boolean isPermittedToNavigate(NavigationState requestedState, WindowInfo windowInfo) {
-        UiShowScreenContext showScreenContext = accessManager.applyRegisteredConstraints(
-                new UiShowScreenContext(windowInfo.getId()));
+        UiShowScreenContext showScreenContext = new UiShowScreenContext(windowInfo.getId());
+        accessManager.applyRegisteredConstraints(showScreenContext);
+
         if (!showScreenContext.isPermitted()) {
             revertNavigationState();
 

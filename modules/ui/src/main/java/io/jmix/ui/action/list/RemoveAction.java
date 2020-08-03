@@ -188,7 +188,8 @@ public class RemoveAction<E extends JmixEntity> extends SecuredListAction implem
             return false;
         }
 
-        UiEntityContext entityContext = accessManager.applyRegisteredConstraints(new UiEntityContext(metaClass));
+        UiEntityContext entityContext = new UiEntityContext(metaClass);
+        accessManager.applyRegisteredConstraints(entityContext);
 
         if (!entityContext.isDeletePermitted()) {
             return false;
@@ -200,8 +201,9 @@ public class RemoveAction<E extends JmixEntity> extends SecuredListAction implem
             MetaClass masterMetaClass = nestedContainer.getMaster().getEntityMetaClass();
             MetaProperty metaProperty = masterMetaClass.getProperty(nestedContainer.getProperty());
 
-            UiEntityAttributeContext entityAttributeContext = accessManager.applyRegisteredConstraints(
-                    new UiEntityAttributeContext(masterMetaClass, metaProperty.getName()));
+            UiEntityAttributeContext entityAttributeContext =
+                    new UiEntityAttributeContext(masterMetaClass, metaProperty.getName());
+            accessManager.applyRegisteredConstraints(entityAttributeContext);
 
             if (!entityAttributeContext.isModifyPermitted()) {
                 return false;

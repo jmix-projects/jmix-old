@@ -27,7 +27,7 @@ import io.jmix.core.security.AccessDeniedException;
 import io.jmix.core.security.EntityAttrAccess;
 import io.jmix.core.security.EntityOp;
 import io.jmix.core.security.PermissionType;
-import io.jmix.data.impl.context.CRUDEntityContext;
+import io.jmix.data.impl.context.CrudEntityContext;
 import io.jmix.ui.context.UiShowScreenContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,12 +48,16 @@ public class SecurityImpl implements Security {
 
     @Override
     public boolean isScreenPermitted(String windowAlias) {
-        return accessManager.applyRegisteredConstraints(new UiShowScreenContext(windowAlias)).isPermitted();
+        UiShowScreenContext showScreenContext = new UiShowScreenContext(windowAlias);
+        accessManager.applyRegisteredConstraints(showScreenContext);
+        return showScreenContext.isPermitted();
     }
 
     @Override
     public boolean isEntityOpPermitted(MetaClass metaClass, EntityOp entityOp) {
-        CRUDEntityContext entityContext = accessManager.applyRegisteredConstraints(new CRUDEntityContext(metaClass));
+        CrudEntityContext entityContext = new CrudEntityContext(metaClass);
+        accessManager.applyRegisteredConstraints(new CrudEntityContext(metaClass));
+
         switch (entityOp) {
             case CREATE:
                 return entityContext.isCreatePermitted();

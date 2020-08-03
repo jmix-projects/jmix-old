@@ -85,8 +85,8 @@ public class ValueBinder {
             }
 
             if (entityValueSource.isDataModelSecurityEnabled()) {
-                UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(
-                        new UiEntityAttributeContext(metaPropertyPath));
+                UiEntityAttributeContext attributeContext = new UiEntityAttributeContext(metaPropertyPath);
+                accessManager.applyRegisteredConstraints(attributeContext);
 
                 if (component instanceof Component.Editable) {
                     if (!attributeContext.isModifyPermitted()) {

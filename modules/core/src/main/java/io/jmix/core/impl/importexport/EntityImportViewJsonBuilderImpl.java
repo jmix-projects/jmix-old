@@ -64,7 +64,8 @@ public class EntityImportViewJsonBuilderImpl implements EntityImportViewJsonBuil
     protected EntityImportView buildFromJsonObject(JsonObject jsonObject, MetaClass metaClass) {
         EntityImportViewBuilder viewBuilder = entityImportViews.builder(metaClass.getJavaClass());
 
-        ImportEntityContext importContext = accessManager.applyRegisteredConstraints(new ImportEntityContext(metaClass));
+        ImportEntityContext importContext = new ImportEntityContext(metaClass);
+        accessManager.applyRegisteredConstraints(importContext);
 
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
             String propertyName = entry.getKey();

@@ -1081,7 +1081,9 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
     }
 
     protected void initShowInfoAction() {
-        UiShowEntityInfoContext showInfoContext = accessManager.applyRegisteredConstraints(new UiShowEntityInfoContext());
+        UiShowEntityInfoContext showInfoContext = new UiShowEntityInfoContext();
+        accessManager.applyRegisteredConstraints(new UiShowEntityInfoContext());
+
         if (showInfoContext.isPermitted()) {
             if (getAction(ShowInfoAction.ACTION_ID) == null) {
                 addAction(new ShowInfoAction());
@@ -1996,8 +1998,9 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
                 .filter(column -> {
                     MetaPropertyPath propertyPath = column.getPropertyPath();
                     if (propertyPath != null) {
-                        UiEntityAttributeContext attributeContext = accessManager.applyRegisteredConstraints(
-                                new UiEntityAttributeContext(metaClass, propertyPath.toString()));
+                        UiEntityAttributeContext attributeContext =
+                                new UiEntityAttributeContext(metaClass, propertyPath.toString());
+                        accessManager.applyRegisteredConstraints(attributeContext);
                         return attributeContext.isViewPermitted();
                     }
                     return true;
@@ -3658,8 +3661,12 @@ public abstract class WebAbstractDataGrid<C extends Grid<E> & JmixEnhancedGrid<E
         protected boolean isEditingPermitted() {
             if (propertyPath != null) {
                 MetaClass metaClass = propertyPath.getMetaClass();
-                return owner.accessManager.applyRegisteredConstraints(
-                        new UiEntityAttributeContext(metaClass, propertyPath.toString())).isModifyPermitted();
+
+                UiEntityAttributeContext attributeContext =
+                        new UiEntityAttributeContext(metaClass, propertyPath.toString());
+                owner.accessManager.applyRegisteredConstraints(attributeContext);
+
+                return attributeContext.isModifyPermitted();
             }
             return true;
         }
