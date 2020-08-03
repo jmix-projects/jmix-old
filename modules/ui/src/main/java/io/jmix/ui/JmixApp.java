@@ -16,27 +16,18 @@
 
 package io.jmix.ui;
 
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServletRequest;
-import com.vaadin.server.VaadinServletResponse;
 import com.vaadin.spring.annotation.VaadinSessionScope;
 import io.jmix.core.CoreProperties;
-import io.jmix.core.WebFilterHelper;
 import io.jmix.core.security.LoginException;
-import io.jmix.core.security.LogoutRequestMatcher;
-import io.jmix.core.security.SecurityContextHelper;
 import io.jmix.core.security.SecurityContextHelper;
 import io.jmix.core.security.UserRepository;
 import io.jmix.core.session.SessionData;
 import io.jmix.ui.util.OperationResult;
-import org.atmosphere.util.AtmosphereFilterChain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Component;
 
@@ -53,9 +44,6 @@ public class JmixApp extends App {
 
     @Autowired
     protected CoreProperties coreProperties;
-
-    @Autowired
-    protected WebFilterHelper webFilterHelper;
 
     @Autowired
     protected SessionRegistry sessionRegistry;
@@ -86,25 +74,7 @@ public class JmixApp extends App {
         closeWindowsInternal(true);
         removeAllWindows(Collections.singletonList(AppUI.getCurrent()));
 
-        LogoutFilter logoutFilter = webFilterHelper.findFilter(LogoutFilter.class);
-        try {
-            if (logoutFilter != null) {
-                VaadinRequest.getCurrent().setAttribute(LogoutRequestMatcher.LOGOUT_ATTRIBUTE, true);
-                logoutFilter.doFilter(VaadinServletRequest.getCurrent(), VaadinServletResponse.getCurrent(), new AtmosphereFilterChain());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
-
-        //TODO EZ handle session expiration
-        sessionRegistry.getSessionInformation(sessionData.getSessionId()).expireNow();
-        //todo MG authorities
-        AnonymousAuthenticationToken anonymousToken = new AnonymousAuthenticationToken(
-                coreProperties.getAnonymousAuthenticationTokenKey(),
-                userRepository.getAnonymousUser(),
-                AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
-        SecurityContextHelper.setAuthentication(anonymousToken);
-        initializeUi();
+        AppUI.getCurrent().getPage().setLocation("/logout");
         return OperationResult.success();
     }
 
