@@ -270,66 +270,47 @@ public class DataContextImpl implements DataContext {
 
         for (MetaProperty property : metaClass.getProperties()) {
             String propertyName = property.getName();
-            if (property.getRange().isClass()) {                                                // refs and collections
-                if ((srcNew || entityStates.isLoaded(srcEntity, propertyName))                  // loaded src
-                        && (dstNew || entityStates.isLoaded(dstEntity, propertyName))) {        // loaded dst
+            if (property.getRange().isClass()                                               // refs and collections
+                    && (srcNew || entityStates.isLoaded(srcEntity, propertyName))           // loaded src
+                    && (dstNew || entityStates.isLoaded(dstEntity, propertyName))) {        // loaded dst
+                Object value = EntityValues.getValue(srcEntity, propertyName);
 
-                    Object value = EntityValues.getValue(srcEntity, propertyName);
+                // ignore null values in non-root source entities
+                if (!isRoot && value == null) {
+                    continue;
+                }
 
-                    // ignore null values in non-root source entities
-                    if (!isRoot && value == null) {
-                        continue;
+                if (value == null) {
+                    setPropertyValue(dstEntity, property, null);
+                    continue;
+                }
+
+                if (value instanceof Collection) {
+                    if (value instanceof List) {
+                        mergeList((List) value, dstEntity, property, isRoot, mergedMap);
+                    } else if (value instanceof Set) {
+                        mergeSet((Set) value, dstEntity, property, isRoot, mergedMap);
+                    } else {
+                        throw new UnsupportedOperationException("Unsupported collection type: " + value.getClass().getName());
                     }
-
-                    if (value == null) {
-                        setPropertyValue(dstEntity, property, null);
-                        continue;
-                    }
-
-                    if (value instanceof Collection) {
-                        if (value instanceof List) {
-                            mergeList((List) value, dstEntity, property, isRoot, mergedMap);
-                        } else if (value instanceof Set) {
-                            mergeSet((Set) value, dstEntity, property, isRoot, mergedMap);
-                        } else {
-                            throw new UnsupportedOperationException("Unsupported collection type: " + value.getClass().getName());
+                } else {
+                    JmixEntity srcRef = (JmixEntity) value;
+                    if (!mergedMap.containsKey(srcRef)) {
+                        JmixEntity managedRef = internalMerge(srcRef, mergedMap, false);
+                        setPropertyValue(dstEntity, property, managedRef, false);
+                        if (metadataTools.isEmbedded(property)) {
+                            EmbeddedPropertyChangeListener listener = new EmbeddedPropertyChangeListener(dstEntity);
+                            managedRef.__getEntityEntry().addPropertyChangeListener(listener);
+                            embeddedPropertyListeners.computeIfAbsent(dstEntity, e -> new HashMap<>()).put(propertyName, listener);
                         }
                     } else {
-                        JmixEntity srcRef = (JmixEntity) value;
-                        if (!mergedMap.containsKey(srcRef)) {
-                            JmixEntity managedRef = internalMerge(srcRef, mergedMap, false);
+                        JmixEntity managedRef = mergedMap.get(srcRef);
+                        if (managedRef != null) {
                             setPropertyValue(dstEntity, property, managedRef, false);
-                            if (metadataTools.isEmbedded(property)) {
-                                EmbeddedPropertyChangeListener listener = new EmbeddedPropertyChangeListener(dstEntity);
-                                managedRef.__getEntityEntry().addPropertyChangeListener(listener);
-                                embeddedPropertyListeners.computeIfAbsent(dstEntity, e -> new HashMap<>()).put(propertyName, listener);
-                            }
                         } else {
-                            JmixEntity managedRef = mergedMap.get(srcRef);
-                            if (managedRef != null) {
-                                setPropertyValue(dstEntity, property, managedRef, false);
-                            } else {
-                                // should never happen
-                                log.debug("Instance was merged but managed instance is null: {}", srcRef);
-                            }
+                            // should never happen
+                            log.debug("Instance was merged but managed instance is null: {}", srcRef);
                         }
-                    }
-                }
-                //copy value holders to support lazy loading
-                if (!(entityStates.isLoaded(srcEntity, propertyName) || srcNew)) {
-                    if (entityStates.isLoaded(dstEntity, propertyName)
-                            && EntityValues.getValue(dstEntity, propertyName) != null) {
-                        continue;
-                    }
-                    try {
-                        Field declaredField = dstEntity.getClass().getDeclaredField("_persistence_" + property.getName() + "_vh");
-                        boolean accessible = declaredField.isAccessible();
-                        declaredField.setAccessible(true);
-                        declaredField.set(dstEntity, declaredField.get(srcEntity));
-                        declaredField.setAccessible(accessible);
-                    } catch (NoSuchFieldException | IllegalAccessException e) {
-                        log.debug("Exception occurred while copying value holder of property {} for {} metaclass entity.",
-                                propertyName, metaClass.getName());
                     }
                 }
             }

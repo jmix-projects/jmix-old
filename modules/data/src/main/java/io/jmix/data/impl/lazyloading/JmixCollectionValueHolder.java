@@ -37,13 +37,9 @@ public class JmixCollectionValueHolder extends JmixAbstractValueHolder {
                 DataManager dataManager = AppBeans.get(DataManager.NAME);
                 FetchPlanBuilder fetchPlanBuilder = AppBeans.getPrototype(FetchPlanBuilder.NAME, ownerClass);
                 LoadContext lc = new LoadContext(ownerClass);
-                lc.setFetchPlan(fetchPlanBuilder
-                        .build()
-                        .addProperty(propertyName));
+                lc.setFetchPlan(fetchPlanBuilder.add(propertyName).build());
                 lc.setId(entityId);
-
                 JmixEntity result = dataManager.load(lc);
-
                 this.value = ((IndirectCollection) result.__getEntityEntry().getAttributeValue(propertyName))
                         .getValueHolder()
                         .getValue();

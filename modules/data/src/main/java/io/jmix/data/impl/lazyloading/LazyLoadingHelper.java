@@ -57,7 +57,7 @@ public class LazyLoadingHelper {
         for (Map.Entry<JmixEntity, Set<FetchPlan>> entry : collectedFetchPlans.entrySet()) {
             MetaClass metaClass = metadata.getClass(entry.getKey().getClass());
             for (MetaProperty property : metaClass.getProperties()) {
-                if (property.getRange().isClass() && !isFetchPlansContainsProperty(property, entry.getValue())) {
+                if (property.getRange().isClass() && !isPropertyContainedInFetchPlans(property, entry.getValue())) {
                     replaceValueHoldersInternal(entry.getKey(), property);
                 }
             }
@@ -88,8 +88,6 @@ public class LazyLoadingHelper {
                     }
                     declaredField.setAccessible(accessible);
                 } catch (NoSuchFieldException | IllegalAccessException e) {
-                    log.warn("Could not find value holder field for property {} in {} entity object",
-                            property.getName(), instance);
                 }
                 break;
             case MANY_TO_ONE:
@@ -105,8 +103,6 @@ public class LazyLoadingHelper {
                     declaredField.set(instance, new JmixWrappingValueHolder((UnitOfWorkQueryValueHolder) fieldInstance));
                     declaredField.setAccessible(accessible);
                 } catch (NoSuchFieldException | IllegalAccessException e) {
-                    log.warn("Could not find value holder field for property {} in {} entity object",
-                            property.getName(), instance);
                 }
                 break;
             case ONE_TO_MANY:
@@ -156,7 +152,7 @@ public class LazyLoadingHelper {
         }
     }
 
-    protected boolean isFetchPlansContainsProperty(MetaProperty metaProperty, Set<FetchPlan> fetchPlans) {
+    protected boolean isPropertyContainedInFetchPlans(MetaProperty metaProperty, Set<FetchPlan> fetchPlans) {
         boolean contains = false;
         for (FetchPlan fetchPlan : fetchPlans) {
             if (fetchPlan.containsProperty(metaProperty.getName())) {

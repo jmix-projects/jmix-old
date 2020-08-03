@@ -62,6 +62,7 @@ public class JmixWrappingValueHolder extends JmixAbstractValueHolder {
                     QueryBasedValueHolder wrappedValueHolder = (QueryBasedValueHolder) originalValueHolder.getWrappedValueHolder();
                     iterator.iterateOn(wrappedValueHolder.getQuery().getSelectionCriteria());
                     Object id = originalValueHolder.getRow().get(fieldName.get());
+                    // Since UUID is stored as String
                     if (idProperty.getJavaType() == UUID.class) {
                         id = UUID.fromString((String) id);
                     }

@@ -106,7 +106,6 @@ public class JmixQuery<E> implements TypedQuery<E> {
         fetchGroupMgr = beanLocator.get(FetchGroupManager.NAME);
         entityFetcher = beanLocator.get(EntityFetcher.NAME);
         lazyLoadingHelper = beanLocator.get(LazyLoadingHelper.NAME);
-        ;
         queryCacheMgr = beanLocator.get(QueryCacheManager.NAME);
         queryTransformerFactory = beanLocator.get(QueryTransformerFactory.NAME);
         hintsProcessor = beanLocator.get(QueryHintsProcessor.NAME);
@@ -126,14 +125,18 @@ public class JmixQuery<E> implements TypedQuery<E> {
 
         @SuppressWarnings("unchecked")
         List<E> resultList = (List<E>) getResultFromCache(query, false, obj -> {
-            ((List) obj).stream().filter(item -> item instanceof JmixEntity).forEach(item -> {
-                for (FetchPlan fetchPlan : fetchPlans) {
-                    entityFetcher.fetch((JmixEntity) item, fetchPlan);
+            for (Object item : (List) obj) {
+                if (item instanceof JmixEntity) {
+                    for (FetchPlan fetchPlan : fetchPlans) {
+                        entityFetcher.fetch((JmixEntity) item, fetchPlan);
+                    }
                 }
-            });
-            ((List) obj).stream().filter(item -> item instanceof JmixEntity).forEach(item -> {
-                lazyLoadingHelper.replaceValueHolders((JmixEntity) item, fetchPlans);
-            });
+            }
+            for (Object item : (List) obj) {
+                if (item instanceof JmixEntity) {
+                    lazyLoadingHelper.replaceValueHolders((JmixEntity) item, fetchPlans);
+                }
+            }
         });
         return resultList;
     }

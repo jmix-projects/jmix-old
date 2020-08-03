@@ -16,10 +16,7 @@
 
 package io.jmix.data.impl.lazyloading;
 
-import io.jmix.core.AppBeans;
-import io.jmix.core.DataManager;
-import io.jmix.core.LoadContext;
-import io.jmix.core.Metadata;
+import io.jmix.core.*;
 import io.jmix.core.metamodel.model.MetaClass;
 
 public class JmixSingleValueHolder extends JmixAbstractValueHolder {
@@ -39,10 +36,12 @@ public class JmixSingleValueHolder extends JmixAbstractValueHolder {
             synchronized (this) {
                 DataManager dataManager = AppBeans.get(DataManager.NAME);
                 Metadata metadata = AppBeans.get(Metadata.NAME);
+                MetadataTools metadataTools = AppBeans.get(MetadataTools.NAME);
                 MetaClass metaClass = metadata.getClass(valueClass);
+                String primaryKeyName = metadataTools.getPrimaryKeyName(metaClass);
                 LoadContext lc = new LoadContext(metaClass);
-                lc.setQueryString(String.format("select e from %s e where e.%s.id = :entityId",
-                        metaClass.getName(), propertyName));
+                lc.setQueryString(String.format("select e from %s e where e.%s.%s = :entityId",
+                        metaClass.getName(), propertyName, primaryKeyName));
                 lc.getQuery().setParameter("entityId", entityId);
                 value = dataManager.load(lc);
                 isInstantiated = true;
