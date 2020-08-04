@@ -20,7 +20,7 @@ import io.jmix.core.DataManager;
 import io.jmix.core.LoadContext;
 import io.jmix.core.Metadata;
 import io.jmix.core.MetadataTools;
-import io.jmix.core.impl.StandardSerialization;
+import io.jmix.core.impl.SerializationContext;
 import io.jmix.core.metamodel.model.MetaClass;
 import org.springframework.beans.factory.BeanFactory;
 
@@ -70,7 +70,7 @@ public class JmixSingleValueHolder extends JmixAbstractValueHolder {
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        BeanFactory beanFactory = StandardSerialization.getThreadLocalBeanFactory();
+        BeanFactory beanFactory = SerializationContext.getThreadLocalBeanFactory();
         dataManager = (DataManager) beanFactory.getBean(DataManager.NAME);
         metadata = (Metadata) beanFactory.getBean(Metadata.NAME);
         metadataTools = (MetadataTools) beanFactory.getBean(MetadataTools.NAME);

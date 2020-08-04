@@ -34,15 +34,6 @@ public class StandardSerialization {
     @Autowired
     protected BeanFactory beanFactory;
 
-    private static ThreadLocal<BeanFactory> beanFactoryThreadLocal = new ThreadLocal<>();
-
-    /**
-     * @return the {@link BeanFactory} instance from the thread local variable, if any stored.
-     */
-    public static BeanFactory getThreadLocalBeanFactory() {
-        return beanFactoryThreadLocal.get();
-    }
-
     public void serialize(Object object, OutputStream os) {
         ObjectOutputStream out = null;
         boolean isObjectStream = os instanceof ObjectOutputStream;
@@ -68,7 +59,7 @@ public class StandardSerialization {
     //all the other application classes). For web application it means placing this class inside webapp folder.
     public Object deserialize(InputStream is) {
         //Put BeanFactory to let deserialized objects restore beans
-        beanFactoryThreadLocal.set(beanFactory);
+        SerializationContext.setThreadLocalBeanFactory(beanFactory);
         try {
             ObjectInputStream ois;
             boolean isObjectStream = is instanceof ObjectInputStream;
@@ -89,7 +80,7 @@ public class StandardSerialization {
             throw new RuntimeException("Failed to deserialize object type", ex);
         } finally {
             //Clean variable after deserialization
-            beanFactoryThreadLocal.remove();
+            SerializationContext.removeThreadLocalBeanFactory();
         }
     }
 
