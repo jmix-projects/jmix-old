@@ -151,7 +151,7 @@ class CompositionTest extends UiScreenSpec {
                 if (loadedEntity == null) {
                     return null;
                 }
-                return standardSerialization.deserialize(serialize(loadedEntity));
+                return standardSerialization.deserialize(standardSerialization.serialize(loadedEntity));
             }
         })
     }
