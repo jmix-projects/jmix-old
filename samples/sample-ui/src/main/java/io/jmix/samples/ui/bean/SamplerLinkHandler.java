@@ -1,4 +1,4 @@
-package io.jmix.samples.ui.linkhandler;
+package io.jmix.samples.ui.bean;
 
 import io.jmix.samples.ui.config.MenuItem;
 import io.jmix.samples.ui.config.SamplerMenuConfig;

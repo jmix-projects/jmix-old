@@ -21,11 +21,11 @@ import com.google.common.collect.ImmutableMap;
 import io.jmix.core.CoreProperties;
 import io.jmix.core.MessageTools;
 import io.jmix.core.Messages;
-import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.samples.ui.config.MenuItem;
 import io.jmix.samples.ui.config.SamplerMenuConfig;
 import io.jmix.samples.ui.screen.sys.main.SamplerMainScreen;
 import io.jmix.samples.ui.util.SamplerHelper;
+import io.jmix.ui.App;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.Fragments;
 import io.jmix.ui.Screens;
@@ -79,8 +79,6 @@ public class SampleBrowser extends Screen {
     protected MessageTools messageTools;
     @Autowired
     protected CoreProperties coreProperties;
-    @Autowired
-    protected CurrentAuthentication currentAuthentication;
     @Autowired
     protected Fragments fragments;
     @Autowired
@@ -282,7 +280,7 @@ public class SampleBrowser extends Screen {
 
     protected Component documentLinks(@Nullable String dockPack, String docUrlSuffix) {
         Link docLink = uiComponents.create(Link.class);
-        Locale locale = currentAuthentication.getLocale();
+        Locale locale = getUserLocale();
         String message = dockPack != null
                 ? messages.getMessage(dockPack, DOC_URL_MESSAGES_KEY, locale)
                 : messages.getMessage(DOC_URL_MESSAGES_KEY, locale);
@@ -415,6 +413,6 @@ public class SampleBrowser extends Screen {
     }
 
     protected Locale getUserLocale() {
-        return currentAuthentication.getLocale();
+        return App.getInstance().getLocale();
     }
 }

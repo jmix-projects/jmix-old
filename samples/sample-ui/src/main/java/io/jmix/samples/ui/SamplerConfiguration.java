@@ -16,8 +16,10 @@
 
 package io.jmix.samples.ui;
 
+import io.jmix.core.Messages;
 import io.jmix.core.annotation.JmixModule;
-import io.jmix.samples.ui.linkhandler.SamplerLinkHandler;
+import io.jmix.samples.ui.bean.SamplerLinkHandler;
+import io.jmix.samples.ui.bean.SamplerMessagesImpl;
 import io.jmix.ui.App;
 import io.jmix.ui.UiConfiguration;
 import io.jmix.ui.sys.LinkHandler;
@@ -36,5 +38,10 @@ public class SamplerConfiguration {
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public LinkHandler linkHandler(App app, String action, Map<String, String> requestParams) {
         return new SamplerLinkHandler(app, action, requestParams);
+    }
+
+    @Bean(name = Messages.NAME)
+    public Messages messages() {
+        return new SamplerMessagesImpl();
     }
 }

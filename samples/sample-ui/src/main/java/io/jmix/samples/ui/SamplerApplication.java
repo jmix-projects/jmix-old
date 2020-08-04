@@ -16,34 +16,13 @@
 
 package io.jmix.samples.ui;
 
-import io.jmix.core.security.UserRepository;
-import io.jmix.core.security.impl.CoreUser;
-import io.jmix.core.security.impl.InMemoryUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
-import org.springframework.context.event.EventListener;
 
 @SpringBootApplication
 public class SamplerApplication {
 
-    @Autowired
-    protected UserRepository userRepository;
-
     public static void main(String[] args) {
         SpringApplication.run(SamplerApplication.class, args);
-    }
-
-    @EventListener(ApplicationStartedEvent.class)
-    protected void onStartup() {
-        initUser();
-    }
-
-    protected void initUser() {
-        if (userRepository instanceof InMemoryUserRepository) {
-            CoreUser demo = new CoreUser("admin", "{noop}admin", "Administrator");
-            ((InMemoryUserRepository) userRepository).createUser(demo);
-        }
     }
 }

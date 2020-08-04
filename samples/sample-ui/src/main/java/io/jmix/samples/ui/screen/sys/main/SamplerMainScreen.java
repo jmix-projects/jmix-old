@@ -17,18 +17,11 @@
 package io.jmix.samples.ui.screen.sys.main;
 
 import io.jmix.core.CoreProperties;
-import io.jmix.core.entity.BaseUser;
-import io.jmix.core.security.ClientDetails;
-import io.jmix.core.security.CurrentAuthentication;
-import io.jmix.core.security.SecurityContextHelper;
-import io.jmix.core.security.authentication.CoreAuthenticationToken;
 import io.jmix.samples.ui.config.MenuItem;
 import io.jmix.samples.ui.config.SamplerMenuConfig;
 import io.jmix.samples.ui.screen.sys.maindashboard.DashboardItemClickEvent;
 import io.jmix.samples.ui.screen.sys.maindashboard.SamplerMainDashboardFragment;
 import io.jmix.samples.ui.util.SamplerHelper;
-import io.jmix.security.authentication.SecuredAuthenticationToken;
-import io.jmix.ui.App;
 import io.jmix.ui.AppUI;
 import io.jmix.ui.Screens;
 import io.jmix.ui.component.AppWorkArea;
@@ -54,8 +47,6 @@ import io.jmix.ui.theme.ThemeConstantsRepository;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,8 +72,6 @@ public class SamplerMainScreen extends Screen implements Window.HasWorkArea {
     protected CoreProperties coreProperties;
     @Autowired
     protected UrlRouting urlRouting;
-    @Autowired
-    protected CurrentAuthentication currentAuthentication;
     @Autowired
     protected ThemeConstantsRepository themeConstantsRepository;
     @Autowired
@@ -165,7 +154,7 @@ public class SamplerMainScreen extends Screen implements Window.HasWorkArea {
         }
 
         localesComboBox.setOptionsMap(coreProperties.getAvailableLocales());
-        localesComboBox.setValue(currentAuthentication.getLocale());
+        localesComboBox.setValue(ui.getLocale());
 
         localesComboBox.setVisible(coreProperties.isLocaleSelectVisible());
 
@@ -176,12 +165,14 @@ public class SamplerMainScreen extends Screen implements Window.HasWorkArea {
                 if (handler != null) {
                     handler.schedule(urlRouting.getState());
                 }
-                // todo change locale
+
+                ui.getApp().setLocale(selectedLocale);
+                ui.getApp().createTopLevelWindow();
             }
         });
 
         localesComboBox.setOptionStyleProvider(locale ->
-                locale.equals(currentAuthentication.getLocale()) ? "selected-locale" : null
+                locale.equals(ui.getLocale()) ? "selected-locale" : null
         );
     }
 
