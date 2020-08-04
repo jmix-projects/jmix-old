@@ -70,6 +70,9 @@ public class DataContextImpl implements DataContext {
     @Autowired
     protected EntityReferencesNormalizer entityReferencesNormalizer;
 
+    @Autowired
+    protected StandardSerialization standardSerialization;
+
     protected EventHub events = new EventHub();
 
     protected Map<Class<?>, Map<Object, JmixEntity>> content = new HashMap<>();
@@ -655,7 +658,7 @@ public class DataContextImpl implements DataContext {
     @SuppressWarnings("unchecked")
     public Collection<JmixEntity> isolate(List<JmixEntity> entities) {
         // re-serialize the whole collection to preserve links between objects
-        List isolatedEntities = (List) StandardSerialization.deserialize(StandardSerialization.serialize(entities));
+        List isolatedEntities = (List) standardSerialization.deserialize(standardSerialization.serialize(entities));
         for (int i = 0; i < isolatedEntities.size(); i++) {
             JmixEntity isolatedEntity = (JmixEntity) isolatedEntities.get(i);
             JmixEntity entity = entities.get(i);

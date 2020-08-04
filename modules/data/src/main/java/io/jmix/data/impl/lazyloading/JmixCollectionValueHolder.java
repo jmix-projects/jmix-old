@@ -16,26 +16,37 @@
 
 package io.jmix.data.impl.lazyloading;
 
-import io.jmix.core.*;
+import io.jmix.core.DataManager;
+import io.jmix.core.FetchPlanBuilder;
+import io.jmix.core.JmixEntity;
+import io.jmix.core.LoadContext;
+import io.jmix.core.impl.StandardSerialization;
 import org.eclipse.persistence.indirection.IndirectCollection;
+import org.springframework.beans.factory.BeanFactory;
+
+import java.io.IOException;
 
 public class JmixCollectionValueHolder extends JmixAbstractValueHolder {
     protected Class ownerClass;
     protected Object entityId;
     protected String propertyName;
 
-    public JmixCollectionValueHolder(String propertyName, Class ownerClass, Object entityId) {
+    protected transient DataManager dataManager;
+    protected transient FetchPlanBuilder fetchPlanBuilder;
+
+    public JmixCollectionValueHolder(String propertyName, Class ownerClass, Object entityId, DataManager dataManager,
+                                     FetchPlanBuilder fetchPlanBuilder) {
         this.propertyName = propertyName;
         this.ownerClass = ownerClass;
         this.entityId = entityId;
+        this.dataManager = dataManager;
+        this.fetchPlanBuilder = fetchPlanBuilder;
     }
 
     @Override
     public Object getValue() {
         if (!isInstantiated) {
             synchronized (this) {
-                DataManager dataManager = AppBeans.get(DataManager.NAME);
-                FetchPlanBuilder fetchPlanBuilder = AppBeans.getPrototype(FetchPlanBuilder.NAME, ownerClass);
                 LoadContext lc = new LoadContext(ownerClass);
                 lc.setFetchPlan(fetchPlanBuilder.add(propertyName).build());
                 lc.setId(entityId);
@@ -51,6 +62,13 @@ public class JmixCollectionValueHolder extends JmixAbstractValueHolder {
 
     @Override
     public Object clone() {
-        return new JmixCollectionValueHolder(propertyName, ownerClass, entityId);
+        return new JmixCollectionValueHolder(propertyName, ownerClass, entityId, dataManager, fetchPlanBuilder);
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        BeanFactory beanFactory = StandardSerialization.getThreadLocalBeanFactory();
+        dataManager = (DataManager) beanFactory.getBean(DataManager.NAME);
+        fetchPlanBuilder = beanFactory.getBean(FetchPlanBuilder.class, ownerClass);
     }
 }

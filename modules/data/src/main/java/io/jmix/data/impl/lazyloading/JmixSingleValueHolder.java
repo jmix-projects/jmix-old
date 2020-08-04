@@ -16,27 +16,39 @@
 
 package io.jmix.data.impl.lazyloading;
 
-import io.jmix.core.*;
+import io.jmix.core.DataManager;
+import io.jmix.core.LoadContext;
+import io.jmix.core.Metadata;
+import io.jmix.core.MetadataTools;
+import io.jmix.core.impl.StandardSerialization;
 import io.jmix.core.metamodel.model.MetaClass;
+import org.springframework.beans.factory.BeanFactory;
+
+import java.io.IOException;
 
 public class JmixSingleValueHolder extends JmixAbstractValueHolder {
     protected Object entityId;
     protected String propertyName;
     protected Class valueClass;
 
-    public JmixSingleValueHolder(String propertyName, Class valueClass, Object entityId) {
+    protected transient DataManager dataManager;
+    protected transient Metadata metadata;
+    protected transient MetadataTools metadataTools;
+
+    public JmixSingleValueHolder(String propertyName, Class valueClass, Object entityId, DataManager dataManager,
+                                 Metadata metadata, MetadataTools metadataTools) {
         this.propertyName = propertyName;
         this.valueClass = valueClass;
         this.entityId = entityId;
+        this.dataManager = dataManager;
+        this.metadata = metadata;
+        this.metadataTools = metadataTools;
     }
 
     @Override
     public Object getValue() {
         if (!isInstantiated) {
             synchronized (this) {
-                DataManager dataManager = AppBeans.get(DataManager.NAME);
-                Metadata metadata = AppBeans.get(Metadata.NAME);
-                MetadataTools metadataTools = AppBeans.get(MetadataTools.NAME);
                 MetaClass metaClass = metadata.getClass(valueClass);
                 String primaryKeyName = metadataTools.getPrimaryKeyName(metaClass);
                 LoadContext lc = new LoadContext(metaClass);
@@ -52,6 +64,15 @@ public class JmixSingleValueHolder extends JmixAbstractValueHolder {
 
     @Override
     public Object clone() {
-        return new JmixSingleValueHolder(propertyName, valueClass, entityId);
+        return new JmixSingleValueHolder(propertyName, valueClass, entityId, dataManager,
+                metadata, metadataTools);
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        BeanFactory beanFactory = StandardSerialization.getThreadLocalBeanFactory();
+        dataManager = (DataManager) beanFactory.getBean(DataManager.NAME);
+        metadata = (Metadata) beanFactory.getBean(Metadata.NAME);
+        metadataTools = (MetadataTools) beanFactory.getBean(MetadataTools.NAME);
     }
 }

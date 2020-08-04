@@ -19,6 +19,7 @@ package test_support
 import io.jmix.core.*
 import io.jmix.core.entity.EntityEntryAuditable
 import io.jmix.core.entity.Versioned
+import io.jmix.core.impl.StandardSerialization
 import io.jmix.data.DataConfiguration
 import io.jmix.ui.UiConfiguration
 import org.eclipse.persistence.internal.queries.EntityFetchGroup
@@ -28,9 +29,6 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.transaction.support.TransactionTemplate
 import spock.lang.Specification
-
-import static io.jmix.core.impl.StandardSerialization.deserialize
-import static io.jmix.core.impl.StandardSerialization.serialize
 
 @ContextConfiguration(classes = [CoreConfiguration, UiConfiguration, DataConfiguration, DataContextTestConfiguration])
 class DataContextSpec extends Specification {
@@ -82,11 +80,12 @@ class DataContextSpec extends Specification {
 
     @SuppressWarnings("unchecked")
     static <T> T reserialize(Serializable object) {
+        StandardSerialization standardSerialization = AppBeans.get(StandardSerialization.NAME)
         if (object == null) {
             return null
         }
 
-        return (T) deserialize(serialize(object))
+        return (T) standardSerialization.deserialize(standardSerialization.serialize(object))
     }
 
     static <T extends Serializable> T makeSaved(T entity) {
