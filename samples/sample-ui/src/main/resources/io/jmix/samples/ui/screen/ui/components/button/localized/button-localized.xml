@@ -1,0 +1,6 @@
+<window xmlns="http://jmix.io/schema/ui/window">
+    <layout>
+        <button caption="msg://localizedButton.caption"
+                description="msg://localizedButton.description"/>
+    </layout>
+</window>

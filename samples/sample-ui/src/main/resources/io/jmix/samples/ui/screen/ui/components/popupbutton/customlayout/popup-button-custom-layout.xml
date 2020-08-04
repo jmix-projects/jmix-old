@@ -1,0 +1,35 @@
+<window xmlns="http://jmix.io/schema/ui/window">
+    <layout>
+        <popupButton id="popupButton"
+                     caption="msg://popupButton.caption"
+                     icon="GEARS"
+                     popupOpenDirection="BOTTOM_CENTER">
+            <popup>
+                <vbox margin="true"
+                      spacing="true"
+                      width="260px">
+                    <label align="MIDDLE_CENTER"
+                           stylename="h2"
+                           value="Settings"/>
+                    <progressBar caption="Progress"
+                                 width="100%"/>
+                    <textField id="textField"
+                               caption="msg://textField.caption"
+                               width="100%"/>
+                    <comboBox id="comboBox"
+                              caption="Status"
+                              optionsEnum="io.jmix.samples.ui.entity.SendingStatus"
+                              width="100%"/>
+                    <hbox spacing="true">
+                        <button id="saveAnsCloseButton"
+                                caption="msg://saveButton.caption"
+                                icon="SAVE"/>
+                        <button id="cancelAnsCloseButton"
+                                caption="msg://cancelButton.caption"
+                                icon="REMOVE"/>
+                    </hbox>
+                </vbox>
+            </popup>
+        </popupButton>
+    </layout>
+</window>

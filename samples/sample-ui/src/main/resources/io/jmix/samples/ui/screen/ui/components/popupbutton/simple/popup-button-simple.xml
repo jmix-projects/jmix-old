@@ -1,0 +1,25 @@
+<window xmlns="http://jmix.io/schema/ui/window">
+    <layout>
+        <hbox spacing="true">
+            <popupButton id="popupButton1"
+                         caption="msg://savePopupButton.caption">
+                <actions>
+                    <action id="popupAction1" caption="msg://saveAsDocAction.caption"/>
+                    <action id="popupAction2" caption="msg://saveAsPdfAction.caption"/>
+                </actions>
+            </popupButton>
+
+            <popupButton id="popupButton2"
+                         caption="msg://savePopupButton.caption"
+                         icon="SAVE">
+                <actions>
+                    <action id="popupAction1" caption="msg://saveAsDocAction.caption"/>
+                    <action id="popupAction2" caption="msg://saveAsPdfAction.caption"/>
+                </actions>
+            </popupButton>
+
+            <popupButton id="popupButton3"
+                         icon="SAVE"/>
+        </hbox>
+    </layout>
+</window>

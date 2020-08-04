@@ -17,15 +17,27 @@
 
 <menu-config xmlns="io/jmix/samples/ui/menu/sampler-menu.xsd">
 
-    <menu id="dialogsAndNotifications" image="dialogsAndNotifications.svg">
-        <menu id="dialogs">
-            <item id="message-dialog" docUrlSuffix="gui_dialogs" image="dialogsAndNotifications.svg"/>
-            <item id="option-dialog" docUrlSuffix="gui_dialogs" image="dialogsAndNotifications.svg"/>
-            <item id="input-dialog" docUrlSuffix="gui_dialogs" image="dialogsAndNotifications.svg"/>
+    <menu id="components" image="mainmenu/components.svg">
+        <menu id="button">
+            <item id="button-simple" docUrlSuffix="gui_Button" image="components/button/button-simple.png"/>
+            <item id="button-localized" docUrlSuffix="gui_Button" image="components/button/button-localized.png"/>
+            <item id="button-action" docUrlSuffix="gui_Button" image="components/button/button-action.png"/>
+            <item id="button-programmatic-action" docUrlSuffix="gui_Button" image="components/button/button-action.png"/>
+            <item id="link-button" docUrlSuffix="gui_LinkButton" image="components/linkbutton/link-button.png"/>
+            <item id="popup-button-simple" docUrlSuffix="gui_PopupButton" image="components/popupbutton/popup-button-simple.png"/>
+            <item id="popup-button-custom-layout" docUrlSuffix="gui_PopupButton" image="components/popupbutton/popup-button-custom-layout.png"/>
         </menu>
-        <menu id="notifications" image="dialogsAndNotifications.svg">
-            <item id="notification-type" docUrlSuffix="gui_notifications" image="dialogsAndNotifications.svg"/>
-            <item id="notification-position" docUrlSuffix="gui_notifications" image="dialogsAndNotifications.svg"/>
+    </menu>
+
+    <menu id="dialogsAndNotifications" image="mainmenu/dialogsAndNotifications.svg">
+        <menu id="dialogs">
+            <item id="message-dialog" docUrlSuffix="gui_dialogs" image="mainmenu/dialogsAndNotifications.svg"/>
+            <item id="option-dialog" docUrlSuffix="gui_dialogs" image="mainmenu/dialogsAndNotifications.svg"/>
+            <item id="input-dialog" docUrlSuffix="gui_dialogs" image="mainmenu/dialogsAndNotifications.svg"/>
+        </menu>
+        <menu id="notifications" image="mainmenu/dialogsAndNotifications.svg">
+            <item id="notification-type" docUrlSuffix="gui_notifications" image="mainmenu/dialogsAndNotifications.svg"/>
+            <item id="notification-position" docUrlSuffix="gui_notifications" image="mainmenu/dialogsAndNotifications.svg"/>
         </menu>
     </menu>
 

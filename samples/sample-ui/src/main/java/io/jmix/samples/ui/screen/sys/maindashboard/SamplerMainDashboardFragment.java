@@ -43,7 +43,7 @@ public class SamplerMainDashboardFragment extends ScreenFragment {
     protected static final String LABEL_TITLE_STYLE = "label-title";
     protected static final String LABEL_IMAGE_STYLE = "label-image";
 
-    protected static final String PLACEHOLDER_IMAGE_PATH = "io/jmix/samples/ui/images/dashboard/mainmenu/";
+    protected static final String PLACEHOLDER_IMAGE_PATH = "io/jmix/samples/ui/images/dashboard/";
 
     @Autowired
     protected CssLayout cssLayout;

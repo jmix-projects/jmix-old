@@ -1,0 +1,13 @@
+<window xmlns="http://jmix.io/schema/ui/window">
+    <layout spacing="true">
+        <linkButton id="helloButton"
+                    caption="Say Hello!"
+                    description="Click Me!"/>
+        <linkButton id="saveButton1"
+                    caption="Save"
+                    icon="SAVE"/>
+        <linkButton id="saveButton2"
+                    description="Save"
+                    icon="SAVE"/>
+    </layout>
+</window>
