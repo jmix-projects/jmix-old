@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
+import org.springframework.session.SessionRepository;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -39,7 +40,7 @@ public class SessionRepositoryWrapper<S extends Session> implements FindByIndexN
 
     protected Map<String, Map<String, Object>> nonPersistentSessionAttributesMap = new ConcurrentHashMap<>();
 
-    protected FindByIndexNameSessionRepository<S> delegate;
+    protected SessionRepository<S> delegate;
 
     @Autowired
     protected SessionRegistry sessionRegistry;
@@ -59,7 +60,7 @@ public class SessionRepositoryWrapper<S extends Session> implements FindByIndexN
         this.attributePersistenceValidators = attributePersistenceValidators;
     }
 
-    public SessionRepositoryWrapper(FindByIndexNameSessionRepository<S> delegate) {
+    public SessionRepositoryWrapper(SessionRepository<S> delegate) {
         this.delegate = delegate;
     }
 
@@ -122,7 +123,10 @@ public class SessionRepositoryWrapper<S extends Session> implements FindByIndexN
 
     @Override
     public Map<String, SessionWrapper> findByIndexNameAndIndexValue(String indexName, String indexValue) {
-        return wrapMap(delegate.findByIndexNameAndIndexValue(indexName, indexValue));
+        if (delegate instanceof FindByIndexNameSessionRepository){
+            return wrapMap(((FindByIndexNameSessionRepository<S>)delegate).findByIndexNameAndIndexValue(indexName, indexValue));
+        }
+        return Collections.emptyMap();
     }
 
     private Map<String, SessionWrapper> wrapMap(Map<String, S> map) {

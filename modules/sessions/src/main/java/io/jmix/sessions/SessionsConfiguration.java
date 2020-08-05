@@ -26,6 +26,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
+import org.springframework.session.SessionRepository;
 import org.springframework.session.web.http.CookieHttpSessionIdResolver;
 import org.springframework.session.web.http.HttpSessionIdResolver;
 import org.springframework.session.web.http.SessionRepositoryFilter;
@@ -40,7 +41,7 @@ public class SessionsConfiguration<S extends Session> {
 
     @Primary
     @Bean("sessions_sessionRepositoryWrapper")
-    public SessionRepositoryWrapper<S> sessionRepositoryWrapper(FindByIndexNameSessionRepository<S> sessionRepository) {
+    public SessionRepositoryWrapper<S> sessionRepositoryWrapper(SessionRepository<S> sessionRepository) {
         SessionRepositoryWrapper<S> sessionRepositoryWrapper = new SessionRepositoryWrapper<>(sessionRepository);
         sessionRepositoryWrapper.addAttributePersistenceValidators(new VaadinSessionAttributesValidator());
         return sessionRepositoryWrapper;
@@ -48,7 +49,7 @@ public class SessionsConfiguration<S extends Session> {
 
     @Bean
     public SessionRepositoryFilter<SessionRepositoryWrapper<S>.SessionWrapper> springSessionRepositoryFilter(
-            @Autowired FindByIndexNameSessionRepository<S> sessionRepository) {
+            @Autowired SessionRepository<S> sessionRepository) {
         SessionRepositoryFilter<SessionRepositoryWrapper<S>.SessionWrapper> sessionRepositoryFilter
                 = new SessionRepositoryFilter<>(sessionRepositoryWrapper(sessionRepository));
         sessionRepositoryFilter.setHttpSessionIdResolver(sessionIdResolver);
