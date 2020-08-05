@@ -19,8 +19,8 @@ package io.jmix.security;
 import io.jmix.core.CoreProperties;
 import io.jmix.core.rememberme.RememberMeProperties;
 import io.jmix.core.security.UserRepository;
-import io.jmix.core.security.authentication.JmixAuthenticationStrategy;
 import io.jmix.core.security.impl.SystemAuthenticationProvider;
+import io.jmix.core.security.rememberme.JmixRememberMeServices;
 import io.jmix.core.session.SessionProperties;
 import io.jmix.security.authentication.SecuredAuthenticationProvider;
 import io.jmix.security.role.RoleRepository;
@@ -38,12 +38,15 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.authentication.session.*;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import static org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices.DEFAULT_PARAMETER;
 
 @Configuration
 @ComponentScan
@@ -76,6 +79,9 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
     @Autowired
     private PersistentTokenRepository rememberMeTokenRepository;
 
+    @Autowired
+    private SessionRegistry sessionRegistry;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(new SystemAuthenticationProvider(userRepository));
@@ -89,11 +95,8 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        SessionRegistry sessionRegistry = sessionRegistry();
         http.antMatcher("/**")
-                .authorizeRequests().anyRequest().authenticated()
-                .and()
-                .formLogin()
+                .authorizeRequests().anyRequest().permitAll()
                 .and()
                 .logout().logoutUrl("/logout").logoutSuccessUrl("/")
                 .and()
@@ -103,22 +106,22 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
                     anonymousConfigurer.key(coreProperties.getAnonymousAuthenticationTokenKey());
                     anonymousConfigurer.principal(userRepository.getAnonymousUser());
                 })
-                .sessionManagement().sessionAuthenticationStrategy(sessionControlAuthenticationStrategy(sessionRegistry))
+                .rememberMe().rememberMeServices(rememberMeServices())
+                .and()
+                .sessionManagement().sessionAuthenticationStrategy(sessionControlAuthenticationStrategy())
                 .maximumSessions(sessionProperties.getMaximumUserSessions()).sessionRegistry(sessionRegistry)
                 .and().and()
                 .csrf().disable()
                 .headers().frameOptions().sameOrigin();
-
-        configureRememberMe(http);
     }
 
-    protected HttpSecurity configureRememberMe(HttpSecurity http) throws Exception {
-        return http.rememberMe()
-                .key(rememberMeProperties.getKey())
-                .tokenValiditySeconds(rememberMeProperties.getTokenValiditySeconds())
-                .tokenRepository(rememberMeTokenRepository)
-                .userDetailsService(userDetailsService)
-                .and();
+    @Bean("sec_rememberMeServices")
+    protected RememberMeServices rememberMeServices() {
+        JmixRememberMeServices rememberMeServices =
+                new JmixRememberMeServices(rememberMeProperties.getKey(), userDetailsService, rememberMeTokenRepository);
+        rememberMeServices.setTokenValiditySeconds(rememberMeProperties.getTokenValiditySeconds());
+        rememberMeServices.setParameter(DEFAULT_PARAMETER);
+        return rememberMeServices;
     }
 
     @Bean("sec_rememberMeRepository")
@@ -126,27 +129,23 @@ public class StandardSecurityConfiguration extends WebSecurityConfigurerAdapter 
         return new InMemoryTokenRepositoryImpl();
     }
 
-    protected SessionAuthenticationStrategy sessionControlAuthenticationStrategy(SessionRegistry sessionRegistry) {
-        return new CompositeSessionAuthenticationStrategy(strategies(sessionRegistry, sessionProperties.getMaximumUserSessions()));
+    @Primary
+    @Bean
+    protected SessionAuthenticationStrategy sessionControlAuthenticationStrategy() {
+        return new CompositeSessionAuthenticationStrategy(strategies());
     }
 
-    protected List<SessionAuthenticationStrategy> strategies(SessionRegistry sessionRegistry, int maximumUserSessions) {
-        SessionFixationProtectionStrategy sessionFixationProtectionStrategy
-                = new SessionFixationProtectionStrategy();
-        sessionFixationProtectionStrategy.setMigrateSessionAttributes(true);
-
+    protected List<SessionAuthenticationStrategy> strategies() {
         RegisterSessionAuthenticationStrategy registerSessionAuthenticationStrategy
                 = new RegisterSessionAuthenticationStrategy(sessionRegistry);
         ConcurrentSessionControlAuthenticationStrategy concurrentSessionControlStrategy
                 = new ConcurrentSessionControlAuthenticationStrategy(sessionRegistry);
-        concurrentSessionControlStrategy.setMaximumSessions(maximumUserSessions);
+        concurrentSessionControlStrategy.setMaximumSessions(sessionProperties.getMaximumUserSessions());
 
         List<SessionAuthenticationStrategy> strategies = new LinkedList<>();
 
-//        strategies.add(sessionFixationProtectionStrategy);
         strategies.add(registerSessionAuthenticationStrategy);
         strategies.add(concurrentSessionControlStrategy);
-        strategies.add(new JmixAuthenticationStrategy());
         return strategies;
     }
 

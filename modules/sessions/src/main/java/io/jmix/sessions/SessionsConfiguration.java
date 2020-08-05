@@ -39,7 +39,7 @@ public class SessionsConfiguration<S extends Session> {
     protected HttpSessionIdResolver sessionIdResolver;
 
     @Primary
-    @Bean("sessionRepositoryWrapper")
+    @Bean("sessions_sessionRepositoryWrapper")
     public SessionRepositoryWrapper<S> sessionRepositoryWrapper(FindByIndexNameSessionRepository<S> sessionRepository) {
         SessionRepositoryWrapper<S> sessionRepositoryWrapper = new SessionRepositoryWrapper<>(sessionRepository);
         sessionRepositoryWrapper.addAttributePersistenceValidators(new VaadinSessionAttributesValidator());

@@ -17,10 +17,10 @@
 package io.jmix.samples.helloworld.screen.login;
 
 
-import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletRequest;
 import com.vaadin.server.VaadinServletResponse;
 import io.jmix.core.CoreProperties;
+import io.jmix.core.Events;
 import io.jmix.core.Messages;
 import io.jmix.core.security.ClientDetails;
 import io.jmix.core.security.SecurityContextHelper;
@@ -40,12 +40,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.RememberMeAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy;
 
 import java.util.Locale;
+
+import static org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices.DEFAULT_PARAMETER;
 
 @Route(path = "login", root = true)
 @UiDescriptor("login-screen.xml")
@@ -76,7 +79,7 @@ public class LoginScreen extends Screen {
     protected AuthenticationManager authenticationManager;
 
     @Autowired
-    protected SessionAuthenticationStrategy authenticationStrategy;
+    protected CompositeSessionAuthenticationStrategy authenticationStrategy;
 
     @Autowired
     protected CoreProperties coreProperties;
@@ -86,6 +89,12 @@ public class LoginScreen extends Screen {
 
     @Autowired
     protected ScreenBuilders screenBuilders;
+
+    @Autowired
+    protected RememberMeServices rememberMeServices;
+
+    @Autowired
+    protected Events events;
 
     @Subscribe
     protected void onInit(InitEvent event) {
@@ -127,8 +136,8 @@ public class LoginScreen extends Screen {
                     .build();
             authenticationToken.setDetails(clientDetails);
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
-            SecurityContextHelper.setAuthentication(authentication);
-            authenticationStrategy.onAuthentication(authentication, VaadinServletRequest.getCurrent(), VaadinServletResponse.getCurrent());
+
+            onSuccessfulAuthentication(authentication);
 
             String mainScreenId = uiProperties.getMainScreenId();
             screenBuilders.screen(this)
@@ -139,6 +148,20 @@ public class LoginScreen extends Screen {
         } catch (BadCredentialsException e) {
             showLoginException(e.getMessage());
         }
+    }
+
+    protected void onSuccessfulAuthentication(Authentication authentication) {
+        SecurityContextHelper.setAuthentication(authentication);
+
+        VaadinServletRequest request = VaadinServletRequest.getCurrent();
+        VaadinServletResponse response = VaadinServletResponse.getCurrent();
+
+        request.setAttribute(DEFAULT_PARAMETER, rememberMeCheckBox.isChecked());
+        authenticationStrategy.onAuthentication(authentication, request, response);
+        rememberMeServices.loginSuccess(request, response, authentication);
+
+        events.publish(new InteractiveAuthenticationSuccessEvent(
+                authentication, this.getClass()));
     }
 
     protected void showLoginException(String message) {
