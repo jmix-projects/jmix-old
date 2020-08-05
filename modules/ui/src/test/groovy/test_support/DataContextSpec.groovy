@@ -33,9 +33,6 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.transaction.support.TransactionTemplate
 import spock.lang.Specification
 
-@ContextConfiguration(classes = [CoreConfiguration, UiConfiguration, DataConfiguration, DataContextTestConfiguration])
-import static io.jmix.core.impl.StandardSerialization.deserialize
-import static io.jmix.core.impl.StandardSerialization.serialize
 
 @ContextConfiguration(classes = [CoreConfiguration, UiConfiguration, DataConfiguration, UiTestConfiguration])
 class DataContextSpec extends Specification {
@@ -48,6 +45,8 @@ class DataContextSpec extends Specification {
     JdbcTemplate jdbc
     @Autowired
     TimeSource timeSource
+    @Autowired
+    StandardSerialization standardSerialization
 
     void setup() {
         transaction.executeWithoutResult {}
@@ -87,9 +86,7 @@ class DataContextSpec extends Specification {
 
     }
 
-    @SuppressWarnings("unchecked")
-    static <T> T reserialize(Serializable object) {
-        StandardSerialization standardSerialization = AppBeans.get(StandardSerialization.NAME)
+    def <T> T reserialize(Serializable object) {
         if (object == null) {
             return null
         }
@@ -97,9 +94,7 @@ class DataContextSpec extends Specification {
         return (T) standardSerialization.deserialize(standardSerialization.serialize(object))
     }
 
-    static <T extends Serializable> T makeSaved(T entity) {
-        EntityStates entityStates = AppBeans.get(EntityStates)
-        TimeSource timeSource = AppBeans.get(TimeSource)
+    def <T extends Serializable> T makeSaved(T entity) {
 
         T e = reserialize(entity)
         entityStates.makeDetached((JmixEntity) e)
