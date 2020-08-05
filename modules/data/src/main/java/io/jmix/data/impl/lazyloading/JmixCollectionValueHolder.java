@@ -16,11 +16,9 @@
 
 package io.jmix.data.impl.lazyloading;
 
-import io.jmix.core.DataManager;
-import io.jmix.core.FetchPlanBuilder;
-import io.jmix.core.JmixEntity;
-import io.jmix.core.LoadContext;
+import io.jmix.core.*;
 import io.jmix.core.impl.SerializationContext;
+import io.jmix.core.metamodel.model.MetaClass;
 import org.eclipse.persistence.indirection.IndirectCollection;
 import org.springframework.beans.factory.BeanFactory;
 
@@ -33,21 +31,24 @@ public class JmixCollectionValueHolder extends JmixAbstractValueHolder {
 
     protected transient DataManager dataManager;
     protected transient FetchPlanBuilder fetchPlanBuilder;
+    protected transient Metadata metadata;
 
     public JmixCollectionValueHolder(String propertyName, Class ownerClass, Object entityId, DataManager dataManager,
-                                     FetchPlanBuilder fetchPlanBuilder) {
+                                     FetchPlanBuilder fetchPlanBuilder, Metadata metadata) {
         this.propertyName = propertyName;
         this.ownerClass = ownerClass;
         this.entityId = entityId;
         this.dataManager = dataManager;
         this.fetchPlanBuilder = fetchPlanBuilder;
+        this.metadata = metadata;
     }
 
     @Override
     public Object getValue() {
         if (!isInstantiated) {
             synchronized (this) {
-                LoadContext lc = new LoadContext(ownerClass);
+                MetaClass metaClass = metadata.getClass(ownerClass);
+                LoadContext lc = new LoadContext(metaClass);
                 lc.setFetchPlan(fetchPlanBuilder.add(propertyName).build());
                 lc.setId(entityId);
                 JmixEntity result = dataManager.load(lc);
@@ -62,7 +63,7 @@ public class JmixCollectionValueHolder extends JmixAbstractValueHolder {
 
     @Override
     public Object clone() {
-        return new JmixCollectionValueHolder(propertyName, ownerClass, entityId, dataManager, fetchPlanBuilder);
+        return new JmixCollectionValueHolder(propertyName, ownerClass, entityId, dataManager, fetchPlanBuilder, metadata);
     }
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -70,5 +71,6 @@ public class JmixCollectionValueHolder extends JmixAbstractValueHolder {
         BeanFactory beanFactory = SerializationContext.getThreadLocalBeanFactory();
         dataManager = (DataManager) beanFactory.getBean(DataManager.NAME);
         fetchPlanBuilder = beanFactory.getBean(FetchPlanBuilder.class, ownerClass);
+        metadata = (Metadata) beanFactory.getBean(Metadata.NAME);
     }
 }

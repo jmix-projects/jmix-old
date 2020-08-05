@@ -134,7 +134,8 @@ public class LazyLoadingHelper {
                         instance.getClass(),
                         instance.__getEntityEntry().getEntityId(),
                         dataManager,
-                        beanFactory.getBean(FetchPlanBuilder.class, instance.getClass())));
+                        beanFactory.getBean(FetchPlanBuilder.class, instance.getClass()),
+                        metadata));
                 break;
         }
     }

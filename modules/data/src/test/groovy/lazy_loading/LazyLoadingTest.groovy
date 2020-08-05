@@ -48,7 +48,7 @@ class LazyLoadingTest extends DataSpec {
 
         when:
 
-        LoadContext<OneToOneFieldEntity> loadContext = new LoadContext<>(OneToOneFieldEntity.class)
+        LoadContext<OneToOneFieldEntity> loadContext = new LoadContext<>(metadata.getClass(OneToOneFieldEntity.class))
         loadContext.setId(id)
 
         loadContext.setFetchPlan(fetchPlanRepository.getFetchPlan(OneToOneFieldEntity.class, "OneToOneFieldEntity"))
@@ -75,7 +75,7 @@ class LazyLoadingTest extends DataSpec {
 
         when:
 
-        LoadContext<OneToOneNoFieldEntity> loadContext = new LoadContext<>(OneToOneNoFieldEntity.class)
+        LoadContext<OneToOneNoFieldEntity> loadContext = new LoadContext<>(metadata.getClass(OneToOneNoFieldEntity.class))
         loadContext.setId(id)
 
         loadContext.setFetchPlan(fetchPlanRepository.getFetchPlan(OneToOneNoFieldEntity.class, "OneToOneNoFieldEntity"))
@@ -102,7 +102,7 @@ class LazyLoadingTest extends DataSpec {
 
         when:
 
-        LoadContext<ManyToOneEntity> loadContext = new LoadContext<>(ManyToOneEntity.class)
+        LoadContext<ManyToOneEntity> loadContext = new LoadContext<>(metadata.getClass(ManyToOneEntity.class))
         loadContext.setId(id)
 
         loadContext.setFetchPlan(fetchPlanRepository.getFetchPlan(ManyToOneEntity.class, "ManyToOneEntity"))
@@ -134,7 +134,7 @@ class LazyLoadingTest extends DataSpec {
 
         when:
 
-        LoadContext<OneToManyEntity> loadContext = new LoadContext<>(OneToManyEntity.class)
+        LoadContext<OneToManyEntity> loadContext = new LoadContext<>(metadata.getClass(OneToManyEntity.class))
         loadContext.setId(id)
 
         loadContext.setFetchPlan(fetchPlanRepository.getFetchPlan(OneToManyEntity.class, "OneToManyEntity"))
@@ -150,7 +150,7 @@ class LazyLoadingTest extends DataSpec {
 
         UUID twoId = prepareManyToMany()
 
-        LoadContext<ManyToManySecondEntity> loadContext = new LoadContext<>(ManyToManySecondEntity.class)
+        LoadContext<ManyToManySecondEntity> loadContext = new LoadContext<>(metadata.getClass(ManyToManySecondEntity.class))
         loadContext.setId(twoId)
 
         loadContext.setFetchPlan(fetchPlanRepository.getFetchPlan(ManyToManySecondEntity.class, "ManyToManySecondEntity"))
