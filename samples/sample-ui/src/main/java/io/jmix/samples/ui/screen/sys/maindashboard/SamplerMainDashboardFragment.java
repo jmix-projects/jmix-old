@@ -41,7 +41,6 @@ public class SamplerMainDashboardFragment extends ScreenFragment {
     protected static final String GROUP_PANEL_ITEM_STYLE = "group-panel-item";
     protected static final String GROUP_PANEL_LABEL_STYLE = "group-panel-label";
     protected static final String LABEL_TITLE_STYLE = "label-title";
-    protected static final String LABEL_IMAGE_STYLE = "label-image";
 
     protected static final String PLACEHOLDER_IMAGE_PATH = "io/jmix/samples/ui/images/dashboard/";
 
@@ -166,7 +165,7 @@ public class SamplerMainDashboardFragment extends ScreenFragment {
 
     protected Image createImagePreview(String imagePath) {
         Image image = uiComponents.create(Image.NAME);
-        image.setStyleName(LABEL_IMAGE_STYLE);
+        image.setScaleMode(Image.ScaleMode.SCALE_DOWN);
         image.setHeight("208px");
         image.setWidth("431px");
         image.setSource(ClasspathResource.class)

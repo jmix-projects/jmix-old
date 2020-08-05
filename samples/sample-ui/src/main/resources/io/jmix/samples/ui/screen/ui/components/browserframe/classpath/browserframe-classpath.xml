@@ -1,0 +1,22 @@
+<window xmlns="http://jmix.io/schema/ui/window">
+    <layout>
+        <hbox height="250px"
+              spacing="true"
+              width="100%">
+            <groupBox caption="Programmatically defined source"
+                      height="100%">
+                <browserFrame id="browserFrame"
+                              height="100%"
+                              width="100%"/>
+            </groupBox>
+            <groupBox caption="Declaratively defined source"
+                      height="100%">
+                <browserFrame height="100%"
+                              width="100%">
+                    <classpath
+                            path="io/jmix/samples/ui/screen/ui/components/browserframe/classpath/browserframe-classpath.html"/>
+                </browserFrame>
+            </groupBox>
+        </hbox>
+    </layout>
+</window>

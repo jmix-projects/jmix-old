@@ -18,14 +18,28 @@
 <menu-config xmlns="io/jmix/samples/ui/menu/sampler-menu.xsd">
 
     <menu id="components" image="mainmenu/components.svg">
+        <menu id="browserframe">
+            <item id="browserframe-classpath" docUrlSuffix="gui_BrowserFrame" splitEnabled="true"
+                  image="components/browserframe/browserframe-classpath.png"/>
+            <item id="browserframe-relative" docUrlSuffix="gui_BrowserFrame" splitEnabled="true"
+                  image="components/browserframe/browserframe-relative.png"/>
+            <item id="browserframe-theme" docUrlSuffix="gui_BrowserFrame" splitEnabled="true"
+                  image="components/browserframe/browserframe-theme.png"/>
+            <item id="browserframe-url" docUrlSuffix="gui_BrowserFrame" splitEnabled="true"
+                  image="components/browserframe/browserframe-url.png"/>
+        </menu>
+
         <menu id="button">
             <item id="button-simple" docUrlSuffix="gui_Button" image="components/button/button-simple.png"/>
             <item id="button-localized" docUrlSuffix="gui_Button" image="components/button/button-localized.png"/>
             <item id="button-action" docUrlSuffix="gui_Button" image="components/button/button-action.png"/>
-            <item id="button-programmatic-action" docUrlSuffix="gui_Button" image="components/button/button-action.png"/>
+            <item id="button-programmatic-action" docUrlSuffix="gui_Button"
+                  image="components/button/button-action.png"/>
             <item id="link-button" docUrlSuffix="gui_LinkButton" image="components/linkbutton/link-button.png"/>
-            <item id="popup-button-simple" docUrlSuffix="gui_PopupButton" image="components/popupbutton/popup-button-simple.png"/>
-            <item id="popup-button-custom-layout" docUrlSuffix="gui_PopupButton" image="components/popupbutton/popup-button-custom-layout.png"/>
+            <item id="popup-button-simple" docUrlSuffix="gui_PopupButton"
+                  image="components/popupbutton/popup-button-simple.png"/>
+            <item id="popup-button-custom-layout" docUrlSuffix="gui_PopupButton"
+                  image="components/popupbutton/popup-button-custom-layout.png"/>
         </menu>
     </menu>
 
@@ -35,9 +49,11 @@
             <item id="option-dialog" docUrlSuffix="gui_dialogs" image="mainmenu/dialogsAndNotifications.svg"/>
             <item id="input-dialog" docUrlSuffix="gui_dialogs" image="mainmenu/dialogsAndNotifications.svg"/>
         </menu>
+
         <menu id="notifications" image="mainmenu/dialogsAndNotifications.svg">
             <item id="notification-type" docUrlSuffix="gui_notifications" image="mainmenu/dialogsAndNotifications.svg"/>
-            <item id="notification-position" docUrlSuffix="gui_notifications" image="mainmenu/dialogsAndNotifications.svg"/>
+            <item id="notification-position" docUrlSuffix="gui_notifications"
+                  image="mainmenu/dialogsAndNotifications.svg"/>
         </menu>
     </menu>
 

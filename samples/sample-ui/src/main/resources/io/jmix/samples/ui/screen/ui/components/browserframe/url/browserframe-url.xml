@@ -1,0 +1,21 @@
+<window xmlns="http://jmix.io/schema/ui/window">
+    <layout>
+        <hbox height="100%"
+              spacing="true"
+              width="100%">
+            <groupBox caption="BrowserFrame with a programmatically defined source"
+                      height="100%">
+                <browserFrame id="browserFrame"
+                              height="100%"
+                              width="100%"/>
+            </groupBox>
+            <groupBox caption="BrowserFrame with a declaratively defined source"
+                      height="100%">
+                <browserFrame height="100%"
+                              width="100%">
+                    <url url="https://doc.cuba-platform.com/manual-7.2/"/>
+                </browserFrame>
+            </groupBox>
+        </hbox>
+    </layout>
+</window>

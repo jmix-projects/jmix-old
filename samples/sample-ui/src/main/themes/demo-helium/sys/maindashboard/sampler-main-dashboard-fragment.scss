@@ -28,12 +28,12 @@
       background: white;
       border-radius: 4px;
       border: 1px solid #d5d5d5;
-      //border: he-border($color: --border-dim-color);
       box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
       -webkit-box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2);
       color: var(--text-main-color);
       cursor: pointer;
       margin: 10px 10px 10px 10px;
+      text-align: center;
     }
 
     .group-panel-item:hover {
@@ -49,9 +49,7 @@
     background-color: #fafafa;
     background-image: -webkit-linear-gradient(top,#fafafa 2%,#f6f6f6 98%);
     background-image: linear-gradient(to bottom,#fafafa 2%,#f6f6f6 98%);
-    //background: var(--dim-color);
     border-bottom: 1px solid #d5d5d5;
-    //border-bottom: he-border($color: --border-dim-color);
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     -webkit-box-shadow: inset 0 1px 0 white, inset 0 -1px 0 #eee;
@@ -61,6 +59,7 @@
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
+    vertical-align: baseline;
   }
 
   .label-title {
@@ -70,25 +69,5 @@
     color: var(--primary-contrast-text-color);
     text-align: center;
     background: unquote("linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(var(--primary-color_rgb), 0.7) 25%, var(--primary-color) 37%, var(--primary-color) 63%, rgba(var(--primary-color_rgb), 0.7) 75%, rgba(255, 255, 255, 0))");
-  }
-
-  .label-image {
-    position: relative;
-    margin-top: 11px;
-    margin-left: 10px
-  }
-
-  .label-image > img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: scale-down;
-    font-family: "object-fit: scale-down;";
-    object-position: center;
-    position: absolute;
-    margin: auto;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
   }
 }
