@@ -147,11 +147,6 @@ public class SamplerMenuConfig {
             menuItem.setUrl(docUrl);
         }
 
-        String docPack = element.attributeValue("docPack");
-        if (StringUtils.isNotBlank(docPack)) {
-            menuItem.setUrl(docPack);
-        }
-
         String splitEnabled = element.attributeValue("splitEnabled");
         if (StringUtils.isNotBlank(splitEnabled)) {
             menuItem.setSplitEnabled(splitEnabled);

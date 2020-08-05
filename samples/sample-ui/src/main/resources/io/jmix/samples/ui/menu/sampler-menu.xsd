@@ -41,7 +41,6 @@
         </xs:sequence>
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attribute name="docUrlSuffix" type="xs:string"/>
-        <xs:attribute name="docPack" type="xs:string"/>
         <xs:attribute name="splitEnabled" type="xs:boolean"/>
         <xs:attribute name="image" type="xs:string"/>
     </xs:complexType>

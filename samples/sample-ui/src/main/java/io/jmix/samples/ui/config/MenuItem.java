@@ -13,7 +13,6 @@ public class MenuItem {
 
     protected final String id;
     protected String url;
-    protected String docPack;
     protected String splitEnabled;
     protected String image;
     protected List<String> otherFiles;
@@ -68,15 +67,6 @@ public class MenuItem {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    @Nullable
-    public String getDocPack() {
-        return docPack;
-    }
-
-    public void setDocPack(String docPack) {
-        this.docPack = docPack;
     }
 
     public List<MenuItem> getChildren() {

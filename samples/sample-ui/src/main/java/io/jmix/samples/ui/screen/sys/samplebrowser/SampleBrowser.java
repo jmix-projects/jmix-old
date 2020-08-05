@@ -208,7 +208,7 @@ public class SampleBrowser extends Screen {
         WindowInfo info = windowConfig.getWindowInfo(item.getId());
 
         String descriptionsPack = info.getControllerClass().getPackage().getName();
-        addTab(messageBundle.getMessage("description"), createDescription(descriptionsPack, item.getUrl(), item.getDocPack(), id));
+        addTab(messageBundle.getMessage("description"), createDescription(descriptionsPack, item.getUrl(), id));
 
         String screenSrc = info.getTemplate();
         addSourceTab(screenSrc);
@@ -228,7 +228,6 @@ public class SampleBrowser extends Screen {
 
     protected Component createDescription(String descriptionsPack,
                                           @Nullable String docUrlSuffix,
-                                          @Nullable String docPack,
                                           String frameId) {
         ScrollBoxLayout scrollBoxLayout = uiComponents.create(ScrollBoxLayout.class);
         scrollBoxLayout.addStyleName(DESCRIPTION_BOX_STYLE);
@@ -242,7 +241,7 @@ public class SampleBrowser extends Screen {
         hbox.setWidth("100%");
 
         if (!Strings.isNullOrEmpty(docUrlSuffix)) {
-            Component docLinks = documentLinks(docPack, docUrlSuffix);
+            Component docLinks = documentLinks(docUrlSuffix);
             hbox.add(docLinks);
         }
 
@@ -278,12 +277,10 @@ public class SampleBrowser extends Screen {
         return sb.toString();
     }
 
-    protected Component documentLinks(@Nullable String dockPack, String docUrlSuffix) {
+    protected Component documentLinks(String docUrlSuffix) {
         Link docLink = uiComponents.create(Link.class);
         Locale locale = getUserLocale();
-        String message = dockPack != null
-                ? messages.getMessage(dockPack, DOC_URL_MESSAGES_KEY, locale)
-                : messages.getMessage(DOC_URL_MESSAGES_KEY, locale);
+        String message = messages.getMessage(DOC_URL_MESSAGES_KEY, locale);
         String url = String.format(message, docUrlSuffix);
         docLink.setUrl(url);
         docLink.setCaption(messages.getMessage(getClass(), "documentation"));
