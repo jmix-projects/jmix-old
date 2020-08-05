@@ -22,6 +22,7 @@ import io.jmix.core.JmixEntity
 import io.jmix.core.TimeSource
 import io.jmix.core.entity.EntityEntryAuditable
 import io.jmix.core.entity.Versioned
+import io.jmix.core.impl.StandardSerialization
 import io.jmix.data.DataConfiguration
 import io.jmix.ui.UiConfiguration
 import org.eclipse.persistence.internal.queries.EntityFetchGroup
@@ -32,6 +33,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.transaction.support.TransactionTemplate
 import spock.lang.Specification
 
+@ContextConfiguration(classes = [CoreConfiguration, UiConfiguration, DataConfiguration, DataContextTestConfiguration])
 import static io.jmix.core.impl.StandardSerialization.deserialize
 import static io.jmix.core.impl.StandardSerialization.serialize
 
@@ -87,14 +89,17 @@ class DataContextSpec extends Specification {
 
     @SuppressWarnings("unchecked")
     static <T> T reserialize(Serializable object) {
+        StandardSerialization standardSerialization = AppBeans.get(StandardSerialization.NAME)
         if (object == null) {
             return null
         }
 
-        return (T) deserialize(serialize(object))
+        return (T) standardSerialization.deserialize(standardSerialization.serialize(object))
     }
 
-    def <T extends Serializable> T makeSaved(T entity) {
+    static <T extends Serializable> T makeSaved(T entity) {
+        EntityStates entityStates = AppBeans.get(EntityStates)
+        TimeSource timeSource = AppBeans.get(TimeSource)
 
         T e = reserialize(entity)
         entityStates.makeDetached((JmixEntity) e)
