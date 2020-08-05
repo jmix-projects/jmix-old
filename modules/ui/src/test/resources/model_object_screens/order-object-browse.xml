@@ -30,7 +30,7 @@
                 <column id="number"/>
                 <column id="customer"/>
             </columns>
-            <rowsCount/>
+            <pagination/>
         </groupTable>
     </layout>
 </window>

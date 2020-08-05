@@ -42,7 +42,7 @@
                 <column id="language"/>
                 <column id="timeZone"/>
             </columns>
-            <rowsCount/>
+            <pagination/>
             <buttonsPanel id="buttonsPanel"
                           alwaysVisible="true">
                 <button id="createBtn" action="usersTable.create"/>

@@ -40,7 +40,7 @@
                 <column id="email"/>
                 <column id="enabled"/>
             </columns>
-            <rowsCount/>
+            <pagination/>
             <buttonsPanel id="buttonsPanel"
                           alwaysVisible="true">
                 <button id="createBtn" action="usersTable.create"/>
